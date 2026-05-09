@@ -4,7 +4,7 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 9, 2026 (v2.5.0 — Session 8 final: App lock bypass fixed; demo mode fixed (account_type=student, is_want tags, mood entries, income ₱6,600); AI income/rename fixes; new AI actions; weekly notification fix; all docs updated)
+**Last Updated:** May 9, 2026 (v2.5.0 — Session 8 final: Demo mode fully populated — HomeCredit Poco F8 Ultra payment plan, scan history, category rules, mood log, income entries, extra expenses; all docs updated)
 **Build:** app-arm64-v8a-release.apk — 45.3 MB (May 8, 2026)
 
 ---
@@ -378,16 +378,25 @@ All account types get access to all features. The label, income categories, budg
 ### 16. Demo Mode
 - Accessible directly from the Login screen — **no account required**
 - Loads realistic sample data modeled after a **Lorma Colleges BSIT student** in San Fernando, La Union
-- **20 clean, purposeful expenses** — readable at a glance, not a data dump
-- Monthly allowance: ₱6,600
-- **This week (8 entries):** Jollibee, jeepney fare, Globe load, canteen lunch, tricycle, notebook, Mang Inasal, Shopee
-- **This month (6 entries):** Tuition installment, SM grocery, Spotify, vitamins, capstone printing, haircut
-- **Last month (6 entries):** Similar pattern for This Month vs Last Month comparison charts
-- Savings goals: New Laptop (₱12K/₱35K), Emergency Fund (₱3.5K/₱10K), Graduation Trip (₱1.5K/₱8K)
-- Debts: borrowed for capstone materials (Kuya Mark), lent fare (Trisha)
-- Recurring: Tuition installment, Spotify, Monthly Allowance
-- Budgets: Food ₱2,000 | Transportation ₱600 | School ₱4,500 | Bills ₱300 | Entertainment ₱300 | Shopping ₱500 | Health ₱300 | Personal Care ₱200
-- Custom categories seeded: School, Personal Care, Allowance
+- Account type: Student | Monthly income: ₱6,600 (daily allowance ₱300 × 22 days)
+- **~27 expenses** spread across this week, this month, and last month
+- **This week:** Jollibee, jeepney fare, Globe load, canteen lunch, tricycle, notebook, Mang Inasal, Shopee USB hub
+- **This month:** Tuition installment, SM grocery, Spotify, vitamins, capstone printing, haircut, Watsons medicine, Grab ride, Mobile Legends diamonds, 7-Eleven snacks, HomeCredit payment
+- **Last month:** Jollibee, jeepney fares, tuition, grocery, Smart load, cinema ticket, 2× HomeCredit payments
+- **Savings goals:** New Laptop (₱12K/₱35K), Emergency Fund (₱3.5K/₱10K), Graduation Trip (₱1.5K/₱8K)
+- **Debts:** Borrowed ₱1,500 from Kuya Mark (₱500 paid) for capstone materials; Lent ₱200 to Trisha for fare
+- **Recurring (4):** Tuition installment ₱3,500/mo, Spotify ₱129/mo, Monthly Allowance ₱6,600/mo (income), HomeCredit ₱4,104/mo
+- **Payment Plans (2):**
+  - HomeCredit — Poco F8 Ultra 16GB/512GB: ₱42,999 SRP → ₱73,878 total over 18 months → ₱4,104/month, 3 of 18 paid, due 15th
+  - ShopeePay Later — Mechanical Keyboard: ₱1,680 over 3 months → ₱560/month, 0 of 3 paid, due 5th
+- **Income entries:** Monthly Allowance ×2 months + Part-time encoding job ₱1,500
+- **Budgets:** Food ₱2,000 | Transportation ₱600 | School ₱4,500 | Bills ₱300 | Entertainment ₱300 | Shopping ₱500 | Health ₱300 | Personal Care ₱200
+- **Custom categories:** School, Personal Care, Allowance
+- **Category rules:** Jollibee→Food, Mang Inasal→Food, Mercury Drug→Health, National Bookstore→School, HomeCredit→Bills
+- **Scan history:** 5 barcode scans (Lucky Me, Cobra, Sting, Chippy)
+- **Mood log:** 10 days of entries (enables Mood & Spending correlation card in Analytics)
+- **Score history:** 14 days of realistic scores (72–83 range) for the health score chart
+- **FHS target:** 65–80 range (realistic for a student with some over-budget days)
 - Orange banner shown in app indicating demo mode with "Sign Up" shortcut
 - Also accessible from Profile → Load Demo Data (for logged-in users)
 - **Isolated from real accounts** — demo data is automatically cleared when a real account logs in next

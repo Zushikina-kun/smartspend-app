@@ -114,7 +114,14 @@ BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 9, 2026)
 
 LATEST FIXES (May 9, 2026 — Session 8):
 - APP LOCK BYPASS FIXED: PopScope(canPop: false) on AppLockScreen — back button no longer bypasses
-- DEMO MODE FIXED: account_type=student, income=₱6,600, is_want tags, 10 mood entries seeded
+- DEMO MODE FULLY POPULATED:
+  - account_type=student, income=₱6,600, is_want tags, 10 mood entries
+  - Payment Plans: HomeCredit Poco F8 Ultra (₱4,104/mo × 18mo, 3 paid) + ShopeePay Later keyboard
+  - Scan history: 5 barcode entries
+  - Category rules: 5 rules (Jollibee, Mang Inasal, Mercury Drug, National Bookstore, HomeCredit)
+  - Income: Monthly Allowance ×2 + Part-time ₱1,500
+  - Extra expenses: Watsons, Grab, Mobile Legends, 7-Eleven, 3× HomeCredit payments
+  - Recurring: 4 items including HomeCredit monthly bill
 - AI INCOME FIX: fires both set_income AND add_income when user says "my allowance is X"
 - AI BULK RENAME: system prompt now shows new_item_name example, forces ACTION lines
 - WEEKLY NOTIFICATION FIX: was using Monday date as key — now uses Sunday date
