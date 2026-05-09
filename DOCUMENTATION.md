@@ -4,8 +4,8 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 9, 2026 (v2.5.0 — Session 8 final: Demo mode fully populated — HomeCredit Poco F8 Ultra payment plan, scan history, category rules, mood log, income entries, extra expenses; all docs updated)
-**Build:** app-arm64-v8a-release.apk — 45.3 MB (May 8, 2026)
+**Last Updated:** May 9, 2026 (v2.5.0 — Session 9: Receipt OCR smart routing, dedicated receipt parser, Import Items button, AI bulk rename fix)
+**Build:** app-arm64-v8a-release.apk — 45.3 MB (May 9, 2026)
 
 ---
 
@@ -82,7 +82,10 @@ All input methods are accessible from the AI chat screen via 3 buttons in the in
 
 **Manual Entry form:** Item name, amount, category, payment method, shop, notes, date picker. AI can optionally pre-fill fields via the Analyze button, but the form is always usable without it.
 
-**Smart Scanner pipeline:** Camera → Mode toggle (Barcode/Receipt) → Auto-detect (barcode or OCR) → Scan Review Screen (edit/confirm, quality warning if OCR is poor) → Send to AI
+**Smart Scanner pipeline:** Camera → Mode toggle (Barcode/Receipt) → Auto-detect (barcode or OCR) → Smart routing:
+- **Barcode/QR** → Scan Review Screen → describe product → AI chat
+- **Receipt with 3+ prices or "total"** → "Import Items" button → Import Receipt screen → AI parses items → review table → bulk import
+- **Simple text/single item** → Scan Review Screen → AI chat
 
 **Scanner features:**
 - Live barcode/QR auto-detection with animated detection box
@@ -92,6 +95,9 @@ All input methods are accessible from the AI chat screen via 3 buttons in the in
 - Barcode repeat detection — shows "[Scanned X times before]" if previously scanned
 - OCR quality check — warns user if extracted text looks garbled
 - Torch toggle
+- **"Import Items" button** in Scan Review Screen — appears when 3+ price lines detected
+- **Receipt import mode** in BankImportScreen — uses LLMService.parseReceipt() for item-level extraction
+- Auto-parses when opened from OCR (no manual "Parse" tap needed)
 
 All AI-parsed inputs pass through `LLMService.parseExpense()` which returns structured JSON:
 `item_name`, `category`, `amount`, `date`, `shop_name`, `payment_method`, `confidence_score`

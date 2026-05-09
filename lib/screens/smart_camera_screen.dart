@@ -289,7 +289,18 @@ class _SmartCameraScreenState extends State<SmartCameraScreen>
           ),
         );
         if (reviewed != null && reviewed.isNotEmpty && mounted) {
-          Navigator.pop(context, ScanResult(text: reviewed));
+          if (reviewed.startsWith('__IMPORT__')) {
+            // User chose "Import Items" — return with import flag
+            Navigator.pop(
+                context,
+                ScanResult(
+                  text: reviewed.substring('__IMPORT__'.length),
+                  isBarcode: false,
+                  barcodeFormat: 'receipt_import',
+                ));
+          } else {
+            Navigator.pop(context, ScanResult(text: reviewed));
+          }
           return;
         }
       } catch (e) {
@@ -598,6 +609,16 @@ class _ScanReviewScreenState extends State<ScanReviewScreen> {
     return '';
   }
 
+  /// True if the scanned text looks like a multi-item receipt
+  bool get _hasMultipleAmounts {
+    final text = _ctrl.text;
+    final amountMatches = RegExp(r'[₱\d]\d*\.\d{2}').allMatches(text).length +
+        RegExp(r'₱\s*\d+').allMatches(text).length;
+    return amountMatches >= 3 ||
+        text.toLowerCase().contains('total') ||
+        text.toLowerCase().contains('subtotal');
+  }
+
   String _getBarcodeHint(String format) {
     final f = format.toLowerCase();
     if (f.contains('qr')) return '• QR code';
@@ -760,11 +781,33 @@ class _ScanReviewScreenState extends State<ScanReviewScreen> {
                   onPressed: () => _ctrl.clear(),
                 )),
                 const SizedBox(width: 12),
-                Expanded(
+                // Show "Import Items" button for non-barcode scans with multiple amounts
+                if (!widget.isBarcode && _hasMultipleAmounts) ...[
+                  Expanded(
                     flex: 2,
                     child: ElevatedButton.icon(
+                      icon: const Icon(Icons.download_done, size: 16),
+                      label: const Text("Import Items"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: () {
+                        final text = _ctrl.text.trim();
+                        if (text.isEmpty) return;
+                        // Return with a special prefix so caller knows to route to import
+                        Navigator.pop(context, '__IMPORT__$text');
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
                       icon: const Icon(Icons.smart_toy, size: 16),
-                      label: const Text("Send to AI"),
+                      label: const Text("AI Chat"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: cs.primary,
                         foregroundColor: cs.onPrimary,
@@ -777,7 +820,27 @@ class _ScanReviewScreenState extends State<ScanReviewScreen> {
                         if (text.isEmpty) return;
                         Navigator.pop(context, text);
                       },
-                    )),
+                    ),
+                  ),
+                ] else
+                  Expanded(
+                      flex: 2,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.smart_toy, size: 16),
+                        label: const Text("Send to AI"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: cs.primary,
+                          foregroundColor: cs.onPrimary,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: () {
+                          final text = _ctrl.text.trim();
+                          if (text.isEmpty) return;
+                          Navigator.pop(context, text);
+                        },
+                      )),
               ]),
             ),
           ),

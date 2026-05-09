@@ -464,6 +464,13 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
   /// Simple expense logging needs ~150 tokens. Advice/analysis needs ~600.
   static int _estimateMaxTokens(String message) {
     final lower = message.toLowerCase();
+    // Bulk rename/capitalization fix — needs many ACTION lines
+    if (lower.contains('capitali') ||
+        lower.contains('rename') ||
+        lower.contains('fix the name') ||
+        lower.contains('fix name')) {
+      return 800; // enough for 10+ ACTION lines
+    }
     // Expense logging — short confirmation needed
     if (RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took)\b')
             .hasMatch(lower) &&
@@ -565,7 +572,8 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "• Delete recurring: ACTION:{\"type\":\"delete_recurring\",\"title\":\"Netflix\"}\n\n"
         "BULK RENAME / CAPITALIZATION FIX (CRITICAL): When user says 'fix capitalization', 'rename my expenses', 'fix the names', or similar — you MUST fire update_expense ACTION lines for EVERY expense that needs changing. Do NOT just list the corrected names as text. Each rename = one ACTION line. Example:\n"
         "ACTION:{\"type\":\"update_expense\",\"item_name\":\"jeepney fare\",\"new_item_name\":\"Jeepney Fare\"}\n"
-        "The update_expense action supports a 'new_item_name' field for renaming. Use it.\n\n"
+        "The update_expense action supports a 'new_item_name' field for renaming. Use it.\n"
+        "IMPORTANT: After listing the corrected names, you MUST include the ACTION lines. If you only list names without ACTION lines, NOTHING gets updated in the database.\n\n"
         "ACTION FORMAT: plain text after reply, one per line, ACTION:{...} only. No bold, no → prefix.\n"
         "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Health, Education, Others.\n"
         "is_want: true=discretionary (snacks, entertainment, shopping). false=essential (transport, groceries, medicine, tuition, bills).\n"

@@ -852,4 +852,96 @@ Return ONLY this JSON array:
       throw Exception("Could not parse transaction history: $e");
     }
   }
+
+  /// Parse a receipt image's OCR text into structured expense items.
+  /// Handles Jollibee, SM, Mercury Drug, National Bookstore, and any receipt.
+  /// Returns a list of expense maps — same format as parseTransactionHistory.
+  static Future<List<Map<String, dynamic>>> parseReceipt(String ocrText) async {
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    const system =
+        '''You are a receipt parser for a Filipino expense tracking app.
+Extract ALL purchased items from a receipt OCR text.
+
+RULES:
+1. Extract each line item as a separate expense entry.
+2. If the receipt has a single total (e.g. fast food combo), return ONE entry with the total.
+3. For grocery/supermarket receipts, extract individual items if clearly listed.
+4. Use the receipt date if visible; otherwise use today's date.
+5. Infer the store/merchant from the receipt header (first few lines).
+6. Infer category from the store type:
+   - Jollibee, McDonald's, KFC, Mang Inasal, Chowking → Food
+   - SM Supermarket, Robinsons, Puregold, grocery → Food
+   - Mercury Drug, Watsons, Rose Pharmacy → Health
+   - National Bookstore, school supplies → Education
+   - SM Department Store, clothing, shoes → Shopping
+   - Cinema, entertainment venue → Entertainment
+   - Convenience store (7-Eleven, Ministop) → Food
+7. is_want: true for fast food treats, snacks, entertainment. false for groceries, medicine, school supplies.
+8. Return ONLY a valid JSON array. No explanations. No markdown.
+9. If the receipt is unreadable or has no prices, return: []''';
+
+    final user = '''Parse this receipt OCR text into expense items:
+
+$ocrText
+
+Reference date: $today
+
+Return ONLY this JSON array:
+[
+  {
+    "date": "YYYY-MM-DD",
+    "description": "item or meal name",
+    "amount": 0.00,
+    "category": "Food|Transportation|Bills|Shopping|Entertainment|Health|Education|Others",
+    "is_want": false,
+    "shop_name": "store or restaurant name",
+    "notes": ""
+  }
+]''';
+
+    try {
+      final raw = await _callGroq(system, user, maxTokens: 1000);
+      final cleaned =
+          raw.replaceAll("```json", "").replaceAll("```", "").trim();
+
+      final jsonMatch = RegExp(r'\[[\s\S]*\]').firstMatch(cleaned);
+      if (jsonMatch == null) return [];
+
+      final parsed = jsonDecode(jsonMatch.group(0)!) as List;
+      final result = <Map<String, dynamic>>[];
+
+      for (final item in parsed) {
+        if (item is! Map) continue;
+        final amount = (item['amount'] as num?)?.toDouble() ?? 0;
+        if (amount <= 0) continue;
+
+        String date = item['date'] as String? ?? today;
+        if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(date) ||
+            DateTime.tryParse(date) == null) {
+          date = today;
+        }
+
+        result.add({
+          'date': date,
+          'time': '00:00',
+          'description':
+              (item['description'] as String?)?.trim().isNotEmpty == true
+                  ? item['description'] as String
+                  : 'Receipt item',
+          'amount': amount,
+          'category':
+              _normalizeCategory(item['category'] as String? ?? 'Others'),
+          'is_want': (item['is_want'] as bool? ?? false) ? 1 : 0,
+          'payment_method': 'Cash',
+          'notes': item['notes'] as String? ?? '',
+          'shop_name': item['shop_name'] as String? ?? '',
+        });
+      }
+
+      return result;
+    } catch (e) {
+      throw Exception("Could not parse receipt: $e");
+    }
+  }
 }

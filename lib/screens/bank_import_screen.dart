@@ -13,8 +13,11 @@ import 'smart_camera_screen.dart';
 /// Import transactions from any bank or e-wallet transaction history.
 /// Supports GCash, BPI, BDO, Maya, UnionBank, Seabank, and any text-based
 /// transaction export — paste the raw text and the AI parses it.
+/// Also used for receipt OCR import (prefillText + sourceLabel='Receipt').
 class BankImportScreen extends StatefulWidget {
-  const BankImportScreen({super.key});
+  final String? prefillText;
+  final String? sourceLabel;
+  const BankImportScreen({super.key, this.prefillText, this.sourceLabel});
 
   @override
   State<BankImportScreen> createState() => _BankImportScreenState();
@@ -35,9 +38,26 @@ class _BankImportScreenState extends State<BankImportScreen> {
     ('BDO', '🏦'),
     ('UnionBank', '🏦'),
     ('Seabank', '🌊'),
+    ('Receipt', '🧾'),
     ('Other', '💳'),
   ];
   String _selectedSource = 'GCash';
+
+  @override
+  void initState() {
+    super.initState();
+    // Pre-fill from OCR or other source if provided
+    if (widget.prefillText != null && widget.prefillText!.isNotEmpty) {
+      _textCtrl.text = widget.prefillText!;
+    }
+    if (widget.sourceLabel != null) {
+      _selectedSource = widget.sourceLabel!;
+    }
+    // Auto-parse if prefilled
+    if (widget.prefillText != null && widget.prefillText!.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _parse());
+    }
+  }
 
   @override
   void dispose() {
@@ -59,11 +79,18 @@ class _BankImportScreenState extends State<BankImportScreen> {
     });
 
     try {
-      final transactions = await LLMService.parseTransactionHistory(text);
+      List<Map<String, dynamic>> transactions;
+      if (_selectedSource == 'Receipt') {
+        // Use receipt-specific parser for OCR'd receipts
+        transactions = await LLMService.parseReceipt(text);
+      } else {
+        transactions = await LLMService.parseTransactionHistory(text);
+      }
       if (transactions.isEmpty) {
         setState(() {
-          _parseError =
-              "No expense transactions found. Make sure you pasted debit/outgoing transactions.";
+          _parseError = _selectedSource == 'Receipt'
+              ? "No items found in receipt. Try improving the scan quality or edit the text manually."
+              : "No expense transactions found. Make sure you pasted debit/outgoing transactions.";
           _parsing = false;
         });
         return;
@@ -78,8 +105,9 @@ class _BankImportScreenState extends State<BankImportScreen> {
                   amount: t['amount'] as double,
                   category: t['category'] as String,
                   isWant: (t['is_want'] as int) == 1,
-                  paymentMethod: t['payment_method'] as String,
+                  paymentMethod: t['payment_method'] as String? ?? 'Cash',
                   notes: t['notes'] as String? ?? '',
+                  shopName: t['shop_name'] as String? ?? '',
                   selected: true,
                 ))
             .toList();
@@ -114,6 +142,7 @@ class _BankImportScreenState extends State<BankImportScreen> {
           'date': row.date,
           'time': row.time,
           'payment_method': row.paymentMethod,
+          'shop_name': row.shopName.isNotEmpty ? row.shopName : null,
           'notes': row.notes.isNotEmpty
               ? row.notes
               : 'Imported from $_selectedSource',
@@ -209,7 +238,9 @@ class _BankImportScreenState extends State<BankImportScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Import Transactions"),
+        title: Text(widget.sourceLabel == 'Receipt'
+            ? "Import Receipt Items"
+            : "Import Transactions"),
         actions: [
           const InfoButton(
             title: "Import Transactions",
@@ -268,27 +299,41 @@ class _BankImportScreenState extends State<BankImportScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: cs.primaryContainer.withValues(alpha: 0.3),
+                      color: _selectedSource == 'Receipt'
+                          ? Colors.green.withValues(alpha: 0.08)
+                          : cs.primaryContainer.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(10),
-                      border:
-                          Border.all(color: cs.primary.withValues(alpha: 0.2)),
+                      border: Border.all(
+                          color: _selectedSource == 'Receipt'
+                              ? Colors.green.withValues(alpha: 0.3)
+                              : cs.primary.withValues(alpha: 0.2)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.info_outline,
-                                size: 15, color: cs.primary),
+                            Icon(
+                                _selectedSource == 'Receipt'
+                                    ? Icons.receipt_long
+                                    : Icons.info_outline,
+                                size: 15,
+                                color: _selectedSource == 'Receipt'
+                                    ? Colors.green
+                                    : cs.primary),
                             const SizedBox(width: 6),
                             Text(
-                              _selectedSource == 'GCash'
-                                  ? "How to get GCash history"
-                                  : "How to get $_selectedSource history",
+                              _selectedSource == 'Receipt'
+                                  ? "Receipt OCR Import"
+                                  : _selectedSource == 'GCash'
+                                      ? "How to get GCash history"
+                                      : "How to get $_selectedSource history",
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: cs.primary),
+                                  color: _selectedSource == 'Receipt'
+                                      ? Colors.green
+                                      : cs.primary),
                             ),
                           ],
                         ),
@@ -567,6 +612,11 @@ class _BankImportScreenState extends State<BankImportScreen> {
 
   String _getInstructions(String source) {
     switch (source) {
+      case 'Receipt':
+        return "Receipt OCR was detected and auto-parsed.\n\n"
+            "Review the items below — edit categories or Want/Need tags as needed.\n\n"
+            "If items look wrong, you can edit the text above and tap 'Parse with AI' again.\n\n"
+            "💡 Tip: For better results, ensure the receipt is flat, well-lit, and in focus when scanning.";
       case 'GCash':
         return "Option A (Most reliable — PDF text):\n"
             "GCash app → Profile → Transaction History → Request via email → open the PDF → select all text → copy → paste here.\n\n"
@@ -768,6 +818,7 @@ class _ImportRow {
   bool isWant;
   String paymentMethod;
   String notes;
+  String shopName;
   bool selected;
 
   _ImportRow({
@@ -779,6 +830,7 @@ class _ImportRow {
     required this.isWant,
     required this.paymentMethod,
     required this.notes,
+    this.shopName = '',
     required this.selected,
   });
 }

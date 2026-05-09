@@ -110,7 +110,25 @@ NEW FEATURE — Payment Plans tab in Debts screen:
 - Active vs Completed sections
 - installment_plans table created via _ensureColumns (no version bump)
 
-BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 9, 2026)
+BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 9, 2026 — Session 9)
+
+LATEST FIXES (May 9, 2026 — Session 9):
+- RECEIPT OCR SMART ROUTING: When camera scans a receipt with 3+ price lines or "total/subtotal",
+  it now routes to the Import screen (BankImportScreen) instead of dumping raw OCR text into AI chat.
+  The Import screen uses a dedicated parseReceipt() AI parser that extracts individual items with
+  categories, Want/Need tags, and shop names — then shows a review table before importing.
+- RECEIPT IMPORT SCREEN: BankImportScreen now accepts prefillText + sourceLabel params.
+  When sourceLabel='Receipt', it uses LLMService.parseReceipt() instead of parseTransactionHistory().
+  Auto-parses on open when prefilled from OCR. Shows green "Receipt OCR Import" instructions card.
+- SCAN REVIEW SCREEN: Added "Import Items" button for non-barcode scans with 3+ amounts.
+  User can choose between "Import Items" (structured review) or "AI Chat" (single message).
+  Returns '__IMPORT__' prefix to signal the caller to route to import screen.
+- LLMService.parseReceipt(): New dedicated receipt parser. Handles Jollibee, SM, Mercury Drug,
+  National Bookstore, and any receipt. Extracts individual items with shop_name field.
+- AI BULK RENAME FIX: max_tokens for capitalization/rename requests increased to 800 (was 400).
+  System prompt now explicitly warns that listing names without ACTION lines does nothing.
+- BANK IMPORT SCREEN: Added 'Receipt' source chip. _ImportRow now has shopName field.
+  shop_name saved to DB when importing receipt items.
 
 LATEST FIXES (May 9, 2026 — Session 8):
 - APP LOCK BYPASS FIXED: PopScope(canPop: false) on AppLockScreen — back button no longer bypasses

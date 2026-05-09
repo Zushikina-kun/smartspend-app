@@ -18,6 +18,7 @@ import '../widgets/info_button.dart';
 import 'chat_history_screen.dart';
 import 'smart_camera_screen.dart';
 import 'add_expense_screen.dart';
+import 'bank_import_screen.dart';
 
 class AIScreen extends StatefulWidget {
   const AIScreen({super.key});
@@ -927,10 +928,60 @@ class _AIScreenState extends State<AIScreen> {
       context,
       MaterialPageRoute(builder: (_) => const SmartCameraScreen()),
     );
-    if (result != null && result.text.isNotEmpty && mounted) {
+    if (result == null || result.text.isEmpty || !mounted) return;
+
+    // Check if user chose "Import Items" from the review screen
+    final isReceiptImport = result.barcodeFormat == 'receipt_import';
+
+    if (result.isBarcode && !isReceiptImport) {
+      // Barcode/QR — send description to AI chat as usual
       _controller.text = result.text;
       await _send();
+    } else {
+      // Receipt/document OCR — check if it looks like a multi-item receipt
+      final text = result.text;
+      final docType = _detectScanType(text);
+
+      if (docType == 'receipt_multi' || isReceiptImport) {
+        // Multi-item receipt → route to Import screen for structured review
+        final imported = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                BankImportScreen(prefillText: text, sourceLabel: 'Receipt'),
+          ),
+        );
+        if (imported == true && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("✓ Receipt items imported"),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ));
+          await _loadContext(silent: true);
+        }
+      } else {
+        // Single item or simple text — send to AI chat
+        _controller.text = text;
+        await _send();
+      }
     }
+  }
+
+  /// Detect if scanned text looks like a multi-item receipt or a single expense
+  String _detectScanType(String text) {
+    final lines = text.split('\n').where((l) => l.trim().isNotEmpty).toList();
+    // Count lines with amounts (₱ or decimal numbers)
+    final amountLines = lines
+        .where((l) =>
+            RegExp(r'[₱\d]\d*\.\d{2}').hasMatch(l) ||
+            RegExp(r'₱\s*\d+').hasMatch(l))
+        .length;
+    // If 3+ amount lines → likely a multi-item receipt
+    if (amountLines >= 3) return 'receipt_multi';
+    // If it has "total" or "subtotal" → receipt
+    if (text.toLowerCase().contains('total') ||
+        text.toLowerCase().contains('subtotal')) return 'receipt_multi';
+    return 'single';
   }
 
   @override

@@ -77,7 +77,12 @@ Everything here is confirmed built, tested, and in the current build (v2.5.0).
 - [x] Nestea, C2 added to Food keywords
 - [x] Weekly notification bug fixed (was using wrong week key)
 - [x] Anomaly detection bug fixed (same week key issue)
-- [x] Duplicate detection improved for imports
+- [x] Receipt OCR smart routing — multi-item receipts go to Import screen, not AI chat
+- [x] LLMService.parseReceipt() — dedicated receipt parser with item extraction
+- [x] BankImportScreen receipt mode — auto-parses OCR text, shows review table
+- [x] Scan Review Screen "Import Items" button for multi-item receipts
+- [x] AI bulk rename max_tokens fix (800 for rename requests)
+- [x] AI bulk rename system prompt — explicit warning about ACTION lines requirement
 
 ---
 

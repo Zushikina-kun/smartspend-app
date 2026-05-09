@@ -67,11 +67,17 @@ Type: *"How do I apply for SSS loan?"*
 
 **Show the live viewfinder briefly.**
 
-> "It auto-detects barcodes in real time. For receipts, you switch to Receipt mode — the amber guide — and tap the shutter. ML Kit extracts the text, you review it, and send it to the AI."
+> "It auto-detects barcodes in real time. For receipts, you switch to Receipt mode — the amber guide — and tap the shutter. ML Kit extracts the text, you review it."
 
 **If you have a receipt handy:** scan it and show the review screen.
 
-> "We also added a bank import feature. If you have your GCash transaction history, you paste the text here and the AI parses all your transactions at once — with their real dates preserved."
+> "Here's the smart part — if the receipt has multiple items, the app detects that and shows you an 'Import Items' button. Tap it and it routes to the Import screen where the AI parses each item individually, assigns categories, and lets you review before importing."
+
+**Show the Import screen with parsed receipt items.**
+
+> "You can edit categories, toggle Want/Need, and select which items to import. This is much more useful than dumping raw OCR text into a chat."
+
+> "We also support bank and GCash transaction history import. Paste the text, the AI parses all transactions at once — with their real dates preserved."
 
 ---
 
