@@ -1,0 +1,23 @@
+dependencies:
+  flutter:
+    sdk: flutter
+
+  http: ^1.1.0
+  provider: ^6.0.5
+
+  # Database
+  sqflite: ^2.3.0
+  path: ^1.8.0
+
+  # OCR
+  google_mlkit_text_recognition: ^0.11.0
+  image_picker: ^1.0.4
+
+  # Barcode
+  mobile_scanner: ^3.5.2
+
+  # Voice
+  speech_to_text: ^6.6.0
+
+  # UI
+  intl: ^0.18.1

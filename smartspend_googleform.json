@@ -1,0 +1,150 @@
+{
+  "title": "SmartSpend Survey: Financial Management & AI App Evaluation",
+  "description": "This survey aims to understand financial habits, challenges, and user needs for an AI-powered expense tracking application. All responses are confidential.",
+  "sections": [
+    {
+      "title": "Part I – Respondent Profile",
+      "questions": [
+        {
+          "type": "short_answer",
+          "question": "Age"
+        },
+        {
+          "type": "multiple_choice",
+          "question": "Gender",
+          "options": ["Male", "Female", "Prefer not to say"]
+        },
+        {
+          "type": "short_answer",
+          "question": "Year Level"
+        },
+        {
+          "type": "short_answer",
+          "question": "Course"
+        }
+      ]
+    },
+    {
+      "title": "Part II – Financial Management Practices",
+      "questions": [
+        {
+          "type": "multiple_choice",
+          "question": "How do you usually track your expenses?",
+          "options": [
+            "Manual notebook",
+            "Mobile app",
+            "Mental tracking only",
+            "I do not track expenses"
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "question": "How often do you monitor your budget?",
+          "options": ["Daily", "Weekly", "Monthly", "Rarely"]
+        },
+        {
+          "type": "multiple_choice",
+          "question": "What is your primary source of income?",
+          "options": [
+            "Parents/Guardians",
+            "Part-time job",
+            "Freelance work",
+            "Others"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Part III – Budgeting Challenges",
+      "questions": [
+        {
+          "type": "checkbox",
+          "question": "What are your common difficulties in managing your expenses?",
+          "options": [
+            "Overspending",
+            "Forgetting to record expenses",
+            "Lack of budgeting knowledge",
+            "Difficulty tracking receipts",
+            "No consistent tracking system"
+          ]
+        },
+        {
+          "type": "linear_scale",
+          "question": "How difficult is it for you to track daily expenses?",
+          "scale": {
+            "min": 1,
+            "max": 5,
+            "labels": ["Very Easy", "Very Difficult"]
+          }
+        },
+        {
+          "type": "multiple_choice",
+          "question": "Do you find manual expense tracking inconvenient?",
+          "options": ["Yes", "No", "Sometimes"]
+        }
+      ]
+    },
+    {
+      "title": "Part IV – System Feature Needs",
+      "questions": [
+        {
+          "type": "checkbox",
+          "question": "Which features would you find helpful?",
+          "options": [
+            "Automatic receipt scanning (OCR)",
+            "Voice input for expenses",
+            "AI financial recommendations",
+            "Barcode scanning",
+            "Expense summaries and reports"
+          ]
+        },
+        {
+          "type": "multiple_choice",
+          "question": "Would you use an AI-powered financial assistant app?",
+          "options": ["Yes", "No", "Maybe"]
+        },
+        {
+          "type": "paragraph",
+          "question": "What features would you like to suggest for improvement?"
+        }
+      ]
+    },
+    {
+      "title": "Part V – Qualitative Feedback",
+      "questions": [
+        {
+          "type": "paragraph",
+          "question": "Describe your current way of managing money."
+        },
+        {
+          "type": "paragraph",
+          "question": "What problems do you encounter when tracking expenses?"
+        },
+        {
+          "type": "paragraph",
+          "question": "What features would make a financial app useful for you?"
+        },
+        {
+          "type": "paragraph",
+          "question": "How do you feel about AI helping manage your finances?"
+        }
+      ]
+    },
+    {
+      "title": "Part VI – System Usability Scale (SUS)",
+      "description": "Rate the following statements from 1 (Strongly Disagree) to 5 (Strongly Agree).",
+      "questions": [
+        { "type": "linear_scale", "question": "I think that I would like to use this system frequently.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "I found the system unnecessarily complex.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "I thought the system was easy to use.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "I think that I would need technical support to use this system.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "The system functions were well integrated.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "There was too much inconsistency in the system.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "Most people would learn to use this system quickly.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "I found the system cumbersome to use.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "I felt confident using the system.", "scale": { "min": 1, "max": 5 } },
+        { "type": "linear_scale", "question": "I needed to learn many things before using the system.", "scale": { "min": 1, "max": 5 } }
+      ]
+    }
+  ]
+}

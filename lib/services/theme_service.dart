@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// Available app color themes
+enum AppTheme {
+  blue,
+  lightBlue,
+  green,
+  purple,
+  orange,
+}
+
+extension AppThemeExtension on AppTheme {
+  String get label {
+    switch (this) {
+      case AppTheme.blue:
+        return 'Ocean Blue';
+      case AppTheme.lightBlue:
+        return 'Sky Blue';
+      case AppTheme.green:
+        return 'Forest Green';
+      case AppTheme.purple:
+        return 'Royal Purple';
+      case AppTheme.orange:
+        return 'Sunset Orange';
+    }
+  }
+
+  Color get seedColor {
+    switch (this) {
+      case AppTheme.blue:
+        return const Color(0xFF0066FF);
+      case AppTheme.lightBlue:
+        return const Color(0xFF0099DD);
+      case AppTheme.green:
+        return const Color(0xFF00875A);
+      case AppTheme.purple:
+        return const Color(0xFF6B21A8);
+      case AppTheme.orange:
+        return const Color(0xFFE65100);
+    }
+  }
+
+  Color get primaryColor {
+    switch (this) {
+      case AppTheme.blue:
+        return const Color(0xFF0066FF);
+      case AppTheme.lightBlue:
+        return const Color(0xFF0099DD);
+      case AppTheme.green:
+        return const Color(0xFF00875A);
+      case AppTheme.purple:
+        return const Color(0xFF6B21A8);
+      case AppTheme.orange:
+        return const Color(0xFFE65100);
+    }
+  }
+
+  String get key {
+    switch (this) {
+      case AppTheme.blue:
+        return 'blue';
+      case AppTheme.lightBlue:
+        return 'light_blue';
+      case AppTheme.green:
+        return 'green';
+      case AppTheme.purple:
+        return 'purple';
+      case AppTheme.orange:
+        return 'orange';
+    }
+  }
+
+  static AppTheme fromKey(String key) {
+    switch (key) {
+      case 'light_blue':
+        return AppTheme.lightBlue;
+      case 'green':
+        return AppTheme.green;
+      case 'purple':
+        return AppTheme.purple;
+      case 'orange':
+        return AppTheme.orange;
+      default:
+        return AppTheme.blue;
+    }
+  }
+}
+
+class ThemeService extends ChangeNotifier {
+  static const _darkKey = 'dark_mode';
+  static const _themeKey = 'app_theme';
+
+  bool _isDark = false;
+  AppTheme _appTheme = AppTheme.blue;
+
+  bool get isDark => _isDark;
+  AppTheme get appTheme => _appTheme;
+  ThemeMode get themeMode => _isDark ? ThemeMode.dark : ThemeMode.light;
+
+  /// The primary color for the current theme — use this instead of hardcoded 0xFF0066FF
+  Color get primaryColor => _appTheme.primaryColor;
+
+  ThemeService() {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    _isDark = prefs.getBool(_darkKey) ?? false;
+    final themeKey = prefs.getString(_themeKey) ?? 'blue';
+    _appTheme = AppThemeExtension.fromKey(themeKey);
+    notifyListeners();
+  }
+
+  Future<void> toggle() async {
+    _isDark = !_isDark;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_darkKey, _isDark);
+    notifyListeners();
+  }
+
+  Future<void> setTheme(AppTheme theme) async {
+    _appTheme = theme;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_themeKey, theme.key);
+    notifyListeners();
+  }
+
+  ThemeData get lightTheme => ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: _appTheme.seedColor),
+        useMaterial3: true,
+        fontFamily: 'Roboto',
+      );
+
+  ThemeData get darkTheme => ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: _appTheme.seedColor,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+        fontFamily: 'Roboto',
+      );
+}

@@ -1,0 +1,537 @@
+================================================================================
+SMARTSPEND FINAL.docx — REVISION GUIDE
+Cross-examined against DOCUMENTATION.md (v2.2.0) and actual built system
+Prepared by: Kiro AI Assistant | April 2026
+================================================================================
+
+HOW TO USE THIS FILE:
+- Each revision is labeled with the SECTION NAME as it appears in the docx
+- "FIND THIS" = exact text to locate in the docx
+- "REPLACE WITH" = the corrected/updated text to paste in
+- "ADD AFTER" = new text to insert after the indicated paragraph
+- Sections marked [MINOR] are small word changes
+- Sections marked [MAJOR] are full paragraph replacements
+
+================================================================================
+[MAJOR] TITLE PAGE
+================================================================================
+
+FIND THIS:
+"SmartSpend: An AI-Assisted Receipt and Expense Tracker for Personal Financial
+Management"
+
+REPLACE WITH:
+"SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application
+for Personal Financial Management"
+
+WHY: The final system is far more than a receipt tracker. It includes a
+conversational AI assistant, Financial Health Score, savings goals, debt
+tracking, multi-currency support, cross-device sync, Google Drive backup,
+biometric login, and theme customization.
+
+================================================================================
+[MAJOR] PROJECT CONTEXT — Paragraph 5 (starts with "This study proposes...")
+================================================================================
+
+FIND THIS:
+"This study proposes the development of SmartSpend, a mobile-based AI-powered
+financial assistant developed using Flutter. The system utilizes a pre-trained
+Large Language Model (LLM) through API integration to provide intelligent
+financial support (Wang et al., 2024). It can extract structured financial data
+such as amount, category, date, and transaction type from natural language
+input, enabling automatic recording and categorization (Singh & Roy, 2023)."
+
+REPLACE WITH:
+"This study proposes the development of SmartSpend, a mobile-based AI-powered
+financial assistant developed using Flutter for Android. The system integrates
+the Groq API with the LLaMA 3.1 8B Instant model to provide intelligent
+financial support (Groq, 2024). It can extract structured financial data such
+as amount, category, date, shop name, and transaction type from natural language
+input, enabling automatic recording and categorization (Singh & Roy, 2023).
+
+Beyond expense tracking, SmartSpend features a conversational AI assistant
+capable of executing real-time actions — such as logging expenses, setting
+budgets, updating income, and creating savings goals — directly from natural
+language commands. The system also computes a Financial Health Score (0–100)
+based on spending patterns, budget compliance, and savings rate, providing
+users with a quantifiable measure of their financial well-being (Miller &
+Scott, 2023)."
+
+================================================================================
+[MAJOR] PROJECT CONTEXT — Paragraph 6 (starts with "The application primarily
+uses local storage...")
+================================================================================
+
+FIND THIS:
+"The application primarily uses local storage (SQLite) for offline
+functionality, ensuring accessibility even without internet connection
+(Rahman, 2022). Additionally, the system supports optional user authentication
+and cloud synchronization using Firebase, allowing users to back up and access
+their financial data across devices (Google, 2023; Tan & Lee, 2024)."
+
+REPLACE WITH:
+"The application uses local SQLite storage (version 10) for offline
+functionality, ensuring accessibility even without internet connection
+(Rahman, 2022). The system implements bidirectional cloud synchronization
+using Firebase Firestore, automatically pushing every data write to the cloud
+and pulling cloud data on login to merge with local records. This enables
+seamless multi-device access to expenses, budgets, goals, income, recurring
+transactions, and debt records (Google, 2023; Tan & Lee, 2024). Firebase
+Authentication supports email/password login, Google Sign-In via OAuth 2.0,
+and biometric authentication using the device's fingerprint or face unlock."
+
+================================================================================
+[ADD] PROJECT CONTEXT — New paragraph after the last paragraph
+(after "...enhance personal financial management (Anderson et al., 2024).")
+================================================================================
+
+ADD THIS NEW PARAGRAPH:
+"To improve accessibility and reduce barriers to adoption, SmartSpend includes
+a Demo Mode accessible directly from the login screen without requiring account
+creation. This allows prospective users to explore the application's full
+feature set using realistic sample Filipino data before committing to
+registration. The application also features a five-step interactive feature
+tour for new users, a customizable theme system with five color options
+(Ocean Blue, Sky Blue, Forest Green, Royal Purple, and Sunset Orange), and
+full dark mode support, ensuring a personalized and comfortable user experience
+across different preferences and environments."
+
+================================================================================
+[MAJOR] SCOPE AND LIMITATIONS — Second paragraph (starts with "As far as
+technology goes...")
+================================================================================
+
+FIND THIS:
+"As far as technology goes, the developed application is primarily designed to
+work offline, using the SQLite database for storing information about the users'
+finances. Optionally, the application offers cloud-based storage and
+authentication services from Firebase. The software also utilizes LLM-based
+API in order to generate smart insights for the users. However, it should be
+noted that only Android devices are supported by the system being considered."
+
+REPLACE WITH:
+"The developed application is designed to work offline using the SQLite
+database (version 10) for storing all financial data on the device. The
+application implements automatic bidirectional cloud synchronization through
+Firebase Firestore, ensuring that financial records are accessible across
+multiple devices when an internet connection is available. Firebase
+Authentication is used for user identity management, supporting email/password
+login, Google Sign-In, and biometric authentication. The software utilizes the
+Groq API with the LLaMA 3.1 8B Instant model to generate AI-powered insights,
+parse natural language expense inputs, and power the conversational financial
+assistant. The application is currently limited to Android devices only."
+
+================================================================================
+[MAJOR] SCOPE AND LIMITATIONS — Third paragraph (starts with "At the same
+time, the system is associated with several limitations...")
+================================================================================
+
+FIND THIS:
+"At the same time, the system is associated with several limitations. As it
+stands, the performance of OCR recognition and voice recognition largely
+depends on the quality of the data being processed. The same goes for the
+results generated after using the barcode scanner. In order to obtain
+AI-generated insights or enable cloud synchronization, the user needs to be
+online. The application lacks banking integration and does not offer any
+professional financial recommendations to its users."
+
+REPLACE WITH:
+"The system is associated with several limitations. The performance of OCR
+text recognition depends on the quality and clarity of the receipt image;
+handwritten receipts or low-quality photos may yield inaccurate results.
+Voice recognition accuracy is influenced by background noise and the
+availability of the Filipino English (en_PH) locale on the device.
+
+All AI-powered features — including expense parsing, financial insights, and
+the conversational assistant — require an active internet connection, as they
+rely on the Groq API. The application does not support banking integration
+and does not provide professional financial or tax advice; all tax estimates
+are approximations based on simplified Philippine BIR TRAIN Law brackets.
+
+Profile photos are stored locally on the device and do not synchronize across
+devices, as Firebase Storage (required for photo synchronization) is a paid
+feature under the Firebase Blaze plan. The application operates under the
+Firebase Spark (free) plan, which provides sufficient capacity for the
+current scope of the study. The application is currently limited to Android
+devices only."
+
+================================================================================
+[ADD] PURPOSE AND DESCRIPTION — New user category after "Technological
+enthusiasts" paragraph
+================================================================================
+
+ADD THIS AFTER the "Technological enthusiasts" paragraph:
+
+"Demo and Evaluation Users. Individuals who wish to explore the application
+without creating an account can use the built-in Demo Mode, accessible
+directly from the login screen. This mode loads realistic Filipino sample
+data and provides full access to all features, making it suitable for
+demonstrations, evaluations, and usability testing without requiring
+registration or personal data entry."
+
+================================================================================
+[MAJOR] TECHNICAL BACKGROUND — Full section replacement
+================================================================================
+
+FIND THIS (entire section from "Flutter." to end of "Bar Code Scanner"):
+"Flutter. Flutter is an open-source framework that will be used for creating
+of mobile application for the platform..."
+[through to]
+"Bar Code Scanner (ML Kit/ZXing). For rapid capturing of expenses, barcode
+scanner will also be implemented using Google's ML Kit service."
+
+REPLACE WITH THE FOLLOWING COMPLETE SECTION:
+
+"Flutter. Flutter is an open-source UI framework developed by Google, used to
+build the SmartSpend Android application. It provides a rich set of widgets
+and tools that enable the development of a responsive, visually consistent,
+and feature-rich mobile interface (Google, 2024).
+
+SQLite (sqflite). The application uses SQLite as its primary local database
+(version 10), storing all financial data — including expenses, budgets,
+savings goals, income, recurring transactions, debts, and chat history —
+directly on the device. This ensures full offline functionality without
+requiring an internet connection (Rahman, 2022).
+
+Firebase Firestore. Firebase Firestore is used for bidirectional cloud
+synchronization of user financial data. Every write operation is automatically
+pushed to Firestore, and on login, the application pulls cloud data and merges
+it into the local database, enabling seamless multi-device access to the same
+financial records (Google, 2023).
+
+Firebase Authentication. Firebase Authentication handles user identity
+management, supporting email/password login, Google Sign-In via OAuth 2.0,
+and biometric authentication (fingerprint or face unlock) as a convenience
+layer after the user's first successful login (Google, 2023).
+
+Firebase Crashlytics. Firebase Crashlytics is integrated for real-time crash
+reporting, capturing Flutter framework errors and asynchronous exceptions and
+reporting them to the Firebase Console for monitoring and debugging.
+
+Groq API (LLaMA 3.1 8B Instant). The system uses the Groq API with the
+LLaMA 3.1 8B Instant model as its AI engine. This model handles three tasks:
+(1) parsing natural language expense descriptions into structured JSON data,
+(2) generating spending insights and financial advice, and (3) powering the
+conversational AI assistant that can execute real-time data actions from chat
+(Groq, 2024).
+
+Speech-to-Text. The speech_to_text package is used to implement voice input
+for expense recording. The system auto-detects Filipino English (en_PH) locale
+with a fallback to en_US, supporting a 15-second listening window with
+automatic pause detection (Google, 2024).
+
+Google ML Kit Text Recognition (OCR). Google ML Kit's Latin script text
+recognizer is used to extract text from receipt photos. The extracted text is
+cleaned, trimmed, and passed to the AI parser for structured data extraction.
+Users may capture a new photo or select from the gallery (Google, 2024).
+
+Mobile Scanner (Barcode). The mobile_scanner package is used for barcode
+scanning. Each scan is saved to a local scan history, and a dialog prompts
+the user to describe the product before AI parsing. The scanner includes a
+torch toggle and visual overlay guide frame (ZXing, 2023).
+
+Google Drive REST API. The application uses the Google Drive REST API with
+the appDataFolder scope to implement backup and restore functionality. All
+financial data is exported as a JSON file to the user's private Drive storage,
+invisible to the user's regular Drive files (Google, 2024).
+
+fl_chart. The fl_chart package is used to render interactive charts in the
+Analytics screen, including a pie chart for category breakdown, a bar chart
+for monthly spending trends, and a line chart for the 30-day Financial Health
+Score history.
+
+local_auth. The local_auth package enables biometric authentication
+(fingerprint or face unlock) as a login option after the user's first
+successful login, using the device's enrolled biometrics with PIN fallback."
+
+================================================================================
+[MINOR] CONCEPTUAL FRAMEWORK CAPTION — Update to reflect final system
+================================================================================
+
+FIND THIS:
+"The output consists of auto-recorded expenses, financial summaries, charts,
+alerts, and AI-generated insights."
+
+REPLACE WITH:
+"The output consists of auto-recorded expenses, financial summaries, charts,
+budget alerts, AI-generated insights, a Financial Health Score (0–100), and
+cross-device synchronized financial records."
+
+================================================================================
+[MINOR] APPENDIX C — Dashboard Screen description
+================================================================================
+
+FIND THIS:
+"The Dashboard Screen will serve as the main interface of the application,
+where users can view an overview of their financial status. It will display
+total expenses, budget summaries, recent transactions, and graphical
+representations of financial data to help users easily understand their
+spending patterns."
+
+REPLACE WITH:
+"The Dashboard Screen serves as the main interface of the application, where
+users can view a comprehensive overview of their financial status. It displays
+this month's total spending with a month-over-month comparison, an income
+progress bar, budget alerts when any category reaches 80% of its limit, a
+Financial Health Score (0–100) with an explanation dialog, AI-generated
+spending insights, and the ten most recent transactions. The dashboard
+automatically refreshes when new data is added from any screen."
+
+================================================================================
+[ADD] APPENDIX C — Add missing screens after "Reports and Analytics Screen"
+================================================================================
+
+ADD THESE AFTER the Reports and Analytics Screen description:
+
+"The Financial Health Score Screen displays the user's score (0–100) with a
+detailed breakdown of contributing factors, including spending level, food
+spending ratio, category diversity, budget compliance, and savings rate
+relative to income. The score is color-coded: green (80–100, Good), yellow
+(60–79, Fair), and red (below 60, Needs Attention). A 30-day score history
+chart is also displayed in the Analytics screen.
+
+The Savings Goals Screen allows users to create and track savings goals with
+a target amount, start date, deadline, and contribution history. A progress
+bar shows the percentage completed, and a countdown displays the days
+remaining until the deadline.
+
+The AI Chat Screen provides a conversational interface where users interact
+with the AI assistant using text or voice. The AI can log expenses, set
+budgets, update income, create savings goals, and provide financial advice
+directly from the chat. The AI responds in the same language the user writes
+in and uses markdown formatting for clear, readable responses."
+
+================================================================================
+[MAJOR] APPENDIX E — Full replacement of all subsections
+================================================================================
+
+REPLACE THE ENTIRE APPENDIX E CONTENT WITH:
+
+"APPENDIX E
+Additional Technical Documentation
+
+This section presents additional technical details of the SmartSpend system,
+including its architecture, data flow, input-process-output structure, tools
+and technologies, and development methodology.
+
+1. System Architecture Overview
+
+The SmartSpend system consists of the following integrated components:
+
+   a. Mobile Application (Flutter — Android)
+      User interface layer with 22+ screens, state management via setState
+      and AppEventBus (global event bus for real-time UI refresh), edge-to-edge
+      UI with five customizable color themes and dark mode support.
+
+   b. Local Database (SQLite — version 10)
+      Eleven tables: expenses, budgets, savings_goals, income, recurring,
+      debts, chat_history, user_profile, settings, score_history, and
+      scan_history. Automatic column migration ensures compatibility across
+      app updates.
+
+   c. Cloud Sync (Firebase Firestore — Spark plan)
+      Bidirectional synchronization: every write operation pushes to Firestore;
+      on login, the application pulls cloud data and merges it into the local
+      database. Synchronized collections: expenses, budgets, goals, income,
+      recurring transactions, and debts.
+
+   d. Authentication (Firebase Auth)
+      Supports email/password login, Google Sign-In (OAuth 2.0), and biometric
+      authentication (fingerprint/face unlock via local_auth).
+
+   e. AI Engine (Groq API — LLaMA 3.1 8B Instant)
+      Handles expense parsing (natural language to structured JSON), spending
+      insights, financial advice, and conversational assistant with real-time
+      action execution.
+
+   f. OCR Module (Google ML Kit — Latin script)
+      Receipt photo or gallery image to text extraction, cleaned and passed
+      to AI parser.
+
+   g. Barcode Scanner (mobile_scanner)
+      Barcode scan saved to scan history; user describes product; AI parses
+      description into expense data.
+
+   h. Voice Input (speech_to_text)
+      Filipino English (en_PH) or en_US locale, 15-second window, automatic
+      pause detection.
+
+   i. Backup (Google Drive REST API — appDataFolder)
+      Manual backup and restore of all financial data as a JSON file stored
+      in the user's private Drive folder.
+
+   j. Crash Reporting (Firebase Crashlytics)
+      Real-time tracking of Flutter framework errors and asynchronous
+      exceptions, reported to Firebase Console.
+
+2. Data Flow Process
+
+   Step 1: User inputs data via one of four methods:
+           - Manual text entry
+           - Voice command (speech_to_text converts audio to text)
+           - Receipt photo (ML Kit OCR extracts text)
+           - Barcode scan (user describes product after scan)
+
+   Step 2: Text input is sent to Groq API (LLaMA 3.1 8B) for parsing
+
+   Step 3: AI returns structured JSON containing item_name, category,
+           amount, date, shop_name, payment_method, and confidence_score
+
+   Step 4: User reviews and confirms the parsed data on the Add Expense screen
+
+   Step 5: Confirmed data is saved to local SQLite database
+
+   Step 6: AppEventBus fires an expenseChanged event
+
+   Step 7: All subscribed screens (Dashboard, Analytics, AI Chat) auto-refresh
+
+   Step 8: Data is pushed to Firebase Firestore in the background
+
+   Step 9: Financial Health Score is recalculated and saved to score_history
+
+3. Input-Process-Output Summary
+
+   INPUT:
+   - Text input (manual description)
+   - Voice input (spoken expense description)
+   - Receipt images (camera or gallery)
+   - Barcode scans (product identification)
+   - User financial settings (income, budgets, account type)
+
+   PROCESS:
+   - AI (LLM) natural language parsing to structured data
+   - OCR text extraction from receipt images
+   - Financial data categorization and storage
+   - Financial Health Score calculation
+   - Budget compliance monitoring
+   - Spending trend analysis and prediction
+
+   OUTPUT:
+   - Organized expense records (local + cloud)
+   - Financial Health Score (0–100) with breakdown
+   - Spending charts (pie, bar, line)
+   - Budget alerts and notifications
+   - AI-generated insights and recommendations
+   - Monthly spending predictions
+   - Tax and savings estimates (PH BIR TRAIN Law)
+
+4. Tools and Technologies Used
+
+   Framework:          Flutter 3.x (Dart) — Android
+   AI / LLM:           Groq API — llama-3.1-8b-instant
+   Local Database:     SQLite via sqflite (version 10)
+   Cloud Sync:         Firebase Firestore (Spark plan — free)
+   Authentication:     Firebase Auth (email + Google OAuth + biometric)
+   Crash Reporting:    Firebase Crashlytics
+   OCR:                Google ML Kit Text Recognition (Latin script)
+   Charts:             fl_chart
+   Voice Input:        speech_to_text (en_PH / en_US)
+   Barcode Scanner:    mobile_scanner
+   Exchange Rates:     open.er-api.com (free, no API key required)
+   Backup:             Google Drive REST API (appDataFolder)
+   Biometric Auth:     local_auth
+   Google Sign-In:     google_sign_in
+   State Management:   setState + AppEventBus (global event bus)
+
+5. Development Methodology Summary
+
+   The system follows the Agile Kanban Software Development Methodology,
+   which includes the following stages:
+
+   Stage 1 — Requirements: Gathering user needs through surveys and
+   interviews with selected faculty respondents to identify financial
+   management challenges and preferred features.
+
+   Stage 2 — Planning: Organizing and prioritizing tasks using a Kanban
+   board to ensure systematic and efficient development.
+
+   Stage 3 — Design: Creating the system architecture, database schema,
+   and user interface designs for all application screens.
+
+   Stage 4 — Development: Implementing the system incrementally using
+   Flutter, integrating AI, OCR, voice, barcode, Firebase, and all other
+   components.
+
+   Stage 5 — Testing: Verifying functionality, fixing bugs, and conducting
+   usability evaluation with faculty respondents using the SUS questionnaire.
+
+   Stage 6 — Deployment: Installing the application on Android devices
+   for actual use and evaluation.
+
+   Stage 7 — Review: Evaluating overall performance, usability, and
+   effectiveness based on SUS scores, user feedback, and testing results."
+
+================================================================================
+[ADD] REFERENCES — Add missing citations
+================================================================================
+
+ADD THESE TO THE REFERENCES SECTION (in alphabetical order by author):
+
+Groq. (2024). Groq API Documentation — LLaMA 3.1 8B Instant.
+  Retrieved from https://console.groq.com/docs
+
+Google. (2024). Firebase Authentication Documentation.
+  Retrieved from https://firebase.google.com/docs/auth
+
+Google. (2024). Firebase Crashlytics Documentation.
+  Retrieved from https://firebase.google.com/docs/crashlytics
+
+Google. (2024). Firebase Firestore Documentation.
+  Retrieved from https://firebase.google.com/docs/firestore
+
+Google. (2024). Google Drive REST API — App Data Folder.
+  Retrieved from https://developers.google.com/drive/api/guides/appdata
+
+Meta AI. (2024). LLaMA 3: Open Foundation and Fine-Tuned Chat Models.
+  Retrieved from https://ai.meta.com/llama/
+
+================================================================================
+[MINOR] THROUGHOUT THE DOCUMENT — Word replacements
+================================================================================
+
+These are small but important corrections to make throughout the entire document:
+
+1. FIND: "Firebase will be implemented in optional mode"
+   REPLACE WITH: "Firebase is used for user authentication and automatic
+   bidirectional cloud synchronization of financial data"
+
+2. FIND: "optional user authentication and cloud synchronization"
+   REPLACE WITH: "user authentication and automatic cloud synchronization"
+
+3. FIND: "SQLite database for storing information about the users' finances"
+   REPLACE WITH: "SQLite database (version 10) for storing all financial data"
+
+4. FIND: "LLM-based API in order to generate smart insights"
+   REPLACE WITH: "Groq API with the LLaMA 3.1 8B Instant model to generate
+   AI-powered insights, parse expense inputs, and power the conversational
+   financial assistant"
+
+5. FIND: "receipt image scanning using Optical Character Recognition (OCR)"
+   REPLACE WITH: "receipt image scanning using Optical Character Recognition
+   (OCR) via Google ML Kit, with support for both camera capture and gallery
+   selection"
+
+================================================================================
+SUMMARY OF CHANGES
+================================================================================
+
+CRITICAL (must change before defense):
+  ✦ Title — update to reflect full system scope
+  ✦ Project Context paragraphs 5 & 6 — reflect actual AI model, sync, auth
+  ✦ Scope & Limitations — Firebase is no longer optional; photo sync limitation
+  ✦ Technical Background — full replacement with accurate technology list
+
+IMPORTANT (should change):
+  ✦ Conceptual Framework caption — add Health Score and sync to outputs
+  ✦ Appendix C Dashboard description — add Health Score, alerts, auto-refresh
+  ✦ Appendix C — add 3 missing screens (Health Score, Goals, AI Chat)
+  ✦ Appendix E — full replacement with accurate architecture and data flow
+  ✦ References — add Groq, Firebase Crashlytics, Drive API, LLaMA 3
+
+OPTIONAL (nice to have):
+  ✦ Purpose & Description — add Demo Mode user category
+  ✦ Minor word replacements throughout
+
+================================================================================
+END OF REVISION GUIDE FOR SMARTSPEND FINAL.docx
+================================================================================

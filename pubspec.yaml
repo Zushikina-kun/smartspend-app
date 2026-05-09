@@ -1,0 +1,51 @@
+name: smartspend_app
+description: Smart Spend - AI-Assisted Financial Tracking and Advisory
+
+version: 2.5.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  http: ^1.1.0
+  sqflite: ^2.3.0
+  path: ^1.9.0
+  speech_to_text: ^7.3.0
+  google_mlkit_text_recognition: ^0.13.0
+  google_mlkit_document_scanner: ^0.1.0
+  google_mlkit_barcode_scanning: ^0.12.0
+  image: ^4.2.0
+  fl_chart: ^0.68.0
+  image_picker: ^1.0.7
+  mobile_scanner: ^3.5.6
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.0
+  cloud_firestore: ^5.4.0
+  flutter_local_notifications: ^17.2.2
+  shared_preferences: ^2.3.2
+  csv: ^6.0.0
+  share_plus: ^10.0.2
+  intl: ^0.19.0
+  path_provider: ^2.1.4
+  flutter_markdown: ^0.7.4
+  google_sign_in: ^6.2.1
+  local_auth: ^2.3.0
+  firebase_crashlytics: ^4.1.0
+  file_picker: ^8.0.0
+  shake: ^2.2.0
+
+dependency_overrides:
+  sensors_plus: ^3.1.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - logo.png
+    - LucidFrameLogo.png
+    - LormaLogo.jpg
+    - Devs/BRIX A. DIRECTO.png
+    - Devs/CYRILLE JOHN M. RUBIS.png
+    - Devs/DJAUNATHAN ALBERT S. MADAYAG.png

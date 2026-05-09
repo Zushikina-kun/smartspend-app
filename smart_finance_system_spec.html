@@ -1,0 +1,284 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.spec { padding: 1.5rem 0; }
+.section { margin-bottom: 2.5rem; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: var(--border-radius-md); white-space: nowrap; }
+.badge-new { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-improved { background: var(--color-background-info); color: var(--color-text-info); }
+.badge-unchanged { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.section-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.section-icon { font-size: 16px; width: 28px; height: 28px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; background: var(--color-background-secondary); }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 14px; }
+.card-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.card-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+.feature-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.feature-list li { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; padding-left: 14px; position: relative; }
+.feature-list li::before { content: "–"; position: absolute; left: 0; color: var(--color-text-tertiary); }
+.feature-list li strong { color: var(--color-text-primary); font-weight: 500; }
+.gap-callout { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 10px; font-size: 12px; color: var(--color-text-warning); line-height: 1.6; }
+.gap-callout strong { color: var(--color-text-warning); font-weight: 500; }
+.layer-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+.layer-label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); min-width: 90px; padding-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+.layer-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); }
+.pill-highlight { background: var(--color-background-info); color: var(--color-text-info); border-color: var(--color-border-info); }
+.pill-new { background: var(--color-background-success); color: var(--color-text-success); border-color: var(--color-border-success); }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.5rem 0; }
+h2.spec-h { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+p.spec-sub { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1.5rem; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
+</style>
+<div class="spec">
+  <h2 class="spec-h">Smart Financial Management System</h2>
+  <p class="spec-sub">Expanded spec — improvements and additions based on 2025 fintech research, behavioral finance, and gap analysis of the original brainstorm.</p>
+
+  <div class="gap-callout">
+    <strong>Research-backed gaps in the original spec:</strong> No emotional/behavioral layer; no financial literacy/education component; no long-range forecasting (3–12 months); no accessibility features; no community/social savings mechanics; onboarding doesn't address trust-building; no cost model or monetization consideration; analytics stops at data — doesn't address the "intention–action gap."
+  </div>
+
+  <!-- CORE MODEL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🗂</div>
+      <span class="section-title">Core data model</span>
+      <span class="badge badge-improved">Improved</span>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Transaction <span class="badge badge-improved">+fields</span></div>
+        <div class="card-body">
+          Add: <strong>emotional_tag</strong> (optional — happy, stressed, impulsive), <strong>mood_at_time</strong> (from mood check-in), <strong>exchange_rate_locked</strong> (per-tx rate snapshot), <strong>split_group_id</strong> (for shared expenses), <strong>need_want_tag</strong> (need / want / investment). Confidence score already exists — expose it to user as a correction prompt.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Budget model <span class="badge badge-improved">+period types</span></div>
+        <div class="card-body">Add <strong>payday-cycle period</strong> (budget resets on salary day, not the 1st), <strong>rollover toggle</strong> (unused balance carries forward), <strong>% of income cap</strong> (e.g. food ≤ 20% of monthly income), <strong>graduated alert thresholds</strong> (50 / 80 / 100%).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Goal model <span class="badge badge-new">New entity</span></div>
+        <div class="card-body">id, name, target_amount, current_amount, deadline, priority_rank, milestone_alerts (25/50/75/100%), linked_account. <strong>Progress notifications at each milestone.</strong> Avalanche / snowball debt strategy selector.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Debt model <span class="badge badge-new">New entity</span></div>
+        <div class="card-body">id, lender, principal, interest_rate, monthly_payment, due_day, payment_history[ ]. AI suggests payoff order. Visual payoff timeline. Running total of interest saved.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mood log <span class="badge badge-new">New entity</span></div>
+        <div class="card-body">id, timestamp, mood_score (1–5), context (optional note). Correlates with spending peaks. Surfaces insight: "You spend 40% more on stressed days."</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Split expense <span class="badge badge-new">New entity</span></div>
+        <div class="card-body">group_id, total_amount, participants[ ], user_share, settled (bool). Tracks shared bills, meals, trips. Shows pending amounts others owe.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEHAVIORAL LAYER (NEW) -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🧠</div>
+      <span class="section-title">Behavioral & psychology layer</span>
+      <span class="badge badge-new">New — not in original</span>
+    </div>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;line-height:1.6">Research shows most apps fail at the "intention–action gap" — users know what to do but still don't. A behavioral layer addresses the emotional and cognitive side of spending, not just the data side.</p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Mood-spend correlation engine</div>
+        <div class="card-body">Optional daily mood check-in (1 tap). AI correlates mood logs with spending patterns. Insight: "You tend to make unplanned purchases when mood score is 2 or below." Pre-spend nudge on low-mood days.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Impulse pause nudge</div>
+        <div class="card-body">When logging a want-category purchase above a threshold, show a 24-hour "sleep on it" reminder. Research shows waiting periods significantly reduce impulsive overspending. User can override at will — no friction for needs.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Loss aversion framing</div>
+        <div class="card-body">Show budget alerts framed as what user stands to lose, not just a number. "₱800 over in food means ₱800 less for your Japan goal." More motivating than a raw percentage.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Spending streak gamification</div>
+        <div class="card-body">Track consecutive days within budget. Show streaks, weekly badges. Uses commitment bias — users are more likely to maintain a streak than start fresh. Avoid shame: never punish, only celebrate wins.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Cognitive bias detector</div>
+        <div class="card-body">AI flags known bias patterns: sunk-cost (continuing a bad subscription), anchoring (comparing to last month's spike), present bias (skipping savings this month "just this once"). Explains it conversationally, not judgmentally.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Social savings (opt-in)</div>
+        <div class="card-body">Anonymous peer benchmarks: "Your food spending is 28% above others in your income range." Social proof drives behavior without shaming. Optional savings challenges with friends (shared goal, private amounts).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT LAYER -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📥</div>
+      <span class="section-title">Input & automation layer</span>
+      <span class="badge badge-improved">Improved</span>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">GCash OCR parser <span class="badge badge-new">New</span></div>
+        <div class="card-body">Screenshot → extract amount, merchant, date, ref number. Specific templates for GCash, Maya, UnionBank, BDO. Handles both peso and foreign currency with locked exchange rate at time of capture.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Shorthand input v2 <span class="badge badge-improved">Improved</span></div>
+        <div class="card-body">Existing: <code>-200 food jollibee</code>. Add: <code>+5000 salary</code>, <code>split 1200 dinner 3</code>, <code>debt 500 gcash loan</code>. Parser handles signed amounts, category shortcuts, split syntax, recurring flags.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Log Now with adjustment <span class="badge badge-improved">Improved</span></div>
+        <div class="card-body">When tapping a recurring entry, prefill with last amount but let user edit before confirming. Removes the all-or-nothing problem for variable recurring expenses.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Windfall/one-time income <span class="badge badge-new">New</span></div>
+        <div class="card-body">Flag income as windfall (bonus, gift, freelance project). AI treats it separately from regular income in projections and health scoring — prevents false positives in trend analysis.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <span class="section-title">Analytics engine</span>
+      <span class="badge badge-improved">Improved</span>
+    </div>
+    <ul class="feature-list">
+      <li><strong>Long-range forecasting (3–12 months):</strong> Most apps only project a few weeks ahead. Model recurring income/expenses forward, surface "in 4 months you'll have enough for your goal" or "at this rate, December will be tight."</li>
+      <li><strong>Payday-cycle analysis:</strong> Segment data by salary cycle, not calendar month. "You spend 60% of your income in the first 5 days" is more actionable than a monthly average.</li>
+      <li><strong>Day-of-week heatmap:</strong> Surfaces patterns like "you spend most on Saturday evenings." Visualized as a grid — not just text insight.</li>
+      <li><strong>Category velocity alerts:</strong> Notify when a category is growing faster than income (e.g., food spending up 25% month-over-month, income flat). Early warning before it becomes a problem.</li>
+      <li><strong>Available balance vs. monthly budget (separate concepts):</strong> Show both simultaneously. "You have ₱2,400 liquid today" and "You have ₱800 left in food budget this month" are different and both useful.</li>
+      <li><strong>Pie chart tap-to-drilldown:</strong> Tap "Food" → see sub-breakdown (groceries vs. dining out vs. delivery). Independent filter periods per chart widget.</li>
+    </ul>
+  </div>
+
+  <!-- FINANCIAL INTELLIGENCE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">💡</div>
+      <span class="section-title">Financial intelligence layer</span>
+      <span class="badge badge-improved">Improved</span>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Health score v2 <span class="badge badge-improved">Improved</span></div>
+        <div class="card-body">Score relative to income, not fixed thresholds. A student saving 5% of ₱5k/month should score differently than someone saving 5% of ₱50k/month. Factors: savings ratio, budget compliance, debt load, emergency fund coverage (months), spending stability. Annotated with explanations — not just a number.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Subscription leak detector <span class="badge badge-improved">Improved</span></div>
+        <div class="card-body">Detect forgotten subscriptions AND price creep (a subscription that quietly raised its price). Show total monthly "invisible spend." One-tap cancellation reminder prompt. Research: apps like Rocket Money save users hours per month on this alone.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Micro-expense clustering <span class="badge badge-new">New</span></div>
+        <div class="card-body">Small frequent purchases (₱30 coffee, ₱50 delivery fee) are individually invisible but collectively large. AI clusters them, shows monthly total, projects annually. "Your daily coffee costs ₱10,800/year."</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Optimal saving moment detection <span class="badge badge-new">New</span></div>
+        <div class="card-body">Inspired by Digit: analyze income timing, bill schedules, and balance trends to find the "safest" days to move money to savings without disrupting cash flow. Suggest auto-transfer timing, not just amounts.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINANCIAL LITERACY LAYER (NEW) -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📚</div>
+      <span class="section-title">Financial literacy layer</span>
+      <span class="badge badge-new">New — major gap in original</span>
+    </div>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px;line-height:1.6">Research consistently shows that many users, especially students and young adults, struggle not because they lack discipline but because they lack foundational knowledge. Embedding education directly in context is more effective than a separate "learn" section.</p>
+    <ul class="feature-list">
+      <li><strong>Contextual micro-lessons:</strong> When a new category appears (e.g., user logs first investment), AI offers a 3-sentence explanation inline. Opt-in, dismissable, never condescending.</li>
+      <li><strong>Jargon tooltips:</strong> Financial terms (interest rate, amortization, emergency fund) are tappable for plain-language explanations within the app.</li>
+      <li><strong>Goal literacy:</strong> When user sets a debt payoff goal, explain avalanche vs snowball methods with projected savings for their specific amounts.</li>
+      <li><strong>Monthly "what this means" summary:</strong> Plain English translation of the month's data. Not charts — a short paragraph the AI writes. "This month you spent ₱800 more than you earned. Your gap is mostly from dining out, which jumped after the 15th."</li>
+    </ul>
+  </div>
+
+  <!-- UX / TRUST -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔐</div>
+      <span class="section-title">Trust, accessibility & UX</span>
+      <span class="badge badge-new">New — not addressed in original</span>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">Trust-first onboarding</div>
+        <div class="card-body">Research: users approach finance apps with inherent suspicion. Explain data storage clearly (local vs cloud), show what's encrypted, let users start with manual-only mode (no cloud sync) until they choose to enable it. Earn trust before asking for data.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Accessibility baseline</div>
+        <div class="card-body">Screen reader support, high-contrast mode, scalable fonts, voice input as first-class input (not an afterthought). Essential for broader reach — not optional.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Simplified onboarding path</div>
+        <div class="card-body">Research: 80% of finance apps lose users within 3 months, largely due to complex onboarding. Target: user logs their first transaction within 60 seconds of opening. Ask for allowance frequency, one main category, and nothing else on day one.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">No shame design</div>
+        <div class="card-body">Never frame alerts as failure. "You've used 80% of your food budget" not "You're almost over budget." No red warning screens. Positive framing throughout — celebrate within-budget days more than penalizing over-budget ones.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE ADDITIONS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏗</div>
+      <span class="section-title">Architecture additions</span>
+      <span class="badge badge-improved">Improved</span>
+    </div>
+    <div class="layer-row">
+      <span class="layer-label">Input</span>
+      <div class="layer-pills">
+        <span class="pill">Manual entry</span><span class="pill">OCR</span><span class="pill">Voice</span><span class="pill">Shorthand</span><span class="pill pill-new">Mood check-in</span><span class="pill pill-new">Split entry</span>
+      </div>
+    </div>
+    <div class="layer-row">
+      <span class="layer-label">Processing</span>
+      <div class="layer-pills">
+        <span class="pill">Rule engine</span><span class="pill">Categorization</span><span class="pill">Recurring handler</span><span class="pill pill-new">Behavioral classifier</span><span class="pill pill-new">Windfall detector</span>
+      </div>
+    </div>
+    <div class="layer-row">
+      <span class="layer-label">Analytics</span>
+      <div class="layer-pills">
+        <span class="pill">Aggregation</span><span class="pill">Time filtering</span><span class="pill">Comparison engine</span><span class="pill pill-new">Payday-cycle segmenter</span><span class="pill pill-new">Long-range forecast</span>
+      </div>
+    </div>
+    <div class="layer-row">
+      <span class="layer-label">Intelligence</span>
+      <div class="layer-pills">
+        <span class="pill">Insights</span><span class="pill">Prediction</span><span class="pill">Health score</span><span class="pill">Leak detection</span><span class="pill pill-new">Behavioral nudge engine</span><span class="pill pill-new">Literacy layer</span><span class="pill pill-new">Micro-cluster detector</span>
+      </div>
+    </div>
+    <div class="layer-row">
+      <span class="layer-label">UI</span>
+      <div class="layer-pills">
+        <span class="pill">Dashboard</span><span class="pill">Insights view</span><span class="pill">Advanced tools</span><span class="pill pill-new">Accessibility layer</span><span class="pill pill-new">No-shame design system</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT GPT GOT RIGHT / WHAT'S STILL MISSING -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">✅</div>
+      <span class="section-title">What the original got right</span>
+    </div>
+    <ul class="feature-list">
+      <li><strong>Zero-entry capture vision</strong> is excellent — OCR, voice, shorthand is the right direction and aligns with what 2025 research says users actually want.</li>
+      <li><strong>Progressive disclosure UX model</strong> (simple → smart → advanced) is well-reasoned and matches the finding that complexity is the #1 reason for app abandonment.</li>
+      <li><strong>Rule engine + learning correction</strong> is a solid, well-known pattern from apps like Monarch Money that actually work.</li>
+      <li><strong>Profile modes</strong> (personal / freelancer / business) address real segmentation — though family/shared mode needs more thought around trust and privacy.</li>
+      <li><strong>Flexible time filtering</strong> is a genuine differentiator — most apps force calendar-month views, which don't match how people actually get paid.</li>
+    </ul>
+  </div>
+</div>

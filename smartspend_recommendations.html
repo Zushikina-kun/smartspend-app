@@ -1,0 +1,265 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.wrap { padding: 1rem 0 2rem; font-family: var(--font-sans); }
+.intro { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.section { margin-bottom: 2rem; }
+.sec-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.sec-icon { font-size: 15px; }
+.sec-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.sec-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 999px; }
+.badge-quick { background: var(--color-background-success); color: var(--color-text-success); }
+.badge-medium { background: var(--color-background-warning); color: var(--color-text-warning); }
+.badge-deep { background: var(--color-background-info); color: var(--color-text-info); }
+.badge-tweak { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 12px 14px; margin-bottom: 8px; }
+.card-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+.card-id { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); min-width: 48px; padding-top: 1px; }
+.card-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; }
+.card-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.65; padding-left: 58px; }
+.card-body strong { color: var(--color-text-primary); font-weight: 500; }
+.effort { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--color-text-tertiary); margin-top: 5px; padding-left: 58px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.dot-low { background: var(--color-text-success); }
+.dot-med { background: var(--color-text-warning); }
+.dot-hi { background: var(--color-text-danger); }
+.data-tag { font-size: 11px; background: var(--color-background-secondary); color: var(--color-text-tertiary); padding: 1px 7px; border-radius: var(--border-radius-md); font-family: var(--font-mono); margin-left: 4px; }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.5rem 0; }
+</style>
+<div class="wrap">
+  <div class="intro">
+    Based on a full read of DOCUMENTATION.md and the context file. These are recommendations beyond the existing pending list — grouped by what kind of work they are. Effort dots: <span class="dot dot-low" style="display:inline-block"></span> low &nbsp; <span class="dot dot-med" style="display:inline-block"></span> medium &nbsp; <span class="dot dot-hi" style="display:inline-block"></span> high.
+  </div>
+
+  <!-- SECTION 1: UNTAPPED DATA -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-icon">🗄</span>
+      <span class="sec-title">Untapped data — fields already in DB, zero display</span>
+      <span class="sec-badge badge-quick">Quick wins</span>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-1</span><span class="card-title">Time-of-day spending heatmap</span></div>
+      <div class="card-body">You already store <strong class="data-tag">expenses.time</strong> on every entry. A second heatmap alongside the day-of-week one — but by hour (7AM–11PM) — would surface "you spend most between 12–2PM" instantly. Same visual pattern as the existing heatmap, just a different axis. Data's already there; zero new columns needed.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — reuse heatmap widget logic, new data query</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-2</span><span class="card-title">Payment method analytics breakdown</span></div>
+      <div class="card-body"><strong class="data-tag">expenses.payment_method</strong> is stored and shown per tile but never aggregated. A simple pie or bar chart in Analytics — Cash vs GCash vs Card — would immediately answer "am I spending more digitally or physically?" Also useful for defense: demonstrates you're using all the data you collect.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — one new chart, existing data</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-3</span><span class="card-title">Top merchants card + merchant-based auto-rule suggestions</span></div>
+      <div class="card-body"><strong class="data-tag">expenses.shop_name</strong> is stored on every AI-logged entry. Surface the top 5 merchants this month ("You've been to Jollibee 12×, ₱1,740 total"). Bonus: when a merchant appears 3+ times without a category rule, prompt: <em>"You log Jollibee often — add a rule to auto-categorize it?"</em> This closes the loop between the new category_rules system and actual usage patterns.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — query + card + optional rule prompt</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-4</span><span class="card-title">Confidence score feedback loop</span></div>
+      <div class="card-body"><strong class="data-tag">expenses.confidence_score</strong> is stored and shown as an orange dot, but that's where it stops. Two ideas: (1) a "low confidence" filter chip in Transactions (already on the pending list as CF-1); (2) actually use corrections as training signal — when a user edits an AI-parsed entry's category, that correction should automatically create/update a category_rule. The correction IS the feedback. Right now corrections are thrown away.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low for filter chip / <span class="dot dot-med"></span> Medium for auto-rule-from-correction</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-5</span><span class="card-title">Income category breakdown chart</span></div>
+      <div class="card-body"><strong class="data-tag">income.category</strong> is stored (Salary, Allowance, Freelance, Gift, etc.) but the income screen is just a list. Add a simple pie showing income by source. For students this shows "Allowance 80%, Freelance 20%." For freelancers it shows which client categories are dominant. Very relevant for defense since it demonstrates multi-source income tracking.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — one new chart on the income screen</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-6</span><span class="card-title">Scan history linked to expenses</span></div>
+      <div class="card-body"><strong class="data-tag">scan_history</strong> records every barcode scan but is completely disconnected from expenses. When showing a scan in history, check if an expense with matching shop_name or item_name exists on the same date. If so, show a "linked to [expense]" indicator. Bonus: if a barcode was scanned but no expense was logged, show "Unlogged scan — add expense?" nudge.</div>
+      <div class="effort"><span class="dot dot-med"></span> Medium — requires join/matching logic</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-7</span><span class="card-title">mood_log.note field — currently unused</span></div>
+      <div class="card-body">The mood_log table has a <strong class="data-tag">note</strong> TEXT column that's never exposed. When the user taps a mood emoji, show an optional one-line "what's going on?" text field. Even 20% of users filling this in makes the mood-spend correlation card much richer. The AI context could also include today's mood note, so the AI can respond empathetically: "I see you're feeling a bit off today — let's keep spending minimal."</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — one text field on existing mood check-in</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-8</span><span class="card-title">Debt interest_rate — show real cost projection</span></div>
+      <div class="card-body"><strong class="data-tag">debts.interest_rate</strong> is stored but not displayed anywhere. Show "At ₱500/month, you'll pay approx. ₱X in total interest" using the stored rate. Even a simple formula without amortization math would be more useful than showing nothing. Already on the pending list as DT-1 but worth flagging it's truly zero-effort on the data side — just math and display.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — pure display/math, data already there</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">UD-9</span><span class="card-title">Installment remaining balance + total interest paid</span></div>
+      <div class="card-body">The installments table has <strong class="data-tag">months_total</strong>, <strong class="data-tag">months_paid</strong>, <strong class="data-tag">interest_rate</strong>, and <strong class="data-tag">start_date</strong>. Currently the screen only shows a progress bar. With those fields you can calculate: remaining balance, total amount paid so far, total interest you'll pay at current rate, and projected payoff date. A one-line "Payoff: March 2027" would be genuinely useful.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — all fields exist, just display math</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 2: EXISTING FEATURES NOT FULLY CONNECTED -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-icon">🔗</span>
+      <span class="sec-title">Features that exist but aren't connected to each other</span>
+      <span class="sec-badge badge-medium">Medium value</span>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">FC-1</span><span class="card-title">Mood log → AI context injection</span></div>
+      <div class="card-body">The mood check-in runs on the home screen and stores data, but today's mood is never passed to the AI. Adding <strong>today's mood score + optional note</strong> to the AI context (AIChatService.setFullContext) costs almost nothing — it's one DB read. The AI could then proactively adjust tone: if mood is 1–2, avoid suggestions that feel like lectures; if mood is 5, it's a good time to suggest goal contributions. Right now the mood system is an analytics island.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — one extra field in the context object</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">FC-2</span><span class="card-title">Score history → Bill Calendar dots</span></div>
+      <div class="card-body">score_history is already populated daily and used for the line chart. The Bill Calendar is a monthly calendar that currently only shows recurring bill due dates. Adding small score dots (color-coded: green/yellow/red) on each day would turn it into a proper <strong>financial journal view</strong> — you can see at a glance: "my score dropped on the 15th because that's when I overspent on food." Already on the pending list as SC-1, but it's more impactful than it looks — it's the only way to see score + behavior + bills in one timeline. Strong defense talking point.</div>
+      <div class="effort"><span class="dot dot-med"></span> Medium — requires calendar widget modification</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">FC-3</span><span class="card-title">Want/Need tagging → AI uses it during logging</span></div>
+      <div class="card-body"><strong class="data-tag">expenses.is_want</strong> exists and feeds the 50/30/20 tracker and Wants vs Needs chart, but the AI never sets this field when logging. When the AI calls log_expense, it already infers category — it can equally infer need vs want from category (Food = Need, Shopping = Want, Entertainment = Want). Add <strong>is_want inference to the ACTION JSON</strong> so AI-logged expenses are tagged from day one. Right now 100% of AI-logged entries default to Need=0 which makes the 50/30/20 tracker inaccurate. Already in pending as CF-2 — but the impact is bigger than "nice to have."</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — add one field to AI action parser output</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">FC-4</span><span class="card-title">Notes field → AI context + Transactions search</span></div>
+      <div class="card-body"><strong class="data-tag">expenses.notes</strong> is stored and displayed in tiles but: (1) not included in Transactions search, and (2) not passed to the AI. Both are in the pending list (NT-1, NT-2) but worth flagging together because they're the same fix — adding notes to the data pipeline. Particularly useful for AI: a user who writes "birthday dinner" in notes gets better advice than one whose entry just says "Food ₱850."</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — search index extension + one context field</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">FC-5</span><span class="card-title">Windfall flag → FHS and forecast actually use it</span></div>
+      <div class="card-body">The <strong class="data-tag">income.is_windfall</strong> column was just added this version and the docs say "AI and forecasts can treat it differently" — but does the code actually do this yet? Worth verifying that PredictService.predictLongRange() and the FHS savings rate component genuinely exclude windfall income from baseline calculations. If a student got a ₱5,000 birthday gift and logs it, it shouldn't make their 3-month forecast look artificially good or inflate their savings rate score.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — a conditional filter in existing service methods</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">FC-6</span><span class="card-title">Category rules → show match count + last triggered</span></div>
+      <div class="card-body">The ManageRulesScreen shows a list of keyword → category rules but has no feedback on whether they're working. Add a <strong>match count</strong> ("triggered 8 times") and <strong>last matched date</strong> to each rule. Users with rules that never trigger probably misspelled the keyword. This also makes for a great defense demo — "the system learns from user corrections and you can see exactly how often each rule fires."</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — add two columns to category_rules or compute from expenses</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 3: BEHAVIOR / FLOW TWEAKS -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-icon">⚙️</span>
+      <span class="sec-title">Behavior tweaks — existing features not working to full potential</span>
+      <span class="sec-badge badge-tweak">Tweaks</span>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">BT-1</span><span class="card-title">Quick-log chips should show spend trend, not just the name</span></div>
+      <div class="card-body">The home screen quick-log chips show top 4 most frequent expenses as one-tap chips. Currently they just show item name + amount. Consider adding a tiny indicator: "↑ ₱20 more than usual" or "same as always." This turns a shortcut into a micro-insight. The data for this is already there — you have the expense history to compute a rolling average per item.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — average query per chip item</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">BT-2</span><span class="card-title">FHS warning decay is silent — make it visible</span></div>
+      <div class="card-body">The warning decay system (−5pts/day for up to 3 days when budget is exceeded) fires notifications but there's no visual on the score card itself showing "you're in a decay period." If a user misses the notification, they see their score drop with no explanation. Show a small amber indicator on the FHS card: <em>"Score reduced — budget exceeded for 2 consecutive days."</em> This makes the decay system feel fair rather than mysterious.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — read warning_decay_days setting, show conditional badge</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">BT-3</span><span class="card-title">50/30/20 tracker always shows this month — add period awareness</span></div>
+      <div class="card-body">The docs explicitly note: "50/30/20 Rule Tracker always uses this-month data regardless of period filter." This is the only analytics card that ignores the period filter. For consistency and for users who want to check a past month's 50/30/20 split, it should respect the selected period. It's a surprising exception that could confuse reviewers during defense ("why is this chart not updating when I change the period?").</div>
+      <div class="effort"><span class="dot dot-med"></span> Medium — wire period filter into the 50/30/20 query</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">BT-4</span><span class="card-title">AI daily limit counter — show when it resets, not just how many remain</span></div>
+      <div class="card-body">The AI screen shows the remaining message count in the appbar. When count hits 0, users know they're blocked but not for how long. Add a small note under the limit: <em>"Resets at midnight"</em> or a countdown like <em>"Resets in 4h 22m."</em> Small UX fix but removes a point of confusion that could hurt demo impressions.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — time math from current time to midnight</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">BT-5</span><span class="card-title">Recurring → Log Now doesn't pre-fill amount for editing</span></div>
+      <div class="card-body">The docs mention "Log Now button records expense as expense entry" — but the v2.5 context file lists "Log Now lets user adjust amount before confirming" as a feature in the brainstorm backlog, implying it might not be fully implemented. If Log Now still logs the fixed amount immediately without an edit step, it should be updated. Variable recurring expenses (electricity, water) are common and users will have wrong amounts logged silently.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — intercept Log Now with a bottom sheet showing editable amount</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">BT-6</span><span class="card-title">Anomaly detection fires on Sunday only — consider on-open trigger</span></div>
+      <div class="card-body">Anomaly detection (2.5× above 4-week category average) only runs on Sundays. If someone makes a massive one-off purchase on a Monday, they won't be alerted until the following Sunday — by then it's no longer relevant. Consider adding an on-expense-log trigger: after each AI expense log, quietly check if the new entry is an anomaly in its category. Fire immediately if it is. The Sunday batch can remain for patterns, but point anomalies deserve real-time detection.</div>
+      <div class="effort"><span class="dot dot-med"></span> Medium — add post-log check in AIChatService action handler</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 4: NEW IDEAS NOT ON ANY LIST -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-icon">💡</span>
+      <span class="sec-title">New ideas — not on any existing list</span>
+      <span class="sec-badge badge-deep">New additions</span>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">NI-1</span><span class="card-title">"Where did my money go?" AI quick-answer card on Home</span></div>
+      <div class="card-body">A persistent home card that, without any user input, surfaces a 1-sentence AI-generated summary of this month's biggest money movements. "You've spent 40% of this month's budget on Food, mostly in the first week." Cached like the existing insight card, regenerates when expense count changes. The key difference from the existing AI insights: it's answering a specific question, not general advice. Lower cognitive load for users who just want the punchline.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — reuse existing insight infrastructure, new focused prompt</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">NI-2</span><span class="card-title">Goal contribution progress relative to deadline</span></div>
+      <div class="card-body">Goals show current amount vs target and a days-left countdown, but they don't tell you if you're on pace. Add a <strong>pace indicator</strong>: "You need ₱X/month to reach this by [deadline]. You're currently ₱Y/month ahead/behind." This uses start_date, deadline, target_amount, and current_amount — all already stored. Turns a static progress bar into an actionable status. Particularly useful for capstone defense since it demonstrates deadline-aware financial planning.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — math on existing fields, one line of UI</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">NI-3</span><span class="card-title">AI "did you mean to log this?" duplicate detector</span></div>
+      <div class="card-body">If the AI receives a log request for an item that's very similar to something logged in the last 2 hours (same category, similar amount, same shop), prompt: <em>"You already logged Jollibee ₱149 at 1:03PM — is this a duplicate?"</em> before writing. The existing duplicate blocking only handles exact same-second timestamps from batch AI logs, not genuine accidental double-logging by users. A fuzzy same-day same-item check would prevent a real pain point.</div>
+      <div class="effort"><span class="dot dot-med"></span> Medium — fuzzy match query before INSERT in action handler</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">NI-4</span><span class="card-title">quiz_challenge setting — currently collected but never used</span></div>
+      <div class="card-body">The settings table stores <strong class="data-tag">quiz_challenge</strong> from onboarding (values: debt / overspending / saving / tracking). This is the user's declared #1 financial challenge — but it's never referenced anywhere after setup. This should influence: which home cards are shown first, what the AI emphasizes in advice, which analytics sections are highlighted. A user who said "debt" should see the debt screen more prominently than one who said "tracking."</div>
+      <div class="effort"><span class="dot dot-med"></span> Medium — read setting in home/analytics/AI context, adjust ordering or emphasis</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">NI-5</span><span class="card-title">Net worth trend over time, not just today's number</span></div>
+      <div class="card-body">The Profile screen shows a Net Worth card (assets − liabilities) as a point-in-time number. You have score_history for daily scores — consider also snapshotting net worth daily (or weekly) and showing a simple sparkline on the Net Worth card: "up ₱1,200 this month." Net worth growing over time is one of the most motivating financial metrics. The snapshot could be computed and stored in a new table, or approximated from income/expense history.</div>
+      <div class="effort"><span class="dot dot-med"></span> Medium — new daily snapshot + sparkline widget</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">NI-6</span><span class="card-title">One-tap "I'm done spending for today" mode</span></div>
+      <div class="card-body">A simple toggle — possibly in the home screen quick actions or the daily limit card — that lets users voluntarily declare "I'm done spending today." Triggers a push notification if any new expense is logged after this point ("You said you were done for today — still want to log this?"). Builds self-commitment, which behavioral research consistently shows is more effective than external restrictions. Very low effort, very high behavioral value, and a unique feature that would stand out in the defense.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — one SharedPreferences bool + notification hook</div>
+    </div>
+
+    <div class="card">
+      <div class="card-top"><span class="card-id">NI-7</span><span class="card-title">Recurring income auto-log suggestion</span></div>
+      <div class="card-body">When a recurring item marked <strong>is_expense = 0</strong> (income recurring) is due, the app currently handles it the same as expense recurring. But income recurring should be treated differently: instead of just a Log Now chip, show a more prominent "Your allowance is due today — log it?" card on the home screen. This also feeds into the cash flow card and FHS savings rate. Many students forget to log their weekly allowance, which makes their income appear lower than it is.</div>
+      <div class="effort"><span class="dot dot-low"></span> Low — filter is_expense=0 from recurring and give it special home card treatment</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION 5: DEFENSE-SPECIFIC -->
+  <div class="section">
+    <div class="sec-header">
+      <span class="sec-icon">🎓</span>
+      <span class="sec-title">Capstone defense value — highest ROI for remaining time</span>
+      <span class="sec-badge badge-quick">Priority</span>
+    </div>
+    <div class="card">
+      <div class="card-body" style="padding-left: 0;">
+        The items with the best <strong>effort-to-impression ratio</strong> for defense, in order:
+        <br><br>
+        <strong>1. FC-3 (is_want AI tagging)</strong> — makes 50/30/20 actually accurate. Reviewers will ask "how does this work?" and right now the answer has a gap.<br><br>
+        <strong>2. NI-4 (quiz_challenge used)</strong> — "the app personalizes based on your declared challenge" is a strong thesis point that's currently a dead setting.<br><br>
+        <strong>3. FC-1 (mood → AI context)</strong> — "the AI knows your mood and adjusts its tone" is a compelling demo moment that takes one DB read to implement.<br><br>
+        <strong>4. UD-3 (top merchants + rule suggestion)</strong> — closes the loop on the auto-categorization rules feature. Right now rules are manual; this makes them feel intelligent.<br><br>
+        <strong>5. NI-2 (goal pace indicator)</strong> — turns a progress bar into a financial advisor. One calculated line, huge perceived value.
+      </div>
+    </div>
+  </div>
+</div>
