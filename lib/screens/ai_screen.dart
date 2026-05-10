@@ -55,14 +55,19 @@ class _AIScreenState extends State<AIScreen> {
       }
     });
     // Shake to undo — firm shake threshold, shows confirmation sheet
-    _shakeDetector = ShakeDetector.autoStart(
-      shakeThresholdGravity: 2.7,
-      onPhoneShake: () {
-        if (UndoService.canUndo && mounted) {
-          _showUndoSheet();
-        }
-      },
-    );
+    // Wrapped in try/catch — some devices don't support setAccelerationSamplingPeriod
+    try {
+      _shakeDetector = ShakeDetector.autoStart(
+        shakeThresholdGravity: 2.7,
+        onPhoneShake: () {
+          if (UndoService.canUndo && mounted) {
+            _showUndoSheet();
+          }
+        },
+      );
+    } catch (_) {
+      // Shake not supported on this device — feature silently disabled
+    }
   }
 
   @override

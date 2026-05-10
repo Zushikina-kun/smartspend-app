@@ -1063,10 +1063,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 // Budget for this category
                                 double budgetAmt = 0.0;
                                 try {
-                                  final b = budgets.firstWhere(
-                                    (b) => (b as dynamic).category == cat,
-                                    orElse: () => null,
-                                  );
+                                  final b = budgets
+                                      .where(
+                                          (b) => (b as dynamic).category == cat)
+                                      .firstOrNull;
                                   if (b != null) {
                                     budgetAmt = (b as dynamic).amount as double;
                                   }
