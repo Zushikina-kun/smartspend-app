@@ -184,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => _WalletsSheet(
+      builder: (_) => WalletsSheet(
         wallets: _wallets,
         onChanged: () async {
           final updated = await DBService.getWallets();
@@ -2031,16 +2031,16 @@ class _SparklinePainter extends CustomPainter {
 
 // ── WALLETS SHEET ─────────────────────────────────────────────────────────────
 
-class _WalletsSheet extends StatefulWidget {
+class WalletsSheet extends StatefulWidget {
   final List<Map<String, dynamic>> wallets;
   final VoidCallback onChanged;
-  const _WalletsSheet({required this.wallets, required this.onChanged});
+  const WalletsSheet({required this.wallets, required this.onChanged});
 
   @override
-  State<_WalletsSheet> createState() => _WalletsSheetState();
+  State<WalletsSheet> createState() => WalletsSheetState();
 }
 
-class _WalletsSheetState extends State<_WalletsSheet> {
+class WalletsSheetState extends State<WalletsSheet> {
   late List<Map<String, dynamic>> _wallets;
 
   static const _presets = [

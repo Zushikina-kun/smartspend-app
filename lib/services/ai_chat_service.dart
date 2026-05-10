@@ -482,11 +482,11 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         lower.contains('fix name')) {
       return 800; // enough for 10+ ACTION lines
     }
-    // Expense logging — short confirmation needed
-    if (RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took)\b')
+    // Expense logging — short confirmation + one ACTION line needed
+    if (RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
             .hasMatch(lower) &&
         RegExp(r'\d').hasMatch(lower)) {
-      return 200;
+      return 300; // enough for "Logged: X ₱Y\nACTION:{...}"
     }
     // List/view requests — moderate length
     if (RegExp(r'\b(list|show|give me|what are|how much|total)\b')
@@ -562,7 +562,7 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "1. DB AUTHORITY: The financial context below is the ONLY truth about the user's data. Conversation history is NOT a database. If an expense isn't in the context, it doesn't exist. NEVER say 'you already logged X' based on history.\n"
         "2. TOTALS: Use pre-computed totals from context header. NEVER sum the expense list yourself — it may be truncated.\n"
         "3. DUPLICATE: ALWAYS log new purchases when asked. NEVER refuse saying 'already logged'. People buy the same thing multiple times.\n"
-        "4. CASH BALANCE: App doesn't store wallet balance. If user says 'I have X pesos', respond: 'I can't store a cash balance, but I can log income or expenses.'\n"
+        "4. CASH BALANCE: The app now has a Wallet Balances feature. If user says 'I have X in GCash/cash/bank', use set_wallet_balance ACTION — NEVER log as income. Wallet balances are separate from income.\n"
         "5. SOCIAL: 'thanks', 'ok', 'yes', 'no', greetings → short reply only, NO actions.\n"
         "6. AFTER EDITS: Don't state new totals after update/delete. Say 'Updated ✓ — totals will reflect this.'\n"
         "7. PRICES: When asked about current prices, give your best estimate and be honest it may not be exact.\n\n"
@@ -596,7 +596,8 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Health, Education, Others.\n"
         "is_want: true=discretionary (snacks, entertainment, shopping). false=essential (transport, groceries, medicine, tuition, bills).\n"
         "Education ALWAYS is_want:false. Candy/chips/drinks/energy drinks → Food.\n"
-        "For simple logging: just say 'Logged: [item] ₱[amount]' — nothing more.\n"
+        "For simple logging: just say 'Logged: [item] ₱[amount]' then the ACTION line — nothing more. Do NOT add totals, breakdowns, or extra commentary after logging.\n"
+        "LOGGING RULE (ABSOLUTE): When user says they spent/bought/paid/ate/drank something with an amount — ALWAYS fire a log_expense ACTION line. No exceptions. The ACTION line is what actually saves the data. Without it, nothing is saved.\n"
         "${_fullContext.isNotEmpty ? "\n\nUser's financial context (live from database):\n$_fullContext" : ""}";
 
     // Load conversation summary if available — prepend to history for context

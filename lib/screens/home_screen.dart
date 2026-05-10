@@ -397,6 +397,28 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     Colors.purple,
                     () => _go(const DebtScreen())),
                 _tile(
+                    Icons.account_balance_wallet_outlined,
+                    "My Wallets",
+                    "Cash on Hand, GCash, Maya, BDO, BPI & more — track liquid money",
+                    Colors.green, () async {
+                  Navigator.pop(context);
+                  // Load wallets then show sheet
+                  final wallets = await DBService.getWallets();
+                  if (context.mounted) {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20))),
+                      builder: (_) => WalletsSheet(
+                        wallets: wallets,
+                        onChanged: () {},
+                      ),
+                    );
+                  }
+                }),
+                _tile(
                     Icons.calendar_month_outlined,
                     "Bill Calendar",
                     "See all upcoming bills by date",
@@ -479,6 +501,7 @@ class _DashboardState extends State<Dashboard> {
   List<Map<String, dynamic>> _quickLogItems = []; // top frequent expenses
   List<Map<String, dynamic>> _recurringCandidates =
       []; // auto-detected subscriptions
+  List<Map<String, dynamic>> _wallets = []; // wallet balances for home display
   StreamSubscription? _eventSub;
   int _lastInsightExpenseCount = -1; // only refresh insight when data changes
   double _dailySpent = 0;
@@ -724,6 +747,12 @@ class _DashboardState extends State<Dashboard> {
     try {
       final candidates = await DBService.detectRecurringCandidates();
       if (mounted) setState(() => _recurringCandidates = candidates);
+    } catch (_) {}
+
+    // Load wallet balances for home display
+    try {
+      final wallets = await DBService.getWallets();
+      if (mounted) setState(() => _wallets = wallets);
     } catch (_) {}
   }
 
@@ -1249,6 +1278,79 @@ class _DashboardState extends State<Dashboard> {
                 .toList(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildWalletSummaryCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final total = _wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
+    final nonZero = _wallets.where((w) => (w['balance'] as num) > 0).toList();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GestureDetector(
+        onTap: () async {
+          final wallets = await DBService.getWallets();
+          if (!context.mounted) return;
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            builder: (_) => WalletsSheet(
+              wallets: wallets,
+              onChanged: () async {
+                final updated = await DBService.getWallets();
+                if (mounted) setState(() => _wallets = updated);
+              },
+            ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: Colors.green.withValues(alpha: 0.07),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.green.withValues(alpha: 0.25)),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.account_balance_wallet_outlined,
+                  color: Colors.green, size: 18),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Total Liquid: ${CurrencyService.format(total)}",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          color: Colors.green),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      nonZero
+                          .map((w) =>
+                              "${w['icon'] ?? '💵'} ${w['name']}: ${CurrencyService.format((w['balance'] as num).toDouble())}")
+                          .join("  ·  "),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: cs.onSurface.withValues(alpha: 0.6)),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right,
+                  size: 16, color: cs.onSurface.withValues(alpha: 0.3)),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1995,6 +2097,10 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 );
               }),
+
+              // Wallet balances summary — only shown when any wallet has a balance
+              if (_wallets.any((w) => (w['balance'] as num) > 0))
+                _buildWalletSummaryCard(context),
 
               // Subscription leak summary
               _buildSubscriptionSummaryCard(context),
