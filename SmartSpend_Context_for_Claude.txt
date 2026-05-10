@@ -110,7 +110,15 @@ NEW FEATURE — Payment Plans tab in Debts screen:
 - Active vs Completed sections
 - installment_plans table created via _ensureColumns (no version bump)
 
-BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 9, 2026 — Session 9)
+BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 10, 2026 — Session 9 final)
+
+LATEST FIXES (May 10, 2026 — Session 9 bug sweep):
+- home_screen.dart: missing mounted check before large setState in _loadData (crash on dispose fixed)
+- app_lock_screen.dart: "Not you? Log out" now runs pushAllToCloud + clearLocalData before signing out (data loss + data bleed fixed)
+- income_screen.dart: missing mounted check after async DB reads in _load() (crash fixed)
+- currency_screen.dart: missing mounted check after await in _select() (crash fixed)
+- chat_history_screen.dart: missing mounted check after clearChatHistory() (crash fixed)
+- income_screen.dart: deprecated Switch.activeColor replaced with activeThumbColor (Flutter 3.31+ compat)
 
 LATEST FIXES (May 9, 2026 — Session 9):
 - RECEIPT OCR SMART ROUTING: When camera scans a receipt with 3+ price lines or "total/subtotal",

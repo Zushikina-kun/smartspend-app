@@ -545,6 +545,7 @@ class _DashboardState extends State<Dashboard> {
     // Apply warning decay penalty (−5/day for ignored budget warnings, max −15)
     final score = await ScoreService.applyWarningDecay(rawScore);
 
+    if (!mounted) return; // widget may have been disposed during async gap
     setState(() {
       _expenses = expenses;
       _totalSpent = total;

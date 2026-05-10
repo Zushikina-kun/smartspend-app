@@ -4,8 +4,8 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 9, 2026 (v2.5.0 — Session 9: Receipt OCR smart routing, dedicated receipt parser, Import Items button, AI bulk rename fix)
-**Build:** app-arm64-v8a-release.apk — 45.3 MB (May 9, 2026)
+**Last Updated:** May 10, 2026 (v2.5.0 — Session 9 final: Bug sweep — 5 crash fixes, app_lock logout data-loss fix, deprecated API fix)
+**Build:** app-arm64-v8a-release.apk — 45.3 MB (May 10, 2026)
 
 ---
 

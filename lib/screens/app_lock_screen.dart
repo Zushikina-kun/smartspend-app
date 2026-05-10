@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/app_lock_service.dart';
 import '../services/auth_service.dart';
+import '../services/db_service.dart';
 import 'login_screen.dart';
 
 /// App lock screen — shown when user returns to app without logging out.
@@ -57,8 +58,13 @@ class _AppLockScreenState extends State<AppLockScreen> {
   }
 
   Future<void> _logout() async {
-    await AuthService.logout();
+    // Push data to cloud before clearing local — same as profile_screen logout
+    try {
+      await DBService.pushAllToCloud();
+    } catch (_) {} // non-fatal — proceed even if push fails
+    await DBService.clearLocalData();
     await AppLockService.setEnabled(false);
+    await AuthService.logout();
     if (mounted) {
       Navigator.pushReplacement(
         context,

@@ -50,7 +50,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
     );
     if (confirm == true) {
       await DBService.clearChatHistory();
-      setState(() => _history.clear());
+      if (mounted) setState(() => _history.clear());
     }
   }
 

@@ -43,6 +43,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
     final income = await DBService.getIncome();
     final accountType =
         await DBService.getSetting('account_type') ?? 'employed';
+    if (!mounted) return;
     setState(() {
       _income = income;
       _accountType = accountType;
@@ -236,7 +237,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                       Switch(
                         value: isWindfall,
                         onChanged: (v) => setSheet(() => isWindfall = v),
-                        activeColor: Colors.amber,
+                        activeThumbColor: Colors.amber,
                       ),
                     ],
                   ),

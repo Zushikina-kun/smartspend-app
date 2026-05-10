@@ -40,6 +40,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
     });
     await CurrencyService.setCurrency(code);
     await _loadLastUpdated();
+    if (!mounted) return;
     setState(() => _loading = false);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

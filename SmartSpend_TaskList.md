@@ -83,6 +83,12 @@ Everything here is confirmed built, tested, and in the current build (v2.5.0).
 - [x] Scan Review Screen "Import Items" button for multi-item receipts
 - [x] AI bulk rename max_tokens fix (800 for rename requests)
 - [x] AI bulk rename system prompt — explicit warning about ACTION lines requirement
+- [x] home_screen _loadData missing mounted check (crash fix)
+- [x] app_lock_screen logout — now runs pushAllToCloud + clearLocalData (data loss fix)
+- [x] income_screen _load missing mounted check (crash fix)
+- [x] currency_screen _select missing mounted check (crash fix)
+- [x] chat_history_screen clear missing mounted check (crash fix)
+- [x] income_screen Switch.activeColor → activeThumbColor (deprecated API fix)
 
 ---
 
