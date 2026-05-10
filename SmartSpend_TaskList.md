@@ -89,6 +89,18 @@ Everything here is confirmed built, tested, and in the current build (v2.5.0).
 - [x] currency_screen _select missing mounted check (crash fix)
 - [x] chat_history_screen clear missing mounted check (crash fix)
 - [x] income_screen Switch.activeColor → activeThumbColor (deprecated API fix)
+- [x] Categories expanded: Gaming, Personal Care, Clothing, Gifts, Travel, Pets (14 total)
+- [x] Payment methods expanded: GCash, Maya, GrabPay, ShopeePay, Debit Card, Credit Card, Bank Transfer
+- [x] Currencies expanded: 57 total (added TWD, BHD, OMR, ILS, CZK, PLN, HUF, CLP, COP, PEN, UAH, RON, HRK, BGN, LKR, NPR, MMK, KHR, LAK, BND, MOP)
+- [x] Home Quick Access grid: 9 portals (added Wallets, Budgets, Achievements)
+- [x] Wallet card always visible on home (setup prompt when empty)
+- [x] Net worth card: "Tap to manage wallets" hint
+- [x] Profile: Manage Rules tile added
+- [x] Analytics: Wallets + Calendar chips added to nav row
+- [x] Crashlytics crash 1: analytics firstWhere null → .where().firstOrNull
+- [x] Crashlytics crash 2: ShakeDetector MissingPluginException → try/catch
+- [x] AI logging fix: max_tokens 200→300, LOGGING RULE added
+- [x] AI wallet rule: never log wallet balances as income
 
 ---
 

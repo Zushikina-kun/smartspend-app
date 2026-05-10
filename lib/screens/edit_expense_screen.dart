@@ -7,7 +7,17 @@ import '../services/category_service.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
 
-const _paymentMethods = ['Cash', 'GCash', 'Card', 'Others'];
+const _paymentMethods = [
+  'Cash',
+  'GCash',
+  'Maya',
+  'GrabPay',
+  'ShopeePay',
+  'Debit Card',
+  'Credit Card',
+  'Bank Transfer',
+  'Others',
+];
 
 class EditExpenseScreen extends StatefulWidget {
   final Expense expense;

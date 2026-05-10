@@ -927,7 +927,11 @@ class _AIScreenState extends State<AIScreen> {
                           nameLower.contains('maya') ||
                           nameLower.contains('grab') ||
                           nameLower.contains('shopee') ||
-                          nameLower.contains('coins')
+                          nameLower.contains('coins') ||
+                          nameLower.contains('lazada') ||
+                          nameLower.contains('tiktok') ||
+                          nameLower.contains('paypal') ||
+                          nameLower.contains('wise')
                       ? 'ewallet'
                       : nameLower.contains('cebuana') ||
                               nameLower.contains('lhuillier') ||

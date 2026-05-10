@@ -468,6 +468,114 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         lower.contains('seminar') ||
         lower.contains('uniform')) return 'Education';
 
+    // ── GAMING ────────────────────────────────────────────────────────────────
+    if (lower.contains('game') ||
+        lower.contains('gaming') ||
+        lower.contains('steam') ||
+        lower.contains('mobile legend') ||
+        lower.contains('mlbb') ||
+        lower.contains('codm') ||
+        lower.contains('call of duty') ||
+        lower.contains('roblox') ||
+        lower.contains('minecraft') ||
+        lower.contains('genshin') ||
+        lower.contains('valorant') ||
+        lower.contains('dota') ||
+        lower.contains('lol') ||
+        lower.contains('league of legend') ||
+        lower.contains('top-up') ||
+        lower.contains('topup') ||
+        lower.contains('load game') ||
+        lower.contains('codashop') ||
+        lower.contains('unipin') ||
+        lower.contains('xbox') ||
+        lower.contains('playstation') ||
+        lower.contains('nintendo') ||
+        lower.contains('arcade') ||
+        lower.contains('esports')) return 'Gaming';
+
+    // ── PERSONAL CARE ─────────────────────────────────────────────────────────
+    if (lower.contains('haircut') ||
+        lower.contains('salon') ||
+        lower.contains('barbershop') ||
+        lower.contains('barber') ||
+        lower.contains('nail') ||
+        lower.contains('spa') ||
+        lower.contains('massage') ||
+        lower.contains('grooming') ||
+        lower.contains('shampoo') ||
+        lower.contains('conditioner') ||
+        lower.contains('soap') ||
+        lower.contains('toothpaste') ||
+        lower.contains('deodorant') ||
+        lower.contains('lotion') ||
+        lower.contains('perfume') ||
+        lower.contains('cologne') ||
+        lower.contains('hygiene')) return 'Personal Care';
+
+    // ── CLOTHING ──────────────────────────────────────────────────────────────
+    if (lower.contains('shirt') ||
+        lower.contains('pants') ||
+        lower.contains('jeans') ||
+        lower.contains('dress') ||
+        lower.contains('shoes') ||
+        lower.contains('sneakers') ||
+        lower.contains('sandals') ||
+        lower.contains('slipper') ||
+        lower.contains('jacket') ||
+        lower.contains('hoodie') ||
+        lower.contains('uniform') ||
+        lower.contains('ukay') ||
+        lower.contains('tiangge') ||
+        lower.contains('clothes') ||
+        lower.contains('clothing') ||
+        lower.contains('outfit') ||
+        lower.contains('wear') ||
+        lower.contains('fashion')) return 'Clothing';
+
+    // ── GIFTS ─────────────────────────────────────────────────────────────────
+    if (lower.contains('gift') ||
+        lower.contains('pasalubong') ||
+        lower.contains('present') ||
+        lower.contains('birthday') ||
+        lower.contains('christmas gift') ||
+        lower.contains('padala') ||
+        lower.contains('souvenir') ||
+        lower.contains('donation') ||
+        lower.contains('charity')) return 'Gifts';
+
+    // ── TRAVEL ────────────────────────────────────────────────────────────────
+    if (lower.contains('hotel') ||
+        lower.contains('airfare') ||
+        lower.contains('airline') ||
+        lower.contains('flight') ||
+        lower.contains('cebu pacific') ||
+        lower.contains('air asia') ||
+        lower.contains('pal ') ||
+        lower.contains('philippine airlines') ||
+        lower.contains('resort') ||
+        lower.contains('beach') ||
+        lower.contains('vacation') ||
+        lower.contains('travel') ||
+        lower.contains('tour') ||
+        lower.contains('booking') ||
+        lower.contains('airbnb') ||
+        lower.contains('hostel')) return 'Travel';
+
+    // ── PETS ──────────────────────────────────────────────────────────────────
+    if (lower.contains('pet') ||
+        lower.contains('dog') ||
+        lower.contains('cat') ||
+        lower.contains('vet') ||
+        lower.contains('veterinar') ||
+        lower.contains('pet food') ||
+        lower.contains('dog food') ||
+        lower.contains('cat food') ||
+        lower.contains('pedigree') ||
+        lower.contains('whiskas') ||
+        lower.contains('aquarium') ||
+        lower.contains('fish food')) return 'Pets';
+
     return 'Others';
   }
 
@@ -540,7 +648,7 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "• Current market prices and estimates (items, gadgets, second-hand goods in the Philippines)\n"
         "• Philippine banking products — BDO, BPI, Metrobank, Landbank, PNB, RCBC, Security Bank, Chinabank, EastWest Bank, UnionBank, PSBank, Maybank PH, Standard Chartered PH\n"
         "• Digital banks — Maya Bank, GoTyme, Tonik, UNObank, UnionDigital, Seabank\n"
-        "• E-wallets — GCash, Maya, GrabPay, ShopeePay, Coins.ph\n"
+        "• E-wallets — GCash, Maya, GrabPay, ShopeePay, Coins.ph, Lazada Wallet, TikTok Shop Wallet, PayPal, Wise\n"
         "• Remittance centers — Cebuana Lhuillier, M Lhuillier, Palawan Pawnshop, Western Union, LBC, Tambunting, USSC, Bayad Center\n"
         "• Loans, SSS, PhilHealth, Pag-IBIG benefits and how to apply\n"
         "• Investment basics — stocks, MP2, time deposits, crypto basics\n"
@@ -593,9 +701,9 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "The update_expense action supports a 'new_item_name' field for renaming. Use it.\n"
         "IMPORTANT: After listing the corrected names, you MUST include the ACTION lines. If you only list names without ACTION lines, NOTHING gets updated in the database.\n\n"
         "ACTION FORMAT: plain text after reply, one per line, ACTION:{...} only. No bold, no → prefix.\n"
-        "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Health, Education, Others.\n"
-        "is_want: true=discretionary (snacks, entertainment, shopping). false=essential (transport, groceries, medicine, tuition, bills).\n"
-        "Education ALWAYS is_want:false. Candy/chips/drinks/energy drinks → Food.\n"
+        "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others.\n"
+        "is_want: true=discretionary (snacks, entertainment, gaming, shopping, gifts). false=essential (transport, groceries, medicine, tuition, bills).\n"
+        "Education ALWAYS is_want:false. Candy/chips/drinks/energy drinks → Food. Games/Steam/mobile top-up → Gaming. Haircut/salon/cosmetics → Personal Care. Clothes/shoes/ukay → Clothing. Pasalubong/gifts → Gifts. Hotel/airfare/bus → Travel. Dog/cat food/vet → Pets.\n"
         "For simple logging: just say 'Logged: [item] ₱[amount]' then the ACTION line — nothing more. Do NOT add totals, breakdowns, or extra commentary after logging.\n"
         "LOGGING RULE (ABSOLUTE): When user says they spent/bought/paid/ate/drank something with an amount — ALWAYS fire a log_expense ACTION line. No exceptions. The ACTION line is what actually saves the data. Without it, nothing is saved.\n"
         "${_fullContext.isNotEmpty ? "\n\nUser's financial context (live from database):\n$_fullContext" : ""}";

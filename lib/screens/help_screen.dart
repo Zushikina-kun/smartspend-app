@@ -807,16 +807,35 @@ const _sections = [
     color: Colors.teal,
     items: [
       _HelpItem(
+        title: "Built-in categories",
+        body: "Smart Spend has 14 built-in categories:\n\n"
+            "• 🍔 Food — meals, drinks, snacks, groceries, restaurants\n"
+            "• 🚌 Transportation — jeepney, bus, Grab, tricycle, fuel\n"
+            "• 📱 Bills — electricity, internet, subscriptions, loans\n"
+            "• 🛍️ Shopping — Lazada, Shopee, gadgets, accessories\n"
+            "• 🎬 Entertainment — movies, concerts, events, tickets\n"
+            "• 🎮 Gaming — Steam, Mobile Legends, Codashop, UniPin, top-ups\n"
+            "• 💊 Health — medicine, hospital, pharmacy, vitamins\n"
+            "• 📚 Education — tuition, books, school supplies, courses\n"
+            "• 💇 Personal Care — haircut, salon, hygiene products\n"
+            "• 👕 Clothing — shirts, pants, shoes, ukay, fashion\n"
+            "• 🎁 Gifts — pasalubong, presents, donations, charity\n"
+            "• ✈️ Travel — hotel, airfare, resort, tour, Airbnb\n"
+            "• 🐾 Pets — pet food, vet, Pedigree, Whiskas\n"
+            "• 📦 Others — anything that doesn't fit above\n\n"
+            "The AI automatically assigns the right category based on keywords.",
+      ),
+      _HelpItem(
         title: "Adding a custom category",
         body:
-            "Go to Profile → Manage Categories, or Hub → Categories. Tap + to add a new category name. Custom categories appear alongside the built-in 8 in all dropdowns.",
+            "Go to Profile → Manage Categories, or Hub → Categories. Tap + to add a new category name. Custom categories appear alongside the built-in ones in all dropdowns.",
         example:
             'Add "School" → now available in Add Expense, Budget, and Recurring screens.',
       ),
       _HelpItem(
         title: "Renaming or deleting a category",
         body:
-            "Tap the edit icon to rename, or the delete icon to remove. Deleting a category moves all its expenses to 'Others' automatically. Built-in categories (Food, Transport, etc.) cannot be deleted.",
+            "Tap the edit icon to rename, or the delete icon to remove. Deleting a category moves all its expenses to 'Others' automatically. Built-in categories cannot be deleted.",
       ),
       _HelpItem(
         title: "Custom categories and AI",

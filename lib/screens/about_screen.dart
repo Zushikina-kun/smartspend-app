@@ -110,7 +110,10 @@ class AboutScreen extends StatelessWidget {
                 "Get notified when your financial health score improves"
               ),
               ("📆 Daily Spending Limit", "Set a daily cap with notifications"),
-              ("🗂️ Custom Categories", "Add your own expense categories"),
+              (
+                "🗂️ Custom Categories",
+                "14 built-in + unlimited custom categories (Gaming, Travel, Pets, Gifts & more)"
+              ),
               (
                 "🔀 Auto-Categorization Rules",
                 "Keyword → category rules for faster logging"

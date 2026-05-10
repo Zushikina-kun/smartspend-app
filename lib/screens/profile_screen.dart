@@ -27,6 +27,7 @@ import 'bank_import_screen.dart';
 import 'help_screen.dart';
 import 'pin_setup_screen.dart';
 import 'manage_categories_screen.dart';
+import 'manage_rules_screen.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
 import 'achievements_screen.dart';
@@ -1129,10 +1130,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(label,
-                                          style: const TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey)),
+                                      Row(
+                                        children: [
+                                          Text(label,
+                                              style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey)),
+                                          const SizedBox(width: 4),
+                                          const Icon(
+                                              Icons
+                                                  .account_balance_wallet_outlined,
+                                              size: 12,
+                                              color: Colors.grey),
+                                          const SizedBox(width: 2),
+                                          const Text("Tap to manage wallets",
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.grey)),
+                                        ],
+                                      ),
                                       Text(
                                         "${isPositive ? '+' : ''}${CurrencyService.format(displayValue.abs())}",
                                         style: TextStyle(
@@ -1667,6 +1683,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Divider(height: 1),
                           ListTile(
+                            leading: const Icon(Icons.rule_outlined,
+                                color: Colors.deepPurple),
+                            title: const Text("Auto-Categorization Rules"),
+                            subtitle: const Text(
+                                "Keyword → category rules for faster logging",
+                                style: TextStyle(fontSize: 11)),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const ManageRulesScreen())),
+                          ),
+                          const Divider(height: 1),
+                          ListTile(
                             leading: const Icon(Icons.today_outlined),
                             title: const Text("Daily Spending Limit"),
                             subtitle: const Text(
@@ -2046,12 +2076,18 @@ class WalletsSheetState extends State<WalletsSheet> {
   static const _presets = [
     // ── CASH ──────────────────────────────────────────────────────────────────
     ('Cash on Hand', 'cash', '💵'),
-    // ── E-WALLETS ─────────────────────────────────────────────────────────────
+    // ── E-WALLETS (BSP-supervised) ────────────────────────────────────────────
     ('GCash', 'ewallet', '📱'),
     ('Maya', 'ewallet', '💜'),
     ('GrabPay', 'ewallet', '🟢'),
     ('ShopeePay', 'ewallet', '🟠'),
     ('Coins.ph', 'ewallet', '🪙'),
+    // ── ONLINE SHOPPING WALLETS ───────────────────────────────────────────────
+    ('Lazada Wallet', 'ewallet', '🛒'),
+    ('TikTok Shop Wallet', 'ewallet', '🎵'),
+    // ── INTERNATIONAL / FREELANCE ─────────────────────────────────────────────
+    ('PayPal', 'ewallet', '🅿️'),
+    ('Wise', 'ewallet', '💸'),
     // ── DIGITAL BANKS (BSP-licensed) ──────────────────────────────────────────
     ('GoTyme Bank', 'bank', '🏦'),
     ('Tonik', 'bank', '🏦'),

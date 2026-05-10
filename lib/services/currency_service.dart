@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'db_service.dart';
 
@@ -40,6 +40,27 @@ class CurrencyService {
     'NGN': '₦ Nigerian Naira',
     'KWD': 'KD Kuwaiti Dinar',
     'QAR': 'QR Qatari Riyal',
+    'TWD': r'NT$ Taiwan Dollar',
+    'BHD': 'BD Bahraini Dinar',
+    'OMR': 'OMR Omani Rial',
+    'ILS': '₪ Israeli Shekel',
+    'CZK': 'Kč Czech Koruna',
+    'PLN': 'zł Polish Zloty',
+    'HUF': 'Ft Hungarian Forint',
+    'CLP': 'CLP Chilean Peso',
+    'COP': 'COP Colombian Peso',
+    'PEN': 'S/ Peruvian Sol',
+    'UAH': '₴ Ukrainian Hryvnia',
+    'RON': 'lei Romanian Leu',
+    'HRK': 'kn Croatian Kuna',
+    'BGN': 'лв Bulgarian Lev',
+    'LKR': '₨ Sri Lankan Rupee',
+    'NPR': '₨ Nepalese Rupee',
+    'MMK': 'K Myanmar Kyat',
+    'KHR': '៛ Cambodian Riel',
+    'LAK': '₭ Lao Kip',
+    'BND': r'B$ Brunei Dollar',
+    'MOP': 'P Macanese Pataca',
   };
 
   static final currencySymbols = <String, String>{
@@ -77,6 +98,27 @@ class CurrencyService {
     'NGN': '₦',
     'KWD': 'KD',
     'QAR': 'QR',
+    'TWD': r'NT$',
+    'BHD': 'BD',
+    'OMR': 'OMR',
+    'ILS': '₪',
+    'CZK': 'Kč',
+    'PLN': 'zł',
+    'HUF': 'Ft',
+    'CLP': 'CLP',
+    'COP': 'COP',
+    'PEN': 'S/',
+    'UAH': '₴',
+    'RON': 'lei',
+    'HRK': 'kn',
+    'BGN': 'лв',
+    'LKR': '₨',
+    'NPR': '₨',
+    'MMK': 'K',
+    'KHR': '៛',
+    'LAK': '₭',
+    'BND': r'B$',
+    'MOP': 'P',
   };
 
   static String _currentCurrency = 'PHP';

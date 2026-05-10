@@ -4,8 +4,8 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 10, 2026 (v2.5.0 — Session 10 final: Wallet balances, full PH bank coverage, 2 Crashlytics crash fixes, in-app docs updated)
-**Build:** app-arm64-v8a-release.apk — 45.3 MB (May 10, 2026)
+**Last Updated:** May 10, 2026 (v2.5.0 — Session 11: Categories expanded (Gaming/Personal Care/Clothing/Gifts/Travel/Pets), payment methods expanded, 57 currencies, wallet discoverability, net worth tap hint, feature portals 9-grid)
+**Build:** app-arm64-v8a-release.apk — 45.4 MB (May 10, 2026)
 
 ---
 

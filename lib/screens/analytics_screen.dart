@@ -22,6 +22,8 @@ import 'recurring_screen.dart';
 import 'budget_screen.dart';
 import 'income_screen.dart';
 import 'bank_import_screen.dart';
+import 'profile_screen.dart' show WalletsSheet;
+import 'bill_calendar_screen.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -814,6 +816,36 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => const BankImportScreen()))
+                            ),
+                            (
+                              Icons.wallet_outlined,
+                              'Wallets',
+                              Colors.green,
+                              () async {
+                                final wallets = await DBService.getWallets();
+                                if (!context.mounted) return;
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20))),
+                                  builder: (_) => WalletsSheet(
+                                    wallets: wallets,
+                                    onChanged: () {},
+                                  ),
+                                );
+                              }
+                            ),
+                            (
+                              Icons.calendar_month_outlined,
+                              'Calendar',
+                              Colors.orange,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const BillCalendarScreen()))
                             ),
                           ])
                             Padding(

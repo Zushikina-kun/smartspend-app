@@ -95,10 +95,16 @@ Category rules — map keywords strictly:
 - Food: ANY food, drink, snack, or beverage item. This includes: candy, chocolate, chips, biscuit, cookie, ice cream, cake, bread, milk, water (bottled), juice, soda, energy drink, coffee, tea, rice, ulam, merienda, any meal, any restaurant, any food brand. Filipino food: siomai, fishball, kwek-kwek, isaw, balut, taho, halo-halo, buko, pansit, adobo, sinigang, tapsilog, silog, lomi, lugaw, goto, champorado. Fast food: Jollibee, McDonald's, KFC, Chowking, Mang Inasal, Shakey's, Greenwich, Yellow Cab, Max's, Goldilocks, Red Ribbon, Starbucks, Dunkin. Convenience stores: 7-Eleven, Ministop, Family Mart. Delivery: GrabFood, Foodpanda, Shopee Food.
 - Transportation: Grab (ride), Angkas, Lalamove, jeep, jeepney, bus, MRT, LRT, taxi, tricycle, trike, pedicab, UV Express, P2P, TNVS, fare, gas, fuel, toll, parking, commute, byahe, sakay
 - Bills: electricity, water bill, internet, WiFi, Meralco, PLDT, Globe, Smart, DITO, rent, Netflix, Spotify, subscription, insurance, loan, mortgage, SSS, PhilHealth, Pag-IBIG, bayad
-- Shopping: clothes, shoes, bag, mall, Lazada, Shopee, gadget, appliance, ukay, tiangge, accessories, cosmetics, makeup, skincare, SM, Ayala, Robinsons
-- Entertainment: movie, cinema, concert, game, arcade, bar, videoke, karaoke, event, ticket, resort, beach, vacation
+- Shopping: online shopping, Lazada, Shopee, gadget, appliance, accessories, SM, Ayala, Robinsons, mall
+- Entertainment: movie, cinema, concert, arcade, bar, videoke, karaoke, event, ticket
+- Gaming: Steam, Mobile Legends, MLBB, CODM, Roblox, Genshin, Valorant, Dota, game top-up, Codashop, UniPin, Xbox, PlayStation, Nintendo, esports, gaming
 - Health: medicine, hospital, clinic, doctor, pharmacy, vitamins, dental, dentist, glasses, eyeglasses, gamot, botika, Mercury Drug, Watsons
 - Education: tuition, books, school supplies, course, training, seminar, uniform
+- Personal Care: haircut, salon, barbershop, nail, spa, massage, shampoo, soap, toothpaste, deodorant, lotion, hygiene
+- Clothing: shirt, pants, jeans, dress, shoes, sneakers, jacket, hoodie, ukay, clothes, outfit, fashion
+- Gifts: gift, pasalubong, present, souvenir, donation, charity
+- Travel: hotel, airfare, airline, flight, Cebu Pacific, AirAsia, resort, tour, booking, Airbnb, hostel
+- Pets: pet food, dog food, cat food, veterinary, vet, Pedigree, Whiskas
 - Others: anything that doesn't fit above
 
 CRITICAL: Candy, chips, biscuits, chocolate, ice cream, cake, bread, drinks — ALL go to Food, not Others.
@@ -106,8 +112,13 @@ CRITICAL: Candy, chips, biscuits, chocolate, ice cream, cake, bread, drinks — 
 Payment method rules:
 - Cash: default if not mentioned
 - GCash: gcash, g-cash
-- Card: credit card, debit card, visa, mastercard
-- Others: PayMaya, Maya, bank transfer, online payment
+- Maya: maya, paymaya
+- GrabPay: grabpay, grab pay
+- ShopeePay: shopeepay, shopee pay
+- Debit Card: debit card, atm card
+- Credit Card: credit card, visa, mastercard, amex
+- Bank Transfer: bank transfer, instapay, pesonet, online banking
+- Others: anything else
 
 Want vs Need rules (is_want field):
 - is_want: true for discretionary/optional spending: Shopping, Entertainment, snacks, candy, chips, fast food treats, coffee shop drinks, gaming, concerts, vacations, accessories, cosmetics
@@ -120,11 +131,11 @@ Today's date: $today, current time: $now
 Return ONLY this JSON:
 {
   "item_name": "specific item or meal name",
-  "category": "one of: Food, Transportation, Bills, Shopping, Entertainment, Health, Education, Others",
+  "category": "one of: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others",
   "amount": 0,
   "date": "$today",
   "time": "$now",
-  "payment_method": "Cash",
+  "payment_method": "Cash|GCash|Maya|GrabPay|ShopeePay|Debit Card|Credit Card|Bank Transfer|Others",
   "shop_name": "store or restaurant name if mentioned",
   "location": "",
   "notes": "",
@@ -436,6 +447,74 @@ Return ONLY this JSON:
         lower.contains('uniform') ||
         lower.contains('allowance') && lower.contains('school'))
       return 'Education';
+
+    // ── GAMING ────────────────────────────────────────────────────────────────
+    if (lower.contains('steam') ||
+        lower.contains('mobile legend') ||
+        lower.contains('mlbb') ||
+        lower.contains('codm') ||
+        lower.contains('roblox') ||
+        lower.contains('genshin') ||
+        lower.contains('valorant') ||
+        lower.contains('dota') ||
+        lower.contains('top-up') ||
+        lower.contains('topup') ||
+        lower.contains('codashop') ||
+        lower.contains('unipin') ||
+        lower.contains('xbox') ||
+        lower.contains('playstation') ||
+        lower.contains('nintendo') ||
+        lower.contains('esports')) return 'Gaming';
+
+    // ── PERSONAL CARE ─────────────────────────────────────────────────────────
+    if (lower.contains('haircut') ||
+        lower.contains('salon') ||
+        lower.contains('barbershop') ||
+        lower.contains('barber') ||
+        lower.contains('nail') ||
+        lower.contains('spa') ||
+        lower.contains('massage') ||
+        lower.contains('grooming') ||
+        lower.contains('shampoo') ||
+        lower.contains('soap') ||
+        lower.contains('toothpaste') ||
+        lower.contains('deodorant') ||
+        lower.contains('lotion') ||
+        lower.contains('hygiene')) return 'Personal Care';
+
+    // ── CLOTHING ──────────────────────────────────────────────────────────────
+    if (lower.contains('jeans') ||
+        lower.contains('dress') ||
+        lower.contains('sneakers') ||
+        lower.contains('jacket') ||
+        lower.contains('hoodie') ||
+        lower.contains('clothing') ||
+        lower.contains('outfit') ||
+        lower.contains('fashion')) return 'Clothing';
+
+    // ── GIFTS ─────────────────────────────────────────────────────────────────
+    if (lower.contains('pasalubong') ||
+        lower.contains('souvenir') ||
+        lower.contains('donation') ||
+        lower.contains('charity')) return 'Gifts';
+
+    // ── TRAVEL ────────────────────────────────────────────────────────────────
+    if (lower.contains('hotel') ||
+        lower.contains('airfare') ||
+        lower.contains('airline') ||
+        lower.contains('flight') ||
+        lower.contains('cebu pacific') ||
+        lower.contains('air asia') ||
+        lower.contains('airbnb') ||
+        lower.contains('hostel')) return 'Travel';
+
+    // ── PETS ──────────────────────────────────────────────────────────────────
+    if (lower.contains('pet food') ||
+        lower.contains('dog food') ||
+        lower.contains('cat food') ||
+        lower.contains('veterinar') ||
+        lower.contains('pedigree') ||
+        lower.contains('whiskas')) return 'Pets';
 
     return 'Others';
   }
@@ -801,7 +880,7 @@ Return ONLY this JSON array:
     "time": "HH:MM",
     "description": "merchant or purpose",
     "amount": 0.00,
-    "category": "Food|Transportation|Bills|Shopping|Entertainment|Health|Education|Others",
+    "category": "Food|Transportation|Bills|Shopping|Entertainment|Gaming|Health|Education|Personal Care|Clothing|Gifts|Travel|Pets|Others",
     "is_want": false,
     "payment_method": "GCash|Maya|BPI|BDO|UnionBank|Cash|Card|Bank Transfer|Others",
     "notes": ""
@@ -893,7 +972,7 @@ Return ONLY this JSON array:
     "date": "YYYY-MM-DD",
     "description": "item or meal name",
     "amount": 0.00,
-    "category": "Food|Transportation|Bills|Shopping|Entertainment|Health|Education|Others",
+    "category": "Food|Transportation|Bills|Shopping|Entertainment|Gaming|Health|Education|Personal Care|Clothing|Gifts|Travel|Pets|Others",
     "is_want": false,
     "shop_name": "store or restaurant name",
     "notes": ""
@@ -945,3 +1024,4 @@ Return ONLY this JSON array:
     }
   }
 }
+

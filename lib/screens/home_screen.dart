@@ -31,6 +31,7 @@ import 'bill_calendar_screen.dart';
 import 'manage_categories_screen.dart';
 import 'manage_rules_screen.dart';
 import 'whats_new_screen.dart';
+import 'achievements_screen.dart';
 import 'bank_import_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -1028,14 +1029,14 @@ class _DashboardState extends State<Dashboard> {
       (
         Icons.bar_chart_outlined,
         "Analytics",
-        "Charts, 50/30/20, forecasts",
+        "Charts & insights",
         Colors.blue,
         () => widget.onNavigate(1),
       ),
       (
         Icons.calendar_month_outlined,
         "Bill Calendar",
-        "Upcoming bills & events",
+        "Upcoming bills",
         Colors.orange,
         () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const BillCalendarScreen())),
@@ -1043,7 +1044,7 @@ class _DashboardState extends State<Dashboard> {
       (
         Icons.savings_outlined,
         "Goals",
-        "Track savings targets",
+        "Savings targets",
         Colors.green,
         () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const SavingsGoalsScreen())),
@@ -1051,15 +1052,46 @@ class _DashboardState extends State<Dashboard> {
       (
         Icons.credit_card_outlined,
         "Debts & Plans",
-        "Owed, lent & installments",
+        "Owed & installments",
         Colors.red,
         () => Navigator.push(
             context, MaterialPageRoute(builder: (_) => const DebtScreen())),
       ),
       (
+        Icons.account_balance_wallet_outlined,
+        "My Wallets",
+        "Cash, GCash, banks",
+        Colors.green,
+        () async {
+          final wallets = await DBService.getWallets();
+          if (!context.mounted) return;
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            builder: (_) => WalletsSheet(
+              wallets: wallets,
+              onChanged: () async {
+                final updated = await DBService.getWallets();
+                if (mounted) setState(() => _wallets = updated);
+              },
+            ),
+          );
+        }
+      ),
+      (
+        Icons.pie_chart_outline,
+        "Budgets",
+        "Category limits",
+        Colors.purple,
+        () => Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const BudgetScreen())),
+      ),
+      (
         Icons.account_balance_outlined,
         "Import",
-        "GCash, BPI, BDO history",
+        "GCash, BPI, BDO",
         Colors.teal,
         () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const BankImportScreen())),
@@ -1067,10 +1099,18 @@ class _DashboardState extends State<Dashboard> {
       (
         Icons.repeat,
         "Recurring",
-        "Bills & subscriptions",
-        Colors.purple,
+        "Bills & subs",
+        Colors.deepOrange,
         () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const RecurringScreen())),
+      ),
+      (
+        Icons.emoji_events_outlined,
+        "Achievements",
+        "Badges & streaks",
+        Colors.amber,
+        () => Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const AchievementsScreen())),
       ),
     ];
 
@@ -1084,14 +1124,17 @@ class _DashboardState extends State<Dashboard> {
             const SizedBox(width: 4),
             InfoButton(
               title: "Quick Access",
-              body: "Shortcuts to your most useful features.\n\n"
+              body: "Shortcuts to your most-used features.\n\n"
                   "• Analytics — charts, 50/30/20 rule, spending forecasts\n"
                   "• Bill Calendar — see all upcoming bills by date\n"
                   "• Goals — track savings targets and emergency fund\n"
                   "• Debts & Plans — money owed, lent, and installment plans\n"
+                  "• My Wallets — Cash on Hand, GCash, Maya, bank balances\n"
+                  "• Budgets — set and track category spending limits\n"
                   "• Import — bulk import from GCash, BPI, BDO, Maya\n"
-                  "• Recurring — manage bills and subscriptions\n\n"
-                  "Tap any card to open that feature. All features are also in the Hub (grid icon in the bottom bar).",
+                  "• Recurring — manage bills and subscriptions\n"
+                  "• Achievements — badges and spending streaks\n\n"
+                  "All features are also in the Hub (grid icon in the bottom bar).",
               size: 13,
             ),
           ],
@@ -1286,6 +1329,7 @@ class _DashboardState extends State<Dashboard> {
     final cs = Theme.of(context).colorScheme;
     final total = _wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
     final nonZero = _wallets.where((w) => (w['balance'] as num) > 0).toList();
+    final hasBalances = nonZero.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -1321,30 +1365,50 @@ class _DashboardState extends State<Dashboard> {
                   color: Colors.green, size: 18),
               const SizedBox(width: 8),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Total Liquid: ${CurrencyService.format(total)}",
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: Colors.green),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      nonZero
-                          .map((w) =>
-                              "${w['icon'] ?? '💵'} ${w['name']}: ${CurrencyService.format((w['balance'] as num).toDouble())}")
-                          .join("  ·  "),
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: cs.onSurface.withValues(alpha: 0.6)),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
+                child: hasBalances
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Total Liquid: ${CurrencyService.format(total)}",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: Colors.green),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            nonZero
+                                .map((w) =>
+                                    "${w['icon'] ?? '💵'} ${w['name']}: ${CurrencyService.format((w['balance'] as num).toDouble())}")
+                                .join("  ·  "),
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: cs.onSurface.withValues(alpha: 0.6)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "My Wallets — tap to set up",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: Colors.green),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            "Track Cash on Hand, GCash, Maya, banks & more",
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: cs.onSurface.withValues(alpha: 0.6)),
+                          ),
+                        ],
+                      ),
               ),
               Icon(Icons.chevron_right,
                   size: 16, color: cs.onSurface.withValues(alpha: 0.3)),
@@ -2098,9 +2162,8 @@ class _DashboardState extends State<Dashboard> {
                 );
               }),
 
-              // Wallet balances summary — only shown when any wallet has a balance
-              if (_wallets.any((w) => (w['balance'] as num) > 0))
-                _buildWalletSummaryCard(context),
+              // Wallet balances summary — always shown, prompts setup when empty
+              _buildWalletSummaryCard(context),
 
               // Subscription leak summary
               _buildSubscriptionSummaryCard(context),

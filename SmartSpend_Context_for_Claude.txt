@@ -110,9 +110,18 @@ NEW FEATURE — Payment Plans tab in Debts screen:
 - Active vs Completed sections
 - installment_plans table created via _ensureColumns (no version bump)
 
-BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 10, 2026 — Session 10)
+BUILD: app-arm64-v8a-release.apk — 45.4 MB (May 10, 2026 — Session 11)
 
-LATEST FIXES (May 10, 2026 — Session 10):
+LATEST FIXES (May 10, 2026 — Session 11):
+- CATEGORIES EXPANDED: Gaming, Personal Care, Clothing, Gifts, Travel, Pets added to built-in list
+- PAYMENT METHODS: Cash, GCash, Maya, GrabPay, ShopeePay, Debit Card, Credit Card, Bank Transfer, Others
+- CURRENCIES: 57 total (added TWD, BHD, OMR, ILS, CZK, PLN, HUF, CLP, COP, PEN, UAH, RON, HRK, BGN, LKR, NPR, MMK, KHR, LAK, BND, MOP)
+- WALLET DISCOVERABILITY: Home 9-grid portals, always-visible wallet card, Analytics chips, Hub tile
+- NET WORTH CARD: "Tap to manage wallets" hint added
+- PROFILE: Manage Rules tile added alongside Manage Categories
+- CRASHLYTICS CRASHES FIXED: analytics firstWhere null, shake MissingPluginException
+- AI LOGGING FIX: max_tokens 200→300, LOGGING RULE added to system prompt
+- AI WALLET RULE: never log wallet balances as income entries
 - NEW FEATURE: Wallet Balances — track Cash on Hand, GCash, Maya, BDO, BPI, Landbank, UnionBank, Seabank
   - wallets table added via _ensureColumns (no version bump)
   - Pre-seeded with Cash on Hand + GCash at ₱0 on first run
