@@ -120,6 +120,11 @@ class _AIScreenState extends State<AIScreen> {
       final db = await DBService.getDB();
       installments = await db.query('installments', orderBy: 'start_date DESC');
     } catch (_) {}
+    // Load wallets for AI context
+    List<Map<String, dynamic>> wallets = [];
+    try {
+      wallets = await DBService.getWallets();
+    } catch (_) {}
     // Load custom categories for AI context
     List<String> customCategories = [];
     try {
@@ -183,6 +188,7 @@ class _AIScreenState extends State<AIScreen> {
       recurring: recurring,
       installments: installments,
       customCategories: customCategories,
+      wallets: wallets,
       todayMoodScore: todayMoodScore,
       todayMoodNote: todayMoodNote,
       quizChallenge: quizChallenge,
@@ -840,6 +846,48 @@ class _AIScreenState extends State<AIScreen> {
             if (match != null) {
               await DBService.deleteRecurring(match['id'] as int);
               _showActionSnackbar("Recurring deleted: ${match['title']}");
+            }
+          }
+          break;
+
+        case 'set_wallet_balance':
+          // Update a wallet balance by name
+          final walletName = action.params['wallet_name'] as String?;
+          final walletBalance = (action.params['balance'] as num?)?.toDouble();
+          if (walletName != null &&
+              walletBalance != null &&
+              walletBalance >= 0) {
+            final wallet = await DBService.findWalletByName(walletName);
+            if (wallet != null) {
+              await DBService.setWalletBalance(
+                  wallet['id'] as int, walletBalance);
+              _showActionSnackbar(
+                  "${wallet['icon'] ?? '💵'} ${wallet['name']} updated: ${CurrencyService.format(walletBalance)}");
+            } else {
+              // Wallet not found — create it
+              final icon = walletName.toLowerCase().contains('gcash')
+                  ? '📱'
+                  : walletName.toLowerCase().contains('maya') ||
+                          walletName.toLowerCase().contains('paymaya')
+                      ? '💜'
+                      : walletName.toLowerCase().contains('bank') ||
+                              walletName.toLowerCase().contains('bdo') ||
+                              walletName.toLowerCase().contains('bpi') ||
+                              walletName.toLowerCase().contains('landbank') ||
+                              walletName.toLowerCase().contains('unionbank') ||
+                              walletName.toLowerCase().contains('seabank')
+                          ? '🏦'
+                          : '💵';
+              await DBService.insertWallet({
+                'name': walletName,
+                'type': walletName.toLowerCase().contains('cash')
+                    ? 'cash'
+                    : 'ewallet',
+                'balance': walletBalance,
+                'icon': icon,
+              });
+              _showActionSnackbar(
+                  "$icon $walletName added: ${CurrencyService.format(walletBalance)}");
             }
           }
           break;

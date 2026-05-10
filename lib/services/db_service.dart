@@ -351,6 +351,39 @@ class DBService {
       ''');
     } catch (_) {}
 
+    // Ensure wallets table — cash on hand, GCash, Maya, bank balances
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS wallets(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL DEFAULT 'cash',
+          balance REAL NOT NULL DEFAULT 0,
+          icon TEXT DEFAULT '💵',
+          updated_at TEXT NOT NULL
+        )
+      ''');
+      // Seed default wallets if table is empty
+      final existing = await db.query('wallets');
+      if (existing.isEmpty) {
+        final now = DateTime.now().toIso8601String();
+        await db.insert('wallets', {
+          'name': 'Cash on Hand',
+          'type': 'cash',
+          'balance': 0.0,
+          'icon': '💵',
+          'updated_at': now
+        });
+        await db.insert('wallets', {
+          'name': 'GCash',
+          'type': 'ewallet',
+          'balance': 0.0,
+          'icon': '📱',
+          'updated_at': now
+        });
+      }
+    } catch (_) {}
+
     // One-time migration: set is_want=1 for Entertainment and Shopping expenses
     // that were logged before the AI started tagging them correctly
     // Education is intentionally excluded — always a Need
@@ -1387,6 +1420,11 @@ class DBService {
     try {
       await db.delete('installment_plans');
     } catch (_) {}
+    // Clear wallets — per-account balances (reset to 0, keep structure)
+    try {
+      await db.update('wallets',
+          {'balance': 0.0, 'updated_at': DateTime.now().toIso8601String()});
+    } catch (_) {}
     // Reset AI daily request counter — per-account so next user gets their own limit
     // (ai_chat_count and ai_chat_date are in SharedPreferences, not SQLite)
     try {
@@ -1647,5 +1685,60 @@ class DBService {
   static Future<void> clearConversationSummaries() async {
     final db = await getDB();
     await db.delete('conversation_summaries');
+  }
+
+  // ── WALLETS ───────────────────────────────────────────────────────────────
+
+  static Future<List<Map<String, dynamic>>> getWallets() async {
+    final db = await getDB();
+    return db.query('wallets', orderBy: 'id ASC');
+  }
+
+  static Future<double> getTotalWalletBalance() async {
+    final wallets = await getWallets();
+    return wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
+  }
+
+  static Future<void> setWalletBalance(int id, double balance) async {
+    final db = await getDB();
+    await db.update(
+      'wallets',
+      {'balance': balance, 'updated_at': DateTime.now().toIso8601String()},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    fireEvent(AppEvent.incomeChanged); // refresh profile/net worth
+  }
+
+  static Future<int> insertWallet(Map<String, dynamic> data) async {
+    final db = await getDB();
+    final id = await db.insert('wallets', {
+      ...data,
+      'updated_at': DateTime.now().toIso8601String(),
+    });
+    fireEvent(AppEvent.incomeChanged);
+    return id;
+  }
+
+  static Future<void> deleteWallet(int id) async {
+    final db = await getDB();
+    await db.delete('wallets', where: 'id = ?', whereArgs: [id]);
+    fireEvent(AppEvent.incomeChanged);
+  }
+
+  /// Find wallet by name (case-insensitive partial match) — used by AI action
+  static Future<Map<String, dynamic>?> findWalletByName(String name) async {
+    final wallets = await getWallets();
+    final lower = name.toLowerCase();
+    // Exact match first
+    for (final w in wallets) {
+      if ((w['name'] as String).toLowerCase() == lower) return w;
+    }
+    // Partial match
+    for (final w in wallets) {
+      if ((w['name'] as String).toLowerCase().contains(lower) ||
+          lower.contains((w['name'] as String).toLowerCase())) return w;
+    }
+    return null;
   }
 }

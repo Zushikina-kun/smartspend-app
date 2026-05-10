@@ -110,7 +110,22 @@ NEW FEATURE — Payment Plans tab in Debts screen:
 - Active vs Completed sections
 - installment_plans table created via _ensureColumns (no version bump)
 
-BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 10, 2026 — Session 9 final)
+BUILD: app-arm64-v8a-release.apk — 45.3 MB (May 10, 2026 — Session 10)
+
+LATEST FIXES (May 10, 2026 — Session 10):
+- NEW FEATURE: Wallet Balances — track Cash on Hand, GCash, Maya, BDO, BPI, Landbank, UnionBank, Seabank
+  - wallets table added via _ensureColumns (no version bump)
+  - Pre-seeded with Cash on Hand + GCash at ₱0 on first run
+  - Profile screen: tap net worth card → Wallets sheet (balance per wallet, total liquid)
+  - Add/edit/delete wallets; preset chips for common Philippine banks/e-wallets
+  - Net worth calculation uses wallet total instead of manual_assets when wallets have data
+  - Wallets reset to ₱0 on logout (per-account)
+- AI set_wallet_balance action: say "my GCash is ₱217" or "cash on hand is ₱697" → AI updates wallet
+  - Creates new wallet if name not found
+  - Auto-assigns icon (📱 GCash, 💜 Maya, 🏦 banks, 💵 cash)
+  - NEVER logs wallet balances as income entries anymore
+- AI context now includes wallet balances (total liquid shown to AI)
+- Debug log issue: AI was logging cash/GCash as income entries (0 actions) — now fixed with proper action
 
 LATEST FIXES (May 10, 2026 — Session 9 bug sweep):
 - home_screen.dart: missing mounted check before large setState in _loadData (crash on dispose fixed)

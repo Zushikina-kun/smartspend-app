@@ -108,6 +108,7 @@ class AIChatService {
     List<Map<String, dynamic>> recurring = const [],
     List<Map<String, dynamic>> installments = const [],
     List<String> customCategories = const [],
+    List<Map<String, dynamic>> wallets = const [],
     int? todayMoodScore,
     String? todayMoodNote,
     String quizChallenge = '',
@@ -192,6 +193,16 @@ class AIChatService {
               return "- ${i['name']}: ₱${remaining.toStringAsFixed(0)} remaining (₱${monthly.toStringAsFixed(0)}/mo, $paid/$totalMonths months paid)";
             }).join("\n");
 
+    // Wallet balances summary
+    final walletsSummary = wallets.isEmpty
+        ? ""
+        : "\n\nWallet balances (cash on hand / e-wallets / banks):\n" +
+            wallets.map((w) {
+              final bal = (w['balance'] as num).toDouble();
+              return "- ${w['icon'] ?? '💵'} ${w['name']}: ₱${bal.toStringAsFixed(2)}";
+            }).join("\n") +
+            "\nTotal liquid: ₱${wallets.fold<double>(0, (s, w) => s + (w['balance'] as num)).toStringAsFixed(2)}";
+
     // Build per-month spending summary — last 3 months only to save tokens
     final sortedMonths = (monthlyTotals.entries.toList()
           ..sort((a, b) => b.key.compareTo(a.key)))
@@ -216,7 +227,7 @@ ${customCategories.isNotEmpty ? 'Custom cats: ${customCategories.join(', ')}' : 
 Expenses (if not listed here, it does not exist in DB):
 $expenseSummary
 
-Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary""";
+Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$walletsSummary""";
   }
 
   /// Normalize category names to match our standard list.
@@ -569,7 +580,11 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "  Use add_installment_plan (NOT add_debt) when user mentions: ShopeePayLater, GCash GLoan, HomeCredit, installment, monthly payment plan, 'bayad buwan-buwan', fixed monthly payments.\n"
         "• Pay debt (partial/full): ACTION:{\"type\":\"update_debt\",\"person\":\"John\",\"payment\":500}\n"
         "• Delete goal: ACTION:{\"type\":\"delete_goal\",\"name\":\"RTX 4060 Ti\"}\n"
-        "• Delete recurring: ACTION:{\"type\":\"delete_recurring\",\"title\":\"Netflix\"}\n\n"
+        "• Delete recurring: ACTION:{\"type\":\"delete_recurring\",\"title\":\"Netflix\"}\n"
+        "• Set wallet balance: ACTION:{\"type\":\"set_wallet_balance\",\"wallet_name\":\"GCash\",\"balance\":217.27}\n"
+        "  Use set_wallet_balance when user says 'I have X in GCash/cash/Maya/bank', 'my cash on hand is X', 'GCash balance is X', 'update my wallet'.\n"
+        "  wallet_name must match one of the user's wallets (Cash on Hand, GCash, Maya, etc.).\n"
+        "  NEVER log wallet balances as income entries — always use set_wallet_balance.\n\n"
         "BULK RENAME / CAPITALIZATION FIX (CRITICAL): When user says 'fix capitalization', 'rename my expenses', 'fix the names', or similar — you MUST fire update_expense ACTION lines for EVERY expense that needs changing. Do NOT just list the corrected names as text. Each rename = one ACTION line. Example:\n"
         "ACTION:{\"type\":\"update_expense\",\"item_name\":\"jeepney fare\",\"new_item_name\":\"Jeepney Fare\"}\n"
         "The update_expense action supports a 'new_item_name' field for renaming. Use it.\n"

@@ -4,7 +4,7 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 10, 2026 (v2.5.0 — Session 9 final: Bug sweep — 5 crash fixes, app_lock logout data-loss fix, deprecated API fix)
+**Last Updated:** May 10, 2026 (v2.5.0 — Session 10: Wallet balances feature — Cash on Hand, GCash, Maya, bank accounts; AI set_wallet_balance action; net worth uses wallet totals)
 **Build:** app-arm64-v8a-release.apk — 45.3 MB (May 10, 2026)
 
 ---

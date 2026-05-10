@@ -47,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double _totalAssets = 0;
   double _totalDebts = 0;
   List<Map<String, dynamic>> _scoreBreakdown = [];
+  List<Map<String, dynamic>> _wallets = [];
   UserProfile? _profile;
   String _accountType = 'employed';
   String _incomeFrequency = 'monthly';
@@ -138,10 +139,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final totalAssets = double.tryParse(assetsStr ?? '') ?? 0.0;
       // Include installment remaining balances in liabilities (#12)
       final installmentsDebt = await DBService.getInstallmentsRemainingTotal();
+      // Load wallet balances
+      List<Map<String, dynamic>> wallets = [];
+      try {
+        wallets = await DBService.getWallets();
+      } catch (_) {}
+      final walletTotal =
+          wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
       if (mounted)
         setState(() {
           _totalDebts = totalDebts + installmentsDebt;
-          _totalAssets = totalAssets;
+          _totalAssets = walletTotal > 0 ? walletTotal : totalAssets;
+          _wallets = wallets;
         });
     } catch (e) {
       // Something failed — still show the screen
@@ -168,54 +177,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _showAssetsDialog() async {
-    final assetsStr = await DBService.getSetting('manual_assets');
-    final ctrl = TextEditingController(text: assetsStr ?? '0');
+
+  void _showWalletsDialog() async {
     if (!mounted) return;
-    await showDialog(
+    await showModalBottomSheet(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Manual Assets"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Add the value of assets not tracked in the app — savings account balance, cash on hand, investments, property value, etc.",
-              style: TextStyle(fontSize: 13),
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: ctrl,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Total asset value",
-                prefixText: "${CurrencyService.symbol} ",
-                border: const OutlineInputBorder(),
-                helperText:
-                    "Net Worth = Income logged + Assets − Expenses − Debts",
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () async {
-              final val = double.tryParse(ctrl.text) ?? 0;
-              await DBService.setSetting('manual_assets', val.toString());
-              if (mounted) {
-                setState(() => _totalAssets = val);
-                Navigator.pop(context);
-              }
-            },
-            child: const Text("Save"),
-          ),
-        ],
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => _WalletsSheet(
+        wallets: _wallets,
+        onChanged: () async {
+          final updated = await DBService.getWallets();
+          if (mounted) setState(() => _wallets = updated);
+        },
       ),
     );
+    // Refresh after sheet closes
+    final updated = await DBService.getWallets();
+    if (mounted) {
+      final walletTotal =
+          updated.fold<double>(0, (s, w) => s + (w['balance'] as num));
+      setState(() {
+        _wallets = updated;
+        _totalAssets = walletTotal;
+      });
+    }
   }
 
   void _showSpendingChallengeDialog() async {
@@ -1103,9 +1090,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Builder(builder: (context) {
                       final isAllowanceBased = _accountType == 'student' ||
                           _accountType == 'unemployed';
+                      final walletTotal = _wallets.fold<double>(
+                          0, (s, w) => s + (w['balance'] as num));
                       final balance = _monthlyIncome - _totalSpent;
                       final netWorth = _totalIncome +
-                          _totalAssets -
+                          (walletTotal > 0 ? walletTotal : _totalAssets) -
                           _totalSpent -
                           _totalDebts;
                       final displayValue =
@@ -1115,7 +1104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ? "Remaining Balance (This Month)"
                           : "Net Worth";
                       return GestureDetector(
-                        onTap: isAllowanceBased ? null : _showAssetsDialog,
+                        onTap: () => _showWalletsDialog(),
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
@@ -1174,7 +1163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                        "Assets: ${CurrencyService.format(_totalIncome + _totalAssets)}",
+                                        "Assets: ${CurrencyService.format(_totalIncome + (walletTotal > 0 ? walletTotal : _totalAssets))}",
                                         style: const TextStyle(
                                             fontSize: 11, color: Colors.green)),
                                     Text(
@@ -2039,4 +2028,240 @@ class _SparklinePainter extends CustomPainter {
   @override
   bool shouldRepaint(_SparklinePainter old) =>
       old.values != values || old.color != color;
+}
+
+// ── WALLETS SHEET ─────────────────────────────────────────────────────────────
+
+class _WalletsSheet extends StatefulWidget {
+  final List<Map<String, dynamic>> wallets;
+  final VoidCallback onChanged;
+  const _WalletsSheet({required this.wallets, required this.onChanged});
+
+  @override
+  State<_WalletsSheet> createState() => _WalletsSheetState();
+}
+
+class _WalletsSheetState extends State<_WalletsSheet> {
+  late List<Map<String, dynamic>> _wallets;
+
+  static const _presets = [
+    ('Cash on Hand', 'cash', '💵'),
+    ('GCash', 'ewallet', '📱'),
+    ('Maya', 'ewallet', '💜'),
+    ('BDO', 'bank', '🏦'),
+    ('BPI', 'bank', '🏦'),
+    ('Landbank', 'bank', '🏦'),
+    ('UnionBank', 'bank', '🏦'),
+    ('Seabank', 'bank', '🌊'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _wallets = List.from(widget.wallets);
+  }
+
+  Future<void> _editBalance(Map<String, dynamic> wallet) async {
+    final ctrl = TextEditingController(
+        text: (wallet['balance'] as num) > 0
+            ? (wallet['balance'] as num).toStringAsFixed(2)
+            : '');
+    final result = await showDialog<double>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text("${wallet['icon']} ${wallet['name']}"),
+        content: TextField(
+          controller: ctrl,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: "Current balance",
+            prefixText: "${CurrencyService.symbol} ",
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () =>
+                Navigator.pop(context, double.tryParse(ctrl.text) ?? 0),
+            child: const Text("Save"),
+          ),
+        ],
+      ),
+    );
+    if (result != null && mounted) {
+      await DBService.setWalletBalance(wallet['id'] as int, result);
+      final updated = await DBService.getWallets();
+      setState(() => _wallets = updated);
+      widget.onChanged();
+    }
+  }
+
+  Future<void> _addWallet(String name, String type, String icon) async {
+    // Check if already exists
+    final exists = _wallets
+        .any((w) => (w['name'] as String).toLowerCase() == name.toLowerCase());
+    if (exists) return;
+    await DBService.insertWallet(
+        {'name': name, 'type': type, 'balance': 0.0, 'icon': icon});
+    final updated = await DBService.getWallets();
+    if (mounted) setState(() => _wallets = updated);
+    widget.onChanged();
+  }
+
+  Future<void> _deleteWallet(int id) async {
+    await DBService.deleteWallet(id);
+    final updated = await DBService.getWallets();
+    if (mounted) setState(() => _wallets = updated);
+    widget.onChanged();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final total = _wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
+
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.6,
+        minChildSize: 0.4,
+        maxChildSize: 0.9,
+        builder: (_, ctrl) => Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2))),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("My Wallets",
+                            style: TextStyle(
+                                fontSize: 17, fontWeight: FontWeight.bold)),
+                        Text("Tap a wallet to update its balance",
+                            style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text("Total Liquid",
+                          style:
+                              TextStyle(fontSize: 11, color: Colors.grey[500])),
+                      Text(CurrencyService.format(total),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: cs.primary)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: ListView(
+                controller: ctrl,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  // Existing wallets
+                  ..._wallets.map((w) {
+                    final bal = (w['balance'] as num).toDouble();
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      child: ListTile(
+                        leading: Text(w['icon'] as String? ?? '💵',
+                            style: const TextStyle(fontSize: 24)),
+                        title: Text(w['name'] as String,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 14)),
+                        subtitle: Text(
+                            bal > 0
+                                ? CurrencyService.format(bal)
+                                : "Tap to set balance",
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: bal > 0 ? cs.primary : Colors.grey,
+                                fontWeight: bal > 0
+                                    ? FontWeight.w600
+                                    : FontWeight.normal)),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined, size: 18),
+                              onPressed: () => _editBalance(w),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                            ),
+                            const SizedBox(width: 8),
+                            // Don't allow deleting Cash on Hand or GCash (defaults)
+                            if ((w['id'] as int) > 2)
+                              IconButton(
+                                icon: Icon(Icons.delete_outline,
+                                    size: 18, color: Colors.red[300]),
+                                onPressed: () => _deleteWallet(w['id'] as int),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                          ],
+                        ),
+                        onTap: () => _editBalance(w),
+                      ),
+                    );
+                  }),
+
+                  // Add preset wallets not yet added
+                  const Divider(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: Text("Add wallet",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _presets
+                        .where((p) => !_wallets.any((w) =>
+                            (w['name'] as String).toLowerCase() ==
+                            p.$1.toLowerCase()))
+                        .map((p) => ActionChip(
+                              avatar: Text(p.$3,
+                                  style: const TextStyle(fontSize: 14)),
+                              label: Text(p.$1,
+                                  style: const TextStyle(fontSize: 12)),
+                              onPressed: () => _addWallet(p.$1, p.$2, p.$3),
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
