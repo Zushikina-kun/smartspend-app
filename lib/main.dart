@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'screens/splash_screen.dart';
 import 'screens/app_lock_screen.dart';
 import 'screens/home_screen.dart';
@@ -25,6 +26,11 @@ void main() async {
   ));
 
   await Firebase.initializeApp();
+
+  // App Check — Play Integrity for release, debug provider for debug builds
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.playIntegrity,
+  );
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
