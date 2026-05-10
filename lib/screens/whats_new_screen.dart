@@ -20,6 +20,21 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
+      '💵',
+      'Wallet Balances',
+      'Track Cash on Hand, GCash, Maya, BDO, BPI, and 30+ PH banks — tap the net worth card in Profile'
+    ),
+    (
+      '🏦',
+      'Full PH Bank & E-Wallet Support',
+      'Import from BDO, BPI, Metrobank, Landbank, RCBC, GoTyme, Tonik, GrabPay, ShopeePay, and more'
+    ),
+    (
+      '🧾',
+      'Smart Receipt Import',
+      'Scan a receipt → AI extracts each item individually → review & bulk import'
+    ),
+    (
       '🗓️',
       'Unified Financial Calendar',
       'Bills, debts, goals, installments, income — all on one calendar with score dots'
@@ -30,66 +45,37 @@ class WhatsNewScreen extends StatelessWidget {
       '16 earnable badges — find them in Hub → Achievements'
     ),
     (
-      '🎮',
-      'Daily & Weekly Challenges',
-      'Daily tasks + weekly spending challenges on the home screen'
-    ),
-    (
-      '🏅',
-      'Monthly Spending Challenge',
-      'Set a monthly spending cap and track progress'
-    ),
-    (
-      '⬆️',
-      'Level-Up Notifications',
-      'Get notified when your Financial Health Score improves'
-    ),
-    (
       '😊',
       'Mood Check-In + Notes',
       'Track mood with optional notes — see spending correlation in Analytics'
     ),
     ('📊', 'Category Breakdown', 'Expandable charts per category in Analytics'),
     ('🔀', 'Auto-Categorization Rules', 'Set keyword → category rules in Hub'),
-    ('📅', 'Last Month + Month Picker', 'New period filters in Analytics'),
     ('🆚', 'Period Comparison Tool', 'Compare any two months side by side'),
     (
-      '💡',
-      'Financial Literacy Tips',
-      'Contextual tips when score components are low'
+      '📅',
+      'Installment & Payment Plans',
+      'Track phones, gadgets, ShopeePayLater, GCash GLoan & more'
     ),
     (
-      '📢',
-      'Loss Aversion Alerts',
-      'Budget alerts now linked to your savings goals'
-    ),
-    ('⭐', 'Windfall Income', 'Mark one-time income separately'),
-    ('📝', 'Logging Streak', 'New streak badge for daily logging'),
-    (
-      '🔍',
-      'Low Confidence Filter',
-      'Filter AI-logged expenses by confidence in Transactions'
+      '🏪',
+      'Import from Bank / GCash',
+      'Paste any bank or e-wallet history — AI parses & bulk imports with real dates'
     ),
     (
-      '💳',
-      'Payment Method Chart',
-      'See Cash vs GCash vs Card breakdown in Analytics'
-    ),
-    ('🏪', 'Top Merchants', 'See your most-visited shops in Analytics'),
-    (
-      '✅',
-      'Done Spending Today',
-      'Commit to no more spending for the day — gentle reminder if you do'
+      '🏷️',
+      'Transaction Tags',
+      'Tag expenses with #hashtags (e.g. #capstone, #shared) — filter by tag in Transactions'
     ),
     (
-      '🎯',
-      'Goal Pace Indicator',
-      'See if you\'re on track to hit your savings goal by deadline'
+      '🔄',
+      'Subscription Auto-Detection',
+      'Automatically detects recurring expense patterns and suggests adding them as recurring transactions'
     ),
     (
-      '💾',
-      'Backup v7',
-      'Backup now includes mood log + budget percentage settings'
+      '🌍',
+      'Market Insights',
+      'Live PHP exchange rates (USD, EUR, GBP, JPY, SGD) + financial literacy tips in Analytics'
     ),
   ];
 

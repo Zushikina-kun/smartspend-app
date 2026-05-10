@@ -310,6 +310,46 @@ const _sections = [
     ],
   ),
   _HelpSection(
+    title: "Wallet Balances",
+    icon: Icons.account_balance_wallet_outlined,
+    color: Colors.green,
+    items: [
+      _HelpItem(
+        title: "What are Wallet Balances?",
+        body:
+            "Wallet Balances let you track how much money you actually have right now across all your accounts — separate from your income and expenses.\n\n"
+            "Supported wallets:\n"
+            "• 💵 Cash on Hand — physical money in your pocket\n"
+            "• 📱 GCash, 💜 Maya, 🟢 GrabPay, 🟠 ShopeePay, 🪙 Coins.ph\n"
+            "• 🏦 BDO, BPI, Metrobank, Landbank, PNB, RCBC, Security Bank, Chinabank, UnionBank, EastWest, PSBank, Maybank\n"
+            "• 🏦 Digital banks: GoTyme, Tonik, UNObank, UnionDigital, Seabank\n"
+            "• 🏪 Remittance: Cebuana, M Lhuillier, Palawan, Western Union, LBC, Tambunting, USSC\n\n"
+            "Access: Profile → tap the Net Worth / Balance card → Wallets sheet.",
+      ),
+      _HelpItem(
+        title: "How do I update my wallet balance?",
+        body: "Two ways:\n\n"
+            "1. Manual: Profile → tap Net Worth card → tap any wallet → enter current balance → Save\n\n"
+            "2. Via AI: Just tell the AI your balance naturally:\n"
+            "   • 'my cash on hand is ₱697'\n"
+            "   • 'GCash balance is ₱217'\n"
+            "   • 'I have ₱5,000 in BDO'\n"
+            "   The AI will update the wallet automatically.\n\n"
+            "You can also add new wallets by tapping the preset chips at the bottom of the Wallets sheet.",
+        example:
+            "Say 'my GCash is ₱500' → AI updates GCash wallet to ₱500 instantly.",
+      ),
+      _HelpItem(
+        title: "How do wallets affect Net Worth?",
+        body:
+            "Wallet balances are used as your 'liquid assets' in the net worth calculation:\n\n"
+            "Net Worth = Wallet Total + Income logged − Expenses − Debts − Installments\n\n"
+            "Wallet balances are NOT income — they don't affect your FHS score, budgets, or 50/30/20 breakdown. They're purely for net worth tracking.\n\n"
+            "Balances reset to ₱0 when you log out (per-account data).",
+      ),
+    ],
+  ),
+  _HelpSection(
     title: "Camera & Scanner",
     icon: Icons.camera_enhance,
     color: Colors.orange,
@@ -332,9 +372,13 @@ const _sections = [
       _HelpItem(
         title: "Scanning a receipt",
         body:
-            "Tap the shutter button in the Smart Scanner. It opens the camera — take a clear, well-lit photo of the receipt. ML Kit extracts the text, shows it to you for review and editing, then you send it to the AI.",
+            "Tap the shutter button in the Smart Scanner. It opens the camera — take a clear, well-lit photo of the receipt. ML Kit extracts the text.\n\n"
+            "Smart routing:\n"
+            "• If the receipt has 3+ prices or a 'Total' line → shows 'Import Items' button → routes to the Import screen where AI extracts each item individually with categories and Want/Need tags\n"
+            "• Simple receipts or single items → 'Send to AI' button → logs via chat\n\n"
+            "The Import Items flow is better for grocery/supermarket receipts with multiple items.",
         example:
-            'Scan SM receipt → extracted text shows items and total → edit if needed → Send to AI.',
+            'Scan Jollibee receipt → "Import Items" → AI extracts Chickenjoy ₱149, Fries ₱59, Coke ₱39 → review → import all at once.',
       ),
       _HelpItem(
         title: "Gallery import",
@@ -605,20 +649,28 @@ const _sections = [
       _HelpItem(
         title: "How is Net Worth calculated?",
         body:
-            "Net Worth = Income logged + Manual Assets − Total Expenses − Outstanding Debts − Installment Remaining Balances\n\n"
+            "Net Worth = Income logged + Wallet Balances − Total Expenses − Outstanding Debts − Installment Remaining Balances\n\n"
+            "• Wallet Balances — your Cash on Hand, GCash, Maya, bank accounts (tap the net worth card in Profile to manage)\n"
             "• Income logged — all income entries you've recorded in the app\n"
-            "• Manual Assets — savings account balance, cash on hand, investments, property (you enter this manually)\n"
             "• Total Expenses — sum of all expenses ever logged\n"
             "• Outstanding Debts — what you still owe (amount minus what you've paid)\n"
             "• Installment Remaining — months remaining × monthly payment for all installments\n\n"
-            "Tap the Net Worth card in Profile to add or update your manual assets.",
+            "Tap the Net Worth card in Profile to open the Wallets sheet and update each balance.",
         example:
-            "Income ₱30,000 + Assets ₱50,000 − Expenses ₱15,000 − Debts ₱6,000 − Installments ₱8,000 = ₱51,000 net worth.",
+            "Cash ₱697 + GCash ₱217 + BDO ₱5,000 + Income ₱30,000 − Expenses ₱15,000 − Debts ₱6,000 = ₱14,914 net worth.",
       ),
       _HelpItem(
-        title: "What are Manual Assets?",
+        title: "What are Wallet Balances?",
         body:
-            "Things of value that aren't tracked as income in the app — your savings account balance, cash in your wallet, investments, the value of property you own. Tap the Net Worth card → enter the total value. This makes your net worth calculation more accurate.",
+            "Wallet Balances track your actual liquid money across all accounts:\n\n"
+            "• 💵 Cash on Hand — physical money in your pocket\n"
+            "• 📱 GCash — your GCash wallet balance\n"
+            "• 💜 Maya — Maya/PayMaya balance\n"
+            "• 🟢 GrabPay — GrabPay wallet\n"
+            "• 🏦 Banks — BDO, BPI, Metrobank, Landbank, PNB, RCBC, Security Bank, Chinabank, UnionBank, EastWest, Seabank, GoTyme, Tonik, and more\n"
+            "• 🏪 Remittance — Cebuana, Palawan, Western Union, LBC, etc.\n\n"
+            "You can also tell the AI: 'my GCash is ₱500' or 'cash on hand is ₱300' and it will update automatically.\n\n"
+            "Wallet balances are separate from income — they don't affect your FHS score or budget calculations.",
       ),
     ],
   ),

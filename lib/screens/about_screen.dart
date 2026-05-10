@@ -134,7 +134,11 @@ class AboutScreen extends StatelessWidget {
               ),
               (
                 "🏦 Import from Bank / GCash",
-                "Paste any bank or e-wallet history — AI parses & bulk imports with real dates"
+                "Paste history from GCash, Maya, BDO, BPI, Metrobank, Landbank, RCBC, GoTyme, Tonik, Seabank, GrabPay, ShopeePay & more — AI parses & bulk imports"
+              ),
+              (
+                "🧾 Smart Receipt Import",
+                "Scan receipt → AI extracts each item individually → review & bulk import"
               ),
               (
                 "🏷️ Transaction Tags",
@@ -177,7 +181,14 @@ class AboutScreen extends StatelessWidget {
                 "Full diagnostics: FHS breakdown, payment plans, notification state, AI context"
               ),
               ("🔮 Cash Flow Forecast", "30-day projected balance from bills"),
-              ("💎 Net Worth Tracker", "Assets + income − expenses − debts"),
+              (
+                "💎 Net Worth Tracker",
+                "Wallet balances + income − expenses − debts"
+              ),
+              (
+                "💵 Wallet Balances",
+                "Cash on Hand, GCash, Maya, BDO, BPI, 30+ PH banks & e-wallets"
+              ),
               ("🤔 AI What-If Scenarios", "Ask 'What if I cut food by ₱500?'"),
               (
                 "🔔 Weekly Behavioral Summary",

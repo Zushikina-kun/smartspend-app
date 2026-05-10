@@ -1108,7 +1108,7 @@ class _AIScreenState extends State<AIScreen> {
                 "• \"How much did I spend on food this month?\"\n"
                 "• \"How do I apply for SSS loan?\"\n"
                 "• \"Is ₱12,000 a good price for a ref?\"\n\n"
-                "15 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, and more.\n\n"
+                "16 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, and more.\n\n"
                 "Daily message limit: 60/day — resets at midnight.",
           ),
           // D2: show remaining daily messages with reset countdown
