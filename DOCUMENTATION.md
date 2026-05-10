@@ -1,4 +1,4 @@
-# Smart Spend — Application Documentation
+﻿# Smart Spend — Application Documentation
 
 **Version:** 2.5.0
 **Group:** Lucid Frame
@@ -792,10 +792,31 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Real dates and times preserved from original transaction history
 
 ### 60. Quick Access Portals (Home Screen)
-- 6-card grid on Home screen: Analytics, Bill Calendar, Goals, Debts & Plans, Import, Recurring
+- 9-card grid (3×3) on Home screen: Analytics, Bill Calendar, Goals, Debts & Plans, My Wallets, Budgets, Import, Recurring, Achievements
 - Each card shows icon, name, and brief description
-- InfoButton explains all 6 portals
+- InfoButton explains all 9 portals
 - Separate from the Hub (which shows all features)
+- Wallet card always visible on home screen — shows "tap to set up" when balances are ₱0
+
+### 61. Wallet Balances
+- Track liquid money across all accounts: Cash on Hand, GCash, Maya, GrabPay, ShopeePay, Coins.ph, Lazada Wallet, TikTok Shop Wallet, PayPal, Wise
+- 17 Philippine banks: BDO, BPI, Metrobank, Landbank, PNB, RCBC, Security Bank, Chinabank, UnionBank, EastWest, PSBank, Maybank, GoTyme, Tonik, UNObank, UnionDigital, Seabank
+- Remittance centers: Cebuana Lhuillier, M Lhuillier, Palawan Pawnshop, Western Union, LBC, Tambunting, USSC
+- Accessible from: Home wallet card, Home 9-grid portal, Hub → My Wallets, Profile → tap net worth card, Analytics nav chips
+- AI action: `set_wallet_balance` — say "my GCash is ₱500" → updates automatically
+- Creates new wallet if name not found, assigns correct icon automatically
+- Wallet total used as liquid assets in net worth calculation
+- Separate from income — does NOT affect FHS score, budgets, or 50/30/20
+- Resets to ₱0 on logout (per-account)
+- `wallets` table created via `_ensureColumns` (no version bump)
+
+### 62. Firebase App Check (Play Integrity)
+- Integrated via `firebase_app_check` package
+- Uses Play Integrity API for Android attestation
+- Initialized in `main.dart` before any Firebase calls
+- SHA-256 fingerprint registered: `0E:F3:30:F9:45:F2:0D:57:59:2C:AB:9E:D4:57:24:FF:76:B0:D4:87:5A:DB:0B:B2:06:36:32:94:98:38:CE:4C`
+- Status: Monitoring mode (metrics visible for Firestore + Auth, enforcement deferred to production)
+- Reason for not enforcing: sideloaded APK during academic phase; enforcement will be activated before Play Store submission
 
 ---
 
@@ -809,6 +830,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - `installment_plans` — Payment Plans tab (ShopeePayLater, GCash GLoan, etc.)
 - `recurring_candidates` — auto-detected subscription patterns
 - `conversation_summaries` — compressed AI chat history for token efficiency
+- `wallets` — wallet balances (Cash on Hand, GCash, Maya, banks, remittance centers)
 
 **New columns added this version:**
 - `income.is_windfall` — marks one-time unexpected income (0/1)
@@ -1171,6 +1193,13 @@ flutter build appbundle --release
 - Logout clears Firebase + Google Sign-In sessions
 - Demo mode runs without any Firebase auth (null user handled gracefully)
 
+### Firebase App Check
+- Play Integrity API integrated via `firebase_app_check` package
+- Initialized in `main.dart` before any Firebase calls
+- SHA-256 fingerprint registered in Firebase Console
+- Status: **Monitoring mode** — metrics visible for both Firestore and Authentication
+- Enforcement deferred to production (post-capstone) to avoid blocking sideloaded APKs during academic testing
+
 ### Firestore Rules
 ```javascript
 rules_version = '2';
@@ -1304,22 +1333,29 @@ AI appends `ACTION:{...}` lines. Parsed via robust dotAll regex (handles multi-l
 ### AI CRUD Coverage
 | Operation | Supported Actions |
 |-----------|------------------|
-| **Create** | `log_expense`, `add_goal`, `add_income`, `add_debt`, `add_recurring` |
-| **Read** | Full context — expenses, budgets, income, score, goals, debts |
-| **Update** | `set_budget`, `set_income`, `set_account_type`, `update_goal`, `update_expense` |
-| **Delete** | `delete_expense` (last resort — AI prefers `update_expense` for corrections) |
+| **Create** | `log_expense`, `add_goal`, `add_income`, `add_debt`, `add_recurring`, `add_installment_plan` |
+| **Read** | Full context — expenses, budgets, income, score, goals, debts, wallets |
+| **Update** | `set_budget`, `set_income`, `set_account_type`, `update_goal`, `update_expense`, `update_debt`, `set_wallet_balance` |
+| **Delete** | `delete_expense` (requires DELETE confirmation), `delete_goal`, `delete_recurring` |
 
 **Correction behavior:** When the user asks to fix a wrong category or amount, the AI uses `update_expense` to edit the existing entry in-place. For deletion, the AI requires the user to type **DELETE** as confirmation before proceeding. If the AI cannot identify the correct entry, it tells the user to delete manually from the Transactions screen.
 
 ### Category Normalization
-Both `AIChatService` and `LLMService` use comprehensive Filipino-aware category normalization covering 80+ keywords including:
-- **Food:** candy, chips, biscuit, chocolate, ice cream, cake, bread, milk, water (bottled), noodles, pizza, burger, shawarma, siomai, fishball, kwek-kwek, isaw, balut, taho, halo-halo, pansit, adobo, sinigang, silog variants, lomi, lugaw, goto, champorado, Ministop, Family Mart, Greenwich, Goldilocks, Red Ribbon, Starbucks, Dunkin, supermarket, wet market
+Both `AIChatService` and `LLMService` use comprehensive Filipino-aware category normalization covering 100+ keywords across **14 built-in categories:**
+- **Food:** candy, chips, biscuit, chocolate, ice cream, noodles, pizza, burger, shawarma, siomai, fishball, kwek-kwek, isaw, balut, taho, halo-halo, pansit, adobo, sinigang, silog variants, lomi, lugaw, goto, champorado, Ministop, Family Mart, Greenwich, Goldilocks, Red Ribbon, Starbucks, Dunkin, supermarket, wet market
 - **Food delivery (checked BEFORE transport):** GrabFood, Grab Food, Foodpanda, Shopee Food
 - **Transportation:** tricycle, trike, pedicab, UV Express, P2P, TNVS, Lalamove, parking, pasada
 - **Bills:** WiFi, DITO, mortgage, SSS, PhilHealth, Pag-IBIG
-- **Shopping:** shirt, shoes, ukay, tiangge, accessories, cosmetics, makeup, skincare
+- **Shopping:** Lazada, Shopee, gadgets, appliances, accessories, SM, Ayala, Robinsons
+- **Entertainment:** movie, cinema, concert, arcade, bar, videoke, karaoke, event, ticket
+- **Gaming:** Steam, Mobile Legends, MLBB, CODM, Roblox, Genshin, Valorant, Dota, top-up, Codashop, UniPin, Xbox, PlayStation, Nintendo, esports
 - **Health:** dental, dentist, glasses, eyeglasses, Mercury Drug, Watsons, Rose Pharmacy
-- **Education:** notebook, uniform
+- **Education:** notebook, uniform, tuition, books, school supplies, course, training
+- **Personal Care:** haircut, salon, barbershop, nail, spa, massage, shampoo, soap, toothpaste, deodorant, lotion, hygiene
+- **Clothing:** shirt, pants, jeans, dress, shoes, sneakers, jacket, hoodie, ukay, fashion
+- **Gifts:** pasalubong, present, souvenir, donation, charity
+- **Travel:** hotel, airfare, airline, flight, Cebu Pacific, AirAsia, resort, tour, Airbnb, hostel
+- **Pets:** pet food, dog food, cat food, veterinary, Pedigree, Whiskas
 - User-defined rules take priority over all built-in keywords
 
 ### AI Language Behavior
@@ -1336,7 +1372,13 @@ Both `AIChatService` and `LLMService` use comprehensive Filipino-aware category 
 - Base: PHP (Philippine Peso)
 - All amounts stored in PHP, converted for display via CurrencyService.format()
 - Rates from open.er-api.com, cached 1 hour, offline fallback
-- 34+ currencies supported
+- **57 currencies supported** (expanded from 35)
+- Includes all major Southeast Asian currencies: PHP, SGD, MYR, IDR, THB, VND, MMK, KHR, LAK, BND, MOP
+- Middle East: SAR, AED, KWD, QAR, BHD, OMR, ILS
+- Eastern Europe: CZK, PLN, HUF, UAH, RON, HRK, BGN
+- Latin America: BRL, MXN, CLP, COP, PEN
+- South Asia: INR, PKR, BDT, LKR, NPR
+- Note: Rates shown are mid-market (interbank). Actual cashout rates vary by provider — banks typically 3–5% below mid-market, remittance centers ₱0.50–₱2.00/USD below mid-market, digital banks closest to mid-market
 
 ---
 
@@ -1499,7 +1541,7 @@ All rights reserved by **Lucid Frame**, 2026.
 | # | Item | Notes |
 |---|---|---|
 | 5 | CSV/Bank import (GCash, Maya, BDO, BPI) | High effort — packages already in pubspec |
-| K | Multi-wallet system (GCash/Cash/Bank/Savings) | High effort — needs DB schema change |
+| K | ~~Multi-wallet system (GCash/Cash/Bank/Savings)~~ | ✅ **DONE** — Wallet Balances feature implemented (section 61) |
 | L | Backend API proxy for Groq key | Pre-Play Store requirement |
 | M | DB indexes for performance at scale | Low urgency — needed at 1000+ expenses |
 
@@ -1607,27 +1649,24 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ### ✅ Fully Implemented (v2.5.0)
 
-All features listed in sections 1–60 of this document are fully built and working in the current build. Key highlights:
-
-- 15 AI action types (log, budget, income, goals, debts, recurring, payment plans, and more)
-- 60+ features across all screens
-- Full Firestore sync including Payment Plans (fixed May 9, 2026)
+All features listed in sections 1–62 of this document are fully built and working in the current build. Key highlights:
+- **16 AI action types:** log_expense, set_budget, set_income, add_income, add_goal, update_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, delete_goal, set_wallet_balance
+- **62+ features** across all screens
+- **Wallet Balances** — Cash on Hand, GCash, Maya, 17 PH banks, remittance centers (section 61)
+- **Firebase App Check** — Play Integrity integrated, monitoring mode (section 62)
+- **14 built-in categories** — added Gaming, Personal Care, Clothing, Gifts, Travel, Pets
+- **9 payment methods** — Cash, GCash, Maya, GrabPay, ShopeePay, Debit Card, Credit Card, Bank Transfer, Others
+- **57 currencies** supported
+- Full Firestore sync including Payment Plans and Wallet Balances
 - Weekly notifications fixed (was using wrong week key)
-- App lock bypass fixed (back button now blocked on lock screen)
-- Transaction Tags, Subscription Auto-Detection, Market Insights
-- Spending Personality, Filipino Financial Calendar AI
-- Conversation summarization (token-efficient AI)
-- Bank/GCash import (AI-powered, any format)
-
----
-
+- 2 Crashlytics crashes fixed (analytics firstWhere null, shake MissingPluginException)
 ### ⬜ Deferred to Capstone 2
 
 These features were planned but deferred because they require significant architectural changes, new packages, or are lower priority than defense-critical items.
 
 | Feature | Why Deferred | Estimated Effort | When |
 |---------|-------------|-----------------|------|
-| **Multi-wallet system** (GCash/Cash/Bank/Savings) | Requires `account_id` FK on expenses table — DB v12 schema change. Touches every expense-related screen. | Very High | Capstone 2 |
+| ~~**Multi-wallet system** (GCash/Cash/Bank/Savings)~~ | ✅ **DONE** — Wallet Balances feature tracks Cash on Hand, GCash, Maya, 17 banks, remittance centers. Note: this is balance tracking, not full multi-wallet with transfers. | — | Implemented v2.5.0 |
 | **Transfer transactions** (Cash → GCash top-up) | Needs wallet system first. New transaction type that must be excluded from expense analytics. | High | After wallet system |
 | **Spending heatmap calendar** | Custom Flutter widget showing daily spend intensity by color. No DB needed but significant UI work. | Medium | Capstone 2 |
 | **Debt payment timeline** | Visual payoff projection chart per debt. Data exists, just needs visualization. | Medium | Capstone 2 |
@@ -1677,7 +1716,7 @@ These are intentional design decisions or platform constraints — not bugs.
 | Last-write-wins sync | No CRDT conflict resolution | Acceptable for single-user app; multi-device edge cases documented |
 | SQLite not encrypted | SQLCipher migration too risky pre-defense | Data behind Firebase Auth + app lock PIN |
 | 60 AI messages/day | Shared API key protection | Resets at midnight UTC; Reset Daily Limit option in ⋮ menu |
-| App lock bypass (back button) | Fixed May 9, 2026 — PopScope added | Back button now blocked on lock screen |
+| App Check not enforced | Sideloaded APK during academic phase | App Check integrated + monitoring; enforcement deferred to production |
 
 ---
 

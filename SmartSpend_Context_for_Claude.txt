@@ -470,7 +470,14 @@ IMPORTANT NOTES FOR KIRO
 - category_rules are kept across accounts (user preference, not financial data)
 - installments are now synced to Firestore
 - installment_plans table is local-only (not yet synced to Firestore)
-- NEVER put await inside setState() — always await before setState
+- NEVER put await inside setState()
+- Wallet balances tracked in `wallets` table (Cash on Hand, GCash, Maya, 17 banks, remittance centers)
+- Wallets reset to ₱0 on logout (per-account)
+- AI set_wallet_balance action: say "my GCash is ₱500" → updates wallet
+- Firebase App Check integrated (Play Integrity, monitoring mode — not enforced)
+- 14 built-in categories: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others
+- 9 payment methods: Cash, GCash, Maya, GrabPay, ShopeePay, Debit Card, Credit Card, Bank Transfer, Others
+- 57 currencies supported — always await before setState
 
 FILE STRUCTURE
 --------------
