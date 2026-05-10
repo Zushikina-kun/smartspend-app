@@ -34,10 +34,21 @@ class _BankImportScreenState extends State<BankImportScreen> {
   static const _sources = [
     ('GCash', '📱'),
     ('Maya', '💜'),
+    ('GrabPay', '🟢'),
+    ('ShopeePay', '🟠'),
     ('BPI', '🏦'),
     ('BDO', '🏦'),
+    ('Metrobank', '🏦'),
     ('UnionBank', '🏦'),
+    ('Landbank', '🏦'),
+    ('RCBC', '🏦'),
+    ('Security Bank', '🏦'),
+    ('PNB', '🏦'),
+    ('Chinabank', '🏦'),
+    ('EastWest Bank', '🏦'),
     ('Seabank', '🌊'),
+    ('GoTyme Bank', '🏦'),
+    ('Tonik', '🏦'),
     ('Receipt', '🧾'),
     ('Other', '💳'),
   ];
@@ -620,19 +631,40 @@ class _BankImportScreenState extends State<BankImportScreen> {
       case 'GCash':
         return "Option A (Most reliable — PDF text):\n"
             "GCash app → Profile → Transaction History → Request via email → open the PDF → select all text → copy → paste here.\n\n"
-            "Option B (Screenshot OCR — may have column alignment issues):\n"
-            "Screenshot your GCash transaction list → tap Camera button above → OCR it.\n"
-            "⚠️ If results look wrong after parsing, try Option A instead — PDF text is more accurate than screenshot OCR for tables.";
+            "Option B (Screenshot OCR):\n"
+            "Screenshot your GCash transaction list → tap Camera button above → OCR it.";
       case 'Maya':
         return "Maya app → Activity → tap the filter icon → select date range → screenshot or copy the list.";
+      case 'GrabPay':
+        return "GrabPay → Wallet → Transaction History → screenshot or copy the list.";
+      case 'ShopeePay':
+        return "Shopee app → Me → ShopeePay → Transaction History → screenshot or copy.";
       case 'BPI':
         return "BPI Online → Accounts → View Statement → select period → copy the transaction table text.";
       case 'BDO':
         return "BDO Online Banking → Accounts → Transaction History → select date range → copy the text.";
+      case 'Metrobank':
+        return "Metrobank Online → Accounts → Transaction History → select period → copy or screenshot.";
       case 'UnionBank':
         return "UnionBank app → Accounts → Transaction History → screenshot or copy the list.";
+      case 'Landbank':
+        return "Landbank iAccess → Accounts → Transaction History → select period → copy or screenshot.";
+      case 'RCBC':
+        return "RCBC Online Banking → Accounts → Transaction History → copy or screenshot.";
+      case 'Security Bank':
+        return "Security Bank Online → Accounts → Transaction History → copy or screenshot.";
+      case 'PNB':
+        return "PNB Digital Banking → Accounts → Transaction History → copy or screenshot.";
+      case 'Chinabank':
+        return "Chinabank Online → Accounts → Transaction History → copy or screenshot.";
+      case 'EastWest Bank':
+        return "EastWest Online → Accounts → Transaction History → copy or screenshot.";
       case 'Seabank':
         return "SeaBank app → Transactions → screenshot or copy the transaction list.";
+      case 'GoTyme Bank':
+        return "GoTyme app → Transactions → screenshot or copy the list.";
+      case 'Tonik':
+        return "Tonik app → Activity → screenshot or copy the transaction list.";
       default:
         return "Copy your transaction history text from your bank app, email statement, or screenshot it and use the Camera button to OCR it.";
     }

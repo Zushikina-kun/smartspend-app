@@ -69,6 +69,12 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
                 "• Live rates from open.er-api.com — cached for 1 hour\n"
                 "• Tap the refresh icon to force-update rates\n"
                 "• Changing currency affects all displayed amounts immediately\n\n"
+                "⚠️ About remittance center rates:\n"
+                "Rates shown here are mid-market (interbank) rates. Actual rates you get when cashing out vary by provider:\n"
+                "• Banks (BDO, BPI, Metrobank): ~3–5% below mid-market\n"
+                "• E-wallets (GCash, Maya): close to mid-market for domestic\n"
+                "• Remittance centers (Cebuana, Palawan, Western Union): ~₱0.50–₱2.00/USD below mid-market\n"
+                "• Digital banks (GoTyme, Tonik, Seabank): often closest to mid-market\n\n"
                 "Note: Changing currency does not convert your stored data — it only changes how amounts are displayed.",
           ),
           IconButton(

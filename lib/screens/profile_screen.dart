@@ -177,7 +177,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-
   void _showWalletsDialog() async {
     if (!mounted) return;
     await showModalBottomSheet(
@@ -2045,14 +2044,41 @@ class _WalletsSheetState extends State<_WalletsSheet> {
   late List<Map<String, dynamic>> _wallets;
 
   static const _presets = [
+    // ── CASH ──────────────────────────────────────────────────────────────────
     ('Cash on Hand', 'cash', '💵'),
+    // ── E-WALLETS ─────────────────────────────────────────────────────────────
     ('GCash', 'ewallet', '📱'),
     ('Maya', 'ewallet', '💜'),
+    ('GrabPay', 'ewallet', '🟢'),
+    ('ShopeePay', 'ewallet', '🟠'),
+    ('Coins.ph', 'ewallet', '🪙'),
+    // ── DIGITAL BANKS (BSP-licensed) ──────────────────────────────────────────
+    ('GoTyme Bank', 'bank', '🏦'),
+    ('Tonik', 'bank', '🏦'),
+    ('UNObank', 'bank', '🏦'),
+    ('UnionDigital', 'bank', '🏦'),
+    // ── UNIVERSAL / COMMERCIAL BANKS ──────────────────────────────────────────
     ('BDO', 'bank', '🏦'),
     ('BPI', 'bank', '🏦'),
+    ('Metrobank', 'bank', '🏦'),
     ('Landbank', 'bank', '🏦'),
+    ('PNB', 'bank', '🏦'),
+    ('RCBC', 'bank', '🏦'),
+    ('Security Bank', 'bank', '🏦'),
+    ('Chinabank', 'bank', '🏦'),
     ('UnionBank', 'bank', '🏦'),
+    ('EastWest Bank', 'bank', '🏦'),
     ('Seabank', 'bank', '🌊'),
+    ('PSBank', 'bank', '🏦'),
+    ('Maybank', 'bank', '🏦'),
+    // ── REMITTANCE / PAWNSHOP ─────────────────────────────────────────────────
+    ('Cebuana Lhuillier', 'remittance', '🏪'),
+    ('M Lhuillier', 'remittance', '🏪'),
+    ('Palawan Pawnshop', 'remittance', '🏪'),
+    ('Western Union', 'remittance', '🏪'),
+    ('LBC', 'remittance', '📦'),
+    ('Tambunting', 'remittance', '🏪'),
+    ('USSC', 'remittance', '🏪'),
   ];
 
   @override

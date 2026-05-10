@@ -864,25 +864,78 @@ class _AIScreenState extends State<AIScreen> {
               _showActionSnackbar(
                   "${wallet['icon'] ?? '💵'} ${wallet['name']} updated: ${CurrencyService.format(walletBalance)}");
             } else {
-              // Wallet not found — create it
-              final icon = walletName.toLowerCase().contains('gcash')
+              // Wallet not found — create it with appropriate icon
+              final nameLower = walletName.toLowerCase();
+              final icon = nameLower.contains('gcash')
                   ? '📱'
-                  : walletName.toLowerCase().contains('maya') ||
-                          walletName.toLowerCase().contains('paymaya')
+                  : nameLower.contains('maya') || nameLower.contains('paymaya')
                       ? '💜'
-                      : walletName.toLowerCase().contains('bank') ||
-                              walletName.toLowerCase().contains('bdo') ||
-                              walletName.toLowerCase().contains('bpi') ||
-                              walletName.toLowerCase().contains('landbank') ||
-                              walletName.toLowerCase().contains('unionbank') ||
-                              walletName.toLowerCase().contains('seabank')
-                          ? '🏦'
-                          : '💵';
+                      : nameLower.contains('grabpay') ||
+                              nameLower.contains('grab pay')
+                          ? '🟢'
+                          : nameLower.contains('shopeepay') ||
+                                  nameLower.contains('shopee pay')
+                              ? '🟠'
+                              : nameLower.contains('coins')
+                                  ? '🪙'
+                                  : nameLower.contains('cebuana') ||
+                                          nameLower.contains('lhuillier') ||
+                                          nameLower.contains('palawan') ||
+                                          nameLower.contains('western union') ||
+                                          nameLower.contains('lbc') ||
+                                          nameLower.contains('tambunting') ||
+                                          nameLower.contains('ussc') ||
+                                          nameLower.contains('pawnshop')
+                                      ? '🏪'
+                                      : nameLower.contains('seabank')
+                                          ? '🌊'
+                                          : nameLower.contains('bank') ||
+                                                  nameLower.contains('bdo') ||
+                                                  nameLower.contains('bpi') ||
+                                                  nameLower
+                                                      .contains('metrobank') ||
+                                                  nameLower
+                                                      .contains('landbank') ||
+                                                  nameLower.contains('pnb') ||
+                                                  nameLower.contains('rcbc') ||
+                                                  nameLower
+                                                      .contains('security') ||
+                                                  nameLower
+                                                      .contains('chinabank') ||
+                                                  nameLower
+                                                      .contains('unionbank') ||
+                                                  nameLower
+                                                      .contains('eastwest') ||
+                                                  nameLower
+                                                      .contains('gotyme') ||
+                                                  nameLower.contains('tonik') ||
+                                                  nameLower
+                                                      .contains('unobank') ||
+                                                  nameLower
+                                                      .contains('psbank') ||
+                                                  nameLower.contains('maybank')
+                                              ? '🏦'
+                                              : '💵';
+              final type = nameLower.contains('cash')
+                  ? 'cash'
+                  : nameLower.contains('gcash') ||
+                          nameLower.contains('maya') ||
+                          nameLower.contains('grab') ||
+                          nameLower.contains('shopee') ||
+                          nameLower.contains('coins')
+                      ? 'ewallet'
+                      : nameLower.contains('cebuana') ||
+                              nameLower.contains('lhuillier') ||
+                              nameLower.contains('palawan') ||
+                              nameLower.contains('western') ||
+                              nameLower.contains('lbc') ||
+                              nameLower.contains('tambunting') ||
+                              nameLower.contains('ussc')
+                          ? 'remittance'
+                          : 'bank';
               await DBService.insertWallet({
                 'name': walletName,
-                'type': walletName.toLowerCase().contains('cash')
-                    ? 'cash'
-                    : 'ewallet',
+                'type': type,
                 'balance': walletBalance,
                 'icon': icon,
               });
