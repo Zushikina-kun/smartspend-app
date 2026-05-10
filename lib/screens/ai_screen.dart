@@ -416,8 +416,15 @@ class _AIScreenState extends State<AIScreen> {
             if (action.params.containsKey('is_want')) {
               isWant = (action.params['is_want'] as bool? ?? false) ? 1 : 0;
             } else {
-              // Fallback: Shopping/Entertainment = Want, others = Need
-              const wantCategories = ['Shopping', 'Entertainment'];
+              // Fallback: Shopping/Entertainment/Gaming/Clothing/Gifts/Travel = Want, others = Need
+              const wantCategories = [
+                'Shopping',
+                'Entertainment',
+                'Gaming',
+                'Clothing',
+                'Gifts',
+                'Travel'
+              ];
               isWant = wantCategories.contains(category) ? 1 : 0;
             }
             await DBService.insertExpense({

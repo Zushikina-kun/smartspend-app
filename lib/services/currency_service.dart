@@ -146,7 +146,20 @@ class CurrencyService {
   static String format(double phpAmount) {
     final converted = convert(phpAmount);
     // No decimal places for these currencies (and PHP — Filipinos don't use centavos in daily tracking)
-    const noDecimal = ['PHP', 'JPY', 'KRW', 'IDR', 'VND', 'NGN'];
+    const noDecimal = [
+      'PHP',
+      'JPY',
+      'KRW',
+      'IDR',
+      'VND',
+      'NGN',
+      'MMK',
+      'LAK',
+      'KHR',
+      'HUF',
+      'CLP',
+      'COP'
+    ];
     if (noDecimal.contains(_currentCurrency)) {
       return '$symbol${converted.toStringAsFixed(0)}';
     }

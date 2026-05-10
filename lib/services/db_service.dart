@@ -394,7 +394,7 @@ class DBService {
         await db.execute("""
           UPDATE expenses
           SET is_want = 1
-          WHERE category IN ('Entertainment', 'Shopping')
+          WHERE category IN ('Entertainment', 'Shopping', 'Gaming', 'Clothing', 'Gifts', 'Travel')
           AND is_want = 0
         """);
         // Ensure Education is always Need — fix any wrongly tagged entries

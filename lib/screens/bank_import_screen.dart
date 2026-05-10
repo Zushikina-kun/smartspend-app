@@ -692,8 +692,14 @@ class _TransactionTile extends StatelessWidget {
     'Bills',
     'Shopping',
     'Entertainment',
+    'Gaming',
     'Health',
     'Education',
+    'Personal Care',
+    'Clothing',
+    'Gifts',
+    'Travel',
+    'Pets',
     'Others',
   ];
 
