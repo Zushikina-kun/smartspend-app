@@ -11,14 +11,19 @@
 
 ```
 build/app/outputs/flutter-apk/
-└── app-arm64-v8a-release.apk    (~44.0 MB) ← Use this for QA
+├── app-armeabi-v7a-release.apk  (36.3 MB) ← older/32-bit phones (Android 5+)
+├── app-arm64-v8a-release.apk    (44.0 MB) ← modern 64-bit phones ← USE THIS
+└── app-x86_64-release.apk       (47.0 MB) ← emulators / x86 devices
 ```
 
-**Recommended:** `app-arm64-v8a-release.apk` — works on all modern Android phones (Snapdragon, MediaTek, Exynos).
+**Which APK to use:**
+- **Modern phones** (2018+, Snapdragon 6xx/8xx, MediaTek Helio/Dimensity): `app-arm64-v8a-release.apk`
+- **Older phones** (pre-2018, 32-bit, Android 5–7): `app-armeabi-v7a-release.apk`
+- **Emulator / Android Studio**: `app-x86_64-release.apk`
 
 **Build command used:**
 ```bash
-flutter build apk --release --target-platform android-arm64 --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
+flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
 ```
 
 ---

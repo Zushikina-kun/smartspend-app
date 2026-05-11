@@ -176,9 +176,9 @@ Flutter UI (screens/) → Services (services/) → SQLite (sqflite v11)
 
 ### Build command (when asked)
 ```bash
-flutter build apk --release --target-platform android-arm64 --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
+flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
 ```
-Output: `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`
+Outputs 3 APKs: `armeabi-v7a` (older phones), `arm64-v8a` (modern phones), `x86_64` (emulators).
 
 ### After every change
 1. Run `getDiagnostics` on changed files
@@ -311,7 +311,17 @@ All HIGH priority issues from previous sessions are resolved. See `SmartSpend_Pe
 
 ---
 
-## What NOT to Touch
+## Package Conflict Note
+
+The `shake` package (`^2.2.0`) depends on `sensors_plus ^3.x`. Newer packages want `sensors_plus ^7.x`. The `dependency_overrides` in `pubspec.yaml` pins `sensors_plus: ^3.1.0` to keep `shake` working.
+
+**This is intentional and correct.** Do NOT remove the override or upgrade `shake` without first checking if a newer version of `shake` supports `sensors_plus ^7.x`.
+
+`flutter pub get` works fine. The `!` warning next to `sensors_plus` in pub output is expected — it means "overridden", not broken.
+
+The 56 packages with newer incompatible versions are **not a problem** — they have breaking API changes that would require code rewrites. Leave them as-is for the capstone.
+
+---
 
 - `pubspec.yalm` — this is a stray typo file, ignore it (the real file is `pubspec.yaml`)
 - `flutter` (file in root) — stray file, ignore

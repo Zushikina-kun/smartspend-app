@@ -71,14 +71,19 @@ flutter run
 ## Build
 
 ```bash
-# Recommended release build (arm64, shrunk, obfuscated)
-flutter build apk --release --target-platform android-arm64 --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
+# Full release build — produces all 3 APKs (arm64, armeabi-v7a, x86_64)
+flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
 ```
 
-**Release APK location:**
+**Release APKs:**
 ```
-build/app/outputs/flutter-apk/app-arm64-v8a-release.apk  (~44 MB)
+build/app/outputs/flutter-apk/
+├── app-armeabi-v7a-release.apk  (~36 MB)  ← older/32-bit phones (Android 5+)
+├── app-arm64-v8a-release.apk    (~44 MB)  ← modern 64-bit phones ← primary
+└── app-x86_64-release.apk       (~47 MB)  ← emulators
 ```
+
+Distribute both `arm64-v8a` and `armeabi-v7a` to cover all Android phones.
 
 ---
 

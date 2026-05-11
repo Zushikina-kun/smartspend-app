@@ -450,8 +450,8 @@ All other items (#3–#26) still need full specs written by Claude before Kiro b
 - Error handling: try-catch on all async operations, show SnackBar on error
 - **No builds unless explicitly requested by Brix**
 - Always run getDiagnostics after changes before building
-- Always use: `flutter build apk --release --split-per-abi`
-- Test device: `app-arm64-v8a-release.apk` (Poco X6 Pro)
+- Always use: `flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info`
+- Produces 3 APKs: `armeabi-v7a` (older phones ~36MB), `arm64-v8a` (modern phones ~44MB), `x86_64` (emulators ~47MB)
 
 ---
 

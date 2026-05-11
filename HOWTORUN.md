@@ -97,17 +97,26 @@ While running, press `r` in the terminal for hot reload, `R` for hot restart.
 
 ## 6. Build Release APK
 
-### Recommended build (arm64, shrunk, obfuscated)
+### Recommended build (all ABIs — covers all phones)
 ```bash
-flutter build apk --release --target-platform android-arm64 --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
+flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
 ```
 
-**Output:**
+**Output — 3 APKs, one per CPU architecture:**
 ```
-build/app/outputs/flutter-apk/app-arm64-v8a-release.apk  (~44 MB)
+build/app/outputs/flutter-apk/
+├── app-armeabi-v7a-release.apk  (~36 MB)  ← older/32-bit phones (Android 5+)
+├── app-arm64-v8a-release.apk    (~44 MB)  ← modern 64-bit phones ← primary
+└── app-x86_64-release.apk       (~47 MB)  ← emulators / x86 devices
 ```
 
-Use `app-arm64-v8a-release.apk` — covers 99%+ of modern Android phones (Snapdragon, MediaTek, etc.).
+**Which APK to install:**
+| Device | APK |
+|--------|-----|
+| Modern phones (2018+, Snapdragon 6xx/8xx, Dimensity, Helio G/A) | `app-arm64-v8a-release.apk` |
+| Older phones (pre-2018, 32-bit, Android 5–7) | `app-armeabi-v7a-release.apk` |
+| Android Studio emulator | `app-x86_64-release.apk` |
+| Not sure | Try `arm64-v8a` first — if it says "App not installed", use `armeabi-v7a` |
 
 ### What the flags do
 | Flag | Effect |

@@ -2,7 +2,10 @@
 
 **Build Date:** May 11, 2026
 **Version:** 2.6.0
-**APK:** ~44.0 MB (arm64-v8a) — May 11, 2026
+**APKs:**
+- `app-armeabi-v7a-release.apk` — 36.3 MB (older/32-bit phones, Android 5+)
+- `app-arm64-v8a-release.apk` — 44.0 MB (modern 64-bit phones — primary)
+- `app-x86_64-release.apk` — 47.0 MB (emulators)
 **Status:** ✅ **COMPLETE** — Zero errors, all sync/data-safety issues resolved
 
 ---
