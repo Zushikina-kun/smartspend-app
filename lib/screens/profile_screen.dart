@@ -20,6 +20,7 @@ import '../services/debug_service.dart';
 import '../services/app_lock_service.dart';
 import '../services/ai_chat_service.dart';
 import '../services/undo_service.dart';
+import '../services/category_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'login_screen.dart';
 import 'about_screen.dart';
@@ -509,6 +510,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await db.delete('debts');
     await db.delete('score_history');
     await db.delete('chat_history');
+    // Also clear tables that were previously missed
+    try { await db.delete('installment_plans'); } catch (_) {}
+    try { await db.delete('installments'); } catch (_) {}
+    try { await db.delete('custom_categories'); CategoryService.invalidate(); } catch (_) {}
+    try { await db.delete('mood_log'); } catch (_) {}
+    try { await db.delete('recurring_candidates'); } catch (_) {}
+    try { await db.delete('conversation_summaries'); } catch (_) {}
+    try { await db.update('wallets', {'balance': 0.0, 'updated_at': DateTime.now().toIso8601String()}); } catch (_) {}
+    // Push the cleared state to Firestore so data doesn't resurrect on next login
+    try {
+      await CloudService.pushAll(
+        expenses: [], budgets: [], goals: [], income: [],
+        recurring: [], debts: [], customCategories: [],
+        installments: [], installmentPlans: [],
+        wallets: await DBService.getWallets(),
+        categoryRules: [],
+      );
+    } catch (_) {}
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

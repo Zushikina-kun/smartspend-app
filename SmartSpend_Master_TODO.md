@@ -1,9 +1,10 @@
 # SmartSpend — Master To-Do List
-**Compiled:** April 28, 2026
-**Version target:** 2.4.0+
-**For:** Kiro (coding AI) — use this as the canonical backlog after monthly refresh
-**Status:** Nothing on this list has been implemented yet.
-**Workflow:** Claude brainstorms/specs → Kiro codes → test → repeat.
+**Compiled:** April 28, 2026 | **Last Updated:** May 11, 2026
+**Version target:** 2.6.0+
+**For:** Kiro (coding AI) — use this as the canonical backlog
+**Status:** v2.6.0 sync audit complete. Open items below.
+
+> **Read `KIRO_CONTEXT.md` before starting any task.**
 
 ---
 

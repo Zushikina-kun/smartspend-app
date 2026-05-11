@@ -1,7 +1,7 @@
 # Smart Spend
 
-**AI-Assisted Financial Tracking & Advisory**  
-Version 2.4.0 | Lucid Frame | Academic Year 2025–2026
+**AI-Assisted Financial Tracking & Advisory**
+Version 2.6.0 | Lucid Frame | Academic Year 2025–2026
 
 ---
 
@@ -19,16 +19,22 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant (Groq LLaMA 3.1) with full CRUD via natural language
-- 📊 Analytics with pie chart, bar chart, health score trend, and category comparison
-- 💰 Budget management with time-aware pace indicators
-- 🎯 Savings goals with contribution tracking
-- 💳 Debt & lending tracker
-- 🔁 Recurring transactions with due date alerts
-- 💱 Multi-currency (34+ currencies, live rates)
-- 🧠 Income-relative Financial Health Score (0–100)
-- ☁️ Firestore sync + Google Drive backup
-- 🔒 App Lock (PIN + biometric)
+- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — 15 action types via natural language
+- 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison
+- 💰 Budget management with pace indicators and % of income mode
+- 🎯 Savings goals with contribution tracking and emergency fund auto-calc
+- 💳 Debt & lending tracker with payment plans (ShopeePayLater, GCash GLoan, etc.)
+- 🔁 Recurring transactions with due date alerts and Log All Due
+- 💵 Wallet Balances — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (fully cloud-synced)
+- 🔀 Auto-Categorization Rules — keyword → category mappings (fully cloud-synced)
+- 💱 Multi-currency (57 currencies, live rates)
+- 🧠 Financial Health Score (0–100, 4-component formula)
+- ☁️ Full Firestore sync — expenses, budgets, goals, income, recurring, debts, wallets, rules
+- 🔒 App Lock (PIN + biometric, per-account)
+- 🏆 16 Achievements & Badges
+- 😊 Daily Mood Check-In with spending correlation
+- 🗓️ Unified Financial Calendar
+- 🏪 Import from Bank / GCash (AI-powered bulk import)
 - 🌙 5 color themes + dark mode
 
 ---
@@ -39,30 +45,39 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 |-----------|-----------|
 | Framework | Flutter (Dart) |
 | AI Engine | Groq API — LLaMA 3.1 8B Instant |
-| Local DB | SQLite (sqflite v10) |
+| Local DB | SQLite (sqflite v11) |
 | Cloud | Firebase Auth + Firestore |
-| OCR | Google ML Kit |
+| OCR | Google ML Kit Text Recognition |
 | Charts | fl_chart |
-| Backup | Google Drive REST API |
+| Backup | System share sheet (JSON, v8 format) |
+| App Lock | local_auth (PIN + biometric) |
+| Exchange Rates | open.er-api.com |
+| Crash Reporting | Firebase Crashlytics |
+
+---
+
+## How to Run
+
+See **[HOWTORUN.md](HOWTORUN.md)** for full setup and run instructions.
+
+Quick start:
+```bash
+flutter pub get
+flutter run
+```
 
 ---
 
 ## Build
 
 ```bash
-# Install dependencies
-flutter pub get
-
-# Debug run
-flutter run
-
-# Release APK (recommended: arm64-v8a for modern phones)
-flutter build apk --release --split-per-abi
+# Recommended release build (arm64, shrunk, obfuscated)
+flutter build apk --release --target-platform android-arm64 --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
 ```
 
 **Release APK location:**
 ```
-build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+build/app/outputs/flutter-apk/app-arm64-v8a-release.apk  (~44 MB)
 ```
 
 ---
@@ -71,19 +86,26 @@ build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 
 | File | Purpose |
 |------|---------|
-| `android/app/google-services.json` | Firebase config |
-| `lib/services/llm_service.dart` | Groq API key |
-| `lib/services/ai_chat_service.dart` | Groq API key |
+| `android/app/google-services.json` | Firebase config (not in repo) |
+| `lib/services/app_config.dart` | Groq API key — centralized, in `.gitignore` |
+
+> ⚠️ `app_config.dart` is excluded from git. Copy `app_config.dart.example` and fill in your key before building.
 
 ---
 
 ## Documentation
 
-See `DOCUMENTATION.md` for full technical documentation.  
-See `SmartSpend_QA_Brief.txt` for QA tester guide.  
-See `FINAL_STATUS.md` for complete fix history.
+| File | Contents |
+|------|---------|
+| `DOCUMENTATION.md` | Full technical documentation |
+| `HOWTORUN.md` | Setup, run, and build instructions |
+| `KIRO_CONTEXT.md` | AI assistant context — architecture, conventions, current state |
+| `FINAL_STATUS.md` | Complete fix history across all sessions |
+| `SmartSpend_PendingIssues.md` | Known issues and their status |
+| `SmartSpend_Master_TODO.md` | Feature backlog |
+| `SmartSpend_QA_Brief.txt` | QA tester guide |
 
 ---
 
-*Smart Spend — Spend Smart, Live Better.*  
+*Smart Spend — Spend Smart, Live Better.*
 *© 2026 Lucid Frame. All rights reserved.*

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_profile.dart';
+import 'demo_service.dart';
 
 /// Handles all Firestore + Firebase Storage sync.
 /// Strategy: every local write pushes to Firestore.
@@ -8,6 +9,10 @@ import '../models/user_profile.dart';
 class CloudService {
   static final _db = FirebaseFirestore.instance;
   static String? get _uid => FirebaseAuth.instance.currentUser?.uid;
+
+  /// Returns true if sync should be suppressed (demo mode loading or no user).
+  static bool get _shouldSkipSync =>
+      DemoService.isDemoLoading || _uid == null;
 
   static DocumentReference? get _userDoc {
     final uid = _uid;
@@ -87,6 +92,7 @@ class CloudService {
   /// Uses the local SQLite id as the Firestore document ID for deduplication.
   static Future<void> pushDoc(
       String collection, Map<String, dynamic> data) async {
+    if (_shouldSkipSync) return; // suppress during demo load or when logged out
     try {
       final col = _col(collection);
       if (col == null) return;
@@ -104,6 +110,7 @@ class CloudService {
 
   /// Delete a document from a Firestore collection by local id.
   static Future<void> deleteDoc(String collection, int id) async {
+    if (_shouldSkipSync) return; // suppress during demo load or when logged out
     try {
       final col = _col(collection);
       if (col == null) return;
@@ -146,6 +153,8 @@ class CloudService {
         fetchCollection('custom_categories'),
         fetchCollection('installments'),
         fetchCollection('installment_plans'),
+        fetchCollection('wallets'),
+        fetchCollection('category_rules'),
         fetchProfile(),
       ]);
 
@@ -159,7 +168,9 @@ class CloudService {
         customCategories: results[6] as List<Map<String, dynamic>>,
         installments: results[7] as List<Map<String, dynamic>>,
         installmentPlans: results[8] as List<Map<String, dynamic>>,
-        profile: results[9] as UserProfile?,
+        wallets: results[9] as List<Map<String, dynamic>>,
+        categoryRules: results[10] as List<Map<String, dynamic>>,
+        profile: results[11] as UserProfile?,
       );
     } catch (_) {
       return SyncData.empty();
@@ -177,6 +188,8 @@ class CloudService {
     List<Map<String, dynamic>> customCategories = const [],
     List<Map<String, dynamic>> installments = const [],
     List<Map<String, dynamic>> installmentPlans = const [],
+    List<Map<String, dynamic>> wallets = const [],
+    List<Map<String, dynamic>> categoryRules = const [],
   }) async {
     try {
       final uid = _uid;
@@ -231,6 +244,8 @@ class CloudService {
       for (final inst in installments) addToBatch('installments', inst);
       for (final plan in installmentPlans)
         addToBatch('installment_plans', plan);
+      for (final w in wallets) addToBatch('wallets', w);
+      for (final r in categoryRules) addToBatch('category_rules', r);
 
       batches.add(current);
 
@@ -258,6 +273,8 @@ class SyncData {
   final List<Map<String, dynamic>> customCategories;
   final List<Map<String, dynamic>> installments;
   final List<Map<String, dynamic>> installmentPlans;
+  final List<Map<String, dynamic>> wallets;
+  final List<Map<String, dynamic>> categoryRules;
   final UserProfile? profile;
 
   SyncData({
@@ -270,6 +287,8 @@ class SyncData {
     this.customCategories = const [],
     this.installments = const [],
     this.installmentPlans = const [],
+    this.wallets = const [],
+    this.categoryRules = const [],
     required this.profile,
   });
 
@@ -283,6 +302,8 @@ class SyncData {
         customCategories: [],
         installments: [],
         installmentPlans: [],
+        wallets: [],
+        categoryRules: [],
         profile: null,
       );
 
@@ -296,5 +317,7 @@ class SyncData {
       customCategories.isEmpty &&
       installments.isEmpty &&
       installmentPlans.isEmpty &&
+      wallets.isEmpty &&
+      categoryRules.isEmpty &&
       profile == null;
 }

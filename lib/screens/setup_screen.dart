@@ -142,6 +142,12 @@ class _SetupScreenState extends State<SetupScreen> {
       // Apply quiz answers — auto-create budgets and goals based on responses
       await _applyQuizAnswers();
 
+      // Push all setup data to Firestore so it's available on other devices
+      // immediately after setup, without waiting for the next explicit sync.
+      try {
+        await DBService.pushAllToCloud();
+      } catch (_) {}
+
       if (mounted) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => const HomeScreen()));

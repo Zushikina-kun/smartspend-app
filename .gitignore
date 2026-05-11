@@ -59,6 +59,9 @@ Debug/*.txt
 # Ideas folder (personal files)
 Ideas/
 
+# API keys and secrets — never commit these to a public repository
+lib/services/app_config.dart
+
 
 # Stray files
 5

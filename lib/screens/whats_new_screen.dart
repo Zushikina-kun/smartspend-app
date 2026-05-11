@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.5.0';
-  static const _prefKey = 'whats_new_seen_2_5_0';
+  static const _version = '2.6.0';
+  static const _prefKey = 'whats_new_seen_2_6_0';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,61 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '☁️',
+      'Wallet Sync Fixed',
+      'Wallet balances now fully sync to Firebase — survive logout, login, and device switches'
+    ),
+    (
+      '🔀',
+      'Auto-Categorization Rules Sync',
+      'Your keyword → category rules now sync across devices via Firestore'
+    ),
+    (
+      '↩️',
+      'Undo Expense Edit Fixed',
+      'Shake-to-undo now correctly reverses AI expense edits and syncs the restored state'
+    ),
+    (
+      '🔒',
+      'Demo Data Isolation',
+      'Loading demo data no longer contaminates your real Firestore account'
+    ),
+    (
+      '🔄',
+      'Backup Restore Syncs to Cloud',
+      'Restoring a backup now pushes all data to Firestore immediately'
+    ),
+    (
+      '🗑️',
+      'Reset All Data Fixed',
+      'Reset now clears all 14 tables and wipes Firestore — data no longer resurrects on next login'
+    ),
+    (
+      '🏆',
+      'Budget Boss Badge Fixed',
+      'Achievement now correctly handles percentage-based budgets'
+    ),
+    (
+      '⚙️',
+      'Setup Data Synced',
+      'Account type, income, and budgets set during onboarding now push to Firestore immediately'
+    ),
+    (
+      '🔑',
+      'API Key Centralized',
+      'Groq API key consolidated into AppConfig — easier to rotate, added to .gitignore'
+    ),
+    (
+      '🔔',
+      'Notifications Reset on Logout',
+      'New accounts on shared devices now receive their first-day notifications correctly'
+    ),
+    (
+      '📂',
+      'Category Rename Syncs',
+      'Renaming or deleting a custom category now updates all affected expenses in Firestore'
+    ),
     (
       '💵',
       'Wallet Balances',
@@ -49,33 +104,11 @@ class WhatsNewScreen extends StatelessWidget {
       'Mood Check-In + Notes',
       'Track mood with optional notes — see spending correlation in Analytics'
     ),
-    ('📊', 'Category Breakdown', 'Expandable charts per category in Analytics'),
     ('🔀', 'Auto-Categorization Rules', 'Set keyword → category rules in Hub'),
-    ('🆚', 'Period Comparison Tool', 'Compare any two months side by side'),
-    (
-      '📅',
-      'Installment & Payment Plans',
-      'Track phones, gadgets, ShopeePayLater, GCash GLoan & more'
-    ),
     (
       '🏪',
       'Import from Bank / GCash',
       'Paste any bank or e-wallet history — AI parses & bulk imports with real dates'
-    ),
-    (
-      '🏷️',
-      'Transaction Tags',
-      'Tag expenses with #hashtags (e.g. #capstone, #shared) — filter by tag in Transactions'
-    ),
-    (
-      '🔄',
-      'Subscription Auto-Detection',
-      'Automatically detects recurring expense patterns and suggests adding them as recurring transactions'
-    ),
-    (
-      '🌍',
-      'Market Insights',
-      'Live PHP exchange rates (USD, EUR, GBP, JPY, SGD) + financial literacy tips in Analytics'
     ),
   ];
 
@@ -84,7 +117,7 @@ class WhatsNewScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text("What's New in v$_version"),
+        title: Text("What's New in v$_version — Sync & Stability"),
         actions: [
           TextButton(
             onPressed: () async {

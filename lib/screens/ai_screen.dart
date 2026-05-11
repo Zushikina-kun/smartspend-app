@@ -716,6 +716,11 @@ class _AIScreenState extends State<AIScreen> {
           }
 
           if (target != null) {
+            // Record undo snapshot BEFORE applying the change
+            UndoService.record(UndoableAction(
+              type: 'update_expense',
+              snapshot: {'prev': target.toMap()},
+            ));
             final updated = target.copyWith(
               itemName: newItemName ?? target.itemName,
               category: newCategory ?? target.category,

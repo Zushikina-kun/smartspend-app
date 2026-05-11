@@ -1,10 +1,10 @@
 ﻿# Smart Spend — Application Documentation
 
-**Version:** 2.5.0
+**Version:** 2.6.0
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 10, 2026 (v2.5.0 — Session 11: Categories expanded (Gaming/Personal Care/Clothing/Gifts/Travel/Pets), payment methods expanded, 57 currencies, wallet discoverability, net worth tap hint, feature portals 9-grid)
+**Last Updated:** May 11, 2026 (v2.6.0 — Session 12: Full cloud sync audit & fixes — wallets, category_rules, demo isolation, backup restore sync, reset all data Firestore wipe, undo sync, setup push, notification throttle reset, budget_boss badge fix, API key centralized)
 **Build:** app-arm64-v8a-release.apk — 45.4 MB (May 10, 2026)
 
 ---
@@ -323,12 +323,15 @@ The score uses a **4-component weighted formula** (25 pts each) based on the pap
 ### 13. User Profile & Cloud Sync
 - First/last/middle name, email, birthdate, address, phone, profile photo (local only)
 - Profile data synced to Firebase Firestore
-- **Full data sync** — expenses, budgets, goals, income, recurring, debts all sync automatically
+- **Full data sync** — expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, **wallets**, and **category_rules** all sync automatically
 - On login: pulls cloud data → merges into local DB (last-write-wins for expenses), then pushes local → cloud
 - Every write automatically pushes to Firestore in the background
 - **On logout:** pushes all data to cloud first, then clears local DB — prevents data mixing between accounts
-- **Demo mode isolation:** demo data is cleared automatically when a real account logs in
-- **Net Worth card** — Assets (income logged + manual assets) minus Liabilities (expenses + debts); tap to add manual assets (savings account, cash, investments); students/unemployed see Remaining Balance instead
+- **Demo mode isolation:** demo data is cleared automatically when a real account logs in; loading demo data from Profile never touches Firestore
+- **Reset All Data:** clears all 14 local tables AND pushes empty state to Firestore — data does not resurrect on next login
+- **Backup restore:** restoring a backup pushes all restored data to Firestore immediately
+- **Setup sync:** account type, income, currency, and auto-created budgets/goals are pushed to Firestore at the end of onboarding
+- **Net Worth card** — Assets (wallet balances) minus Liabilities (expenses + debts + installments); tap to add manual assets; students/unemployed see Remaining Balance instead
 - Income card — tap to update amount and frequency (daily/weekly/bimonthly/monthly)
 - Tax and savings estimates shown for employed/business/working_student only
 - Score breakdown list with actionable tips per negative factor

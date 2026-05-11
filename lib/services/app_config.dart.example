@@ -1,0 +1,20 @@
+/// Centralized app configuration and API keys.
+///
+/// SETUP INSTRUCTIONS:
+/// 1. Copy this file: cp lib/services/app_config.dart.example lib/services/app_config.dart
+/// 2. Replace the placeholder key below with your actual Groq API key
+/// 3. Get a free key at: https://console.groq.com
+///
+/// app_config.dart is in .gitignore — never commit your real key.
+class AppConfig {
+  AppConfig._(); // prevent instantiation
+
+  /// Groq API key — used by AIChatService and LLMService.
+  /// Free tier: 14,400 req/day at the account level; app enforces 60/user/day.
+  static const groqApiKey = "gsk_YOUR_GROQ_API_KEY_HERE";
+
+  static const groqBaseUrl =
+      "https://api.groq.com/openai/v1/chat/completions";
+
+  static const groqModel = "llama-3.1-8b-instant";
+}

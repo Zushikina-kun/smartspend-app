@@ -345,7 +345,53 @@ const _sections = [
             "Wallet balances are used as your 'liquid assets' in the net worth calculation:\n\n"
             "Net Worth = Wallet Total + Income logged − Expenses − Debts − Installments\n\n"
             "Wallet balances are NOT income — they don't affect your FHS score, budgets, or 50/30/20 breakdown. They're purely for net worth tracking.\n\n"
-            "Balances reset to ₱0 when you log out (per-account data).",
+            "Wallet balances sync to Firebase automatically — they survive logout and restore when you log back in on any device.",
+      ),
+    ],
+  ),
+  _HelpSection(
+    title: "Cloud Sync & Data Safety",
+    icon: Icons.cloud_sync_outlined,
+    color: Colors.blueGrey,
+    items: [
+      _HelpItem(
+        title: "What data syncs to the cloud?",
+        body:
+            "Everything syncs automatically to Firebase Firestore:\n\n"
+            "✅ Expenses, Budgets, Savings Goals\n"
+            "✅ Income entries, Recurring transactions\n"
+            "✅ Debts & Lending, Payment Plans\n"
+            "✅ Custom Categories, Auto-Categorization Rules\n"
+            "✅ Wallet Balances\n"
+            "✅ Key settings: account type, income, currency, daily limit, payday date\n\n"
+            "Not synced (device-local by design):\n"
+            "• Score history, Mood log, Scan history — these are device analytics\n"
+            "• Chat history — private per account, cleared on logout\n"
+            "• Profile photo — requires Firebase Storage (Blaze plan)",
+        example:
+            "Set your GCash balance on your phone → log in on a tablet → GCash balance is there.",
+      ),
+      _HelpItem(
+        title: "What happens when I log out?",
+        body:
+            "Before logging out, all your data is pushed to Firestore. Then local data is cleared so the next account on the same device starts clean — no data mixing between accounts.\n\n"
+            "When you log back in, your data is pulled from Firestore and restored automatically.",
+      ),
+      _HelpItem(
+        title: "What happens when I log in on a new device?",
+        body:
+            "On login, the app pulls all your data from Firestore and merges it into the local database. Your expenses, budgets, goals, wallets, rules — everything is restored.\n\n"
+            "It also pushes any local data to Firestore to ensure the cloud is up to date.",
+      ),
+      _HelpItem(
+        title: "Does Reset All Data also clear the cloud?",
+        body:
+            "Yes. Profile → Reset All Data now clears all 14 local tables AND pushes the empty state to Firestore. Your data won't resurrect on next login from another device.",
+      ),
+      _HelpItem(
+        title: "Is demo data kept separate from my real account?",
+        body:
+            "Yes. Demo data is completely local — it never touches your Firestore account. Loading demo data from Profile → Load Demo Data is safe even when logged in.",
       ),
     ],
   ),

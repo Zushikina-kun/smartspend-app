@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
+import '../services/db_service.dart';
 import 'setup_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -31,6 +33,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (user != null && mounted) {
         // Save the display name to Firebase profile
         await user.updateDisplayName(_name.text.trim());
+        // Kick off background sync — new account has nothing to pull,
+        // but this ensures any local data (e.g. from demo mode) is cleared
+        // and the account is properly initialized in Firestore.
+        _syncAfterRegister();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const SetupScreen()),
@@ -41,6 +47,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  Future<void> _syncAfterRegister() async {
+    try {
+      // Clear any leftover demo data so the new account starts clean
+      final prefs = await SharedPreferences.getInstance();
+      final wasDemo = prefs.getBool('was_demo_mode') ?? false;
+      if (wasDemo) {
+        await DBService.clearLocalData();
+        await prefs.setBool('was_demo_mode', false);
+      }
+      // No pull needed — brand new account has no cloud data yet.
+      // Setup screen will push everything after the user completes onboarding.
+    } catch (_) {}
   }
 
   bool _validate() {

@@ -1,0 +1,228 @@
+# Smart Spend — How to Run & Build
+
+**Version:** 2.6.0 | **Platform:** Android (Flutter)
+
+---
+
+## Prerequisites
+
+| Tool | Version | Notes |
+|------|---------|-------|
+| Flutter | 3.x (stable) | `flutter --version` to check |
+| Dart | Included with Flutter | |
+| Android Studio | Latest | For Android SDK + emulator |
+| Android SDK | API 33+ | Target: API 36 |
+| Java | 17 (JDK) | Required by Gradle |
+| Git | Any | For cloning |
+
+---
+
+## 1. Clone the Project
+
+```bash
+git clone https://github.com/Zushikina-kun/smartspend-app.git
+cd smartspend-app
+```
+
+---
+
+## 2. Firebase Setup
+
+The app requires Firebase. The `google-services.json` file is **not included in the repo** (contains API keys).
+
+1. Go to [Firebase Console](https://console.firebase.google.com)
+2. Open the **SmartSpend** project (or create one)
+3. Download `google-services.json` from Project Settings → Android app
+4. Place it at: `android/app/google-services.json`
+
+Firebase services used:
+- **Firebase Auth** — email/password + Google Sign-In
+- **Firestore** — cloud data sync
+- **Firebase Crashlytics** — crash reporting
+- **Firebase App Check** — Play Integrity (release builds)
+
+---
+
+## 3. API Key Setup
+
+The Groq API key is stored in `lib/services/app_config.dart` which is excluded from git.
+
+Create the file:
+```bash
+# Copy the example file
+cp lib/services/app_config.dart.example lib/services/app_config.dart
+```
+
+Then open `lib/services/app_config.dart` and fill in your Groq key:
+```dart
+static const groqApiKey = "gsk_YOUR_KEY_HERE";
+```
+
+Get a free Groq key at: https://console.groq.com
+
+> The key used in development has a 60 req/day cap enforced in-app. For production, rotate the key and consider a server-side proxy.
+
+---
+
+## 4. Install Dependencies
+
+```bash
+flutter pub get
+```
+
+---
+
+## 5. Run in Debug Mode
+
+### On a physical device (recommended)
+1. Enable Developer Options on your Android phone
+2. Enable USB Debugging
+3. Connect via USB
+4. Run:
+```bash
+flutter run
+```
+
+### On an emulator
+1. Open Android Studio → Device Manager → Start an emulator (API 33+)
+2. Run:
+```bash
+flutter run
+```
+
+### Hot reload
+While running, press `r` in the terminal for hot reload, `R` for hot restart.
+
+---
+
+## 6. Build Release APK
+
+### Recommended build (arm64, shrunk, obfuscated)
+```bash
+flutter build apk --release --target-platform android-arm64 --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
+```
+
+**Output:**
+```
+build/app/outputs/flutter-apk/app-arm64-v8a-release.apk  (~44 MB)
+```
+
+Use `app-arm64-v8a-release.apk` — covers 99%+ of modern Android phones (Snapdragon, MediaTek, etc.).
+
+### What the flags do
+| Flag | Effect |
+|------|--------|
+| `--target-platform android-arm64` | Only build for 64-bit ARM (modern phones) |
+| `--split-per-abi` | Separate APK per CPU arch — smaller than fat APK |
+| `--shrink` | R8 code + resource shrinking via ProGuard |
+| `--obfuscate` | Renames classes/methods — reduces DEX size, harder to reverse |
+| `--split-debug-info=build/debug-info` | Required with `--obfuscate`; saves symbol maps for crash decoding |
+
+> Keep the `build/debug-info/` folder if you need to decode Crashlytics stack traces.
+
+### Simple build (no obfuscation, for testing)
+```bash
+flutter build apk --release --split-per-abi
+```
+
+---
+
+## 7. Install APK on Device
+
+```bash
+# Via ADB
+adb install build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+
+# Or transfer the file to the phone and open it
+```
+
+---
+
+## 8. Project Structure
+
+```
+smartspend-app/
+├── lib/
+│   ├── main.dart                  # App entry point
+│   ├── models/                    # Data models (Expense, Budget, UserProfile)
+│   ├── screens/                   # All UI screens (31 screens)
+│   ├── services/                  # Business logic & data layer (23 services)
+│   └── widgets/                   # Reusable widgets
+├── android/
+│   └── app/
+│       └── google-services.json   # ← YOU MUST ADD THIS (not in repo)
+├── lib/services/app_config.dart   # ← YOU MUST CREATE THIS (not in repo)
+├── pubspec.yaml                   # Dependencies
+├── DOCUMENTATION.md               # Full technical docs
+├── HOWTORUN.md                    # This file
+└── KIRO_CONTEXT.md                # AI assistant context
+```
+
+---
+
+## 9. Common Issues
+
+### `google-services.json not found`
+You need to add the Firebase config file. See step 2 above.
+
+### `app_config.dart not found`
+You need to create the API key file. See step 3 above.
+
+### `flutter pub get` fails
+Make sure you're on Flutter stable channel:
+```bash
+flutter channel stable
+flutter upgrade
+flutter pub get
+```
+
+### Build fails with Gradle error
+Make sure Java 17 is installed and set as JAVA_HOME:
+```bash
+java -version  # should show 17.x
+```
+
+### `Developer Mode` warning on Windows
+Flutter on Windows requires Developer Mode for symlinks:
+```
+Settings → System → For developers → Developer Mode → ON
+```
+
+### App crashes on launch (release build)
+Check that `google-services.json` matches the package name `com.lucidframe.smartspend` (or whatever is in `android/app/build.gradle`).
+
+---
+
+## 10. Test Device
+
+Primary test device: **Poco X6 Pro** (Android 16, HyperOS 2)
+- Use `app-arm64-v8a-release.apk`
+- Optical in-display fingerprint works with `biometricOnly: false` in `local_auth`
+
+---
+
+## 11. Key Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| `sqflite` | Local SQLite database |
+| `firebase_auth` | Authentication |
+| `cloud_firestore` | Cloud sync |
+| `firebase_crashlytics` | Crash reporting |
+| `firebase_app_check` | API abuse protection |
+| `google_sign_in` | Google OAuth |
+| `local_auth` | PIN + biometric lock |
+| `google_mlkit_text_recognition` | OCR for receipts |
+| `google_mlkit_barcode_scanning` | Barcode/QR detection |
+| `mobile_scanner` | Live camera barcode scanning |
+| `fl_chart` | Charts (pie, bar, line) |
+| `speech_to_text` | Voice input |
+| `flutter_local_notifications` | Push notifications |
+| `share_plus` | Backup export via share sheet |
+| `file_picker` | Backup restore file picker |
+| `shake` | Shake-to-undo gesture |
+| `http` | Groq API + exchange rate calls |
+
+---
+
+*Smart Spend — Lucid Frame | Lorma Colleges CCSE, BSIT | 2025–2026*

@@ -363,9 +363,12 @@ class DBService {
           updated_at TEXT NOT NULL
         )
       ''');
-      // Seed default wallets if table is empty
+      // Seed default wallets only on a truly fresh install (no user profile yet).
+      // After logout, wallets are deleted and restored from Firestore on next
+      // login — so we must NOT re-seed here or we'd overwrite the restored data.
       final existing = await db.query('wallets');
-      if (existing.isEmpty) {
+      final hasUser = await db.query('user_profile');
+      if (existing.isEmpty && hasUser.isEmpty) {
         final now = DateTime.now().toIso8601String();
         await db.insert('wallets', {
           'name': 'Cash on Hand',
@@ -784,6 +787,14 @@ class DBService {
     final db = await getDB();
     await db.update('expenses', {'category': newName},
         where: 'category = ?', whereArgs: [oldName]);
+    // Push all affected expenses to Firestore
+    try {
+      final affected = await db.query('expenses',
+          where: 'category = ?', whereArgs: [newName]);
+      for (final e in affected) {
+        CloudService.pushDoc('expenses', e);
+      }
+    } catch (_) {}
     fireEvent(AppEvent.expenseChanged);
   }
 
@@ -793,7 +804,7 @@ class DBService {
   static Future<void> insertCategoryRule(
       String keyword, String category) async {
     final db = await getDB();
-    await db.insert(
+    final id = await db.insert(
       'category_rules',
       {
         'keyword': keyword.trim().toLowerCase(),
@@ -802,11 +813,22 @@ class DBService {
       },
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+    if (id > 0) {
+      try {
+        CloudService.pushDoc('category_rules', {
+          'id': id,
+          'keyword': keyword.trim().toLowerCase(),
+          'category': category,
+          'created_at': DateTime.now().toIso8601String(),
+        });
+      } catch (_) {}
+    }
   }
 
   static Future<void> deleteCategoryRule(int id) async {
     final db = await getDB();
     await db.delete('category_rules', where: 'id = ?', whereArgs: [id]);
+    try { CloudService.deleteDoc('category_rules', id); } catch (_) {}
   }
 
   static Future<List<Map<String, dynamic>>> getCategoryRules() async {
@@ -1230,6 +1252,24 @@ class DBService {
       }
       CategoryService.invalidate(); // refresh category cache after sync
 
+      // Merge category_rules — user-defined auto-categorization rules
+      for (final r in syncData.categoryRules) {
+        final id = r['id'];
+        final keyword = r['keyword'] as String?;
+        if (keyword == null || keyword.isEmpty) continue;
+        final existing = id != null
+            ? await db.query('category_rules', where: 'id = ?', whereArgs: [id], limit: 1)
+            : await db.query('category_rules', where: 'keyword = ?', whereArgs: [keyword], limit: 1);
+        if (existing.isEmpty) {
+          final clean = Map<String, dynamic>.from(r)..remove('firestore_doc_id');
+          try {
+            await db.insert('category_rules', clean,
+                conflictAlgorithm: ConflictAlgorithm.ignore);
+            count++;
+          } catch (_) {}
+        }
+      }
+
       // Merge installments
       for (final inst in syncData.installments) {
         final id = inst['id'];
@@ -1264,6 +1304,36 @@ class DBService {
         }
       }
 
+      // Merge wallets — restore balances from cloud; update existing by id
+      for (final w in syncData.wallets) {
+        final id = w['id'];
+        if (id == null) continue;
+        final clean = Map<String, dynamic>.from(w)..remove('firestore_doc_id');
+        final existing =
+            await db.query('wallets', where: 'id = ?', whereArgs: [id], limit: 1);
+        if (existing.isEmpty) {
+          try {
+            await db.insert('wallets', clean,
+                conflictAlgorithm: ConflictAlgorithm.ignore);
+            count++;
+          } catch (_) {}
+        } else {
+          // Always restore cloud balance — wallet balances are the source of truth
+          try {
+            await db.update('wallets',
+                {'balance': clean['balance'], 'updated_at': clean['updated_at']},
+                where: 'id = ?', whereArgs: [id]);
+          } catch (_) {}
+        }
+      }
+      // If no wallets came from cloud (brand new account), seed defaults
+      final walletCount = await db.rawQuery('SELECT COUNT(*) as c FROM wallets');
+      if ((walletCount.first['c'] as int? ?? 0) == 0) {
+        final now = DateTime.now().toIso8601String();
+        await db.insert('wallets', {'name': 'Cash on Hand', 'type': 'cash', 'balance': 0.0, 'icon': '💵', 'updated_at': now});
+        await db.insert('wallets', {'name': 'GCash', 'type': 'ewallet', 'balance': 0.0, 'icon': '📱', 'updated_at': now});
+      }
+
       // Sync profile photo if it's a remote URL
       if (syncData.profile?.photoUrl != null &&
           syncData.profile!.photoUrl!.startsWith('https://')) {
@@ -1280,6 +1350,7 @@ class DBService {
         fireEvent(AppEvent.expenseChanged);
         fireEvent(AppEvent.budgetChanged);
         fireEvent(AppEvent.incomeChanged);
+        fireEvent(AppEvent.goalChanged);
       }
 
       // Restore key settings from Firestore (income, account type, currency)
@@ -1320,6 +1391,17 @@ class DBService {
         installmentPlans = await db.query('installment_plans');
       } catch (_) {}
 
+      // Also push wallets
+      List<Map<String, dynamic>> wallets = [];
+      try {
+        wallets = await getWallets();
+      } catch (_) {}
+      // Also push category_rules
+      List<Map<String, dynamic>> categoryRules = [];
+      try {
+        categoryRules = await getCategoryRules();
+      } catch (_) {}
+
       await CloudService.pushAll(
         expenses: expenses.map((e) => e.toMap()).toList(),
         budgets: budgets.map((b) => b.toMap()).toList(),
@@ -1330,6 +1412,8 @@ class DBService {
         customCategories: customCategories,
         installments: installments,
         installmentPlans: installmentPlans,
+        wallets: wallets,
+        categoryRules: categoryRules,
       );
 
       // Push key settings so they survive logout/login
@@ -1340,6 +1424,9 @@ class DBService {
         'income_frequency',
         'currency',
         'setup_done',
+        'daily_limit',
+        'payday_date',
+        'manual_assets',
       ]) {
         final val = await getSetting(key);
         if (val != null) settingsToSync[key] = val;
@@ -1416,14 +1503,37 @@ class DBService {
     // Reset weekly challenge dismiss — per-account
     await db.delete('settings',
         where: 'key = ?', whereArgs: ['weekly_challenge_dismissed']);
+    // Reset recurring candidate detection date — per-account so new account
+    // gets fresh subscription detection on first use
+    await db.delete('settings',
+        where: 'key = ?', whereArgs: ['last_recurring_check']);
+    // Reset notification throttle keys — per-account so new account gets
+    // their first-day/week/month notifications without waiting for the cycle
+    for (final key in [
+      'last_weekly_notif',
+      'last_anomaly_check',
+      'last_velocity_check',
+      'last_want_alert',
+      'last_daily_briefing',
+    ]) {
+      await db.delete('settings', where: 'key = ?', whereArgs: [key]);
+    }
     // Clear installment_plans — per-account financial data
     try {
       await db.delete('installment_plans');
     } catch (_) {}
-    // Clear wallets — per-account balances (reset to 0, keep structure)
+    // Clear old installments table — per-account financial data
     try {
-      await db.update('wallets',
-          {'balance': 0.0, 'updated_at': DateTime.now().toIso8601String()});
+      await db.delete('installments');
+    } catch (_) {}
+    // Clear recurring_candidates — derived from this account's expense patterns
+    try {
+      await db.delete('recurring_candidates');
+    } catch (_) {}
+    // Clear wallets — per-account balances. Rows are deleted so they restore
+    // cleanly from Firestore on next login (avoids stale zero-balance rows).
+    try {
+      await db.delete('wallets');
     } catch (_) {}
     // Reset AI daily request counter — per-account so next user gets their own limit
     // (ai_chat_count and ai_chat_date are in SharedPreferences, not SQLite)
@@ -1701,12 +1811,13 @@ class DBService {
 
   static Future<void> setWalletBalance(int id, double balance) async {
     final db = await getDB();
-    await db.update(
-      'wallets',
-      {'balance': balance, 'updated_at': DateTime.now().toIso8601String()},
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final updated = {'balance': balance, 'updated_at': DateTime.now().toIso8601String()};
+    await db.update('wallets', updated, where: 'id = ?', whereArgs: [id]);
+    // Sync to Firestore immediately
+    final rows = await db.query('wallets', where: 'id = ?', whereArgs: [id], limit: 1);
+    if (rows.isNotEmpty) {
+      try { CloudService.pushDoc('wallets', rows.first); } catch (_) {}
+    }
     fireEvent(AppEvent.incomeChanged); // refresh profile/net worth
   }
 
@@ -1716,6 +1827,8 @@ class DBService {
       ...data,
       'updated_at': DateTime.now().toIso8601String(),
     });
+    // Sync to Firestore immediately
+    try { CloudService.pushDoc('wallets', {...data, 'id': id, 'updated_at': DateTime.now().toIso8601String()}); } catch (_) {}
     fireEvent(AppEvent.incomeChanged);
     return id;
   }
@@ -1723,6 +1836,8 @@ class DBService {
   static Future<void> deleteWallet(int id) async {
     final db = await getDB();
     await db.delete('wallets', where: 'id = ?', whereArgs: [id]);
+    // Remove from Firestore
+    try { CloudService.deleteDoc('wallets', id); } catch (_) {}
     fireEvent(AppEvent.incomeChanged);
   }
 

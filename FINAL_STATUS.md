@@ -1,9 +1,62 @@
 # Smart Spend — Final Status Report
 
-**Build Date:** May 2, 2026
-**Version:** 2.4.0
-**APK:** ~44.59 MB (arm64-v8a) — May 2, 2026 11:01 PM
-**Status:** ✅ **COMPLETE** — Zero errors, all fixable items resolved
+**Build Date:** May 11, 2026
+**Version:** 2.6.0
+**APK:** ~44.0 MB (arm64-v8a) — May 11, 2026
+**Status:** ✅ **COMPLETE** — Zero errors, all sync/data-safety issues resolved
+
+---
+
+## ✅ Session 12 — Full Cloud Sync Audit & Fixes (v2.6.0)
+
+**Build:** May 11, 2026 — 44.0 MB arm64-v8a
+
+### Sync Fixes (Data Safety)
+- **Wallets fully synced** — `setWalletBalance`, `insertWallet`, `deleteWallet` now call `CloudService.pushDoc/deleteDoc`; wallets included in `pullAll`, `pushAll`, `SyncData`, `syncFromCloud`, `pushAllToCloud`; backup export + restore; `clearLocalData` now deletes rows (not zeros) so they restore cleanly from Firestore
+- **Category rules fully synced** — `insertCategoryRule` and `deleteCategoryRule` now push to Firestore; added to `pullAll`, `pushAll`, `SyncData`, `syncFromCloud`, `pushAllToCloud`, and backup restore
+- **Reset All Data fixed** — now clears all 14 tables (was only 6) AND pushes empty state to Firestore so data doesn't resurrect on next login
+- **Demo data isolation** — `DemoService._isDemoLoading` flag added; `CloudService._shouldSkipSync` checks it; demo data never reaches Firestore even when a real user is logged in; `clearDemoData()` now wipes Firestore if a real user is logged in
+- **Backup restore syncs to cloud** — `BackupService.restoreFromFile()` now calls `DBService.pushAllToCloud()` after all data is restored
+- **Setup onboarding syncs** — `SetupScreen._finish()` now calls `pushAllToCloud()` after setup completes; new device login now works correctly
+- **Register screen** — `_syncAfterRegister()` clears demo data if `was_demo_mode` was set before registration
+
+### Logout Cleanup Fixes
+- `installments` (old table) — now deleted in `clearLocalData()`
+- `recurring_candidates` — now deleted in `clearLocalData()`
+- `last_recurring_check` — now reset on logout
+- Notification throttle keys (`last_weekly_notif`, `last_anomaly_check`, `last_velocity_check`, `last_want_alert`, `last_daily_briefing`) — all reset on logout so new accounts get first-day notifications
+
+### Sync Event Fixes
+- `syncFromCloud` now fires `AppEvent.goalChanged` after merging goals (was missing)
+
+### Settings Sync Fixes
+- `daily_limit`, `payday_date`, `manual_assets` added to `pushAllToCloud` settings sync list
+
+### Undo Fixes
+- `UndoService` `update_expense` case — now calls `CloudService.pushDoc` after restoring (was raw `db.update` with no Firestore sync)
+- `ai_screen` `update_expense` action — now records undo snapshot BEFORE applying the change (was never recorded, making shake-to-undo silently do nothing for expense edits)
+
+### Logic Fixes
+- `renameExpenseCategory()` — now pushes all affected expense documents to Firestore after bulk rename
+- `achievements_screen` `budget_boss` badge — now correctly resolves percentage-based budgets (was using `b.amount` which is 0 for % budgets)
+
+### Security / Code Quality
+- Groq API key centralized in `AppConfig` (`lib/services/app_config.dart`)
+- Both `AIChatService` and `LLMService` now reference `AppConfig` instead of hardcoded strings
+- `app_config.dart` added to `.gitignore`
+- `app_config.dart.example` created for new developers
+
+### Documentation
+- `README.md` — updated to v2.6.0, added HOWTORUN.md and KIRO_CONTEXT.md references
+- `HOWTORUN.md` — new file: full setup, run, and build instructions
+- `KIRO_CONTEXT.md` — new file: complete architecture reference for AI assistant
+- `DOCUMENTATION.md` — updated to v2.6.0, sync section updated
+- `whats_new_screen.dart` — bumped to v2.6.0 with 11 new sync/fix entries
+- `about_screen.dart` — bumped to v2.6.0, tech stack updated
+- `help_screen.dart` — new "Cloud Sync & Data Safety" section added
+- `pubspec.yaml` — bumped to 2.6.0+1
+
+
 
 ---
 

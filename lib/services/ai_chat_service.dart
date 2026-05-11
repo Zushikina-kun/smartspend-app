@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'db_service.dart';
+import 'app_config.dart';
 
 /// Represents an action the AI wants to perform on the app's data
 class AIAction {
@@ -11,10 +12,9 @@ class AIAction {
 }
 
 class AIChatService {
-  static const _apiKey =
-      "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";
-  static const _baseUrl = "https://api.groq.com/openai/v1/chat/completions";
-  static const _model = "llama-3.1-8b-instant";
+  static const _apiKey = AppConfig.groqApiKey;
+  static const _baseUrl = AppConfig.groqBaseUrl;
+  static const _model = AppConfig.groqModel;
 
   // D2 mitigation: daily request cap to protect the shared API key
   static const _dailyLimit = 60;

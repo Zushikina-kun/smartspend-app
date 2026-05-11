@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'app_config.dart';
 
 class LLMService {
-  static const _groqKey =
-      "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";
-  static const _groqUrl = "https://api.groq.com/openai/v1/chat/completions";
-  static const _groqModel = "llama-3.1-8b-instant";
+  static const _groqKey = AppConfig.groqApiKey;
+  static const _groqUrl = AppConfig.groqBaseUrl;
+  static const _groqModel = AppConfig.groqModel;
 
   // Fallback: Gemini free tier (student edu account)
   // Set this if you have a working Gemini key

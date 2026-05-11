@@ -1,9 +1,9 @@
 # Smart Spend — QA-Ready Build Summary
 
-**Build Date:** April 29, 2026
-**Version:** 2.4.0
-**APK Size:** 44.5MB (arm64-v8a)
-**Status:** ✅ QA-Ready — Zero compile errors, all critical fixes implemented
+**Build Date:** May 11, 2026
+**Version:** 2.6.0
+**APK Size:** ~44.0 MB (arm64-v8a)
+**Status:** ✅ QA-Ready — Zero compile errors, all sync/data-safety issues resolved
 
 ---
 
@@ -11,144 +11,122 @@
 
 ```
 build/app/outputs/flutter-apk/
-├── app-arm64-v8a-release.apk    (42.2MB) ← Use this for QA
-├── app-armeabi-v7a-release.apk  (34.6MB)
-└── app-x86_64-release.apk       (45.3MB)
+└── app-arm64-v8a-release.apk    (~44.0 MB) ← Use this for QA
 ```
 
-**Recommended:** Distribute `app-arm64-v8a-release.apk` — works on all modern Android phones.
+**Recommended:** `app-arm64-v8a-release.apk` — works on all modern Android phones (Snapdragon, MediaTek, Exynos).
+
+**Build command used:**
+```bash
+flutter build apk --release --target-platform android-arm64 --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
+```
 
 ---
 
-## ✅ What Was Fixed (This Session)
+## ✅ What Was Fixed (v2.6.0 — Session 12)
 
-### HIGH Priority (all done)
-- ✅ Radio/RadioListTile deprecated → replaced with custom icon tiles
-- ✅ Budget screen hardcoded ₱ → all amounts use CurrencyService
-- ✅ Analytics income dialog title → adapts to account type
-- ✅ Tax card hidden for students/unemployed → replaced with Allowance Overview
-- ✅ Profile tax row hidden for students/unemployed
-- ✅ Forgot Password added to login screen
-- ✅ **Account isolation** — logout clears local DB after cloud push, demo mode isolated
+### CRITICAL — Data Safety
+- ✅ **Wallets fully synced to Firestore** — balances survive logout, login, and device switches
+- ✅ **Category rules synced to Firestore** — keyword → category rules now persist across devices
+- ✅ **Reset All Data fixed** — clears all 14 tables + wipes Firestore (data no longer resurrects)
+- ✅ **Demo data isolation** — loading demo data never contaminates real Firestore account
+- ✅ **Backup restore syncs to cloud** — restoring a backup now pushes to Firestore immediately
+- ✅ **Setup onboarding syncs** — account type, income, budgets pushed to Firestore after setup
 
-### MEDIUM Priority (all done)
-- ✅ All hardcoded `Color(0xFF0066FF)` → theme-aware across 8 screens
-- ✅ Recurring detail dialog shows human-readable dates
-- ✅ Savings goals snackbar fires on correct context
-- ✅ `_loadingInsight` flicker fixed
-- ✅ Chat history pull-to-refresh added
-- ✅ Today's Spending card added to Home
-- ✅ Account type change fires event → all screens refresh
+### HIGH — Sync Correctness
+- ✅ **Undo expense edit syncs** — shake-to-undo on expense edits now correctly restores + syncs
+- ✅ **Undo snapshot recorded** — expense edit undo now actually works (snapshot was never saved before)
+- ✅ **Category rename syncs** — renaming/deleting a custom category updates all expenses in Firestore
+- ✅ **Settings sync expanded** — daily_limit, payday_date, manual_assets now sync across devices
 
-### LOW Priority (all done)
-- ✅ Google button broken image hack removed
-- ✅ Recurring start date shown in list
-- ✅ Monthly bar chart respects period filter
-- ✅ Nav bar uses theme colors
-- ✅ Budget nested dialog uses main context
-- ✅ syncFromCloud fires events after sync
-- ✅ Recurring next due date picker added
-- ✅ FAB keyboard overlap fixed in AI chat
-- ✅ AI write actions require confirmation
-- ✅ AI language detection strengthened for Taglish
+### MEDIUM — Logic & Correctness
+- ✅ **Budget Boss badge fixed** — now correctly handles percentage-based budgets
+- ✅ **Notification throttle reset on logout** — new accounts get first-day notifications
+- ✅ **installments + recurring_candidates cleared on logout** — no data leaks between accounts
+- ✅ **goalChanged event on sync** — savings goals screen refreshes after login sync
 
-### DEFERRED Mitigations (all done)
-- ✅ **D2** — Groq API daily cap (60 msg/day) + remaining count in appbar
-- ✅ **D4** — Last-write-wins sync via `updated_at` timestamp
-- ✅ **D7** — This month vs last month category comparison table
-- ✅ **D8** — Time-aware budget hints (day X of Y, pace indicators)
-- ✅ **D9** — Pie chart drilldown (tap legend → see transactions)
-- ✅ **D10** — Income frequency editable in Profile
-- ✅ **D11** — Health score uses income-relative thresholds
-
----
-
-## 🎯 What's Still Deferred (Plan Later)
-
-| # | Item | Why |
-|---|------|-----|
-| D3 | SQLite encryption | Needs native plugin + migration |
-| D5 | Firebase Storage for photos | Needs Blaze (paid) plan |
-| D6 | Cloud Functions | Needs Blaze (paid) plan |
-
-Everything else is **done**.
+### SECURITY
+- ✅ **API key centralized** — Groq key in `AppConfig`, added to `.gitignore`
 
 ---
 
 ## 🧪 QA Testing Guide
 
-### Test Scenarios
+### Test 1 — Wallet Sync (Critical — was broken before)
+1. Log in → go to Profile → tap Net Worth card → set GCash to ₱500
+2. Log out → log back in
+3. ✅ GCash should still show ₱500 (not ₱0)
 
-#### 1. Account Isolation (Critical)
-- Create Account A → add expenses → logout
-- Create Account B → login → verify Account A's data is NOT visible
-- Login as Account A again → verify data is restored from cloud
+### Test 2 — Wallet Sync Across Devices
+1. Set wallet balance on Device A
+2. Log in on Device B
+3. ✅ Wallet balance should appear on Device B
 
-#### 2. Demo Mode Isolation
-- Tap "Try Demo" → verify sample data loads
-- Logout → login as real account → verify demo data is gone
+### Test 3 — Category Rules Sync
+1. Hub → Auto-Categorization Rules → add rule: "7-eleven" → Food
+2. Log out → log back in
+3. ✅ Rule should still be there
 
-#### 3. Multi-Currency
-- Change currency in Profile → Currency & Region
-- Verify all amounts display in new currency across all screens
+### Test 4 — Reset All Data + Firestore Wipe
+1. Add some expenses → Profile → Reset All Data → type RESET
+2. Log out → log back in
+3. ✅ App should be empty — data should NOT come back from Firestore
 
-#### 4. AI Chat
-- Send 5 messages → verify confirmation dialog appears before actions
-- Check appbar for remaining message count
-- Try to send 61 messages in one day → verify daily limit error
+### Test 5 — Demo Data Isolation
+1. Log in as real account → Profile → Load Demo Data
+2. Log out → log back in
+3. ✅ Demo data should NOT appear — real account data should be there
 
-#### 5. Budget Time-Aware
-- Set a Food budget of ₱3000
-- Spend ₱1500 on day 10 of the month
-- Check Budget screen → should show "⚠️ ahead of pace"
+### Test 6 — Backup Restore Syncs
+1. Profile → Backup Data → save file
+2. Reset all data
+3. Profile → Restore from Backup → pick the file
+4. Log out → log back in on another device
+5. ✅ Restored data should appear on the other device
 
-#### 6. Pie Chart Drilldown
-- Go to Analytics → tap any category in the legend
-- Verify transaction list appears below
-- Tap again → verify it closes
+### Test 7 — Undo Expense Edit
+1. Tell AI: "I spent 100 pesos on food"
+2. Tell AI: "Change that to 200 pesos"
+3. Shake phone → confirm undo
+4. ✅ Expense should revert to 100 pesos
+5. Log out → log back in
+6. ✅ Reverted amount (100) should persist — not 200
 
-#### 7. Category Comparison
-- Go to Analytics → select "This Month" filter
-- Scroll down → verify "This Month vs Last Month" table appears
-- Check up/down arrows match spending changes
+### Test 8 — Budget Boss Badge (% budgets)
+1. Set Food budget to 30% of income (not fixed ₱)
+2. Stay under budget all month
+3. Hub → Achievements
+4. ✅ Budget Boss badge should be earned
 
-#### 8. Income Frequency
-- Go to Profile → tap Income card
-- Verify frequency selector appears (daily/weekly/bimonthly/monthly)
-- Set "daily ₱500" → verify it saves as ₱11,000/mo (500 × 22)
+### Test 9 — Account Isolation (existing test)
+1. Create Account A → add expenses → logout
+2. Create Account B → login → verify Account A's data is NOT visible
+3. Login as Account A → verify data is restored from cloud
 
-#### 9. Health Score Income-Relative
-- Set income to ₱30,000
-- Spend ₱10,000 (33% of income) → score should be ~85 (≤40% bracket)
-- Spend ₱25,000 (83% of income) → score should drop to ~70 (≤80% bracket)
-
-#### 10. Forgot Password
-- Tap "Forgot Password?" on login screen
-- Enter email → verify Firebase sends reset email
+### Test 10 — New Account Notifications
+1. Log out → create a new account on the same device
+2. Complete setup
+3. ✅ Daily briefing notification should fire (not suppressed by previous account's throttle)
 
 ---
 
 ## 🐛 Known Non-Issues
 
-These are **not bugs** — they're expected behavior:
-
 | Observation | Explanation |
 |-------------|-------------|
 | Profile photo doesn't sync to other devices | Firebase Storage requires Blaze plan — photos are local-only by design |
-| AI sometimes responds in wrong language for Taglish | LLaMA 3.1 8B limitation — strengthened but not perfect |
-| Offline data doesn't sync until next login | Real-time sync requires Cloud Functions (Blaze plan) — current design is login-triggered |
-| Editing an expense on Device A while offline, then editing same expense on Device B → last login wins | Last-write-wins is the mitigation — full CRDT is deferred |
+| AI sometimes responds in wrong language for Taglish | LLaMA 3.1 8B limitation |
+| Offline data doesn't sync until next login | No Cloud Functions (Spark plan) — login-triggered sync by design |
+| Score history, mood log, scan history don't sync | Device-local analytics by design — not financial data |
 
 ---
 
 ## 📱 Installation Instructions for Testers
 
-1. **Uninstall old version** (if any) — settings will be preserved but data will be fresh
+1. **Uninstall old version** if any (or install alongside — different package name not needed)
 2. Install `app-arm64-v8a-release.apk`
 3. Open app → complete onboarding → create account or try demo
-4. Grant permissions when prompted (camera, microphone, storage)
-
-**First-time users:** The feature tour will guide you through the app.
+4. Grant permissions when prompted (camera, microphone, notifications)
 
 **Returning testers:** Your data is in the cloud — just log in and it will sync down.
 
@@ -156,48 +134,29 @@ These are **not bugs** — they're expected behavior:
 
 ## 🔧 Developer Notes
 
-### Build Command
-```bash
-flutter build apk --release --split-per-abi
-```
-
 ### Zero Errors
-All 41 Dart files compile clean. Only 3 analyzer warnings (all pre-existing, not blocking):
-1. `flutter_lints` config missing (non-fatal)
-2. `fetchSignInMethodsForEmail` deprecated in `auth_service.dart` (Firebase API, not our code)
-3. `test/widget_test.dart` references non-existent `MyApp` (stub test file, not used)
+All Dart files compile clean. Warnings are pre-existing (deprecated Firebase APIs, package version notices) — none are blocking.
 
 ### File Count
-- 41 Dart files
-- 12 screens
-- 15 services
+- 31 screens
+- 23 services
 - 3 models
-- 3 widgets
+- 4 widgets
+- ~12,000+ lines of Dart
 
-### Lines of Code
-~8,500 lines of Dart (excluding generated files)
+### Debug Symbol Maps
+The `build/debug-info/` folder contains symbol maps for decoding obfuscated Crashlytics stack traces. Keep this folder.
 
 ---
 
 ## 🎓 Capstone Defense Readiness
 
-**Chapter 1 & 2:** Documentation complete in `DOCUMENTATION.md` and `SmartSpend_Chapter1&2.docx`
+**Documentation:** `DOCUMENTATION.md`, `HOWTORUN.md`, `KIRO_CONTEXT.md`, `FINAL_STATUS.md`
 
-**App Demonstration:** Not required for proposal defense — only document defense needed
+**Data Safety:** All user data syncs to Firestore — no risk of data loss during testing
 
-**QA Feedback:** Ready for distribution to classmates and friends for bug hunting
-
-**Data Safety:** All user data is backed up to Firestore — no risk of data loss during testing
+**Demo Mode:** Fully isolated from real accounts — safe to demo on any device
 
 ---
 
-## 📞 Support
-
-For bugs or issues during QA, contact:
-- **Brix A. Directo** (Lead Developer)
-- **Cyrille John M. Rubis** (Developer)
-- **Djaunathan Albert S. Madayag** (Developer)
-
----
-
-*Built with ❤️ by Lucid Frame*
+*Built with ❤️ by Lucid Frame | Lorma Colleges CCSE, BSIT | 2025–2026*

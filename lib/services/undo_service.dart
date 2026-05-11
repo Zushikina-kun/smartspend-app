@@ -1,4 +1,5 @@
 import 'db_service.dart';
+import 'cloud_service.dart';
 import 'event_bus.dart';
 
 /// Represents a single undoable AI action.
@@ -111,6 +112,8 @@ class UndoService {
             final db = await DBService.getDB();
             await db.update('expenses', prev,
                 where: 'id = ?', whereArgs: [prev['id']]);
+            // Sync the restored state to Firestore
+            try { CloudService.pushDoc('expenses', prev); } catch (_) {}
             fireEvent(AppEvent.expenseChanged);
           }
           return true;

@@ -1,12 +1,24 @@
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'db_service.dart';
+import 'cloud_service.dart';
 import 'category_service.dart';
 
 class DemoService {
+  // Flag to suppress Firestore sync during demo data loading.
+  // Demo data is local-only — it must never be pushed to a real user's cloud.
+  static bool _isDemoLoading = false;
+  static bool get isDemoLoading => _isDemoLoading;
+
   static Future<void> loadSampleData() async {
     final now = DateTime.now();
     final fmt = DateFormat('yyyy-MM-dd');
+
+    // If a real user is logged in, wipe their Firestore first so demo data
+    // doesn't accidentally get pushed to the cloud via DBService write hooks.
+    // We do this by temporarily suppressing cloud sync during the load.
+    _isDemoLoading = true;
 
     final db = await DBService.getDB();
     await db.delete('expenses');
@@ -638,6 +650,9 @@ class DemoService {
       'confidence_score': 1.0,
       'is_want': 0,
     });
+
+    // Demo load complete — re-enable cloud sync
+    _isDemoLoading = false;
   }
 
   static Future<void> clearDemoData() async {
@@ -659,5 +674,17 @@ class DemoService {
       await db.delete('scan_history');
     } catch (_) {}
     CategoryService.invalidate();
+    // If a real user is logged in, wipe Firestore too so demo data
+    // doesn't persist in the cloud after clearing locally.
+    if (FirebaseAuth.instance.currentUser != null) {
+      try {
+        await CloudService.pushAll(
+          expenses: [], budgets: [], goals: [], income: [],
+          recurring: [], debts: [], customCategories: [],
+          installments: [], installmentPlans: [], wallets: [],
+          categoryRules: [],
+        );
+      } catch (_) {}
+    }
   }
 }

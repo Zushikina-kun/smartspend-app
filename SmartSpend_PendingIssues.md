@@ -1,236 +1,154 @@
 # SmartSpend — Pending Issues & Feature Requests
-**Logged:** May 3, 2026
-**Status:** Identified, not yet fixed. Work through these one by one.
-
----
-
-## ISSUE 1 — Feature Tour Doesn't Show for New Accounts on Same Device
-
-**What happens:** When a new account is created and logged in on a device that previously had the app installed, the feature tour never appears — even though it's a brand new account.
-
-**Root cause:** `tour_done` is stored in `SharedPreferences` (device-local storage), not per Firebase user. So if any previous session (demo or another account) already set `tour_done = true`, new accounts on the same device never see the tour.
-
-**Where to fix:** `lib/widgets/feature_tour.dart` — `shouldShow()` and `markDone()` methods. Change the key from `'tour_done'` to `'tour_done_${uid}'` so it's per-account. Also need to reset it on logout.
-
-**Files affected:**
-- `lib/widgets/feature_tour.dart`
-- `lib/screens/profile_screen.dart` (Replay Tutorial option)
-- `lib/services/auth_service.dart` or logout flow (reset on logout)
-
-**Priority:** HIGH — affects every new user's first experience
-
-**STATUS: ✅ FIXED (May 3, 2026)**
-- `feature_tour.dart`: `shouldShow()`, `markDone()`, and new `reset()` now use `tour_done_${uid}` (or `tour_done_demo` for demo mode)
-- `profile_screen.dart`: Replay Tutorial now calls `FeatureTour.reset()` instead of directly writing `tour_done`
-- Demo mode: `_tryDemo()` in `login_screen.dart` calls `FeatureTour.markDone()` which resolves to `tour_done_demo` since no Firebase user is signed in
-
----
-
-## ISSUE 2 — Profile Photo: Use Google/Gmail Profile Picture as Default
-
-**What happens:** New accounts have no profile photo. The app shows a placeholder avatar. Users expect their Google profile picture to appear automatically when they sign in with Google.
-
-**What's needed:**
-- On Google Sign-In, fetch `user.photoURL` from Firebase Auth (it's already available — Google provides it)
-- Store it as the profile photo URL in the user_profile table
-- Display it in the profile screen avatar
-- Allow manual override (user can still change it)
-- For email/password accounts: keep the placeholder (no Google photo available)
-
-**Where to fix:** `lib/screens/login_screen.dart` — `_syncAfterLogin()` method. After Google sign-in, check `user.photoURL` and save it to the profile if no photo is already set.
-
-**Files affected:**
-- `lib/screens/login_screen.dart`
-- `lib/screens/profile_screen.dart` (display logic)
-- `lib/services/db_service.dart` (saveProfile)
-
-**Priority:** MEDIUM — nice to have, improves first impression
-
-**Note:** Profile photo sync across devices still requires Firebase Storage (Blaze plan). This fix only uses the Google-provided URL which is already a remote HTTPS URL — no Storage needed.
-
----
-
-## ISSUE 3 — Analytics Period Filter: Missing "Last Month", Specific Month, and Calendar Comparison
-
-**What happens:** The period filter only has: All Time, This Week, This Month, This Year, Custom Range. There's no "Last Month" option, no way to select "January 2026" specifically, and no month-by-month calendar navigation.
-
-**What's needed:**
-- Add "Last Month" as a quick filter chip (most commonly needed comparison)
-- Add a month picker (year + month selection) for specific month analysis
-- The existing "Custom Range" covers arbitrary date ranges, but a month picker is more intuitive
-
-**Where to fix:** `lib/screens/analytics_screen.dart` — period filter chips section and `_loadData()` filter logic.
-
-**Files affected:**
-- `lib/screens/analytics_screen.dart`
-
-**Priority:** MEDIUM — directly addresses panel feedback about comparison
-
----
-
-## ISSUE 4 — Backdated Expenses: How the App Handles Old Records
-
-**What happens:** If a user logs an expense with a past date (e.g. recording January expenses in May), the app should handle it correctly across all features.
-
-**Current behavior (verified):**
-- ✅ Add Expense has a date picker — user can select any past date
-- ✅ Expenses are stored with the selected date, not today's date
-- ✅ Analytics filters by date correctly
-- ✅ This Month vs Last Month comparison uses stored dates
-- ✅ FHS Component 4 (Logging Consistency) uses the span from first expense to today
-
-**Potential issue:** If a user bulk-enters 30 old expenses all at once, Component 4 (Logging Consistency) will show 1 logged day out of 30 active days = very low score. This is technically correct but may feel unfair.
-
-**Suggested fix:** When calculating Component 4, if the user has expenses on many different past dates (suggesting retroactive entry), give partial credit rather than penalizing heavily. Or add a note in the score breakdown: "Score reflects logging regularity from [first expense date]."
-
-**Files affected:**
-- `lib/services/score_service.dart` (Component 4 logic)
-
-**Priority:** LOW — edge case, not a blocker
-
----
-
-## ISSUE 5 — CSV/Bank Import: GCash, PayMaya, BDO, BPI
-
-**What happens:** Users want to import their transaction history from GCash, PayMaya/Maya, BDO, BPI, etc. as CSV files.
-
-**GCash CSV format (from research):**
-GCash exports transaction history as a PDF (not CSV directly). The PDF contains columns like:
-- Date/Time (e.g. "Jan 11, 2025 10:30 AM")
-- Reference No.
-- Description (e.g. "Send Money to Juan Dela Cruz", "GCash Pay - Jollibee")
-- Debit (amount sent/paid)
-- Credit (amount received)
-- Balance
-
-GCash for Business has a direct CSV export with similar columns.
-
-**Maya/PayMaya CSV format:**
-Similar structure — Date, Description, Amount (positive = credit, negative = debit), Balance.
-
-**BDO/BPI CSV format:**
-More formal bank format — Date, Description, Debit, Credit, Balance. Dates in YYYY-MM-DD or MM/DD/YYYY format.
-
-**What's needed:**
-- File picker → user selects CSV file
-- Auto-detect format (GCash vs Maya vs BDO vs BPI) based on column headers
-- Parse rows: map Date → expense date, Description → item_name + category (via AI normalizer), Debit → amount
-- Preview table — user can deselect rows before importing
-- Bulk insert with duplicate detection (same date + amount + description = skip)
-- Import summary: "47 transactions imported, 3 skipped (duplicates)"
-- Handle date format variations (Jan 11 2025, 01/11/2025, 2025-01-11)
-- Handle credit entries (income) vs debit entries (expenses) separately
-
-**Files affected (new):**
-- `lib/screens/csv_import_screen.dart` (new)
-- `lib/services/csv_import_service.dart` (new)
-
-**Files affected (existing):**
-- `lib/screens/home_screen.dart` (Hub tile)
-- `lib/services/ai_chat_service.dart` (category normalizer for imported descriptions)
-
-**Priority:** HIGH for Capstone 2 — directly addresses "I just started, my history is empty" problem
-
-**Note:** The `csv` and `file_picker` packages are already in pubspec.yaml. Main work is writing format-specific parsers and the preview UI.
-
-**Sample formats to handle:**
-```
-GCash:
-Date,Reference No.,Description,Debit,Credit,Balance
-Jan 11 2025,REF123,Send Money to Juan,500.00,,4242.12
-Jan 12 2025,REF124,GCash Pay - Jollibee,149.00,,4093.12
-
-Maya:
-Transaction Date,Description,Amount,Balance
-2025-01-11,Transfer to Juan Dela Cruz,-500.00,4242.12
-2025-01-12,Payment - Jollibee,-149.00,4093.12
-
-BDO:
-Date,Description,Debit,Credit,Balance
-01/11/2025,FUND TRANSFER TO JUAN,500.00,,4242.12
-01/12/2025,JOLLIBEE PAYMENT,149.00,,4093.12
-```
-
----
-
-## ISSUE 6 — PIN and Biometric Lock Are Device-Wide, Not Per-Account
-
-**What happens:** The app lock PIN and biometric enabled state are stored in `SharedPreferences` with fixed keys (`app_lock_pin`, `app_lock_enabled`). This means:
-- If Account A sets a PIN, Account B on the same device inherits that PIN automatically
-- A new account on a device that had a PIN set will immediately be locked with someone else's PIN
-- Disabling the lock on one account disables it for all accounts on that device
-
-**Root cause:** `lib/services/app_lock_service.dart` uses hardcoded SharedPreferences keys:
-```dart
-static const _prefPin = 'app_lock_pin';
-static const _prefEnabled = 'app_lock_enabled';
-```
-
-**Fix:** Make keys per-account by appending the Firebase UID:
-```dart
-static String _pinKey(String uid) => 'app_lock_pin_$uid';
-static String _enabledKey(String uid) => 'app_lock_enabled_$uid';
-```
-
-All methods (`setPin`, `verifyPin`, `hasPin`, `removePin`, `isEnabled`, `setEnabled`) need to accept or fetch the current UID.
-
-**Files affected:**
-- `lib/services/app_lock_service.dart` — all methods
-- `lib/screens/profile_screen.dart` — App Lock setup/disable UI
-- `lib/screens/app_lock_screen.dart` — PIN verification
-- `lib/screens/pin_setup_screen.dart` — PIN creation
-- `lib/main.dart` — `_checkLockOnResume()` calls `AppLockService.isEnabled()`
-- `lib/screens/splash_screen.dart` — checks lock on cold start
-
-**Priority:** HIGH — security issue. A new user on a shared device could be locked out with someone else's PIN, or worse, bypass the lock entirely if the previous user disabled it.
-
-**Note:** Biometric itself is device-level (the device's fingerprint/face) so biometric authentication doesn't need to change — only the enabled/disabled state and PIN need to be per-account.
-
-**STATUS: ✅ FIXED (May 3, 2026)**
-- `app_lock_service.dart`: All methods now use `app_lock_pin_${uid}` and `app_lock_enabled_${uid}` keys. Added `_getUid()` helper that returns `FirebaseAuth.instance.currentUser?.uid ?? 'demo'`. No changes needed in callers — the service resolves the UID internally.
-
----
-
-## FULL SharedPreferences AUDIT
-
-| Key | Location | Status | Action needed |
-|-----|----------|--------|---------------|
-| `tour_done_${uid}` | feature_tour.dart | ✅ FIXED — per-account | Was `tour_done` (device-wide) |
-| `app_lock_pin_${uid}` | app_lock_service.dart | ✅ FIXED — per-account | Was `app_lock_pin` (device-wide) |
-| `app_lock_enabled_${uid}` | app_lock_service.dart | ✅ FIXED — per-account | Was `app_lock_enabled` (device-wide) |
-| `dark_mode` | theme_service.dart | ✅ Acceptable — device-wide | Theme preference is standard device-wide behavior |
-| `app_theme` | theme_service.dart | ✅ Acceptable — device-wide | Same as above |
-| `ai_chat_count` | ai_chat_service.dart | ✅ Correct — device-wide | Daily limit is per-device intentionally |
-| `ai_chat_date` | ai_chat_service.dart | ✅ Correct — device-wide | Same |
-| `onboarding_done` | splash/onboarding | ✅ Correct — device-wide | First-launch walkthrough, once per device is fine |
-| `was_demo_mode` | login/splash | ✅ Correct — device-wide | Demo isolation flag, correct behavior |
+**Last Updated:** May 11, 2026 (v2.6.0)
 
 ---
 
 ## SUMMARY TABLE
 
-| # | Issue | Priority | Effort | Status |
-|---|-------|----------|--------|--------|
-| 1 | Feature tour not showing for new accounts on same device | HIGH | Low | ✅ Fixed |
-| 2 | Use Google profile picture as default avatar | MEDIUM | Low | ❌ Not fixed |
-| 3 | Analytics: add Last Month + month picker | MEDIUM | Low | ❌ Not fixed |
-| 4 | Backdated expenses: Component 4 scoring fairness | LOW | Low | ❌ Not fixed |
-| 5 | CSV/Bank import (GCash, Maya, BDO, BPI) | HIGH (C2) | High | ❌ Capstone 2 |
-| 6 | PIN and biometric lock are device-wide, not per-account | HIGH | Medium | ✅ Fixed |
-| 7 | Chat history visible across accounts (privacy) | HIGH | Low | ✅ Fixed |
+| # | Issue | Priority | Status |
+|---|-------|----------|--------|
+| 1 | Feature tour not showing for new accounts on same device | HIGH | ✅ Fixed (May 3) |
+| 2 | Use Google profile picture as default avatar | MEDIUM | ❌ Open |
+| 3 | Analytics: add Last Month + month picker | MEDIUM | ❌ Open |
+| 4 | Backdated expenses: Component 4 scoring fairness | LOW | ❌ Open |
+| 5 | CSV/Bank import (GCash, Maya, BDO, BPI) | HIGH (C2) | ❌ Capstone 2 |
+| 6 | PIN and biometric lock are device-wide, not per-account | HIGH | ✅ Fixed (May 3) |
+| 7 | Chat history visible across accounts (privacy) | HIGH | ✅ Fixed (May 3) |
+| 8 | Wallets not syncing to Firestore | CRITICAL | ✅ Fixed (May 11) |
+| 9 | Category rules not syncing to Firestore | HIGH | ✅ Fixed (May 11) |
+| 10 | Reset All Data only cleared 6 of 14 tables, didn't wipe Firestore | HIGH | ✅ Fixed (May 11) |
+| 11 | Demo data contaminating real user's Firestore | HIGH | ✅ Fixed (May 11) |
+| 12 | Backup restore didn't push to Firestore | HIGH | ✅ Fixed (May 11) |
+| 13 | Setup onboarding data never pushed to Firestore | HIGH | ✅ Fixed (May 11) |
+| 14 | Undo expense edit didn't sync to Firestore | MEDIUM | ✅ Fixed (May 11) |
+| 15 | Undo snapshot never recorded for expense edits | MEDIUM | ✅ Fixed (May 11) |
+| 16 | renameExpenseCategory didn't sync to Firestore | MEDIUM | ✅ Fixed (May 11) |
+| 17 | budget_boss badge broken for % budgets | MEDIUM | ✅ Fixed (May 11) |
+| 18 | Notification throttle keys not reset on logout | MEDIUM | ✅ Fixed (May 11) |
+| 19 | installments + recurring_candidates not cleared on logout | MEDIUM | ✅ Fixed (May 11) |
+| 20 | daily_limit, payday_date, manual_assets not synced to Firestore | MEDIUM | ✅ Fixed (May 11) |
+| 21 | syncFromCloud missing goalChanged event | LOW | ✅ Fixed (May 11) |
+| 22 | API key hardcoded in two files | SECURITY | ✅ Fixed (May 11) |
 
 ---
 
-## ISSUE 7 — Chat History Visible Across Accounts (Privacy)
+## OPEN ISSUES
 
-**What happens:** `clearLocalData()` in `db_service.dart` intentionally kept `chat_history` across logins with the comment "so AI remembers conversations". This means Account B can see Account A's entire conversation history after logging in on the same device.
+### ISSUE 2 — Profile Photo: Use Google/Gmail Profile Picture as Default
 
-**Fix applied:** `chat_history` is now cleared on logout alongside all other financial data. Each account starts with a fresh AI conversation. The AI daily limit (`ai_chat_count`, `ai_chat_date`) remains device-wide intentionally (API key protection).
+**What happens:** New accounts have no profile photo. Users expect their Google profile picture to appear automatically when they sign in with Google.
 
-**STATUS: ✅ FIXED (May 3, 2026)**
-- `db_service.dart`: `clearLocalData()` now includes `await db.delete('chat_history')`
+**Fix needed:** `login_screen.dart` → `_syncAfterLogin()` — check `user.photoURL` and save it to the profile if no photo is already set. Already partially implemented (the code is there but only runs for Google sign-in, not email/password).
+
+**Priority:** MEDIUM — nice to have, improves first impression
 
 ---
 
-*Logged by Kiro — May 3, 2026*
-*Work through these in order of priority. Issues 2, 3, 4 can be done before defense. Issue 5 is Capstone 2.*
+### ISSUE 3 — Analytics Period Filter: Missing "Last Month" and Month Picker
+
+**What happens:** No "Last Month" quick filter, no way to select a specific month like "January 2026".
+
+**Fix needed:** `analytics_screen.dart` — add "Last Month" chip and a month/year grid picker.
+
+**Priority:** MEDIUM
+
+---
+
+### ISSUE 4 — Backdated Expenses: Component 4 Scoring Fairness
+
+**What happens:** Bulk-entering old expenses makes Component 4 (Logging Consistency) very low even though the user logged consistently.
+
+**Current mitigation:** Already partially addressed — `activeDays` is capped at `2 × loggedDays` to prevent extreme penalties for retroactive entry.
+
+**Priority:** LOW — edge case
+
+---
+
+### ISSUE 5 — CSV File Import (GCash, Maya, BDO, BPI)
+
+**What's needed:** File picker → parse CSV → preview table → bulk import with duplicate detection.
+
+**Note:** The text-paste bank import (`BankImportScreen`) already handles this via AI parsing. CSV file import is an additional convenience for users who have exported CSV files.
+
+**Packages already in pubspec:** `csv`, `file_picker`
+
+**Priority:** HIGH for Capstone 2
+
+---
+
+## FIXED ISSUES (v2.6.0 — May 11, 2026)
+
+### ISSUE 8 — Wallets Not Syncing to Firestore ✅ FIXED
+- `setWalletBalance`, `insertWallet`, `deleteWallet` now call `CloudService.pushDoc/deleteDoc`
+- Wallets included in `pullAll`, `pushAll`, `SyncData`, `syncFromCloud`, `pushAllToCloud`
+- Backup export + restore now includes wallets
+- `clearLocalData` now deletes wallet rows (not zeros) so they restore cleanly from Firestore
+- Default wallets only seeded on truly fresh install (no user profile)
+
+### ISSUE 9 — Category Rules Not Syncing to Firestore ✅ FIXED
+- `insertCategoryRule` and `deleteCategoryRule` now push to Firestore
+- Added to `pullAll`, `pushAll`, `SyncData`, `syncFromCloud`, `pushAllToCloud`
+- Backup restore already had category_rules; now also syncs to Firestore after restore
+
+### ISSUE 10 — Reset All Data Incomplete ✅ FIXED
+- Now clears all 14 tables: expenses, budgets, savings_goals, income, recurring, debts, score_history, chat_history, installment_plans, installments, custom_categories, mood_log, recurring_candidates, conversation_summaries
+- Wallets zeroed (not deleted — user keeps their account)
+- Pushes empty state to Firestore via `CloudService.pushAll()` with empty lists
+
+### ISSUE 11 — Demo Data Contaminating Firestore ✅ FIXED
+- `DemoService._isDemoLoading` flag added
+- `CloudService._shouldSkipSync` checks this flag — demo data never reaches Firestore
+- `clearDemoData()` now wipes Firestore if a real user is logged in
+
+### ISSUE 12 — Backup Restore Didn't Push to Firestore ✅ FIXED
+- `BackupService.restoreFromFile()` now calls `DBService.pushAllToCloud()` after all data is restored
+
+### ISSUE 13 — Setup Onboarding Data Never Pushed ✅ FIXED
+- `SetupScreen._finish()` now calls `pushAllToCloud()` after setup completes
+- `RegisterScreen._syncAfterRegister()` clears demo data if `was_demo_mode` was set
+
+### ISSUE 14 & 15 — Undo Expense Edit Broken ✅ FIXED
+- `UndoService` `update_expense` case now calls `CloudService.pushDoc` after restoring
+- `ai_screen` `update_expense` action now records undo snapshot BEFORE applying the change
+
+### ISSUE 16 — renameExpenseCategory Didn't Sync ✅ FIXED
+- Now pushes all affected expense documents to Firestore after bulk rename
+
+### ISSUE 17 — budget_boss Badge Broken for % Budgets ✅ FIXED
+- Now resolves `percentageValue / 100 × monthlyIncome` before comparing (same as ScoreService)
+
+### ISSUE 18 — Notification Throttle Keys Not Reset on Logout ✅ FIXED
+- `last_weekly_notif`, `last_anomaly_check`, `last_velocity_check`, `last_want_alert`, `last_daily_briefing` all cleared in `clearLocalData()`
+
+### ISSUE 19 — installments + recurring_candidates Not Cleared on Logout ✅ FIXED
+- Both tables now deleted in `clearLocalData()`
+- `last_recurring_check` also reset
+
+### ISSUE 20 — Settings Not Fully Synced ✅ FIXED
+- `daily_limit`, `payday_date`, `manual_assets` added to `pushAllToCloud` settings sync list
+
+### ISSUE 21 — syncFromCloud Missing goalChanged Event ✅ FIXED
+- `syncFromCloud` now fires `AppEvent.goalChanged` after merging goals
+
+### ISSUE 22 — API Key Hardcoded in Two Files ✅ FIXED
+- Centralized in `lib/services/app_config.dart`
+- Both `AIChatService` and `LLMService` reference `AppConfig`
+- `app_config.dart` added to `.gitignore`
+- `app_config.dart.example` created for new developers
+
+---
+
+## FIXED ISSUES (v2.5.x — May 3–10, 2026)
+
+### ISSUE 1 — Feature Tour Not Showing for New Accounts ✅ FIXED
+- `feature_tour.dart`: uses `tour_done_${uid}` (per-account)
+
+### ISSUE 6 — PIN/Biometric Lock Device-Wide ✅ FIXED
+- `app_lock_service.dart`: uses `app_lock_pin_${uid}` and `app_lock_enabled_${uid}`
+
+### ISSUE 7 — Chat History Visible Across Accounts ✅ FIXED
+- `clearLocalData()` now deletes `chat_history`
+
+---
+
+*Updated by Kiro — May 11, 2026*

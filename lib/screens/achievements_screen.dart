@@ -129,12 +129,18 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     final budgets = await DBService.getBudgets();
     if (budgets.isNotEmpty) {
       final thisMonth = now.toIso8601String().substring(0, 7);
+      final monthlyIncome = await DBService.getMonthlyIncome();
       bool allOnTrack = true;
       for (final b in budgets) {
         final catExpenses =
             await DBService.getExpensesByCategory(b.category, month: thisMonth);
         final catSpent = catExpenses.fold<double>(0.0, (s, e) => s + e.amount);
-        if (catSpent > b.amount) {
+        // Resolve percentage-based budgets to their actual ₱ amount
+        final budgetLimit = b.isPercentage
+            ? (b.percentageValue / 100.0 * monthlyIncome)
+            : b.amount;
+        if (budgetLimit <= 0) continue; // skip unconfigured budgets
+        if (catSpent > budgetLimit) {
           allOnTrack = false;
           break;
         }

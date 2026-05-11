@@ -43,6 +43,10 @@ class BackupService {
     try {
       moodLog = await DBService.getMoodHistory(days: 365);
     } catch (_) {}
+    List<Map<String, dynamic>> wallets = [];
+    try {
+      wallets = await DBService.getWallets();
+    } catch (_) {}
 
     return {
       'version': 8,
@@ -60,6 +64,7 @@ class BackupService {
       'custom_categories': customCategories,
       'category_rules': categoryRules,
       'mood_log': moodLog,
+      'wallets': wallets,
     };
   }
 
@@ -197,7 +202,45 @@ class BackupService {
         } catch (_) {}
       }
 
+      // Restore wallet balances — update existing wallets by name, add new ones
+      for (final w in (data['wallets'] as List? ?? [])) {
+        try {
+          final m = Map<String, dynamic>.from(w as Map);
+          final name = m['name'] as String?;
+          if (name == null || name.isEmpty) continue;
+          final db = await DBService.getDB();
+          final existing = await db.query('wallets',
+              where: 'LOWER(name) = ?',
+              whereArgs: [name.toLowerCase()],
+              limit: 1);
+          if (existing.isNotEmpty) {
+            await db.update(
+              'wallets',
+              {
+                'balance': m['balance'] ?? 0.0,
+                'updated_at': m['updated_at'] ?? DateTime.now().toIso8601String(),
+              },
+              where: 'id = ?',
+              whereArgs: [existing.first['id']],
+            );
+          } else {
+            await db.insert('wallets', {
+              'name': name,
+              'type': m['type'] ?? 'cash',
+              'balance': m['balance'] ?? 0.0,
+              'icon': m['icon'] ?? '💵',
+              'updated_at': m['updated_at'] ?? DateTime.now().toIso8601String(),
+            });
+          }
+        } catch (_) {}
+      }
+
       final exportedAt = data['exported_at'] as String? ?? 'unknown';
+
+      // Push all restored data to Firestore so it syncs across devices
+      try {
+        await DBService.pushAllToCloud();
+      } catch (_) {}
 
       // Fire all events so every screen refreshes after restore
       fireEvent(AppEvent.expenseChanged);
