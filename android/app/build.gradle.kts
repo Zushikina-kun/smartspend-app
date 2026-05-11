@@ -1,26 +1,25 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services") version "4.4.4"
     id("com.google.firebase.crashlytics")
 }
 
 dependencies {
-  // Import the Firebase BoM
   implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
   implementation("com.google.firebase:firebase-analytics")
   implementation("com.google.firebase:firebase-crashlytics")
-  // Core library desugaring (required for flutter_local_notifications)
   coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 // Load release signing config from key.properties (not committed to git)
 val keyPropertiesFile = rootProject.file("key.properties")
-val keyProperties = java.util.Properties()
+val keyProperties = Properties()
 if (keyPropertiesFile.exists()) {
-    keyProperties.load(keyPropertiesFile.inputStream())
+    keyPropertiesFile.inputStream().use { keyProperties.load(it) }
 }
 
 android {
@@ -35,16 +34,15 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     signingConfigs {
         create("release") {
             keyAlias = keyProperties["keyAlias"] as String? ?: ""
             keyPassword = keyProperties["keyPassword"] as String? ?: ""
-            storeFile = keyProperties["storeFile"]?.let {
-                file("$it")
-            }
+            val storeFilePath = keyProperties["storeFile"] as String?
+            storeFile = if (storeFilePath != null) file(storeFilePath) else null
             storePassword = keyProperties["storePassword"] as String? ?: ""
         }
     }
