@@ -95,7 +95,36 @@ While running, press `r` in the terminal for hot reload, `R` for hot restart.
 
 ---
 
-## 6. Build Release APK
+## 6. Release Signing Setup
+
+The app uses a proper release keystore so APK updates install over previous versions without uninstalling, and Google Sign-In works correctly.
+
+**Files needed (NOT in git — you must have these locally):**
+- `android/app/smartspend-release.jks` — the keystore file
+- `android/key.properties` — passwords and alias
+
+**`android/key.properties` format:**
+```
+storePassword=SmartSpend2026!
+keyPassword=SmartSpend2026!
+keyAlias=smartspend
+storeFile=smartspend-release.jks
+```
+
+**If you're setting up on a new machine:**
+1. Get `smartspend-release.jks` from Brix (keep it safe — losing it means you can never update the app on existing installs)
+2. Create `android/key.properties` with the content above
+3. Run `flutter build apk --release --split-per-abi ...`
+
+**SHA-1 fingerprints registered in Firebase:**
+- Release: `9E:2E:EE:E5:0A:9D:80:66:4E:79:DF:22:8E:B9:79:8A:E0:C7:F2:28`
+- Debug: `40:B2:1D:58:7A:95:93:55:6D:A2:B0:5A:22:43:D4:1B:D0:C0:D6:62`
+
+Both are registered in Firebase Console → Project Settings → Android app → SHA certificate fingerprints. This is required for Google Sign-In to work.
+
+---
+
+## 7. Build Release APK
 
 ### Recommended build (all ABIs — covers all phones)
 ```bash
@@ -136,7 +165,7 @@ flutter build apk --release --split-per-abi
 
 ---
 
-## 7. Install APK on Device
+## 8. Install APK on Device
 
 ```bash
 # Via ADB
@@ -147,7 +176,7 @@ adb install build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 
 ---
 
-## 8. Project Structure
+## 9. Project Structure
 
 ```
 smartspend-app/
@@ -169,7 +198,7 @@ smartspend-app/
 
 ---
 
-## 9. Common Issues
+## 10. Common Issues
 
 ### `google-services.json not found`
 You need to add the Firebase config file. See step 2 above.
@@ -202,7 +231,7 @@ Check that `google-services.json` matches the package name `com.lucidframe.smart
 
 ---
 
-## 10. Test Device
+## 11. Test Device
 
 Primary test device: **Poco X6 Pro** (Android 16, HyperOS 2)
 - Use `app-arm64-v8a-release.apk`
@@ -210,7 +239,7 @@ Primary test device: **Poco X6 Pro** (Android 16, HyperOS 2)
 
 ---
 
-## 11. Key Dependencies
+## 12. Key Dependencies
 
 | Package | Purpose |
 |---------|---------|

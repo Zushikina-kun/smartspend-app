@@ -311,6 +311,24 @@ All HIGH priority issues from previous sessions are resolved. See `SmartSpend_Pe
 
 ---
 
+## Release Signing
+
+The app is signed with a dedicated release keystore (not the debug key).
+
+**Files (NOT in git — get from Brix):**
+- `android/app/smartspend-release.jks` — the keystore file
+- `android/key.properties` — passwords (create locally, see HOWTORUN.md §6)
+
+**SHA-1 fingerprints registered in Firebase:**
+- Release: `9E:2E:EE:E5:0A:9D:80:66:4E:79:DF:22:8E:B9:79:8A:E0:C7:F2:28`
+- Debug: `40:B2:1D:58:7A:95:93:55:6D:A2:B0:5A:22:43:D4:1B:D0:C0:D6:62`
+
+Both registered in Firebase → Project Settings → Android app. Required for Google Sign-In.
+
+`build.gradle.kts` reads `key.properties` at build time. Falls back to debug key if file is missing.
+
+---
+
 ## Package Conflict Note
 
 The `shake` package (`^2.2.0`) depends on `sensors_plus ^3.x`. Newer packages want `sensors_plus ^7.x`. The `dependency_overrides` in `pubspec.yaml` pins `sensors_plus: ^3.1.0` to keep `shake` working.

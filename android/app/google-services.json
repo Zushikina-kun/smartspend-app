@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "578698877732",
+    "firebase_url": "https://smartspend-16e70-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "smartspend-16e70",
     "storage_bucket": "smartspend-16e70.firebasestorage.app"
   },
@@ -13,6 +14,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "578698877732-5kcbiovfa0hc4s8v1utnv9phvs4kt8ql.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucidframe.smartspend_app",
+            "certificate_hash": "9e2eeee50a9d80664e79df228eb9798ae0c7f228"
+          }
+        },
+        {
+          "client_id": "578698877732-kjlr84e809fcr3n7953qauflkfo14leq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucidframe.smartspend_app",
+            "certificate_hash": "40b21d587a9593556da2b05a2243d41bd0c0d662"
+          }
+        },
         {
           "client_id": "578698877732-liek5j11s3b4avlc66ueqeh9kvs7gtc2.apps.googleusercontent.com",
           "client_type": 1,

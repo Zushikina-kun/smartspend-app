@@ -62,6 +62,11 @@ Ideas/
 # API keys and secrets — never commit these to a public repository
 lib/services/app_config.dart
 
+# Android release signing — never commit keystore or key.properties
+android/key.properties
+android/app/*.jks
+android/app/*.keystore
+
 
 # Stray files
 5
