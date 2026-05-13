@@ -511,19 +511,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await db.delete('score_history');
     await db.delete('chat_history');
     // Also clear tables that were previously missed
-    try { await db.delete('installment_plans'); } catch (_) {}
-    try { await db.delete('installments'); } catch (_) {}
-    try { await db.delete('custom_categories'); CategoryService.invalidate(); } catch (_) {}
-    try { await db.delete('mood_log'); } catch (_) {}
-    try { await db.delete('recurring_candidates'); } catch (_) {}
-    try { await db.delete('conversation_summaries'); } catch (_) {}
-    try { await db.update('wallets', {'balance': 0.0, 'updated_at': DateTime.now().toIso8601String()}); } catch (_) {}
+    try {
+      await db.delete('installment_plans');
+    } catch (_) {}
+    try {
+      await db.delete('installments');
+    } catch (_) {}
+    try {
+      await db.delete('custom_categories');
+      CategoryService.invalidate();
+    } catch (_) {}
+    try {
+      await db.delete('mood_log');
+    } catch (_) {}
+    try {
+      await db.delete('recurring_candidates');
+    } catch (_) {}
+    try {
+      await db.delete('conversation_summaries');
+    } catch (_) {}
+    try {
+      await db.update('wallets',
+          {'balance': 0.0, 'updated_at': DateTime.now().toIso8601String()});
+    } catch (_) {}
     // Push the cleared state to Firestore so data doesn't resurrect on next login
     try {
       await CloudService.pushAll(
-        expenses: [], budgets: [], goals: [], income: [],
-        recurring: [], debts: [], customCategories: [],
-        installments: [], installmentPlans: [],
+        expenses: [],
+        budgets: [],
+        goals: [],
+        income: [],
+        recurring: [],
+        debts: [],
+        customCategories: [],
+        installments: [],
+        installmentPlans: [],
         wallets: await DBService.getWallets(),
         categoryRules: [],
       );
@@ -1062,8 +1084,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ? NetworkImage(_profile!.photoUrl!)
                                       as ImageProvider
                                   : _profile!.photoUrl!.startsWith('/')
-                                      ? FileImage(File(_profile!.photoUrl!))
-                                          as ImageProvider
+                                      ? (File(_profile!.photoUrl!).existsSync()
+                                          ? FileImage(File(_profile!.photoUrl!))
+                                              as ImageProvider
+                                          : null)
                                       : null)
                               : null,
                           child: _profile?.photoUrl == null
@@ -1951,7 +1975,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     backgroundImage: _photoPath != null
                         ? (_photoPath!.startsWith('https://')
                             ? NetworkImage(_photoPath!) as ImageProvider
-                            : FileImage(File(_photoPath!)) as ImageProvider)
+                            : (File(_photoPath!).existsSync()
+                                ? FileImage(File(_photoPath!)) as ImageProvider
+                                : null))
                         : null,
                     child: _photoPath == null
                         ? const Icon(Icons.person,
