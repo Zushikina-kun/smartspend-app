@@ -50,54 +50,57 @@ class _FeatureTourState extends State<FeatureTour>
           "Tap the AI button in the bottom navigation bar to open your financial assistant.\n\n"
           "You can:\n"
           "🎙️ Speak — just say what you spent\n"
-          "📷 Camera & Scanner — scan a receipt or barcode\n"
+          "📷 Camera — scan receipts or barcodes\n"
           "✏️ Type — describe it in plain language\n\n"
-          "The AI logs expenses, sets budgets, tracks debts, and more — automatically.",
+          "The AI logs expenses, updates wallets, sets budgets, tracks debts, and more — 16 action types, all automatic.",
     ),
     _TourStep(
       icon: Icons.home_outlined,
       color: Color(0xFF0066FF),
       title: "Your Home Dashboard",
       body: "The Home screen is your financial command center:\n\n"
-          "📊 This month's spending vs last month\n"
-          "💰 Cash flow forecast — income vs upcoming bills\n"
-          "🎯 Quick-access portals — Goals, Debts, Calendar, Import & more\n"
+          "💵 Wallet balance card — your total cash at a glance\n"
+          "📊 Financial Health Score (0–100)\n"
+          "🎯 9-grid Quick Access — Goals, Wallets, Budgets, Calendar & more\n"
           "🔔 Alerts for overdue bills and budget warnings\n"
           "😊 Daily mood check-in\n\n"
-          "Tap any card to dive deeper into that feature.",
+          "Tap any card to dive deeper.",
     ),
     _TourStep(
-      icon: Icons.savings_outlined,
+      icon: Icons.account_balance_wallet_outlined,
       color: Color(0xFF00875A),
-      title: "Budgets, Goals & Tags",
-      body: "Set monthly budgets per category to control your spending.\n\n"
-          "Create savings goals — including an auto-calculated Emergency Fund.\n\n"
-          "🏷️ Tag expenses with custom labels like #capstone or #shared to group and filter them in the Transactions screen.\n\n"
-          "Hub → Budgets, Savings Goals, or Transactions to get started.",
+      title: "Wallets, Budgets & Goals",
+      body:
+          "💵 Wallets — track Cash on Hand, GCash, Maya, banks. Auto-deducts when you log expenses.\n\n"
+          "💰 Budgets — set monthly limits per category (14 categories: Food, Gaming, Travel, Pets & more).\n\n"
+          "🎯 Savings Goals — track targets with progress bars.\n\n"
+          "⚙️ App Settings — toggle wallet auto-deduct, mood, impulse pause, balance mode.\n\n"
+          "Find everything in the Hub (grid icon) or Profile.",
     ),
     _TourStep(
       icon: Icons.bar_chart_outlined,
       color: Color(0xFFE65100),
-      title: "Analytics & Market Insights",
+      title: "Analytics & Insights",
       body: "The Analytics tab shows:\n"
-          "📊 Spending by category (tap legend to drill down)\n"
-          "📈 Monthly trends & 50/30/20 Rule tracker\n"
-          "🏥 Health score history (30 days)\n"
-          "🌍 Live PHP exchange rates + financial literacy tips\n"
-          "🔮 Long-range forecast (3/6/12 months)\n\n"
-          "Your Financial Health Score (0–100) adapts to your actual income.",
+          "📊 Spending by category (tap to drill down)\n"
+          "📈 50/30/20 Rule tracker\n"
+          "🏥 Health score trend (30 days)\n"
+          "🌍 Live exchange rates (57 currencies)\n"
+          "🔮 Long-range forecast (3/6/12 months)\n"
+          "🧠 Spending Personality + Mood correlation\n\n"
+          "Navigation chips at top: Goals, Debts, Budgets, Wallets, Calendar, Import.",
     ),
     _TourStep(
       icon: Icons.tips_and_updates_outlined,
       color: Color(0xFF0099DD),
       title: "Pro Tips",
-      body: "• Pull down on any screen to refresh\n"
-          "• Long-press a message in AI chat to copy it\n"
+      body: "• Say 'my GCash is ₱500' to update wallet via AI\n"
           "• Import GCash/BPI/BDO history: Hub → Import from Bank\n"
-          "• Tag expenses with #hashtags for easy filtering\n"
-          "• Backup your data from Profile → Backup Data\n"
-          "• The AI can log debts, income, goals, and recurring bills\n"
-          "• Shake your phone to undo the last AI action",
+          "• Scan receipts → 'Import Items' for multi-item parsing\n"
+          "• Tag expenses with #hashtags for filtering\n"
+          "• Shake phone to undo last AI action (60 sec window)\n"
+          "• Profile → App Settings for Balance Mode & toggles\n"
+          "• 16 achievement badges — check Hub → Achievements",
     ),
   ];
 

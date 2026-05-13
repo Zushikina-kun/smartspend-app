@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -3241,46 +3241,68 @@ class _DailyChallengesWidget extends StatefulWidget {
 }
 
 class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
+  int _streak = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _computeStreak();
+  }
+
+  Future<void> _computeStreak() async {
+    // Count consecutive days with at least 1 expense logged
+    final now = DateTime.now();
+    int streak = 0;
+    for (int d = 1; d <= 60; d++) {
+      final checkDate = DateTime(now.year, now.month, now.day - d)
+          .toIso8601String()
+          .substring(0, 10);
+      if (widget.expenses.any((e) => e.date == checkDate)) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    if (mounted) setState(() => _streak = streak);
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final today = DateTime.now().toIso8601String().substring(0, 10);
+    final dayOfWeek = DateTime.now().weekday; // 1=Mon, 7=Sun
 
-    // Define 3 daily challenges
+    // ── BUILD CHALLENGE POOL (varies by day) ──────────────────
     final hasLoggedToday = widget.expenses.any((e) => e.date == today);
-    final todaySpent = widget.expenses
-        .where((e) => e.date == today)
-        .fold(0.0, (s, e) => s + e.amount);
-    final dailyBudget =
-        widget.monthlyIncome > 0 ? widget.monthlyIncome / 30 : 0.0;
+    final todayExpenses = widget.expenses.where((e) => e.date == today).toList();
+    final todaySpent = todayExpenses.fold(0.0, (s, e) => s + e.amount);
+    final dailyBudget = widget.monthlyIncome > 0 ? widget.monthlyIncome / 30 : 0.0;
     final underBudgetToday = dailyBudget > 0 && todaySpent <= dailyBudget;
-    final hasCheckedScore = widget.score > 0;
+    final hasNeedToday = todayExpenses.any((e) => e.isWant != true);
+    final hasWantToday = todayExpenses.any((e) => e.isWant == true);
+    final loggedMultiple = todayExpenses.length >= 3;
 
-    final challenges = [
-      {
-        'title': 'Log an expense today',
-        'done': hasLoggedToday,
-        'icon': Icons.receipt_outlined,
-        'color': Colors.blue,
-      },
-      {
-        'title': dailyBudget > 0
-            ? 'Stay under ${CurrencyService.format(dailyBudget)} today'
-            : 'Set your income to unlock',
-        'done': underBudgetToday && dailyBudget > 0,
-        'icon': Icons.savings_outlined,
-        'color': Colors.green,
-      },
-      {
-        'title': 'Check your Health Score',
-        'done': hasCheckedScore,
-        'icon': Icons.monitor_heart_outlined,
-        'color': Colors.purple,
-      },
+    // All possible challenges — 3 shown per day based on day-of-week rotation
+    final allChallenges = <Map<String, dynamic>>[
+      {'title': 'Log an expense today', 'done': hasLoggedToday, 'icon': Icons.receipt_outlined, 'color': Colors.blue},
+      {'title': dailyBudget > 0 ? 'Stay under ${CurrencyService.format(dailyBudget)} today' : 'Set income to unlock', 'done': underBudgetToday && dailyBudget > 0, 'icon': Icons.savings_outlined, 'color': Colors.green},
+      {'title': 'Log a Need expense', 'done': hasNeedToday, 'icon': Icons.check_circle_outline, 'color': Colors.teal},
+      {'title': 'Log 3+ expenses today', 'done': loggedMultiple, 'icon': Icons.format_list_numbered, 'color': Colors.indigo},
+      {'title': 'Avoid Want spending today', 'done': hasLoggedToday && !hasWantToday, 'icon': Icons.shield_outlined, 'color': Colors.orange},
+      {'title': 'Check your Health Score', 'done': widget.score > 0, 'icon': Icons.monitor_heart_outlined, 'color': Colors.purple},
     ];
+
+    // Pick 4 challenges based on day rotation (deterministic per day)
+    final seed = dayOfWeek + DateTime.now().day;
+    final indices = <int>[];
+    for (int i = 0; i < allChallenges.length && indices.length < 4; i++) {
+      indices.add((seed + i) % allChallenges.length);
+    }
+    final challenges = indices.map((i) => allChallenges[i]).toList();
 
     final doneCount = challenges.where((c) => c['done'] == true).length;
     final allDone = doneCount == challenges.length;
+    final progress = challenges.isEmpty ? 0.0 : doneCount / challenges.length;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -3302,13 +3324,11 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
           children: [
             Row(
               children: [
-                const Text("Daily Challenges",
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                const Text("Daily Quests",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 const SizedBox(width: 6),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: allDone
                         ? Colors.green.withValues(alpha: 0.15)
@@ -3323,46 +3343,73 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
                         color: allDone ? Colors.green : cs.primary),
                   ),
                 ),
-                if (allDone) ...[
-                  const SizedBox(width: 6),
-                  const Text("🎉 All done!",
-                      style: TextStyle(fontSize: 12, color: Colors.green)),
-                ],
+                const Spacer(),
+                if (_streak > 0)
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "🔥 $_streak day streak",
+                      style: const TextStyle(fontSize: 10, color: Colors.orange, fontWeight: FontWeight.w600),
+                    ),
+                  ),
               ],
             ),
+            const SizedBox(height: 8),
+            // Progress bar
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 4,
+                backgroundColor: cs.outline.withValues(alpha: 0.1),
+                valueColor: AlwaysStoppedAnimation(allDone ? Colors.green : cs.primary),
+              ),
+            ),
             const SizedBox(height: 10),
-            ...challenges.map((c) {
-              final done = c['done'] as bool;
-              final color = c['color'] as Color;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  children: [
-                    Icon(
-                      done ? Icons.check_circle : Icons.radio_button_unchecked,
-                      size: 18,
-                      color: done ? Colors.green : Colors.grey[400],
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(c['icon'] as IconData,
-                        size: 14, color: done ? Colors.green : color),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        c['title'] as String,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: done
-                              ? Colors.green
-                              : cs.onSurface.withValues(alpha: 0.7),
-                          decoration: done ? TextDecoration.lineThrough : null,
+            if (allDone)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    "🎉 All quests complete! Great job today.",
+                    style: TextStyle(fontSize: 12, color: Colors.green[700], fontWeight: FontWeight.w500),
+                  ),
+                ),
+              )
+            else
+              ...challenges.map((c) {
+                final done = c['done'] as bool;
+                final color = c['color'] as Color;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    children: [
+                      Icon(
+                        done ? Icons.check_circle : Icons.radio_button_unchecked,
+                        size: 18,
+                        color: done ? Colors.green : Colors.grey[400],
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(c['icon'] as IconData, size: 14, color: done ? Colors.green : color),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          c['title'] as String,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: done ? Colors.green : cs.onSurface.withValues(alpha: 0.7),
+                            decoration: done ? TextDecoration.lineThrough : null,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                    ],
+                  ),
+                );
+              }),
           ],
         ),
       ),
