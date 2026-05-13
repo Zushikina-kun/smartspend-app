@@ -271,6 +271,28 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         ));
       }
 
+      // Auto-deduct from matching wallet
+      try {
+        String? walletName;
+        if (_selectedPayment == 'Cash')
+          walletName = 'Cash on Hand';
+        else if (_selectedPayment == 'GCash')
+          walletName = 'GCash';
+        else if (_selectedPayment == 'Maya')
+          walletName = 'Maya';
+        else if (_selectedPayment == 'GrabPay')
+          walletName = 'GrabPay';
+        else if (_selectedPayment == 'ShopeePay') walletName = 'ShopeePay';
+        if (walletName != null) {
+          final wallet = await DBService.findWalletByName(walletName);
+          if (wallet != null && (wallet['balance'] as num) > 0) {
+            final newBal = ((wallet['balance'] as num) - amount).toDouble();
+            await DBService.setWalletBalance(
+                wallet['id'] as int, newBal.clamp(0.0, double.infinity));
+          }
+        }
+      } catch (_) {}
+
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
       if (mounted) _showError("Failed to save: $e");

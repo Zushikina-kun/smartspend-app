@@ -746,7 +746,7 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
       // Handle rate limit specifically
       if (response.statusCode == 429) {
         throw Exception(
-            "I'm receiving too many requests right now. Please wait a moment and try again.");
+            "Too many requests — wait 5 seconds and try again, or use the + button to add expenses manually.");
       }
       // Show actual status code for easier debugging
       throw Exception(
@@ -803,6 +803,40 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         }
         actions.add(AIAction(type: parsed['type'] as String, params: parsed));
       } catch (_) {}
+    }
+
+    // FALLBACK: If AI said "Logged:" but fired no ACTION, auto-generate log_expense
+    // This handles the case where the model ignores the ACTION instruction
+    if (actions.isEmpty &&
+        RegExp(r'Logged:?\s*.+₱\d', caseSensitive: false).hasMatch(fullReply)) {
+      final logMatch =
+          RegExp(r'Logged:?\s*(.+?)\s*₱(\d+(?:\.\d+)?)', caseSensitive: false)
+              .firstMatch(fullReply);
+      if (logMatch != null) {
+        final itemName =
+            logMatch.group(1)?.replaceAll('*', '').trim() ?? 'Expense';
+        final amount = double.tryParse(logMatch.group(2) ?? '') ?? 0;
+        if (amount > 0) {
+          final category = _normalizeCategory(itemName);
+          // Determine is_want from category
+          const wantCategories = [
+            'Shopping',
+            'Entertainment',
+            'Gaming',
+            'Clothing',
+            'Gifts',
+            'Travel'
+          ];
+          final isWant = wantCategories.contains(category);
+          actions.add(AIAction(type: 'log_expense', params: {
+            'type': 'log_expense',
+            'item_name': itemName,
+            'category': category,
+            'amount': amount,
+            'is_want': isWant,
+          }));
+        }
+      }
     }
 
     // Strip all ACTION blocks from the displayed reply.

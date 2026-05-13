@@ -457,7 +457,32 @@ class _AIScreenState extends State<AIScreen> {
             _showActionSnackbar(
                 "Logged: $itemName ${CurrencyService.format(amount)}");
 
-            // Anomaly detection — check if amount is unusually high for category
+            // Auto-deduct from matching wallet based on payment method
+            try {
+              final paymentMethod =
+                  action.params['payment_method'] as String? ?? 'Cash';
+              String? walletName;
+              if (paymentMethod == 'Cash' || paymentMethod == 'cash') {
+                walletName = 'Cash on Hand';
+              } else if (paymentMethod == 'GCash' || paymentMethod == 'gcash') {
+                walletName = 'GCash';
+              } else if (paymentMethod == 'Maya' || paymentMethod == 'maya') {
+                walletName = 'Maya';
+              } else if (paymentMethod == 'GrabPay') {
+                walletName = 'GrabPay';
+              } else if (paymentMethod == 'ShopeePay') {
+                walletName = 'ShopeePay';
+              }
+              if (walletName != null) {
+                final wallet = await DBService.findWalletByName(walletName);
+                if (wallet != null && (wallet['balance'] as num) > 0) {
+                  final newBal =
+                      ((wallet['balance'] as num) - amount).toDouble();
+                  await DBService.setWalletBalance(
+                      wallet['id'] as int, newBal.clamp(0.0, double.infinity));
+                }
+              }
+            } catch (_) {}
             try {
               final allExp = await DBService.getExpenses();
               final catAmounts = allExp
