@@ -833,16 +833,24 @@ const _sections = [
     color: Colors.deepPurple,
     items: [
       _HelpItem(
-        title: "Daily Challenges",
+        title: "Daily Quests",
         body:
-            "A new challenge appears on the home screen every day. Complete it to earn bonus points toward your Financial Health Score. Examples:\n\n"
-            "• Log at least 2 expenses today\n"
-            "• Stay under your daily spending limit\n"
-            "• Log an expense before noon\n"
-            "• Tag an expense as Need or Want\n\n"
-            "Challenges reset at midnight. Tap 'Done' when you've completed it.",
+            "4 rotating quests appear on the home screen every day — inspired by gacha game dailies.\n\n"
+            "Possible quests (4 shown per day from a pool of 6):\n"
+            "• Log an expense today\n"
+            "• Stay under your daily budget\n"
+            "• Log a Need expense\n"
+            "• Log 3+ expenses today\n"
+            "• Avoid Want spending today\n"
+            "• Check your Health Score\n\n"
+            "Features:\n"
+            "• Progress bar shows X/4 completion\n"
+            "• 🔥 Streak counter — consecutive days with expenses logged\n"
+            "• 🎉 Celebration when all 4 are done\n"
+            "• Quests rotate daily so it stays fresh\n\n"
+            "No manual claiming needed — quests auto-complete as you use the app.",
         example:
-            "Challenge: 'Log 2 expenses today' → log lunch and transport → tap Done → +5 pts.",
+            "Day 1: Log expense ✓, Stay under budget ✓, Log 3+ ✗, Check score ✓ → 3/4 done.",
       ),
       _HelpItem(
         title: "Weekly Challenge",

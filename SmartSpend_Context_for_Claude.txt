@@ -110,7 +110,20 @@ NEW FEATURE — Payment Plans tab in Debts screen:
 - Active vs Completed sections
 - installment_plans table created via _ensureColumns (no version bump)
 
-BUILD: app-arm64-v8a-release.apk — 45.4 MB (May 10, 2026 — Session 11)
+BUILD: app-arm64-v8a-release.apk — 45.4 MB (May 13, 2026 — Session 12)
+
+LATEST FIXES (May 13, 2026 — Session 12):
+- AI ACTION FALLBACK: If AI says "Logged: X ₱Y" but fires no ACTION, app auto-generates log_expense
+- WALLET AUTO-DEDUCT: Logging expense auto-deducts from matching wallet (Cash/GCash/Maya/GrabPay/ShopeePay)
+- APP SETTINGS SHEET: Profile → App Settings with 5 toggles (wallet auto-deduct, mood, impulse, budget alerts, balance mode)
+- BALANCE MODE: Shows wallet total as primary balance instead of income-based remaining
+- HOME SCREEN REARRANGED: Wallet card + daily limit moved up, logical flow
+- PROFILE PHOTO: Google account photo as fallback when local file missing
+- DAILY QUESTS ENHANCED: 4 rotating challenges from pool of 6, progress bar, streak counter (gacha-style)
+- FEATURE TOUR UPDATED: 5 steps covering wallets, 9-grid, 14 categories, settings, achievements
+- SETTINGS TOGGLES WIRED: Mood/impulse/budget alerts now actually respect their toggle state
+- 429 ERROR: Now suggests manual entry as alternative
+- AppConfig.dart created (API key centralized)
 
 LATEST FIXES (May 10, 2026 — Session 11):
 - CATEGORIES EXPANDED: Gaming, Personal Care, Clothing, Gifts, Travel, Pets added to built-in list

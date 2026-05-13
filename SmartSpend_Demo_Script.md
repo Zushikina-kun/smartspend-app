@@ -153,14 +153,22 @@ Type: *"How do I apply for SSS loan?"*
 
 ## PART 6 — Behavioral Features (1 minute)
 
-**Show Home screen, scroll to mood check-in:**
-> "Daily mood check-in tracks how you feel. In Analytics, there's a Mood & Spending Correlation card that shows if you spend more on bad days."
+**Show Home screen, scroll to Daily Quests card:**
+> "We built a gamification layer inspired by gacha games. These are Daily Quests — 4 rotating challenges that change each day."
+
+**Point out the progress bar and streak:**
+> "There's a progress bar showing how many you've completed, and a streak counter. Today I've done 2 of 4. My streak is [X] days — that means I've logged expenses every day for [X] days straight."
+
+> "The quests vary — log an expense, stay under daily budget, avoid Want spending, log 3+ items. They rotate so it doesn't get repetitive."
+
+**Show the mood check-in:**
+> "There's also a daily mood check-in. In Analytics, there's a Mood & Spending Correlation card that shows if you spend more on bad days."
 
 **Show Spending Personality card:**
-> "Based on your data, it labels your style — Foodie Spender, Consistent Saver, etc. Each comes with a tip."
+> "Based on your data, it labels your style — Foodie Spender, Consistent Saver, etc."
 
 **Mention briefly:**
-> "There's also impulse pause — large Want expenses get a confirmation dialog. Subscription auto-detection finds recurring patterns. And 16 achievement badges for consistent tracking."
+> "Plus impulse pause for large Want purchases, subscription auto-detection, and 16 achievement badges in Hub → Achievements."
 
 ---
 
