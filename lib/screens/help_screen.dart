@@ -347,6 +347,27 @@ const _sections = [
             "Wallet balances are NOT income — they don't affect your FHS score, budgets, or 50/30/20 breakdown. They're purely for net worth tracking.\n\n"
             "Wallet balances sync to Firebase automatically — they survive logout and restore when you log back in on any device.",
       ),
+      _HelpItem(
+        title: "How does wallet auto-deduct work?",
+        body:
+            "When enabled (Profile → App Settings → Auto-deduct wallets), logging an expense automatically reduces the matching wallet balance:\n\n"
+            "• Payment method 'Cash' → deducts from Cash on Hand\n"
+            "• Payment method 'GCash' → deducts from GCash wallet\n"
+            "• Payment method 'Maya' → deducts from Maya wallet\n"
+            "• Same for GrabPay, ShopeePay\n\n"
+            "This keeps your wallet balances accurate without manual updates.\n\n"
+            "You can disable this in App Settings if you prefer to update wallets manually.",
+        example:
+            "Log ₱30 jeepney fare (Cash) → Cash on Hand goes from ₱697 to ₱667 automatically.",
+      ),
+      _HelpItem(
+        title: "Profile photo across devices",
+        body: "Your profile photo works with a smart fallback system:\n\n"
+            "1. If you picked a photo from gallery → that local file is used\n"
+            "2. If the local file is missing (new device, reinstall) → your Google account photo is used automatically\n"
+            "3. If no Google photo → your initials are shown\n\n"
+            "This means your profile picture 'just works' on any device as long as you're signed in with Google — no need to re-pick a photo.",
+      ),
     ],
   ),
   _HelpSection(

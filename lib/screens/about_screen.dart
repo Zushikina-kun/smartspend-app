@@ -193,6 +193,7 @@ class AboutScreen extends StatelessWidget {
                 "Cash on Hand, GCash, Maya, BDO, BPI, 30+ PH banks & e-wallets"
               ),
               ("⚙️ App Settings", "Toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode"),
+              ("📷 Smart Profile Photo", "Google account photo fallback — works across devices without re-picking"),
               ("🤔 AI What-If Scenarios", "Ask 'What if I cut food by ₱500?'"),
               (
                 "🔔 Weekly Behavioral Summary",
