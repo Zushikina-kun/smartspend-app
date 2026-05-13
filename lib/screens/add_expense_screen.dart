@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import '../services/db_service.dart';
 import '../services/llm_service.dart';
@@ -273,6 +273,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
       // Auto-deduct from matching wallet
       try {
+        final autoDeductSetting = await DBService.getSetting('wallet_auto_deduct');
+        if (autoDeductSetting == 'false') throw Exception('disabled');
         String? walletName;
         if (_selectedPayment == 'Cash')
           walletName = 'Cash on Hand';

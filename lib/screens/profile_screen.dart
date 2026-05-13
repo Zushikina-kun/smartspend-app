@@ -206,6 +206,131 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void _showSettingsSheet() async {
+    // Load current settings
+    final autoDeduct =
+        (await DBService.getSetting('wallet_auto_deduct')) != 'false';
+    final moodEnabled =
+        (await DBService.getSetting('mood_checkin_enabled')) != 'false';
+    final impulseEnabled =
+        (await DBService.getSetting('impulse_pause_enabled')) != 'false';
+    final budgetAlerts =
+        (await DBService.getSetting('budget_alerts_enabled')) != 'false';
+
+    if (!mounted) return;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheet) => Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2))),
+              ),
+              const SizedBox(height: 16),
+              const Text("App Settings",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text("Customize how Smart Spend works for you",
+                  style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              const SizedBox(height: 16),
+              _settingsTile(
+                icon: Icons.account_balance_wallet_outlined,
+                title: "Auto-deduct wallets",
+                subtitle: "Deduct from Cash/GCash/Maya when logging expenses",
+                value: autoDeduct,
+                onChanged: (v) {
+                  setSheet(() {});
+                  DBService.setSetting(
+                      'wallet_auto_deduct', v ? 'true' : 'false');
+                },
+              ),
+              _settingsTile(
+                icon: Icons.emoji_emotions_outlined,
+                title: "Daily mood check-in",
+                subtitle: "Show mood prompt on home screen",
+                value: moodEnabled,
+                onChanged: (v) {
+                  setSheet(() {});
+                  DBService.setSetting(
+                      'mood_checkin_enabled', v ? 'true' : 'false');
+                },
+              ),
+              _settingsTile(
+                icon: Icons.pause_circle_outline,
+                title: "Impulse pause",
+                subtitle: "Confirm before logging large Want expenses",
+                value: impulseEnabled,
+                onChanged: (v) {
+                  setSheet(() {});
+                  DBService.setSetting(
+                      'impulse_pause_enabled', v ? 'true' : 'false');
+                },
+              ),
+              _settingsTile(
+                icon: Icons.notifications_outlined,
+                title: "Budget alerts",
+                subtitle: "Notify when category budget hits 80% or 100%",
+                value: budgetAlerts,
+                onChanged: (v) {
+                  setSheet(() {});
+                  DBService.setSetting(
+                      'budget_alerts_enabled', v ? 'true' : 'false');
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _settingsTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Colors.grey[600]),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500)),
+                Text(subtitle,
+                    style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+              ],
+            ),
+          ),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: Theme.of(context).colorScheme.primary,
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showSpendingChallengeDialog() async {
     final existing = await DBService.getSetting('spending_challenge');
     final ctrl = TextEditingController(
@@ -1759,6 +1884,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 style: TextStyle(fontSize: 11)),
                             trailing: const Icon(Icons.chevron_right),
                             onTap: () => _showSpendingChallengeDialog(),
+                          ),
+                          const Divider(height: 1),
+                          ListTile(
+                            leading: const Icon(Icons.settings_outlined,
+                                color: Colors.blueGrey),
+                            title: const Text("App Settings"),
+                            subtitle: const Text(
+                                "Wallet auto-deduct, notifications, display",
+                                style: TextStyle(fontSize: 11)),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => _showSettingsSheet(),
                           ),
                           const Divider(height: 1),
                           ListTile(

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
@@ -459,6 +459,8 @@ class _AIScreenState extends State<AIScreen> {
 
             // Auto-deduct from matching wallet based on payment method
             try {
+              final autoDeductSetting = await DBService.getSetting('wallet_auto_deduct');
+              if (autoDeductSetting == 'false') throw Exception('disabled');
               final paymentMethod =
                   action.params['payment_method'] as String? ?? 'Cash';
               String? walletName;
