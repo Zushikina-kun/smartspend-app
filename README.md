@@ -19,13 +19,14 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — 15 action types via natural language
+- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — 16 action types via natural language
 - 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc
 - 💳 Debt & lending tracker with payment plans (ShopeePayLater, GCash GLoan, etc.)
 - 🔁 Recurring transactions with due date alerts and Log All Due
-- 💵 Wallet Balances — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (fully cloud-synced)
+- 💵 Wallet Balances — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (auto-deduct on expense)
+- ⚙️ App Settings — toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode
 - 🔀 Auto-Categorization Rules — keyword → category mappings (fully cloud-synced)
 - 💱 Multi-currency (57 currencies, live rates)
 - 🧠 Financial Health Score (0–100, 4-component formula)
@@ -35,6 +36,8 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 😊 Daily Mood Check-In with spending correlation
 - 🗓️ Unified Financial Calendar
 - 🏪 Import from Bank / GCash (AI-powered bulk import)
+- 🧾 Smart Receipt Import (OCR → AI item extraction → review table)
+- 📷 Google profile photo fallback (works across devices)
 - 🌙 5 color themes + dark mode
 
 ---
@@ -53,6 +56,9 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 | App Lock | local_auth (PIN + biometric) |
 | Exchange Rates | open.er-api.com |
 | Crash Reporting | Firebase Crashlytics |
+| App Check | Firebase App Check (Play Integrity, monitoring mode) |
+
+**Architecture:** Serverless/client-side only. No backend server. All logic runs on-device + Firebase + third-party APIs (Groq, open.er-api.com). Zero hosting costs.
 
 ---
 
