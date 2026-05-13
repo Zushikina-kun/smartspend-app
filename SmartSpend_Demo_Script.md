@@ -1,5 +1,5 @@
 # Smart Spend — App Demo Script
-**Version:** 2.5.0 | **Group:** Lucid Frame | **Presenter:** Brix A. Directo
+**Version:** 2.6.0 | **Group:** Lucid Frame | **Presenter:** Brix A. Directo
 **Estimated demo time:** 8–12 minutes
 
 ---
@@ -8,27 +8,31 @@
 
 **Setup checklist:**
 - [ ] Install `app-arm64-v8a-release.apk` on Poco X6 Pro
-- [ ] Log in with your account (not demo mode — use real data)
-- [ ] Make sure you have at least a few expenses logged this month
+- [ ] Log in with your Google account (not demo mode — use real data)
+- [ ] Make sure you have expenses logged this month + wallet balances set
 - [ ] Have WiFi on (for AI and exchange rates)
-- [ ] Brightness at max
-- [ ] Screen timeout set to 5+ minutes
+- [ ] Brightness at max, screen timeout 5+ minutes
 
 **Key talking points to weave in naturally:**
 - "AI is the primary input method — not forms"
-- "Context injection, not RAG — works offline-capable"
+- "Context injection, not RAG — no backend server needed"
 - "Designed specifically for Filipino users"
-- "Agentic AI — it doesn't just answer, it acts"
+- "Agentic AI — it doesn't just answer, it acts on your data"
+- "Serverless architecture — zero hosting costs"
 
 ---
 
 ## OPENING (30 seconds)
 
-> "Smart Spend is an AI-assisted financial tracking and advisory app for Filipino users. The core idea is simple: instead of filling out forms, you just talk to the AI — and it handles everything else."
+> "Smart Spend is an AI-assisted financial tracking and advisory app for Filipino users. Instead of filling out forms, you just talk to the AI — and it handles everything."
 
-**Show:** Home screen with your real data visible.
+**Show:** Home screen — point out the key elements visible:
+- Financial Health Score (top)
+- Wallet balance card (shows Cash on Hand + GCash totals)
+- Daily spending limit progress bar
+- Quick Access 9-grid (Analytics, Calendar, Goals, Debts, Wallets, Budgets, Import, Recurring, Achievements)
 
-> "This is the home screen. You can see your spending this month, upcoming bills, your Financial Health Score, and quick access to all major features."
+> "The home screen gives you everything at a glance — your score, your cash, today's spending, and shortcuts to every feature."
 
 ---
 
@@ -39,158 +43,160 @@
 > "The AI screen is the heart of the app. You can log expenses three ways."
 
 **Demo 1 — Voice input:**
-> "First, voice. I'll just say what I spent."
-
 Tap the mic button, say: *"Spent 30 pesos for jeepney fare"*
 
-> "The AI parsed that, categorized it as Transportation, tagged it as a Need, and logged it — no form, no tapping through dropdowns."
+> "The AI parsed that, categorized it as Transportation, tagged it as a Need, and logged it. Notice the wallet card — Cash on Hand just went down by ₱30 automatically."
 
 **Demo 2 — Text input:**
 Type: *"Bought Jollibee chicken joy for 149"*
 
-> "Same thing with text. It knows Jollibee is Food, infers it's a Want since it's a fast food treat, and logs it."
+> "Same thing with text. It knows Jollibee is Food, infers it's a Want, and logs it. The wallet deducts again."
 
-**Demo 3 — Broader AI question:**
+**Demo 3 — Wallet update:**
+Type: *"My GCash is 500 pesos"*
+
+> "The AI also manages your wallet balances. I just told it my GCash balance and it updated instantly — no forms needed."
+
+**Demo 4 — Broader question:**
 Type: *"How do I apply for SSS loan?"*
 
-> "But the AI isn't just an expense recorder. It's a financial companion. It can answer questions about Philippine banking, government benefits, investments — anything money-related."
-
-**Point out:** The AI response is warm and conversational, not robotic.
+> "The AI isn't just an expense recorder. It's a financial companion — it answers questions about Philippine banking, SSS, PhilHealth, investments, prices."
 
 ---
 
-## PART 2 — Smart Scanner (1.5 minutes)
+## PART 2 — Smart Scanner (1 minute)
 
 **Tap the camera icon in the AI screen**
 
 > "For receipts and barcodes, we have the Smart Scanner."
 
-**Show the live viewfinder briefly.**
+**Show the live viewfinder briefly, toggle Receipt mode.**
 
-> "It auto-detects barcodes in real time. For receipts, you switch to Receipt mode — the amber guide — and tap the shutter. ML Kit extracts the text, you review it."
+> "It auto-detects barcodes in real time. For receipts, switch to Receipt mode and tap the shutter."
 
-**If you have a receipt handy:** scan it and show the review screen.
+**If you have a receipt:** scan it → show the "Import Items" button.
 
-> "Here's the smart part — if the receipt has multiple items, the app detects that and shows you an 'Import Items' button. Tap it and it routes to the Import screen where the AI parses each item individually, assigns categories, and lets you review before importing."
-
-**Show the Import screen with parsed receipt items.**
-
-> "You can edit categories, toggle Want/Need, and select which items to import. This is much more useful than dumping raw OCR text into a chat."
-
-> "We also support bank and GCash transaction history import. Paste the text, the AI parses all transactions at once — with their real dates preserved."
+> "If the receipt has multiple items, the app detects that and shows 'Import Items'. It routes to the Import screen where the AI extracts each item individually — with categories and Want/Need tags — and you review before importing."
 
 ---
 
-## PART 3 — Analytics (2 minutes)
+## PART 3 — Wallets & Settings (1 minute)
+
+**Tap the Wallet card on Home screen (or go to Profile → tap Net Worth card)**
+
+> "The Wallet system tracks your actual cash across all accounts."
+
+**Show the Wallets sheet:**
+> "Cash on Hand, GCash, Maya, BDO, BPI — 30+ Philippine banks and e-wallets. Tap any wallet to update its balance. Or just tell the AI."
+
+**Go to Profile → App Settings:**
+> "Users can customize their experience. Auto-deduct wallets, mood check-in, impulse pause, budget alerts — all toggleable. There's also Balance Mode which shows your total cash instead of income-based remaining."
+
+---
+
+## PART 4 — Analytics (1.5 minutes)
 
 **Tap Analytics tab**
 
-> "The Analytics screen is where all that data becomes insight."
+> "Analytics is where all that data becomes insight."
 
 **Scroll slowly, pointing out:**
+1. **Navigation chips** — "Quick links to Goals, Debts, Budgets, Wallets, Calendar, Import"
+2. **Pie chart** — "Spending by category — 14 categories including Gaming, Personal Care, Travel, Pets"
+3. **50/30/20 tracker** — "Compares your Needs, Wants, and Savings against the 50/30/20 rule"
+4. **Market Insights** — "Live PHP exchange rates with a note about remittance center rate differences"
+5. **Spending Personality** — "Labels your spending style based on actual data — no AI call needed"
 
-1. **Navigation chips** — "Quick links to Goals, Debts, Budgets, Import"
-2. **Pie chart** — "Spending by category. Tap any slice to drill down into those transactions."
-3. **50/30/20 tracker** — "This always uses this month's data. It compares your Needs, Wants, and Savings against the 50/30/20 rule."
-4. **Health Score chart** — "30-day trend of your Financial Health Score."
-5. **Market Insights card** — "Live PHP exchange rates — USD, EUR, GBP. Tap to expand for financial literacy tips."
-
-> "The analytics are designed to answer the question every Filipino asks at the end of the month: 'Where did my money go?'"
+> "The analytics answer: 'Where did my money go?' — the question every Filipino asks at month-end."
 
 ---
 
-## PART 4 — Financial Health Score (1 minute)
+## PART 5 — Financial Health Score (1 minute)
 
 **Go back to Home, tap the FHS card**
 
-> "The Financial Health Score is a 0–100 score based on four components — each worth 25 points."
+> "The Financial Health Score is 0–100, based on four components — each worth 25 points."
 
-**Show the breakdown dialog:**
+**Show the breakdown:**
+> "Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency. It's income-relative — a student with ₱6,600 and a professional with ₱50,000 are both measured fairly."
 
-> "Savings Rate — are you saving at least 20% of income? Overspend Control — how many days did you stay within your daily budget? Budget Adherence — are your category budgets on track? And Logging Consistency — are you recording regularly?"
-
-> "This formula is based on our capstone paper's specification. It's income-relative — a student with ₱6,600 allowance and a professional with ₱50,000 salary are both measured fairly against their own income."
-
-**Point to the "Ask AI to explain my score" link:**
-> "And if you want a plain-language explanation, you just tap here and ask the AI."
+**Point to "Ask AI to explain my score":**
+> "Tap here and the AI explains in plain language why your score is what it is."
 
 ---
 
-## PART 5 — Behavioral Features (1 minute)
+## PART 6 — Behavioral Features (1 minute)
 
-**Show Home screen, scroll to mood check-in**
+**Show Home screen, scroll to mood check-in:**
+> "Daily mood check-in tracks how you feel. In Analytics, there's a Mood & Spending Correlation card that shows if you spend more on bad days."
 
-> "We also built a behavioral layer. The daily mood check-in tracks how you feel each day."
-
-**Show the Spending Personality card:**
-> "Based on your actual spending data, the app labels your spending style. Right now it says I'm a [read the label]. Each personality comes with a specific tip."
+**Show Spending Personality card:**
+> "Based on your data, it labels your style — Foodie Spender, Consistent Saver, etc. Each comes with a tip."
 
 **Mention briefly:**
-> "There's also an impulse pause mechanic — if you log a large Want expense, the app asks 'Was this planned?' to encourage reflection before confirming. And the subscription auto-detection finds recurring patterns in your history and suggests adding them as tracked bills."
+> "There's also impulse pause — large Want expenses get a confirmation dialog. Subscription auto-detection finds recurring patterns. And 16 achievement badges for consistent tracking."
 
 ---
 
-## PART 6 — Data & Sync (30 seconds)
+## PART 7 — Architecture & Filipino Context (1 minute)
 
-> "All data is stored locally in SQLite — the app works fully offline. When you're online, it syncs to Firebase Firestore automatically. Backup and restore is available via the share sheet — no cloud account needed."
+> "The architecture is fully serverless — no backend. Flutter on the client, Firebase for auth and sync, Groq API for AI, SQLite for local storage. Zero hosting costs."
 
-**Mention briefly:**
-> "We use Groq's LLaMA 3.1 8B Instant model for the AI — it's fast, free-tier, and runs entirely through API calls. The app uses a context injection architecture instead of RAG — the user's financial data is injected directly into each prompt, which is more efficient for the small, structured data we're working with."
+> "We use context injection instead of RAG — the user's financial data is injected directly into each AI prompt. More efficient for small, structured data."
 
----
-
-## PART 7 — Filipino Context (30 seconds)
-
-> "Everything is designed for Filipino users specifically. The AI understands jeepney, tricycle, GCash, ShopeePayLater, Jollibee, siomai — all the local context. It knows about SSS, PhilHealth, Pag-IBIG. It's aware of the 13th month pay season, school enrollment months, and the 11.11 and 12.12 sales."
-
-> "The demo mode even loads data modeled after a Lorma Colleges BSIT student — so the panel can try it without needing an account."
+> "Everything is Filipino-first. The AI understands jeepney, tricycle, GCash, ShopeePayLater, Jollibee, siomai. It knows about 13th month pay, school enrollment season, 11.11 sales. The categories include Filipino-specific ones. Payment methods include GCash, Maya, GrabPay, ShopeePay."
 
 ---
 
 ## CLOSING (30 seconds)
 
-> "Smart Spend demonstrates that a mobile-first, AI-powered financial assistant can be built on a free-tier stack — no paid cloud services, no backend server — and still deliver real-time, personalized financial guidance."
+> "Smart Spend demonstrates that a mobile-first, AI-powered financial assistant can be built entirely on free-tier services — no paid cloud, no backend server — and still deliver real-time, personalized financial guidance."
 
-> "The goal isn't to replace financial advisors. It's to make basic financial literacy and tracking accessible to every Filipino, regardless of their background. You don't need to know what a budget is to use it — you just need to tell it what you spent."
+> "The goal is to make financial literacy accessible to every Filipino. You don't need to know what a budget is — you just tell it what you spent."
 
 ---
 
 ## PANEL Q&A — QUICK ANSWERS
 
-**"Why not use a banking API to auto-import transactions?"**
-> "Philippine banks don't have open banking APIs yet. We built a manual import feature instead — users paste their GCash or bank transaction history and the AI parses it. It's not automatic, but it works with any bank or e-wallet."
+**"Why not use a banking API to auto-import?"**
+> "Philippine banks don't have open banking APIs. We built manual import instead — paste GCash/bank history, AI parses it. Works with any bank."
 
-**"How do you handle the AI making mistakes?"**
-> "Every AI-logged expense is flagged with an AI badge and a confidence score. Low-confidence entries get an orange dot. Users can edit or delete any entry. The AI also has a shake-to-undo feature — shake the phone within 60 seconds to reverse the last action."
+**"How do you handle AI mistakes?"**
+> "Every AI-logged expense has a confidence score. Low-confidence gets an orange dot. Users can edit or delete. There's also shake-to-undo within 60 seconds. Plus a fallback parser — if the AI says 'Logged' but forgets the ACTION line, the app auto-generates it."
 
 **"What about data privacy?"**
-> "All financial data stays on the device in SQLite. The only data that leaves the device is the AI prompt — which contains the user's financial summary, not raw personal data. The Groq API key is rate-limited to 60 messages per day as a mitigation."
+> "All data stays on-device in SQLite. Only the financial summary goes to Groq's API — not raw personal data. The API key is rate-limited to 60 messages/day. Firebase App Check is integrated for Firestore protection."
 
-**"Is the Financial Health Score formula from literature?"**
-> "Yes — it's based on the 4-component weighted formula specified in our capstone paper. Each component maps to a measurable financial behavior: savings rate, overspend control, budget adherence, and logging consistency."
+**"Is the FHS formula from literature?"**
+> "Yes — 4-component weighted formula from our capstone paper. Each maps to a measurable behavior: savings rate, overspend control, budget adherence, logging consistency."
 
-**"What's the difference between this and GCash's built-in analytics?"**
-> "GCash shows you what you spent. Smart Spend tells you what it means — whether you're on track, where you're overspending, what your financial health score is, and what to do about it. It also covers all payment methods, not just GCash."
+**"What's the difference from GCash analytics?"**
+> "GCash shows what you spent. Smart Spend tells you what it means — your health score, where you're overspending, what to do about it. It covers all payment methods, not just GCash. And the AI gives personalized advice."
 
-**"Can it predict future spending?"**
-> "Yes — the Long-Range Forecast in Analytics projects 3, 6, and 12-month cumulative spending based on your current pace. There's also a monthly prediction card and a Spending Forecast on the home screen that warns which budget categories will be exceeded by month-end."
+**"Do you have a backend?"**
+> "No — fully serverless. Firebase handles auth and sync, Groq handles AI, everything else runs on-device. Zero hosting costs, zero server maintenance."
 
-**"What's next for the app?"**
-> "Post-capstone, we're planning a multi-wallet system to track GCash, Maya, and bank balances separately, a notification listener to auto-parse GCash payment notifications, and a backend proxy to properly secure the API key for production deployment."
+**"What's next?"**
+> "Post-capstone: full cash-on-hand tracking mode, transfer between wallets, notification listener for auto-parsing GCash payments, and a backend proxy to secure the API key for Play Store deployment."
 
 ---
 
-## DEMO FLOW SUMMARY (for quick reference)
+## DEMO FLOW SUMMARY
 
 ```
-Home screen (overview) → AI screen (voice + text + broader question) →
-Smart Scanner (brief) → Analytics (pie + 50/30/20 + market insights) →
-FHS card (breakdown + explain link) → Spending Personality →
-Behavioral features (mood + impulse) → Closing statement
+Home (score + wallet + daily limit + 9-grid) →
+AI (voice + text + wallet update + broader question) →
+Scanner (receipt → Import Items) →
+Wallets + Settings (balance mode) →
+Analytics (pie + 50/30/20 + market + personality) →
+FHS (breakdown + explain) →
+Behavioral (mood + impulse + badges) →
+Architecture + Filipino context →
+Closing
 ```
 
 **Total: ~8 minutes. Leave 4 minutes for Q&A.**
 
 ---
 
-*Smart Spend v2.5.0 — Lucid Frame — Lorma Colleges CCSE BSIT 2025–2026*
+*Smart Spend v2.6.0 — Lucid Frame — Lorma Colleges CCSE BSIT 2025–2026*
