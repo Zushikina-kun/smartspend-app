@@ -2165,6 +2165,9 @@ class _DashboardState extends State<Dashboard> {
               // Wallet balances summary — always shown, prompts setup when empty
               _buildWalletSummaryCard(context),
 
+              // Daily spending limit progress bar (#14)
+              if (_dailyLimit > 0) _buildDailyLimitCard(context),
+
               // Subscription leak summary
               _buildSubscriptionSummaryCard(context),
 
@@ -2178,14 +2181,14 @@ class _DashboardState extends State<Dashboard> {
               // Quick-log chips (most frequent expenses)
               if (_quickLogItems.isNotEmpty) _buildQuickLogChips(context),
 
-              // Daily spending limit progress bar (#14)
-              if (_dailyLimit > 0) _buildDailyLimitCard(context),
+              // Spending streaks & badges (#13)
+              if (_earnedBadges.isNotEmpty) _buildBadgesRow(context),
+
+              // Daily mood check-in
+              _MoodCheckInWidget(),
 
               // NI-6: "Done spending today" toggle
               _DoneSpendingToggle(),
-
-              // Spending streaks & badges (#13)
-              if (_earnedBadges.isNotEmpty) _buildBadgesRow(context),
 
               // WN-1: Untagged expenses prompt
               Builder(builder: (ctx) {

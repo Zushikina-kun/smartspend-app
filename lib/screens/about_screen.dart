@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -192,6 +192,7 @@ class AboutScreen extends StatelessWidget {
                 "💵 Wallet Balances",
                 "Cash on Hand, GCash, Maya, BDO, BPI, 30+ PH banks & e-wallets"
               ),
+              ("⚙️ App Settings", "Toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode"),
               ("🤔 AI What-If Scenarios", "Ask 'What if I cut food by ₱500?'"),
               (
                 "🔔 Weekly Behavioral Summary",

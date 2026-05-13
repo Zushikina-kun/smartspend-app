@@ -356,8 +356,7 @@ const _sections = [
     items: [
       _HelpItem(
         title: "What data syncs to the cloud?",
-        body:
-            "Everything syncs automatically to Firebase Firestore:\n\n"
+        body: "Everything syncs automatically to Firebase Firestore:\n\n"
             "✅ Expenses, Budgets, Savings Goals\n"
             "✅ Income entries, Recurring transactions\n"
             "✅ Debts & Lending, Payment Plans\n"
@@ -717,6 +716,32 @@ const _sections = [
             "• 🏪 Remittance — Cebuana, Palawan, Western Union, LBC, etc.\n\n"
             "You can also tell the AI: 'my GCash is ₱500' or 'cash on hand is ₱300' and it will update automatically.\n\n"
             "Wallet balances are separate from income — they don't affect your FHS score or budget calculations.",
+      ),
+    ],
+  ),
+  _HelpSection(
+    title: "App Settings",
+    icon: Icons.settings_outlined,
+    color: Colors.blueGrey,
+    items: [
+      _HelpItem(
+        title: "Where are the settings?",
+        body: "Profile → App Settings. Opens a sheet with toggles for:\n\n"
+            "• Auto-deduct wallets — automatically reduce wallet balance when you log an expense\n"
+            "• Daily mood check-in — show/hide the mood prompt on home screen\n"
+            "• Impulse pause — confirm before logging large Want expenses\n"
+            "• Budget alerts — notifications at 80% and 100% budget usage\n"
+            "• Balance mode — show wallet total as your primary balance instead of income-based remaining",
+      ),
+      _HelpItem(
+        title: "What is Balance Mode?",
+        body:
+            "When Balance Mode is ON, the Profile card shows your total wallet balance (Cash + GCash + banks) as the primary number.\n\n"
+            "When OFF (default), it shows:\n"
+            "• Students: Remaining Balance = Income − Expenses this month\n"
+            "• Others: Net Worth = Income + Assets − Expenses − Debts\n\n"
+            "Balance Mode is useful if you prefer tracking 'how much do I have right now' instead of 'how much of my income is left'.\n\n"
+            "Toggle it in Profile → App Settings → Balance mode.",
       ),
     ],
   ),

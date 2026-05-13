@@ -216,6 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         (await DBService.getSetting('impulse_pause_enabled')) != 'false';
     final budgetAlerts =
         (await DBService.getSetting('budget_alerts_enabled')) != 'false';
+    bool _balanceMode = (await DBService.getSetting('balance_mode')) == 'true';
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -287,6 +288,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setSheet(() {});
                   DBService.setSetting(
                       'budget_alerts_enabled', v ? 'true' : 'false');
+                },
+              ),
+              const SizedBox(height: 12),
+              Text("Display",
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600])),
+              const SizedBox(height: 8),
+              _settingsTile(
+                icon: Icons.account_balance_wallet,
+                title: "Balance mode",
+                subtitle:
+                    "Show wallet total as primary balance instead of income-based remaining",
+                value: _balanceMode,
+                onChanged: (v) {
+                  setSheet(() => _balanceMode = v);
+                  DBService.setSetting('balance_mode', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
                 },
               ),
             ],
@@ -1254,159 +1274,175 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     const SizedBox(height: 16),
 
-                    // Net Worth card — account-type aware
-                    Builder(builder: (context) {
-                      final isAllowanceBased = _accountType == 'student' ||
-                          _accountType == 'unemployed';
-                      final walletTotal = _wallets.fold<double>(
-                          0, (s, w) => s + (w['balance'] as num));
-                      final balance = _monthlyIncome - _totalSpent;
-                      final netWorth = _totalIncome +
-                          (walletTotal > 0 ? walletTotal : _totalAssets) -
-                          _totalSpent -
-                          _totalDebts;
-                      final displayValue =
-                          isAllowanceBased ? balance : netWorth;
-                      final isPositive = displayValue >= 0;
-                      final label = isAllowanceBased
-                          ? "Remaining Balance (This Month)"
-                          : "Net Worth";
-                      return GestureDetector(
-                        onTap: () => _showWalletsDialog(),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: isPositive
-                                ? Colors.green.withValues(alpha: 0.1)
-                                : Colors.red.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isPositive
-                                  ? Colors.green.withValues(alpha: 0.3)
-                                  : Colors.red.withValues(alpha: 0.3),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                    // Net Worth card — account-type aware + balance mode
+                    FutureBuilder<String?>(
+                        future: DBService.getSetting('balance_mode'),
+                        builder: (context, balModeSnap) {
+                          final balanceMode = balModeSnap.data == 'true';
+                          final isAllowanceBased = _accountType == 'student' ||
+                              _accountType == 'unemployed';
+                          final walletTotal = _wallets.fold<double>(
+                              0, (s, w) => s + (w['balance'] as num));
+                          final balance = _monthlyIncome - _totalSpent;
+                          final netWorth = _totalIncome +
+                              (walletTotal > 0 ? walletTotal : _totalAssets) -
+                              _totalSpent -
+                              _totalDebts;
+                          // Balance mode: show wallet total as primary
+                          final displayValue = balanceMode
+                              ? walletTotal
+                              : isAllowanceBased
+                                  ? balance
+                                  : netWorth;
+                          final isPositive = displayValue >= 0;
+                          final label = balanceMode
+                              ? "Total Cash Available"
+                              : isAllowanceBased
+                                  ? "Remaining Balance (This Month)"
+                                  : "Net Worth";
+                          return GestureDetector(
+                            onTap: () => _showWalletsDialog(),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: isPositive
+                                    ? Colors.green.withValues(alpha: 0.1)
+                                    : Colors.red.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: isPositive
+                                      ? Colors.green.withValues(alpha: 0.3)
+                                      : Colors.red.withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text(label,
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey)),
-                                          const SizedBox(width: 4),
-                                          const Icon(
-                                              Icons
-                                                  .account_balance_wallet_outlined,
-                                              size: 12,
-                                              color: Colors.grey),
-                                          const SizedBox(width: 2),
-                                          const Text("Tap to manage wallets",
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Colors.grey)),
+                                          Row(
+                                            children: [
+                                              Text(label,
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.grey)),
+                                              const SizedBox(width: 4),
+                                              const Icon(
+                                                  Icons
+                                                      .account_balance_wallet_outlined,
+                                                  size: 12,
+                                                  color: Colors.grey),
+                                              const SizedBox(width: 2),
+                                              const Text(
+                                                  "Tap to manage wallets",
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.grey)),
+                                            ],
+                                          ),
+                                          Text(
+                                            "${isPositive ? '+' : ''}${CurrencyService.format(displayValue.abs())}",
+                                            style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                              color: isPositive
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                      Text(
-                                        "${isPositive ? '+' : ''}${CurrencyService.format(displayValue.abs())}",
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          color: isPositive
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
+                                      Icon(
+                                        isPositive
+                                            ? Icons.trending_up
+                                            : Icons.trending_down,
+                                        color: isPositive
+                                            ? Colors.green
+                                            : Colors.red,
+                                        size: 32,
                                       ),
                                     ],
                                   ),
-                                  Icon(
-                                    isPositive
-                                        ? Icons.trending_up
-                                        : Icons.trending_down,
-                                    color:
-                                        isPositive ? Colors.green : Colors.red,
-                                    size: 32,
-                                  ),
+                                  if (!isAllowanceBased) ...[
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            "Assets: ${CurrencyService.format(_totalIncome + (walletTotal > 0 ? walletTotal : _totalAssets))}",
+                                            style: const TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.green)),
+                                        Text(
+                                            "Liabilities: ${CurrencyService.format(_totalSpent + _totalDebts)}",
+                                            style: const TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.red)),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 4),
+                                    // NI-5: Net worth trend sparkline using score history as proxy
+                                    FutureBuilder<List<Map<String, dynamic>>>(
+                                      future:
+                                          DBService.getScoreHistory(days: 30),
+                                      builder: (ctx, snap) {
+                                        final history = snap.data ?? [];
+                                        if (history.length < 3)
+                                          return const SizedBox.shrink();
+                                        // Use score as a proxy trend indicator
+                                        final scores = history
+                                            .map((h) =>
+                                                (h['score'] as num).toDouble())
+                                            .toList();
+                                        final maxScore = scores
+                                            .reduce((a, b) => a > b ? a : b)
+                                            .clamp(1.0, 100.0);
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                "Financial health trend (30 days)",
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.grey[500])),
+                                            const SizedBox(height: 4),
+                                            SizedBox(
+                                              height: 24,
+                                              child: CustomPaint(
+                                                size: const Size(
+                                                    double.infinity, 24),
+                                                painter: _SparklinePainter(
+                                                    scores,
+                                                    maxScore,
+                                                    isPositive
+                                                        ? Colors.green
+                                                        : Colors.orange),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text("Tap to manage assets",
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.grey[500])),
+                                  ],
                                 ],
                               ),
-                              if (!isAllowanceBased) ...[
-                                const SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                        "Assets: ${CurrencyService.format(_totalIncome + (walletTotal > 0 ? walletTotal : _totalAssets))}",
-                                        style: const TextStyle(
-                                            fontSize: 11, color: Colors.green)),
-                                    Text(
-                                        "Liabilities: ${CurrencyService.format(_totalSpent + _totalDebts)}",
-                                        style: const TextStyle(
-                                            fontSize: 11, color: Colors.red)),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                // NI-5: Net worth trend sparkline using score history as proxy
-                                FutureBuilder<List<Map<String, dynamic>>>(
-                                  future: DBService.getScoreHistory(days: 30),
-                                  builder: (ctx, snap) {
-                                    final history = snap.data ?? [];
-                                    if (history.length < 3)
-                                      return const SizedBox.shrink();
-                                    // Use score as a proxy trend indicator
-                                    final scores = history
-                                        .map((h) =>
-                                            (h['score'] as num).toDouble())
-                                        .toList();
-                                    final maxScore = scores
-                                        .reduce((a, b) => a > b ? a : b)
-                                        .clamp(1.0, 100.0);
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Financial health trend (30 days)",
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: Colors.grey[500])),
-                                        const SizedBox(height: 4),
-                                        SizedBox(
-                                          height: 24,
-                                          child: CustomPaint(
-                                            size:
-                                                const Size(double.infinity, 24),
-                                            painter: _SparklinePainter(
-                                                scores,
-                                                maxScore,
-                                                isPositive
-                                                    ? Colors.green
-                                                    : Colors.orange),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 4),
-                                Text("Tap to manage assets",
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.grey[500])),
-                              ],
-                            ],
-                          ),
-                        ),
-                      );
-                    }),
+                            ),
+                          );
+                        }),
 
                     const SizedBox(height: 16),
 
