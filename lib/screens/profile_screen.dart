@@ -179,6 +179,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  /// Get the best available profile image: local file > stored URL > Google photo > null
+  ImageProvider? _getProfileImage() {
+    final photoUrl = _profile?.photoUrl;
+    // 1. Local file photo (from gallery pick)
+    if (photoUrl != null && photoUrl.startsWith('/')) {
+      if (File(photoUrl).existsSync()) {
+        return FileImage(File(photoUrl));
+      }
+    }
+    // 2. Stored URL (e.g. from previous Google sign-in)
+    if (photoUrl != null && photoUrl.startsWith('https://')) {
+      return NetworkImage(photoUrl);
+    }
+    // 3. Fallback: Google account photo from Firebase Auth
+    final googlePhoto = FirebaseAuth.instance.currentUser?.photoURL;
+    if (googlePhoto != null && googlePhoto.isNotEmpty) {
+      return NetworkImage(googlePhoto);
+    }
+    // 4. No photo available
+    return null;
+  }
+
   void _showWalletsDialog() async {
     if (!mounted) return;
     await showModalBottomSheet(
@@ -1224,18 +1246,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           radius: 48,
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
-                          backgroundImage: _profile?.photoUrl != null
-                              ? (_profile!.photoUrl!.startsWith('https://')
-                                  ? NetworkImage(_profile!.photoUrl!)
-                                      as ImageProvider
-                                  : _profile!.photoUrl!.startsWith('/')
-                                      ? (File(_profile!.photoUrl!).existsSync()
-                                          ? FileImage(File(_profile!.photoUrl!))
-                                              as ImageProvider
-                                          : null)
-                                      : null)
-                              : null,
-                          child: _profile?.photoUrl == null
+                          backgroundImage: _getProfileImage(),
+                          child: _getProfileImage() == null
                               ? Text(initials,
                                   style: TextStyle(
                                       fontSize: 32,
