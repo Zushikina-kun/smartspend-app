@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -569,6 +569,8 @@ class _DashboardState extends State<Dashboard> {
     // Apply warning decay penalty (−5/day for ignored budget warnings, max −15)
     final score = await ScoreService.applyWarningDecay(rawScore);
 
+    // Load budget alerts setting before setState
+    final budgetAlertsEnabled = (await DBService.getSetting('budget_alerts_enabled')) != 'false';
     if (!mounted) return; // widget may have been disposed during async gap
     setState(() {
       _expenses = expenses;
@@ -642,7 +644,7 @@ class _DashboardState extends State<Dashboard> {
         final spentAmt = spent[b.category] ?? 0;
         final ratio = b.amount > 0 ? spentAmt / b.amount : 0.0;
         if (ratio >= 1.0 || ratio >= 0.8 || ratio >= 0.5) {
-          NotificationService.showBudgetAlert(b.category, spentAmt, b.amount);
+          if (budgetAlertsEnabled) NotificationService.showBudgetAlert(b.category, spentAmt, b.amount);
         }
       }
 
@@ -2932,6 +2934,7 @@ class _MoodCheckInWidget extends StatefulWidget {
 class _MoodCheckInWidgetState extends State<_MoodCheckInWidget> {
   int? _todayMood;
   bool _loading = true;
+  bool _enabled = true;
 
   static const _emojis = ['😞', '😕', '😐', '🙂', '😄'];
   static const _labels = ['Rough', 'Low', 'Okay', 'Good', 'Great'];
@@ -2943,9 +2946,12 @@ class _MoodCheckInWidgetState extends State<_MoodCheckInWidget> {
   }
 
   Future<void> _load() async {
+    final enabled =
+        (await DBService.getSetting('mood_checkin_enabled')) != 'false';
     final entry = await DBService.getTodayMood();
     if (mounted) {
       setState(() {
+        _enabled = enabled;
         _todayMood = entry != null ? entry['mood_score'] as int : null;
         _loading = false;
       });
@@ -2992,7 +2998,7 @@ class _MoodCheckInWidgetState extends State<_MoodCheckInWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return const SizedBox.shrink();
+    if (_loading || !_enabled) return const SizedBox.shrink();
     final cs = Theme.of(context).colorScheme;
 
     return Padding(

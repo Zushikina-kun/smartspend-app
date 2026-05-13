@@ -175,7 +175,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     }
 
     // Impulse pause mechanic — for Want-tagged expenses above 2× category average
-    if (_isWant && amount > 0) {
+    final impulseEnabled = (await DBService.getSetting('impulse_pause_enabled')) != 'false';
+    if (impulseEnabled && _isWant && amount > 0) {
       try {
         final allExp = await DBService.getExpenses();
         final catAmounts = allExp
