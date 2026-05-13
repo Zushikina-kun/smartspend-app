@@ -80,17 +80,32 @@ Type: *"How do I apply for SSS loan?"*
 
 ---
 
-## PART 3 — Wallets & Settings (1 minute)
+## PART 3 — Wallets & Settings (1.5 minutes)
 
 **Tap the Wallet card on Home screen (or go to Profile → tap Net Worth card)**
 
 > "The Wallet system tracks your actual cash across all accounts."
 
 **Show the Wallets sheet:**
-> "Cash on Hand, GCash, Maya, BDO, BPI — 30+ Philippine banks and e-wallets. Tap any wallet to update its balance. Or just tell the AI."
+> "Cash on Hand, GCash, Maya, BDO, BPI — 30+ Philippine banks and e-wallets. Tap any wallet to update its balance. Or just tell the AI — 'my GCash is 500'."
 
 **Go to Profile → App Settings:**
-> "Users can customize their experience. Auto-deduct wallets, mood check-in, impulse pause, budget alerts — all toggleable. There's also Balance Mode which shows your total cash instead of income-based remaining."
+> "Users can customize their experience with these toggles."
+
+**Show each toggle briefly:**
+> "Auto-deduct wallets — when you log an expense, the matching wallet goes down automatically. Mood check-in — show or hide the daily mood prompt. Impulse pause — adds a confirmation step for large Want purchases. Budget alerts — notifications at 80% and 100%."
+
+**Toggle Balance Mode ON, show the Profile card change:**
+> "And here's Balance Mode. Let me show the difference."
+
+**Explain the two modes:**
+> "Normal mode shows 'Remaining Balance' — that's your monthly income minus what you've spent. It answers: 'How much of my allowance is left?'"
+
+> "Balance Mode shows 'Total Cash Available' — that's the sum of all your wallets. It answers: 'How much money do I actually have right now?'"
+
+> "Normal mode is better for budgeting against income. Balance mode is better for students who get irregular allowances or freelancers who want to track actual cash on hand."
+
+> "Both modes use the same data — same expenses, same FHS score, same budgets. The only difference is what number you see on the Profile card. No logic changes."
 
 ---
 
@@ -111,17 +126,28 @@ Type: *"How do I apply for SSS loan?"*
 
 ---
 
-## PART 5 — Financial Health Score (1 minute)
+## PART 5 — Financial Health Score (1.5 minutes)
 
 **Go back to Home, tap the FHS card**
 
-> "The Financial Health Score is 0–100, based on four components — each worth 25 points."
+> "The Financial Health Score is our core metric — 0 to 100, calculated from four equal components."
 
-**Show the breakdown:**
-> "Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency. It's income-relative — a student with ₱6,600 and a professional with ₱50,000 are both measured fairly."
+**Show the breakdown dialog, explain each:**
+
+> "Component 1: Savings Rate — 25 points. Are you saving at least 20% of your income? If your income is ₱6,600 and you spent ₱4,000, you saved 39% — full 25 points."
+
+> "Component 2: Overspend Control — 25 points. How many days did you stay within your daily budget? If you set ₱250/day and exceeded it on 2 of 10 days, you get about 20 points."
+
+> "Component 3: Budget Adherence — 25 points. What percentage of your category budgets are on track? All 8 budgets within limit = full 25."
+
+> "Component 4: Logging Consistency — 25 points. Are you recording expenses regularly? Logged 8 of 10 days = 20 points."
+
+> "The formula is income-relative. A student with ₱6,600 allowance and a professional with ₱50,000 salary are both measured fairly against their own income — not a fixed standard."
+
+> "There's also a Warning Decay system — if a budget is exceeded and you keep spending in that category, the score drops 5 points per day for up to 3 days. This incentivizes corrective action."
 
 **Point to "Ask AI to explain my score":**
-> "Tap here and the AI explains in plain language why your score is what it is."
+> "And if the panel wants a plain-language explanation, tap here — the AI explains exactly why the score is what it is and what to improve."
 
 ---
 
@@ -177,7 +203,10 @@ Type: *"How do I apply for SSS loan?"*
 > "No — fully serverless. Firebase handles auth and sync, Groq handles AI, everything else runs on-device. Zero hosting costs, zero server maintenance."
 
 **"What's next?"**
-> "Post-capstone: full cash-on-hand tracking mode, transfer between wallets, notification listener for auto-parsing GCash payments, and a backend proxy to secure the API key for Play Store deployment."
+> "Post-capstone: full cash-on-hand tracking mode with income auto-calculation from wallet changes, transfer between wallets, notification listener for auto-parsing GCash payments, and a backend proxy to secure the API key for Play Store deployment."
+
+**"What's the difference between Normal Mode and Balance Mode?"**
+> "Normal mode tracks income minus expenses — 'how much of my allowance is left.' Balance mode tracks wallet totals — 'how much cash do I actually have.' Normal is better for fixed-income budgeting. Balance is better for irregular income or students who just want to know their actual cash. Both use the same underlying data."
 
 ---
 
@@ -187,7 +216,7 @@ Type: *"How do I apply for SSS loan?"*
 Home (score + wallet + daily limit + 9-grid) →
 AI (voice + text + wallet update + broader question) →
 Scanner (receipt → Import Items) →
-Wallets + Settings (balance mode) →
+Wallets + Settings (balance mode demo + comparison) →
 Analytics (pie + 50/30/20 + market + personality) →
 FHS (breakdown + explain) →
 Behavioral (mood + impulse + badges) →
@@ -195,7 +224,7 @@ Architecture + Filipino context →
 Closing
 ```
 
-**Total: ~8 minutes. Leave 4 minutes for Q&A.**
+**Total: ~9 minutes. Leave 3–4 minutes for Q&A.**
 
 ---
 

@@ -554,6 +554,18 @@ const _sections = [
         body:
             "The score always uses this month's expenses only — it resets at the start of each month. This makes it a fair reflection of your current habits, not your entire history. The 30-day trend chart in Analytics shows how your score has changed over time.",
       ),
+      _HelpItem(
+        title: "Where does the FHS get its data?",
+        body: "Each component pulls from specific database tables:\n\n"
+            "• Savings Rate → monthly_income (settings) vs total expenses this month\n"
+            "• Overspend Control → daily_limit (settings) vs expenses grouped by date\n"
+            "• Budget Adherence → budgets table vs expenses by category this month\n"
+            "• Logging Consistency → count of unique dates with expenses this month vs days elapsed\n\n"
+            "The formula is income-relative — it compares YOUR spending against YOUR income, not against a fixed standard. A student with ₱6,600/month and a professional with ₱50,000/month are both scored fairly.\n\n"
+            "Warning Decay: if a budget category is exceeded and you keep spending in it, the score loses 5 pts/day (max −15 pts over 3 days). This resets when you stop overspending in that category.",
+        example:
+            "Student: Income ₱6,600, Daily limit ₱250, 8 budgets set → all 4 components have data to calculate from.",
+      ),
     ],
   ),
   _HelpSection(
@@ -757,12 +769,21 @@ const _sections = [
       _HelpItem(
         title: "What is Balance Mode?",
         body:
-            "When Balance Mode is ON, the Profile card shows your total wallet balance (Cash + GCash + banks) as the primary number.\n\n"
-            "When OFF (default), it shows:\n"
-            "• Students: Remaining Balance = Income − Expenses this month\n"
-            "• Others: Net Worth = Income + Assets − Expenses − Debts\n\n"
-            "Balance Mode is useful if you prefer tracking 'how much do I have right now' instead of 'how much of my income is left'.\n\n"
-            "Toggle it in Profile → App Settings → Balance mode.",
+            "Balance Mode changes what the Profile card shows as your primary number.\n\n"
+            "**Normal Mode (default):**\n"
+            "• Shows: Remaining Balance = Income − Expenses this month\n"
+            "• Best for: Fixed income (salary, regular allowance)\n"
+            "• Answers: 'How much of my allowance is left?'\n"
+            "• Pro: Clear budget tracking against known income\n"
+            "• Con: Doesn't reflect actual cash if you have savings or multiple accounts\n\n"
+            "**Balance Mode:**\n"
+            "• Shows: Total Cash Available = sum of all wallet balances\n"
+            "• Best for: Irregular income, freelancers, students with variable allowances\n"
+            "• Answers: 'How much money do I actually have right now?'\n"
+            "• Pro: Shows real-world cash position across all accounts\n"
+            "• Con: Requires keeping wallet balances updated\n\n"
+            "Both modes use the same expenses, budgets, FHS score, and analytics. Only the Profile card display changes.\n\n"
+            "Toggle in Profile → App Settings → Balance mode.",
       ),
     ],
   ),
