@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartSpend Defense Cheat Sheet v4 (Revised May 14, 2026)</title>
+<title>SmartSpend v2.6.0 — Defense Q&A Ready (May 15, 2026)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 :root{--g:#1a7a4a;--gl:#e8f5ee;--gm:#2ea06a;--ink:#1a1a2e;--is:#4a4a6a;--rule:#e2e8f0;--bg:#f8f9fc;--w:#fff;--am:#d97706;--al:#fffbeb;--bl:#1d4ed8;--bll:#eff6ff;--rd:#c0392b;--rl:#fef2f2;--pu:#7c3aed;--pl:#f5f3ff;--tl:#0f766e;--tll:#f0fdfa;--or:#c2410c;--ol:#fff7ed;}
@@ -71,13 +71,23 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--ink);font-si
 .kwr{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
 .kw{font-size:10px;padding:1px 6px;background:var(--bg);border:1px solid var(--rule);border-radius:3px;color:var(--is);font-family:'JetBrains Mono',monospace;}
 mark{background:#fef08a;color:var(--ink);border-radius:2px;padding:0 1px;}
+.card{transition:box-shadow .15s;}
+.card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.card.open{border-color:var(--g);box-shadow:0 2px 12px rgba(26,122,74,.1);}
+.cb{animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.si{transition:background .15s;}
+.tag{transition:all .15s;font-weight:500;}
+.pill{animation:none;}
+.ans code{background:#f1f5f9;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:12px;}
 @media print{.hero,.tb{position:relative;top:auto;}.cb{display:block!important;}.ar,.new-badge{display:none;}}
+@media(max-width:600px){.hero{padding:12px 14px 10px;}.body{padding:10px 8px 60px;}.tb{padding:6px 14px;}.ch{padding:9px 10px;}}
 </style>
 </head>
 <body>
 <div class="hero">
   <div class="hr">
-    <h1>SmartSpend Defense Cheat Sheet v4 (Revised May 14, 2026)</h1>
+    <h1>SmartSpend v2.6.0 — Defense Q&A Ready (May 15, 2026)</h1>
     <span class="hs" id="cnt">Loading...</span>
     <div class="btns">
       <button class="hbtn" onclick="expandAll()">Expand All</button>
@@ -85,7 +95,7 @@ mark{background:#fef08a;color:var(--ink);border-radius:2px;padding:0 1px;}
     </div>
   </div>
   <div class="sr">
-    <input class="si" id="srch" type="text" placeholder="Search any question, feature, keyword..." autocomplete="off" oninput="go()">
+    <input class="si" id="srch" type="text" placeholder="Type to search... (auto-expands results)" autocomplete="off" oninput="go()">
   </div>
 </div>
 <div class="tb" id="tags"></div>
