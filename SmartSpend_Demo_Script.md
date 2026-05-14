@@ -237,6 +237,9 @@ Closing
 
 **Total: ~9 minutes. Leave 3–4 minutes for Q&A.**
 
+**If panel wants to try it themselves:**
+> "You can try Demo Mode — just tap 'Skip' on the login screen. It loads pre-populated data modeled after a BSIT student at Lorma Colleges. All features work — wallets, AI, analytics, everything. No account needed."
+
 ---
 
 *Smart Spend v2.6.0 — Lucid Frame — Lorma Colleges CCSE BSIT 2025–2026*
