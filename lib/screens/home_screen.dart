@@ -170,7 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _navItem(Icons.home, "Home", 0),
+                _navItem(Icons.home, "Home", 0, onTap: () {
+                  setState(() => _index = 0);
+                  _checkTour();
+                }),
                 _navItem(Icons.bar_chart, "Analytics", 1),
                 _navItem(Icons.smart_toy, "AI", 2),
                 _navItem(Icons.grid_view_rounded, "Hub", -1,
