@@ -4,7 +4,7 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 14, 2026 (v2.6.0 — Session 12 continued: AI action fallback parser, wallet auto-deduct on expense, app settings toggles, balance mode, home screen rearranged, Google photo fallback, profile photo fix)
+**Last Updated:** May 14, 2026 (v2.6.0 — Session 12 final: AI action fallback, wallet auto-deduct, app settings, balance mode, daily quests, log allowance, tutorial replay fix, Google photo fallback, demo data updated)
 **Build:** app-arm64-v8a-release.apk — 45.4 MB (May 14, 2026)
 
 ---

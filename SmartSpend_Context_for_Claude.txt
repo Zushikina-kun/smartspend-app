@@ -110,7 +110,7 @@ NEW FEATURE — Payment Plans tab in Debts screen:
 - Active vs Completed sections
 - installment_plans table created via _ensureColumns (no version bump)
 
-BUILD: app-arm64-v8a-release.apk — 45.4 MB (May 14, 2026 — Session 12)
+BUILD: app-arm64-v8a-release.apk — 45.4 MB (May 14, 2026 — Session 12 final)
 
 LATEST FIXES (May 14, 2026 — Session 12):
 - AI ACTION FALLBACK: If AI says "Logged: X ₱Y" but fires no ACTION, app auto-generates log_expense
