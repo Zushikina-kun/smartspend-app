@@ -1,4 +1,4 @@
-# 🎤 SmartSpend Demo Script (Video Recording / Zoom)
+﻿# 🎤 SmartSpend Demo Script (Video Recording / Zoom)
 **v2.6.0 | Lucid Frame | May 15, 2026**
 **Format: Pre-recorded video OR live Zoom screen share**
 **Time: ~9 min demo + Q&A after**
@@ -18,12 +18,12 @@
 
 ## 🟢 OPENING — 30 sec
 
-**What's visible without scrolling:** Balance card with FHS score + income progress bar
+**What's visible without scrolling:** Spending card showing "This Month's Spending ₱X" with income progress bar
 
 🗣️ **NARRATE:**
 > "Smart Spend is an AI-assisted financial tracking app for Filipino users. Instead of forms, you talk to the AI and it handles everything."
 
-> "Here's the home screen. At the top — my Financial Health Score, currently [X] out of 100. Below it, my income progress bar showing how much I've spent vs my monthly income."
+> "Here's the home screen. At the top — this month's total spending with a progress bar showing how much of my income I've used."
 
 ---
 
@@ -141,7 +141,7 @@
 
 ## 🏥 PART 5 — Financial Health Score — 1.5 min
 
-📱 **TAP** Home tab → **TAP** the FHS card at the very top (the score number)
+📱 **TAP** Home tab → **SCROLL FAR DOWN** past quests and forecast to the FHS card
 
 🗣️ **NARRATE:**
 > "Financial Health Score — 0 to 100. Four components, 25 points each."
@@ -242,14 +242,14 @@
 
 ## 🔄 RECORDING ORDER
 ```
-1. Home (top: FHS + progress bar — NO scrolling needed)
+1. Home TOP (spending card — visible without scrolling)
 2. AI tab (voice → text → wallet → question)
 3. Camera icon → Scanner (brief)
-4. Home → SCROLL to wallet card + Log Allowance
+4. Home → SCROLL to wallet card (green) + Log Allowance (blue)
 5. Profile → App Settings → Balance Mode toggle
 6. Analytics tab (scroll: pie → 50/30/20 → market → personality)
-7. Home → TAP FHS card → breakdown dialog
-8. Home → SCROLL to Daily Quests + Mood
+7. Home → SCROLL FAR DOWN to FHS card → tap → breakdown dialog
+8. Home → SCROLL to Daily Quests + Mood (middle area)
 9. Narrate architecture (any screen)
 10. Closing statement
 ```

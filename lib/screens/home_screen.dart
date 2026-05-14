@@ -2377,9 +2377,6 @@ class _DashboardState extends State<Dashboard> {
                 );
               }),
 
-              // Daily mood check-in
-              _MoodCheckInWidget(),
-
               // GM-1: Daily Challenges card
               _DailyChallengesWidget(
                 expenses: _expenses,
