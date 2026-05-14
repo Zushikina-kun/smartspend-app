@@ -1,6 +1,6 @@
 # SmartSpend — Complete Task Status
-**Version:** 2.5.0
-**Last Updated:** May 9, 2026
+**Version:** 2.6.0
+**Last Updated:** May 14, 2026
 **Purpose:** Definitive status of all tasks — done, deferred, blocked, and why.
 
 ---
@@ -101,6 +101,19 @@ Everything here is confirmed built, tested, and in the current build (v2.5.0).
 - [x] Crashlytics crash 2: ShakeDetector MissingPluginException → try/catch
 - [x] AI logging fix: max_tokens 200→300, LOGGING RULE added
 - [x] AI wallet rule: never log wallet balances as income
+- [x] AI action fallback parser: auto-generates log_expense when AI says "Logged" but fires no ACTION
+- [x] Wallet auto-deduction on expense logging (Cash/GCash/Maya/GrabPay/ShopeePay)
+- [x] App Settings sheet: 5 toggles (wallet auto-deduct, mood, impulse, budget alerts, balance mode)
+- [x] Balance Mode: shows wallet total as primary balance in Profile
+- [x] Settings toggles wired up: mood/impulse/budget alerts now respect their toggle state
+- [x] Home screen rearranged: wallet + daily limit moved up, logical flow
+- [x] Profile photo: Google account photo as fallback when local file missing
+- [x] Daily Quests enhanced: 4 rotating from pool of 6, progress bar, streak counter
+- [x] Feature tour updated: 5 steps covering wallets, 9-grid, 14 categories, settings
+- [x] Log Allowance button: tap for daily amount, long-press for custom (irregular schedules)
+- [x] AI payment_method fix: now uses AI's response instead of hardcoded 'Cash'
+- [x] AppConfig.dart created (API key centralized, .gitignore'd)
+- [x] 429 error message: suggests manual entry as alternative
 
 ---
 
