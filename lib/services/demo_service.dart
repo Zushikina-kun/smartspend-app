@@ -651,6 +651,27 @@ class DemoService {
       'is_want': 0,
     });
 
+    // Demo load complete — set wallet balances for realistic demo
+    try {
+      final wallets = await DBService.getWallets();
+      for (final w in wallets) {
+        if ((w['name'] as String) == 'Cash on Hand') {
+          await DBService.setWalletBalance(w['id'] as int, 547.0);
+        } else if ((w['name'] as String) == 'GCash') {
+          await DBService.setWalletBalance(w['id'] as int, 312.50);
+        }
+      }
+    } catch (_) {}
+
+    // Add more auto-categorization rules for demo
+    try {
+      await DBService.insertCategoryRule('cobra', 'Food');
+      await DBService.insertCategoryRule('nestea', 'Food');
+      await DBService.insertCategoryRule('sting', 'Food');
+      await DBService.insertCategoryRule('steam', 'Gaming');
+      await DBService.insertCategoryRule('shopee', 'Shopping');
+    } catch (_) {}
+
     // Demo load complete — re-enable cloud sync
     _isDemoLoading = false;
   }
@@ -679,9 +700,16 @@ class DemoService {
     if (FirebaseAuth.instance.currentUser != null) {
       try {
         await CloudService.pushAll(
-          expenses: [], budgets: [], goals: [], income: [],
-          recurring: [], debts: [], customCategories: [],
-          installments: [], installmentPlans: [], wallets: [],
+          expenses: [],
+          budgets: [],
+          goals: [],
+          income: [],
+          recurring: [],
+          debts: [],
+          customCategories: [],
+          installments: [],
+          installmentPlans: [],
+          wallets: [],
           categoryRules: [],
         );
       } catch (_) {}
