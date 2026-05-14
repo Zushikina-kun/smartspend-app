@@ -1,233 +1,257 @@
-# 🎤 SmartSpend Demo Script
+# 🎤 SmartSpend Demo Script (Video Recording / Zoom)
 **v2.6.0 | Lucid Frame | May 15, 2026**
-**Time: ~9 min demo + 3-4 min Q&A**
+**Format: Pre-recorded video OR live Zoom screen share**
+**Time: ~9 min demo + Q&A after**
 
 ---
 
-## 📋 PRE-DEMO CHECKLIST
-- [ ] APK installed (arm64, 45.4 MB)
-- [ ] Logged in with Google
-- [ ] WiFi ON
-- [ ] Brightness MAX
-- [ ] Screen timeout 5+ min
-- [ ] AI messages available (check count in app bar)
-- [ ] Wallet balances set
+## 📋 BEFORE RECORDING
+- [ ] Phone screen mirrored to PC (scrcpy or Vysor) OR use phone screen recorder
+- [ ] APK installed, logged in, WiFi ON
+- [ ] Brightness MAX, screen timeout 5+ min
+- [ ] AI messages available (check count)
+- [ ] Wallet balances set to real amounts
+- [ ] Clear any notification clutter
+- [ ] Portrait mode (phone vertical)
 
 ---
 
 ## 🟢 OPENING — 30 sec
 
-📱 **SHOW:** Home screen
+**What's visible without scrolling:** Balance card with FHS score + income progress bar
 
-🗣️ **SAY:**
-> "Smart Spend is an AI-assisted financial tracking app for Filipino users. Instead of filling out forms, you just talk to the AI — and it handles everything."
+🗣️ **NARRATE:**
+> "Smart Spend is an AI-assisted financial tracking app for Filipino users. Instead of forms, you talk to the AI and it handles everything."
 
-👆 **POINT TO:**
-- Financial Health Score (top)
-- Wallet balance card
-- Daily limit bar
-- 9-grid Quick Access
+> "Here's the home screen. At the top — my Financial Health Score, currently [X] out of 100. Below it, my income progress bar showing how much I've spent vs my monthly income."
 
 ---
 
-## 🤖 PART 1 — AI Input — 2 min
+## 🤖 PART 1 — AI Chat — 2 min
 
-📱 **TAP:** AI button (bottom nav)
+📱 **TAP** AI button (bottom nav, center circle)
 
-### Demo 1: Voice
-🗣️ **SAY:** "First, voice input."
+🗣️ **NARRATE:**
+> "The AI screen is the core of the app. Let me show three ways to log expenses."
 
-👆 **TAP** mic → speak: *"Spent 30 pesos for jeepney fare"*
+### Voice
+📱 **TAP** mic → say: *"Spent 30 pesos for jeepney fare"*
+⏸️ Wait for response
 
-🗣️ **SAY:**
-> "Parsed it, categorized as Transportation, tagged as Need, logged it. Wallet went down by ₱30 automatically."
+🗣️ **NARRATE:**
+> "It parsed that — Transportation, Need, ₱30. Logged automatically."
 
-### Demo 2: Text
-⌨️ **TYPE:** `Bought Jollibee chicken joy for 149`
+### Text
+📱 **TYPE:** `Bought Jollibee chicken joy for 149`
+⏸️ Wait for response
 
-🗣️ **SAY:**
-> "Same with text. Knows Jollibee is Food, infers it's a Want, logs it."
+🗣️ **NARRATE:**
+> "Knows Jollibee is Food, tagged as Want. No dropdowns, no forms."
 
-### Demo 3: Wallet update
-⌨️ **TYPE:** `My GCash is 500 pesos`
+### Wallet Update
+📱 **TYPE:** `My GCash is 500 pesos`
+⏸️ Wait for response
 
-🗣️ **SAY:**
-> "The AI also manages wallet balances. Updated instantly — no forms."
+🗣️ **NARRATE:**
+> "It also manages wallet balances directly. GCash updated to ₱500."
 
-### Demo 4: Broader question
-⌨️ **TYPE:** `How do I apply for SSS loan?`
+### Broader Question
+📱 **TYPE:** `How do I apply for SSS loan?`
+⏸️ Wait for response
 
-🗣️ **SAY:**
-> "Not just an expense recorder — it's a financial companion. Banking, SSS, PhilHealth, investments, prices."
+🗣️ **NARRATE:**
+> "Not just expense logging — it's a financial companion. Banking, SSS, PhilHealth, investments, prices."
 
 ---
 
-## 📷 PART 2 — Scanner — 1 min
+## 📷 PART 2 — Scanner — 45 sec
 
-📱 **TAP:** Camera icon in AI screen
+📱 **TAP** camera icon (top of AI screen)
 
-🗣️ **SAY:**
-> "Smart Scanner — auto-detects barcodes in real time. For receipts, switch to Receipt mode."
+🗣️ **NARRATE:**
+> "Smart Scanner — auto-detects barcodes live. For receipts, switch to Receipt mode."
 
-👆 **SHOW:** Toggle receipt mode (amber guide)
+📱 **TAP** mode toggle (shows amber guide)
 
-🗣️ **SAY:**
-> "If a receipt has multiple items, 'Import Items' button appears — routes to Import screen where AI extracts each item individually."
+🗣️ **NARRATE:**
+> "If a receipt has multiple items, an 'Import Items' button appears — routes to the Import screen where AI extracts each item individually with categories."
+
+📱 **TAP** back to return to AI screen
 
 ---
 
 ## 💵 PART 3 — Wallets & Settings — 1.5 min
 
-📱 **TAP:** Wallet card on Home
+📱 **TAP** Home tab → **SCROLL DOWN** to the green Wallet card
 
-🗣️ **SAY:**
-> "Wallet system tracks actual cash — Cash on Hand, GCash, Maya, 30+ PH banks."
+🗣️ **NARRATE:**
+> "Here's the Wallet system — tracks actual cash across all accounts."
 
-👆 **SHOW:** Wallets sheet (balances visible)
+📱 **TAP** the wallet card → Wallets sheet opens
 
-📱 **TAP:** Log Allowance button
+🗣️ **NARRATE:**
+> "Cash on Hand, GCash, Maya — 30+ Philippine banks and e-wallets. Tap any to update."
 
-🗣️ **SAY:**
-> "This is for students with irregular allowances. Tap when you receive money — adds to Cash on Hand, logs as income. Long-press for custom amount."
+📱 **CLOSE** sheet → **SHOW** the blue Log Allowance button (right below wallet card)
 
-📱 **GO TO:** Profile → App Settings
+🗣️ **NARRATE:**
+> "This Log Allowance button is for students with irregular schedules. Tap when you receive allowance — adds to Cash on Hand. Long-press for custom amount like 2-3 days' worth."
 
-🗣️ **SAY:**
-> "Users customize their experience. Auto-deduct wallets, mood, impulse pause, budget alerts."
+📱 **GO TO** Profile tab → **SCROLL DOWN** → **TAP** "App Settings"
 
-👆 **TOGGLE** Balance Mode ON → show Profile card change
+🗣️ **NARRATE:**
+> "App Settings — users customize their experience. Auto-deduct wallets, mood check-in, impulse pause, budget alerts."
 
-🗣️ **SAY:**
-> "Normal mode: 'How much allowance is left?' Balance mode: 'How much cash do I actually have?' Same data, different perspective. No logic changes."
+📱 **TOGGLE** Balance Mode ON → **SHOW** the Profile card change
+
+🗣️ **NARRATE:**
+> "Balance Mode shows total wallet cash instead of income-based remaining. Normal mode: 'how much allowance is left.' Balance mode: 'how much cash do I actually have.' Same data, different view."
+
+📱 **TOGGLE** back OFF
 
 ---
 
 ## 📊 PART 4 — Analytics — 1.5 min
 
-📱 **TAP:** Analytics tab
+📱 **TAP** Analytics tab (bottom nav)
 
-🗣️ **SAY:**
-> "Where all that data becomes insight."
+🗣️ **NARRATE:**
+> "Analytics — where all that data becomes insight."
 
-👆 **SCROLL** slowly, point to:
-1. **Nav chips** — "Goals, Debts, Budgets, Wallets, Calendar, Import"
-2. **Pie chart** — "14 categories including Gaming, Personal Care, Travel, Pets"
-3. **50/30/20** — "Needs vs Wants vs Savings against the rule"
-4. **Market Insights** — "Live PHP exchange rates"
-5. **Spending Personality** — "Labels your style from actual data"
+📱 **SHOW** the navigation chips row at top
 
-🗣️ **SAY:**
-> "Answers the question every Filipino asks: 'Where did my money go?'"
+🗣️ **NARRATE:**
+> "Quick links — Goals, Debts, Budgets, Wallets, Calendar, Import."
+
+📱 **SCROLL** slowly through:
+
+🗣️ **NARRATE as you scroll:**
+> "Pie chart — spending by category. We have 14 categories including Gaming, Personal Care, Travel, Pets."
+
+> "50/30/20 tracker — Needs vs Wants vs Savings against the recommended rule."
+
+> "Market Insights — live PHP exchange rates."
+
+📱 **KEEP SCROLLING** to Spending Personality
+
+🗣️ **NARRATE:**
+> "Spending Personality — labels your style from actual data. No AI call needed."
 
 ---
 
-## 🏥 PART 5 — FHS — 1.5 min
+## 🏥 PART 5 — Financial Health Score — 1.5 min
 
-📱 **TAP:** FHS card on Home
+📱 **TAP** Home tab → **TAP** the FHS card at the very top (the score number)
 
-🗣️ **SAY:**
-> "Financial Health Score — 0 to 100, four components, 25 points each."
+🗣️ **NARRATE:**
+> "Financial Health Score — 0 to 100. Four components, 25 points each."
 
-👆 **SHOW** breakdown, explain each:
+📱 **SHOW** the breakdown dialog/sheet
 
-🗣️ **SAY:**
-> "Savings Rate — saving 20%+ of income? Full 25.
-> Overspend Control — how many days under daily budget? Full 25.
-> Budget Adherence — all categories within limit? Full 25.
-> Logging Consistency — recording every day? Full 25."
+🗣️ **NARRATE:**
+> "Savings Rate — saving 20% or more of income? Full 25 points."
+> "Overspend Control — how many days stayed under daily budget?"
+> "Budget Adherence — all category budgets within limit?"
+> "Logging Consistency — recording expenses every day?"
 
-> "Income-relative — a student with ₱6,600 and a professional with ₱50,000 are both scored fairly."
+> "It's income-relative. A student with ₱6,600 and a professional with ₱50,000 are both scored fairly against their own income."
 
-> "Warning Decay: if you ignore a budget warning, score drops 5 pts/day for 3 days."
+> "There's also Warning Decay — ignore a budget warning, score drops 5 points per day for up to 3 days."
 
-👆 **POINT TO:** "Ask AI to explain my score" link
+📱 **CLOSE** dialog → **SHOW** "Ask AI to explain my score" link
+
+🗣️ **NARRATE:**
+> "Users can tap here to get a plain-language explanation from the AI."
 
 ---
 
 ## 🎮 PART 6 — Gamification — 1 min
 
-📱 **SHOW:** Home screen → scroll to Daily Quests
+📱 **TAP** Home tab → **SCROLL DOWN** past wallet/limit to Daily Quests card
 
-🗣️ **SAY:**
-> "Gamification layer — Daily Quests. 4 rotating challenges, progress bar, streak counter. Inspired by gacha game dailies."
+🗣️ **NARRATE:**
+> "Gamification layer — Daily Quests. 4 rotating challenges per day with a progress bar and streak counter. Inspired by gacha game dailies."
 
-👆 **SHOW:** Mood check-in widget
+📱 **SCROLL** to Mood check-in
 
-🗣️ **SAY:**
-> "Daily mood check-in. Analytics shows mood-spending correlation."
+🗣️ **NARRATE:**
+> "Daily mood check-in. In Analytics, there's a mood-spending correlation card."
 
-👆 **SHOW:** Spending Personality card
+📱 **SCROLL** to badges row (if visible)
 
-🗣️ **SAY:**
-> "Spending Personality — computed from data, no AI call. Plus 16 achievement badges, impulse pause, subscription auto-detection."
+🗣️ **NARRATE:**
+> "16 achievement badges, spending streaks, impulse pause for large Want purchases, subscription auto-detection."
 
 ---
 
-## 🏗️ PART 7 — Architecture — 1 min
+## 🏗️ PART 7 — Architecture & Filipino Context — 1 min
 
-🗣️ **SAY:**
-> "Fully serverless — no backend. Flutter client, Firebase for auth and sync, Groq API for AI, SQLite for local storage. Zero hosting costs."
+📱 **No screen needed — just narrate over any screen**
 
-> "Context injection, not RAG — user's financial data injected directly into each AI prompt. Simpler, faster, no vector database needed."
+🗣️ **NARRATE:**
+> "Architecture: fully serverless. No backend server. Flutter on the client, Firebase for auth and sync, Groq API for AI, SQLite for local storage. Zero hosting costs."
 
-> "Filipino-first — AI understands jeepney, GCash, ShopeePayLater, Jollibee, siomai, 13th month pay, 11.11 sales."
+> "We use context injection — not RAG. The user's financial data is injected directly into each AI prompt. Simpler, faster, no vector database needed."
+
+> "Filipino-first design. The AI understands jeepney, GCash, ShopeePayLater, Jollibee, siomai, 13th month pay, 11.11 sales. 14 categories, 9 payment methods, 57 currencies."
 
 ---
 
 ## 🎬 CLOSING — 30 sec
 
-🗣️ **SAY:**
-> "Smart Spend demonstrates that an AI-powered financial assistant can be built entirely on free-tier services — no paid cloud, no backend — and still deliver personalized financial guidance."
+🗣️ **NARRATE:**
+> "Smart Spend demonstrates that an AI-powered financial assistant can be built entirely on free-tier services — and still deliver personalized financial guidance for Filipino users."
 
-> "The goal: make financial literacy accessible to every Filipino. You don't need to know what a budget is — just tell it what you spent."
-
----
-
-## 🙋 Q&A QUICK ANSWERS
-
-| Question | One-liner |
-|----------|-----------|
-| "Why not bank API?" | PH has no open banking APIs. We built manual import instead. |
-| "AI mistakes?" | Human-in-the-loop + confidence score + shake-to-undo 60 sec. |
-| "Data privacy?" | No PII to API. Only expense text + anonymized summary. |
-| "FHS from literature?" | UNSGSA framework. 4 components × 25 pts. Income-relative. |
-| "vs GCash analytics?" | GCash shows what you spent. We tell you what it means + what to do. |
-| "Backend?" | No. Fully serverless. Zero hosting costs. |
-| "What's next?" | Cash-on-hand mode, wallet transfers, backend proxy, Play Store. |
-| "Normal vs Balance Mode?" | Normal = allowance left. Balance = actual cash. Same data, display only. |
-| "Context injection vs RAG?" | Small structured data fits in one prompt. RAG is overkill. |
+> "The goal: make financial literacy accessible. You don't need to know what a budget is — just tell it what you spent."
 
 ---
 
-## 📦 BONUS — If Panel Asks (show if needed)
+## 🙋 Q&A TABLE (for after the video)
 
-| Feature | Where to find it |
-|---------|-----------------|
+| Question | Answer |
+|----------|--------|
+| Why not bank API? | PH has no open banking APIs. Manual import instead. |
+| AI mistakes? | Human-in-the-loop + confidence score + shake-to-undo. |
+| Data privacy? | No PII to API. Only expense text + anonymized summary. |
+| FHS basis? | UNSGSA framework. 4×25 pts. Income-relative. |
+| vs GCash? | GCash shows what you spent. We tell you what it means. |
+| Backend? | No. Serverless. Zero hosting costs. |
+| Context injection vs RAG? | Small data fits in one prompt. RAG is overkill. |
+| 30 respondents? | Capstone study. Purposive. Nielsen: 5 finds 85% of issues. |
+| Balance Mode? | Normal = allowance left. Balance = actual cash. Display only. |
+| What's next? | Wallet transfers, backend proxy, Play Store. |
+| Demo Mode? | Login → Skip. Pre-populated Filipino student data. |
+
+---
+
+## 📦 BONUS — Show if asked
+
+| Feature | Navigation |
+|---------|-----------|
 | Payment Plans | Hub → Debts → Plans tab |
-| Bill Calendar | Home 9-grid → Bill Calendar |
-| Transaction Tags | Add Expense → Tags field |
-| Achievements | Home 9-grid → Achievements |
+| Bill Calendar | Home → scroll to mini-card, or 9-grid |
+| Tags | Add Expense → Tags field |
+| Achievements | Hub → Achievements (or Home 9-grid) |
 | Bank Import | Hub → Import from Bank |
-| Shake to Undo | Shake phone within 60 sec |
+| Shake Undo | Shake phone within 60 sec of AI action |
 | Recurring | Hub → Recurring Transactions |
-| Debts | Hub → Debts & Lending |
 | Custom Categories | Profile → Manage Categories |
 | Auto-Rules | Profile → Auto-Categorization Rules |
-| Demo Mode | Login screen → Skip button |
 
 ---
 
-## 🔄 FLOW SUMMARY
+## 🔄 RECORDING ORDER
 ```
-Home (score + wallet + limit + 9-grid)
-  → AI (voice + text + wallet + question)
-  → Scanner (receipt → Import Items)
-  → Wallets + Settings (balance mode)
-  → Analytics (pie + 50/30/20 + market + personality)
-  → FHS (breakdown + decay + explain)
-  → Gamification (quests + mood + badges)
-  → Architecture (serverless + context injection + Filipino)
-  → Closing
+1. Home (top: FHS + progress bar — NO scrolling needed)
+2. AI tab (voice → text → wallet → question)
+3. Camera icon → Scanner (brief)
+4. Home → SCROLL to wallet card + Log Allowance
+5. Profile → App Settings → Balance Mode toggle
+6. Analytics tab (scroll: pie → 50/30/20 → market → personality)
+7. Home → TAP FHS card → breakdown dialog
+8. Home → SCROLL to Daily Quests + Mood
+9. Narrate architecture (any screen)
+10. Closing statement
 ```
 
 ---
