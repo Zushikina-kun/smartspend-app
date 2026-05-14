@@ -242,4 +242,59 @@ Closing
 
 ---
 
+## BONUS — Features Not in Main Demo (show if asked)
+
+**Payment Plans (ShopeePayLater, HomeCredit):**
+- Hub → Debts & Lending → "Plans" tab
+- Shows: monthly payment, months paid/total, remaining balance, due day
+- "Log Payment" button records expense + increments months paid
+> "This tracks installment plans like ShopeePayLater or HomeCredit. It shows how much you've paid, what's remaining, and when the next payment is due."
+
+**Bill Calendar:**
+- Home 9-grid → Bill Calendar
+- Shows all upcoming bills, debts, installments, and income on a monthly calendar
+- Gray dots on days with logged expenses, colored dots for events
+> "Every financial event on one calendar — bills, debts, goals, installments. Tap any day to see details."
+
+**Transaction Tags:**
+- Add Expense → Tags field (type #capstone, #shared, etc.)
+- Transactions screen → filter chips by tag
+> "You can tag expenses with custom labels like #capstone or #shared, then filter by tag in the Transactions screen."
+
+**Achievements (16 badges):**
+- Home 9-grid → Achievements
+- Shows earned (colored) and locked (silhouette) badges
+- Examples: First Step, 3-Day Streak, Week Warrior, Saver, Budget Boss, AI Power User, Impulse Control
+> "16 earnable badges — some are easy like logging your first expense, others take consistency like a 30-day streak."
+
+**Bank/GCash Import:**
+- Hub → Import from Bank / GCash
+- Paste transaction history text → Parse with AI → review table → bulk import
+- Supports: GCash, Maya, BPI, BDO, Metrobank, Landbank, RCBC, GoTyme, Tonik, and more
+> "Paste your GCash or bank transaction history — the AI parses all rows at once with real dates preserved. You review before importing."
+
+**Shake to Undo:**
+- After any AI action, shake the phone within 60 seconds
+- Shows confirmation sheet → tap Undo → reverses the action
+> "Made a mistake? Shake your phone within 60 seconds to undo the last AI action."
+
+**Recurring Transactions:**
+- Hub → Recurring Transactions
+- Bills, subscriptions, income — with frequency and next due date
+- "Log All Due" button logs all overdue items at once
+> "Track monthly bills and subscriptions. The app alerts you when they're due and can log them all with one tap."
+
+**Debts & Lending:**
+- Hub → Debts & Lending
+- Two types: money you owe, money others owe you
+- Track partial payments, due dates
+> "Track who owes you and who you owe. Log partial payments as you go."
+
+**Custom Categories + Auto-Rules:**
+- Profile → Manage Categories (add custom ones)
+- Profile → Auto-Categorization Rules (keyword → category)
+> "You can add custom categories and set rules like 'cobra' → Food so the AI always categorizes it correctly."
+
+---
+
 *Smart Spend v2.6.0 — Lucid Frame — Lorma Colleges CCSE BSIT 2025–2026*
