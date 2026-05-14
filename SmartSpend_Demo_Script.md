@@ -89,6 +89,9 @@ Type: *"How do I apply for SSS loan?"*
 **Show the Wallets sheet:**
 > "Cash on Hand, GCash, Maya, BDO, BPI — 30+ Philippine banks and e-wallets. Tap any wallet to update its balance. Or just tell the AI — 'my GCash is 500'."
 
+**Point to the Log Allowance button:**
+> "This blue button is for students with irregular allowances. Tap it when you receive your allowance — it adds to Cash on Hand and logs as income. Long-press for a custom amount if you got 2-3 days' worth at once. It doesn't change your monthly income setting — just your actual cash."
+
 **Go to Profile → App Settings:**
 > "Users can customize their experience with these toggles."
 

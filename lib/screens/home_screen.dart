@@ -570,7 +570,8 @@ class _DashboardState extends State<Dashboard> {
     final score = await ScoreService.applyWarningDecay(rawScore);
 
     // Load budget alerts setting before setState
-    final budgetAlertsEnabled = (await DBService.getSetting('budget_alerts_enabled')) != 'false';
+    final budgetAlertsEnabled =
+        (await DBService.getSetting('budget_alerts_enabled')) != 'false';
     if (!mounted) return; // widget may have been disposed during async gap
     setState(() {
       _expenses = expenses;
@@ -644,7 +645,8 @@ class _DashboardState extends State<Dashboard> {
         final spentAmt = spent[b.category] ?? 0;
         final ratio = b.amount > 0 ? spentAmt / b.amount : 0.0;
         if (ratio >= 1.0 || ratio >= 0.8 || ratio >= 0.5) {
-          if (budgetAlertsEnabled) NotificationService.showBudgetAlert(b.category, spentAmt, b.amount);
+          if (budgetAlertsEnabled)
+            NotificationService.showBudgetAlert(b.category, spentAmt, b.amount);
         }
       }
 
@@ -1421,6 +1423,137 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget _buildLogAllowanceButton(BuildContext context) {
+    // Only show for students/unemployed with daily/weekly income frequency
+    if (_monthlyIncome <= 0) return const SizedBox.shrink();
+    final cs = Theme.of(context).colorScheme;
+    // Calculate per-day allowance from monthly income
+    final dailyAllowance = _monthlyIncome / 22; // ~22 school days/month
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GestureDetector(
+        onTap: () => _logAllowance(dailyAllowance),
+        onLongPress: () => _logAllowanceCustom(),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.blue.withValues(alpha: 0.07),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.blue.withValues(alpha: 0.25)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.add_card, color: Colors.blue, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Log Allowance",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            color: Colors.blue)),
+                    Text(
+                      "Tap: +${CurrencyService.format(dailyAllowance)} to Cash · Long-press: custom amount",
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: cs.onSurface.withValues(alpha: 0.5)),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.touch_app, size: 16, color: Colors.blue),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _logAllowance(double amount) async {
+    try {
+      // 1. Log as income entry
+      await DBService.insertIncome({
+        'title': 'Daily Allowance',
+        'amount': amount,
+        'category': 'Allowance',
+        'date': DateTime.now().toIso8601String().substring(0, 10),
+        'is_recurring': 0,
+      });
+      // 2. Add to Cash on Hand wallet
+      final wallet = await DBService.findWalletByName('Cash on Hand');
+      if (wallet != null) {
+        final newBal = ((wallet['balance'] as num) + amount).toDouble();
+        await DBService.setWalletBalance(wallet['id'] as int, newBal);
+      }
+      fireEvent(AppEvent.incomeChanged);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              "✓ Allowance +${CurrencyService.format(amount)} added to Cash on Hand"),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ));
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _logAllowanceCustom() async {
+    final ctrl = TextEditingController();
+    final result = await showDialog<double>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Log Allowance"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("How much did you receive today?",
+                style: TextStyle(fontSize: 13)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: ctrl,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              autofocus: true,
+              decoration: InputDecoration(
+                prefixText: "${CurrencyService.symbol} ",
+                hintText: "e.g. 330, 660, 990",
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text("Tip: Got 2 days' worth? Enter the total.",
+                style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, double.tryParse(ctrl.text)),
+            child: const Text("Log"),
+          ),
+        ],
+      ),
+    );
+    if (result != null && result > 0) {
+      await _logAllowance(result);
+    }
+  }
+
   Widget _buildSubscriptionSummaryCard(BuildContext context) {
     // Show subscriptions from recurring table (is_expense=1, monthly/yearly)
     final subs = _allRecurring.where((r) {
@@ -2166,6 +2299,9 @@ class _DashboardState extends State<Dashboard> {
 
               // Wallet balances summary — always shown, prompts setup when empty
               _buildWalletSummaryCard(context),
+
+              // Quick "Log Allowance" button — adds to wallet + income
+              _buildLogAllowanceButton(context),
 
               // Daily spending limit progress bar (#14)
               if (_dailyLimit > 0) _buildDailyLimitCard(context),
@@ -3274,9 +3410,11 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
 
     // ── BUILD CHALLENGE POOL (varies by day) ──────────────────
     final hasLoggedToday = widget.expenses.any((e) => e.date == today);
-    final todayExpenses = widget.expenses.where((e) => e.date == today).toList();
+    final todayExpenses =
+        widget.expenses.where((e) => e.date == today).toList();
     final todaySpent = todayExpenses.fold(0.0, (s, e) => s + e.amount);
-    final dailyBudget = widget.monthlyIncome > 0 ? widget.monthlyIncome / 30 : 0.0;
+    final dailyBudget =
+        widget.monthlyIncome > 0 ? widget.monthlyIncome / 30 : 0.0;
     final underBudgetToday = dailyBudget > 0 && todaySpent <= dailyBudget;
     final hasNeedToday = todayExpenses.any((e) => e.isWant != true);
     final hasWantToday = todayExpenses.any((e) => e.isWant == true);
@@ -3284,12 +3422,44 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
 
     // All possible challenges — 3 shown per day based on day-of-week rotation
     final allChallenges = <Map<String, dynamic>>[
-      {'title': 'Log an expense today', 'done': hasLoggedToday, 'icon': Icons.receipt_outlined, 'color': Colors.blue},
-      {'title': dailyBudget > 0 ? 'Stay under ${CurrencyService.format(dailyBudget)} today' : 'Set income to unlock', 'done': underBudgetToday && dailyBudget > 0, 'icon': Icons.savings_outlined, 'color': Colors.green},
-      {'title': 'Log a Need expense', 'done': hasNeedToday, 'icon': Icons.check_circle_outline, 'color': Colors.teal},
-      {'title': 'Log 3+ expenses today', 'done': loggedMultiple, 'icon': Icons.format_list_numbered, 'color': Colors.indigo},
-      {'title': 'Avoid Want spending today', 'done': hasLoggedToday && !hasWantToday, 'icon': Icons.shield_outlined, 'color': Colors.orange},
-      {'title': 'Check your Health Score', 'done': widget.score > 0, 'icon': Icons.monitor_heart_outlined, 'color': Colors.purple},
+      {
+        'title': 'Log an expense today',
+        'done': hasLoggedToday,
+        'icon': Icons.receipt_outlined,
+        'color': Colors.blue
+      },
+      {
+        'title': dailyBudget > 0
+            ? 'Stay under ${CurrencyService.format(dailyBudget)} today'
+            : 'Set income to unlock',
+        'done': underBudgetToday && dailyBudget > 0,
+        'icon': Icons.savings_outlined,
+        'color': Colors.green
+      },
+      {
+        'title': 'Log a Need expense',
+        'done': hasNeedToday,
+        'icon': Icons.check_circle_outline,
+        'color': Colors.teal
+      },
+      {
+        'title': 'Log 3+ expenses today',
+        'done': loggedMultiple,
+        'icon': Icons.format_list_numbered,
+        'color': Colors.indigo
+      },
+      {
+        'title': 'Avoid Want spending today',
+        'done': hasLoggedToday && !hasWantToday,
+        'icon': Icons.shield_outlined,
+        'color': Colors.orange
+      },
+      {
+        'title': 'Check your Health Score',
+        'done': widget.score > 0,
+        'icon': Icons.monitor_heart_outlined,
+        'color': Colors.purple
+      },
     ];
 
     // Pick 4 challenges based on day rotation (deterministic per day)
@@ -3325,10 +3495,12 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
             Row(
               children: [
                 const Text("Daily Quests",
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: allDone
                         ? Colors.green.withValues(alpha: 0.15)
@@ -3346,14 +3518,18 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
                 const Spacer(),
                 if (_streak > 0)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.orange.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
                       "🔥 $_streak day streak",
-                      style: const TextStyle(fontSize: 10, color: Colors.orange, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.orange,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
               ],
@@ -3366,7 +3542,8 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
                 value: progress,
                 minHeight: 4,
                 backgroundColor: cs.outline.withValues(alpha: 0.1),
-                valueColor: AlwaysStoppedAnimation(allDone ? Colors.green : cs.primary),
+                valueColor:
+                    AlwaysStoppedAnimation(allDone ? Colors.green : cs.primary),
               ),
             ),
             const SizedBox(height: 10),
@@ -3376,7 +3553,10 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     "🎉 All quests complete! Great job today.",
-                    style: TextStyle(fontSize: 12, color: Colors.green[700], fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.green[700],
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
               )
@@ -3389,20 +3569,26 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
                   child: Row(
                     children: [
                       Icon(
-                        done ? Icons.check_circle : Icons.radio_button_unchecked,
+                        done
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
                         size: 18,
                         color: done ? Colors.green : Colors.grey[400],
                       ),
                       const SizedBox(width: 8),
-                      Icon(c['icon'] as IconData, size: 14, color: done ? Colors.green : color),
+                      Icon(c['icon'] as IconData,
+                          size: 14, color: done ? Colors.green : color),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           c['title'] as String,
                           style: TextStyle(
                             fontSize: 12,
-                            color: done ? Colors.green : cs.onSurface.withValues(alpha: 0.7),
-                            decoration: done ? TextDecoration.lineThrough : null,
+                            color: done
+                                ? Colors.green
+                                : cs.onSurface.withValues(alpha: 0.7),
+                            decoration:
+                                done ? TextDecoration.lineThrough : null,
                           ),
                         ),
                       ),

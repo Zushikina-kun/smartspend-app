@@ -194,6 +194,7 @@ class AboutScreen extends StatelessWidget {
               ),
               ("⚙️ App Settings", "Toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode"),
               ("📷 Smart Profile Photo", "Google account photo fallback — works across devices without re-picking"),
+              ("💵 Log Allowance", "One-tap to add daily allowance to Cash on Hand — handles irregular school schedules"),
               ("🤔 AI What-If Scenarios", "Ask 'What if I cut food by ₱500?'"),
               (
                 "🔔 Weekly Behavioral Summary",

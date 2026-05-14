@@ -361,6 +361,17 @@ const _sections = [
             "Log ₱30 jeepney fare (Cash) → Cash on Hand goes from ₱697 to ₱667 automatically.",
       ),
       _HelpItem(
+        title: "Log Allowance button",
+        body:
+            "The blue 'Log Allowance' card on the home screen lets you quickly record when you receive your allowance.\n\n"
+            "• Tap: adds your daily allowance (income ÷ 22 school days) to Cash on Hand + logs as income\n"
+            "• Long-press: enter a custom amount (for 2-3 days' worth, or irregular amounts)\n\n"
+            "This is designed for students with irregular allowance schedules — no allowance on weekends, absences, or online class days. Just tap it on the days you actually receive money.\n\n"
+            "It does NOT change your monthly income setting (₱6,600) — that stays fixed for FHS calculations. It only adds to your actual cash balance.",
+        example:
+            "Got 2 days' allowance today (₱660) → long-press → enter 660 → Cash on Hand goes up by ₱660.",
+      ),
+      _HelpItem(
         title: "Profile photo across devices",
         body: "Your profile photo works with a smart fallback system:\n\n"
             "1. If you picked a photo from gallery → that local file is used\n"

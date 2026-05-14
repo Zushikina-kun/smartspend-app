@@ -433,7 +433,8 @@ class _AIScreenState extends State<AIScreen> {
               'amount': amount,
               'date': now.toIso8601String().substring(0, 10),
               'time': now.toIso8601String().substring(11, 19),
-              'payment_method': 'Cash',
+              'payment_method':
+                  action.params['payment_method'] as String? ?? 'Cash',
               'shop_name': shopName,
               'notes': 'Logged via AI chat',
               'ai_generated': 1,
@@ -459,7 +460,8 @@ class _AIScreenState extends State<AIScreen> {
 
             // Auto-deduct from matching wallet based on payment method
             try {
-              final autoDeductSetting = await DBService.getSetting('wallet_auto_deduct');
+              final autoDeductSetting =
+                  await DBService.getSetting('wallet_auto_deduct');
               if (autoDeductSetting == 'false') throw Exception('disabled');
               final paymentMethod =
                   action.params['payment_method'] as String? ?? 'Cash';
