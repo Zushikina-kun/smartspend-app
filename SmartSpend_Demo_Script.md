@@ -66,7 +66,7 @@
 
 ## 📷 PART 2 — Scanner — 45 sec
 
-📱 **TAP** camera icon (top of AI screen)
+📱 **TAP** camera icon (bottom-left of input row)
 
 🗣️ **NARRATE:**
 > "Smart Scanner — auto-detects barcodes live. For receipts, switch to Receipt mode."
@@ -167,7 +167,7 @@
 
 ## 🎮 PART 6 — Gamification — 1 min
 
-📱 **TAP** Home tab → **SCROLL DOWN** past wallet/limit to Daily Quests card
+📱 **TAP** Home tab → **SCROLL DOWN** past wallet/limit/subscriptions to Mood + Daily Quests area
 
 🗣️ **NARRATE:**
 > "Gamification layer — Daily Quests. 4 rotating challenges per day with a progress bar and streak counter. Inspired by gacha game dailies."
@@ -249,7 +249,7 @@
 5. Profile → App Settings → Balance Mode toggle
 6. Analytics tab (scroll: pie → 50/30/20 → score trend → market → AI advice)
 7. Home → SCROLL FAR DOWN to FHS card → tap → breakdown dialog
-8. Home → SCROLL to Daily Quests + Mood (middle area)
+8. Home → SCROLL to Mood (middle) then Daily Quests (below it)
 9. Narrate architecture (any screen)
 10. Closing statement
 ```
