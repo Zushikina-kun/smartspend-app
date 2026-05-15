@@ -247,7 +247,7 @@
 3. Camera icon → Scanner (brief)
 4. Home → SCROLL to wallet card (green) + Log Allowance (blue)
 5. Profile → App Settings → Balance Mode toggle
-6. Analytics tab (scroll: pie → 50/30/20 → market → personality)
+6. Analytics tab (scroll: pie → 50/30/20 → score trend → market → AI advice)
 7. Home → SCROLL FAR DOWN to FHS card → tap → breakdown dialog
 8. Home → SCROLL to Daily Quests + Mood (middle area)
 9. Narrate architecture (any screen)
