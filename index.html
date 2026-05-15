@@ -80,6 +80,19 @@ mark{background:#fef08a;color:var(--ink);border-radius:2px;padding:0 1px;}
 .tag{transition:all .15s;font-weight:500;}
 .pill{animation:none;}
 .ans code{background:#f1f5f9;padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+body.dark{--bg:#1a1a2e;--w:#252540;--ink:#e2e8f0;--is:#a0aec0;--rule:#374151;background:#0f0f1a;color:#e2e8f0;}
+body.dark .hero{background:linear-gradient(135deg,#065f46 0%,#064e3b 100%);}
+body.dark .tb{background:#252540;border-color:#374151;}
+body.dark .tag{background:#1a1a2e;border-color:#374151;color:#a0aec0;}
+body.dark .card{background:#252540;border-color:#374151;}
+body.dark .ch:hover{background:#1a1a2e;}
+body.dark .cb{border-color:#374151;}
+body.dark .si{background:rgba(255,255,255,.1);}
+body.dark .tip{background:#422006;border-color:#d97706;color:#fbbf24;}
+body.dark .trp{background:#450a0a;border-color:#dc2626;color:#fca5a5;}
+body.dark .kw{background:#1a1a2e;border-color:#374151;color:#a0aec0;}
+body.dark mark{background:#854d0e;color:#fef3c7;}
+body.dark .ans code{background:#374151;color:#e2e8f0;}
 @media print{.hero,.tb{position:relative;top:auto;}.cb{display:block!important;}.ar,.new-badge{display:none;}}
 @media(max-width:600px){.hero{padding:12px 14px 10px;}.body{padding:10px 8px 60px;}.tb{padding:6px 14px;}.ch{padding:9px 10px;}}
 </style>
@@ -585,6 +598,55 @@ tip:"Key distinction: set_wallet_balance updates ACTUAL CASH. set_income updates
 kw:["set_wallet_balance","16 actions","wallet","gcash","maya","bdo","auto-create","icon","new action"]
 });
 
+
+D.push({c:"feat",
+q:"What are the 14 expense categories? List them all.",
+a:"<p><strong>14 built-in categories:</strong></p><ul><li>🍔 Food — meals, drinks, snacks, groceries, restaurants</li><li>🚌 Transportation — jeepney, bus, Grab, tricycle, fuel</li><li>📱 Bills — electricity, internet, subscriptions, loans</li><li>🛍️ Shopping — Lazada, Shopee, gadgets, accessories</li><li>🎬 Entertainment — movies, concerts, events, tickets</li><li>🎮 Gaming — Steam, Mobile Legends, Codashop, UniPin, top-ups</li><li>💊 Health — medicine, hospital, pharmacy, vitamins</li><li>📚 Education — tuition, books, school supplies, courses</li><li>💇 Personal Care — haircut, salon, hygiene products</li><li>👕 Clothing — shirts, pants, shoes, ukay, fashion</li><li>🎁 Gifts — pasalubong, presents, donations, charity</li><li>✈️ Travel — hotel, airfare, resort, tour, Airbnb</li><li>🐾 Pets — pet food, vet, Pedigree, Whiskas</li><li>📦 Others — anything that doesn't fit above</li></ul><p>Users can also create unlimited custom categories.</p>",
+kw:["14 categories","food","transportation","gaming","personal care","clothing","gifts","travel","pets","education","health","bills","shopping","entertainment","others","list all"]
+});
+
+D.push({c:"feat",
+q:"What are the 9 payment methods?",
+a:"<p><strong>9 payment methods:</strong> Cash, GCash, Maya, GrabPay, ShopeePay, Debit Card, Credit Card, Bank Transfer, Others.</p><p>Payment method determines which wallet auto-deducts: Cash → Cash on Hand, GCash → GCash wallet, Maya → Maya wallet, etc.</p>",
+kw:["9 payment methods","cash","gcash","maya","grabpay","shopeepay","debit card","credit card","bank transfer","payment"]
+});
+
+D.push({c:"feat",
+q:"What are the 57 currencies supported?",
+a:"<p>SmartSpend supports 57 currencies via open.er-api.com. Major ones: PHP, USD, EUR, GBP, JPY, SGD, AUD, CAD, HKD, KRW, CNY, MYR, IDR, THB, VND, INR, SAR, AED, BRL, MXN, CHF + 36 more including TWD, ILS, CZK, PLN, HUF, UAH, LKR, NPR, MMK, KHR, LAK, BND.</p><p>All amounts stored in PHP internally — converted for display only. Rates cached 1 hour, offline fallback.</p>",
+kw:["57 currencies","exchange rate","php","usd","eur","open.er-api","conversion","display","cached"]
+});
+
+D.push({c:"meth",
+q:"What is the difference between Objective 1, 2, and 3?",
+a:"<p><strong>Objective 1 (Assess):</strong> Understand the problem. Survey + interview 30 respondents about their financial practices and challenges. Produces original data.</p><p><strong>Objective 2 (Design & Develop):</strong> Build the solution. System architecture, DB, UI, multi-modal input, cloud sync, LLM integration (including comparative benchmarking for model selection). The bulk of the technical work.</p><p><strong>Objective 3 (Evaluate):</strong> Test the solution. SUS questionnaire administered to 30 respondents after live demo. Target score ≥80 (Good).</p><p>Flow: Understand problem → Build solution → Test solution.</p>",
+kw:["3 objectives","objective 1","objective 2","objective 3","assess","design","develop","evaluate","sus","difference","flow"]
+});
+
+D.push({c:"tech",
+q:"What is Firebase Spark plan and what are its limits?",
+a:"<p>Firebase Spark = free tier. SmartSpend uses it for: Auth (unlimited users), Firestore (1GB storage, 50K reads/day, 20K writes/day), Crashlytics (unlimited). These limits are more than sufficient for academic deployment with 30 respondents.</p><p><strong>What Spark does NOT include:</strong> Firebase Storage (no profile photo sync), Cloud Functions (no server-side logic), Firebase Extensions. All documented as limitations.</p>",
+kw:["firebase","spark","free tier","limits","storage","functions","firestore","reads","writes","academic"]
+});
+
+D.push({c:"trap",
+q:"TRAP: Why Flutter and not React Native or native Android?",
+a:"<p>Flutter chosen for: (1) Single codebase compiles to native Android — not a web view. (2) Rich widget library with first-class support for all packages we need (sqflite, Firebase, ML Kit, fl_chart, local_auth). (3) Hot reload for fast iterative development. (4) Dart language is type-safe and easy to learn. (5) Cross-platform potential for future iOS version without rewrite.</p><p>React Native rejected: bridge architecture adds latency for ML Kit and camera operations. Native Android rejected: Kotlin-only limits future iOS expansion and has slower UI development cycle.</p>",
+kw:["flutter","react native","kotlin","native","why flutter","framework","dart","cross-platform","hot reload"]
+});
+
+D.push({c:"stat",
+q:"What is the target population and why La Union?",
+a:"<p><strong>Target:</strong> Parents 35-55 (20 respondents) + Young professionals 21-35 (10 respondents) in San Fernando City, La Union.</p><p><strong>Why La Union:</strong> Lorma Colleges is located there — research access to the community. The financial challenges identified (low literacy, manual tracking burden, lack of AI tools) are documented nationally by BSP and PSA — La Union validates these exist locally too.</p><p><strong>Why these demographics:</strong> Parents 35-55 are primary household financial managers with lowest formal account ownership (BSP 2021). Young professionals manage independent income but often without formal training.</p>",
+kw:["la union","san fernando","target population","parents","young professionals","35-55","21-35","lorma","why la union","demographics"]
+});
+
+D.push({c:"ai",
+q:"How does the AI handle Filipino-English (Taglish) input?",
+a:"<p>The LLM system prompt includes comprehensive Filipino keyword rules covering: Filipino food (siomai, fishball, kwek-kwek, taho, halo-halo, pansit, adobo, sinigang, silog variants), transport (jeepney, tricycle, UV Express, byahe, sakay), bills (bayad, SSS, PhilHealth, Pag-IBIG), and shopping (ukay, tiangge, Divisoria).</p><p>The AI responds in English by default. Switches to Filipino only if user writes full Filipino sentences or explicitly requests it. Taglish input stays in English response.</p><p>Voice input uses en_PH locale (Filipino English) with en_US fallback.</p>",
+kw:["taglish","filipino","english","code-switching","en_PH","locale","siomai","jeepney","filipino keywords","language"]
+});
+
 var aTag = null, qry = "";
 
 function hl(s, q) {
@@ -641,6 +703,8 @@ function go() {
   render();
 }
 
+function toggleDark(){document.body.classList.toggle('dark');var b=document.getElementById('dkbtn');b.textContent=document.body.classList.contains('dark')?'☀️ Light':'🌙 Dark';localStorage.setItem('dk',document.body.classList.contains('dark')?'1':'0');}
+if(localStorage.getItem('dk')==='1'){document.body.classList.add('dark');document.getElementById('dkbtn').textContent='☀️ Light';}
 function expandAll() {
   var cards = document.querySelectorAll(".card");
   for (var i = 0; i < cards.length; i++) cards[i].classList.add("open");
