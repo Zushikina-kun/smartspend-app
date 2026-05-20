@@ -1,7 +1,7 @@
 # SmartSpend — Kiro Context & Architecture Reference
 
-**Version:** 2.6.0
-**Last Updated:** May 11, 2026
+**Version:** 2.7.0
+**Last Updated:** May 20, 2026
 **For:** Kiro AI assistant — read this before making any changes to the codebase.
 
 ---

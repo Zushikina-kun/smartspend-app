@@ -10,7 +10,7 @@ PROJECT OVERVIEW
 ----------------
 Name: Smart Spend
 Type: Android mobile app (Flutter/Dart)
-Version: 2.5.0+1
+Version: 2.7.0
 Group: Lucid Frame
 Academic: Capstone/Thesis — BSIT, 2025-2026
 Status: Fully functional, proposal defense done, ongoing development

@@ -33,6 +33,8 @@ import 'manage_rules_screen.dart';
 import 'whats_new_screen.dart';
 import 'achievements_screen.dart';
 import 'bank_import_screen.dart';
+import 'insurance_screen.dart';
+import '../services/startup_alerts_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -59,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     _checkTour();
     _startConnectivityCheck();
+    _checkStartupAlerts();
   }
 
   @override
@@ -103,6 +106,105 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool get _isDemoMode => FirebaseAuth.instance.currentUser == null;
+
+  Future<void> _checkStartupAlerts() async {
+    // Delay slightly so the UI is fully built first
+    await Future.delayed(const Duration(milliseconds: 1200));
+    if (!mounted) return;
+    final alerts = await StartupAlertsService.checkAlerts();
+    if (alerts.isEmpty || !mounted) return;
+    _showStartupAlertSheet(alerts);
+  }
+
+  void _showStartupAlertSheet(List<StartupAlert> alerts) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Row(
+                children: [
+                  Icon(Icons.notifications_active,
+                      color: Colors.orange, size: 22),
+                  SizedBox(width: 8),
+                  Text("Heads Up!",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ...alerts.map((alert) => Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: alert.color.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color: alert.color.withValues(alpha: 0.3)),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(alert.icon, color: alert.color, size: 20),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(alert.title,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13,
+                                        color: alert.color)),
+                                const SizedBox(height: 2),
+                                Text(alert.message,
+                                    style: const TextStyle(fontSize: 12)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  child: const Text("Got it"),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   void _showQuickAccessHub(BuildContext context) {
     showModalBottomSheet(
@@ -451,6 +553,12 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                       MaterialPageRoute(
                           builder: (_) => const BankImportScreen()));
                 }),
+                _tile(
+                    Icons.shield_outlined,
+                    "Insurance & Contributions",
+                    "SSS, PhilHealth, Pag-IBIG, insurance premiums & due dates",
+                    Colors.indigo,
+                    () => _go(const InsuranceScreen())),
                 const SizedBox(height: 8),
               ],
             ),

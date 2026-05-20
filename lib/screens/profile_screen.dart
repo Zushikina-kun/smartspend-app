@@ -1040,6 +1040,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void _showTextSizePicker() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Text Size"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            (1.0, 'Normal', 'Default text size'),
+            (1.15, 'Large', 'Easier to read'),
+            (1.3, 'Extra Large', 'Best for accessibility'),
+          ].map((option) {
+            final isSelected = themeService.textScale == option.$1;
+            return ListTile(
+              dense: true,
+              leading: Icon(
+                isSelected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color:
+                    isSelected ? Theme.of(context).colorScheme.primary : null,
+              ),
+              title: Text(option.$2),
+              subtitle: Text(option.$3, style: const TextStyle(fontSize: 11)),
+              onTap: () async {
+                await themeService.setTextScale(option.$1);
+                if (mounted) {
+                  Navigator.pop(context);
+                  setState(() {});
+                }
+              },
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
+        ],
+      ),
+    );
+  }
+
   void _showAccountTypeDialog() {
     final types = [
       ('employed', Icons.work_outline, 'Employed', 'Regular salary or wages'),
@@ -1689,6 +1732,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 style: const TextStyle(fontSize: 12)),
                             trailing: const Icon(Icons.chevron_right),
                             onTap: () => _showThemePicker(),
+                          ),
+                          const Divider(height: 1),
+                          ListTile(
+                            leading: const Icon(Icons.text_fields_outlined),
+                            title: const Text("Text Size"),
+                            subtitle: Text(themeService.textScaleLabel,
+                                style: const TextStyle(fontSize: 12)),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => _showTextSizePicker(),
                           ),
                           const Divider(height: 1),
                           ListTile(

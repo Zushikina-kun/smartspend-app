@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../models/expense.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
@@ -40,6 +41,8 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
   String? _photoPath;
   List<String> _tags = [];
   final _tagInputCtrl = TextEditingController();
+  late DateTime _selectedDate;
+  late TimeOfDay _selectedTime;
 
   @override
   void initState() {
@@ -56,6 +59,25 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
     _selectedPayment = widget.expense.paymentMethod ?? 'Cash';
     _isWant = (widget.expense.isWant ?? false);
     _photoPath = widget.expense.photoPath;
+    // Parse date and time from expense
+    try {
+      _selectedDate = DateTime.parse(widget.expense.date);
+    } catch (_) {
+      _selectedDate = DateTime.now();
+    }
+    if (widget.expense.time != null && widget.expense.time!.isNotEmpty) {
+      try {
+        final parts = widget.expense.time!.split(':');
+        _selectedTime = TimeOfDay(
+          hour: int.parse(parts[0]),
+          minute: int.parse(parts[1]),
+        );
+      } catch (_) {
+        _selectedTime = TimeOfDay.now();
+      }
+    } else {
+      _selectedTime = TimeOfDay.now();
+    }
     // Load existing tags
     final existingTags = widget.expense.tags ?? '';
     _tags = existingTags.isNotEmpty
@@ -108,6 +130,9 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
         isWant: _isWant,
         photoPath: _photoPath,
         tags: _tags.isEmpty ? null : _tags.join(','),
+        date: _selectedDate.toIso8601String().substring(0, 10),
+        time:
+            '${_selectedTime.hour.toString().padLeft(2, '0')}:${_selectedTime.minute.toString().padLeft(2, '0')}:00',
       );
       await DBService.updateExpense(updated);
 
@@ -172,6 +197,9 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
             _field(_amountCtrl, "Amount (${CurrencyService.symbol})",
                 Icons.attach_money,
                 type: const TextInputType.numberWithOptions(decimal: true)),
+            const SizedBox(height: 14),
+            // Date & Time picker row
+            _buildDateTimeRow(),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
               initialValue: _categories.contains(_selectedCategory)
@@ -246,6 +274,58 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildDateTimeRow() {
+    final dateStr = DateFormat('MMM d, yyyy').format(_selectedDate);
+    final timeStr = _selectedTime.format(context);
+    return Row(
+      children: [
+        Expanded(
+          child: InkWell(
+            onTap: _pickDate,
+            borderRadius: BorderRadius.circular(12),
+            child: InputDecorator(
+              decoration: _deco("Date", Icons.calendar_today),
+              child: Text(dateStr, style: const TextStyle(fontSize: 15)),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: InkWell(
+            onTap: _pickTime,
+            borderRadius: BorderRadius.circular(12),
+            child: InputDecorator(
+              decoration: _deco("Time", Icons.access_time),
+              child: Text(timeStr, style: const TextStyle(fontSize: 15)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
+    );
+    if (picked != null && mounted) {
+      setState(() => _selectedDate = picked);
+    }
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+    if (picked != null && mounted) {
+      setState(() => _selectedTime = picked);
+    }
   }
 
   Widget _field(TextEditingController ctrl, String label, IconData icon,

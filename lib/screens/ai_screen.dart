@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
@@ -41,17 +41,23 @@ class _AIScreenState extends State<AIScreen> {
   String? _lastUserMessage; // for retry button
   StreamSubscription? _eventSub;
   ShakeDetector? _shakeDetector;
+  Timer? _debounceTimer;
 
   @override
   void initState() {
     super.initState();
     _loadContext();
-    // Silently refresh AI context when data changes elsewhere
+    // Silently refresh AI context when data changes elsewhere (debounced)
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
           event == AppEvent.budgetChanged ||
           event == AppEvent.incomeChanged) {
-        _loadContext(silent: true);
+        // Debounce: cancel previous timer, wait 500ms before refreshing
+        // Prevents 12 rapid reloads during plan_salary_split
+        _debounceTimer?.cancel();
+        _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+          _loadContext(silent: true);
+        });
       }
     });
     // Shake to undo — firm shake threshold, shows confirmation sheet
@@ -73,6 +79,7 @@ class _AIScreenState extends State<AIScreen> {
   @override
   void dispose() {
     _shakeDetector?.stopListening();
+    _debounceTimer?.cancel();
     UndoService.clear();
     _eventSub?.cancel();
     _controller.dispose();
@@ -147,6 +154,11 @@ class _AIScreenState extends State<AIScreen> {
         todayMoodNote = mood['note'] as String?;
       }
     } catch (_) {}
+    // Load insurance policies for AI context
+    List<Map<String, dynamic>> insurancePolicies = [];
+    try {
+      insurancePolicies = await DBService.getInsurancePolicies();
+    } catch (_) {}
     final spentMap = <String, double>{};
     for (final e in monthExpenses) {
       spentMap[e.category] = (spentMap[e.category] ?? 0) + e.amount;
@@ -162,6 +174,12 @@ class _AIScreenState extends State<AIScreen> {
       monthlyIncome: income,
     );
     final score = await ScoreService.applyWarningDecay(rawScore);
+    // Get FHS breakdown for AI explanation capability
+    final fhsBreakdown = ScoreService.getBreakdown(
+      expenseData,
+      budgets: budgets,
+      monthlyIncome: income,
+    );
 
     AIChatService.setFullContext(
       expenses: expenses
@@ -199,6 +217,8 @@ class _AIScreenState extends State<AIScreen> {
       quizChallenge: quizChallenge,
       allTimeTotal: allTimeTotal,
       monthlyTotals: monthlyTotals,
+      fhsBreakdown: fhsBreakdown,
+      insurancePolicies: insurancePolicies,
     );
 
     // Restore chat history into AI memory on first load only
@@ -411,6 +431,13 @@ class _AIScreenState extends State<AIScreen> {
           final shopName = action.params['shop_name'] as String?;
           if (amount != null && amount > 0) {
             final now = DateTime.now();
+            // Support custom date from AI (e.g., "I spent 50 yesterday")
+            final customDate = action.params['date'] as String?;
+            final customTime = action.params['time'] as String?;
+            final expenseDate =
+                customDate ?? now.toIso8601String().substring(0, 10);
+            final expenseTime =
+                customTime ?? now.toIso8601String().substring(11, 19);
             // FC-3: Use is_want from AI response if provided, otherwise infer from category
             int isWant;
             if (action.params.containsKey('is_want')) {
@@ -431,8 +458,8 @@ class _AIScreenState extends State<AIScreen> {
               'item_name': itemName,
               'category': category,
               'amount': amount,
-              'date': now.toIso8601String().substring(0, 10),
-              'time': now.toIso8601String().substring(11, 19),
+              'date': expenseDate,
+              'time': expenseTime,
               'payment_method':
                   action.params['payment_method'] as String? ?? 'Cash',
               'shop_name': shopName,
@@ -730,6 +757,8 @@ class _AIScreenState extends State<AIScreen> {
           final newCategory = action.params['category'] as String?;
           final newAmount = (action.params['amount'] as num?)?.toDouble();
           final newItemName = action.params['new_item_name'] as String?;
+          final newDate = action.params['date'] as String?;
+          final newTime = action.params['time'] as String?;
 
           // Find the expense to update
           final allExpenses = await DBService.getExpenses();
@@ -754,6 +783,8 @@ class _AIScreenState extends State<AIScreen> {
               itemName: newItemName ?? target.itemName,
               category: newCategory ?? target.category,
               amount: newAmount ?? target.amount,
+              date: newDate ?? target.date,
+              time: newTime ?? target.time,
             );
             await DBService.updateExpense(updated);
             _showActionSnackbar(
@@ -799,6 +830,41 @@ class _AIScreenState extends State<AIScreen> {
           } else {
             _showActionSnackbar(
                 "Could not find expense. Delete manually from Transactions screen.");
+          }
+          break;
+
+        case 'delete_by_date':
+          // Delete all expenses within a date range
+          final delByDateConfirmed =
+              action.params['confirmed'] as bool? ?? false;
+          if (!delByDateConfirmed) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text(
+                    "⚠️ Bulk deletion blocked. Type DELETE in chat to confirm."),
+                backgroundColor: Colors.orange,
+                behavior: SnackBarBehavior.floating,
+              ));
+            }
+            break;
+          }
+          final startDate = action.params['start_date'] as String?;
+          final endDate = action.params['end_date'] as String?;
+          if (startDate != null && endDate != null) {
+            final allExpForDel = await DBService.getExpenses();
+            final toDeleteList = allExpForDel.where((e) {
+              return e.date.compareTo(startDate) >= 0 &&
+                  e.date.compareTo(endDate) <= 0;
+            }).toList();
+            if (toDeleteList.isNotEmpty) {
+              for (final exp in toDeleteList) {
+                if (exp.id != null) await DBService.deleteExpense(exp.id!);
+              }
+              _showActionSnackbar(
+                  "Deleted ${toDeleteList.length} expenses ($startDate to $endDate)");
+            } else {
+              _showActionSnackbar("No expenses found in that date range");
+            }
           }
           break;
 
@@ -994,6 +1060,165 @@ class _AIScreenState extends State<AIScreen> {
             }
           }
           break;
+        case 'transfer_wallet':
+          // Transfer money between wallets
+          final fromName = action.params['from_wallet'] as String?;
+          final toName = action.params['to_wallet'] as String?;
+          final transferAmt = (action.params['amount'] as num?)?.toDouble();
+          if (fromName != null &&
+              toName != null &&
+              transferAmt != null &&
+              transferAmt > 0) {
+            final fromWallet = await DBService.findWalletByName(fromName);
+            final toWallet = await DBService.findWalletByName(toName);
+            if (fromWallet != null && toWallet != null) {
+              final success = await DBService.transferBetweenWallets(
+                  fromWallet['id'] as int, toWallet['id'] as int, transferAmt);
+              if (success) {
+                _showActionSnackbar(
+                    "Transferred ${CurrencyService.format(transferAmt)}: $fromName → $toName");
+              } else {
+                _showActionSnackbar(
+                    "Transfer failed — insufficient balance in $fromName");
+              }
+            } else {
+              _showActionSnackbar(
+                  "Wallet not found: ${fromWallet == null ? fromName : toName}");
+            }
+          }
+          break;
+
+        case 'plan_salary_split':
+          // Create budgets based on 50/30/20 (or custom) split
+          final splitIncome = (action.params['income'] as num?)?.toDouble();
+          final needsPct =
+              (action.params['needs_pct'] as num?)?.toDouble() ?? 50;
+          final wantsPct =
+              (action.params['wants_pct'] as num?)?.toDouble() ?? 30;
+          final savingsPct =
+              (action.params['savings_pct'] as num?)?.toDouble() ?? 20;
+          if (splitIncome != null && splitIncome > 0) {
+            final needsBudget = splitIncome * needsPct / 100;
+            final wantsBudget = splitIncome * wantsPct / 100;
+            final savingsBudget = splitIncome * savingsPct / 100;
+            // Set budgets for major need categories
+            const needCats = [
+              'Food',
+              'Transportation',
+              'Bills',
+              'Health',
+              'Education'
+            ];
+            const wantCats = [
+              'Shopping',
+              'Entertainment',
+              'Gaming',
+              'Personal Care',
+              'Clothing',
+              'Gifts',
+              'Travel'
+            ];
+            final needPerCat = needsBudget / needCats.length;
+            final wantPerCat = wantsBudget / wantCats.length;
+            for (final cat in needCats) {
+              await DBService.setBudget(cat, needPerCat.roundToDouble());
+            }
+            for (final cat in wantCats) {
+              await DBService.setBudget(cat, wantPerCat.roundToDouble());
+            }
+            // Also update monthly income
+            await DBService.setMonthlyIncome(splitIncome);
+            fireEvent(AppEvent.incomeChanged);
+            // Create savings goal if none exists
+            final goals = await DBService.getGoals();
+            final hasSavingsGoal = goals.any((g) =>
+                (g['name'] as String).toLowerCase().contains('savings') ||
+                (g['name'] as String).toLowerCase().contains('emergency'));
+            if (!hasSavingsGoal) {
+              await DBService.insertGoal({
+                'name': 'Monthly Savings',
+                'target_amount': savingsBudget * 6,
+                'current_amount': 0.0,
+                'start_date': DateTime.now().toIso8601String().substring(0, 10),
+                'created_at': DateTime.now().toIso8601String(),
+              });
+            }
+            _showActionSnackbar(
+                "Salary split applied: ${needsPct.toInt()}/${wantsPct.toInt()}/${savingsPct.toInt()} — ${needCats.length + wantCats.length} budgets set");
+          }
+          break;
+
+        case 'analyze_goal_feasibility':
+          // Informational — AI provides the analysis in its reply text
+          final goalName = action.params['goal_name'] as String? ?? 'Goal';
+          _showActionSnackbar("📊 Feasibility analysis: $goalName");
+          break;
+
+        case 'suggest_debt_payoff':
+          // Informational — AI provides the strategy in its reply
+          final strategy = action.params['strategy'] as String? ?? 'avalanche';
+          _showActionSnackbar(
+              "📋 Debt payoff: ${strategy == 'avalanche' ? 'Avalanche (highest interest first)' : 'Snowball (smallest balance first)'}");
+          break;
+
+        case 'generate_monthly_plan':
+          // AI generates the plan in its reply text — confirm
+          _showActionSnackbar("📅 Monthly spending plan generated");
+          break;
+
+        case 'compare_periods':
+          // AI provides the comparison in its reply text
+          final p1 = action.params['period1'] as String? ?? '';
+          final p2 = action.params['period2'] as String? ?? '';
+          _showActionSnackbar("📊 Comparing $p1 vs $p2");
+          break;
+
+        case 'explain_fhs_breakdown':
+          // AI provides the explanation in its reply text
+          _showActionSnackbar("📋 FHS breakdown explained");
+          break;
+
+        case 'project_savings_timeline':
+          // AI provides the projection in its reply text
+          final projGoal = action.params['goal_name'] as String? ?? 'Goal';
+          _showActionSnackbar("📈 Savings projection: $projGoal");
+          break;
+
+        case 'detect_subscriptions':
+          // Scan expenses for repeating patterns and show findings
+          try {
+            final subExp = await DBService.getExpenses();
+            // Group by item_name and count occurrences
+            final nameCounts = <String, int>{};
+            final nameAmounts = <String, double>{};
+            for (final e in subExp) {
+              final key = e.itemName.toLowerCase().trim();
+              nameCounts[key] = (nameCounts[key] ?? 0) + 1;
+              nameAmounts[key] = e.amount;
+            }
+            // Find items that appear 3+ times (likely subscriptions)
+            final subs = nameCounts.entries
+                .where((e) => e.value >= 3)
+                .map((e) =>
+                    '${e.key} (${e.value}x, ₱${nameAmounts[e.key]?.toStringAsFixed(0)})')
+                .take(5)
+                .toList();
+            if (subs.isNotEmpty) {
+              _showActionSnackbar(
+                  "🔍 Found ${subs.length} potential subscription${subs.length > 1 ? 's' : ''}");
+            } else {
+              _showActionSnackbar("🔍 No recurring patterns detected yet");
+            }
+          } catch (_) {
+            _showActionSnackbar("🔍 Subscription scan complete");
+          }
+          break;
+
+        case 'compute_contribution':
+          // AI provides the calculation in its reply text
+          final contribType = action.params['type_name'] as String? ?? 'SSS';
+          _showActionSnackbar("🧮 $contribType contribution computed");
+          break;
       }
     } catch (e) {
       // Show error so we know if something failed
@@ -1148,12 +1373,17 @@ class _AIScreenState extends State<AIScreen> {
                 "💡 Try asking:\n"
                 "• \"Spent 30 for jeepney\" — logs instantly\n"
                 "• \"My daily allowance is ₱300\" — sets income\n"
-                "• \"Add ShopeePayLater ₱373/month for 3 months\" — creates payment plan\n"
+                "• \"Split my salary 50/30/20\" — creates budgets\n"
+                "• \"Move ₱500 from Cash to GCash\" — wallet transfer\n"
+                "• \"Add ShopeePayLater ₱373/month for 3 months\" — payment plan\n"
                 "• \"Fix capitalization of my expenses this week\"\n"
                 "• \"How much did I spend on food this month?\"\n"
+                "• \"Why is my FHS score low?\" — detailed breakdown\n"
+                "• \"Compare this month to last month\"\n"
+                "• \"Plan my monthly budget\" — generates spending plan\n"
                 "• \"How do I apply for SSS loan?\"\n"
                 "• \"Is ₱12,000 a good price for a ref?\"\n\n"
-                "16 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, and more.\n\n"
+                "24 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, transfers, salary splits, subscription detection, and more.\n\n"
                 "Daily message limit: 60/day — resets at midnight.",
           ),
           // D2: show remaining daily messages with reset countdown

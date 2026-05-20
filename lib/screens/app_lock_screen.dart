@@ -150,7 +150,7 @@ class _AppLockScreenState extends State<AppLockScreen> {
 
                     // Logo + greeting
                     Image.asset(
-                      'logo.png',
+                      'assets/logo.png',
                       width: 72,
                       height: 72,
                       errorBuilder: (_, __, ___) => Icon(

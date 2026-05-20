@@ -1,7 +1,7 @@
 name: smartspend_app
 description: Smart Spend - AI-Assisted Financial Tracking and Advisory
 
-version: 2.6.0+1
+version: 2.7.0+1
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -44,9 +44,9 @@ dependency_overrides:
 flutter:
   uses-material-design: true
   assets:
-    - logo.png
-    - LucidFrameLogo.png
-    - LormaLogo.jpg
-    - Devs/BRIX A. DIRECTO.png
-    - Devs/CYRILLE JOHN M. RUBIS.png
-    - Devs/DJAUNATHAN ALBERT S. MADAYAG.png
+    - assets/logo.png
+    - assets/LucidFrameLogo.png
+    - assets/LormaLogo.jpg
+    - assets/Devs/BRIX A. DIRECTO.png
+    - assets/Devs/CYRILLE JOHN M. RUBIS.png
+    - assets/Devs/DJAUNATHAN ALBERT S. MADAYAG.png

@@ -52,12 +52,12 @@ android/local.properties
 android/key.properties
 
 # Debug exports (personal data)
-Debug/*.json
-Debug/*.csv
-Debug/*.txt
+docs/Debug/*.json
+docs/Debug/*.csv
+docs/Debug/*.txt
 
 # Ideas folder (personal files)
-Ideas/
+docs/Ideas/
 
 # API keys and secrets — never commit these to a public repository
 lib/services/app_config.dart

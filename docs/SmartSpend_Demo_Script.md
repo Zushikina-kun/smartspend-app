@@ -1,5 +1,5 @@
 ﻿# 🎤 SmartSpend Demo Script (Video Recording / Zoom)
-**v2.6.0 | Lucid Frame | May 15, 2026**
+**v2.7.0 | Lucid Frame | May 20, 2026**
 **Format: Pre-recorded video OR live Zoom screen share**
 **Time: ~9 min demo + Q&A after**
 

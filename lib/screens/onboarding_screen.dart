@@ -144,7 +144,7 @@ class _OnboardPage extends StatelessWidget {
         children: [
           // Use logo on first page, icons on others
           icon == Icons.account_balance_wallet
-              ? Image.asset('logo.png',
+              ? Image.asset('assets/logo.png',
                   width: 120,
                   height: 120,
                   errorBuilder: (_, __, ___) =>

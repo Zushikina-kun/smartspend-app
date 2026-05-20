@@ -1,7 +1,7 @@
 # Smart Spend
 
 **AI-Assisted Financial Tracking & Advisory**
-Version 2.6.0 | Lucid Frame | Academic Year 2025–2026
+Version 2.7.0 | Lucid Frame | Academic Year 2025–2026
 
 ---
 
@@ -19,7 +19,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — 16 action types via natural language
+- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — 24 action types via natural language
 - 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc

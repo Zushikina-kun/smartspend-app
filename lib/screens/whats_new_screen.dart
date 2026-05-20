@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.6.0';
-  static const _prefKey = 'whats_new_seen_2_6_0';
+  static const _version = '2.7.0';
+  static const _prefKey = 'whats_new_seen_2_7_0';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,96 +20,51 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '☁️',
-      'Wallet Sync Fixed',
-      'Wallet balances now fully sync to Firebase — survive logout, login, and device switches'
+      '🛡️',
+      'Insurance & Contributions Tracker',
+      'Track SSS, PhilHealth, Pag-IBIG, and private insurance — premiums, due dates, and overdue alerts'
     ),
     (
-      '🔀',
-      'Auto-Categorization Rules Sync',
-      'Your keyword → category rules now sync across devices via Firestore'
+      '🤖',
+      '24 AI Actions (was 16)',
+      'New: salary split, goal feasibility, debt payoff strategy, monthly plan, period comparison, FHS explanation, savings projection, subscription detection, contribution calculator'
     ),
     (
-      '↩️',
-      'Undo Expense Edit Fixed',
-      'Shake-to-undo now correctly reverses AI expense edits and syncs the restored state'
-    ),
-    (
-      '🔒',
-      'Demo Data Isolation',
-      'Loading demo data no longer contaminates your real Firestore account'
-    ),
-    (
-      '🔄',
-      'Backup Restore Syncs to Cloud',
-      'Restoring a backup now pushes all data to Firestore immediately'
-    ),
-    (
-      '🗑️',
-      'Reset All Data Fixed',
-      'Reset now clears all 14 tables and wipes Firestore — data no longer resurrects on next login'
-    ),
-    (
-      '🏆',
-      'Budget Boss Badge Fixed',
-      'Achievement now correctly handles percentage-based budgets'
-    ),
-    (
-      '⚙️',
-      'Setup Data Synced',
-      'Account type, income, and budgets set during onboarding now push to Firestore immediately'
-    ),
-    (
-      '🔑',
-      'API Key Centralized',
-      'Groq API key consolidated into AppConfig — easier to rotate, added to .gitignore'
+      '📅',
+      'Date & Time Editing',
+      'Edit expense dates and times — tap the date/time field in Edit Expense. AI can also change dates via chat'
     ),
     (
       '🔔',
-      'Notifications Reset on Logout',
-      'New accounts on shared devices now receive their first-day notifications correctly'
+      'Smart Startup Alerts',
+      'On-open notifications for: exceeded budgets, overdue bills, debts due soon, FHS drops, idle money, overdue premiums'
     ),
     (
-      '📂',
-      'Category Rename Syncs',
-      'Renaming or deleting a custom category now updates all affected expenses in Firestore'
+      '💰',
+      'Salary Split (50/30/20)',
+      'Tell AI "split my salary 50/30/20" — auto-creates budgets for all 12 categories + savings goal'
     ),
     (
-      '💵',
-      'Wallet Balances',
-      'Track Cash on Hand, GCash, Maya, BDO, BPI, and 30+ PH banks — tap the net worth card in Profile'
+      '🔀',
+      'Wallet Transfers',
+      'Tell AI "move ₱500 from Cash to GCash" — instant wallet-to-wallet transfer'
     ),
     (
-      '🏦',
-      'Full PH Bank & E-Wallet Support',
-      'Import from BDO, BPI, Metrobank, Landbank, RCBC, GoTyme, Tonik, GrabPay, ShopeePay, and more'
+      '📊',
+      'FHS Breakdown in AI',
+      'Ask "why is my score low?" — AI now has full component-level breakdown data to explain your Financial Health Score'
     ),
     (
-      '🧾',
-      'Smart Receipt Import',
-      'Scan a receipt → AI extracts each item individually → review & bulk import'
+      '🗑️',
+      'Bulk Delete by Date',
+      'Tell AI "delete all expenses from January" — bulk delete with DELETE confirmation'
     ),
     (
-      '🗓️',
-      'Unified Financial Calendar',
-      'Bills, debts, goals, installments, income — all on one calendar with score dots'
+      '🔍',
+      'Subscription Detection',
+      'Ask AI "find my subscriptions" — scans expenses for repeating patterns'
     ),
-    (
-      '🏆',
-      'Achievements Screen',
-      '16 earnable badges — find them in Hub → Achievements'
-    ),
-    (
-      '😊',
-      'Mood Check-In + Notes',
-      'Track mood with optional notes — see spending correlation in Analytics'
-    ),
-    ('🔀', 'Auto-Categorization Rules', 'Set keyword → category rules in Hub'),
-    (
-      '🏪',
-      'Import from Bank / GCash',
-      'Paste any bank or e-wallet history — AI parses & bulk imports with real dates'
-    ),
+    ('💾', 'Backup v9', 'Insurance policies now included in backup/restore'),
   ];
 
   @override
@@ -117,7 +72,7 @@ class WhatsNewScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text("What's New in v$_version — Sync & Stability"),
+        title: Text("What's New in v$_version — AI & Insurance"),
         actions: [
           TextButton(
             onPressed: () async {

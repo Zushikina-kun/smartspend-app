@@ -1,10 +1,10 @@
 ﻿# Smart Spend — Application Documentation
 
-**Version:** 2.6.0
+**Version:** 2.7.0
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 14, 2026 (v2.6.0 — Session 12 final: AI action fallback, wallet auto-deduct, app settings, balance mode, daily quests, log allowance, tutorial replay fix, Google photo fallback, demo data updated)
+**Last Updated:** May 20, 2026 (v2.7.0 — Session 13: 24 AI actions, Insurance Tracker, date/time CRUD, startup alerts, salary split, wallet transfers, subscription detection, FHS breakdown in AI, backup v9)
 **Build:** app-arm64-v8a-release.apk — 45.4 MB (May 14, 2026)
 
 ---
@@ -129,13 +129,13 @@ Before every AI message, the app queries SQLite for the user's live financial da
 > *"Smart Spend implements a context-aware agentic AI system using dynamic full-context injection from a local SQLite database, enabling autonomous financial data management without the infrastructure overhead of traditional RAG pipelines."*
 
 #### AI Chat Capabilities
-The AI has access to: last 10 expenses detailed + older summarized by category, budget status, monthly income, total spent, health score, savings goals, debts, recurring, and installments. Context is compressed to stay within the 8,192 token limit.
+The AI has access to: last 10 expenses detailed + older summarized by category, budget status, monthly income, total spent, health score (with component breakdown), savings goals, debts, recurring, installments, wallet balances, insurance policies, and FHS breakdown. Context is compressed to stay within the 8,192 token limit.
 
-The AI executes **15 action types** directly — data is written to the DB immediately with green snackbar confirmation:
+The AI executes **24 action types** directly — data is written to the DB immediately with green snackbar confirmation:
 
 | Action | Example Trigger |
 |--------|----------------|
-| `log_expense` | "I spent 30 pesos for transport" |
+| `log_expense` | "I spent 30 pesos for transport" / "Bought coffee yesterday" (supports custom date) |
 | `set_budget` | "Set my food budget to ₱3000" |
 | `set_income` | "My salary is ₱25000" |
 | `add_goal` | "I want to save ₱50000 for a laptop" |
@@ -147,9 +147,21 @@ The AI executes **15 action types** directly — data is written to the DB immed
 | `add_recurring` | "Add Netflix 299 pesos monthly subscription" |
 | `delete_recurring` | "Cancel my Netflix subscription" |
 | `set_account_type` | "I'm a student" |
-| `update_expense` | "Change that Sting to Food category" / bulk rename |
+| `update_expense` | "Change that Sting to Food" / "Move that to last Tuesday" / bulk rename |
 | `delete_expense` | "Delete that wrong entry" (requires typing DELETE to confirm) |
+| `delete_by_date` | "Delete all expenses from January" (requires DELETE confirmation) |
 | `add_installment_plan` | "I have a ShopeePayLater loan, ₱373/month for 3 months" |
+| `set_wallet_balance` | "My GCash balance is ₱2,500" / "I have 500 cash" |
+| `transfer_wallet` | "Move ₱1000 from Cash to GCash" / "Top-up Maya from cash" |
+| `plan_salary_split` | "Split my salary 50/30/20" / "Budget my ₱25K income" |
+| `analyze_goal_feasibility` | "Can I afford a ₱50K laptop?" / "Is my goal realistic?" |
+| `suggest_debt_payoff` | "What's the best way to pay off my debts?" |
+| `generate_monthly_plan` | "Plan my month" / "Create a spending plan" |
+| `compare_periods` | "Compare this month to last month" |
+| `explain_fhs_breakdown` | "Why is my score low?" / "Explain my financial health" |
+| `project_savings_timeline` | "When will I save enough for my laptop?" |
+| `detect_subscriptions` | "What subscriptions do I have?" / "Find recurring charges" |
+| `compute_contribution` | "How much should I pay for SSS?" / "PhilHealth contribution" |
 
 - Actions execute immediately — green snackbar shown per action
 - **Broader scope** — handles personal finance + Philippine banking, SSS/PhilHealth/Pag-IBIG, investments, price estimates, buying/selling advice
@@ -320,6 +332,38 @@ The score uses a **4-component weighted formula** (25 pts each) based on the pap
 
 ---
 
+### 12a. Insurance & Contributions Tracker
+- Track insurance policies and government contributions (SSS, PhilHealth, Pag-IBIG, GSIS)
+- **Quick-add chips** for common PH contributions on empty state
+- **Summary card** — total monthly premiums + overdue count
+- **Grouped view** — Government Contributions vs Insurance Policies
+- **Mark as Paid** — advances next due date based on frequency (monthly/quarterly/yearly)
+- **Overdue detection** — color-coded labels (red for overdue, orange for due soon)
+- **Startup alerts** — overdue premiums trigger on-open notification
+- **AI context** — insurance data visible to AI for Q&A about policies
+- **Firestore sync** — policies sync to cloud automatically
+- **Backup/restore** — included in backup v9
+- **Demo data** — SSS, PhilHealth, Pag-IBIG samples loaded in demo mode
+- **Disclaimer:** Tracking and education only — not insurance sales or financial advice
+- Accessible from Quick Access Hub → Insurance & Contributions
+
+---
+
+### 12b. Startup Alerts (On-Open Notifications)
+- Modal bottom sheet shown on app open when important conditions are detected
+- **6 alert conditions:**
+  1. Budget exceeded (any category over limit)
+  2. Overdue recurring bills
+  3. Debts due within 3 days
+  4. Financial Health Score dropped 10+ points
+  5. Idle wallets (14+ days, >₱5,000 balance, no expenses)
+  6. Insurance premiums overdue
+- **Smart timing** — won't repeat on the same day
+- Color-coded alert cards with icons
+- Dismissible with "Got it" button
+
+---
+
 ### 13. User Profile & Cloud Sync
 - First/last/middle name, email, birthdate, address, phone, profile photo (local only)
 - Profile data synced to Firebase Firestore
@@ -443,8 +487,8 @@ Change from Profile → App Theme. Dark mode toggle works independently with any
 - **Backup** — exports all data as a timestamped JSON file (`SmartSpend_Backup_YYYYMMDD_HHmmss.json`) via the system share sheet
 - User can save to phone storage, email, Google Drive, Dropbox, or any app they choose — no OAuth required
 - **Restore** — tap "Restore from Backup" → pick a `.json` backup file from device storage → data is imported alongside existing data
-- Data backed up: expenses, budgets (including percentage mode), goals, income, recurring, debts, scan history, installments, **payment plans**, custom categories, category rules, **mood log**
-- Backup format: **v8** (v6 adds category_rules, v7 adds mood_log, v8 adds installment_plans)
+- Data backed up: expenses, budgets (including percentage mode), goals, income, recurring, debts, scan history, installments, **payment plans**, custom categories, category rules, **mood log**, **wallets**, **insurance policies**
+- Backup format: **v9** (v6 adds category_rules, v7 adds mood_log, v8 adds installment_plans, v9 adds insurance_policies)
 - Profile → Backup Data / Restore from Backup
 - No cloud account or internet connection required
 

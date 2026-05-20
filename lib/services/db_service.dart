@@ -456,6 +456,24 @@ class DBService {
             conflictAlgorithm: ConflictAlgorithm.ignore);
       }
     } catch (_) {}
+
+    // Ensure insurance_policies table — insurance & government contributions tracker
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS insurance_policies(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          provider TEXT,
+          type TEXT DEFAULT 'other',
+          premium_amount REAL NOT NULL,
+          frequency TEXT DEFAULT 'monthly',
+          next_due_date TEXT,
+          last_paid_date TEXT,
+          notes TEXT,
+          created_at TEXT
+        )
+      ''');
+    } catch (_) {}
   }
 
   static Future<void> _createTables(Database db) async {
@@ -789,8 +807,8 @@ class DBService {
         where: 'category = ?', whereArgs: [oldName]);
     // Push all affected expenses to Firestore
     try {
-      final affected = await db.query('expenses',
-          where: 'category = ?', whereArgs: [newName]);
+      final affected = await db
+          .query('expenses', where: 'category = ?', whereArgs: [newName]);
       for (final e in affected) {
         CloudService.pushDoc('expenses', e);
       }
@@ -828,7 +846,9 @@ class DBService {
   static Future<void> deleteCategoryRule(int id) async {
     final db = await getDB();
     await db.delete('category_rules', where: 'id = ?', whereArgs: [id]);
-    try { CloudService.deleteDoc('category_rules', id); } catch (_) {}
+    try {
+      CloudService.deleteDoc('category_rules', id);
+    } catch (_) {}
   }
 
   static Future<List<Map<String, dynamic>>> getCategoryRules() async {
@@ -1258,10 +1278,13 @@ class DBService {
         final keyword = r['keyword'] as String?;
         if (keyword == null || keyword.isEmpty) continue;
         final existing = id != null
-            ? await db.query('category_rules', where: 'id = ?', whereArgs: [id], limit: 1)
-            : await db.query('category_rules', where: 'keyword = ?', whereArgs: [keyword], limit: 1);
+            ? await db.query('category_rules',
+                where: 'id = ?', whereArgs: [id], limit: 1)
+            : await db.query('category_rules',
+                where: 'keyword = ?', whereArgs: [keyword], limit: 1);
         if (existing.isEmpty) {
-          final clean = Map<String, dynamic>.from(r)..remove('firestore_doc_id');
+          final clean = Map<String, dynamic>.from(r)
+            ..remove('firestore_doc_id');
           try {
             await db.insert('category_rules', clean,
                 conflictAlgorithm: ConflictAlgorithm.ignore);
@@ -1309,8 +1332,8 @@ class DBService {
         final id = w['id'];
         if (id == null) continue;
         final clean = Map<String, dynamic>.from(w)..remove('firestore_doc_id');
-        final existing =
-            await db.query('wallets', where: 'id = ?', whereArgs: [id], limit: 1);
+        final existing = await db.query('wallets',
+            where: 'id = ?', whereArgs: [id], limit: 1);
         if (existing.isEmpty) {
           try {
             await db.insert('wallets', clean,
@@ -1320,18 +1343,36 @@ class DBService {
         } else {
           // Always restore cloud balance — wallet balances are the source of truth
           try {
-            await db.update('wallets',
-                {'balance': clean['balance'], 'updated_at': clean['updated_at']},
-                where: 'id = ?', whereArgs: [id]);
+            await db.update(
+                'wallets',
+                {
+                  'balance': clean['balance'],
+                  'updated_at': clean['updated_at']
+                },
+                where: 'id = ?',
+                whereArgs: [id]);
           } catch (_) {}
         }
       }
       // If no wallets came from cloud (brand new account), seed defaults
-      final walletCount = await db.rawQuery('SELECT COUNT(*) as c FROM wallets');
+      final walletCount =
+          await db.rawQuery('SELECT COUNT(*) as c FROM wallets');
       if ((walletCount.first['c'] as int? ?? 0) == 0) {
         final now = DateTime.now().toIso8601String();
-        await db.insert('wallets', {'name': 'Cash on Hand', 'type': 'cash', 'balance': 0.0, 'icon': '💵', 'updated_at': now});
-        await db.insert('wallets', {'name': 'GCash', 'type': 'ewallet', 'balance': 0.0, 'icon': '📱', 'updated_at': now});
+        await db.insert('wallets', {
+          'name': 'Cash on Hand',
+          'type': 'cash',
+          'balance': 0.0,
+          'icon': '💵',
+          'updated_at': now
+        });
+        await db.insert('wallets', {
+          'name': 'GCash',
+          'type': 'ewallet',
+          'balance': 0.0,
+          'icon': '📱',
+          'updated_at': now
+        });
       }
 
       // Sync profile photo if it's a remote URL
@@ -1811,14 +1852,62 @@ class DBService {
 
   static Future<void> setWalletBalance(int id, double balance) async {
     final db = await getDB();
-    final updated = {'balance': balance, 'updated_at': DateTime.now().toIso8601String()};
+    // Clamp to 0 — wallet balance should never go negative
+    final clampedBalance = balance < 0 ? 0.0 : balance;
+    final updated = {
+      'balance': clampedBalance,
+      'updated_at': DateTime.now().toIso8601String()
+    };
     await db.update('wallets', updated, where: 'id = ?', whereArgs: [id]);
     // Sync to Firestore immediately
-    final rows = await db.query('wallets', where: 'id = ?', whereArgs: [id], limit: 1);
+    final rows =
+        await db.query('wallets', where: 'id = ?', whereArgs: [id], limit: 1);
     if (rows.isNotEmpty) {
-      try { CloudService.pushDoc('wallets', rows.first); } catch (_) {}
+      try {
+        CloudService.pushDoc('wallets', rows.first);
+      } catch (_) {}
     }
     fireEvent(AppEvent.incomeChanged); // refresh profile/net worth
+  }
+
+  /// Transfer money between two wallets (e.g., Cash → GCash)
+  /// Returns true if successful, false if source has insufficient balance
+  static Future<bool> transferBetweenWallets(
+      int fromId, int toId, double amount) async {
+    if (amount <= 0) return false;
+    final db = await getDB();
+    final fromRows = await db.query('wallets',
+        where: 'id = ?', whereArgs: [fromId], limit: 1);
+    final toRows =
+        await db.query('wallets', where: 'id = ?', whereArgs: [toId], limit: 1);
+    if (fromRows.isEmpty || toRows.isEmpty) return false;
+
+    final fromBalance = (fromRows.first['balance'] as num).toDouble();
+    if (fromBalance < amount) return false; // insufficient balance
+
+    final now = DateTime.now().toIso8601String();
+    await db.update(
+        'wallets', {'balance': fromBalance - amount, 'updated_at': now},
+        where: 'id = ?', whereArgs: [fromId]);
+    final toBalance = (toRows.first['balance'] as num).toDouble();
+    await db.update(
+        'wallets', {'balance': toBalance + amount, 'updated_at': now},
+        where: 'id = ?', whereArgs: [toId]);
+
+    // Sync both to Firestore
+    try {
+      final updatedFrom = await db.query('wallets',
+          where: 'id = ?', whereArgs: [fromId], limit: 1);
+      final updatedTo = await db.query('wallets',
+          where: 'id = ?', whereArgs: [toId], limit: 1);
+      if (updatedFrom.isNotEmpty)
+        CloudService.pushDoc('wallets', updatedFrom.first);
+      if (updatedTo.isNotEmpty)
+        CloudService.pushDoc('wallets', updatedTo.first);
+    } catch (_) {}
+
+    fireEvent(AppEvent.incomeChanged);
+    return true;
   }
 
   static Future<int> insertWallet(Map<String, dynamic> data) async {
@@ -1828,7 +1917,10 @@ class DBService {
       'updated_at': DateTime.now().toIso8601String(),
     });
     // Sync to Firestore immediately
-    try { CloudService.pushDoc('wallets', {...data, 'id': id, 'updated_at': DateTime.now().toIso8601String()}); } catch (_) {}
+    try {
+      CloudService.pushDoc('wallets',
+          {...data, 'id': id, 'updated_at': DateTime.now().toIso8601String()});
+    } catch (_) {}
     fireEvent(AppEvent.incomeChanged);
     return id;
   }
@@ -1837,7 +1929,9 @@ class DBService {
     final db = await getDB();
     await db.delete('wallets', where: 'id = ?', whereArgs: [id]);
     // Remove from Firestore
-    try { CloudService.deleteDoc('wallets', id); } catch (_) {}
+    try {
+      CloudService.deleteDoc('wallets', id);
+    } catch (_) {}
     fireEvent(AppEvent.incomeChanged);
   }
 
@@ -1855,5 +1949,38 @@ class DBService {
           lower.contains((w['name'] as String).toLowerCase())) return w;
     }
     return null;
+  }
+
+  // ─── INSURANCE POLICIES ─────────────────────────────────────────────────────
+
+  static Future<List<Map<String, dynamic>>> getInsurancePolicies() async {
+    final db = await getDB();
+    return db.query('insurance_policies', orderBy: 'next_due_date ASC');
+  }
+
+  static Future<int> insertInsurancePolicy(Map<String, dynamic> data) async {
+    final db = await getDB();
+    final id = await db.insert('insurance_policies', data);
+    try {
+      CloudService.pushDoc('insurance_policies', {...data, 'id': id});
+    } catch (_) {}
+    return id;
+  }
+
+  static Future<void> updateInsurancePolicy(Map<String, dynamic> data) async {
+    final db = await getDB();
+    await db.update('insurance_policies', data,
+        where: 'id = ?', whereArgs: [data['id']]);
+    try {
+      CloudService.pushDoc('insurance_policies', data);
+    } catch (_) {}
+  }
+
+  static Future<void> deleteInsurancePolicy(int id) async {
+    final db = await getDB();
+    await db.delete('insurance_policies', where: 'id = ?', whereArgs: [id]);
+    try {
+      CloudService.deleteDoc('insurance_policies', id);
+    } catch (_) {}
   }
 }

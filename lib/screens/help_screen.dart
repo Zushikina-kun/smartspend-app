@@ -807,7 +807,7 @@ const _sections = [
         title: "How do I back up my data?",
         body:
             "Profile → Backup Data. The app creates a JSON file with all your data and opens the share sheet — save it to your phone, email it to yourself, upload to Google Drive, or send via WhatsApp.\n\n"
-            "Backup v8 includes: expenses, budgets, goals, income, recurring, debts, payment plans, installments, custom categories, auto-categorization rules, and mood log (up to 365 days).",
+            "Backup v9 includes: expenses, budgets, goals, income, recurring, debts, payment plans, installments, custom categories, auto-categorization rules, mood log, wallets, and insurance policies.",
       ),
       _HelpItem(
         title: "How do I restore from backup?",
@@ -1120,20 +1120,33 @@ const _sections = [
     ],
   ),
   _HelpSection(
-    title: "Government Contributions",
-    icon: Icons.account_balance_outlined,
+    title: "Insurance & Contributions",
+    icon: Icons.shield_outlined,
     color: Colors.indigo,
     items: [
       _HelpItem(
-        title: "Adding SSS, PhilHealth, Pag-IBIG",
+        title: "Insurance & Contributions Tracker",
         body:
-            "Go to Hub → Recurring Transactions. Tap the + icon in the top bar to see preset templates for SSS, PhilHealth, and Pag-IBIG contributions. Tap any preset to add it instantly with default amounts.",
-        example: "Tap SSS Contribution → added as ₱1,125/month recurring bill.",
+            "Hub → Insurance & Contributions. Track all your insurance policies and government contributions in one place.\n\n"
+            "• Quick-add SSS, PhilHealth, Pag-IBIG with one tap\n"
+            "• Set premium amounts, frequency, and due dates\n"
+            "• Mark as Paid — auto-advances next due date\n"
+            "• Overdue premiums trigger startup alerts\n\n"
+            "⚠️ This is for tracking only — not insurance sales or financial advice.",
+      ),
+      _HelpItem(
+        title: "Adding SSS, PhilHealth, Pag-IBIG",
+        body: "Two ways:\n\n"
+            "1. Hub → Insurance & Contributions → tap the quick-add chips (SSS, PhilHealth, Pag-IBIG)\n"
+            "2. Hub → Recurring Transactions → tap + for preset templates\n\n"
+            "The Insurance screen tracks premiums with due dates and overdue alerts. Recurring Transactions auto-logs the expense each month.",
+        example: "Tap SSS chip → set ₱1,400/month → next due date → done.",
       ),
       _HelpItem(
         title: "Adjusting contribution amounts",
         body:
-            "After adding a preset, long-press it to edit the amount to match your actual contribution bracket. Amounts vary based on your monthly salary.",
+            "Tap the ⋮ menu on any policy → Edit. Amounts vary based on your monthly salary bracket.\n\n"
+            "You can also ask the AI: 'How much should I pay for SSS if I earn ₱25,000?' — it will calculate based on the current contribution table.",
       ),
     ],
   ),

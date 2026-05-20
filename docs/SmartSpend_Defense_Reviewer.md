@@ -1,5 +1,5 @@
 # Smart Spend — Capstone Defense Reviewer
-**Version 2.4.0 | April 29, 2026 | Lucid Frame**
+**Version 2.7.0 | May 20, 2026 | Lucid Frame**
 
 ---
 

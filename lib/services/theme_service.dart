@@ -90,12 +90,15 @@ extension AppThemeExtension on AppTheme {
 class ThemeService extends ChangeNotifier {
   static const _darkKey = 'dark_mode';
   static const _themeKey = 'app_theme';
+  static const _textScaleKey = 'text_scale';
 
   bool _isDark = false;
   AppTheme _appTheme = AppTheme.blue;
+  double _textScale = 1.0; // 1.0 = normal, 1.15 = large, 1.3 = extra large
 
   bool get isDark => _isDark;
   AppTheme get appTheme => _appTheme;
+  double get textScale => _textScale;
   ThemeMode get themeMode => _isDark ? ThemeMode.dark : ThemeMode.light;
 
   /// The primary color for the current theme — use this instead of hardcoded 0xFF0066FF
@@ -110,6 +113,7 @@ class ThemeService extends ChangeNotifier {
     _isDark = prefs.getBool(_darkKey) ?? false;
     final themeKey = prefs.getString(_themeKey) ?? 'blue';
     _appTheme = AppThemeExtension.fromKey(themeKey);
+    _textScale = prefs.getDouble(_textScaleKey) ?? 1.0;
     notifyListeners();
   }
 
@@ -125,6 +129,19 @@ class ThemeService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_themeKey, theme.key);
     notifyListeners();
+  }
+
+  Future<void> setTextScale(double scale) async {
+    _textScale = scale;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_textScaleKey, scale);
+    notifyListeners();
+  }
+
+  String get textScaleLabel {
+    if (_textScale <= 1.0) return 'Normal';
+    if (_textScale <= 1.15) return 'Large';
+    return 'Extra Large';
   }
 
   ThemeData get lightTheme => ThemeData(

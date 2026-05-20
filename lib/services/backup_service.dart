@@ -47,11 +47,15 @@ class BackupService {
     try {
       wallets = await DBService.getWallets();
     } catch (_) {}
+    List<Map<String, dynamic>> insurancePolicies = [];
+    try {
+      insurancePolicies = await DBService.getInsurancePolicies();
+    } catch (_) {}
 
     return {
-      'version': 8,
+      'version': 9,
       'exported_at': DateTime.now().toIso8601String(),
-      'app_version': '2.5.0',
+      'app_version': '2.6.0',
       'expenses': expenses.map((e) => e.toMap()).toList(),
       'budgets': budgets.map((b) => b.toMap()).toList(),
       'goals': goals,
@@ -65,6 +69,7 @@ class BackupService {
       'category_rules': categoryRules,
       'mood_log': moodLog,
       'wallets': wallets,
+      'insurance_policies': insurancePolicies,
     };
   }
 
@@ -218,7 +223,8 @@ class BackupService {
               'wallets',
               {
                 'balance': m['balance'] ?? 0.0,
-                'updated_at': m['updated_at'] ?? DateTime.now().toIso8601String(),
+                'updated_at':
+                    m['updated_at'] ?? DateTime.now().toIso8601String(),
               },
               where: 'id = ?',
               whereArgs: [existing.first['id']],
@@ -232,6 +238,14 @@ class BackupService {
               'updated_at': m['updated_at'] ?? DateTime.now().toIso8601String(),
             });
           }
+        } catch (_) {}
+      }
+
+      // Restore insurance policies (v9+)
+      for (final p in (data['insurance_policies'] as List? ?? [])) {
+        try {
+          final m = Map<String, dynamic>.from(p as Map)..remove('id');
+          await DBService.insertInsurancePolicy(m);
         } catch (_) {}
       }
 

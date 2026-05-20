@@ -672,6 +672,45 @@ class DemoService {
       await DBService.insertCategoryRule('shopee', 'Shopping');
     } catch (_) {}
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // INSURANCE & CONTRIBUTIONS — SSS, PhilHealth, Pag-IBIG samples
+    // Realistic student/young professional contribution amounts
+    // ─────────────────────────────────────────────────────────────────────────
+    try {
+      final db6 = await DBService.getDB();
+      await db6.delete('insurance_policies');
+      await DBService.insertInsurancePolicy({
+        'name': 'SSS Voluntary Contribution',
+        'provider': 'SSS',
+        'type': 'government',
+        'premium_amount': 1400.0,
+        'frequency': 'monthly',
+        'next_due_date': fmt.format(now.add(const Duration(days: 12))),
+        'last_paid_date': fmt.format(now.subtract(const Duration(days: 18))),
+        'created_at': now.toIso8601String(),
+      });
+      await DBService.insertInsurancePolicy({
+        'name': 'PhilHealth Contribution',
+        'provider': 'PhilHealth',
+        'type': 'government',
+        'premium_amount': 500.0,
+        'frequency': 'monthly',
+        'next_due_date': fmt.format(now.add(const Duration(days: 5))),
+        'last_paid_date': fmt.format(now.subtract(const Duration(days: 25))),
+        'created_at': now.toIso8601String(),
+      });
+      await DBService.insertInsurancePolicy({
+        'name': 'Pag-IBIG MP2 Savings',
+        'provider': 'Pag-IBIG',
+        'type': 'government',
+        'premium_amount': 500.0,
+        'frequency': 'monthly',
+        'next_due_date': fmt.format(now.subtract(const Duration(days: 3))),
+        'last_paid_date': fmt.format(now.subtract(const Duration(days: 33))),
+        'created_at': now.toIso8601String(),
+      });
+    } catch (_) {}
+
     // Demo load complete — re-enable cloud sync
     _isDemoLoading = false;
   }
@@ -693,6 +732,9 @@ class DemoService {
     } catch (_) {}
     try {
       await db.delete('scan_history');
+    } catch (_) {}
+    try {
+      await db.delete('insurance_policies');
     } catch (_) {}
     CategoryService.invalidate();
     // If a real user is logged in, wipe Firestore too so demo data

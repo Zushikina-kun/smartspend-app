@@ -1,6 +1,6 @@
 # SmartSpend — Complete Task Status
-**Version:** 2.6.0
-**Last Updated:** May 14, 2026
+**Version:** 2.7.0
+**Last Updated:** May 20, 2026
 **Purpose:** Definitive status of all tasks — done, deferred, blocked, and why.
 
 ---

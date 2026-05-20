@@ -114,6 +114,8 @@ class AIChatService {
     String quizChallenge = '',
     double allTimeTotal = 0,
     Map<String, double> monthlyTotals = const {},
+    List<Map<String, dynamic>> fhsBreakdown = const [],
+    List<Map<String, dynamic>> insurancePolicies = const [],
   }) {
     // Refresh user-defined categorization rules cache
     DBService.getCategoryRules().then((rules) => _userRules = rules);
@@ -216,6 +218,27 @@ class AIChatService {
                 .map((e) => "  ${e.key}: ₱${e.value.toStringAsFixed(0)}")
                 .join("\n");
 
+    // Build FHS breakdown summary for AI explanation
+    final fhsSummary = fhsBreakdown.isEmpty
+        ? ""
+        : "\n\nFHS Breakdown (${healthScore}/100):\n" +
+            fhsBreakdown
+                .map((b) =>
+                    "- ${b['component'] ?? 'unknown'}: ${(b['points'] as num?)?.toStringAsFixed(1) ?? '?'} pts — ${b['reason'] ?? ''}")
+                .join("\n");
+
+    // Build insurance summary for AI context
+    final insuranceSummary = insurancePolicies.isEmpty
+        ? ""
+        : "\n\nInsurance & Contributions:\n" +
+            insurancePolicies.take(5).map((p) {
+              final name = p['name'] as String? ?? '';
+              final premium = (p['premium_amount'] as num?)?.toDouble() ?? 0;
+              final freq = p['frequency'] as String? ?? 'monthly';
+              final nextDue = p['next_due_date'] as String? ?? '';
+              return "- $name: ₱${premium.toStringAsFixed(0)}/$freq${nextDue.isNotEmpty ? ' (due: $nextDue)' : ''}";
+            }).join("\n");
+
     _fullContext = """
 Account type: $accountType | Income: ${monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo' : 'Not set'} | Score: $healthScore/100
 This month spent: ₱${totalSpent.toStringAsFixed(0)}$wantNeedSummary
@@ -227,7 +250,7 @@ ${customCategories.isNotEmpty ? 'Custom cats: ${customCategories.join(', ')}' : 
 Expenses (if not listed here, it does not exist in DB):
 $expenseSummary
 
-Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$walletsSummary""";
+Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$walletsSummary$fhsSummary$insuranceSummary""";
   }
 
   /// Normalize category names to match our standard list.
@@ -594,7 +617,7 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
     if (RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
             .hasMatch(lower) &&
         RegExp(r'\d').hasMatch(lower)) {
-      return 300; // enough for "Logged: X ₱Y\nACTION:{...}"
+      return 400; // enough for "Logged: X ₱Y\nACTION:{...}"
     }
     // List/view requests — moderate length
     if (RegExp(r'\b(list|show|give me|what are|how much|total)\b')
@@ -676,6 +699,7 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "7. PRICES: When asked about current prices, give your best estimate and be honest it may not be exact.\n\n"
         "ACTIONS — append after reply text ONLY when user explicitly describes a purchase/financial change:\n"
         "• Log expense: ACTION:{\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false}\n"
+        "  Optional fields: \"date\":\"YYYY-MM-DD\" (for past expenses like 'yesterday', 'last Monday'), \"payment_method\":\"GCash\", \"shop_name\":\"Jollibee\"\n"
         "• Set budget: ACTION:{\"type\":\"set_budget\",\"category\":\"Food\",\"amount\":3000}\n"
         "• Set income (updates the monthly income SETTING): ACTION:{\"type\":\"set_income\",\"amount\":25000} — use when user says 'my salary/allowance IS X'\n"
         "• Add income (logs an actual income ENTRY): ACTION:{\"type\":\"add_income\",\"title\":\"Daily Allowance\",\"amount\":6600,\"category\":\"Allowance\"} — use when user says 'I received/got X' or 'log my allowance'\n"
@@ -686,7 +710,11 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "• Add recurring: ACTION:{\"type\":\"add_recurring\",\"title\":\"X\",\"amount\":299,\"category\":\"Bills\",\"frequency\":\"monthly\",\"is_expense\":true}\n"
         "• Set account type: ACTION:{\"type\":\"set_account_type\",\"account_type\":\"student\"}\n"
         "• Update expense: ACTION:{\"type\":\"update_expense\",\"item_name\":\"X\",\"category\":\"Food\"}\n"
+        "  update_expense also supports: \"new_item_name\" (rename), \"amount\" (change amount), \"date\" (YYYY-MM-DD), \"time\" (HH:mm:ss).\n"
+        "  Example date change: ACTION:{\"type\":\"update_expense\",\"item_name\":\"Jollibee\",\"date\":\"2026-05-18\"}\n"
         "• Delete expense: requires user to type DELETE first. ACTION:{\"type\":\"delete_expense\",\"item_name\":\"X\",\"confirmed\":true}\n"
+        "• Delete expenses by date: ACTION:{\"type\":\"delete_by_date\",\"start_date\":\"2026-01-01\",\"end_date\":\"2026-01-31\",\"confirmed\":true}\n"
+        "  Use when user says 'delete all expenses from January', 'clear December expenses'. REQUIRES user to type DELETE to confirm.\n"
         "• Add payment plan (installment): ACTION:{\"type\":\"add_installment_plan\",\"title\":\"ShopeePayLater\",\"provider\":\"ShopeePayLater\",\"total_amount\":1120,\"monthly_payment\":373,\"months_total\":3,\"due_day\":5}\n"
         "  Use add_installment_plan (NOT add_debt) when user mentions: ShopeePayLater, GCash GLoan, HomeCredit, installment, monthly payment plan, 'bayad buwan-buwan', fixed monthly payments.\n"
         "• Pay debt (partial/full): ACTION:{\"type\":\"update_debt\",\"person\":\"John\",\"payment\":500}\n"
@@ -695,7 +723,27 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "• Set wallet balance: ACTION:{\"type\":\"set_wallet_balance\",\"wallet_name\":\"GCash\",\"balance\":217.27}\n"
         "  Use set_wallet_balance when user says 'I have X in GCash/cash/Maya/bank', 'my cash on hand is X', 'GCash balance is X', 'update my wallet'.\n"
         "  wallet_name must match one of the user's wallets (Cash on Hand, GCash, Maya, etc.).\n"
-        "  NEVER log wallet balances as income entries — always use set_wallet_balance.\n\n"
+        "  NEVER log wallet balances as income entries — always use set_wallet_balance.\n"
+        "• Transfer between wallets: ACTION:{\"type\":\"transfer_wallet\",\"from_wallet\":\"Cash on Hand\",\"to_wallet\":\"GCash\",\"amount\":1000}\n"
+        "  Use transfer_wallet when user says 'moved X from cash to GCash', 'transferred X to Maya', 'top-up GCash X from cash'.\n"
+        "• Plan salary split (50/30/20 or custom): ACTION:{\"type\":\"plan_salary_split\",\"income\":25000,\"needs_pct\":50,\"wants_pct\":30,\"savings_pct\":20}\n"
+        "  Use when user says 'split my salary', 'budget my income', '50/30/20 plan', 'allocate my pay'. Creates budgets for each category based on percentages.\n"
+        "• Analyze goal feasibility: ACTION:{\"type\":\"analyze_goal_feasibility\",\"goal_name\":\"Emergency Fund\",\"target\":50000,\"monthly_savings\":3000}\n"
+        "  Use when user asks 'can I afford X?', 'how long to save for Y?', 'is my goal realistic?'. Calculates timeline.\n"
+        "• Suggest debt payoff order: ACTION:{\"type\":\"suggest_debt_payoff\",\"strategy\":\"avalanche\"}\n"
+        "  Use when user asks about debt payoff strategy. strategy: 'avalanche' (highest interest first) or 'snowball' (smallest balance first).\n"
+        "• Generate monthly plan: ACTION:{\"type\":\"generate_monthly_plan\"}\n"
+        "  Use when user says 'plan my month', 'monthly budget plan', 'start of month plan'. Creates a spending plan from history.\n"
+        "• Compare periods: ACTION:{\"type\":\"compare_periods\",\"period1\":\"2026-04\",\"period2\":\"2026-05\"}\n"
+        "  Use when user asks 'compare this month to last month', 'spending comparison', 'how did I do vs last month?'.\n"
+        "• Explain FHS breakdown: ACTION:{\"type\":\"explain_fhs_breakdown\"}\n"
+        "  Use when user asks 'explain my score', 'why is my FHS low?', 'financial health breakdown', 'what affects my score?'. Give a detailed Filipino-English explanation with tips.\n"
+        "• Project savings timeline: ACTION:{\"type\":\"project_savings_timeline\",\"goal_name\":\"Emergency Fund\",\"target\":50000}\n"
+        "  Use when user asks 'when will I save enough for X?', 'how long to reach my goal?'. Calculate based on current savings rate.\n"
+        "• Detect subscriptions: ACTION:{\"type\":\"detect_subscriptions\"}\n"
+        "  Use when user asks 'what subscriptions do I have?', 'find forgotten subscriptions', 'recurring charges', 'what am I paying monthly?'. Scan expenses for repeating patterns.\n"
+        "• Compute insurance/SSS contribution: ACTION:{\"type\":\"compute_contribution\",\"type_name\":\"SSS\",\"monthly_income\":25000}\n"
+        "  Use when user asks 'how much should I pay for SSS?', 'PhilHealth contribution', 'Pag-IBIG contribution'. Calculate based on income bracket.\n\n"
         "BULK RENAME / CAPITALIZATION FIX (CRITICAL): When user says 'fix capitalization', 'rename my expenses', 'fix the names', or similar — you MUST fire update_expense ACTION lines for EVERY expense that needs changing. Do NOT just list the corrected names as text. Each rename = one ACTION line. Example:\n"
         "ACTION:{\"type\":\"update_expense\",\"item_name\":\"jeepney fare\",\"new_item_name\":\"Jeepney Fare\"}\n"
         "The update_expense action supports a 'new_item_name' field for renaming. Use it.\n"

@@ -16,23 +16,25 @@
 
 ### 1. Expanded Agentic AI Actions
 **Why:** Panel said LLM should do "something important and heavy"
-- [ ] `plan_salary_split` — AI creates 50/30/20 budget from salary
-- [ ] `analyze_goal_feasibility` — checks if savings rate supports a goal
-- [ ] `suggest_debt_payoff_order` — avalanche vs snowball recommendation
-- [ ] `compute_insurance_premium` — estimate PhilHealth/SSS from income
-- [ ] `detect_subscription_charges` — flag forgotten subscriptions
+- [x] `plan_salary_split` — AI creates 50/30/20 budget from salary
+- [x] `analyze_goal_feasibility` — checks if savings rate supports a goal
+- [x] `suggest_debt_payoff_order` — avalanche vs snowball recommendation
+- [x] `compute_insurance_premium` — estimate PhilHealth/SSS from income
+- [x] `detect_subscription_charges` — flag forgotten subscriptions
 - [ ] `suggest_idle_money_actions` — trigger when wallet unchanged 14+ days
-- [ ] `generate_monthly_plan` — start-of-month spending plan from history
-- [ ] `explain_fhs_breakdown` — plain Filipino-English FHS explanation with tips
-- [ ] `compare_periods` — narrative comparison of two months
-- [ ] `project_savings_timeline` — "when will I save enough for X?"
+- [x] `generate_monthly_plan` — start-of-month spending plan from history
+- [x] `explain_fhs_breakdown` — plain Filipino-English FHS explanation with tips
+- [x] `compare_periods` — narrative comparison of two months
+- [x] `project_savings_timeline` — "when will I save enough for X?"
+- [x] `transfer_wallet` — move money between wallets
+- [x] `delete_by_date` — bulk delete expenses by date range
 
 ### 2. Date/Time CRUD for All Data
 **Why:** Panel noted users can't modify dates of existing expenses
-- [ ] Add date/time edit to all expense records
-- [ ] AI can change dates: "Move that grocery to last Tuesday"
-- [ ] AI can delete by date: "Delete all expenses from December"
-- [ ] Time field on all records (HH:mm)
+- [x] Add date/time edit to all expense records
+- [x] AI can change dates: "Move that grocery to last Tuesday"
+- [x] AI can delete by date: "Delete all expenses from December"
+- [x] Time field on all records (HH:mm)
 
 ### 3. LLM Comparative Analysis (Full Table for Ch3)
 **Why:** Panel specifically asked for this
@@ -43,12 +45,12 @@
 
 ### 4. Insurance Feature
 **Why:** Huge PH market gap; panel will likely ask
-- [ ] Insurance Tracker screen (log policies, premiums, due dates)
-- [ ] Premium reminders
-- [ ] PhilHealth/SSS/Pag-IBIG contribution tracker
+- [x] Insurance Tracker screen (log policies, premiums, due dates)
+- [x] Premium reminders (via startup alerts)
+- [x] PhilHealth/SSS/Pag-IBIG contribution tracker
 - [ ] AI insurance Q&A
 - [ ] Coverage gap analysis (Phase 2)
-- [ ] Disclaimer: tracking/education only, not sales
+- [x] Disclaimer: tracking/education only, not sales
 
 ### 5. Wallet-First Architecture (Simplified)
 **Why:** Panel confused by income/allowance role system
@@ -64,15 +66,15 @@
 ## 🟡 HIGH — Major Improvements
 
 ### 6. Pop-up Reminders / On-Open Alerts
-- [ ] Modal card on app open if: bills overdue, budget exceeded, debt due, FHS dropped 10+
-- [ ] Smart timing (don't repeat same day)
-- [ ] Dismissible but persistent
+- [x] Modal card on app open if: bills overdue, budget exceeded, debt due, FHS dropped 10+
+- [x] Smart timing (don't repeat same day)
+- [x] Dismissible but persistent
 
 ### 7. Idle/Sleeping Money Insights
-- [ ] Detect wallet unchanged 14+ days AND amount > 1-month average
+- [x] Detect wallet unchanged 14+ days AND amount > 1-month average
 - [ ] AI suggests: MP2, time deposits, high-interest savings, T-bills
 - [ ] Personalized by amount, account type, FHS, existing debts
-- [ ] Disclaimer included
+- [x] Disclaimer included
 
 ### 8. User Research (Academic Strengthening)
 - [ ] Pre-survey administered (Objective 1)

@@ -102,7 +102,7 @@ class _SplashScreenState extends State<SplashScreen>
               children: [
                 // Use logo.png if available, fallback to icon
                 Image.asset(
-                  'logo.png',
+                  'assets/logo.png',
                   width: 160,
                   height: 160,
                   fit: BoxFit.contain,

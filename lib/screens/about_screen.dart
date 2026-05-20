@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -16,7 +16,7 @@ class AboutScreen extends StatelessWidget {
           children: [
             // App logo + name
             Image.asset(
-              'logo.png',
+              'assets/logo.png',
               width: 90,
               height: 90,
               errorBuilder: (_, __, ___) => Icon(Icons.account_balance_wallet,
@@ -192,9 +192,18 @@ class AboutScreen extends StatelessWidget {
                 "💵 Wallet Balances",
                 "Cash on Hand, GCash, Maya, BDO, BPI, 30+ PH banks & e-wallets"
               ),
-              ("⚙️ App Settings", "Toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode"),
-              ("📷 Smart Profile Photo", "Google account photo fallback — works across devices without re-picking"),
-              ("💵 Log Allowance", "One-tap to add daily allowance to Cash on Hand — handles irregular school schedules"),
+              (
+                "⚙️ App Settings",
+                "Toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode"
+              ),
+              (
+                "📷 Smart Profile Photo",
+                "Google account photo fallback — works across devices without re-picking"
+              ),
+              (
+                "💵 Log Allowance",
+                "One-tap to add daily allowance to Cash on Hand — handles irregular school schedules"
+              ),
               ("🤔 AI What-If Scenarios", "Ask 'What if I cut food by ₱500?'"),
               (
                 "🔔 Weekly Behavioral Summary",
@@ -339,7 +348,7 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 12),
             // Lorma Colleges logo
             Image.asset(
-              'LormaLogo.jpg',
+              'assets/LormaLogo.jpg',
               height: 48,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
@@ -369,7 +378,7 @@ class AboutScreen extends StatelessWidget {
 
             // Lucid Frame group logo
             Image.asset(
-              'LucidFrameLogo.png',
+              'assets/LucidFrameLogo.png',
               height: 56,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
@@ -472,16 +481,16 @@ class AboutScreen extends StatelessWidget {
   Widget _teamCard(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final members = [
-      ("Brix A. Directo", "Lead Developer", "Devs/BRIX A. DIRECTO.png"),
+      ("Brix A. Directo", "Lead Developer", "assets/Devs/BRIX A. DIRECTO.png"),
       (
         "Cyrille John M. Rubis",
         "UI/UX Designer & Documentation Lead",
-        "Devs/CYRILLE JOHN M. RUBIS.png"
+        "assets/Devs/CYRILLE JOHN M. RUBIS.png"
       ),
       (
         "Djaunathan Albert S. Madayag",
         "Project Manager & QA Lead",
-        "Devs/DJAUNATHAN ALBERT S. MADAYAG.png"
+        "assets/Devs/DJAUNATHAN ALBERT S. MADAYAG.png"
       ),
     ];
 
@@ -499,7 +508,7 @@ class AboutScreen extends StatelessWidget {
             child: Row(
               children: [
                 Image.asset(
-                  'LucidFrameLogo.png',
+                  'assets/LucidFrameLogo.png',
                   height: 32,
                   errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                 ),
