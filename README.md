@@ -19,24 +19,29 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — 24 action types via natural language
+- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — **25 agentic action types** via natural language
 - 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc
 - 💳 Debt & lending tracker with payment plans (ShopeePayLater, GCash GLoan, etc.)
 - 🔁 Recurring transactions with due date alerts and Log All Due
-- 💵 Wallet Balances — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (auto-deduct on expense)
+- 💵 **Wallet Balances** — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (auto-deduct on expense, transfers between wallets)
+- 🛡️ **Insurance & Contributions Tracker** — SSS, PhilHealth, Pag-IBIG, private insurance with due dates and overdue alerts
+- 🔔 **Smart Startup Alerts** — on-open notifications for overdue bills, budget exceeded, debts due, FHS drops, idle money
 - ⚙️ App Settings — toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode
 - 🔀 Auto-Categorization Rules — keyword → category mappings (fully cloud-synced)
 - 💱 Multi-currency (57 currencies, live rates)
-- 🧠 Financial Health Score (0–100, 4-component formula)
-- ☁️ Full Firestore sync — expenses, budgets, goals, income, recurring, debts, wallets, rules
+- 🧠 Financial Health Score (0–100, 4-component formula) — AI can explain breakdown
+- 🏦 **PH Banks Database** — 20 banks, 5 e-wallets, government contributions, investment options with rates
+- ☁️ Full Firestore sync — expenses, budgets, goals, income, recurring, debts, wallets, rules, insurance
 - 🔒 App Lock (PIN + biometric, per-account)
 - 🏆 16 Achievements & Badges
 - 😊 Daily Mood Check-In with spending correlation
 - 🗓️ Unified Financial Calendar
 - 🏪 Import from Bank / GCash (AI-powered bulk import)
 - 🧾 Smart Receipt Import (OCR → AI item extraction → review table)
+- 📅 **Date/Time Editing** — edit expense dates, AI can change dates via chat
+- 🔤 **Text Size Accessibility** — Normal, Large, Extra Large for easier reading
 - 📷 Google profile photo fallback (works across devices)
 - 🌙 5 color themes + dark mode
 

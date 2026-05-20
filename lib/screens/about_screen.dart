@@ -29,7 +29,7 @@ class AboutScreen extends StatelessWidget {
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
             const Text(
-              "Version 2.6.0",
+              "Version 2.7.0",
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
             const SizedBox(height: 6),
@@ -201,8 +201,8 @@ class AboutScreen extends StatelessWidget {
                 "Google account photo fallback — works across devices without re-picking"
               ),
               (
-                "💵 Log Allowance",
-                "One-tap to add daily allowance to Cash on Hand — handles irregular school schedules"
+                "💵 Add Money to Wallet",
+                "One-tap to add daily income to Cash on Hand — long-press for custom amount"
               ),
               ("🤔 AI What-If Scenarios", "Ask 'What if I cut food by ₱500?'"),
               (
@@ -305,6 +305,46 @@ class AboutScreen extends StatelessWidget {
                 "📋 Where Did My Money Go?",
                 "Quick summary card of top spending categories"
               ),
+              (
+                "🛡️ Insurance & Contributions",
+                "Track SSS, PhilHealth, Pag-IBIG premiums and due dates"
+              ),
+              (
+                "🔔 Smart Startup Alerts",
+                "On-open notifications for overdue bills, budget exceeded, debts due"
+              ),
+              (
+                "💰 Salary Split (50/30/20)",
+                "AI auto-creates budgets from your income split"
+              ),
+              (
+                "🔀 Wallet Transfers",
+                "Move money between Cash, GCash, Maya via AI chat"
+              ),
+              (
+                "📅 Date/Time Editing",
+                "Change expense dates — even via AI chat"
+              ),
+              (
+                "🔍 Subscription Detection",
+                "AI scans expenses for recurring patterns"
+              ),
+              (
+                "📊 FHS Breakdown in AI",
+                "Ask AI to explain your Financial Health Score in detail"
+              ),
+              (
+                "💡 Idle Money Suggestions",
+                "AI suggests MP2, time deposits, digital banks for idle cash"
+              ),
+              (
+                "🏦 PH Banks Database",
+                "20 banks, 5 e-wallets, investment options with rates"
+              ),
+              (
+                "🔤 Text Size Accessibility",
+                "Normal, Large, or Extra Large text for easier reading"
+              ),
             ]),
 
             const SizedBox(height: 20),
@@ -313,10 +353,10 @@ class AboutScreen extends StatelessWidget {
 
             _infoCard(context, [
               "Framework: Flutter (Dart)",
-              "AI Engine: Groq API — LLaMA 3.1 8B Instant",
+              "AI Engine: Groq API — LLaMA 3.1 8B Instant (25 agentic actions)",
               "Local Database: SQLite (sqflite) v11",
               "Cloud Auth & Sync: Firebase Auth + Firestore",
-              "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules",
+              "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules, insurance_policies",
               "OCR: Google ML Kit Text Recognition",
               "Charts: fl_chart",
               "Backup v8: System share sheet — expenses, budgets, goals, income, recurring, debts, payment plans, categories, rules, mood log, wallets (file_picker for restore)",

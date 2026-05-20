@@ -131,7 +131,7 @@ Before every AI message, the app queries SQLite for the user's live financial da
 #### AI Chat Capabilities
 The AI has access to: last 10 expenses detailed + older summarized by category, budget status, monthly income, total spent, health score (with component breakdown), savings goals, debts, recurring, installments, wallet balances, insurance policies, and FHS breakdown. Context is compressed to stay within the 8,192 token limit.
 
-The AI executes **24 action types** directly — data is written to the DB immediately with green snackbar confirmation:
+The AI executes **25 action types** directly — data is written to the DB immediately with green snackbar confirmation:
 
 | Action | Example Trigger |
 |--------|----------------|
@@ -162,6 +162,7 @@ The AI executes **24 action types** directly — data is written to the DB immed
 | `project_savings_timeline` | "When will I save enough for my laptop?" |
 | `detect_subscriptions` | "What subscriptions do I have?" / "Find recurring charges" |
 | `compute_contribution` | "How much should I pay for SSS?" / "PhilHealth contribution" |
+| `suggest_idle_money` | "What should I do with my savings?" / "Where to put idle money?" |
 
 - Actions execute immediately — green snackbar shown per action
 - **Broader scope** — handles personal finance + Philippine banking, SSS/PhilHealth/Pag-IBIG, investments, price estimates, buying/selling advice

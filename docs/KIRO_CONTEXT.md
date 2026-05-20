@@ -127,9 +127,9 @@ Flutter UI (screens/) → Services (services/) → SQLite (sqflite v11)
 
 **Flow:** Every message → fresh DB query → inject full context into system prompt → Groq API → parse ACTION lines → execute directly on SQLite → Firestore sync
 
-**Context includes:** Last 30 expenses (10 detailed + 20 summarized), budgets, income, health score, goals, debts, recurring, installments, wallets, mood, custom categories, quiz challenge
+**Context includes:** Last 30 expenses (10 detailed + 20 summarized), budgets, income, health score (with FHS breakdown), goals, debts, recurring, installments, wallets, insurance policies, mood, custom categories, quiz challenge
 
-**15 action types:** `log_expense`, `set_budget`, `set_income`, `add_goal`, `update_goal`, `delete_goal`, `add_income`, `add_debt`, `update_debt`, `add_recurring`, `delete_recurring`, `set_account_type`, `update_expense`, `delete_expense`, `add_installment_plan`, `set_wallet_balance`
+**25 action types:** `log_expense`, `set_budget`, `set_income`, `add_goal`, `update_goal`, `delete_goal`, `add_income`, `add_debt`, `update_debt`, `add_recurring`, `delete_recurring`, `set_account_type`, `update_expense`, `delete_expense`, `delete_by_date`, `add_installment_plan`, `set_wallet_balance`, `transfer_wallet`, `plan_salary_split`, `analyze_goal_feasibility`, `suggest_debt_payoff`, `generate_monthly_plan`, `compare_periods`, `explain_fhs_breakdown`, `project_savings_timeline`, `detect_subscriptions`, `compute_contribution`, `suggest_idle_money`
 
 **Daily limit:** 60 messages/day (SharedPreferences, device-wide, intentional)
 

@@ -13,7 +13,7 @@ Type: Android mobile app (Flutter/Dart)
 Version: 2.7.0
 Group: Lucid Frame
 Academic: Capstone/Thesis — BSIT, 2025-2026
-Status: Fully functional, proposal defense done, ongoing development
+Status: Fully functional, Capstone 1 passed, Capstone 2 in development (v2.7.0)
 
 TEAM
 ----
@@ -27,6 +27,8 @@ AI-assisted mobile financial tracking and advisory app for Filipino users.
 Pipeline: User Input → AI Parsing → SQLite DB → Analytics & Insights
 The AI is the primary entry point for all data input.
 Architecture: Agentic AI with dynamic context injection (NOT RAG).
+AI Actions: 25 agentic action types (log, update, delete, budgets, goals, debts, wallets, transfers, salary split, subscriptions, insurance, idle money, etc.)
+Key new features (v2.7.0): Insurance Tracker, Startup Alerts, Date/Time CRUD, Wallet-First Design, PH Banks Database, Text Size Accessibility.
 
 TECH STACK
 ----------

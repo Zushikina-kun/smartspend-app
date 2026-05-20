@@ -1670,6 +1670,33 @@ const _sections = [
             "After every 10 messages, the AI automatically summarizes the older conversation into key bullet points. This keeps the AI efficient and within token limits without losing important context.\n\n"
             "You still see the full chat history in the UI — only what the AI reads internally is compressed. The summary focuses on: expenses logged, budgets discussed, goals mentioned, and financial decisions made.",
       ),
+      _HelpItem(
+        title: "Quick AI Prompts — Try These!",
+        body: "Not sure what to ask? Here are 25 things the AI can do:\n\n"
+            "💸 LOGGING:\n"
+            "• \"Spent 30 for jeepney\"\n"
+            "• \"Bought coffee yesterday for 150\"\n"
+            "• \"I paid 500 for electricity via GCash\"\n\n"
+            "💰 WALLETS:\n"
+            "• \"My GCash is 2500\"\n"
+            "• \"Move 1000 from Cash to GCash\"\n"
+            "• \"What should I do with my idle money?\"\n\n"
+            "📊 ANALYSIS:\n"
+            "• \"Compare this month to last month\"\n"
+            "• \"Why is my score low?\"\n"
+            "• \"Find my subscriptions\"\n"
+            "• \"Plan my month\"\n\n"
+            "🎯 GOALS & BUDGETS:\n"
+            "• \"Split my salary 50/30/20\"\n"
+            "• \"Can I afford a ₱50K laptop?\"\n"
+            "• \"When will I save enough for my goal?\"\n"
+            "• \"What's the best way to pay off my debts?\"\n\n"
+            "🏦 PH FINANCE:\n"
+            "• \"How much should I pay for SSS?\"\n"
+            "• \"How do I apply for Pag-IBIG loan?\"\n"
+            "• \"Is GoTyme or Maya Bank better for savings?\"\n"
+            "• \"What's a good price for a second-hand iPhone 13?\"",
+      ),
     ],
   ),
 ];
