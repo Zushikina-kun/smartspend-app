@@ -310,10 +310,11 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   List<Widget> _buildStep0(ColorScheme cs) => [
-        const Text("What best describes you?",
+        const Text("Let's set up your wallets",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        const Text("This helps us personalize your experience.",
+        const Text(
+            "Smart Spend tracks your money through wallets. How do you receive and spend money?",
             style: TextStyle(color: Colors.grey)),
         const SizedBox(height: 24),
         ..._accountTypes.map((t) => Padding(
@@ -367,11 +368,11 @@ class _SetupScreenState extends State<SetupScreen> {
       ];
 
   List<Widget> _buildStep1(ColorScheme cs) => [
-        Text("What's your $_incomeLabel?",
+        Text("How much money comes in?",
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         const Text(
-            "We'll use this to calculate your savings rate and financial health score.",
+            "This helps calculate your savings rate and financial health. Your wallets will track where the money actually sits.",
             style: TextStyle(color: Colors.grey)),
         const SizedBox(height: 4),
         // Trust-first: make income optional — don't block users who aren't ready

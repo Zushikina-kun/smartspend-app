@@ -1,0 +1,45 @@
+{
+  "banks": [
+    {"name": "BDO Unibank", "type": "universal", "min_balance": 2000, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 1500},
+    {"name": "BPI", "type": "universal", "min_balance": 3000, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 900},
+    {"name": "Metrobank", "type": "universal", "min_balance": 2000, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 950},
+    {"name": "Landbank", "type": "government", "min_balance": 500, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 500},
+    {"name": "PNB", "type": "universal", "min_balance": 2000, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 700},
+    {"name": "RCBC", "type": "universal", "min_balance": 5000, "savings_rate": 0.50, "atm_fee": 0, "online": true, "branches": 450},
+    {"name": "Security Bank", "type": "universal", "min_balance": 5000, "savings_rate": 0.50, "atm_fee": 0, "online": true, "branches": 300},
+    {"name": "UnionBank", "type": "universal", "min_balance": 2000, "savings_rate": 0.50, "atm_fee": 0, "online": true, "branches": 350},
+    {"name": "Chinabank", "type": "commercial", "min_balance": 5000, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 200},
+    {"name": "EastWest Bank", "type": "commercial", "min_balance": 1000, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 400},
+    {"name": "PSBank", "type": "thrift", "min_balance": 500, "savings_rate": 0.25, "atm_fee": 0, "online": true, "branches": 250},
+    {"name": "Maybank Philippines", "type": "commercial", "min_balance": 10000, "savings_rate": 0.50, "atm_fee": 0, "online": true, "branches": 80},
+    {"name": "Maya Bank", "type": "digital", "min_balance": 0, "savings_rate": 3.5, "atm_fee": 0, "online": true, "branches": 0, "notes": "Up to 3.5% p.a. on savings, no maintaining balance"},
+    {"name": "GoTyme Bank", "type": "digital", "min_balance": 0, "savings_rate": 5.0, "atm_fee": 0, "online": true, "branches": 0, "notes": "Up to 5% p.a. on savings, GoTyme debit card via GoTyme kiosks"},
+    {"name": "Tonik Bank", "type": "digital", "min_balance": 0, "savings_rate": 4.0, "atm_fee": 0, "online": true, "branches": 0, "notes": "Up to 4% p.a. time deposits, stashes feature"},
+    {"name": "Seabank", "type": "digital", "min_balance": 0, "savings_rate": 3.0, "atm_fee": 0, "online": true, "branches": 0, "notes": "Up to 3% p.a., linked to Shopee"},
+    {"name": "UNObank", "type": "digital", "min_balance": 0, "savings_rate": 3.0, "atm_fee": 0, "online": true, "branches": 0, "notes": "Up to 3% p.a., no fees"},
+    {"name": "UnionDigital", "type": "digital", "min_balance": 0, "savings_rate": 3.0, "atm_fee": 0, "online": true, "branches": 0, "notes": "Digital arm of UnionBank, up to 3% p.a."},
+    {"name": "CIMB Bank PH", "type": "digital", "min_balance": 0, "savings_rate": 2.5, "atm_fee": 0, "online": true, "branches": 0, "notes": "GSave via GCash, up to 2.5% p.a."},
+    {"name": "ING Philippines", "type": "digital", "min_balance": 0, "savings_rate": 2.5, "atm_fee": 0, "online": true, "branches": 0, "notes": "No fees, up to 2.5% p.a."}
+  ],
+  "ewallets": [
+    {"name": "GCash", "provider": "Globe/Mynt", "send_fee": 0, "cash_in": "Free via most banks", "limit": 100000, "features": "Bills, Send, Invest (GInvest), Save (GSave), Insurance"},
+    {"name": "Maya", "provider": "Voyager/PLDT", "send_fee": 0, "cash_in": "Free via most banks", "limit": 100000, "features": "Bills, Send, Crypto, Maya Bank savings 3.5%"},
+    {"name": "GrabPay", "provider": "Grab", "send_fee": 0, "cash_in": "Free via GrabPay", "limit": 100000, "features": "Ride payments, food delivery, bills"},
+    {"name": "ShopeePay", "provider": "Shopee/Seabank", "send_fee": 0, "cash_in": "Free", "limit": 100000, "features": "Shopee purchases, bills, SPayLater"},
+    {"name": "Coins.ph", "provider": "Coins.ph", "send_fee": 0, "cash_in": "Free via select channels", "limit": 100000, "features": "Crypto, remittance, bills, load"}
+  ],
+  "government": [
+    {"name": "SSS", "type": "social_security", "contribution_rate": "14% of monthly salary credit (employee: 4.5%, employer: 9.5%)", "min_contribution": 580, "max_contribution": 2880, "benefits": "Retirement, disability, death, maternity, sickness, unemployment"},
+    {"name": "PhilHealth", "type": "health_insurance", "contribution_rate": "5% of monthly income (split 50/50 with employer)", "min_contribution": 500, "max_contribution": 5000, "benefits": "Hospitalization, outpatient, Z-benefits, PCB packages"},
+    {"name": "Pag-IBIG", "type": "housing_fund", "contribution_rate": "Employee: 1-2% + Employer: 2% of monthly income", "min_contribution": 200, "max_contribution": 200, "benefits": "Housing loan, multi-purpose loan, calamity loan, MP2 savings (6-7% dividends)"}
+  ],
+  "investment_options": [
+    {"name": "Pag-IBIG MP2", "type": "savings", "min_amount": 500, "expected_return": "6-7% p.a.", "risk": "very_low", "liquidity": "5 years lock-in (partial withdrawal after)", "notes": "Tax-free dividends, government-backed"},
+    {"name": "Time Deposits", "type": "fixed_income", "min_amount": 5000, "expected_return": "4-6% p.a.", "risk": "very_low", "liquidity": "30-365 days lock-in", "notes": "PDIC insured up to ₱500K per bank"},
+    {"name": "Treasury Bills", "type": "government_securities", "min_amount": 10000, "expected_return": "5-6% p.a.", "risk": "very_low", "liquidity": "91-364 days", "notes": "Tax-exempt, buy via banks or BTr online"},
+    {"name": "Retail Treasury Bonds", "type": "government_securities", "min_amount": 5000, "expected_return": "5-7% p.a.", "risk": "very_low", "liquidity": "3-25 years (tradeable)", "notes": "Tax-exempt, quarterly interest"},
+    {"name": "UITF (Bond Funds)", "type": "pooled_fund", "min_amount": 1000, "expected_return": "3-5% p.a.", "risk": "low", "liquidity": "T+1 to T+3 days", "notes": "Managed by banks, diversified"},
+    {"name": "UITF (Equity Funds)", "type": "pooled_fund", "min_amount": 1000, "expected_return": "8-12% p.a. (volatile)", "risk": "high", "liquidity": "T+3 to T+7 days", "notes": "PSEi-linked, long-term only"},
+    {"name": "Digital Bank High-Yield Savings", "type": "savings", "min_amount": 0, "expected_return": "3-5% p.a.", "risk": "very_low", "liquidity": "Instant", "notes": "GoTyme 5%, Tonik 4%, Maya 3.5% — PDIC insured"}
+  ]
+}

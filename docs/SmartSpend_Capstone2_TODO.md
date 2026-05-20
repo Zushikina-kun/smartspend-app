@@ -21,7 +21,7 @@
 - [x] `suggest_debt_payoff_order` — avalanche vs snowball recommendation
 - [x] `compute_insurance_premium` — estimate PhilHealth/SSS from income
 - [x] `detect_subscription_charges` — flag forgotten subscriptions
-- [ ] `suggest_idle_money_actions` — trigger when wallet unchanged 14+ days
+- [x] `suggest_idle_money_actions` — trigger when wallet unchanged 14+ days
 - [x] `generate_monthly_plan` — start-of-month spending plan from history
 - [x] `explain_fhs_breakdown` — plain Filipino-English FHS explanation with tips
 - [x] `compare_periods` — narrative comparison of two months
@@ -48,7 +48,7 @@
 - [x] Insurance Tracker screen (log policies, premiums, due dates)
 - [x] Premium reminders (via startup alerts)
 - [x] PhilHealth/SSS/Pag-IBIG contribution tracker
-- [ ] AI insurance Q&A
+- [x] AI insurance Q&A
 - [ ] Coverage gap analysis (Phase 2)
 - [x] Disclaimer: tracking/education only, not sales
 
@@ -72,8 +72,8 @@
 
 ### 7. Idle/Sleeping Money Insights
 - [x] Detect wallet unchanged 14+ days AND amount > 1-month average
-- [ ] AI suggests: MP2, time deposits, high-interest savings, T-bills
-- [ ] Personalized by amount, account type, FHS, existing debts
+- [x] AI suggests: MP2, time deposits, high-interest savings, T-bills
+- [x] Personalized by amount, account type, FHS, existing debts
 - [x] Disclaimer included
 
 ### 8. User Research (Academic Strengthening)
@@ -94,10 +94,10 @@
 ## 🟢 MEDIUM — Good Additions
 
 ### 10. Philippine Banks Database
-- [ ] Static JSON with 20 most common PH banks
+- [x] Static JSON with 20 most common PH banks
 - [ ] Account types, minimum balance, interest rates, fees
 - [ ] How to open (online vs branch), requirements
-- [ ] AI fallback for banks not in database
+- [x] AI fallback for banks not in database
 - [ ] Bank comparison screen
 
 ### 11. Market Insights & Global Happenings
@@ -108,7 +108,7 @@
 - [ ] Disclaimer: general awareness only
 
 ### 12. UI/UX Improvements
-- [ ] Larger text option (16/18/20sp)
+- [x] Larger text option (16/18/20sp)
 - [ ] High contrast mode
 - [ ] Compact vs Comfortable mode
 - [ ] Cleaner minimalist aesthetic

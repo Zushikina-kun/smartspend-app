@@ -1219,6 +1219,13 @@ class _AIScreenState extends State<AIScreen> {
           final contribType = action.params['type_name'] as String? ?? 'SSS';
           _showActionSnackbar("🧮 $contribType contribution computed");
           break;
+
+        case 'suggest_idle_money':
+          // AI provides investment suggestions in its reply text
+          final idleAmt = (action.params['amount'] as num?)?.toDouble() ?? 0;
+          _showActionSnackbar(
+              "💡 Idle money suggestions for ${CurrencyService.format(idleAmt)}");
+          break;
       }
     } catch (e) {
       // Show error so we know if something failed
@@ -1383,7 +1390,7 @@ class _AIScreenState extends State<AIScreen> {
                 "• \"Plan my monthly budget\" — generates spending plan\n"
                 "• \"How do I apply for SSS loan?\"\n"
                 "• \"Is ₱12,000 a good price for a ref?\"\n\n"
-                "24 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, transfers, salary splits, subscription detection, and more.\n\n"
+                "25 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, transfers, salary splits, subscription detection, idle money suggestions, and more.\n\n"
                 "Daily message limit: 60/day — resets at midnight.",
           ),
           // D2: show remaining daily messages with reset countdown
