@@ -1441,7 +1441,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildWalletSummaryCard(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     final total = _wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
     final nonZero = _wallets.where((w) => (w['balance'] as num) > 0).toList();
     final hasBalances = nonZero.isNotEmpty;
@@ -1468,65 +1467,81 @@ class _DashboardState extends State<Dashboard> {
         },
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.green.withValues(alpha: 0.07),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.green.withValues(alpha: 0.25)),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.account_balance_wallet_outlined,
-                  color: Colors.green, size: 18),
-              const SizedBox(width: 8),
-              Expanded(
-                child: hasBalances
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Total Liquid: ${CurrencyService.format(total)}",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Colors.green),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            nonZero
-                                .map((w) =>
-                                    "${w['icon'] ?? '💵'} ${w['name']}: ${CurrencyService.format((w['balance'] as num).toDouble())}")
-                                .join("  ·  "),
-                            style: TextStyle(
-                                fontSize: 11,
-                                color: cs.onSurface.withValues(alpha: 0.6)),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "My Wallets — tap to set up",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Colors.green),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            "Track Cash on Hand, GCash, Maya, banks & more",
-                            style: TextStyle(
-                                fontSize: 11,
-                                color: cs.onSurface.withValues(alpha: 0.6)),
-                          ),
-                        ],
-                      ),
+            gradient: LinearGradient(
+              colors: [
+                Colors.green.shade600,
+                Colors.green.shade800,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.green.withValues(alpha: 0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
               ),
-              Icon(Icons.chevron_right,
-                  size: 16, color: cs.onSurface.withValues(alpha: 0.3)),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.account_balance_wallet,
+                      color: Colors.white, size: 20),
+                  const SizedBox(width: 8),
+                  const Text("My Wallets",
+                      style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500)),
+                  const Spacer(),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text("Tap to manage",
+                        style: TextStyle(color: Colors.white70, fontSize: 10)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                hasBalances
+                    ? CurrencyService.format(total)
+                    : "₱0.00 — Tap to set up",
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold),
+              ),
+              if (hasBalances) ...[
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 4,
+                  children: nonZero.take(4).map((w) {
+                    return Text(
+                      "${w['icon'] ?? '💵'} ${w['name']}: ${CurrencyService.format((w['balance'] as num).toDouble())}",
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 12),
+                    );
+                  }).toList(),
+                ),
+              ] else ...[
+                const SizedBox(height: 4),
+                const Text(
+                  "Track Cash, GCash, Maya, banks & more",
+                  style: TextStyle(color: Colors.white60, fontSize: 12),
+                ),
+              ],
             ],
           ),
         ),
@@ -1535,16 +1550,16 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buildLogAllowanceButton(BuildContext context) {
-    // Only show for students/unemployed with daily/weekly income frequency
+    // Only show if user has income set
     if (_monthlyIncome <= 0) return const SizedBox.shrink();
     final cs = Theme.of(context).colorScheme;
-    // Calculate per-day allowance from monthly income
-    final dailyAllowance = _monthlyIncome / 22; // ~22 school days/month
+    // Calculate per-day amount from monthly income
+    final dailyAmount = _monthlyIncome / 22; // ~22 working days/month
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GestureDetector(
-        onTap: () => _logAllowance(dailyAllowance),
+        onTap: () => _logAllowance(dailyAmount),
         onLongPress: () => _logAllowanceCustom(),
         child: Container(
           width: double.infinity,
@@ -1569,13 +1584,13 @@ class _DashboardState extends State<Dashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Log Allowance",
+                    const Text("Add Money to Wallet",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
                             color: Colors.blue)),
                     Text(
-                      "Tap: +${CurrencyService.format(dailyAllowance)} to Cash · Long-press: custom amount",
+                      "Tap: +${CurrencyService.format(dailyAmount)} to Cash · Long-press: custom amount",
                       style: TextStyle(
                           fontSize: 11,
                           color: cs.onSurface.withValues(alpha: 0.5)),

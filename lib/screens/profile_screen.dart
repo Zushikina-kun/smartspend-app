@@ -230,15 +230,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _showSettingsSheet() async {
     // Load current settings
-    final autoDeduct =
+    bool autoDeduct =
         (await DBService.getSetting('wallet_auto_deduct')) != 'false';
-    final moodEnabled =
+    bool moodEnabled =
         (await DBService.getSetting('mood_checkin_enabled')) != 'false';
-    final impulseEnabled =
+    bool impulseEnabled =
         (await DBService.getSetting('impulse_pause_enabled')) != 'false';
-    final budgetAlerts =
+    bool budgetAlerts =
         (await DBService.getSetting('budget_alerts_enabled')) != 'false';
-    bool _balanceMode = (await DBService.getSetting('balance_mode')) == 'true';
+    bool balanceMode = (await DBService.getSetting('balance_mode')) == 'true';
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -274,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subtitle: "Deduct from Cash/GCash/Maya when logging expenses",
                 value: autoDeduct,
                 onChanged: (v) {
-                  setSheet(() {});
+                  setSheet(() => autoDeduct = v);
                   DBService.setSetting(
                       'wallet_auto_deduct', v ? 'true' : 'false');
                 },
@@ -285,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subtitle: "Show mood prompt on home screen",
                 value: moodEnabled,
                 onChanged: (v) {
-                  setSheet(() {});
+                  setSheet(() => moodEnabled = v);
                   DBService.setSetting(
                       'mood_checkin_enabled', v ? 'true' : 'false');
                 },
@@ -296,7 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subtitle: "Confirm before logging large Want expenses",
                 value: impulseEnabled,
                 onChanged: (v) {
-                  setSheet(() {});
+                  setSheet(() => impulseEnabled = v);
                   DBService.setSetting(
                       'impulse_pause_enabled', v ? 'true' : 'false');
                 },
@@ -307,7 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 subtitle: "Notify when category budget hits 80% or 100%",
                 value: budgetAlerts,
                 onChanged: (v) {
-                  setSheet(() {});
+                  setSheet(() => budgetAlerts = v);
                   DBService.setSetting(
                       'budget_alerts_enabled', v ? 'true' : 'false');
                 },
@@ -324,9 +324,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 title: "Balance mode",
                 subtitle:
                     "Show wallet total as primary balance instead of income-based remaining",
-                value: _balanceMode,
+                value: balanceMode,
                 onChanged: (v) {
-                  setSheet(() => _balanceMode = v);
+                  setSheet(() => balanceMode = v);
                   DBService.setSetting('balance_mode', v ? 'true' : 'false');
                   fireEvent(AppEvent.incomeChanged);
                 },
