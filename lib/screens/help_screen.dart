@@ -1082,40 +1082,64 @@ const _sections = [
       _HelpItem(
         title: "How streaks work",
         body:
-            "The app tracks consecutive days where your financial health score is 60 or above (Fair or better). A streak badge appears on the home screen when you hit 3+ days.",
+            "The app tracks consecutive days where your financial health score is 60 or above (Fair or better). A streak badge appears on the home screen when you hit 3+ days.\n\n"
+            "Daily Quests also track a logging streak — consecutive days with at least 1 expense logged.",
         example:
             "🔥 5-day streak → you've had a Fair or Good score for 5 days in a row.",
       ),
       _HelpItem(
-        title: "All 16 badges",
-        body: "🌱 First Step — Log your first expense\n"
-            "🔥 3-Day Streak — Score ≥60 for 3 consecutive days\n"
-            "💯 Week Warrior — Score ≥60 for 7 consecutive days\n"
-            "🏆 Month Master — Score ≥60 for 30 consecutive days\n"
-            "💰 Saver — Save ≥20% of income for a full month\n"
+        title: "All 23 badges",
+        body: "Getting Started:\n"
+            "🌱 First Step — Log your first expense\n"
+            "📱 App Explorer — Use 5 different features\n\n"
+            "Streaks:\n"
+            "🔥 3-Day Streak — Score ≥60 for 3 days\n"
+            "💯 Week Warrior — Score ≥60 for 7 days\n"
+            "🏆 Month Master — Score ≥60 for 30 days\n\n"
+            "Savings & Budget:\n"
+            "💰 Saver — Save ≥20% of income for a month\n"
             "🎯 Goal Getter — Complete a savings goal\n"
-            "🧾 Receipt Scanner — Scan 10 receipts\n"
+            "📊 Budget Boss — All budgets on track for a month\n"
+            "🪙 Spare Change Hero — Save ₱100+ via round-ups\n\n"
+            "AI & Tech:\n"
             "🤖 AI Power User — Send 20 AI messages\n"
-            "📊 Budget Boss — All budgets on track for a full month\n"
-            "🚫 Impulse Control — Decline an impulse pause 5 times\n"
-            "🌙 Night Owl — Log an expense after 10 PM\n"
-            "☀️ Early Bird — Log an expense before 8 AM\n"
-            "💳 Debt Slayer — Pay off a debt completely\n"
-            "🏦 Emergency Ready — Emergency fund reaches 100%\n"
+            "🧾 Receipt Scanner — Scan 10 receipts\n"
+            "🔀 Wallet Wizard — Make 5 wallet transfers\n\n"
+            "Discipline:\n"
+            "🚫 Impulse Control — Decline impulse pause 5 times\n"
             "📅 Consistent Logger — Log every day for 14 days\n"
-            "🔍 Detail Oriented — Add notes to 10 expenses",
+            "🔍 Detail Oriented — Add notes to 10 expenses\n"
+            "🛡️ Insurance Aware — Track 1+ insurance policy\n\n"
+            "Fun:\n"
+            "🌙 Night Owl — Log after 10 PM\n"
+            "☀️ Early Bird — Log before 8 AM\n\n"
+            "Debt & Health:\n"
+            "💳 Debt Slayer — Pay off a debt completely\n"
+            "🏦 Emergency Ready — Emergency fund at 100%\n\n"
+            "Milestones:\n"
+            "💎 Century Club — Log 100 expenses total\n"
+            "⭐ Score Star — Reach FHS score of 80+\n"
+            "🎓 Financial Literate — Ask AI 5 advice questions",
         example:
             "Locked badges show 🔒 so you always know what to aim for next.",
       ),
       _HelpItem(
-        title: "Impulse Control badge",
+        title: "Daily Quests (10 rotating challenges)",
         body:
-            "Earned by tapping 'Wait, let me reconsider' on the impulse pause dialog 5 times. Each time you choose to pause and reflect instead of spending impulsively, it counts toward this badge.",
+            "4 quests shown per day from a pool of 10, rotating based on the day. Complete all 4 for a perfect day!\n\n"
+            "Examples:\n"
+            "• Log an expense today\n"
+            "• Stay under daily budget\n"
+            "• Avoid Want spending today\n"
+            "• Keep total under ₱200 today\n"
+            "• Log before noon\n"
+            "• Spend only on Needs today\n\n"
+            "Quests reset daily. Your streak counter shows consecutive days with at least 1 expense logged.",
       ),
       _HelpItem(
         title: "Where do I see my badges?",
         body:
-            "Hub → Achievements. Shows all 16 badges in a grid — earned ones are highlighted, locked ones show 🔒. The count in the top bar shows how many you've earned. Pull down to refresh.",
+            "Hub → Achievements. Shows all 23 badges in a grid — earned ones are highlighted, locked ones show 🔒. The count in the top bar shows how many you've earned. Pull down to refresh.",
       ),
     ],
   ),

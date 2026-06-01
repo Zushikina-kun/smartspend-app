@@ -1516,7 +1516,7 @@ All rights reserved by **Lucid Frame**, 2026.
 | BC-2 | Bill Calendar mini-card on home screen | Low | Show next 3 upcoming financial events with dates and type |
 | BC-3 | Bill Calendar → Log Now shortcut | Low | Tap a bill on calendar to log it directly |
 | GM-1 | Daily Challenges card on home screen | Medium | 3 daily tasks (log 2 expenses, stay under budget, check score) — highest retention mechanic |
-| GM-2 | Expanded badge system + Achievements screen | Medium | 16 badges, dedicated screen in Profile, locked badges shown as silhouettes |
+| GM-2 | Expanded badge system + Achievements screen | Medium | 23 badges (7 categories), dedicated screen in Profile, locked badges shown as silhouettes |
 | GM-3 | Logging streak (separate from score streak) | Low | Consecutive days with ≥1 expense logged |
 | UX-1 | Empty state guidance on all screens | Low | Budgets/Goals/Debts/Recurring empty screens should suggest an action |
 | CF-1 | Confidence score filter in Transactions | Low | "Show low-confidence only" chip — data already in DB |

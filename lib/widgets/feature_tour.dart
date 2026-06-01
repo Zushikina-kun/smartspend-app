@@ -100,7 +100,7 @@ class _FeatureTourState extends State<FeatureTour>
           "• Tag expenses with #hashtags for filtering\n"
           "• Shake phone to undo last AI action (60 sec window)\n"
           "• Profile → App Settings for Balance Mode & toggles\n"
-          "• 16 achievement badges — check Hub → Achievements",
+          "• 23 achievement badges + daily quests — check Hub → Achievements",
     ),
   ];
 

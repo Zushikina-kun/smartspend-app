@@ -294,6 +294,7 @@ All HIGH priority issues from previous sessions are resolved. See `SmartSpend_Pe
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
+| 2.7.0 | May 20, 2026 | 25 AI actions, Insurance Tracker, startup alerts, date/time CRUD, wallet-first design, PH banks database, bank comparison screen, high contrast mode, text size accessibility, round-up savings, price memory, smart daily allowance, barcode product lookup, 23 badges (was 16), 10 daily quests (was 6), DTI ratio, emergency fund calculator, Firebase Remote Config for API security, optimized AI prompt (60% smaller), multi-item logging fix |
 | 2.6.0 | May 11, 2026 | Full cloud sync audit — wallets, category_rules, demo isolation, backup restore sync, reset all data Firestore wipe, undo sync, setup push, notification throttle reset, budget_boss badge fix, API key centralized |
 | 2.5.0 | May 10, 2026 | Wallet Balances, PH bank support, smart receipt import, unified calendar, achievements, mood check-in, auto-categorization rules, period comparison, installment plans, bank import |
 | 2.4.0 | Apr 29, 2026 | Custom categories, shake-to-undo, expense photos, % budget mode, want/need tagging, streaks/badges, daily limit, bill calendar, onboarding quiz, FHS rewrite |

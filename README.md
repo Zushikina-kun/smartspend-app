@@ -35,7 +35,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 🏦 **PH Banks Database** — 20 banks, 5 e-wallets, government contributions, investment options with rates
 - ☁️ Full Firestore sync — expenses, budgets, goals, income, recurring, debts, wallets, rules, insurance
 - 🔒 App Lock (PIN + biometric, per-account)
-- 🏆 16 Achievements & Badges
+- 🏆 **23 Achievements & Badges** + 10 rotating Daily Quests with streak tracking
 - 😊 Daily Mood Check-In with spending correlation
 - 🗓️ Unified Financial Calendar
 - 🏪 Import from Bank / GCash (AI-powered bulk import)
