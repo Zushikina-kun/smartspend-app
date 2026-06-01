@@ -1744,6 +1744,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Divider(height: 1),
                           ListTile(
+                            leading: const Icon(Icons.contrast),
+                            title: const Text("High Contrast"),
+                            subtitle: const Text(
+                                "Black & white for maximum readability",
+                                style: TextStyle(fontSize: 12)),
+                            trailing: Switch(
+                              value: themeService.highContrast,
+                              onChanged: (v) async {
+                                await themeService.setHighContrast(v);
+                                if (mounted) setState(() {});
+                              },
+                            ),
+                          ),
+                          const Divider(height: 1),
+                          ListTile(
                             leading: const Icon(Icons.download_outlined),
                             title: const Text("Export to CSV"),
                             trailing: const Icon(Icons.chevron_right),

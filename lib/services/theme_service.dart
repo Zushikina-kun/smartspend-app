@@ -91,14 +91,17 @@ class ThemeService extends ChangeNotifier {
   static const _darkKey = 'dark_mode';
   static const _themeKey = 'app_theme';
   static const _textScaleKey = 'text_scale';
+  static const _highContrastKey = 'high_contrast';
 
   bool _isDark = false;
   AppTheme _appTheme = AppTheme.blue;
   double _textScale = 1.0; // 1.0 = normal, 1.15 = large, 1.3 = extra large
+  bool _highContrast = false;
 
   bool get isDark => _isDark;
   AppTheme get appTheme => _appTheme;
   double get textScale => _textScale;
+  bool get highContrast => _highContrast;
   ThemeMode get themeMode => _isDark ? ThemeMode.dark : ThemeMode.light;
 
   /// The primary color for the current theme — use this instead of hardcoded 0xFF0066FF
@@ -114,6 +117,7 @@ class ThemeService extends ChangeNotifier {
     final themeKey = prefs.getString(_themeKey) ?? 'blue';
     _appTheme = AppThemeExtension.fromKey(themeKey);
     _textScale = prefs.getDouble(_textScaleKey) ?? 1.0;
+    _highContrast = prefs.getBool(_highContrastKey) ?? false;
     notifyListeners();
   }
 
@@ -138,6 +142,13 @@ class ThemeService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setHighContrast(bool enabled) async {
+    _highContrast = enabled;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_highContrastKey, enabled);
+    notifyListeners();
+  }
+
   String get textScaleLabel {
     if (_textScale <= 1.0) return 'Normal';
     if (_textScale <= 1.15) return 'Large';
@@ -145,16 +156,32 @@ class ThemeService extends ChangeNotifier {
   }
 
   ThemeData get lightTheme => ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: _appTheme.seedColor),
+        colorScheme: _highContrast
+            ? const ColorScheme.light(
+                primary: Colors.black,
+                onPrimary: Colors.white,
+                secondary: Colors.black,
+                surface: Colors.white,
+                onSurface: Colors.black,
+              )
+            : ColorScheme.fromSeed(seedColor: _appTheme.seedColor),
         useMaterial3: true,
         fontFamily: 'Roboto',
       );
 
   ThemeData get darkTheme => ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: _appTheme.seedColor,
-          brightness: Brightness.dark,
-        ),
+        colorScheme: _highContrast
+            ? const ColorScheme.dark(
+                primary: Colors.white,
+                onPrimary: Colors.black,
+                secondary: Colors.white,
+                surface: Colors.black,
+                onSurface: Colors.white,
+              )
+            : ColorScheme.fromSeed(
+                seedColor: _appTheme.seedColor,
+                brightness: Brightness.dark,
+              ),
         useMaterial3: true,
         fontFamily: 'Roboto',
       );

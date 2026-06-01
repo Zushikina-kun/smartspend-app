@@ -34,6 +34,7 @@ import 'whats_new_screen.dart';
 import 'achievements_screen.dart';
 import 'bank_import_screen.dart';
 import 'insurance_screen.dart';
+import 'bank_comparison_screen.dart';
 import '../services/startup_alerts_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -559,6 +560,12 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     "SSS, PhilHealth, Pag-IBIG, insurance premiums & due dates",
                     Colors.indigo,
                     () => _go(const InsuranceScreen())),
+                _tile(
+                    Icons.account_balance,
+                    "PH Banks & Investments",
+                    "Compare 20 banks, digital banks, e-wallets, and investment options",
+                    Colors.blue,
+                    () => _go(const BankComparisonScreen())),
                 const SizedBox(height: 8),
               ],
             ),

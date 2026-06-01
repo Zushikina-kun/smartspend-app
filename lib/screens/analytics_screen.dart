@@ -2460,6 +2460,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     _buildWantNeedCard(context),
                     const SizedBox(height: 16),
 
+                    // Debt-to-Income Ratio
+                    _buildDebtToIncomeCard(context),
+                    const SizedBox(height: 16),
+
+                    // Emergency Fund Calculator
+                    _buildEmergencyFundCard(context),
+                    const SizedBox(height: 16),
+
                     // Tax & Savings Card — for employed/business/working_student/freelancer
                     if (_accountType != 'student' &&
                         _accountType != 'unemployed' &&
@@ -3067,6 +3075,209 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
         const SizedBox(width: 4),
         Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildDebtToIncomeCard(BuildContext context) {
+    if (_monthlyIncome <= 0) return const SizedBox.shrink();
+    // Calculate total monthly debt obligations
+    double monthlyDebtPayments = 0;
+    // Estimate from Bills category expenses this month
+    final debtExpenses = _thisMonthExpenses
+        .where((e) => e.category == 'Bills')
+        .fold<double>(0, (s, e) => s + e.amount);
+    monthlyDebtPayments = debtExpenses;
+
+    final dtiRatio = monthlyDebtPayments / _monthlyIncome;
+    final dtiPct = (dtiRatio * 100).clamp(0, 200);
+    final isHealthy = dtiPct <= 30;
+    final isWarning = dtiPct > 30 && dtiPct <= 50;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context)
+            .colorScheme
+            .surfaceContainerHighest
+            .withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text("Debt-to-Income Ratio",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () => showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text("Debt-to-Income Ratio"),
+                    content: const Text(
+                        "BSP recommends keeping your DTI below 30%.\n\n"
+                        "• ≤30% — Healthy: you can comfortably manage debt\n"
+                        "• 31-50% — Warning: debt is becoming a burden\n"
+                        "• >50% — Critical: seek debt restructuring\n\n"
+                        "Calculated as: Monthly debt payments ÷ Monthly income × 100"),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Got it"))
+                    ],
+                  ),
+                ),
+                child: Icon(Icons.info_outline,
+                    size: 14,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.4)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Text("${dtiPct.toStringAsFixed(1)}%",
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: isHealthy
+                          ? Colors.green
+                          : isWarning
+                              ? Colors.orange
+                              : Colors.red)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  isHealthy
+                      ? "Healthy — within BSP recommended limit"
+                      : isWarning
+                          ? "Warning — debt is becoming a burden"
+                          : "Critical — consider debt restructuring",
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: isHealthy
+                          ? Colors.green
+                          : isWarning
+                              ? Colors.orange
+                              : Colors.red),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: (dtiPct / 100).clamp(0, 1),
+              backgroundColor: Colors.grey.withValues(alpha: 0.2),
+              color: isHealthy
+                  ? Colors.green
+                  : isWarning
+                      ? Colors.orange
+                      : Colors.red,
+              minHeight: 6,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+              "Bills this month: ${CurrencyService.format(monthlyDebtPayments)} / Income: ${CurrencyService.format(_monthlyIncome)}",
+              style: const TextStyle(fontSize: 11, color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmergencyFundCard(BuildContext context) {
+    // Calculate average monthly spending from last 3 months
+    final now = DateTime.now();
+    double totalSpent3Mo = 0;
+    int monthsCounted = 0;
+    for (int i = 0; i < 3; i++) {
+      final month = DateTime(now.year, now.month - i, 1);
+      final key = "${month.year}-${month.month.toString().padLeft(2, '0')}";
+      final monthExpenses = _expenses.where((e) {
+        try {
+          return e.date.startsWith(key);
+        } catch (_) {
+          return false;
+        }
+      }).toList();
+      if (monthExpenses.isNotEmpty) {
+        totalSpent3Mo += monthExpenses.fold<double>(0, (s, e) => s + e.amount);
+        monthsCounted++;
+      }
+    }
+    if (monthsCounted == 0) return const SizedBox.shrink();
+
+    final avgMonthly = totalSpent3Mo / monthsCounted;
+    final target3Mo = avgMonthly * 3;
+    final target6Mo = avgMonthly * 6;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.teal.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.teal.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.shield_outlined, size: 18, color: Colors.teal),
+              const SizedBox(width: 8),
+              const Text("Emergency Fund Calculator",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+              "Based on your average monthly spending of ${CurrencyService.format(avgMonthly)}:",
+              style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          const SizedBox(height: 10),
+          _efRow("3-Month Fund (minimum)", target3Mo, Colors.teal),
+          const SizedBox(height: 6),
+          _efRow("6-Month Fund (recommended)", target6Mo, Colors.teal.shade700),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.teal.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              "💡 An emergency fund covers 3-6 months of expenses if you lose income. "
+              "Keep it in a high-yield savings account (GoTyme 5%, Tonik 4%, Maya 3.5%) for easy access.",
+              style:
+                  TextStyle(fontSize: 11, color: Colors.grey[700], height: 1.4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _efRow(String label, double amount, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: Text(label, style: const TextStyle(fontSize: 13))),
+        Text(CurrencyService.format(amount),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 13, color: color)),
       ],
     );
   }
