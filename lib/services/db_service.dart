@@ -677,6 +677,32 @@ class DBService {
     try {
       await CloudService.saveExpense(data);
     } catch (_) {}
+
+    // Round-Up Savings: auto-save spare change to first savings goal
+    try {
+      final roundUpEnabled = await getSetting('round_up_savings');
+      if (roundUpEnabled != 'false') {
+        final roundTo = 10.0; // Round to nearest ₱10
+        final remainder = amount % roundTo;
+        if (remainder > 0) {
+          final roundUp = roundTo - remainder;
+          // Add to first active savings goal
+          final goals = await getGoals();
+          final activeGoal = goals
+              .where((g) =>
+                  (g['current_amount'] as num) < (g['target_amount'] as num))
+              .firstOrNull;
+          if (activeGoal != null) {
+            final newAmount =
+                ((activeGoal['current_amount'] as num).toDouble() + roundUp)
+                    .clamp(
+                        0.0, (activeGoal['target_amount'] as num).toDouble());
+            await updateGoal({...activeGoal, 'current_amount': newAmount});
+          }
+        }
+      }
+    } catch (_) {}
+
     fireEvent(AppEvent.expenseChanged);
   }
 

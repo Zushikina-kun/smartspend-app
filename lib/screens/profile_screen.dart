@@ -239,6 +239,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool budgetAlerts =
         (await DBService.getSetting('budget_alerts_enabled')) != 'false';
     bool balanceMode = (await DBService.getSetting('balance_mode')) == 'true';
+    bool roundUpSavings =
+        (await DBService.getSetting('round_up_savings')) != 'false';
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -329,6 +331,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setSheet(() => balanceMode = v);
                   DBService.setSetting('balance_mode', v ? 'true' : 'false');
                   fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.savings_outlined,
+                title: "Round-up savings",
+                subtitle:
+                    "Auto-save spare change to your first savings goal (rounds to nearest ₱10)",
+                value: roundUpSavings,
+                onChanged: (v) {
+                  setSheet(() => roundUpSavings = v);
+                  DBService.setSetting(
+                      'round_up_savings', v ? 'true' : 'false');
                 },
               ),
             ],

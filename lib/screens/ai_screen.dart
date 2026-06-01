@@ -535,6 +535,26 @@ class _AIScreenState extends State<AIScreen> {
                   }
                 }
               }
+              // Price Memory — check if this specific item costs more than last time
+              final sameItems = allExp
+                  .where((e) =>
+                      e.itemName.toLowerCase() == itemName.toLowerCase() &&
+                      e.amount > 0 &&
+                      e.amount != amount)
+                  .toList();
+              if (sameItems.isNotEmpty && mounted) {
+                final lastPrice = sameItems.first.amount;
+                if (amount > lastPrice * 1.15) {
+                  // 15%+ price increase
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        "📈 Price up: $itemName was ${CurrencyService.format(lastPrice)} last time (+${((amount / lastPrice - 1) * 100).toStringAsFixed(0)}%)"),
+                    backgroundColor: Colors.blue,
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 3),
+                  ));
+                }
+              }
             } catch (_) {}
 
             // Proactive budget insight — check if this expense pushes category near/over budget
