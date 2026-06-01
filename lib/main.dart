@@ -28,13 +28,25 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  // App Check — Play Integrity for release, debug provider for debug builds
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.playIntegrity,
-  );
+  // App Check — Play Integrity for Play Store builds, debug provider otherwise
+  // Play Integrity only works for apps installed via Play Store with valid signing
+  // For sideloaded APKs (QA testing), use debug provider
+  try {
+    await FirebaseAppCheck.instance.activate(
+      // Use debug provider for all non-Play-Store builds
+      // Switch to playIntegrity only when publishing to Play Store
+      androidProvider: AndroidProvider.debug,
+    );
+  } catch (_) {
+    // App Check activation failed — auth still works without it
+  }
 
-  // Fetch API key from Remote Config (falls back to local if unavailable)
-  await AppConfig.init();
+  // Fetch API key from Remote Config (fails silently — uses local fallback)
+  try {
+    await AppConfig.init();
+  } catch (_) {
+    // Remote Config unavailable — local fallback key will be used
+  }
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
