@@ -1325,6 +1325,17 @@ class _DashboardState extends State<Dashboard> {
         : isWarning
             ? Colors.orange
             : cs.primary;
+
+    // Smart daily allowance: remaining monthly budget ÷ days left
+    final now = DateTime.now();
+    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+    final daysLeft = daysInMonth - now.day + 1;
+    final totalBudget =
+        _monthlyIncome > 0 ? _monthlyIncome : _dailyLimit * daysInMonth;
+    final remaining = totalBudget - _totalSpent;
+    final smartDaily =
+        daysLeft > 0 ? (remaining / daysLeft).clamp(0.0, double.infinity) : 0.0;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Container(
@@ -1378,6 +1389,22 @@ class _DashboardState extends State<Dashboard> {
                     "${(ratio * 100).toStringAsFixed(0)}% of daily limit used",
                     style: const TextStyle(fontSize: 11, color: Colors.orange)),
               ),
+            // Smart daily allowance — Cleo Autopilot-style
+            if (smartDaily > 0 && _monthlyIncome > 0) ...[
+              const SizedBox(height: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  "💡 Smart allowance: ${CurrencyService.format(smartDaily)}/day for remaining $daysLeft days",
+                  style: TextStyle(
+                      fontSize: 10, color: cs.onSurface.withValues(alpha: 0.6)),
+                ),
+              ),
+            ],
           ],
         ),
       ),
