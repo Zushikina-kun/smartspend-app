@@ -69,8 +69,8 @@ class OCRService {
         result = '[Low quality scan — edit before sending]\n$cleaned';
       }
 
-      // Trim to 800 chars to stay within AI token limit
-      return result.length > 800 ? result.substring(0, 800) : result;
+      // Trim to 1200 chars to stay within AI token limit (increased from 800)
+      return result.length > 1200 ? result.substring(0, 1200) : result;
     } finally {
       await textRecognizer.close();
       // Clean up temp file if we created one
@@ -90,8 +90,8 @@ class OCRService {
       if (decoded == null) return path;
 
       // img package auto-applies EXIF orientation on decode
-      // Re-encode to apply the correction
-      final fixed = img.encodeJpg(decoded, quality: 90);
+      // Re-encode to apply the correction — use quality 95 to preserve OCR accuracy
+      final fixed = img.encodeJpg(decoded, quality: 95);
       final dir = await getTemporaryDirectory();
       final outPath =
           '${dir.path}/ocr_fixed_${DateTime.now().millisecondsSinceEpoch}.jpg';

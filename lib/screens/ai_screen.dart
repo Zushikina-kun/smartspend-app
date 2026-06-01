@@ -1359,8 +1359,8 @@ class _AIScreenState extends State<AIScreen> {
             RegExp(r'[₱\d]\d*\.\d{2}').hasMatch(l) ||
             RegExp(r'₱\s*\d+').hasMatch(l))
         .length;
-    // If 3+ amount lines → likely a multi-item receipt
-    if (amountLines >= 3) return 'receipt_multi';
+    // If 2+ amount lines → likely a multi-item receipt (lowered from 3)
+    if (amountLines >= 2) return 'receipt_multi';
     // If it has "total" or "subtotal" → receipt
     if (text.toLowerCase().contains('total') ||
         text.toLowerCase().contains('subtotal')) return 'receipt_multi';

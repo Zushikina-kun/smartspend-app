@@ -5,6 +5,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import '../services/ocr_service.dart';
 import '../services/db_service.dart';
+import '../services/barcode_lookup_service.dart';
 
 /// Smart Camera Screen — Auto mode only.
 /// Live viewfinder with detection box.
@@ -73,6 +74,12 @@ class _SmartCameraScreenState extends State<SmartCameraScreen>
     final repeatHint =
         prevCount > 1 ? '\n\n[Scanned $prevCount times before]' : '';
 
+    // Look up product in database (local PH + Open Food Facts API)
+    ProductInfo? productInfo;
+    try {
+      productInfo = await BarcodeLookupService.lookup(code);
+    } catch (_) {}
+
     // SH-2: Check if an expense was logged for this barcode (by shop_name match)
     String linkedExpenseHint = '';
     try {
@@ -90,14 +97,25 @@ class _SmartCameraScreenState extends State<SmartCameraScreen>
       }
     } catch (_) {}
 
+    // Build pre-filled text based on product lookup result
+    String prefillText;
+    if (productInfo != null) {
+      final priceHint = productInfo.estimatedPrice != null
+          ? ' for ${productInfo.estimatedPrice!.toStringAsFixed(0)}'
+          : '';
+      prefillText =
+          'I bought ${productInfo.displayName}$priceHint$repeatHint$linkedExpenseHint';
+    } else {
+      prefillText = 'Barcode: $code\n\nI bought: $repeatHint$linkedExpenseHint';
+    }
+
     if (!mounted) return;
     final reviewed = await Navigator.push<String>(
       context,
       MaterialPageRoute(
         builder: (_) => ScanReviewScreen(
-          initialText:
-              'Barcode: $code\n\nI bought: $repeatHint$linkedExpenseHint',
-          title: "Describe Product",
+          initialText: prefillText,
+          title: productInfo != null ? "Confirm Product" : "Describe Product",
           isBarcode: true,
           barcodeFormat: format,
         ),
@@ -213,14 +231,29 @@ class _SmartCameraScreenState extends State<SmartCameraScreen>
     ScaffoldMessenger.of(context).clearSnackBars();
 
     if (barcodeCode != null) {
-      // Barcode found in image
+      // Barcode found in image — look up product
       await DBService.insertScan(barcodeCode);
+      ProductInfo? productInfo;
+      try {
+        productInfo = await BarcodeLookupService.lookup(barcodeCode);
+      } catch (_) {}
+
+      String prefillText;
+      if (productInfo != null) {
+        final priceHint = productInfo.estimatedPrice != null
+            ? ' for ${productInfo.estimatedPrice!.toStringAsFixed(0)}'
+            : '';
+        prefillText = 'I bought ${productInfo.displayName}$priceHint';
+      } else {
+        prefillText = 'Barcode: $barcodeCode\n\nI bought: ';
+      }
+
       final reviewed = await Navigator.push<String>(
         context,
         MaterialPageRoute(
           builder: (_) => ScanReviewScreen(
-            initialText: 'Barcode: $barcodeCode\n\nI bought: ',
-            title: "Describe Product",
+            initialText: prefillText,
+            title: productInfo != null ? "Confirm Product" : "Describe Product",
             isBarcode: true,
             barcodeFormat: barcodeFormat,
           ),
