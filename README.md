@@ -20,7 +20,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
 - 🤖 AI Chat Assistant (Groq LLaMA 3.1) — **25 agentic action types** via natural language
-- 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison
+- 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison, **DTI ratio**, **emergency fund calculator**
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc
 - 💳 Debt & lending tracker with payment plans (ShopeePayLater, GCash GLoan, etc.)
@@ -42,8 +42,14 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 🧾 Smart Receipt Import (OCR → AI item extraction → review table)
 - 📅 **Date/Time Editing** — edit expense dates, AI can change dates via chat
 - 🔤 **Text Size Accessibility** — Normal, Large, Extra Large for easier reading
+- 🔲 **High Contrast Mode** — black/white for maximum readability
+- 💰 **Round-Up Savings** — auto-save spare change to savings goals (rounds to ₱10)
+- 📈 **Price Memory** — alerts when items cost more than last time (+15% threshold)
+- 💡 **Smart Daily Allowance** — dynamic "how much can I spend today" based on remaining budget
+- 🏦 **PH Banks & Investments** — compare 20 banks, digital banks, e-wallets, investment options
+- 🔐 **API Security** — Firebase Remote Config + App Check (key not in APK)
 - 📷 Google profile photo fallback (works across devices)
-- 🌙 5 color themes + dark mode
+- 🌙 5 color themes + dark mode + high contrast
 
 ---
 

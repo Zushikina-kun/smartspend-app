@@ -12,7 +12,7 @@ class AIAction {
 }
 
 class AIChatService {
-  static const _apiKey = AppConfig.groqApiKey;
+  static String get _apiKey => AppConfig.groqApiKey;
   static const _baseUrl = AppConfig.groqBaseUrl;
   static const _model = AppConfig.groqModel;
 

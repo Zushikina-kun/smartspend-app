@@ -12,6 +12,7 @@ import 'services/theme_service.dart';
 import 'services/currency_service.dart';
 import 'services/notification_service.dart';
 import 'services/app_lock_service.dart';
+import 'services/app_config.dart';
 
 final themeService = ThemeService();
 
@@ -31,6 +32,9 @@ void main() async {
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.playIntegrity,
   );
+
+  // Fetch API key from Remote Config (falls back to local if unavailable)
+  await AppConfig.init();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 

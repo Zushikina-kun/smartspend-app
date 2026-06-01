@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'app_config.dart';
 
 class LLMService {
-  static const _groqKey = AppConfig.groqApiKey;
+  static String get _groqKey => AppConfig.groqApiKey;
   static const _groqUrl = AppConfig.groqBaseUrl;
   static const _groqModel = AppConfig.groqModel;
 
