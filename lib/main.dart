@@ -126,19 +126,20 @@ class _SmartSpendAppState extends State<SmartSpendApp>
 
   @override
   Widget build(BuildContext context) {
-    return MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        textScaler: TextScaler.linear(themeService.textScale),
+    return MaterialApp(
+      navigatorKey: _navigatorKey,
+      debugShowCheckedModeBanner: false,
+      title: 'Smart Spend',
+      themeMode: themeService.themeMode,
+      theme: themeService.lightTheme,
+      darkTheme: themeService.darkTheme,
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(
+          textScaler: TextScaler.linear(themeService.textScale),
+        ),
+        child: child!,
       ),
-      child: MaterialApp(
-        navigatorKey: _navigatorKey,
-        debugShowCheckedModeBanner: false,
-        title: 'Smart Spend',
-        themeMode: themeService.themeMode,
-        theme: themeService.lightTheme,
-        darkTheme: themeService.darkTheme,
-        home: const SplashScreen(),
-      ),
+      home: const SplashScreen(),
     );
   }
 }

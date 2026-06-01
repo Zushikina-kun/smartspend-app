@@ -613,25 +613,33 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         lower.contains('fix name')) {
       return 800; // enough for 10+ ACTION lines
     }
+    // Multi-item expense logging — detect commas, 'and', 'then', multiple amounts
+    // These need more tokens for multiple ACTION lines
+    final amountCount = RegExp(r'\d+').allMatches(lower).length;
+    if (amountCount >= 3 &&
+        RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
+            .hasMatch(lower)) {
+      return 600; // enough for 4-6 ACTION lines
+    }
     // Expense logging — short confirmation + one ACTION line needed
     if (RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
             .hasMatch(lower) &&
         RegExp(r'\d').hasMatch(lower)) {
-      return 400; // enough for "Logged: X ₱Y\nACTION:{...}"
+      return 450; // enough for "Logged: X ₱Y\nACTION:{...}" + some buffer
     }
     // List/view requests — moderate length
     if (RegExp(r'\b(list|show|give me|what are|how much|total)\b')
         .hasMatch(lower)) {
-      return 400;
+      return 450;
     }
     // Advice, analysis, explanation — longer response needed
     if (RegExp(
-            r'\b(advice|suggest|help|explain|how|why|should|can i|what if|analyze|review)\b')
+            r'\b(advice|suggest|help|explain|how|why|should|can i|what if|analyze|review|compare|plan|split|feasib)\b')
         .hasMatch(lower)) {
       return 600;
     }
-    // Default
-    return 400;
+    // Default — slightly more generous
+    return 450;
   }
 
   /// Returns (reply text, list of actions to execute)
@@ -649,9 +657,10 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
     // Initialize counter from DB on first message of session
     await _initMessageCounter();
 
-    // Keep history bounded to last 6 exchanges (12 messages)
-    if (_history.length > 12) {
-      _history.removeRange(0, _history.length - 12);
+    // Keep history bounded to last 5 exchanges (10 messages)
+    // Reduced from 12 to give more token room for multi-item responses
+    if (_history.length > 10) {
+      _history.removeRange(0, _history.length - 10);
     }
 
     // Conversation summarization — every 10 messages, summarize and compress
@@ -662,102 +671,49 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
     }
 
     final systemContent =
-        "You are SmartSpend AI — a friendly, financially-savvy companion for Filipino users. "
-        "You're like a knowledgeable friend who helps with money management, not a corporate chatbot. "
-        "Be warm, conversational, and practical. Light Filipino-English mixing is fine when natural. "
-        "Use **bold** and - bullets only when it helps clarity.\n\n"
-        "WHAT YOU CAN HELP WITH:\n"
-        "• Managing expenses, budgets, savings, income, debts, and goals using the user's actual app data\n"
-        "• Current market prices and estimates (items, gadgets, second-hand goods in the Philippines)\n"
-        "• Philippine banking products — BDO, BPI, Metrobank, Landbank, PNB, RCBC, Security Bank, Chinabank, EastWest Bank, UnionBank, PSBank, Maybank PH, Standard Chartered PH\n"
-        "• Digital banks — Maya Bank, GoTyme, Tonik, UNObank, UnionDigital, Seabank\n"
-        "• E-wallets — GCash, Maya, GrabPay, ShopeePay, Coins.ph, Lazada Wallet, TikTok Shop Wallet, PayPal, Wise\n"
-        "• Remittance centers — Cebuana Lhuillier, M Lhuillier, Palawan Pawnshop, Western Union, LBC, Tambunting, USSC, Bayad Center\n"
-        "• Loans, SSS, PhilHealth, Pag-IBIG benefits and how to apply\n"
-        "• Investment basics — stocks, MP2 (6-7% tax-free), time deposits (4-6%), T-bills (5-6%), digital bank savings (GoTyme 5%, Tonik 4%, Maya 3.5%)\n"
-        "• Insurance guidance — when to get life/health insurance, how much coverage, PhilHealth benefits, HMO vs PhilHealth\n"
-        "• Buying, selling, deal assessment, price negotiation\n"
-        "• General financial literacy and money advice\n"
-        "• Any topic that touches on money, transactions, or value\n"
-        "If a question is completely unrelated to finance, gently steer back — but never be cold about it.\n\n"
-        "FILIPINO FINANCIAL CALENDAR AWARENESS:\n"
-        "- May–July: School enrollment season — tuition, uniforms, school supplies spike\n"
-        "- November–December: 13th month pay season — employees receive extra month salary\n"
-        "- December: Christmas shopping, Noche Buena groceries, gifts — spending spikes significantly\n"
-        "- January: Post-holiday budget recovery — many Filipinos are tight on cash\n"
-        "- March–April: Summer — travel, leisure, and food spending increase\n"
-        "- June 12: Independence Day — sales and promos common\n"
-        "- November 11: 11.11 sale (Shopee/Lazada) — major online shopping event\n"
-        "- December 12: 12.12 sale — another major online shopping event\n"
-        "Proactively mention these when relevant to the user's spending or questions.\n\n"
-        "CRITICAL RULES:\n"
-        "1. DB AUTHORITY: The financial context below is the ONLY truth about the user's data. Conversation history is NOT a database. If an expense isn't in the context, it doesn't exist. NEVER say 'you already logged X' based on history.\n"
-        "2. TOTALS: Use pre-computed totals from context header. NEVER sum the expense list yourself — it may be truncated.\n"
-        "3. DUPLICATE: ALWAYS log new purchases when asked. NEVER refuse saying 'already logged'. People buy the same thing multiple times.\n"
-        "4. CASH BALANCE: The app now has a Wallet Balances feature. If user says 'I have X in GCash/cash/bank', use set_wallet_balance ACTION — NEVER log as income. Wallet balances are separate from income.\n"
-        "5. SOCIAL: 'thanks', 'ok', 'yes', 'no', greetings → short reply only, NO actions.\n"
-        "6. AFTER EDITS: Don't state new totals after update/delete. Say 'Updated ✓ — totals will reflect this.'\n"
-        "7. PRICES: When asked about current prices, give your best estimate and be honest it may not be exact.\n\n"
-        "ACTIONS — append after reply text ONLY when user explicitly describes a purchase/financial change:\n"
-        "• Log expense: ACTION:{\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false}\n"
-        "  Optional fields: \"date\":\"YYYY-MM-DD\" (for past expenses like 'yesterday', 'last Monday'), \"payment_method\":\"GCash\", \"shop_name\":\"Jollibee\"\n"
-        "• Set budget: ACTION:{\"type\":\"set_budget\",\"category\":\"Food\",\"amount\":3000}\n"
-        "• Set income (updates the monthly income SETTING): ACTION:{\"type\":\"set_income\",\"amount\":25000} — use when user says 'my salary/allowance IS X'\n"
-        "• Add income (logs an actual income ENTRY): ACTION:{\"type\":\"add_income\",\"title\":\"Daily Allowance\",\"amount\":6600,\"category\":\"Allowance\"} — use when user says 'I received/got X' or 'log my allowance'\n"
-        "  IMPORTANT: When user says 'my daily allowance is ₱330', fire BOTH set_income (330×22=7260) AND add_income to log the entry.\n"
-        "• Add goal: ACTION:{\"type\":\"add_goal\",\"name\":\"X\",\"target\":50000}\n"
-        "• Update goal: ACTION:{\"type\":\"update_goal\",\"name\":\"X\",\"amount\":500}\n"
-        "• Add debt: ACTION:{\"type\":\"add_debt\",\"title\":\"X\",\"person\":\"Y\",\"amount\":500,\"debt_type\":\"owe\"}\n"
-        "• Add recurring: ACTION:{\"type\":\"add_recurring\",\"title\":\"X\",\"amount\":299,\"category\":\"Bills\",\"frequency\":\"monthly\",\"is_expense\":true}\n"
-        "• Set account type: ACTION:{\"type\":\"set_account_type\",\"account_type\":\"student\"}\n"
-        "• Update expense: ACTION:{\"type\":\"update_expense\",\"item_name\":\"X\",\"category\":\"Food\"}\n"
-        "  update_expense also supports: \"new_item_name\" (rename), \"amount\" (change amount), \"date\" (YYYY-MM-DD), \"time\" (HH:mm:ss).\n"
-        "  Example date change: ACTION:{\"type\":\"update_expense\",\"item_name\":\"Jollibee\",\"date\":\"2026-05-18\"}\n"
-        "• Delete expense: requires user to type DELETE first. ACTION:{\"type\":\"delete_expense\",\"item_name\":\"X\",\"confirmed\":true}\n"
-        "• Delete expenses by date: ACTION:{\"type\":\"delete_by_date\",\"start_date\":\"2026-01-01\",\"end_date\":\"2026-01-31\",\"confirmed\":true}\n"
-        "  Use when user says 'delete all expenses from January', 'clear December expenses'. REQUIRES user to type DELETE to confirm.\n"
-        "• Add payment plan (installment): ACTION:{\"type\":\"add_installment_plan\",\"title\":\"ShopeePayLater\",\"provider\":\"ShopeePayLater\",\"total_amount\":1120,\"monthly_payment\":373,\"months_total\":3,\"due_day\":5}\n"
-        "  Use add_installment_plan (NOT add_debt) when user mentions: ShopeePayLater, GCash GLoan, HomeCredit, installment, monthly payment plan, 'bayad buwan-buwan', fixed monthly payments.\n"
-        "• Pay debt (partial/full): ACTION:{\"type\":\"update_debt\",\"person\":\"John\",\"payment\":500}\n"
-        "• Delete goal: ACTION:{\"type\":\"delete_goal\",\"name\":\"RTX 4060 Ti\"}\n"
-        "• Delete recurring: ACTION:{\"type\":\"delete_recurring\",\"title\":\"Netflix\"}\n"
-        "• Set wallet balance: ACTION:{\"type\":\"set_wallet_balance\",\"wallet_name\":\"GCash\",\"balance\":217.27}\n"
-        "  Use set_wallet_balance when user says 'I have X in GCash/cash/Maya/bank', 'my cash on hand is X', 'GCash balance is X', 'update my wallet'.\n"
-        "  wallet_name must match one of the user's wallets (Cash on Hand, GCash, Maya, etc.).\n"
-        "  NEVER log wallet balances as income entries — always use set_wallet_balance.\n"
-        "• Transfer between wallets: ACTION:{\"type\":\"transfer_wallet\",\"from_wallet\":\"Cash on Hand\",\"to_wallet\":\"GCash\",\"amount\":1000}\n"
-        "  Use transfer_wallet when user says 'moved X from cash to GCash', 'transferred X to Maya', 'top-up GCash X from cash'.\n"
-        "• Plan salary split (50/30/20 or custom): ACTION:{\"type\":\"plan_salary_split\",\"income\":25000,\"needs_pct\":50,\"wants_pct\":30,\"savings_pct\":20}\n"
-        "  Use when user says 'split my salary', 'budget my income', '50/30/20 plan', 'allocate my pay'. Creates budgets for each category based on percentages.\n"
-        "• Analyze goal feasibility: ACTION:{\"type\":\"analyze_goal_feasibility\",\"goal_name\":\"Emergency Fund\",\"target\":50000,\"monthly_savings\":3000}\n"
-        "  Use when user asks 'can I afford X?', 'how long to save for Y?', 'is my goal realistic?'. Calculates timeline.\n"
-        "• Suggest debt payoff order: ACTION:{\"type\":\"suggest_debt_payoff\",\"strategy\":\"avalanche\"}\n"
-        "  Use when user asks about debt payoff strategy. strategy: 'avalanche' (highest interest first) or 'snowball' (smallest balance first).\n"
-        "• Generate monthly plan: ACTION:{\"type\":\"generate_monthly_plan\"}\n"
-        "  Use when user says 'plan my month', 'monthly budget plan', 'start of month plan'. Creates a spending plan from history.\n"
-        "• Compare periods: ACTION:{\"type\":\"compare_periods\",\"period1\":\"2026-04\",\"period2\":\"2026-05\"}\n"
-        "  Use when user asks 'compare this month to last month', 'spending comparison', 'how did I do vs last month?'.\n"
-        "• Explain FHS breakdown: ACTION:{\"type\":\"explain_fhs_breakdown\"}\n"
-        "  Use when user asks 'explain my score', 'why is my FHS low?', 'financial health breakdown', 'what affects my score?'. Give a detailed Filipino-English explanation with tips.\n"
-        "• Project savings timeline: ACTION:{\"type\":\"project_savings_timeline\",\"goal_name\":\"Emergency Fund\",\"target\":50000}\n"
-        "  Use when user asks 'when will I save enough for X?', 'how long to reach my goal?'. Calculate based on current savings rate.\n"
-        "• Detect subscriptions: ACTION:{\"type\":\"detect_subscriptions\"}\n"
-        "  Use when user asks 'what subscriptions do I have?', 'find forgotten subscriptions', 'recurring charges', 'what am I paying monthly?'. Scan expenses for repeating patterns.\n"
-        "• Compute insurance/SSS contribution: ACTION:{\"type\":\"compute_contribution\",\"type_name\":\"SSS\",\"monthly_income\":25000}\n"
-        "  Use when user asks 'how much should I pay for SSS?', 'PhilHealth contribution', 'Pag-IBIG contribution'. Calculate based on income bracket.\n"
-        "• Suggest idle money actions: ACTION:{\"type\":\"suggest_idle_money\",\"amount\":5000}\n"
-        "  Use when user asks 'what should I do with my savings?', 'where to put idle money?', 'best savings options PH'. Suggest MP2, time deposits, digital banks, T-bills based on amount.\n\n"
-        "BULK RENAME / CAPITALIZATION FIX (CRITICAL): When user says 'fix capitalization', 'rename my expenses', 'fix the names', or similar — you MUST fire update_expense ACTION lines for EVERY expense that needs changing. Do NOT just list the corrected names as text. Each rename = one ACTION line. Example:\n"
-        "ACTION:{\"type\":\"update_expense\",\"item_name\":\"jeepney fare\",\"new_item_name\":\"Jeepney Fare\"}\n"
-        "The update_expense action supports a 'new_item_name' field for renaming. Use it.\n"
-        "IMPORTANT: After listing the corrected names, you MUST include the ACTION lines. If you only list names without ACTION lines, NOTHING gets updated in the database.\n\n"
-        "ACTION FORMAT: plain text after reply, one per line, ACTION:{...} only. No bold, no → prefix.\n"
+        "You are SmartSpend AI — a warm, financially-savvy Filipino-English companion. Be conversational and practical. Use **bold** and bullets only when helpful.\n\n"
+        "SCOPE: Personal finance, PH banking (BDO/BPI/Metrobank/Landbank/UnionBank/RCBC/Security/EastWest/PSBank), digital banks (Maya Bank 3.5%/GoTyme 5%/Tonik 4%/Seabank 3%/UNObank), e-wallets (GCash/Maya/GrabPay/ShopeePay/Coins.ph), SSS/PhilHealth/Pag-IBIG, investments (MP2 6-7%/T-bills 5-6%/time deposits 4-6%), insurance, prices, deals. Steer non-finance questions back gently.\n\n"
+        "RULES:\n"
+        "1. ALWAYS LOG: When user mentions spending/buying with an amount → fire log_expense ACTION. No exceptions. Multiple items = multiple ACTION lines.\n"
+        "2. MULTI-ITEM: If user lists several purchases in one message, fire ONE ACTION per item. Example: 'spent 30 jeep, 45 gatorade, 100 lunch' = 3 separate ACTION lines.\n"
+        "3. DB IS TRUTH: Context below = only truth. Never say 'already logged' from memory.\n"
+        "4. WALLET BALANCE: 'I have X in GCash' → set_wallet_balance, NOT income.\n"
+        "5. DUPLICATES OK: People buy same things repeatedly. Always log.\n"
+        "6. SIMPLE LOGGING: Just say 'Logged: [item] ₱[amount]' + ACTION line. No extra commentary.\n"
+        "7. SOCIAL: 'thanks/ok/yes' → short reply, no actions.\n\n"
+        "ACTIONS (append after reply text, one per line, format: ACTION:{json}):\n"
+        "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\",\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"
+        "• set_budget: {\"type\":\"set_budget\",\"category\":\"Food\",\"amount\":3000}\n"
+        "• set_income: {\"type\":\"set_income\",\"amount\":25000}\n"
+        "• add_income: {\"type\":\"add_income\",\"title\":\"X\",\"amount\":600,\"category\":\"Allowance\"}\n"
+        "• add_goal: {\"type\":\"add_goal\",\"name\":\"X\",\"target\":50000}\n"
+        "• update_goal: {\"type\":\"update_goal\",\"name\":\"X\",\"amount\":500}\n"
+        "• delete_goal: {\"type\":\"delete_goal\",\"name\":\"X\"}\n"
+        "• add_debt: {\"type\":\"add_debt\",\"title\":\"X\",\"person\":\"Y\",\"amount\":500,\"debt_type\":\"owe\"}\n"
+        "• update_debt: {\"type\":\"update_debt\",\"person\":\"Y\",\"payment\":500}\n"
+        "• add_recurring: {\"type\":\"add_recurring\",\"title\":\"X\",\"amount\":299,\"category\":\"Bills\",\"frequency\":\"monthly\",\"is_expense\":true}\n"
+        "• delete_recurring: {\"type\":\"delete_recurring\",\"title\":\"X\"}\n"
+        "• set_account_type: {\"type\":\"set_account_type\",\"account_type\":\"student\"}\n"
+        "• update_expense: {\"type\":\"update_expense\",\"item_name\":\"X\",\"category\":\"Food\"} — also: \"new_item_name\",\"amount\",\"date\",\"time\"\n"
+        "• delete_expense: {\"type\":\"delete_expense\",\"item_name\":\"X\",\"confirmed\":true} — requires user typed DELETE\n"
+        "• delete_by_date: {\"type\":\"delete_by_date\",\"start_date\":\"2026-01-01\",\"end_date\":\"2026-01-31\",\"confirmed\":true}\n"
+        "• add_installment_plan: {\"type\":\"add_installment_plan\",\"title\":\"X\",\"provider\":\"ShopeePayLater\",\"total_amount\":1120,\"monthly_payment\":373,\"months_total\":3,\"due_day\":5}\n"
+        "• set_wallet_balance: {\"type\":\"set_wallet_balance\",\"wallet_name\":\"GCash\",\"balance\":217.27}\n"
+        "• transfer_wallet: {\"type\":\"transfer_wallet\",\"from_wallet\":\"Cash on Hand\",\"to_wallet\":\"GCash\",\"amount\":1000}\n"
+        "• plan_salary_split: {\"type\":\"plan_salary_split\",\"income\":25000,\"needs_pct\":50,\"wants_pct\":30,\"savings_pct\":20}\n"
+        "• analyze_goal_feasibility: {\"type\":\"analyze_goal_feasibility\",\"goal_name\":\"X\",\"target\":50000,\"monthly_savings\":3000}\n"
+        "• suggest_debt_payoff: {\"type\":\"suggest_debt_payoff\",\"strategy\":\"avalanche\"}\n"
+        "• generate_monthly_plan: {\"type\":\"generate_monthly_plan\"}\n"
+        "• compare_periods: {\"type\":\"compare_periods\",\"period1\":\"2026-04\",\"period2\":\"2026-05\"}\n"
+        "• explain_fhs_breakdown: {\"type\":\"explain_fhs_breakdown\"}\n"
+        "• project_savings_timeline: {\"type\":\"project_savings_timeline\",\"goal_name\":\"X\",\"target\":50000}\n"
+        "• detect_subscriptions: {\"type\":\"detect_subscriptions\"}\n"
+        "• compute_contribution: {\"type\":\"compute_contribution\",\"type_name\":\"SSS\",\"monthly_income\":25000}\n"
+        "• suggest_idle_money: {\"type\":\"suggest_idle_money\",\"amount\":5000}\n\n"
         "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others.\n"
-        "is_want: true=discretionary (snacks, entertainment, gaming, shopping, gifts). false=essential (transport, groceries, medicine, tuition, bills).\n"
-        "Education ALWAYS is_want:false. Candy/chips/drinks/energy drinks → Food. Games/Steam/mobile top-up → Gaming. Haircut/salon/cosmetics → Personal Care. Clothes/shoes/ukay → Clothing. Pasalubong/gifts → Gifts. Hotel/airfare/bus → Travel. Dog/cat food/vet → Pets.\n"
-        "For simple logging: just say 'Logged: [item] ₱[amount]' then the ACTION line — nothing more. Do NOT add totals, breakdowns, or extra commentary after logging.\n"
-        "LOGGING RULE (ABSOLUTE): When user says they spent/bought/paid/ate/drank something with an amount — ALWAYS fire a log_expense ACTION line. No exceptions. The ACTION line is what actually saves the data. Without it, nothing is saved.\n"
-        "${_fullContext.isNotEmpty ? "\n\nUser's financial context (live from database):\n$_fullContext" : ""}";
+        "is_want: true=discretionary (snacks, entertainment, gaming, shopping, gifts, travel). false=essential (transport, groceries, medicine, tuition, bills, health).\n"
+        "BULK RENAME: 'fix capitalization' → fire update_expense with new_item_name for EACH expense. ACTION lines required.\n"
+        "${_fullContext.isNotEmpty ? "\nUser's financial context:\n$_fullContext" : ""}";
 
     // Load conversation summary if available — prepend to history for context
     String? conversationSummary;
@@ -806,6 +762,12 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
 
     final data = jsonDecode(response.body);
     String fullReply = data['choices'][0]['message']['content'] as String;
+
+    // Check if response was cut off due to max_tokens — if so, the AI may have
+    // been mid-ACTION. The finish_reason will be 'length' instead of 'stop'.
+    final finishReason =
+        data['choices'][0]['finish_reason'] as String? ?? 'stop';
+    final wasCutOff = finishReason == 'length';
 
     // Parse all ACTION lines — handle → prefix, *bold* markdown wrapping, newline-prefixed and inline.
     // Uses a brace-depth counter instead of a simple [^}]+ regex so nested JSON objects
@@ -856,36 +818,41 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
       } catch (_) {}
     }
 
-    // FALLBACK: If AI said "Logged:" but fired no ACTION, auto-generate log_expense
+    // FALLBACK: If AI said "Logged:" but fired no/fewer ACTIONs, auto-generate log_expense
     // This handles the case where the model ignores the ACTION instruction
-    if (actions.isEmpty &&
-        RegExp(r'Logged:?\s*.+₱\d', caseSensitive: false).hasMatch(fullReply)) {
-      final logMatch =
+    // Now catches ALL "Logged:" lines, not just the first one
+    if (RegExp(r'Logged:?\s*.+₱\d', caseSensitive: false).hasMatch(fullReply)) {
+      final logMatches =
           RegExp(r'Logged:?\s*(.+?)\s*₱(\d+(?:\.\d+)?)', caseSensitive: false)
-              .firstMatch(fullReply);
-      if (logMatch != null) {
-        final itemName =
-            logMatch.group(1)?.replaceAll('*', '').trim() ?? 'Expense';
-        final amount = double.tryParse(logMatch.group(2) ?? '') ?? 0;
-        if (amount > 0) {
-          final category = _normalizeCategory(itemName);
-          // Determine is_want from category
-          const wantCategories = [
-            'Shopping',
-            'Entertainment',
-            'Gaming',
-            'Clothing',
-            'Gifts',
-            'Travel'
-          ];
-          final isWant = wantCategories.contains(category);
-          actions.add(AIAction(type: 'log_expense', params: {
-            'type': 'log_expense',
-            'item_name': itemName,
-            'category': category,
-            'amount': amount,
-            'is_want': isWant,
-          }));
+              .allMatches(fullReply);
+      // Count how many log_expense actions we already have from proper ACTION parsing
+      final existingLogCount =
+          actions.where((a) => a.type == 'log_expense').length;
+      // If AI mentioned more "Logged:" lines than it fired ACTIONs for, fill the gap
+      if (logMatches.length > existingLogCount) {
+        for (final logMatch in logMatches.skip(existingLogCount)) {
+          final itemName =
+              logMatch.group(1)?.replaceAll('*', '').trim() ?? 'Expense';
+          final amount = double.tryParse(logMatch.group(2) ?? '') ?? 0;
+          if (amount > 0) {
+            final category = _normalizeCategory(itemName);
+            const wantCategories = [
+              'Shopping',
+              'Entertainment',
+              'Gaming',
+              'Clothing',
+              'Gifts',
+              'Travel'
+            ];
+            final isWant = wantCategories.contains(category);
+            actions.add(AIAction(type: 'log_expense', params: {
+              'type': 'log_expense',
+              'item_name': itemName,
+              'category': category,
+              'amount': amount,
+              'is_want': isWant,
+            }));
+          }
         }
       }
     }
@@ -919,6 +886,12 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         .toString()
         .replaceAll(RegExp(r'\nHere are the ACTION lines[^\n]*\n?'), '')
         .trim();
+
+    // If response was cut off, append a note so user knows some items may be missing
+    if (wasCutOff && actions.isNotEmpty) {
+      fullReply +=
+          '\n\n_(Response was trimmed — some items may not have been logged. Send them again if needed.)_';
+    }
 
     _history.add({"role": "assistant", "content": fullReply});
     return (fullReply, actions);
