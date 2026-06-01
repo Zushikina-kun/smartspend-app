@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'db_service.dart';
+import 'currency_service.dart';
 
 class NotificationService {
   static final _plugin = FlutterLocalNotificationsPlugin();
@@ -66,7 +67,7 @@ class NotificationService {
     await _plugin.show(
       1,
       '📊 Weekly Spending Summary',
-      'You spent ₱${total.toStringAsFixed(0)} this week. Top category: $topCat.',
+      'You spent ${CurrencyService.format(total)} this week. Top category: $topCat.',
       const NotificationDetails(android: android),
     );
 

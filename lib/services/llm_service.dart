@@ -182,8 +182,14 @@ Return ONLY this JSON:
       'Bills',
       'Shopping',
       'Entertainment',
+      'Gaming',
       'Health',
       'Education',
+      'Personal Care',
+      'Clothing',
+      'Gifts',
+      'Travel',
+      'Pets',
       'Others'
     ];
     // Case-insensitive exact match
@@ -1024,4 +1030,3 @@ Return ONLY this JSON array:
     }
   }
 }
-

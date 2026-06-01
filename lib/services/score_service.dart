@@ -61,11 +61,12 @@ class ScoreService {
 
     if (expenses.isEmpty) {
       breakdown.add({
-        'reason': 'No expenses recorded yet',
+        'reason':
+            'No expenses recorded yet — start logging to see your real score',
         'points': 0,
         'component': 'all',
       });
-      return {'score': 100, 'breakdown': breakdown};
+      return {'score': 50, 'breakdown': breakdown};
     }
 
     final now = DateTime.now();
