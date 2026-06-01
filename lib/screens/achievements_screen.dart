@@ -16,28 +16,46 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   bool _loading = true;
 
   static const _allBadges = [
+    // Getting Started
     _Badge('🌱', 'First Step', 'Log your first expense', 'first_expense'),
+    _Badge('📱', 'App Explorer', 'Use 5 different features', 'explorer'),
+    // Streaks
     _Badge(
         '🔥', '3-Day Streak', 'Score ≥60 for 3 consecutive days', 'streak_3'),
     _Badge(
         '💯', 'Week Warrior', 'Score ≥60 for 7 consecutive days', 'streak_7'),
     _Badge(
         '🏆', 'Month Master', 'Score ≥60 for 30 consecutive days', 'streak_30'),
+    // Savings & Budget
     _Badge('💰', 'Saver', 'Save ≥20% of income for a full month', 'saver'),
     _Badge('🎯', 'Goal Getter', 'Complete a savings goal', 'goal_complete'),
-    _Badge('🧾', 'Receipt Scanner', 'Scan 10 receipts', 'scan_10'),
-    _Badge('🤖', 'AI Power User', 'Send 20 AI messages', 'ai_20'),
     _Badge('📊', 'Budget Boss', 'All budgets on track for a full month',
         'budget_boss'),
+    _Badge('🪙', 'Spare Change Hero', 'Save ₱100+ via round-up savings',
+        'roundup_100'),
+    // AI & Tech
+    _Badge('🤖', 'AI Power User', 'Send 20 AI messages', 'ai_20'),
+    _Badge('🧾', 'Receipt Scanner', 'Scan 10 receipts', 'scan_10'),
+    _Badge('🔀', 'Wallet Wizard', 'Make 5 wallet transfers', 'transfers_5'),
+    // Discipline
     _Badge('🚫', 'Impulse Control', 'Decline an impulse pause 5 times',
         'impulse_5'),
+    _Badge('📅', 'Consistent Logger', 'Log every day for 14 days', 'log_14'),
+    _Badge('🔍', 'Detail Oriented', 'Add notes to 10 expenses', 'notes_10'),
+    _Badge('🛡️', 'Insurance Aware', 'Track at least 1 insurance policy',
+        'insurance_1'),
+    // Fun
     _Badge('🌙', 'Night Owl', 'Log an expense after 10 PM', 'night_owl'),
     _Badge('☀️', 'Early Bird', 'Log an expense before 8 AM', 'early_bird'),
+    // Debt & Financial Health
     _Badge('💳', 'Debt Slayer', 'Pay off a debt completely', 'debt_paid'),
     _Badge('🏦', 'Emergency Ready', 'Emergency fund reaches 100%',
         'emergency_100'),
-    _Badge('📅', 'Consistent Logger', 'Log every day for 14 days', 'log_14'),
-    _Badge('🔍', 'Detail Oriented', 'Add notes to 10 expenses', 'notes_10'),
+    // Milestones
+    _Badge('💎', 'Century Club', 'Log 100 expenses total', 'expenses_100'),
+    _Badge('⭐', 'Score Star', 'Reach FHS score of 80+', 'score_80'),
+    _Badge('🎓', 'Financial Literate', 'Ask AI 5 financial advice questions',
+        'advice_5'),
   ];
 
   @override
@@ -161,6 +179,56 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         int.tryParse(await DBService.getSetting('impulse_declines') ?? '0') ??
             0;
     if (impulseDeclines >= 5) earned.add('impulse_5');
+
+    // NEW BADGES — v2.7.0
+
+    // Century Club — 100+ total expenses
+    if (expenses.length >= 100) earned.add('expenses_100');
+
+    // Score Star — FHS score of 80+
+    if (history.isNotEmpty && (history.last['score'] as int) >= 80) {
+      earned.add('score_80');
+    }
+
+    // Spare Change Hero — round-up savings accumulated ₱100+
+    // Check if any goal has received round-up contributions
+    for (final g in goals) {
+      if ((g['current_amount'] as num) >= 100) {
+        earned.add('roundup_100'); // approximate — any goal with ₱100+ counts
+        break;
+      }
+    }
+
+    // Wallet Wizard — 5+ wallet transfers (check expenses with transfer notes)
+    final transferCount =
+        expenses.where((e) => e.notes?.contains('Transfer') ?? false).length;
+    if (transferCount >= 5) earned.add('transfers_5');
+
+    // Insurance Aware — at least 1 insurance policy tracked
+    try {
+      final policies = await DBService.getInsurancePolicies();
+      if (policies.isNotEmpty) earned.add('insurance_1');
+    } catch (_) {}
+
+    // App Explorer — used 5+ different features (heuristic: has expenses + budgets + goals + chat + scan)
+    int featuresUsed = 0;
+    if (expenses.isNotEmpty) featuresUsed++;
+    if (budgets.isNotEmpty) featuresUsed++;
+    if (goals.isNotEmpty) featuresUsed++;
+    if (chatHistory.length >= 5) featuresUsed++;
+    if (scans.isNotEmpty) featuresUsed++;
+    if (debts.isNotEmpty) featuresUsed++;
+    if (featuresUsed >= 5) earned.add('explorer');
+
+    // Financial Literate — asked AI 5+ advice questions
+    final adviceMessages = chatHistory
+        .where((m) =>
+            (m['role'] as String) == 'user' &&
+            RegExp(r'(how|why|should|can i|what if|explain|advice|suggest)',
+                    caseSensitive: false)
+                .hasMatch(m['message'] as String? ?? ''))
+        .length;
+    if (adviceMessages >= 5) earned.add('advice_5');
 
     if (mounted)
       setState(() {

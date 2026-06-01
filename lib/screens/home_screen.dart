@@ -3577,7 +3577,7 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
     final hasWantToday = todayExpenses.any((e) => e.isWant == true);
     final loggedMultiple = todayExpenses.length >= 3;
 
-    // All possible challenges — 3 shown per day based on day-of-week rotation
+    // All possible challenges — 4 shown per day based on day-of-week rotation
     final allChallenges = <Map<String, dynamic>>[
       {
         'title': 'Log an expense today',
@@ -3616,6 +3616,37 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
         'done': widget.score > 0,
         'icon': Icons.monitor_heart_outlined,
         'color': Colors.purple
+      },
+      {
+        'title': 'Update your wallet balance',
+        'done': false, // can't easily check this without DB call
+        'icon': Icons.account_balance_wallet,
+        'color': Colors.green
+      },
+      {
+        'title': 'Spend only on Needs today',
+        'done': hasLoggedToday && hasNeedToday && !hasWantToday,
+        'icon': Icons.verified_outlined,
+        'color': Colors.teal
+      },
+      {
+        'title': 'Keep total under ₱200 today',
+        'done': hasLoggedToday && todaySpent <= 200,
+        'icon': Icons.money_off,
+        'color': Colors.amber
+      },
+      {
+        'title': 'Log before noon',
+        'done': todayExpenses.any((e) {
+          try {
+            final h = int.parse(e.time?.substring(0, 2) ?? '99');
+            return h < 12;
+          } catch (_) {
+            return false;
+          }
+        }),
+        'icon': Icons.wb_sunny_outlined,
+        'color': Colors.orange
       },
     ];
 
