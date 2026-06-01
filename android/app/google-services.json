@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "578698877732-gmq2foh9qrlp3sp5hog7nngh7ve1e4bk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucidframe.smartspend_app",
+            "certificate_hash": "4d1c67d4787a30206d5bd5976ef6ef873d9112e8"
+          }
+        },
+        {
           "client_id": "578698877732-kjlr84e809fcr3n7953qauflkfo14leq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -118,9 +118,17 @@ storeFile=smartspend-release.jks
 
 **SHA-1 fingerprints registered in Firebase:**
 - Release: `9E:2E:EE:E5:0A:9D:80:66:4E:79:DF:22:8E:B9:79:8A:E0:C7:F2:28`
-- Debug: `40:B2:1D:58:7A:95:93:55:6D:A2:B0:5A:22:43:D4:1B:D0:C0:D6:62`
+- Debug (machine 1): `40:B2:1D:58:7A:95:93:55:6D:A2:B0:5A:22:43:D4:1B:D0:C0:D6:62`
+- Debug (machine 2 — Brix's current dev machine): `4D:1C:67:D4:78:7A:30:20:6D:5B:D5:97:6E:F6:EF:87:3D:91:12:E8`
 
-Both are registered in Firebase Console → Project Settings → Android app → SHA certificate fingerprints. This is required for Google Sign-In to work.
+All are registered in Firebase Console → Project Settings → Android app → SHA certificate fingerprints. This is required for Google Sign-In to work.
+
+**If Google Sign-In fails on a new machine:**
+1. Run: `keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android`
+2. Copy the SHA-1 fingerprint
+3. Add it to Firebase Console → Project Settings → Android app → Add fingerprint
+4. Download the new `google-services.json` and replace `android/app/google-services.json`
+5. Rebuild the APK
 
 ---
 

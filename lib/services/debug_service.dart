@@ -16,7 +16,7 @@ class DebugService {
 
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln('  SMART SPEND — DEBUG LOG');
-    buffer.writeln('  Version: 2.5.0');
+    buffer.writeln('  Version: 2.7.0');
     buffer.writeln('  Generated: ${fmt.format(now)}');
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln();
@@ -341,6 +341,16 @@ class DebugService {
     }
     buffer.writeln();
 
+    buffer.writeln('═══════════════════════════════════════════════');
+    buffer.writeln('  BUILD INFO');
+    buffer.writeln('═══════════════════════════════════════════════');
+    buffer.writeln(
+        '  Debug SHA-1: 4D:1C:67:D4:78:7A:30:20:6D:5B:D5:97:6E:F6:EF:87:3D:91:12:E8');
+    buffer.writeln(
+        '  If Google Sign-In fails: add this SHA-1 to Firebase Console');
+    buffer.writeln(
+        '  Firebase: Project Settings → Your Apps → Android → Add fingerprint');
+    buffer.writeln();
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln('  END OF DEBUG LOG');
     buffer.writeln('═══════════════════════════════════════════════');

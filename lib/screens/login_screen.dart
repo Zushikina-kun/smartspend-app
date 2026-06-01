@@ -149,16 +149,32 @@ class _LoginScreenState extends State<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       if (mounted) setState(() => _errorMessage = _friendlyError(e.toString()));
     } catch (e) {
-      final msg = e.toString();
-      if (msg.contains('LinkAccountException') ||
+      final msg = e.toString().toLowerCase();
+      if (msg.contains('linkaccountexception') ||
           msg.contains('account-exists')) {
         if (mounted) {
           setState(() => _errorMessage =
               "An account with this email already exists. Please log in with your password first, then link Google from Profile settings.");
         }
-      } else if (!msg.contains('sign_in_canceled') &&
-          !msg.contains('network_error')) {
-        if (mounted) setState(() => _errorMessage = "Google sign-in failed.");
+      } else if (msg.contains('sign_in_canceled') ||
+          msg.contains('network_error') ||
+          msg.contains('canceled')) {
+        // User cancelled or no network — silent, no error shown
+      } else if (msg.contains('sha') ||
+          msg.contains('certificate') ||
+          msg.contains('10:') ||
+          msg.contains('developer_error') ||
+          msg.contains('sign_in_failed')) {
+        // SHA-1 fingerprint not registered in Firebase
+        if (mounted) {
+          setState(() => _errorMessage =
+              "Google sign-in configuration error.\n\nIf you're a developer: add your debug SHA-1 fingerprint to Firebase Console → Project Settings → Your Apps → Android app.\n\nDebug SHA-1: 4D:1C:67:D4:78:7A:30:20:6D:5B:D5:97:6E:F6:EF:87:3D:91:12:E8");
+        }
+      } else {
+        if (mounted) {
+          setState(() => _errorMessage =
+              "Google sign-in failed. Try email/password login instead.\n\nError: ${e.toString().replaceAll('Exception: ', '')}");
+        }
       }
     } finally {
       if (mounted) setState(() => _googleLoading = false);
