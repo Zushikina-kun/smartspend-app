@@ -35,6 +35,7 @@ import 'achievements_screen.dart';
 import 'bank_import_screen.dart';
 import 'insurance_screen.dart';
 import 'bank_comparison_screen.dart';
+import 'pca_calculator_screen.dart';
 import '../services/startup_alerts_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -566,6 +567,12 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     "Compare 20 banks, digital banks, e-wallets, and investment options",
                     Colors.blue,
                     () => _go(const BankComparisonScreen())),
+                _tile(
+                    Icons.calculate_outlined,
+                    "Peso Cost Averaging",
+                    "Plan your regular investments — MP2, UITFs, stocks",
+                    Colors.teal,
+                    () => _go(const PCACalculatorScreen())),
                 const SizedBox(height: 8),
               ],
             ),

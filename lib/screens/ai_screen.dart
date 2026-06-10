@@ -1775,6 +1775,10 @@ class _AIScreenState extends State<AIScreen> {
                   Expanded(
                     child: TextField(
                       controller: _controller,
+                      maxLines: 6,
+                      minLines: 1,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
                       decoration: InputDecoration(
                         hintText: _isListening
                             ? "Listening..."
@@ -1784,7 +1788,6 @@ class _AIScreenState extends State<AIScreen> {
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 10),
                       ),
-                      onSubmitted: (_) => _send(),
                     ),
                   ),
                   const SizedBox(width: 8),

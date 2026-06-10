@@ -793,6 +793,111 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _showHealthCertificate() async {
+    final now = DateTime.now();
+    final monthStr = "${[
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ][now.month]} ${now.year}";
+    final scoreLabel = _score >= 80
+        ? "Excellent 🌟"
+        : _score >= 60
+            ? "Good ✅"
+            : "In Progress 📈";
+
+    if (!mounted) return;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.indigo.shade700, Colors.indigo.shade400],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  const Text("🏅 Financial Health Certificate",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  Text(
+                    "${_profile?.displayName ?? 'User'}",
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  const SizedBox(height: 8),
+                  Text("has achieved a Financial Health Score of",
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 13)),
+                  const SizedBox(height: 8),
+                  Text("$_score / 100",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold)),
+                  Text(scoreLabel,
+                      style:
+                          const TextStyle(color: Colors.white70, fontSize: 16)),
+                  const SizedBox(height: 12),
+                  Text("$monthStr · SmartSpend by Lucid Frame",
+                      style:
+                          const TextStyle(color: Colors.white54, fontSize: 11)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final text =
+                      "🏅 My Financial Health Score: $_score/100 ($scoreLabel)\n"
+                      "$monthStr — SmartSpend by Lucid Frame\n\n"
+                      "Track your finances smarter with SmartSpend!";
+                  await Share.share(text,
+                      subject: "My SmartSpend Financial Health Certificate");
+                  if (mounted) Navigator.pop(context);
+                },
+                icon: const Icon(Icons.share),
+                label: const Text("Share Certificate"),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _export() async {
     try {
       final expenses = await DBService.getExpenses();
@@ -1793,6 +1898,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             title: const Text("Export to CSV"),
                             trailing: const Icon(Icons.chevron_right),
                             onTap: _export,
+                          ),
+                          const Divider(height: 1),
+                          ListTile(
+                            leading: Icon(Icons.workspace_premium_outlined,
+                                color: cs.primary),
+                            title: const Text("Financial Health Certificate"),
+                            subtitle: const Text(
+                                "Share your FHS score as an image",
+                                style: TextStyle(fontSize: 11)),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: _showHealthCertificate,
                           ),
                           const Divider(height: 1),
                           ListTile(
