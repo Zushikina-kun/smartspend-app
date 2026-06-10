@@ -3195,9 +3195,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   Widget _buildEmergencyFundCard(BuildContext context) {
     // Calculate average monthly spending from last 3 months
+    // Excludes large one-time Want purchases (>3x category average) to avoid inflation
     final now = DateTime.now();
     double totalSpent3Mo = 0;
     int monthsCounted = 0;
+    int excludedCount = 0;
+
+    // First pass: compute category averages to identify outliers
+    final catAmounts = <String, List<double>>{};
+    for (final e in _expenses) {
+      catAmounts.putIfAbsent(e.category, () => []).add(e.amount);
+    }
+    final catAvg = <String, double>{};
+    catAmounts.forEach((cat, amounts) {
+      catAvg[cat] = amounts.reduce((a, b) => a + b) / amounts.length;
+    });
+
     for (int i = 0; i < 3; i++) {
       final month = DateTime(now.year, now.month - i, 1);
       final key = "${month.year}-${month.month.toString().padLeft(2, '0')}";
@@ -3209,7 +3222,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         }
       }).toList();
       if (monthExpenses.isNotEmpty) {
-        totalSpent3Mo += monthExpenses.fold<double>(0, (s, e) => s + e.amount);
+        double monthTotal = 0;
+        for (final e in monthExpenses) {
+          final avg = catAvg[e.category] ?? e.amount;
+          // Exclude if: tagged as Want AND amount is 3x+ the category average AND > ₱1,000
+          final isLargeOneTime =
+              (e.isWant == true) && (e.amount > avg * 3) && (e.amount > 1000);
+          if (isLargeOneTime) {
+            excludedCount++;
+          } else {
+            monthTotal += e.amount;
+          }
+        }
+        totalSpent3Mo += monthTotal;
         monthsCounted++;
       }
     }
@@ -3240,7 +3265,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-              "Based on your average monthly spending of ${CurrencyService.format(avgMonthly)}:",
+              "Based on avg monthly essentials: ${CurrencyService.format(avgMonthly)}"
+              "${excludedCount > 0 ? ' ($excludedCount large one-time purchases excluded)' : ''}",
               style: const TextStyle(fontSize: 12, color: Colors.grey)),
           const SizedBox(height: 10),
           _efRow("3-Month Fund (minimum)", target3Mo, Colors.teal),

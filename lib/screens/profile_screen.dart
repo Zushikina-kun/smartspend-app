@@ -509,23 +509,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final frequencyOptions = isStudent
         ? [
-            ('daily', 'Daily'),
-            ('weekly', 'Weekly'),
-            ('monthly', 'Monthly'),
+            ('daily', 'Daily allowance'),
+            ('weekly', 'Weekly allowance'),
+            ('bimonthly', 'Bi-monthly (15th & 30th)'),
+            ('monthly', 'Monthly allowance'),
             ('manual', 'Manual — enter total')
           ]
         : isUnemployed
-            ? [('manual', 'Manual — enter total'), ('monthly', 'Monthly')]
+            ? [
+                ('manual', 'Manual — enter total'),
+                ('monthly', 'Monthly'),
+                ('weekly', 'Weekly'),
+              ]
             : _accountType == 'general'
                 ? [
-                    ('manual', 'Manual — enter total'),
+                    ('daily', 'Daily'),
+                    ('weekly', 'Weekly'),
+                    ('bimonthly', 'Bi-monthly (15th & 30th)'),
                     ('monthly', 'Monthly'),
-                    ('weekly', 'Weekly')
+                    ('manual', 'Manual — enter total'),
                   ]
                 : [
                     ('daily', 'Daily wage'),
                     ('weekly', 'Weekly pay'),
-                    ('bimonthly', 'Bi-monthly'),
+                    ('bimonthly', 'Bi-monthly (15th & 30th)'),
                     ('monthly', 'Monthly salary'),
                     ('manual', 'Manual — enter total'),
                   ];
@@ -546,16 +553,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 TextField(
                   controller: controller,
                   keyboardType: TextInputType.number,
+                  onChanged: (_) =>
+                      setDialog(() {}), // trigger rebuild for helper text
                   decoration: InputDecoration(
                       labelText: frequency == 'manual'
                           ? "How much money do you have right now?"
                           : "$_incomeLabel amount",
                       prefixText: "${CurrencyService.symbol} ",
-                      helperText: frequency == 'manual'
-                          ? "Stored as-is — no conversion"
-                          : frequency != 'monthly'
-                              ? "Will be converted to monthly equivalent"
-                              : null),
+                      helperText: () {
+                        if (frequency == 'manual')
+                          return "Stored as-is — no conversion";
+                        final raw = double.tryParse(controller.text) ?? 0;
+                        if (raw <= 0) return null;
+                        double monthly = raw;
+                        if (frequency == 'daily') monthly = raw * 22;
+                        if (frequency == 'weekly') monthly = raw * 4.33;
+                        if (frequency == 'bimonthly') monthly = raw * 2;
+                        if (frequency == 'monthly') return null;
+                        return "= ${CurrencyService.format(monthly)}/month equivalent";
+                      }()),
                 ),
                 if (frequencyOptions.length > 1) ...[
                   const SizedBox(height: 14),

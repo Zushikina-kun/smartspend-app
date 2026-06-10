@@ -679,7 +679,7 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "3. DB IS TRUTH: Context below = only truth. Never say 'already logged' from memory.\n"
         "4. WALLET BALANCE: 'I have X in GCash' → set_wallet_balance, NOT income.\n"
         "5. DUPLICATES OK: People buy same things repeatedly. Always log.\n"
-        "6. SIMPLE LOGGING: Just say 'Logged: [item] ₱[amount]' + ACTION line. No extra commentary.\n"
+        "6. LOGGING TONE: When logging expenses, be warm and natural — not robotic. Instead of just 'Logged: X ₱Y', add a brief friendly comment. Examples: 'Got it, logged your jeepney fare 🚌', 'Noted! Lunch for ₱100 — hope it was good 😄', 'Logged your Sting — staying energized! ⚡'. Keep it short (1 line max), then the ACTION.\n"
         "7. SOCIAL: 'thanks/ok/yes' → short reply, no actions.\n\n"
         "ACTIONS (append after reply text, one per line, format: ACTION:{json}):\n"
         "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\",\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"

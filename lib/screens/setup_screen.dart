@@ -65,6 +65,7 @@ class _SetupScreenState extends State<SetupScreen> {
       return [
         ('daily', 'Daily allowance'),
         ('weekly', 'Weekly allowance'),
+        ('bimonthly', 'Bi-monthly (15th & 30th)'),
         ('monthly', 'Monthly allowance'),
         ('manual', 'Manual — just enter my total'),
       ];
@@ -78,19 +79,30 @@ class _SetupScreenState extends State<SetupScreen> {
     }
     if (_accountType == 'freelancer') {
       return [
+        ('daily', 'Daily rate'),
         ('weekly', 'Weekly project pay'),
         ('bimonthly', 'Bi-monthly'),
         ('monthly', 'Monthly retainer'),
         ('manual', 'Manual — just enter my total'),
       ];
     }
-    if (_accountType == 'unemployed' || _accountType == 'general') {
+    if (_accountType == 'unemployed') {
       return [
         ('manual', 'Manual — just enter my total'),
         ('monthly', 'Monthly'),
         ('weekly', 'Weekly'),
       ];
     }
+    if (_accountType == 'general') {
+      return [
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('bimonthly', 'Bi-monthly (15th & 30th)'),
+        ('monthly', 'Monthly'),
+        ('manual', 'Manual — just enter my total'),
+      ];
+    }
+    // employed, business, working_student
     return [
       ('daily', 'Daily wage'),
       ('weekly', 'Weekly pay'),
