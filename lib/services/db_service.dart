@@ -1072,6 +1072,15 @@ class DBService {
 
   static Future<void> insertIncome(Map<String, dynamic> data) async {
     final db = await getDB();
+    // Duplicate detection: same title + amount + date within same day
+    final today = (data['date'] as String?) ??
+        DateTime.now().toIso8601String().substring(0, 10);
+    final existing = await db.query('income',
+        where: 'title = ? AND amount = ? AND date = ?',
+        whereArgs: [data['title'], data['amount'], today],
+        limit: 1);
+    if (existing.isNotEmpty) return; // duplicate — skip silently
+
     final id = await db.insert('income', data,
         conflictAlgorithm: ConflictAlgorithm.replace);
     CloudService.pushDoc('income', {...data, 'id': id});

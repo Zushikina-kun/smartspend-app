@@ -441,7 +441,24 @@ class _AIScreenState extends State<AIScreen> {
             // FC-3: Use is_want from AI response if provided, otherwise infer from category
             int isWant;
             if (action.params.containsKey('is_want')) {
-              isWant = (action.params['is_want'] as bool? ?? false) ? 1 : 0;
+              final rawWant = action.params['is_want'];
+              // Handle both bool and string representations
+              if (rawWant is bool) {
+                isWant = rawWant ? 1 : 0;
+              } else if (rawWant is String) {
+                isWant = rawWant.toLowerCase() == 'true' ? 1 : 0;
+              } else {
+                // Fall back to category-based inference
+                const wantCats = [
+                  'Shopping',
+                  'Entertainment',
+                  'Gaming',
+                  'Clothing',
+                  'Gifts',
+                  'Travel'
+                ];
+                isWant = wantCats.contains(category) ? 1 : 0;
+              }
             } else {
               // Fallback: Shopping/Entertainment/Gaming/Clothing/Gifts/Travel = Want, others = Need
               const wantCategories = [

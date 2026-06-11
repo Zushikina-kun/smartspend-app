@@ -240,7 +240,7 @@ class AIChatService {
             }).join("\n");
 
     _fullContext = """
-Account type: $accountType | Income: ${monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo' : 'Not set'} | Score: $healthScore/100
+Account type: $accountType | Income: ${monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set'} | Score: $healthScore/100
 This month spent: ₱${totalSpent.toStringAsFixed(0)}$wantNeedSummary
 ${allTimeTotal > 0 ? 'All-time: ₱${allTimeTotal.toStringAsFixed(0)}' : ''}$monthlyTotalsSummary
 ${quizChallenge.isNotEmpty ? 'Challenge: $quizChallenge' : ''}
@@ -677,7 +677,7 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "1. ALWAYS LOG: When user mentions spending/buying with an amount → fire log_expense ACTION. No exceptions. Multiple items = multiple ACTION lines.\n"
         "2. MULTI-ITEM: If user lists several purchases in one message, fire ONE ACTION per item. Example: 'spent 30 jeep, 45 gatorade, 100 lunch' = 3 separate ACTION lines.\n"
         "3. DB IS TRUTH: Context below = only truth. Never say 'already logged' from memory.\n"
-        "4. WALLET BALANCE: 'I have X in GCash' → set_wallet_balance, NOT income.\n"
+        "4. WALLET BALANCE: 'I have X in GCash', 'cash on hand is X', 'my cash is X' → ALWAYS use set_wallet_balance. NEVER log as income, NEVER log as expense. This is a balance update only.\n"
         "5. DUPLICATES OK: People buy same things repeatedly. Always log.\n"
         "6. LOGGING TONE: When logging expenses, be warm and natural — not robotic. Instead of just 'Logged: X ₱Y', add a brief friendly comment. Examples: 'Got it, logged your jeepney fare 🚌', 'Noted! Lunch for ₱100 — hope it was good 😄', 'Logged your Sting — staying energized! ⚡'. Keep it short (1 line max), then the ACTION.\n"
         "7. SOCIAL: 'thanks/ok/yes' → short reply, no actions.\n\n"
@@ -711,7 +711,8 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "• compute_contribution: {\"type\":\"compute_contribution\",\"type_name\":\"SSS\",\"monthly_income\":25000}\n"
         "• suggest_idle_money: {\"type\":\"suggest_idle_money\",\"amount\":5000}\n\n"
         "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others.\n"
-        "is_want: true=discretionary (snacks, entertainment, gaming, shopping, gifts, travel). false=essential (transport, groceries, medicine, tuition, bills, health).\n"
+        "is_want: true=discretionary (snacks/drinks/junk food, entertainment, gaming, shopping, gifts, travel, dining out at restaurants). false=essential (meals/breakfast/lunch/dinner/brunch, transport, groceries, medicine, tuition, bills, health).\n"
+        "IMPORTANT is_want rules: Breakfast/Lunch/Dinner/Brunch/Meal → is_want:false (essential food). Snacks/drinks/energy drinks/junk food → is_want:true. Jeepney/tricycle/bus/commute → is_want:false. Games/steam → is_want:true.\n"
         "BULK RENAME: 'fix capitalization' → fire update_expense with new_item_name for EACH expense. ACTION lines required.\n"
         "${_fullContext.isNotEmpty ? "\nUser's financial context:\n$_fullContext" : ""}";
 
@@ -777,8 +778,9 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
 
     // Find every ACTION: occurrence and extract the JSON object that follows it
     // Handles: ACTION:{...}, **ACTION**{...}, **ACTION** {...}, →ACTION:{...}
+    // ACTION tag regex — handles: ACTION:{...}, ACTION: type_name: {...}, →ACTION:{...}, **ACTION**{...}
     final actionTagRegex =
-        RegExp(r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*', dotAll: true);
+        RegExp(r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*(?:\w+:\s*)?', dotAll: true);
     for (final tagMatch in actionTagRegex.allMatches(fullReply)) {
       final jsonStart = tagMatch.end;
       if (jsonStart >= fullReply.length) continue;
@@ -821,46 +823,66 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
     // FALLBACK: If AI said "Logged:" but fired no/fewer ACTIONs, auto-generate log_expense
     // This handles the case where the model ignores the ACTION instruction
     // Now catches ALL "Logged:" lines, not just the first one
+    // EXCLUDES: wallet balance updates, income updates, non-expense confirmations
     if (RegExp(r'Logged:?\s*.+₱\d', caseSensitive: false).hasMatch(fullReply)) {
-      final logMatches =
-          RegExp(r'Logged:?\s*(.+?)\s*₱(\d+(?:\.\d+)?)', caseSensitive: false)
-              .allMatches(fullReply);
-      // Count how many log_expense actions we already have from proper ACTION parsing
-      final existingLogCount =
-          actions.where((a) => a.type == 'log_expense').length;
-      // If AI mentioned more "Logged:" lines than it fired ACTIONs for, fill the gap
-      if (logMatches.length > existingLogCount) {
-        for (final logMatch in logMatches.skip(existingLogCount)) {
-          final itemName =
-              logMatch.group(1)?.replaceAll('*', '').trim() ?? 'Expense';
-          final amount = double.tryParse(logMatch.group(2) ?? '') ?? 0;
-          if (amount > 0) {
-            final category = _normalizeCategory(itemName);
-            const wantCategories = [
-              'Shopping',
-              'Entertainment',
-              'Gaming',
-              'Clothing',
-              'Gifts',
-              'Travel'
-            ];
-            final isWant = wantCategories.contains(category);
-            actions.add(AIAction(type: 'log_expense', params: {
-              'type': 'log_expense',
-              'item_name': itemName,
-              'category': category,
-              'amount': amount,
-              'is_want': isWant,
-            }));
+      // Don't run fallback if a wallet balance was already set — prevents double-logging
+      final hasWalletAction = actions.any((a) =>
+          a.type == 'set_wallet_balance' ||
+          a.type == 'transfer_wallet' ||
+          a.type == 'set_income' ||
+          a.type == 'add_income');
+      if (!hasWalletAction) {
+        final logMatches =
+            RegExp(r'Logged:?\s*(.+?)\s*₱(\d+(?:\.\d+)?)', caseSensitive: false)
+                .allMatches(fullReply);
+        // Count how many log_expense actions we already have from proper ACTION parsing
+        final existingLogCount =
+            actions.where((a) => a.type == 'log_expense').length;
+        // If AI mentioned more "Logged:" lines than it fired ACTIONs for, fill the gap
+        if (logMatches.length > existingLogCount) {
+          for (final logMatch in logMatches.skip(existingLogCount)) {
+            final itemName =
+                logMatch.group(1)?.replaceAll('*', '').trim() ?? 'Expense';
+            // Skip wallet/income-related items that sneak through
+            final nameLower = itemName.toLowerCase();
+            if (nameLower.contains('cash on hand') ||
+                nameLower.contains('wallet') ||
+                nameLower.contains('gcash') ||
+                nameLower.contains('balance') ||
+                nameLower.contains('income') ||
+                nameLower.contains('allowance') ||
+                nameLower.contains('salary')) {
+              continue;
+            }
+            final amount = double.tryParse(logMatch.group(2) ?? '') ?? 0;
+            if (amount > 0) {
+              final category = _normalizeCategory(itemName);
+              const wantCategories = [
+                'Shopping',
+                'Entertainment',
+                'Gaming',
+                'Clothing',
+                'Gifts',
+                'Travel'
+              ];
+              final isWant = wantCategories.contains(category);
+              actions.add(AIAction(type: 'log_expense', params: {
+                'type': 'log_expense',
+                'item_name': itemName,
+                'category': category,
+                'amount': amount,
+                'is_want': isWant,
+              }));
+            }
           }
         }
       }
     }
 
     // Strip all ACTION blocks from the displayed reply.
-    // Walk the string and remove every ACTION:{...} occurrence (handles nested braces).
+    // Handles multiple formats: ACTION:{...}, ACTION: type_name: {...}, →ACTION:{...}
     final stripTagRegex =
-        RegExp(r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*\{', dotAll: true);
+        RegExp(r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*(?:\w+:\s*)?\{', dotAll: true);
     final buffer = StringBuffer();
     int pos = 0;
     for (final tagMatch in stripTagRegex.allMatches(fullReply)) {

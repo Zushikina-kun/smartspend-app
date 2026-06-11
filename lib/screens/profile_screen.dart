@@ -1662,6 +1662,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
                                         color: cs.onPrimaryContainer)),
+                                // Low income warning
+                                if (_monthlyIncome > 0 &&
+                                    _monthlyIncome < 1000) ...[
+                                  const SizedBox(height: 2),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Colors.orange.withValues(alpha: 0.3),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: const Text(
+                                      "⚠️ Looks low — tap to update",
+                                      style: TextStyle(
+                                          fontSize: 10, color: Colors.orange),
+                                    ),
+                                  ),
+                                ],
                                 // Show per-period breakdown when not monthly
                                 if (_incomeFrequency != 'monthly' &&
                                     _incomeFrequency != 'manual' &&
