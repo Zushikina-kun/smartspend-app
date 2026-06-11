@@ -27,8 +27,10 @@ AI-assisted mobile financial tracking and advisory app for Filipino users.
 Pipeline: User Input → AI Parsing → SQLite DB → Analytics & Insights
 The AI is the primary entry point for all data input.
 Architecture: Agentic AI with dynamic context injection (NOT RAG).
-AI Actions: 25 agentic action types (log, update, delete, budgets, goals, debts, wallets, transfers, salary split, subscriptions, insurance, idle money, etc.)
-Key new features (v2.7.0): Insurance Tracker, Startup Alerts, Date/Time CRUD, Wallet-First Design, PH Banks Database, Text Size Accessibility.
+AI Actions: 25 agentic action types (30 planned — business mode, flag_anomaly, suggest_cuts, debt_plan, simulate_what_if).
+Key features (v2.7.0 — June 2026): 25 AI actions, Insurance Tracker, Startup Alerts (6 conditions), Date/Time CRUD, Wallet-First Design, PH Banks Database + Comparison Screen, Barcode Product Lookup (Open Food Facts API + local PH DB), High Contrast Mode, Text Size (3 levels), Round-Up Savings, Price Memory, Smart Daily Allowance, 23 Badges + 10 Daily Quests, DTI Ratio, Emergency Fund Calculator, PCA Calculator, Financial Health Certificate (shareable), Firebase Remote Config API Security, App Check debug mode.
+Recent debug fixes (June 2026): wallet double-logging fixed, ACTION regex handles "ACTION: type: {json}", is_want type coercion robust, duplicate income prevention, low-income warning (< ₱1000/mo), bimonthly income for all account types, emergency fund excludes outliers.
+Next priorities: Wallet-First full migration, Multi-model LLM switching (Groq→Gemini→Cerebras), Business Mode, Market Insights, Financial Glossary.
 
 TECH STACK
 ----------

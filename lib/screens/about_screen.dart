@@ -338,6 +338,22 @@ class AboutScreen extends StatelessWidget {
                 "AI suggests MP2, time deposits, digital banks for idle cash"
               ),
               (
+                "💹 Peso Cost Averaging Calculator",
+                "Plan regular investments — MP2, UITFs, stocks — with year-by-year projections"
+              ),
+              (
+                "🏅 Financial Health Certificate",
+                "Shareable monthly FHS score card — share via WhatsApp, social media"
+              ),
+              (
+                "📊 Debt-to-Income Ratio",
+                "BSP-referenced DTI card in Analytics — color-coded healthy/warning/critical"
+              ),
+              (
+                "🛡️ Smart Daily Allowance",
+                "Remaining budget ÷ days left — how much you can safely spend today"
+              ),
+              (
                 "🏦 PH Banks Database",
                 "20 banks, 5 e-wallets, investment options with rates"
               ),
@@ -407,8 +423,11 @@ class AboutScreen extends StatelessWidget {
               ),
               child: const Text(
                 "Smart Spend is an academic project intended for educational and demonstration purposes. "
-                "Tax estimations are approximations only and do not constitute official financial or tax advice. "
-                "AI-generated insights are based on user-provided data and should not replace professional financial consultation.",
+                "This app is NOT a licensed financial advisor, investment advisor, insurance broker, or tax consultant. "
+                "Nothing in this app constitutes personalized financial, investment, insurance, or tax advice. "
+                "AI-generated insights are based on user-provided data and general knowledge — always consult a licensed financial professional before making significant financial decisions. "
+                "SmartSpend is not liable for any financial losses resulting from actions taken based on information provided by this app.\n\n"
+                "Philippine regulatory reference: Securities and Exchange Commission (SEC-PH), Insurance Commission, Bangko Sentral ng Pilipinas (BSP), RA 11765 (Financial Products and Services Consumer Protection Act).",
                 style: TextStyle(fontSize: 12, height: 1.5),
                 textAlign: TextAlign.center,
               ),

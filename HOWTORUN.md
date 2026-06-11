@@ -130,6 +130,8 @@ All are registered in Firebase Console → Project Settings → Android app → 
 4. Download the new `google-services.json` and replace `android/app/google-services.json`
 5. Rebuild the APK
 
+> **App Check note:** App Check is in **debug/monitoring mode** for sideloaded APKs (academic builds). Before submitting to Google Play Store, switch App Check to `PlayIntegrityProvider` enforcement in `main.dart` and register the release SHA-256 fingerprint in Firebase Console.
+
 ---
 
 ## 7. Build Release APK
@@ -236,6 +238,17 @@ Settings → System → For developers → Developer Mode → ON
 
 ### App crashes on launch (release build)
 Check that `google-services.json` matches the package name `com.lucidframe.smartspend` (or whatever is in `android/app/build.gradle`).
+
+### Google Sign-In fails
+Check that the SHA-1 fingerprint of your debug keystore is registered in Firebase. Your debug SHA-1:
+```
+4D:1C:67:D4:78:7A:30:20:6D:5B:D5:97:6E:F6:EF:87:3D:91:12:E8
+```
+If running on a different machine, generate your own:
+```bash
+keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+```
+Then add the SHA-1 in Firebase Console → Project Settings → Android app → Add fingerprint, download the updated `google-services.json`, and rebuild.
 
 ---
 

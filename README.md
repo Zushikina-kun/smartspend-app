@@ -19,7 +19,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — **25 agentic action types** via natural language
+- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — **25 agentic action types (30 planned)** via natural language
 - 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison, **DTI ratio**, **emergency fund calculator**
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc
@@ -47,9 +47,15 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 📈 **Price Memory** — alerts when items cost more than last time (+15% threshold)
 - 💡 **Smart Daily Allowance** — dynamic "how much can I spend today" based on remaining budget
 - 🏦 **PH Banks & Investments** — compare 20 banks, digital banks, e-wallets, investment options
-- 🔐 **API Security** — Firebase Remote Config + App Check (key not in APK)
+- 💹 **Peso Cost Averaging Calculator** — plan regular investments with year-by-year projections (MP2, UITFs, stocks)
+- 🏅 **Financial Health Certificate** — shareable monthly score card (share via WhatsApp, social)
+- 🔐 **API Security** — Firebase Remote Config + App Check (key never in APK binary)
 - 📷 Google profile photo fallback (works across devices)
 - 🌙 5 color themes + dark mode + high contrast
+- 🤖 **AI**: **25 agentic action types** (30 planned), multi-model LLM switching planned (Groq → Gemini → Cerebras)
+- 💹 **Peso Cost Averaging Calculator** — plan regular investments with year-by-year projections
+- 🏅 **Financial Health Certificate** — shareable monthly score card
+- 🔀 Multi-model LLM switching planned (currently Groq LLaMA 3.1 8B)
 
 ---
 

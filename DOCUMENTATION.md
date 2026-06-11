@@ -4,8 +4,8 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** May 20, 2026 (v2.7.0 — Session 13: 24 AI actions, Insurance Tracker, date/time CRUD, startup alerts, salary split, wallet transfers, subscription detection, FHS breakdown in AI, backup v9)
-**Build:** app-arm64-v8a-release.apk — 45.4 MB (May 14, 2026)
+**Last Updated:** June 11, 2026 (v2.7.0 — Sessions 13–14: debug fixes, PCA calculator, health certificate, expandable chat, income frequency fixes, emergency fund outlier exclusion, AI personality, 7 debug log bugs fixed)
+**Build:** app-arm64-v8a-release.apk — 45.9 MB (June 11, 2026)
 
 ---
 
@@ -163,6 +163,8 @@ The AI executes **25 action types** directly — data is written to the DB immed
 | `detect_subscriptions` | "What subscriptions do I have?" / "Find recurring charges" |
 | `compute_contribution` | "How much should I pay for SSS?" / "PhilHealth contribution" |
 | `suggest_idle_money` | "What should I do with my savings?" / "Where to put idle money?" |
+
+> **(+ 5 more planned: `flag_anomaly_explanation`, `suggest_expense_cuts`, `create_debt_payment_plan`, `simulate_what_if`, business actions)**
 
 - Actions execute immediately — green snackbar shown per action
 - **Broader scope** — handles personal finance + Philippine banking, SSS/PhilHealth/Pag-IBIG, investments, price estimates, buying/selling advice
@@ -602,6 +604,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Exports a comprehensive plain-text debug log for QA and troubleshooting
 - **Filename includes date+time:** `smartspend_debug_YYYYMMDD_HHmmss.txt`
 - Access from: AI screen → ⋮ menu → "Export Debug Log", or Profile → "Export Debug Log"
+- **7 debug log bugs fixed in Sessions 13–14** — all log sections now correctly display data
 - **Contents (all moving parts):**
   - All settings (sensitive keys masked)
   - All expenses with Want/Need tag, AI flag, notes
@@ -846,6 +849,13 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Separate from the Hub (which shows all features)
 - Wallet card always visible on home screen — shows "tap to set up" when balances are ₱0
 
+### 60a. Quick Access Hub (Full Feature Hub)
+Accessible via the Hub tab in the bottom nav bar. Lists all features:
+- Analytics, Bill Calendar, Goals, Debts & Plans, My Wallets, Budgets, Import, Recurring, Achievements
+- Insurance & Contributions
+- Auto-Categorization Rules, Manage Categories
+- **Peso Cost Averaging** — plan regular investments with year-by-year projections
+
 ### 61. Wallet Balances
 - Track liquid money across all accounts: Cash on Hand, GCash, Maya, GrabPay, ShopeePay, Coins.ph, Lazada Wallet, TikTok Shop Wallet, PayPal, Wise
 - 17 Philippine banks: BDO, BPI, Metrobank, Landbank, PNB, RCBC, Security Bank, Chinabank, UnionBank, EastWest, PSBank, Maybank, GoTyme, Tonik, UNObank, UnionDigital, Seabank
@@ -865,6 +875,25 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - SHA-256 fingerprint registered: `0E:F3:30:F9:45:F2:0D:57:59:2C:AB:9E:D4:57:24:FF:76:B0:D4:87:5A:DB:0B:B2:06:36:32:94:98:38:CE:4C`
 - Status: Monitoring mode (metrics visible for Firestore + Auth, enforcement deferred to production)
 - Reason for not enforcing: sideloaded APK during academic phase; enforcement will be activated before Play Store submission
+
+---
+
+### 63. PCA Calculator (Peso Cost Averaging)
+- Accessible from Quick Access Hub → "Peso Cost Averaging"
+- Helps users plan regular fixed-amount investments using the PCA strategy
+- **Inputs:** investment amount, frequency (weekly/monthly), target asset/fund, start date, years
+- **Output:** year-by-year projection table showing total invested, estimated portfolio value, and % growth
+- Explains the PCA concept in plain language — "invest the same amount regardless of price"
+- Designed for Filipino users investing in MP2, UITFs, stocks, or crypto
+- Purely informational — no actual investment transactions
+
+### 64. Financial Health Certificate
+- Shareable monthly scorecard generated from the user's actual Financial Health Score data
+- Accessible from Profile or Analytics → "Get Certificate"
+- **Contents:** Month and year, FHS score with badge color, breakdown of all 4 components, savings rate, budget adherence percentage, and key stats
+- Exported as a shareable image via `share_plus`
+- Uses the same 4-component FHS formula — no separate calculation
+- Encourages users to share their financial progress
 
 ---
 
@@ -1506,69 +1535,83 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 📋 Pending Work & Roadmap
 
-*Last updated: May 3, 2026. Prioritized for next development session.*
+*Last updated: June 11, 2026 (v2.7.0). Items below are still open.*
 
-### 🔴 HIGH — Next Session Priority
+### ✅ COMPLETED IN SESSIONS 13–14
 
-| # | Item | Effort | Description |
-|---|---|---|---|
-| BC-1 | Bill Calendar — unified financial timeline | Medium | Add debt due dates, goal deadlines, installment payment days, income expected dates, payday marker — all color-coded by type |
-| BC-2 | Bill Calendar mini-card on home screen | Low | Show next 3 upcoming financial events with dates and type |
-| BC-3 | Bill Calendar → Log Now shortcut | Low | Tap a bill on calendar to log it directly |
-| GM-1 | Daily Challenges card on home screen | Medium | 3 daily tasks (log 2 expenses, stay under budget, check score) — highest retention mechanic |
-| GM-2 | Expanded badge system + Achievements screen | Medium | 23 badges (7 categories), dedicated screen in Profile, locked badges shown as silhouettes |
-| GM-3 | Logging streak (separate from score streak) | Low | Consecutive days with ≥1 expense logged |
-| UX-1 | Empty state guidance on all screens | Low | Budgets/Goals/Debts/Recurring empty screens should suggest an action |
-| CF-1 | Confidence score filter in Transactions | Low | "Show low-confidence only" chip — data already in DB |
-| **FC-3** | **AI tags Want/Need during logging** | Low | Add is_want inference to AI action parser — makes 50/30/20 accurate (currently all AI entries default to Need) |
-| **NI-4** | **quiz_challenge setting actually used** | Medium | Onboarding answer (debt/overspending/saving/tracking) stored but never referenced — should influence home cards, AI advice, analytics emphasis |
-| **FC-1** | **Mood → AI context injection** | Low | Pass today's mood score + note to AIChatService.setFullContext — AI adjusts tone based on mood |
-| **NI-2** | **Goal pace indicator** | Low | "You need ₱X/month to reach this by deadline — you're ₱Y/month behind" — all fields already stored |
+| Item | Description |
+|------|-------------|
+| 25 AI agentic actions | All planned actions implemented + 5 more planned |
+| Insurance Tracker | SSS/PhilHealth/Pag-IBIG + private insurance |
+| Startup Alerts | 6 on-open alert conditions |
+| Date/Time CRUD | Date picker in Edit Expense + AI date changes |
+| Wallet-first design | Gradient wallet card, smart daily allowance |
+| PH Banks database | 20 banks JSON + Bank Comparison screen |
+| High contrast mode | Black/white toggle in Profile |
+| Text size (3 levels) | Normal/Large/Extra Large |
+| Round-up savings | Auto-save spare change to goals |
+| Price memory | 15%+ price increase alert |
+| Barcode product lookup | Open Food Facts API + local PH database |
+| 23 badges + 10 daily quests | Gamification enhanced |
+| DTI ratio card | Debt-to-Income in Analytics |
+| Emergency fund calculator | Smart outlier exclusion |
+| PCA calculator | Peso Cost Averaging screen |
+| Financial Health Certificate | Shareable score card |
+| Expandable chat input | Grows 1→6 lines |
+| Income frequency fix | Bimonthly for all account types + live preview |
+| Firebase Remote Config | API key not in APK |
+| App Check debug mode | Fixed Google Sign-In for sideloaded APKs |
+| AI personality warmth | "Got it, logged your jeepney fare 🚌" |
+| 7 debug log bugs fixed | Double-logging, ACTION regex, is_want, duplicates |
+| Competitor analysis doc | 9 apps compared, gaps documented |
+| LLM comparison table | 10 models, 6 criteria, Chapter 3 ready |
+| PlayStore security guide | Full deployment guide |
 
-### 🟠 MEDIUM — Before Defense
-
-| # | Item | Effort | Description |
-|---|---|---|---|
-| PM-1 | Payment method breakdown in Analytics | Low | Pie/bar chart by Cash/GCash/Card — data already in DB |
-| SM-1 | Top merchants card in Analytics | Low | "You've been to Jollibee 12 times" — shop_name already in DB |
-| SH-1 | FHS Score history annotations | Medium | Why did score drop on specific days — markers on line chart |
-| GM-4 | Savings goal milestone celebrations | Low | Confetti animation at 25/50/75/100% |
-| GM-5 | Level/rank system on Profile | Medium | 8 levels (Beginner → Money Master), XP bar |
-| GM-6 | "Financial Health Level Up" notification | Low | Push notif when FHS crosses 60/70/80/90 for first time |
-| IN-1 | Income analytics — breakdown by category + trend | Medium | Income screen is just a list — add a chart |
-| DT-1 | Debt interest projection | Low | "At this rate you'll pay ₱X in interest" — field already stored |
-| RC-1 | Recurring total cost calculation | Low | "Paying Netflix for 8 months = ₱2,392 total" — start_date stored |
-| RC-2 | Recurring → Budget auto-suggest | Low | When adding recurring expense, offer to create matching budget |
-| IN-2 | Installment → Recurring link | Low | Offer to create recurring payment reminder when adding installment |
-| NT-1 | Notes search in Transactions | Low | Notes field stored but never searchable |
-| NT-2 | Notes visible in AI context | Low | AI can't see expense notes — add to context |
-| UX-2 | Shareable financial summary card | Low | "This month: spent ₱8,200, saved ₱1,800, FHS 74" via share_plus |
-| UX-3 | Goal contribution suggestion from income | Low | When logging income: "Allocate 20% to your New Laptop goal?" |
-| UX-4 | Emergency Fund prompt for users without one | Low | Home screen card: "You don't have an emergency fund. Start one?" |
-| **UD-7** | **mood_log.note field exposed** | Low | Optional one-line "what's going on?" text when logging mood |
-| **FC-5** | **Windfall flag actually used in FHS/forecast** | Low | Verify PredictService and FHS savings rate exclude windfall income from baseline |
-| **FC-6** | **Category rules show match count** | Low | Show "triggered 8 times, last: May 3" per rule |
-| **BT-1** | **Quick-log chips show spend trend** | Low | "↑ ₱20 more than usual" indicator on each chip |
-| **BT-2** | **FHS decay visible on score card** | Low | Show amber indicator when decay is active |
-| **BT-4** | **AI limit shows reset countdown** | Low | "Resets in 4h 22m" instead of just remaining count |
-| **BT-5** | **Recurring Log Now pre-fills amount** | Low | Variable bills need editable amount before confirming |
-| **NI-1** | **"Where did my money go?" focused AI card** | Low | 1-sentence cached AI answer on home |
-| **NI-6** | **"I'm done spending today" toggle** | Low | Voluntary commitment mode with warning if expense logged after |
-| **NI-7** | **Recurring income gets special home card** | Low | is_expense=0 recurring shown as "Your allowance is due — log it?" |
-| **UD-4b** | **Auto-rule from correction** | Medium | When user edits AI-parsed category, auto-create a category_rule |
-| **NI-3** | **AI fuzzy duplicate detector** | Medium | Before logging, check if similar item exists in last 2 hours |
-| **BT-3** | **50/30/20 tracker respects period filter** | Medium | Currently always shows this-month data regardless of selected period |
-| **BT-6** | **Anomaly detection on-log** | Medium | After each AI expense log, check if anomalous — fire immediately, not just Sunday |
-| **NI-5** | **Net worth trend sparkline** | Medium | Daily/weekly net worth snapshot + sparkline on Profile card |
-
-### 🟡 LOW — Nice to Have
+### 🔴 HIGH — Next Priority
 
 | # | Item | Effort | Description |
-|---|---|---|---|
-| GM-7 | Weekly challenge system | Medium | Monday challenge: "Spend less than ₱500 on Food this week" |
-| GM-8 | Spending Challenge Mode | Medium | User sets personal monthly challenge with win/lose result |
-| GM-9 | "Better than last month" comparison | Low | "You spent ₱800 less than last month — best month yet! 🏆" |
-| UX-5 | What's New / changelog screen | Low | One-time dialog after update showing new features |
+|---|------|--------|-------------|
+| 1 | **Wallet-First Full Migration** | Large | Remove income/role system, wallet = truth, new FHS formula |
+| 2 | **Multi-model LLM switching** | Medium | Groq → Gemini → Cerebras auto-fallback, UI model selector |
+| 3 | **5 remaining AI actions** | Medium | flag_anomaly, suggest_expense_cuts, create_debt_plan, simulate_what_if, business_daily_summary |
+| 4 | **Business Mode** | Large | Revenue, P&L, inventory, invoice, BIR VAT, AI business actions |
+| 5 | **Market Insights** | Medium | PSEi, inflation, fuel prices, AI global event interpretation |
+| 6 | **Philippine Financial Knowledge Base** | Medium | SSS tables, PhilHealth, BIR brackets injected into AI context |
+
+### 🟡 MEDIUM — Good Additions
+
+| # | Item | Effort | Description |
+|---|------|--------|-------------|
+| 7 | Savings goal deadline alert in startup | Low | Alert when goal deadline within 7 days |
+| 8 | Typing indicator in AI chat | Low | "Peso is thinking..." 3-dot animation |
+| 9 | Long-press AI message: copy/quote/delete | Low | UX improvement for chat |
+| 10 | Financial Glossary / tooltips | Low | First-time encounter explanations for FHS, DTI, etc. |
+| 11 | BIR Tax Estimate | Low | Annual withholding estimate from logged income |
+| 12 | Split bills / shared expenses | Medium | Mark expense as shared, creates debt entry |
+| 13 | Financial Milestones Timeline | Medium | Visual timeline of financial achievements |
+| 14 | Screenshot OCR for balance updates | Low | Extend Smart Scanner to read bank balance screenshots |
+| 15 | Brankas API prototype (open banking) | High | UnionBank balance sync via Brankas API |
+| 16 | Mascot character | Design | Filipino-themed mascot for empty states/onboarding |
+
+### 🔵 LOW / FUTURE
+
+| # | Item | Description |
+|---|------|-------------|
+| 17 | Multi-language UI (Filipino/Bisaya) | Full Tagalog translation option |
+| 18 | PSE stocks tracker | Link to COL Financial or manual portfolio tracking |
+| 19 | Credit/debit card import | When BSP Open Finance expands to cards |
+| 20 | AI fine-tuning | Post-capstone: custom model on PH financial data |
+
+### 📝 ACADEMIC (Team's Tasks)
+
+| Task | Status |
+|------|--------|
+| Pre-survey (Objective 1) | ⏳ Pending |
+| SUS testing — 30 respondents | ⏳ Pending |
+| Qualitative interviews (5-10) | ⏳ Pending |
+| Chapter 2 — Related Literature | ⏳ Pending — use docs/Competitor_Analysis |
+| Chapter 3 — Methodology | ⏳ Pending — use docs/LLM_Comparison_Table_Ch3 |
+| Privacy Policy (Play Store) | ⏳ Pending |
 | UX-6 | Time-of-day spending analysis | Low | "You spend most between 12–1 PM" — time field already stored |
 | UX-7 | AI proactive check-in on app open | Medium | "You haven't logged in 2 days — want to catch up?" |
 | UX-8 | Bulk actions in Transactions | Medium | Long-press → select multiple → bulk delete/recategorize |

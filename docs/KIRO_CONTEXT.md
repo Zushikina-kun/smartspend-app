@@ -1,7 +1,7 @@
 # SmartSpend — Kiro Context & Architecture Reference
 
 **Version:** 2.7.0
-**Last Updated:** May 20, 2026
+**Last Updated:** June 11, 2026
 **For:** Kiro AI assistant — read this before making any changes to the codebase.
 
 ---
@@ -47,7 +47,13 @@ Flutter UI (screens/) → Services (services/) → SQLite (sqflite v11)
 | `AuthService` | Firebase Auth (email/password + Google). |
 | `ScoreService` | Financial Health Score calculation (4-component, 25pts each). |
 | `NotificationService` | All push notifications via flutter_local_notifications. |
-| `BackupService` | JSON backup/restore via share sheet. |
+| `BackupService` | JSON backup/restore (v9 — includes insurance_policies). |
+| `BarcodeLookupService` | Product lookup: local PH DB + Open Food Facts API + prefix inference. |
+| `StartupAlertsService` | On-open alerts: 6 conditions (bills, budgets, debts, FHS drop, idle money, insurance). |
+| `RecurringHelper` | Shared log+advance logic for recurring transactions. |
+| `InsuranceScreen` | Insurance & government contributions tracker with Firestore sync. |
+| `BankComparisonScreen` | PH banks, digital banks, e-wallets, investments (from ph_banks.json). |
+| `PCACalculatorScreen` | Peso Cost Averaging calculator with year-by-year breakdown. |
 | `DemoService` | Sample data loading. **Never touches Firestore.** |
 | `CategoryService` | Category list cache. Call `invalidate()` after any category change. |
 | `CurrencyService` | Exchange rates + formatting. All amounts stored in PHP internally. |
@@ -294,7 +300,7 @@ All HIGH priority issues from previous sessions are resolved. See `SmartSpend_Pe
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
-| 2.7.0 | May 20, 2026 | 25 AI actions, Insurance Tracker, startup alerts, date/time CRUD, wallet-first design, PH banks database, bank comparison screen, high contrast mode, text size accessibility, round-up savings, price memory, smart daily allowance, barcode product lookup, 23 badges (was 16), 10 daily quests (was 6), DTI ratio, emergency fund calculator, Firebase Remote Config for API security, optimized AI prompt (60% smaller), multi-item logging fix |
+| 2.7.0 | June 11, 2026 | 25 AI actions (30 planned), PCA calculator, Financial Health Certificate, expandable chat, income frequency fix (bimonthly for all), emergency fund outlier exclusion, AI personality warmth, 7 debug log bugs fixed (double-logging wallet, ACTION regex, is_want coercion, duplicate income, low income warning), barcode product lookup (Open Food Facts API), bank comparison screen, high contrast mode, text size, round-up savings, price memory, smart daily allowance, 23 badges + 10 daily quests, DTI ratio, emergency fund calculator, Firebase Remote Config API security, App Check debug mode (Google login fix), SHA-1 in debug log |
 | 2.6.0 | May 11, 2026 | Full cloud sync audit — wallets, category_rules, demo isolation, backup restore sync, reset all data Firestore wipe, undo sync, setup push, notification throttle reset, budget_boss badge fix, API key centralized |
 | 2.5.0 | May 10, 2026 | Wallet Balances, PH bank support, smart receipt import, unified calendar, achievements, mood check-in, auto-categorization rules, period comparison, installment plans, bank import |
 | 2.4.0 | Apr 29, 2026 | Custom categories, shake-to-undo, expense photos, % budget mode, want/need tagging, streaks/badges, daily limit, bill calendar, onboarding quiz, FHS rewrite |

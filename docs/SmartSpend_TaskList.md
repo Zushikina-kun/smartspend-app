@@ -1,13 +1,51 @@
 # SmartSpend — Complete Task Status
 **Version:** 2.7.0
-**Last Updated:** May 20, 2026
+**Last Updated:** June 11, 2026
 **Purpose:** Definitive status of all tasks — done, deferred, blocked, and why.
 
 ---
 
 ## SECTION 1 — FULLY DONE ✅
 
-Everything here is confirmed built, tested, and in the current build (v2.5.0).
+Everything here is confirmed built, tested, and in the current build (v2.7.0 — June 11, 2026).
+
+### Sessions 13–14 (May–June 2026) — New
+- [x] 25 AI agentic actions (plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, compute_contribution, detect_subscriptions, suggest_idle_money, generate_monthly_plan, explain_fhs_breakdown, compare_periods, project_savings_timeline, transfer_wallet, delete_by_date)
+- [x] Insurance & Contributions Tracker (InsuranceScreen + Firestore sync + demo data)
+- [x] Startup Alerts — 6 on-open conditions (bills, budgets, debts, FHS drop, idle money, insurance overdue)
+- [x] Date/time editing in Edit Expense (date picker + time picker)
+- [x] AI can change/add expense dates via chat
+- [x] Wallet-first design (gradient card, smart daily allowance, "Add Money to Wallet")
+- [x] PH Banks Comparison Screen (4 tabs: Banks, Digital, E-Wallets, Investments)
+- [x] Barcode product lookup (Open Food Facts API + local PH product DB + prefix inference)
+- [x] High contrast mode (black/white toggle in Profile)
+- [x] Text size accessibility (Normal/Large/Extra Large via MediaQuery.textScaler in MaterialApp.builder)
+- [x] Round-up savings (auto ₱10 round-up to first savings goal)
+- [x] Price memory (15%+ price increase alert per item)
+- [x] Smart daily allowance (remaining budget ÷ days left shown on daily limit card)
+- [x] 23 badges (was 16) — 7 categories including new: Spare Change Hero, Wallet Wizard, Insurance Aware, Century Club, Score Star, Financial Literate, App Explorer
+- [x] 10 daily quests (was 6) — gacha rotation, 4 shown per day
+- [x] DTI ratio card in Analytics (BSP-referenced, color-coded)
+- [x] Emergency Fund Calculator in Analytics (excludes large one-time Want purchases)
+- [x] Peso Cost Averaging Calculator (Hub → Peso Cost Averaging)
+- [x] Financial Health Certificate (shareable score card via share sheet)
+- [x] Expandable chat input (1→6 lines, multiline)
+- [x] Firebase Remote Config for API key (not in APK binary)
+- [x] App Check debug mode for sideloaded APKs (Google login fix)
+- [x] SHA-1 fingerprint in debug log + HOWTORUN.md
+- [x] AI personality warmth ("Got it, logged your jeepney fare 🚌")
+- [x] Income frequency bimonthly for all account types + live monthly equivalent preview
+- [x] Emergency fund outlier exclusion (3x category average + >₱1,000 + Want = excluded)
+- [x] 7 debug log bugs fixed (wallet double-logging, ACTION regex, is_want coercion, duplicate income, low income warning, fallback parser exclusions, ACTION format fix)
+- [x] Competitor analysis document (docs/Competitor_Analysis_and_Feature_Ideas.md)
+- [x] LLM comparison table for Chapter 3 (docs/LLM_Comparison_Table_Ch3.md)
+- [x] Play Store security guide (docs/PlayStore_Security_Guide.md)
+- [x] Capstone 2 Feature Analysis (docs/SmartSpend_Capstone2_Feature_Analysis.md)
+- [x] Backup v9 (includes insurance_policies)
+- [x] RecurringHelper shared service (eliminates 40+ lines of duplication)
+- [x] LLM service category normalization fixed (14 categories, was 8)
+- [x] FHS empty state returns 50 (was misleading 100)
+- [x] Notification currency uses CurrencyService.format() (was hardcoded ₱)
 
 ### Core App (Sessions 1–27)
 - [x] All deprecated widgets replaced (Radio, Color hardcodes, etc.)
