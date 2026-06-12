@@ -322,24 +322,83 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   List<Widget> _buildStep0(ColorScheme cs) => [
-        const Text("Let's set up your wallets",
+        const Text("Welcome to Smart Spend! 👋",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         const Text(
-            "Smart Spend tracks your money through wallets. How do you receive and spend money?",
+            "Your personal AI financial companion. Let's set things up in just a few steps.",
             style: TextStyle(color: Colors.grey)),
         const SizedBox(height: 24),
-        ..._accountTypes.map((t) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+        // Wallet-first: show wallet icons prominently
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.green.shade600, Colors.green.shade800],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text("💵 Your wallets are the heart of the app",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15)),
+              SizedBox(height: 8),
+              Text(
+                "Track your cash, GCash, Maya, BDO, BPI — everything in one place.\n\n"
+                "You tell the app how much money you have, and it tracks where it goes.",
+                style:
+                    TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text("What works best for you?",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 12),
+        // Simplified role picker — just 4 options instead of 8
+        ...([
+          (
+            'general',
+            Icons.person_outline,
+            'General User',
+            'Student, employed, freelancer — everyone'
+          ),
+          (
+            'student',
+            Icons.school_outlined,
+            'Student',
+            'Allowance-based budgeting'
+          ),
+          (
+            'business',
+            Icons.store_outlined,
+            'Business Owner',
+            'Track business + personal expenses'
+          ),
+          (
+            'employed',
+            Icons.work_outline,
+            'Employed',
+            'Regular salary or wages'
+          ),
+        ].map((t) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
               child: InkWell(
                 onTap: () => setState(() => _accountType = t.$1),
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
                     color: _accountType == t.$1
                         ? cs.primary.withValues(alpha: 0.1)
-                        : cs.surfaceContainerHighest.withValues(alpha: 0.4),
+                        : cs.surfaceContainerHighest.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: _accountType == t.$1
@@ -353,30 +412,39 @@ class _SetupScreenState extends State<SetupScreen> {
                       Icon(t.$2,
                           color: _accountType == t.$1
                               ? cs.primary
-                              : cs.onSurface.withValues(alpha: 0.6)),
-                      const SizedBox(width: 14),
+                              : cs.onSurface.withValues(alpha: 0.5),
+                          size: 22),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(t.$3,
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                                    fontWeight: FontWeight.bold, fontSize: 14)),
                             Text(t.$4,
                                 style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     color:
-                                        cs.onSurface.withValues(alpha: 0.6))),
+                                        cs.onSurface.withValues(alpha: 0.5))),
                           ],
                         ),
                       ),
                       if (_accountType == t.$1)
-                        Icon(Icons.check_circle, color: cs.primary),
+                        Icon(Icons.check_circle, color: cs.primary, size: 20),
                     ],
                   ),
                 ),
               ),
-            )),
+            ))),
+        const SizedBox(height: 8),
+        Text(
+          "Don't worry — this can be changed anytime in Profile settings.",
+          style: TextStyle(
+              fontSize: 11,
+              color: cs.onSurface.withValues(alpha: 0.4),
+              fontStyle: FontStyle.italic),
+        ),
       ];
 
   List<Widget> _buildStep1(ColorScheme cs) => [

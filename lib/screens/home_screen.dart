@@ -36,6 +36,7 @@ import 'bank_import_screen.dart';
 import 'insurance_screen.dart';
 import 'bank_comparison_screen.dart';
 import 'pca_calculator_screen.dart';
+import 'glossary_screen.dart';
 import '../services/startup_alerts_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -573,6 +574,12 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     "Plan your regular investments — MP2, UITFs, stocks",
                     Colors.teal,
                     () => _go(const PCACalculatorScreen())),
+                _tile(
+                    Icons.menu_book_outlined,
+                    "Financial Glossary",
+                    "23 key terms explained in plain Filipino-English — FHS, MP2, DTI, UITF and more",
+                    Colors.deepPurple,
+                    () => _go(const GlossaryScreen())),
                 const SizedBox(height: 8),
               ],
             ),
