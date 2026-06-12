@@ -14,6 +14,7 @@ import '../services/event_bus.dart';
 import '../services/currency_service.dart';
 import '../services/debug_service.dart';
 import '../services/undo_service.dart';
+import '../services/app_config.dart';
 import '../models/expense.dart';
 import '../widgets/info_button.dart';
 import 'chat_history_screen.dart';
@@ -1347,6 +1348,94 @@ class _AIScreenState extends State<AIScreen> {
     );
   }
 
+  void _showModelSelector() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheet) => Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2))),
+              ),
+              const SizedBox(height: 16),
+              const Text("AI Model",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              const Text(
+                  "Choose your AI engine. Auto-fallback switches models when daily limit is reached.",
+                  style: TextStyle(fontSize: 12, color: Colors.grey)),
+              const SizedBox(height: 16),
+              ...AppConfig.availableModels.map((m) {
+                final isActive = AppConfig.activeModelId == m.$1;
+                final isGroqLimited =
+                    m.$1 == 'groq_llama' && AppConfig.groqLimitReached;
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    backgroundColor: isActive
+                        ? Theme.of(ctx)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.15)
+                        : Colors.grey.withValues(alpha: 0.1),
+                    child: Icon(
+                      isActive ? Icons.check : Icons.radio_button_unchecked,
+                      size: 18,
+                      color: isActive
+                          ? Theme.of(ctx).colorScheme.primary
+                          : Colors.grey,
+                    ),
+                  ),
+                  title: Text(m.$2,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 14)),
+                  subtitle: Text(
+                      isGroqLimited ? '🟡 Daily limit reached' : m.$3,
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: isGroqLimited ? Colors.orange : Colors.grey)),
+                  onTap: () {
+                    AppConfig.setModel(m.$1);
+                    AIChatService.clearHistory();
+                    Navigator.pop(ctx);
+                    setState(() {});
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Switched to ${m.$2}"),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
+                    ));
+                  },
+                );
+              }),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.07),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                    "💡 To enable Gemini/Cerebras fallback, add API keys in Firebase Remote Config: gemini_api_key / cerebras_api_key",
+                    style: TextStyle(fontSize: 11, height: 1.4)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showMessageMenu(BuildContext ctx, String text, bool isUser) {
     showModalBottomSheet(
       context: ctx,
@@ -1507,9 +1596,26 @@ class _AIScreenState extends State<AIScreen> {
                 "25 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, transfers, salary splits, subscription detection, idle money suggestions, and more.\n\n"
                 "Daily message limit: 60/day — resets at midnight.",
           ),
+          // Model selector
+          GestureDetector(
+            onTap: _showModelSelector,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: Chip(
+                avatar: Text(AppConfig.groqLimitReached ? '🟡' : '🟢',
+                    style: const TextStyle(fontSize: 10)),
+                label: Text(
+                  AppConfig.activeModelLabel.split(' ').first,
+                  style: const TextStyle(fontSize: 10),
+                ),
+                padding: EdgeInsets.zero,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            ),
+          ),
           // D2: show remaining daily messages with reset countdown
           FutureBuilder<int>(
-            key: ValueKey(_sending), // rebuild when sending state changes
+            key: ValueKey(_sending),
             future: AIChatService.getRemainingMessages(),
             builder: (_, snap) {
               final remaining = snap.data;

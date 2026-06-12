@@ -12,9 +12,8 @@ class AIAction {
 }
 
 class AIChatService {
-  static String get _apiKey => AppConfig.groqApiKey;
-  static const _baseUrl = AppConfig.groqBaseUrl;
-  static const _model = AppConfig.groqModel;
+  static String get _groqKey => AppConfig.groqApiKey;
+  static String get _groqUrl => AppConfig.groqBaseUrl;
 
   // D2 mitigation: daily request cap to protect the shared API key
   static const _dailyLimit = 60;
@@ -749,13 +748,13 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
 
     final response = await http
         .post(
-          Uri.parse(_baseUrl),
+          Uri.parse(_groqUrl),
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer $_apiKey",
+            "Authorization": "Bearer ${_groqKey}",
           },
           body: jsonEncode({
-            "model": _model,
+            "model": AppConfig.groqModel,
             "messages": messages,
             "temperature": 0.3,
             // Dynamic max_tokens: simple logging needs less, advice needs more
@@ -765,10 +764,15 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         .timeout(const Duration(seconds: 20));
 
     if (response.statusCode != 200) {
-      // Handle rate limit specifically
+      // Handle rate limit — try auto-fallback to next model
       if (response.statusCode == 429) {
+        final switched = AppConfig.autoFallback();
+        if (switched) {
+          // Retry with the new model
+          return sendMessage(message);
+        }
         throw Exception(
-            "Too many requests — wait 5 seconds and try again, or use the + button to add expenses manually.");
+            "Daily AI limit reached on all models. Try again tomorrow, or add a Gemini/Cerebras API key in Settings.");
       }
       // Show actual status code for easier debugging
       throw Exception(
@@ -946,13 +950,13 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
 
       final response = await http
           .post(
-            Uri.parse(_baseUrl),
+            Uri.parse(_groqUrl),
             headers: {
               "Content-Type": "application/json",
-              "Authorization": "Bearer $_apiKey",
+              "Authorization": "Bearer ${_groqKey}",
             },
             body: jsonEncode({
-              "model": _model,
+              "model": AppConfig.groqModel,
               "messages": [
                 {
                   "role": "system",

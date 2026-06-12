@@ -5,8 +5,8 @@ import 'app_config.dart';
 
 class LLMService {
   static String get _groqKey => AppConfig.groqApiKey;
-  static const _groqUrl = AppConfig.groqBaseUrl;
-  static const _groqModel = AppConfig.groqModel;
+  static String get _groqUrl => AppConfig.groqBaseUrl;
+  static String get _groqModel => AppConfig.groqModel;
 
   // Fallback: Gemini free tier (student edu account)
   // Set this if you have a working Gemini key
