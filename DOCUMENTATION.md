@@ -4,8 +4,8 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** June 11, 2026 (v2.7.0 — Sessions 13–14: debug fixes, PCA calculator, health certificate, expandable chat, income frequency fixes, emergency fund outlier exclusion, AI personality, 7 debug log bugs fixed)
-**Build:** app-arm64-v8a-release.apk — 45.9 MB (June 11, 2026)
+**Last Updated:** June 12, 2026 (v2.8.0 — Sessions 14-15: multi-model LLM switching Gemini 2.5 Flash-Lite + Groq LLaMA 3.3 70B + Cerebras, 28 AI actions, typing indicator, long-press message menu, BIR tax breakdown, PFKB injected into AI context, goal deadline alerts, Gemini model name fix)
+**Build:** app-arm64-v8a-release.apk — 45.9 MB (June 12, 2026)
 
 ---
 

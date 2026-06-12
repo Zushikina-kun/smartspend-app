@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.7.0';
-  static const _prefKey = 'whats_new_seen_2_7_0';
+  static const _version = '2.8.0';
+  static const _prefKey = 'whats_new_seen_2_8_0';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,51 +20,55 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🛡️',
-      'Insurance & Contributions Tracker',
-      'Track SSS, PhilHealth, Pag-IBIG, and private insurance — premiums, due dates, and overdue alerts'
-    ),
-    (
       '🤖',
-      '24 AI Actions (was 16)',
-      'New: salary split, goal feasibility, debt payoff strategy, monthly plan, period comparison, FHS explanation, savings projection, subscription detection, contribution calculator'
-    ),
-    (
-      '📅',
-      'Date & Time Editing',
-      'Edit expense dates and times — tap the date/time field in Edit Expense. AI can also change dates via chat'
-    ),
-    (
-      '🔔',
-      'Smart Startup Alerts',
-      'On-open notifications for: exceeded budgets, overdue bills, debts due soon, FHS drops, idle money, overdue premiums'
-    ),
-    (
-      '💰',
-      'Salary Split (50/30/20)',
-      'Tell AI "split my salary 50/30/20" — auto-creates budgets for all 12 categories + savings goal'
+      'Multi-Model AI (Gemini + Groq + Cerebras)',
+      'Auto-switches to next model when daily limit reached. Gemini 2.5 Flash-Lite is now default (1,000/day free, 1M context)'
     ),
     (
       '🔀',
-      'Wallet Transfers',
-      'Tell AI "move ₱500 from Cash to GCash" — instant wallet-to-wallet transfer'
+      '28 AI Actions (was 25)',
+      'New: suggest expense cuts, simulate what-if scenarios, create debt payment plan'
     ),
     (
-      '📊',
-      'FHS Breakdown in AI',
-      'Ask "why is my score low?" — AI now has full component-level breakdown data to explain your Financial Health Score'
+      '💬',
+      'Typing Indicator',
+      '"Peso is thinking..." with animated dots while AI processes'
     ),
     (
-      '🗑️',
-      'Bulk Delete by Date',
-      'Tell AI "delete all expenses from January" — bulk delete with DELETE confirmation'
+      '📋',
+      'Long-Press Message Menu',
+      'Long-press any AI message to copy, use as prompt, or share'
     ),
     (
-      '🔍',
-      'Subscription Detection',
-      'Ask AI "find my subscriptions" — scans expenses for repeating patterns'
+      '💹',
+      'Peso Cost Averaging Calculator',
+      'Plan regular investments — MP2, UITFs, stocks — with year-by-year projections'
     ),
-    ('💾', 'Backup v9', 'Insurance policies now included in backup/restore'),
+    (
+      '🏅',
+      'Financial Health Certificate',
+      'Shareable monthly FHS score card — share via WhatsApp, social media'
+    ),
+    (
+      '🏦',
+      'BIR Tax Breakdown',
+      'Tap income card → full monthly breakdown: BIR tax, SSS, PhilHealth, Pag-IBIG, take-home'
+    ),
+    (
+      '🧠',
+      'Philippine Financial Knowledge Base',
+      'AI now knows SSS/PhilHealth/Pag-IBIG rates, BIR TRAIN Law brackets, digital bank rates, BSP Open Finance status'
+    ),
+    (
+      '🎯',
+      'Goal Deadline Alerts',
+      'Startup alert when savings goal deadline is within 7 days'
+    ),
+    (
+      '⚙️',
+      '3 Income Frequencies for All',
+      'Bimonthly (15th & 30th) now available for all account types with live monthly preview'
+    ),
   ];
 
   @override
@@ -72,7 +76,7 @@ class WhatsNewScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text("What's New in v$_version — AI & Insurance"),
+        title: Text("What's New in v$_version — AI & Multi-Model"),
         actions: [
           TextButton(
             onPressed: () async {

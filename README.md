@@ -1,7 +1,7 @@
 # Smart Spend
 
 **AI-Assisted Financial Tracking & Advisory**
-Version 2.7.0 | Lucid Frame | Academic Year 2025–2026
+Version 2.8.0 | Lucid Frame | Academic Year 2025–2026
 
 ---
 
