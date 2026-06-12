@@ -4,6 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shake/shake.dart';
+import 'package:share_plus/share_plus.dart';
 import 'dart:async';
 import '../services/ai_chat_service.dart';
 import '../services/db_service.dart';
@@ -1263,6 +1264,22 @@ class _AIScreenState extends State<AIScreen> {
           _showActionSnackbar(
               "💡 Idle money suggestions for ${CurrencyService.format(idleAmt)}");
           break;
+
+        case 'suggest_expense_cuts':
+          // AI analyzes categories and suggests reductions
+          _showActionSnackbar("✂️ Expense cut suggestions ready");
+          break;
+
+        case 'simulate_what_if':
+          // AI projects impact of a change
+          final whatIfChange = action.params['change'] as String? ?? 'change';
+          _showActionSnackbar(
+              "🔮 What-if: $whatIfChange — projection calculated");
+          break;
+
+        case 'create_debt_payment_plan':
+          // AI creates a debt payoff schedule
+          _showActionSnackbar("📋 Debt payment plan created");
       }
     } catch (e) {
       // Show error so we know if something failed
@@ -1326,6 +1343,66 @@ class _AIScreenState extends State<AIScreen> {
         content: Text("Copied to clipboard"),
         duration: Duration(seconds: 1),
         behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _showMessageMenu(BuildContext ctx, String text, bool isUser) {
+    showModalBottomSheet(
+      context: ctx,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.copy_outlined),
+                title: const Text("Copy message"),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _copyMessage(text);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.reply_outlined),
+                title: const Text("Use as new message"),
+                subtitle: const Text("Fill in chat box with this text",
+                    style: TextStyle(fontSize: 11)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  setState(() => _controller.text = text);
+                  _controller.selection = TextSelection.fromPosition(
+                      TextPosition(offset: _controller.text.length));
+                },
+              ),
+              if (!isUser)
+                ListTile(
+                  leading: const Icon(Icons.share_outlined),
+                  title: const Text("Share message"),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    // Share plain text via share sheet
+                    final stripped = text
+                        .replaceAll(RegExp(r'\*\*(.+?)\*\*'), r'$1')
+                        .replaceAll('**', '');
+                    Share.share(stripped, subject: "SmartSpend AI Insight");
+                  },
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1621,8 +1698,40 @@ class _AIScreenState extends State<AIScreen> {
                     : ListView.builder(
                         controller: _scrollController,
                         padding: const EdgeInsets.all(12),
-                        itemCount: _messages.length,
+                        itemCount: _messages.length + (_sending ? 1 : 0),
                         itemBuilder: (_, i) {
+                          // Typing indicator as last item
+                          if (_sending && i == _messages.length) {
+                            return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 14, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest,
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(14),
+                                    topRight: Radius.circular(14),
+                                    bottomRight: Radius.circular(14),
+                                    bottomLeft: Radius.circular(2),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text("Peso is thinking",
+                                        style: TextStyle(
+                                            fontSize: 13, color: Colors.grey)),
+                                    const SizedBox(width: 4),
+                                    _TypingDots(),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
                           final msg = _messages[i];
                           final isUser = msg["role"] == "user";
                           final text = msg["text"]!;
@@ -1633,7 +1742,8 @@ class _AIScreenState extends State<AIScreen> {
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
                             child: GestureDetector(
-                              onLongPress: () => _copyMessage(text),
+                              onLongPress: () =>
+                                  _showMessageMenu(context, text, isUser),
                               child: Container(
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 padding: const EdgeInsets.symmetric(
@@ -1819,6 +1929,57 @@ class _AIScreenState extends State<AIScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Animated 3-dot typing indicator
+class _TypingDots extends StatefulWidget {
+  @override
+  State<_TypingDots> createState() => _TypingDotsState();
+}
+
+class _TypingDotsState extends State<_TypingDots>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 900))
+      ..repeat();
+    _anim = Tween<double>(begin: 0, end: 1).animate(_ctrl);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (_, __) {
+        final phase = (_anim.value * 3).floor();
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(3, (i) {
+            return Container(
+              width: 5,
+              height: 5,
+              margin: const EdgeInsets.only(right: 3),
+              decoration: BoxDecoration(
+                color: Colors.grey.withValues(alpha: phase == i ? 0.9 : 0.35),
+                shape: BoxShape.circle,
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 }

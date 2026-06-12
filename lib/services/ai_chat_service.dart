@@ -250,7 +250,15 @@ ${customCategories.isNotEmpty ? 'Custom cats: ${customCategories.join(', ')}' : 
 Expenses (if not listed here, it does not exist in DB):
 $expenseSummary
 
-Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$walletsSummary$fhsSummary$insuranceSummary""";
+Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$walletsSummary$fhsSummary$insuranceSummary
+
+Philippine Financial Reference (use when relevant):
+SSS contributions (2024): 14% of MSC — Employee 4.5%, Employer 9.5%. Brackets: ₱4K-₱30K MSC range. Min: ₱560/mo employee. Max: ₱1,350/mo employee.
+PhilHealth: 5% of basic salary (50/50 employer/employee). Min ₱500/mo total. Max ₱5,000/mo total.
+Pag-IBIG: Employee 2%, Employer 2% of monthly salary. Max employee contribution ₱200/mo. MP2: 6-9% annual dividend, tax-free.
+BIR TRAIN Law tax brackets (annual): ₱250K exempt; ₱250K-400K: 15%; ₱400K-800K: 20%; ₱800K-2M: 25%; ₱2M-8M: 30%; above ₱8M: 35%.
+PH Digital Banks high-yield: GoTyme 5%/yr, Tonik 4%/yr, Maya 3.5%/yr, Seabank 3%/yr. All PDIC-insured up to ₱500K.
+BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. Brankas API available for PH bank integration.""";
   }
 
   /// Normalize category names to match our standard list.
@@ -709,7 +717,13 @@ Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsS
         "• project_savings_timeline: {\"type\":\"project_savings_timeline\",\"goal_name\":\"X\",\"target\":50000}\n"
         "• detect_subscriptions: {\"type\":\"detect_subscriptions\"}\n"
         "• compute_contribution: {\"type\":\"compute_contribution\",\"type_name\":\"SSS\",\"monthly_income\":25000}\n"
-        "• suggest_idle_money: {\"type\":\"suggest_idle_money\",\"amount\":5000}\n\n"
+        "• suggest_idle_money: {\"type\":\"suggest_idle_money\",\"amount\":5000}\n"
+        "• suggest_expense_cuts: {\"type\":\"suggest_expense_cuts\"}\n"
+        "  Use when user asks 'where can I save money?', 'how to cut expenses?', 'what can I reduce?'. Analyze top spending categories and suggest specific cuts.\n"
+        "• simulate_what_if: {\"type\":\"simulate_what_if\",\"change\":\"save 500 more\",\"amount\":500}\n"
+        "  Use when user asks 'what if I save ₱500 more?', 'what if I cut food by ₱1000?'. Project impact on savings and FHS.\n"
+        "• create_debt_payment_plan: {\"type\":\"create_debt_payment_plan\"}\n"
+        "  Use when user asks 'help me pay off my debts', 'create a debt payment schedule'. Create timeline across all debts.\n\n"
         "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others.\n"
         "is_want: true=discretionary (snacks/drinks/junk food, entertainment, gaming, shopping, gifts, travel, dining out at restaurants). false=essential (meals/breakfast/lunch/dinner/brunch, transport, groceries, medicine, tuition, bills, health).\n"
         "IMPORTANT is_want rules: Breakfast/Lunch/Dinner/Brunch/Meal → is_want:false (essential food). Snacks/drinks/energy drinks/junk food → is_want:true. Jeepney/tricycle/bus/commute → is_want:false. Games/steam → is_want:true.\n"

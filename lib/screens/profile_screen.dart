@@ -793,6 +793,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _showBIRBreakdown() async {
+    if (_monthlyIncome <= 0) return;
+    final tax = TaxService.estimateTax(_monthlyIncome);
+    // PH government contributions (approximate)
+    final sss = (_monthlyIncome * 0.045).clamp(560.0, 1350.0); // employee share
+    final philhealth =
+        (_monthlyIncome * 0.025).clamp(250.0, 2500.0); // employee 2.5%
+    const pagibig = 200.0; // max employee contribution
+    final totalDeductions = tax + sss + philhealth + pagibig;
+    final takeHome = _monthlyIncome - totalDeductions;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Monthly Deductions Estimate",
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            const Text("Based on PH TRAIN Law + mandatory contributions",
+                style: TextStyle(fontSize: 12, color: Colors.grey)),
+            const SizedBox(height: 16),
+            _birRow("Gross Income", _monthlyIncome, Colors.green),
+            const Divider(height: 20),
+            _birRow("BIR Income Tax", -tax, Colors.red),
+            _birRow("SSS (employee 4.5%)", -sss, Colors.orange),
+            _birRow("PhilHealth (2.5%)", -philhealth, Colors.orange),
+            _birRow("Pag-IBIG", -pagibig, Colors.orange),
+            const Divider(height: 20),
+            _birRow("Est. Take-Home Pay", takeHome,
+                takeHome > 0 ? Colors.green : Colors.red,
+                bold: true),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.amber.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Text(
+                "⚠️ Estimation only — not official tax advice. Actual amounts depend on your specific tax situation. Consult a licensed accountant for official BIR compliance.",
+                style: TextStyle(fontSize: 11, height: 1.4),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _birRow(String label, double amount, Color color,
+      {bool bold = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
+          Text(
+            "${amount >= 0 ? '' : '-'}${CurrencyService.format(amount.abs())}",
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+                color: color),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _showHealthCertificate() async {
     final now = DateTime.now();
     final monthStr = "${[
@@ -1712,24 +1791,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 _accountType != 'unemployed' &&
                                 _accountType != 'pensioner' &&
                                 _accountType != 'general')
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text("Tax: ${CurrencyService.format(tax)}",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: cs.onPrimaryContainer
-                                              .withValues(alpha: 0.7))),
-                                  Text(
-                                      "Save: ${CurrencyService.format(savings)}",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.green[
-                                              Theme.of(context).brightness ==
-                                                      Brightness.dark
-                                                  ? 300
-                                                  : 700])),
-                                ],
+                              GestureDetector(
+                                onTap: () => _showBIRBreakdown(),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                        "Tax: ~${CurrencyService.format(tax)}/mo",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: cs.onPrimaryContainer
+                                                .withValues(alpha: 0.7))),
+                                    Text(
+                                        "Save: ${CurrencyService.format(savings)}",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.green[
+                                                Theme.of(context).brightness ==
+                                                        Brightness.dark
+                                                    ? 300
+                                                    : 700])),
+                                    Text("Tap for BIR breakdown",
+                                        style: TextStyle(
+                                            fontSize: 9,
+                                            color: cs.onPrimaryContainer
+                                                .withValues(alpha: 0.4))),
+                                  ],
+                                ),
                               ),
                             Icon(Icons.edit,
                                 size: 16,

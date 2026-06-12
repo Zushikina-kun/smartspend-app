@@ -192,6 +192,32 @@ class StartupAlertsService {
           color: Colors.purple,
         ));
       }
+
+      // 7. Check for savings goals with deadline within 7 days
+      final goals = await DBService.getGoals();
+      final urgentGoals = <String>[];
+      for (final g in goals) {
+        final deadline = g['deadline'] as String?;
+        final current = (g['current_amount'] as num?)?.toDouble() ?? 0;
+        final target = (g['target_amount'] as num?)?.toDouble() ?? 1;
+        if (deadline != null && deadline.isNotEmpty && current < target) {
+          try {
+            final daysLeft =
+                DateTime.parse(deadline).difference(DateTime.now()).inDays;
+            if (daysLeft <= 7 && daysLeft >= 0) {
+              urgentGoals.add('${g['name']} ($daysLeft days left)');
+            }
+          } catch (_) {}
+        }
+      }
+      if (urgentGoals.isNotEmpty) {
+        alerts.add(StartupAlert(
+          title: '🎯 Goal Deadline Near',
+          message: urgentGoals.take(2).join(', '),
+          icon: Icons.savings_outlined,
+          color: Colors.amber,
+        ));
+      }
     } catch (_) {
       // Fail silently — alerts are non-critical
     }
