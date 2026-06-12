@@ -1596,7 +1596,7 @@ class _AIScreenState extends State<AIScreen> {
                 "25 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, transfers, salary splits, subscription detection, idle money suggestions, and more.\n\n"
                 "Daily message limit: 60/day — resets at midnight.",
           ),
-          // Model selector
+          // Model selector — shows current model with status
           GestureDetector(
             onTap: _showModelSelector,
             child: Padding(
@@ -1605,7 +1605,11 @@ class _AIScreenState extends State<AIScreen> {
                 avatar: Text(AppConfig.groqLimitReached ? '🟡' : '🟢',
                     style: const TextStyle(fontSize: 10)),
                 label: Text(
-                  AppConfig.activeModelLabel.split(' ').first,
+                  AppConfig.activeModelLabel.split(' ').first == 'Gemini'
+                      ? 'Gemini'
+                      : AppConfig.activeModelLabel.split(' ').first == 'LLaMA'
+                          ? 'LLaMA'
+                          : AppConfig.activeModelLabel.split(' ').first,
                   style: const TextStyle(fontSize: 10),
                 ),
                 padding: EdgeInsets.zero,
