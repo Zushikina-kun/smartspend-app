@@ -241,6 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool balanceMode = (await DBService.getSetting('balance_mode')) == 'true';
     bool roundUpSavings =
         (await DBService.getSetting('round_up_savings')) != 'false';
+    bool compactMode = (await DBService.getSetting('compact_mode')) == 'true';
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -343,6 +344,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setSheet(() => roundUpSavings = v);
                   DBService.setSetting(
                       'round_up_savings', v ? 'true' : 'false');
+                },
+              ),
+              _settingsTile(
+                icon: Icons.density_medium_outlined,
+                title: "Compact mode",
+                subtitle: "Reduce spacing & list density for more items per screen",
+                value: compactMode,
+                onChanged: (v) {
+                  setSheet(() => compactMode = v);
+                  DBService.setSetting(
+                      'compact_mode', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
                 },
               ),
             ],

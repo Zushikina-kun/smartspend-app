@@ -31,32 +31,6 @@ class _SetupScreenState extends State<SetupScreen> {
 
   bool _saving = false;
 
-  final _accountTypes = [
-    ('employed', Icons.work_outline, 'Employed', 'Monthly salary or wages'),
-    ('business', Icons.store_outlined, 'Business Owner', 'Business income'),
-    ('freelancer', Icons.laptop_outlined, 'Freelancer', 'Project-based income'),
-    ('student', Icons.school_outlined, 'Student', 'Allowance-based'),
-    (
-      'working_student',
-      Icons.work_history_outlined,
-      'Working Student',
-      'Both income & allowance'
-    ),
-    (
-      'pensioner',
-      Icons.elderly_outlined,
-      'Pensioner / Retiree',
-      'Pension or retirement income'
-    ),
-    ('unemployed', Icons.person_outline, 'Unemployed', 'No regular income'),
-    (
-      'general',
-      Icons.person_pin_outlined,
-      'General / Other',
-      'Any income type — full flexibility'
-    ),
-  ];
-
   bool get _isAllowanceBased => _accountType == 'student';
   bool get _hasIncome => _accountType != 'unemployed';
 

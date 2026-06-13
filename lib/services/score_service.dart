@@ -438,4 +438,146 @@ class ScoreService {
       'Your spending is fairly balanced across categories.'
     );
   }
+
+  /// Get all financial milestones the user has achieved
+  static List<Map<String, dynamic>> getMilestones(
+    List<Map<String, dynamic>> expenses, {
+    List<Budget> budgets = const [],
+    double monthlyIncome = 0,
+    int currentFHS = 50,
+  }) {
+    final milestones = <Map<String, dynamic>>[];
+
+    if (expenses.isEmpty) return milestones;
+
+    final totalSpent =
+        expenses.fold<double>(0, (sum, e) => sum + (e['amount'] as num));
+    final totalSaved = monthlyIncome > 0 ? monthlyIncome - totalSpent : 0;
+
+    // Savings milestones
+    if (totalSaved >= 100000)
+      milestones.add({
+        'icon': '💯',
+        'title': '100K Savings Club',
+        'description': 'Saved ₱100,000 or more',
+        'category': 'savings'
+      });
+    if (totalSaved >= 50000)
+      milestones.add({
+        'icon': '💰',
+        'title': '50K Milestone',
+        'description': 'Saved ₱50,000 or more',
+        'category': 'savings'
+      });
+    if (totalSaved >= 10000)
+      milestones.add({
+        'icon': '🎯',
+        'title': '10K Goal',
+        'description': 'Reached ₱10,000 in savings',
+        'category': 'savings'
+      });
+    if (totalSaved >= 5000)
+      milestones.add({
+        'icon': '📈',
+        'title': '5K Achievement',
+        'description': 'Accumulated ₱5,000 in savings',
+        'category': 'savings'
+      });
+    if (totalSaved >= 1000)
+      milestones.add({
+        'icon': '🌟',
+        'title': '₱1K Saved',
+        'description': 'First ₱1,000 milestone reached',
+        'category': 'savings'
+      });
+
+    // Savings rate milestones
+    if (monthlyIncome > 0) {
+      final savingsRate = totalSaved / monthlyIncome;
+      if (savingsRate >= 0.5)
+        milestones.add({
+          'icon': '🚀',
+          'title': '50% Savings Rate',
+          'description': 'Saving half your income — incredible!',
+          'category': 'rate'
+        });
+      if (savingsRate >= 0.3)
+        milestones.add({
+          'icon': '✨',
+          'title': '30% Savings Rate',
+          'description': 'You\'re saving 30% of income',
+          'category': 'rate'
+        });
+      if (savingsRate >= 0.2)
+        milestones.add({
+          'icon': '💎',
+          'title': '20% Savings Rate',
+          'description': 'Hitting the 20% savings target',
+          'category': 'rate'
+        });
+    }
+
+    // FHS milestones
+    if (currentFHS >= 90)
+      milestones.add({
+        'icon': '👑',
+        'title': 'Financial Champion',
+        'description': 'FHS score 90+ — elite financial health',
+        'category': 'fhs'
+      });
+    if (currentFHS >= 80)
+      milestones.add({
+        'icon': '🏆',
+        'title': 'Excellent Health',
+        'description': 'FHS score 80+ — strong financial habits',
+        'category': 'fhs'
+      });
+    if (currentFHS >= 70)
+      milestones.add({
+        'icon': '⭐',
+        'title': 'Good Financial Health',
+        'description': 'FHS score 70+ — on the right track',
+        'category': 'fhs'
+      });
+    if (currentFHS >= 60)
+      milestones.add({
+        'icon': '🌱',
+        'title': 'Building Momentum',
+        'description': 'FHS score 60+ — steady progress',
+        'category': 'fhs'
+      });
+
+    // Spending discipline
+    if (totalSpent > 0 && monthlyIncome > 0) {
+      final wantSpending = expenses
+          .where((e) => e['is_want'] == true || e['is_want'] == 1)
+          .fold<double>(0, (sum, e) => sum + (e['amount'] as num));
+      final wantRatio = wantSpending / totalSpent;
+      if (wantRatio <= 0.1)
+        milestones.add({
+          'icon': '🎖️',
+          'title': 'Minimalist',
+          'description': 'Only 10% of spending on wants',
+          'category': 'discipline'
+        });
+    }
+
+    // Logging streak (simple: if has expenses across multiple days)
+    if (expenses.length >= 30)
+      milestones.add({
+        'icon': '📝',
+        'title': '30 Expenses Logged',
+        'description': 'Consistent tracking habit',
+        'category': 'logging'
+      });
+    if (expenses.length >= 50)
+      milestones.add({
+        'icon': '📋',
+        'title': '50 Expenses Logged',
+        'description': 'Dedicated financial tracker',
+        'category': 'logging'
+      });
+
+    return milestones;
+  }
 }

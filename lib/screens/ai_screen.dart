@@ -2010,20 +2010,27 @@ class _AIScreenState extends State<AIScreen> {
                   ),
                   const SizedBox(width: 4),
                   Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      maxLines: 6,
-                      minLines: 1,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      decoration: InputDecoration(
-                        hintText: _isListening
-                            ? "Listening..."
-                            : "Ask about your spending...",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24)),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 140),
+                      child: AnimatedSize(
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOut,
+                        child: TextField(
+                          controller: _controller,
+                          maxLines: 6,
+                          minLines: 1,
+                          keyboardType: TextInputType.multiline,
+                          textInputAction: TextInputAction.newline,
+                          decoration: InputDecoration(
+                            hintText: _isListening
+                                ? "Listening..."
+                                : "Ask about your spending...",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(24)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                          ),
+                        ),
                       ),
                     ),
                   ),

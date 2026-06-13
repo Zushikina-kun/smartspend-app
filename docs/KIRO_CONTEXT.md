@@ -1,7 +1,7 @@
 # SmartSpend — Kiro Context & Architecture Reference
 
-**Version:** 2.7.0
-**Last Updated:** June 11, 2026
+**Version:** 2.8.0
+**Last Updated:** June 12, 2026
 **For:** Kiro AI assistant — read this before making any changes to the codebase.
 
 ---
@@ -31,7 +31,12 @@ Smart Spend is an AI-powered personal finance tracker for Android (Flutter/Dart)
 ```
 Flutter UI (screens/) → Services (services/) → SQLite (sqflite v11)
                                              → Firestore (cloud_firestore)
-                                             → Groq API (LLaMA 3.1 8B)
+                                             → Multi-Model LLM Routing:
+                                                1. Gemini 2.5 Flash-Lite (primary, 1,000/day free)
+                                                2. Gemini 2.5 Flash (fallback 1, 250/day free)
+                                                3. Groq LLaMA 3.3 70B (fallback 2, 14,400/day)
+                                                4. Groq LLaMA 3.1 8B (fallback 3, fastest)
+                                                5. Cerebras LLaMA 3.1 (fallback 4, 1M tokens/day)
                                              → open.er-api.com (exchange rates)
 ```
 
@@ -41,8 +46,8 @@ Flutter UI (screens/) → Services (services/) → SQLite (sqflite v11)
 |---------|---------------|
 | `DBService` | All SQLite CRUD. Every write also calls CloudService. |
 | `CloudService` | All Firestore sync. `pushDoc`, `deleteDoc`, `pullAll`, `pushAll`. |
-| `AIChatService` | Groq API chat. Context injection. Action parsing. |
-| `LLMService` | Groq API for expense parsing, insights, receipt import. |
+| `AIChatService` | Multi-model LLM chat (Gemini → Groq → Cerebras). Context injection. Action parsing. Auto-fallback on rate limit. |
+| `LLMService` | Multi-model LLM for expense parsing, insights, receipt import. Same fallback chain as AIChatService. |
 | `AppConfig` | Centralized API keys. **In `.gitignore` — do not commit.** |
 | `AuthService` | Firebase Auth (email/password + Google). |
 | `ScoreService` | Financial Health Score calculation (4-component, 25pts each). |
@@ -132,15 +137,15 @@ Flutter UI (screens/) → Services (services/) → SQLite (sqflite v11)
 
 **Type:** Agentic AI with dynamic context injection (not RAG)
 
-**Flow:** Every message → fresh DB query → inject full context into system prompt → Groq API → parse ACTION lines → execute directly on SQLite → Firestore sync
+**Flow:** Every message → fresh DB query → inject full context into system prompt → Multi-Model LLM (Gemini 2.5 Flash-Lite primary, auto-fallback to Groq/Cerebras on 429) → parse ACTION lines → execute directly on SQLite → Firestore sync
 
 **Context includes:** Last 30 expenses (10 detailed + 20 summarized), budgets, income, health score (with FHS breakdown), goals, debts, recurring, installments, wallets, insurance policies, mood, custom categories, quiz challenge
 
-**25 action types:** `log_expense`, `set_budget`, `set_income`, `add_goal`, `update_goal`, `delete_goal`, `add_income`, `add_debt`, `update_debt`, `add_recurring`, `delete_recurring`, `set_account_type`, `update_expense`, `delete_expense`, `delete_by_date`, `add_installment_plan`, `set_wallet_balance`, `transfer_wallet`, `plan_salary_split`, `analyze_goal_feasibility`, `suggest_debt_payoff`, `generate_monthly_plan`, `compare_periods`, `explain_fhs_breakdown`, `project_savings_timeline`, `detect_subscriptions`, `compute_contribution`, `suggest_idle_money`
+**28 action types:** `log_expense`, `set_budget`, `set_income`, `add_goal`, `update_goal`, `delete_goal`, `add_income`, `add_debt`, `update_debt`, `add_recurring`, `delete_recurring`, `set_account_type`, `update_expense`, `delete_expense`, `delete_by_date`, `add_installment_plan`, `set_wallet_balance`, `transfer_wallet`, `plan_salary_split`, `analyze_goal_feasibility`, `suggest_debt_payoff`, `generate_monthly_plan`, `compare_periods`, `explain_fhs_breakdown`, `project_savings_timeline`, `detect_subscriptions`, `compute_contribution`, `suggest_idle_money`, `suggest_expense_cuts`, `simulate_what_if`, `create_debt_payment_plan`
 
 **Daily limit:** 60 messages/day (SharedPreferences, device-wide, intentional)
 
-**API key location:** `lib/services/app_config.dart` → `AppConfig.groqApiKey`
+**API key location:** `lib/services/app_config.dart` → `AppConfig` (multi-model keys: Gemini, Groq, Cerebras with fallback routing)
 
 ---
 

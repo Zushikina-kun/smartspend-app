@@ -19,7 +19,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — **25 agentic action types (30 planned)** via natural language
+- 🤖 AI Chat Assistant — **28 agentic action types** via natural language with multi-model LLM routing (Gemini 2.5 Flash-Lite primary)
 - 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison, **DTI ratio**, **emergency fund calculator**
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc
@@ -54,10 +54,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 🔐 **API Security** — Firebase Remote Config + App Check (key never in APK binary)
 - 📷 Google profile photo fallback (works across devices)
 - 🌙 5 color themes + dark mode + high contrast
-- 🤖 **AI**: **25 agentic action types** (30 planned), multi-model LLM switching planned (Groq → Gemini → Cerebras)
-- 💹 **Peso Cost Averaging Calculator** — plan regular investments with year-by-year projections
-- 🏅 **Financial Health Certificate** — shareable monthly score card
-- 🔀 Multi-model LLM switching planned (currently Groq LLaMA 3.1 8B)
+- 🤖 **AI**: **28 agentic action types**, multi-model LLM switching (Gemini 2.5 Flash-Lite → Groq → Cerebras auto-fallback)
 
 ---
 
@@ -66,7 +63,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 | Component | Technology |
 |-----------|-----------|
 | Framework | Flutter (Dart) |
-| AI Engine | Groq API — LLaMA 3.1 8B Instant |
+| AI Engine | Multi-Model LLM: Gemini 2.5 Flash-Lite (primary), Gemini 2.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras LLaMA 3.1 (auto-fallback on rate limit) |
 | Local DB | SQLite (sqflite v11) |
 | Cloud | Firebase Auth + Firestore |
 | OCR | Google ML Kit Text Recognition |

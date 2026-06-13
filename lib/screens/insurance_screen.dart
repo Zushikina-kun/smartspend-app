@@ -473,7 +473,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: frequency,
+                  initialValue: frequency,
                   decoration: InputDecoration(
                     labelText: "Frequency",
                     border: OutlineInputBorder(
@@ -486,7 +486,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
-                  value: type,
+                  initialValue: type,
                   decoration: InputDecoration(
                     labelText: "Type",
                     border: OutlineInputBorder(

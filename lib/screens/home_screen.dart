@@ -3033,37 +3033,56 @@ class _DashboardState extends State<Dashboard> {
                   totalSpent: _totalSpent,
                 );
                 final cs = Theme.of(ctx).colorScheme;
-                return Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: cs.surfaceContainerHighest.withValues(alpha: 0.35),
+                return Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    border:
-                        Border.all(color: cs.outline.withValues(alpha: 0.15)),
                   ),
-                  child: Row(
-                    children: [
-                      Text(personality.$1,
-                          style: const TextStyle(fontSize: 22)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(personality.$2,
-                                style: const TextStyle(
-                                    fontSize: 13, fontWeight: FontWeight.bold)),
-                            Text(personality.$3,
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    color: cs.onSurface.withValues(alpha: 0.6),
-                                    height: 1.3)),
-                          ],
+                  child: InkWell(
+                    onTap: () => ScaffoldMessenger.of(ctx).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "${personality.$2}\n${personality.$3}",
+                          style: const TextStyle(fontSize: 12),
                         ),
+                        duration: const Duration(seconds: 3),
                       ),
-                    ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 12),
+                      child: Row(
+                        children: [
+                          Text(personality.$1,
+                              style: const TextStyle(fontSize: 24)),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(personality.$2,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                                Text(personality.$3,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color:
+                                            cs.onSurface.withValues(alpha: 0.7),
+                                        height: 1.3)),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Icon(Icons.info_outline,
+                              size: 18,
+                              color: cs.onSurface.withValues(alpha: 0.5)),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               }),

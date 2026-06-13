@@ -71,6 +71,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   Map<String, double> _cachedDailyTotals = {};
   List<Map<String, dynamic>> _scoreHistory = [];
   List<Map<String, dynamic>> _currentComponents = [];
+  bool _showAdvancedCharts = false;
   StreamSubscription? _eventSub;
 
   List<dynamic> _glanceBudgets = []; // full budget list for category breakdown
@@ -565,6 +566,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       appBar: AppBar(
         title: const Text("Analytics"),
         actions: [
+          IconButton(
+            icon: Icon(_showAdvancedCharts
+                ? Icons.unfold_less
+                : Icons.unfold_more),
+            tooltip: _showAdvancedCharts ? "Hide details" : "Show more charts",
+            onPressed: () => setState(() => _showAdvancedCharts = !_showAdvancedCharts),
+          ),
           const InfoButton(
             title: "Analytics",
             body:
@@ -1066,7 +1074,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
                       // ── CATEGORY BREAKDOWN TABLE ──────────────────────────
                       // Simple always-visible table: category, amount, % of total, budget status
-                      if (categories.isNotEmpty) ...[
+                      if (categories.isNotEmpty && _showAdvancedCharts) ...[
                         const Text("Category Breakdown",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
@@ -1378,7 +1386,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       const SizedBox(height: 8),
 
                       // Monthly Bar Chart
-                      if (monthly.length >= 2) ...[
+                      if (monthly.length >= 2 && _showAdvancedCharts) ...[
                         const Text("Monthly Spending",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
@@ -1450,7 +1458,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ],
 
                       // Daily Spending Trend (last 30 days)
-                      if (_cachedDailyTotals.length >= 3) ...[
+                      if (_cachedDailyTotals.length >= 3 && _showAdvancedCharts) ...[
                         const Text("Daily Spending (last 30 days)",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
@@ -1655,6 +1663,49 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   ),
                                 );
                               }),
+                            ),
+                            const SizedBox(height: 24),
+                          ],
+                        );
+                      }),
+
+                      // Financial Milestones
+                      Builder(builder: (context) {
+                        final currentScore = _scoreHistory.isNotEmpty
+                            ? (_scoreHistory.last['score'] as num?)?.toInt() ?? 50
+                            : 50;
+                        final milestones = ScoreService.getMilestones(
+                          _expenses.map((e) => {
+                            'amount': e.amount,
+                            'is_want': (e.isWant ?? false) ? 1 : 0,
+                          }).toList(),
+                          monthlyIncome: _monthlyIncome,
+                          currentFHS: currentScore,
+                        );
+                        if (milestones.isEmpty) return const SizedBox.shrink();
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("🏆 Achievements",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 4),
+                            Text("Milestones you've unlocked this month",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey[500])),
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: milestones.map((m) {
+                                return Chip(
+                                  avatar: Text(m['icon'] as String,
+                                      style: const TextStyle(fontSize: 16)),
+                                  label: Text(m['title'] as String,
+                                      style: const TextStyle(fontSize: 12)),
+                                  onDeleted: null,
+                                );
+                              }).toList(),
                             ),
                             const SizedBox(height: 24),
                           ],
