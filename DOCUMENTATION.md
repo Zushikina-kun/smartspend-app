@@ -1,11 +1,11 @@
 ﻿# Smart Spend — Application Documentation
 
-**Version:** 2.7.0
+**Version:** 2.8.0
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** June 12, 2026 (v2.8.0 — Sessions 14-15: multi-model LLM switching Gemini 2.5 Flash-Lite + Groq LLaMA 3.3 70B + Cerebras, 28 AI actions, typing indicator, long-press message menu, BIR tax breakdown, PFKB injected into AI context, goal deadline alerts, Gemini model name fix)
-**Build:** app-arm64-v8a-release.apk — 45.9 MB (June 12, 2026)
+**Last Updated:** June 12, 2026 (v2.8.0 — Sessions 14-15: multi-model LLM switching Gemini 2.5 Flash-Lite + Groq LLaMA 3.3 70B + Cerebras, 28 AI actions, typing indicator, long-press menu, BIR tax breakdown, PFKB, goal deadline alerts, Financial Glossary, wallet-first setup, simplified role picker)
+**Build:** app-arm64-v8a-release.apk — 46.0 MB (June 12, 2026)
 
 ---
 
@@ -37,6 +37,7 @@ Smart Spend is **not** a banking app. It does not process payments or transfer m
 │                      Flutter UI Layer                       │
 │  Screens: Home, Analytics, AI Chat, Profile, Budget,        │
 │  Goals, Income, Debt, Recurring, Transactions, Currency     │
+│  Insurance, Bank Comparison, PCA Calc, Glossary, etc.       │
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ┌──────────────────────────▼──────────────────────────────────┐
@@ -45,19 +46,29 @@ Smart Spend is **not** a banking app. It does not process payments or transfer m
 │  DBService   │  CloudService   │  AuthService               │
 │  VoiceService│  OCRService     │  ScoreService              │
 │  CurrencyService │ TaxService  │  PredictService            │
-│  ExportService   │ DemoService │  NotificationService       │
-│  BackupService   │ EventBus    │  ThemeService              │
+│  BackupService│ BarcodeLookup  │  NotificationService       │
+│  StartupAlerts│ RecurringHelper│  ThemeService              │
 └──────┬────────────────────────────────┬─────────────────────┘
        │                                │
 ┌──────▼──────┐              ┌──────────▼──────────────────────┐
 │   SQLite    │              │   Firebase (Firestore +          │
-│  (Local DB) │              │   Auth + Crashlytics)           │
-│  version 11 │              └──────────────────────────────────┘
-└─────────────┘                         │
-                              ┌──────────▼──────────┐
-                              │   Groq API           │
-                              │  (LLaMA 3.1 8B)      │
-                              └──────────────────────┘
+│  (Local DB) │              │   Auth + Crashlytics +          │
+│  version 11 │              │   Remote Config)                │
+└─────────────┘              └──────────────────────────────────┘
+                                         │
+                              ┌──────────▼──────────────────────┐
+                              │   Multi-Model LLM Routing       │
+                              │  1. Gemini 2.5 Flash-Lite       │
+                              │     (primary, 1,000/day free)   │
+                              │  2. Gemini 2.5 Flash            │
+                              │     (fallback 1, 250/day free)  │
+                              │  3. Groq LLaMA 3.3 70B          │
+                              │     (fallback 2, 14,400/day)    │
+                              │  4. Groq LLaMA 3.1 8B           │
+                              │     (fallback 3, fastest)       │
+                              │  5. Cerebras LLaMA 3.1          │
+                              │     (fallback 4, 1M tokens/day) │
+                              └──────────────────────────────────┘
                                          │
                               ┌──────────▼──────────┐
                               │  open.er-api.com     │
@@ -106,11 +117,12 @@ Low-confidence entries (< 0.7) are flagged with an orange dot on the expense til
 
 ---
 
-### 2. AI Engine (Groq API — LLaMA 3.1 8B Instant)
+### 2. AI Engine — Multi-Model (Gemini 2.5 Flash-Lite / Groq / Cerebras)
 - **Expense Parsing** — converts natural language to structured expense data
 - **Spending Insights** — analyzes patterns and generates bullet-point insights on the dashboard
 - **Financial Advice** — personalized tips based on income, spending, and predictions
 - **AI Chat** — conversational assistant with full financial context injection
+- **Multi-Model Routing** — Gemini 2.5 Flash-Lite (primary) → Gemini 2.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras. Auto-fallback on 429. User can switch manually via model chip in AI appbar.
 
 #### AI Architecture — Agentic AI with Context Injection
 
@@ -131,7 +143,7 @@ Before every AI message, the app queries SQLite for the user's live financial da
 #### AI Chat Capabilities
 The AI has access to: last 10 expenses detailed + older summarized by category, budget status, monthly income, total spent, health score (with component breakdown), savings goals, debts, recurring, installments, wallet balances, insurance policies, and FHS breakdown. Context is compressed to stay within the 8,192 token limit.
 
-The AI executes **25 action types** directly — data is written to the DB immediately with green snackbar confirmation:
+The AI executes **28 action types** directly — data is written to the DB immediately with green snackbar confirmation:
 
 | Action | Example Trigger |
 |--------|----------------|
@@ -163,8 +175,11 @@ The AI executes **25 action types** directly — data is written to the DB immed
 | `detect_subscriptions` | "What subscriptions do I have?" / "Find recurring charges" |
 | `compute_contribution` | "How much should I pay for SSS?" / "PhilHealth contribution" |
 | `suggest_idle_money` | "What should I do with my savings?" / "Where to put idle money?" |
+| `suggest_expense_cuts` | "Where can I save money?" / "How to cut expenses?" |
+| `simulate_what_if` | "What if I save ₱500 more/month?" / "What if I cut food by ₱1000?" |
+| `create_debt_payment_plan` | "Help me pay off my debts" / "Create a debt payment schedule" |
 
-> **(+ 5 more planned: `flag_anomaly_explanation`, `suggest_expense_cuts`, `create_debt_payment_plan`, `simulate_what_if`, business actions)**
+> **(+ additional business mode actions planned for future release)**
 
 - Actions execute immediately — green snackbar shown per action
 - **Broader scope** — handles personal finance + Philippine banking, SSS/PhilHealth/Pag-IBIG, investments, price estimates, buying/selling advice
@@ -354,13 +369,14 @@ The score uses a **4-component weighted formula** (25 pts each) based on the pap
 
 ### 12b. Startup Alerts (On-Open Notifications)
 - Modal bottom sheet shown on app open when important conditions are detected
-- **6 alert conditions:**
+- **7 alert conditions:**
   1. Budget exceeded (any category over limit)
   2. Overdue recurring bills
   3. Debts due within 3 days
   4. Financial Health Score dropped 10+ points
   5. Idle wallets (14+ days, >₱5,000 balance, no expenses)
   6. Insurance premiums overdue
+  7. Savings goal deadline within 7 days
 - **Smart timing** — won't repeat on the same day
 - Color-coded alert cards with icons
 - Dismissible with "Got it" button

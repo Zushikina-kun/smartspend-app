@@ -1,5 +1,5 @@
 # SmartSpend — Capstone 2 & Future Development TODO
-**Date:** June 11, 2026 | **Status:** Active Development (v2.7.0)
+**Date:** June 12, 2026 | **Status:** Active Development (v2.8.0)
 **Source:** Panel feedback + Claude analysis + team brainstorming
 
 ---
@@ -14,7 +14,7 @@
 
 ## 🔴 CRITICAL — Address Panel Concerns
 
-### 1. Expanded Agentic AI Actions ✅ COMPLETE
+### 1. Expanded Agentic AI Actions ✅ COMPLETE (28 total)
 **Why:** Panel said LLM should do "something important and heavy"
 - [x] `plan_salary_split` — AI creates 50/30/20 budget from salary
 - [x] `analyze_goal_feasibility` — checks if savings rate supports a goal
@@ -28,7 +28,10 @@
 - [x] `project_savings_timeline` — "when will I save enough for X?"
 - [x] `transfer_wallet` — move money between wallets
 - [x] `delete_by_date` — bulk delete expenses by date range
-**Total: 25 agentic actions (was 0 in Capstone 1)**
+- [x] `suggest_expense_cuts` — analyze categories, identify reductions
+- [x] `simulate_what_if` — project impact of a financial change
+- [x] `create_debt_payment_plan` — create repayment schedule across all debts
+**Total: 28 agentic actions (was 0 in Capstone 1)**
 
 ### 2. Date/Time CRUD for All Data ✅ COMPLETE
 **Why:** Panel noted users can't modify dates of existing expenses
@@ -159,15 +162,18 @@
 
 ## 🔵 LOW / FUTURE
 
-### 18. AI Fine-Tuning / Knowledge Base
-- [ ] Build Philippine Financial Knowledge Base (PFKB)
-- [ ] SSS rules, PhilHealth tables, BIR guidelines, insurance types
-- [ ] Inject as context alongside user data
+### 18. AI Fine-Tuning / Knowledge Base ✅ PARTIALLY DONE
+- [x] SSS, PhilHealth, Pag-IBIG rates, BIR TRAIN Law, digital bank rates injected into AI context (PFKB in system prompt)
+- [ ] Full structured JSON knowledge base (complete SSS table, all PhilHealth brackets)
+- [ ] Insurance types and major PH providers database
+- [ ] BSP financial guidelines
 
 ### 19. Additional Features
+- [x] Financial Health Certificate (shareable report card) — Profile → Financial Health Certificate
+- [x] Peso Cost Averaging Calculator — Hub → Peso Cost Averaging
+- [x] Financial Glossary (23 terms, searchable) — Hub → Financial Glossary
+- [x] BIR Tax Breakdown (monthly deductions) — tap income card in Profile
 - [ ] QR Code bill payment guide
-- [ ] Financial Health Certificate (shareable report card)
-- [ ] Peso Cost Averaging Calculator
 - [ ] Multi-language UI (Filipino, Bisaya/Cebuano)
 - [ ] Market insights (PSEi, CPI, fuel prices)
 - [ ] Couple/Family sharing mode

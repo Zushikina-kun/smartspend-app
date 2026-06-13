@@ -49,11 +49,12 @@ Flutter UI (screens/) → Services (services/) → SQLite (sqflite v11)
 | `NotificationService` | All push notifications via flutter_local_notifications. |
 | `BackupService` | JSON backup/restore (v9 — includes insurance_policies). |
 | `BarcodeLookupService` | Product lookup: local PH DB + Open Food Facts API + prefix inference. |
-| `StartupAlertsService` | On-open alerts: 6 conditions (bills, budgets, debts, FHS drop, idle money, insurance). |
+| `StartupAlertsService` | On-open alerts: 7 conditions (bills, budgets, debts, FHS drop, idle money, insurance, goal deadline). |
 | `RecurringHelper` | Shared log+advance logic for recurring transactions. |
 | `InsuranceScreen` | Insurance & government contributions tracker with Firestore sync. |
 | `BankComparisonScreen` | PH banks, digital banks, e-wallets, investments (from ph_banks.json). |
 | `PCACalculatorScreen` | Peso Cost Averaging calculator with year-by-year breakdown. |
+| `GlossaryScreen` | Financial Glossary — 23 terms, searchable, expandable cards. |
 | `DemoService` | Sample data loading. **Never touches Firestore.** |
 | `CategoryService` | Category list cache. Call `invalidate()` after any category change. |
 | `CurrencyService` | Exchange rates + formatting. All amounts stored in PHP internally. |
@@ -300,6 +301,7 @@ All HIGH priority issues from previous sessions are resolved. See `SmartSpend_Pe
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
+| 2.8.0 | June 12, 2026 | Multi-model LLM (Gemini 2.5 Flash-Lite default → Gemini 2.5 Flash → Groq 3.3 70B → Groq 3.1 8B → Cerebras), 28 AI actions (+suggest_cuts, +simulate_what_if, +create_debt_plan), typing indicator, long-press message menu (copy/use/share), BIR tax breakdown, PFKB in AI context, goal deadline startup alert (#7), Financial Glossary screen (23 terms), wallet-first setup (4-role simplified), Gemini model name fix, pubspec 2.8.0 |
 | 2.7.0 | June 11, 2026 | 25 AI actions (30 planned), PCA calculator, Financial Health Certificate, expandable chat, income frequency fix (bimonthly for all), emergency fund outlier exclusion, AI personality warmth, 7 debug log bugs fixed (double-logging wallet, ACTION regex, is_want coercion, duplicate income, low income warning), barcode product lookup (Open Food Facts API), bank comparison screen, high contrast mode, text size, round-up savings, price memory, smart daily allowance, 23 badges + 10 daily quests, DTI ratio, emergency fund calculator, Firebase Remote Config API security, App Check debug mode (Google login fix), SHA-1 in debug log |
 | 2.6.0 | May 11, 2026 | Full cloud sync audit — wallets, category_rules, demo isolation, backup restore sync, reset all data Firestore wipe, undo sync, setup push, notification throttle reset, budget_boss badge fix, API key centralized |
 | 2.5.0 | May 10, 2026 | Wallet Balances, PH bank support, smart receipt import, unified calendar, achievements, mood check-in, auto-categorization rules, period comparison, installment plans, bank import |

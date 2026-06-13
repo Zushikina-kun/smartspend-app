@@ -49,6 +49,8 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 🏦 **PH Banks & Investments** — compare 20 banks, digital banks, e-wallets, investment options
 - 💹 **Peso Cost Averaging Calculator** — plan regular investments with year-by-year projections (MP2, UITFs, stocks)
 - 🏅 **Financial Health Certificate** — shareable monthly score card (share via WhatsApp, social)
+- 📖 **Financial Glossary** — 23 key terms explained in plain Filipino-English (FHS, MP2, DTI, UITF, SSS, etc.)
+- 💰 **BIR Tax Breakdown** — tap income card for full monthly deductions (BIR, SSS, PhilHealth, Pag-IBIG, take-home)
 - 🔐 **API Security** — Firebase Remote Config + App Check (key never in APK binary)
 - 📷 Google profile photo fallback (works across devices)
 - 🌙 5 color themes + dark mode + high contrast
