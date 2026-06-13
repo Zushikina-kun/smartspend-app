@@ -1281,6 +1281,53 @@ class _AIScreenState extends State<AIScreen> {
         case 'create_debt_payment_plan':
           // AI creates a debt payoff schedule
           _showActionSnackbar("📋 Debt payment plan created");
+          break;
+
+        case 'split_expense':
+          // Split an expense with someone — logs your share + creates debt for theirs
+          final splitItem = action.params['item_name'] as String? ?? 'Expense';
+          final splitTotal =
+              (action.params['total_amount'] as num?)?.toDouble();
+          final splitPerson = action.params['split_with'] as String?;
+          final yourShare = (action.params['your_share'] as num?)?.toDouble();
+          final splitCat = action.params['category'] as String? ?? 'Others';
+          if (splitTotal != null &&
+              splitPerson != null &&
+              yourShare != null &&
+              yourShare > 0) {
+            final now = DateTime.now();
+            await DBService.insertExpense({
+              'item_name': '$splitItem (your share)',
+              'category': splitCat,
+              'amount': yourShare,
+              'date': now.toIso8601String().substring(0, 10),
+              'time': now.toIso8601String().substring(11, 19),
+              'payment_method':
+                  action.params['payment_method'] as String? ?? 'Cash',
+              'notes':
+                  'Split with $splitPerson (total: ${CurrencyService.format(splitTotal)})',
+              'split_with': splitPerson,
+              'ai_generated': 1,
+              'confidence_score': 0.9,
+              'is_want': 0,
+            });
+            final theirShare = splitTotal - yourShare;
+            if (theirShare > 0) {
+              await DBService.insertDebt({
+                'title': '$splitItem split',
+                'person': splitPerson,
+                'amount': theirShare,
+                'paid_amount': 0.0,
+                'type': 'lent',
+                'notes': 'Owes their share of $splitItem',
+                'created_at': now.toIso8601String(),
+              });
+            }
+            fireEvent(AppEvent.expenseChanged);
+            _showActionSnackbar(
+                "💸 Split logged: ${CurrencyService.format(yourShare)} your share — ${CurrencyService.format(theirShare)} owed by $splitPerson");
+          }
+          break;
       }
     } catch (e) {
       // Show error so we know if something failed

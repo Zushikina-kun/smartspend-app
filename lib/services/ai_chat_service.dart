@@ -618,21 +618,20 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         lower.contains('rename') ||
         lower.contains('fix the name') ||
         lower.contains('fix name')) {
-      return 800; // enough for 10+ ACTION lines
+      return 800;
     }
     // Multi-item expense logging — detect commas, 'and', 'then', multiple amounts
-    // These need more tokens for multiple ACTION lines
     final amountCount = RegExp(r'\d+').allMatches(lower).length;
     if (amountCount >= 3 &&
         RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
             .hasMatch(lower)) {
-      return 600; // enough for 4-6 ACTION lines
+      return 600;
     }
     // Expense logging — short confirmation + one ACTION line needed
     if (RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
             .hasMatch(lower) &&
         RegExp(r'\d').hasMatch(lower)) {
-      return 450; // enough for "Logged: X ₱Y\nACTION:{...}" + some buffer
+      return 450;
     }
     // List/view requests — moderate length
     if (RegExp(r'\b(list|show|give me|what are|how much|total)\b')
@@ -645,8 +644,25 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         .hasMatch(lower)) {
       return 600;
     }
-    // Default — slightly more generous
     return 450;
+  }
+
+  /// Detect task type for model routing: 'fast' or 'smart'
+  static String _detectTaskType(String message) {
+    final lower = message.toLowerCase();
+    // Fast tasks: logging, balance updates, simple queries
+    if (RegExp(
+            r'\b(spent|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya)\b')
+        .hasMatch(lower)) {
+      return 'fast';
+    }
+    // Smart tasks: analysis, planning, advice, complex questions
+    if (RegExp(
+            r'\b(analyze|plan|advice|suggest|explain|compare|feasib|what if|simulate|debt|goal|invest|sss|philhealth|bir)\b')
+        .hasMatch(lower)) {
+      return 'smart';
+    }
+    return 'default';
   }
 
   /// Returns (reply text, list of actions to execute)
@@ -722,7 +738,9 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "• simulate_what_if: {\"type\":\"simulate_what_if\",\"change\":\"save 500 more\",\"amount\":500}\n"
         "  Use when user asks 'what if I save ₱500 more?', 'what if I cut food by ₱1000?'. Project impact on savings and FHS.\n"
         "• create_debt_payment_plan: {\"type\":\"create_debt_payment_plan\"}\n"
-        "  Use when user asks 'help me pay off my debts', 'create a debt payment schedule'. Create timeline across all debts.\n\n"
+        "  Use when user asks 'help me pay off my debts', 'create a debt payment schedule'. Create timeline across all debts.\n"
+        "• split_expense: {\"type\":\"split_expense\",\"item_name\":\"Dinner\",\"total_amount\":800,\"split_with\":\"John\",\"your_share\":400}\n"
+        "  Use when user says 'split the bill with John', 'shared lunch with Maria ₱500', 'we split dinner'. Logs your share as expense and creates debt for the other person's share.\n\n"
         "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others.\n"
         "is_want: true=discretionary (snacks/drinks/junk food, entertainment, gaming, shopping, gifts, travel, dining out at restaurants). false=essential (meals/breakfast/lunch/dinner/brunch, transport, groceries, medicine, tuition, bills, health).\n"
         "IMPORTANT is_want rules: Breakfast/Lunch/Dinner/Brunch/Meal → is_want:false (essential food). Snacks/drinks/energy drinks/junk food → is_want:true. Jeepney/tricycle/bus/commute → is_want:false. Games/steam → is_want:true.\n"
@@ -746,6 +764,15 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       ..._history,
     ];
 
+    // Task-based model routing — temporarily switch for this request if needed
+    final taskType = _detectTaskType(message);
+    final taskModelId = AppConfig.modelForTask(taskType);
+    final originalModelId = AppConfig.activeModelId;
+    final needsSwitch = taskModelId != originalModelId &&
+        taskModelId != 'default' &&
+        AppConfig.groqApiKey.isNotEmpty;
+    if (needsSwitch) AppConfig.setModel(taskModelId);
+
     final response = await http
         .post(
           Uri.parse(_groqUrl),
@@ -762,6 +789,9 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
           }),
         )
         .timeout(const Duration(seconds: 20));
+
+    // Restore original model after task-specific routing
+    if (needsSwitch) AppConfig.setModel(originalModelId);
 
     if (response.statusCode != 200) {
       // Handle rate limit — try auto-fallback to next model

@@ -226,6 +226,7 @@ class DBService {
       "ALTER TABLE expenses ADD COLUMN photo_path TEXT",
       "ALTER TABLE expenses ADD COLUMN is_want INTEGER DEFAULT 0",
       "ALTER TABLE expenses ADD COLUMN tags TEXT",
+      "ALTER TABLE expenses ADD COLUMN split_with TEXT",
       "ALTER TABLE savings_goals ADD COLUMN start_date TEXT",
       "ALTER TABLE savings_goals ADD COLUMN purpose TEXT",
       "ALTER TABLE recurring ADD COLUMN start_date TEXT",

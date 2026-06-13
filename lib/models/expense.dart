@@ -15,6 +15,7 @@ class Expense {
   final String? photoPath; // Local file path for attached receipt photo
   final bool? isWant; // true = Want, false/null = Need
   final String? tags; // comma-separated tags e.g. "#capstone,#school"
+  final String? splitWith; // person name this expense was split with
 
   Expense({
     this.id,
@@ -33,6 +34,7 @@ class Expense {
     this.photoPath,
     this.isWant,
     this.tags,
+    this.splitWith,
   });
 
   // Legacy compat: 'note' maps to itemName for old code
@@ -56,6 +58,7 @@ class Expense {
       if (photoPath != null) 'photo_path': photoPath,
       'is_want': (isWant ?? false) ? 1 : 0,
       if (tags != null && tags!.isNotEmpty) 'tags': tags,
+      if (splitWith != null && splitWith!.isNotEmpty) 'split_with': splitWith,
     };
   }
 
@@ -77,6 +80,7 @@ class Expense {
       photoPath: map['photo_path'] as String?,
       isWant: map['is_want'] != null ? (map['is_want'] as int) == 1 : null,
       tags: map['tags'] as String?,
+      splitWith: map['split_with'] as String?,
     );
   }
 
@@ -97,6 +101,7 @@ class Expense {
     String? photoPath,
     bool? isWant,
     String? tags,
+    String? splitWith,
   }) {
     return Expense(
       id: id ?? this.id,
@@ -115,6 +120,7 @@ class Expense {
       photoPath: photoPath ?? this.photoPath,
       isWant: isWant ?? this.isWant,
       tags: tags ?? this.tags,
+      splitWith: splitWith ?? this.splitWith,
     );
   }
 }
