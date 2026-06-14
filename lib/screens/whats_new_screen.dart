@@ -26,8 +26,8 @@ class WhatsNewScreen extends StatelessWidget {
     ),
     (
       '🔀',
-      '28 AI Actions (was 25)',
-      'New: suggest expense cuts, simulate what-if scenarios, create debt payment plan'
+      '29 AI Actions (was 25)',
+      'New: suggest expense cuts, simulate what-if, create debt plan, split expense (auto-creates debt for the other person)'
     ),
     (
       '💬',

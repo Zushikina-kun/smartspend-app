@@ -91,7 +91,7 @@ class AboutScreen extends StatelessWidget {
               ),
               (
                 "🏆 Achievements & Badges",
-                "23 earnable badges + 10 daily quests with streak tracking"
+                "29 earnable badges + 10 daily quests with streak tracking",
               ),
               (
                 "🎮 Daily Challenges",

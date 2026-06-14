@@ -56,7 +56,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 🔐 **API Security** — Firebase Remote Config + App Check (key never in APK binary)
 - 📷 Google profile photo fallback (works across devices)
 - 🌙 5 color themes + dark mode + high contrast
-- 🤖 **AI**: **28 agentic action types**, multi-model LLM switching (Gemini 2.5 Flash-Lite → Groq → Cerebras auto-fallback)
+- 🤖 **AI**: **29 agentic action types**, multi-model LLM switching (Gemini 2.5 Flash-Lite → Groq → Cerebras auto-fallback)
 
 ---
 
