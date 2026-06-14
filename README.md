@@ -19,7 +19,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant — **28 agentic action types** via natural language with multi-model LLM routing (Gemini 2.5 Flash-Lite primary)
+- 🤖 AI Chat Assistant (Groq LLaMA 3.1) — **29 agentic action types** via natural language with multi-model LLM routing (Gemini 2.5 Flash-Lite primary)
 - 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison, **DTI ratio**, **emergency fund calculator**
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc

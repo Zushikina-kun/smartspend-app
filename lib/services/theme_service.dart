@@ -92,16 +92,19 @@ class ThemeService extends ChangeNotifier {
   static const _themeKey = 'app_theme';
   static const _textScaleKey = 'text_scale';
   static const _highContrastKey = 'high_contrast';
+  static const _compactKey = 'compact_mode';
 
   bool _isDark = false;
   AppTheme _appTheme = AppTheme.blue;
   double _textScale = 1.0; // 1.0 = normal, 1.15 = large, 1.3 = extra large
   bool _highContrast = false;
+  bool _compactMode = false;
 
   bool get isDark => _isDark;
   AppTheme get appTheme => _appTheme;
   double get textScale => _textScale;
   bool get highContrast => _highContrast;
+  bool get compactMode => _compactMode;
   ThemeMode get themeMode => _isDark ? ThemeMode.dark : ThemeMode.light;
 
   /// The primary color for the current theme — use this instead of hardcoded 0xFF0066FF
@@ -118,6 +121,7 @@ class ThemeService extends ChangeNotifier {
     _appTheme = AppThemeExtension.fromKey(themeKey);
     _textScale = prefs.getDouble(_textScaleKey) ?? 1.0;
     _highContrast = prefs.getBool(_highContrastKey) ?? false;
+    _compactMode = prefs.getBool(_compactKey) ?? false;
     notifyListeners();
   }
 
@@ -149,6 +153,13 @@ class ThemeService extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> setCompactMode(bool enabled) async {
+    _compactMode = enabled;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_compactKey, enabled);
+    notifyListeners();
+  }
+
   String get textScaleLabel {
     if (_textScale <= 1.0) return 'Normal';
     if (_textScale <= 1.15) return 'Large';
@@ -167,6 +178,8 @@ class ThemeService extends ChangeNotifier {
             : ColorScheme.fromSeed(seedColor: _appTheme.seedColor),
         useMaterial3: true,
         fontFamily: 'Roboto',
+        visualDensity:
+            _compactMode ? VisualDensity.compact : VisualDensity.standard,
       );
 
   ThemeData get darkTheme => ThemeData(
@@ -184,5 +197,7 @@ class ThemeService extends ChangeNotifier {
               ),
         useMaterial3: true,
         fontFamily: 'Roboto',
+        visualDensity:
+            _compactMode ? VisualDensity.compact : VisualDensity.standard,
       );
 }

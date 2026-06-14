@@ -124,6 +124,8 @@ class ExpenseTile extends StatelessWidget {
         expense.shopName!,
       dateStr,
       if (expense.isWant == true) '🏷️ Want',
+      if (expense.splitWith != null && expense.splitWith!.isNotEmpty)
+        '🤝 Split w/ ${expense.splitWith}',
     ].join('  •  ');
 
     Color? confidenceColor;

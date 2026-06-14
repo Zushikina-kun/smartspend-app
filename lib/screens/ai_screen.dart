@@ -1640,7 +1640,7 @@ class _AIScreenState extends State<AIScreen> {
                 "• \"Plan my monthly budget\" — generates spending plan\n"
                 "• \"How do I apply for SSS loan?\"\n"
                 "• \"Is ₱12,000 a good price for a ref?\"\n\n"
-                "28 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, transfers, salary splits, subscription detection, idle money suggestions, expense cuts, what-if simulation, debt payment plan, and more.\n\n"
+                "29 action types: log/update/delete expenses, set budgets, manage goals, debts, recurring, payment plans, wallet balances, transfers, salary splits, subscription detection, idle money suggestions, expense cuts, what-if simulation, debt payment plan, split bills, and more.\n\n"
                 "Daily message limit: 60/day per model — auto-switches to next model when limit reached.",
           ),
           // Model selector — shows current model with status

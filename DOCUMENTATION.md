@@ -143,7 +143,7 @@ Before every AI message, the app queries SQLite for the user's live financial da
 #### AI Chat Capabilities
 The AI has access to: last 10 expenses detailed + older summarized by category, budget status, monthly income, total spent, health score (with component breakdown), savings goals, debts, recurring, installments, wallet balances, insurance policies, and FHS breakdown. Context is compressed to stay within the 8,192 token limit.
 
-The AI executes **28 action types** directly — data is written to the DB immediately with green snackbar confirmation:
+The AI executes **29 action types** directly — data is written to the DB immediately with green snackbar confirmation:
 
 | Action | Example Trigger |
 |--------|----------------|
@@ -178,6 +178,7 @@ The AI executes **28 action types** directly — data is written to the DB immed
 | `suggest_expense_cuts` | "Where can I save money?" / "How to cut expenses?" |
 | `simulate_what_if` | "What if I save ₱500 more/month?" / "What if I cut food by ₱1000?" |
 | `create_debt_payment_plan` | "Help me pay off my debts" / "Create a debt payment schedule" |
+| `split_expense` | "Split dinner ₱800 with John" / "Shared lunch with Maria" |
 
 > **(+ additional business mode actions planned for future release)**
 

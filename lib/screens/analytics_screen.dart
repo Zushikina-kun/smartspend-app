@@ -567,11 +567,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         title: const Text("Analytics"),
         actions: [
           IconButton(
-            icon: Icon(_showAdvancedCharts
-                ? Icons.unfold_less
-                : Icons.unfold_more),
+            icon: Icon(
+                _showAdvancedCharts ? Icons.unfold_less : Icons.unfold_more),
             tooltip: _showAdvancedCharts ? "Hide details" : "Show more charts",
-            onPressed: () => setState(() => _showAdvancedCharts = !_showAdvancedCharts),
+            onPressed: () =>
+                setState(() => _showAdvancedCharts = !_showAdvancedCharts),
           ),
           const InfoButton(
             title: "Analytics",
@@ -1458,7 +1458,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ],
 
                       // Daily Spending Trend (last 30 days)
-                      if (_cachedDailyTotals.length >= 3 && _showAdvancedCharts) ...[
+                      if (_cachedDailyTotals.length >= 3 &&
+                          _showAdvancedCharts) ...[
                         const Text("Daily Spending (last 30 days)",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
@@ -1672,13 +1673,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       // Financial Milestones
                       Builder(builder: (context) {
                         final currentScore = _scoreHistory.isNotEmpty
-                            ? (_scoreHistory.last['score'] as num?)?.toInt() ?? 50
+                            ? (_scoreHistory.last['score'] as num?)?.toInt() ??
+                                50
                             : 50;
                         final milestones = ScoreService.getMilestones(
-                          _expenses.map((e) => {
-                            'amount': e.amount,
-                            'is_want': (e.isWant ?? false) ? 1 : 0,
-                          }).toList(),
+                          _expenses
+                              .map((e) => {
+                                    'amount': e.amount,
+                                    'is_want': (e.isWant ?? false) ? 1 : 0,
+                                  })
+                              .toList(),
                           monthlyIncome: _monthlyIncome,
                           currentFHS: currentScore,
                         );
@@ -2519,6 +2523,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     _buildEmergencyFundCard(context),
                     const SizedBox(height: 16),
 
+                    // Financial Milestones
+                    _buildMilestonesCard(context),
+                    const SizedBox(height: 16),
+
                     // Tax & Savings Card — for employed/business/working_student/freelancer
                     if (_accountType != 'student' &&
                         _accountType != 'unemployed' &&
@@ -3356,6 +3364,81 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 13, color: color)),
       ],
+    );
+  }
+
+  Widget _buildMilestonesCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final expenseData = _expenses
+        .map((e) => {
+              'amount': e.amount,
+              'category': e.category,
+              'date': e.date,
+              'is_want': e.isWant == true ? 1 : 0
+            })
+        .toList();
+    final milestones = ScoreService.getMilestones(
+      expenseData,
+      monthlyIncome: _monthlyIncome,
+      currentFHS: _scoreHistory.isNotEmpty
+          ? (_scoreHistory.last['score'] as num?)?.toInt() ?? 50
+          : 50,
+    );
+    if (milestones.isEmpty) return const SizedBox.shrink();
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.amber.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.amber.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.emoji_events_outlined, size: 18, color: Colors.amber),
+              SizedBox(width: 8),
+              Text("Financial Milestones",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: milestones
+                .take(8)
+                .map((m) => Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: cs.primaryContainer.withValues(alpha: 0.4),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(m['icon'] as String? ?? '🏆',
+                              style: const TextStyle(fontSize: 14)),
+                          const SizedBox(width: 6),
+                          Text(m['title'] as String? ?? '',
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
+          if (milestones.length > 8) ...[
+            const SizedBox(height: 6),
+            Text("+${milestones.length - 8} more milestones",
+                style: TextStyle(
+                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.5))),
+          ],
+        ],
+      ),
     );
   }
 

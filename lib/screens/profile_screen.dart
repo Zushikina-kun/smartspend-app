@@ -349,12 +349,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.density_medium_outlined,
                 title: "Compact mode",
-                subtitle: "Reduce spacing & list density for more items per screen",
+                subtitle:
+                    "Reduce spacing & list density for more items per screen",
                 value: compactMode,
                 onChanged: (v) {
                   setSheet(() => compactMode = v);
-                  DBService.setSetting(
-                      'compact_mode', v ? 'true' : 'false');
+                  themeService.setCompactMode(v);
+                  DBService.setSetting('compact_mode', v ? 'true' : 'false');
                   fireEvent(AppEvent.incomeChanged);
                 },
               ),
