@@ -4,8 +4,8 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** June 12, 2026 (v2.8.0 — Sessions 14-15: multi-model LLM switching Gemini 2.5 Flash-Lite + Groq LLaMA 3.3 70B + Cerebras, 28 AI actions, typing indicator, long-press menu, BIR tax breakdown, PFKB, goal deadline alerts, Financial Glossary, wallet-first setup, simplified role picker)
-**Build:** app-arm64-v8a-release.apk — 46.0 MB (June 12, 2026)
+**Last Updated:** June 13, 2026 (v2.8.0 Final — 29 AI actions including split_expense with auto debt creation, LLM task routing fast/smart, financial milestones card in Analytics, compact mode fully functional via ThemeService.visualDensity, split_with visible in expense tiles, all coding tasks complete, build 46.0 MB)
+**Build:** app-arm64-v8a-release.apk — 46.0 MB (June 13, 2026)
 
 ---
 
@@ -1552,9 +1552,9 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 📋 Pending Work & Roadmap
 
-*Last updated: June 11, 2026 (v2.7.0). Items below are still open.*
+*Last updated: June 13, 2026 (v2.8.0 Final). All coding tasks complete.*
 
-### ✅ COMPLETED IN SESSIONS 13–14
+### ✅ COMPLETED IN SESSIONS 13–15 (v2.8.0)
 
 | Item | Description |
 |------|-------------|
