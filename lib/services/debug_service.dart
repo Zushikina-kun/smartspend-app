@@ -217,6 +217,8 @@ class DebugService {
       kGapPenaltyKey, // accumulated unlogged-but-spent days this month
       kGapCleanKey, // accumulated confirmed clean days this month
       'last_gap_check_date', // date gap detection last ran
+      'ai_request_trace', // §25 rolling last-5 request traces (latency/tokens/retries)
+      'last_ungrounded_advice', // §16 last advice reply flagged with no figures
     ];
     for (final key in notifKeys) {
       final val = await DBService.getSetting(key);

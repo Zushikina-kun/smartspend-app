@@ -697,9 +697,21 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     return 450;
   }
 
-  /// Detect task type for model routing: 'fast' or 'smart'
+  /// Detect task type for model routing: 'fast', 'smart', or 'financial_advice'
+  ///
+  /// financial_advice — complex multi-step financial planning queries that benefit
+  /// from deeper reasoning (§29 model routing, §34 thinking mode).
+  /// Routes to gemini_flash when available for highest-quality output.
   static String _detectTaskType(String message) {
     final lower = message.toLowerCase();
+
+    // Financial advice tier — multi-step reasoning, planning, PH gov contributions
+    // These need the smartest model available, not just the fast one.
+    if (RegExp(
+            r'\b(feasib|simulate|what if.*save|what if.*cut|amortiz|invest|emergency fund|sss contribution|philhealth contribution|pag.ibig|bir tax|tax bracket|debt strateg|avalanche|snowball|payoff plan|retirement|compound|inflation|opportunity cost|net worth|budget plan|monthly plan|salary split|50.30.20|financial plan)\b')
+        .hasMatch(lower)) {
+      return 'financial_advice';
+    }
     // Fast tasks: logging, balance updates, simple queries
     if (RegExp(
             r'\b(spent|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya)\b')
@@ -726,6 +738,9 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
 
     _history.add({"role": "user", "content": message});
     _messagesSinceLastSummary++;
+
+    // ── §25 OBSERVABILITY — request trace start ───────────────────────────────
+    final traceStart = DateTime.now();
 
     // Initialize counter from DB on first message of session
     await _initMessageCounter();
@@ -915,6 +930,13 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     final data = jsonDecode(response.body);
     String fullReply = data['choices'][0]['message']['content'] as String;
 
+    // ── §25 OBSERVABILITY — extract token usage ───────────────────────────────
+    final usage = data['usage'] as Map<String, dynamic>?;
+    final promptTokens = (usage?['prompt_tokens'] as num?)?.toInt() ?? 0;
+    final completionTokens =
+        (usage?['completion_tokens'] as num?)?.toInt() ?? 0;
+    final totalTokens = (usage?['total_tokens'] as num?)?.toInt() ?? 0;
+
     // Check if response was cut off due to max_tokens — if so, the AI may have
     // been mid-ACTION. The finish_reason will be 'length' instead of 'stop'.
     final finishReason =
@@ -1087,11 +1109,53 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
 
     _history.add({"role": "assistant", "content": fullReply});
 
+    // ── §25 OBSERVABILITY — write request trace ───────────────────────────────
+    // Logs latency, token usage, retry count, action count, and task type
+    // to a rolling DB setting. Visible in the next debug log export.
+    // Cheatsheet §25: "You cannot improve what you cannot measure."
+    try {
+      final latencyMs = DateTime.now().difference(traceStart).inMilliseconds;
+      final taskType = _detectTaskType(message);
+      final traceEntry = '${DateTime.now().toIso8601String().substring(0, 16)} '
+          'latency=${latencyMs}ms '
+          'tokens=${totalTokens}(p=$promptTokens/c=$completionTokens) '
+          'retries=$attempt '
+          'actions=${validatedActions.length} '
+          'task=$taskType '
+          'model=${AppConfig.activeModelId}';
+      // Keep a rolling log of the last 5 traces (newline-separated)
+      final prev = await DBService.getSetting('ai_request_trace') ?? '';
+      final lines = prev.split('\n').where((l) => l.isNotEmpty).toList();
+      lines.add(traceEntry);
+      if (lines.length > 5) lines.removeRange(0, lines.length - 5);
+      await DBService.setSetting('ai_request_trace', lines.join('\n'));
+    } catch (_) {}
+
+    // ── §16 EVAL CASCADE LAYER 1 — deterministic groundedness check ──────────
+    // For financial advice responses: if the reply mentions money-related
+    // advice keywords but contains zero numbers/amounts, flag it as
+    // potentially ungrounded (the model gave generic advice without using
+    // the user's actual financial data).
+    // This is the cheap "deterministic floor" from the eval cascade pattern —
+    // no extra API call needed.
+    try {
+      final isAdviceQuery = RegExp(
+              r'\b(invest|plan|save|budget|debt|goal|sss|philhealth|bir|tax|contribut|amortiz|compound|retirement)\b',
+              caseSensitive: false)
+          .hasMatch(message);
+      final hasNumbers =
+          RegExp(r'₱\d|[0-9]+%|[0-9,]+\s*(pesos|peso|month|year|days?)')
+              .hasMatch(fullReply);
+      if (isAdviceQuery && !hasNumbers && fullReply.length > 100) {
+        // Groundedness signal: advice reply with no figures = likely generic hallucination
+        await DBService.setSetting(
+          'last_ungrounded_advice',
+          '${DateTime.now().toIso8601String().substring(0, 16)}|${message.length > 80 ? message.substring(0, 80) : message}',
+        );
+      }
+    } catch (_) {}
+
     // ── DEBUG LOGGING (Cheatsheet §26 Step 4) ────────────────────────────────
-    // When the model says "Logged:" but fired zero valid actions, record the
-    // raw output to the debug log so failures are diagnosable without the user
-    // needing to report them. This catches the "it said logged but didn't"
-    // pattern observed repeatedly in the Jul 28 debug session.
     if (validatedActions.isEmpty &&
         RegExp(r'Logged:?\s*.+₱\d', caseSensitive: false).hasMatch(fullReply)) {
       try {
