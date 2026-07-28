@@ -171,6 +171,14 @@ class _AIScreenState extends State<AIScreen> {
       gapCleanDays =
           int.tryParse(await DBService.getSetting(kGapCleanKey) ?? '0') ?? 0;
     } catch (_) {}
+
+    // Load lightweight mode + spending limit for AI context
+    final incomeWalletMode = await DBService.getIncomeWalletMode();
+    final spendingLimit = await DBService.getSpendingLimit();
+    final spendingLimitPeriod = await DBService.getSpendingLimitPeriod();
+    final spentInPeriod = spendingLimit > 0
+        ? await DBService.getSpentInPeriod(spendingLimitPeriod)
+        : 0.0;
     final spentMap = <String, double>{};
     for (final e in monthExpenses) {
       spentMap[e.category] = (spentMap[e.category] ?? 0) + e.amount;
@@ -183,13 +191,19 @@ class _AIScreenState extends State<AIScreen> {
     final rawScore = ScoreService.calculateScore(
       expenseData,
       budgets: budgets,
-      monthlyIncome: income,
+      monthlyIncome: incomeWalletMode ? income : 0,
+      lightweightMode: !incomeWalletMode,
+      spendingLimit: spendingLimit,
+      spendingLimitPeriod: spendingLimitPeriod,
     );
     final score = await ScoreService.applyAllAdjustments(rawScore);
     final fhsBreakdown = ScoreService.getBreakdown(
       expenseData,
       budgets: budgets,
-      monthlyIncome: income,
+      monthlyIncome: incomeWalletMode ? income : 0,
+      lightweightMode: !incomeWalletMode,
+      spendingLimit: spendingLimit,
+      spendingLimitPeriod: spendingLimitPeriod,
     );
 
     AIChatService.setFullContext(
@@ -232,6 +246,10 @@ class _AIScreenState extends State<AIScreen> {
       insurancePolicies: insurancePolicies,
       gapPenaltyDays: gapPenaltyDays,
       gapCleanDays: gapCleanDays,
+      incomeWalletMode: incomeWalletMode,
+      spendingLimit: spendingLimit,
+      spendingLimitPeriod: spendingLimitPeriod,
+      spentInPeriod: spentInPeriod,
     );
 
     // Restore chat history into AI memory on first load only

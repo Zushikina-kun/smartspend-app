@@ -967,6 +967,77 @@ class DBService {
     await setSetting('daily_limit', limit.toString());
   }
 
+  // ── SPENDING LIMIT (period-based) ─────────────────────────────────────────
+  // Complements the old per-day 'daily_limit' with a flexible period limit.
+  // Period values: 'daily' | 'weekly' | 'monthly' | 'yearly'
+
+  static Future<double> getSpendingLimit() async {
+    final val = await getSetting('spending_limit_amount');
+    return double.tryParse(val ?? '') ?? 0.0;
+  }
+
+  static Future<void> setSpendingLimit(double amount) async {
+    await setSetting('spending_limit_amount', amount.toString());
+  }
+
+  static Future<String> getSpendingLimitPeriod() async {
+    return (await getSetting('spending_limit_period')) ?? 'monthly';
+  }
+
+  static Future<void> setSpendingLimitPeriod(String period) async {
+    await setSetting('spending_limit_period', period);
+  }
+
+  /// Returns total spent within the current spending limit period.
+  static Future<double> getSpentInPeriod(String period) async {
+    final db = await getDB();
+    final now = DateTime.now();
+    String whereClause;
+    switch (period) {
+      case 'daily':
+        final today = now.toIso8601String().substring(0, 10);
+        whereClause = "date = '$today'";
+        break;
+      case 'weekly':
+        final weekStart = now
+            .subtract(Duration(days: now.weekday - 1))
+            .toIso8601String()
+            .substring(0, 10);
+        whereClause = "date >= '$weekStart'";
+        break;
+      case 'yearly':
+        whereClause = "date LIKE '${now.year}%'";
+        break;
+      case 'monthly':
+      default:
+        final monthKey = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+        whereClause = "date LIKE '$monthKey%'";
+        break;
+    }
+    final result = await db.rawQuery(
+        'SELECT COALESCE(SUM(amount), 0) as total FROM expenses WHERE $whereClause');
+    return (result.first['total'] as num?)?.toDouble() ?? 0.0;
+  }
+
+  /// Whether income/wallet features are enabled.
+  /// Default: true for existing users (backward-compatible), false for new users.
+  static Future<bool> getIncomeWalletMode() async {
+    final val = await getSetting('income_wallet_mode');
+    if (val == null) {
+      // Auto-detect: if user has any income records or non-zero wallets, default on
+      final incomeCount =
+          await _db?.rawQuery('SELECT COUNT(*) as c FROM income') ?? [];
+      final count =
+          incomeCount.isNotEmpty ? (incomeCount.first['c'] as int? ?? 0) : 0;
+      return count > 0;
+    }
+    return val == 'true';
+  }
+
+  static Future<void> setIncomeWalletMode(bool enabled) async {
+    await setSetting('income_wallet_mode', enabled ? 'true' : 'false');
+  }
+
   /// Returns total remaining balance across all installments
   static Future<double> getInstallmentsRemainingTotal() async {
     try {

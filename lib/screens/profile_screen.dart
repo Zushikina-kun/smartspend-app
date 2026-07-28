@@ -54,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _accountType = 'employed';
   String _incomeFrequency = 'monthly';
   bool _loading = true;
+  bool _incomeWalletMode = true; // loaded in _loadStats
 
   @override
   void initState() {
@@ -90,11 +91,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .map((e) =>
               {'amount': e.amount, 'category': e.category, 'date': e.date})
           .toList();
+      final iwMode = await DBService.getIncomeWalletMode();
+      final spendLimit = await DBService.getSpendingLimit();
+      final spendPeriod = await DBService.getSpendingLimitPeriod();
       final rawScore = ScoreService.calculateScore(expenseData,
-          budgets: budgets, monthlyIncome: income);
+          budgets: budgets,
+          monthlyIncome: iwMode ? income : 0,
+          lightweightMode: !iwMode,
+          spendingLimit: spendLimit,
+          spendingLimitPeriod: spendPeriod);
       final score = await ScoreService.applyAllAdjustments(rawScore);
       final breakdown = ScoreService.getBreakdown(expenseData,
-          budgets: budgets, monthlyIncome: income);
+          budgets: budgets,
+          monthlyIncome: iwMode ? income : 0,
+          lightweightMode: !iwMode,
+          spendingLimit: spendLimit,
+          spendingLimitPeriod: spendPeriod);
 
       UserProfile? profile;
       if (user != null) {
@@ -120,6 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _profile = profile;
           _accountType = accountType;
           _incomeFrequency = incomeFreq;
+          _incomeWalletMode = iwMode;
           _loading = false;
         });
       }
@@ -242,6 +255,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool roundUpSavings =
         (await DBService.getSetting('round_up_savings')) != 'false';
     bool compactMode = (await DBService.getSetting('compact_mode')) == 'true';
+    // New: lightweight mode + spending limit
+    bool incomeWalletMode = await DBService.getIncomeWalletMode();
+    double spendingLimit = await DBService.getSpendingLimit();
+    String spendingLimitPeriod = await DBService.getSpendingLimitPeriod();
+    final limitCtrl = TextEditingController(
+        text: spendingLimit > 0 ? spendingLimit.toStringAsFixed(0) : '');
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -358,6 +377,124 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   DBService.setSetting('compact_mode', v ? 'true' : 'false');
                   fireEvent(AppEvent.incomeChanged);
                 },
+              ),
+              const SizedBox(height: 12),
+              Text("Tracking Mode",
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600])),
+              const SizedBox(height: 4),
+              Text(
+                "Choose how SmartSpend calculates your Financial Health Score.",
+                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              ),
+              const SizedBox(height: 8),
+              _settingsTile(
+                icon: Icons.account_balance_wallet_outlined,
+                title: "Track income & wallets",
+                subtitle: incomeWalletMode
+                    ? "ON — full FHS with savings rate & wallet tracking"
+                    : "OFF — FHS uses spending habits only (no income needed)",
+                value: incomeWalletMode,
+                onChanged: (v) {
+                  setSheet(() => incomeWalletMode = v);
+                  DBService.setIncomeWalletMode(v);
+                  fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              const SizedBox(height: 12),
+              Text("Spending Limit",
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600])),
+              const SizedBox(height: 4),
+              Text(
+                "Set a single cap for your total spending. Works in any mode.",
+                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              ),
+              const SizedBox(height: 8),
+              // Period picker
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today_outlined,
+                      size: 18, color: Colors.grey),
+                  const SizedBox(width: 10),
+                  const Text("Period:",
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SegmentedButton<String>(
+                      segments: const [
+                        ButtonSegment(value: 'daily', label: Text('Day')),
+                        ButtonSegment(value: 'weekly', label: Text('Week')),
+                        ButtonSegment(value: 'monthly', label: Text('Month')),
+                        ButtonSegment(value: 'yearly', label: Text('Year')),
+                      ],
+                      selected: {spendingLimitPeriod},
+                      style: ButtonStyle(
+                        visualDensity: VisualDensity.compact,
+                        textStyle: WidgetStateProperty.all(
+                            const TextStyle(fontSize: 11)),
+                      ),
+                      onSelectionChanged: (v) {
+                        setSheet(() => spendingLimitPeriod = v.first);
+                        DBService.setSpendingLimitPeriod(v.first);
+                        fireEvent(AppEvent.expenseChanged);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              // Limit amount field
+              Row(
+                children: [
+                  const Icon(Icons.price_change_outlined,
+                      size: 18, color: Colors.grey),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: limitCtrl,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      style: const TextStyle(fontSize: 13),
+                      decoration: InputDecoration(
+                        prefixText: "₱ ",
+                        hintText: "e.g. 500 for daily, 5000 for monthly",
+                        hintStyle: const TextStyle(fontSize: 11),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.check, size: 18),
+                          tooltip: "Save limit",
+                          onPressed: () {
+                            final val = double.tryParse(limitCtrl.text) ?? 0;
+                            setSheet(() => spendingLimit = val);
+                            DBService.setSpendingLimit(val);
+                            fireEvent(AppEvent.expenseChanged);
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (spendingLimit > 0)
+                    TextButton(
+                      onPressed: () {
+                        limitCtrl.clear();
+                        setSheet(() => spendingLimit = 0);
+                        DBService.setSpendingLimit(0);
+                        fireEvent(AppEvent.expenseChanged);
+                      },
+                      child: const Text("Clear",
+                          style: TextStyle(fontSize: 11, color: Colors.red)),
+                    ),
+                ],
               ),
             ],
           ),
@@ -1557,290 +1694,294 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     const SizedBox(height: 16),
 
-                    // Net Worth card — account-type aware + balance mode
-                    FutureBuilder<String?>(
-                        future: DBService.getSetting('balance_mode'),
-                        builder: (context, balModeSnap) {
-                          final balanceMode = balModeSnap.data == 'true';
-                          final isAllowanceBased = _accountType == 'student' ||
-                              _accountType == 'unemployed';
-                          final walletTotal = _wallets.fold<double>(
-                              0, (s, w) => s + (w['balance'] as num));
-                          final balance = _monthlyIncome - _totalSpent;
-                          final netWorth = _totalIncome +
-                              (walletTotal > 0 ? walletTotal : _totalAssets) -
-                              _totalSpent -
-                              _totalDebts;
-                          // Balance mode: show wallet total as primary
-                          final displayValue = balanceMode
-                              ? walletTotal
-                              : isAllowanceBased
-                                  ? balance
-                                  : netWorth;
-                          final isPositive = displayValue >= 0;
-                          final label = balanceMode
-                              ? "Total Cash Available"
-                              : isAllowanceBased
-                                  ? "Remaining Balance (This Month)"
-                                  : "Net Worth";
-                          return GestureDetector(
-                            onTap: () => _showWalletsDialog(),
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: isPositive
-                                    ? Colors.green.withValues(alpha: 0.1)
-                                    : Colors.red.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
+                    // Net Worth card — only shown in income/wallet mode
+                    if (_incomeWalletMode)
+                      FutureBuilder<String?>(
+                          future: DBService.getSetting('balance_mode'),
+                          builder: (context, balModeSnap) {
+                            final balanceMode = balModeSnap.data == 'true';
+                            final isAllowanceBased =
+                                _accountType == 'student' ||
+                                    _accountType == 'unemployed';
+                            final walletTotal = _wallets.fold<double>(
+                                0, (s, w) => s + (w['balance'] as num));
+                            final balance = _monthlyIncome - _totalSpent;
+                            final netWorth = _totalIncome +
+                                (walletTotal > 0 ? walletTotal : _totalAssets) -
+                                _totalSpent -
+                                _totalDebts;
+                            // Balance mode: show wallet total as primary
+                            final displayValue = balanceMode
+                                ? walletTotal
+                                : isAllowanceBased
+                                    ? balance
+                                    : netWorth;
+                            final isPositive = displayValue >= 0;
+                            final label = balanceMode
+                                ? "Total Cash Available"
+                                : isAllowanceBased
+                                    ? "Remaining Balance (This Month)"
+                                    : "Net Worth";
+                            return GestureDetector(
+                              onTap: () => _showWalletsDialog(),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
                                   color: isPositive
-                                      ? Colors.green.withValues(alpha: 0.3)
-                                      : Colors.red.withValues(alpha: 0.3),
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(label,
-                                                  style: const TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.grey)),
-                                              const SizedBox(width: 4),
-                                              const Icon(
-                                                  Icons
-                                                      .account_balance_wallet_outlined,
-                                                  size: 12,
-                                                  color: Colors.grey),
-                                              const SizedBox(width: 2),
-                                              const Text(
-                                                  "Tap to manage wallets",
-                                                  style: TextStyle(
-                                                      fontSize: 10,
-                                                      color: Colors.grey)),
-                                            ],
-                                          ),
-                                          Text(
-                                            "${isPositive ? '+' : ''}${CurrencyService.format(displayValue.abs())}",
-                                            style: TextStyle(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
-                                              color: isPositive
-                                                  ? Colors.green
-                                                  : Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Icon(
-                                        isPositive
-                                            ? Icons.trending_up
-                                            : Icons.trending_down,
-                                        color: isPositive
-                                            ? Colors.green
-                                            : Colors.red,
-                                        size: 32,
-                                      ),
-                                    ],
+                                      ? Colors.green.withValues(alpha: 0.1)
+                                      : Colors.red.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: isPositive
+                                        ? Colors.green.withValues(alpha: 0.3)
+                                        : Colors.red.withValues(alpha: 0.3),
                                   ),
-                                  if (!isAllowanceBased) ...[
-                                    const SizedBox(height: 8),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                            "Assets: ${CurrencyService.format(_totalIncome + (walletTotal > 0 ? walletTotal : _totalAssets))}",
-                                            style: const TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.green)),
-                                        Text(
-                                            "Liabilities: ${CurrencyService.format(_totalSpent + _totalDebts)}",
-                                            style: const TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.red)),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 4),
-                                    // NI-5: Net worth trend sparkline using score history as proxy
-                                    FutureBuilder<List<Map<String, dynamic>>>(
-                                      future:
-                                          DBService.getScoreHistory(days: 30),
-                                      builder: (ctx, snap) {
-                                        final history = snap.data ?? [];
-                                        if (history.length < 3)
-                                          return const SizedBox.shrink();
-                                        // Use score as a proxy trend indicator
-                                        final scores = history
-                                            .map((h) =>
-                                                (h['score'] as num).toDouble())
-                                            .toList();
-                                        final maxScore = scores
-                                            .reduce((a, b) => a > b ? a : b)
-                                            .clamp(1.0, 100.0);
-                                        return Column(
+                                        Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            Row(
+                                              children: [
+                                                Text(label,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.grey)),
+                                                const SizedBox(width: 4),
+                                                const Icon(
+                                                    Icons
+                                                        .account_balance_wallet_outlined,
+                                                    size: 12,
+                                                    color: Colors.grey),
+                                                const SizedBox(width: 2),
+                                                const Text(
+                                                    "Tap to manage wallets",
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.grey)),
+                                              ],
+                                            ),
                                             Text(
-                                                "Financial health trend (30 days)",
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.grey[500])),
-                                            const SizedBox(height: 4),
-                                            SizedBox(
-                                              height: 24,
-                                              child: CustomPaint(
-                                                size: const Size(
-                                                    double.infinity, 24),
-                                                painter: _SparklinePainter(
-                                                    scores,
-                                                    maxScore,
-                                                    isPositive
-                                                        ? Colors.green
-                                                        : Colors.orange),
+                                              "${isPositive ? '+' : ''}${CurrencyService.format(displayValue.abs())}",
+                                              style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: isPositive
+                                                    ? Colors.green
+                                                    : Colors.red,
                                               ),
                                             ),
                                           ],
-                                        );
-                                      },
+                                        ),
+                                        Icon(
+                                          isPositive
+                                              ? Icons.trending_up
+                                              : Icons.trending_down,
+                                          color: isPositive
+                                              ? Colors.green
+                                              : Colors.red,
+                                          size: 32,
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text("Tap to manage assets",
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            color: Colors.grey[500])),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-
-                    const SizedBox(height: 16),
-
-                    // Income card — theme-aware
-                    GestureDetector(
-                      onTap: _showIncomeDialog,
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: cs.primaryContainer,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_incomeLabel,
-                                    style: TextStyle(
-                                        color: cs.onPrimaryContainer
-                                            .withValues(alpha: 0.7),
-                                        fontSize: 12)),
-                                Text(CurrencyService.format(_monthlyIncome),
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: cs.onPrimaryContainer)),
-                                // Low income warning
-                                if (_monthlyIncome > 0 &&
-                                    _monthlyIncome < 1000) ...[
-                                  const SizedBox(height: 2),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          Colors.orange.withValues(alpha: 0.3),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: const Text(
-                                      "⚠️ Looks low — tap to update",
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.orange),
-                                    ),
-                                  ),
-                                ],
-                                // Show per-period breakdown when not monthly
-                                if (_incomeFrequency != 'monthly' &&
-                                    _incomeFrequency != 'manual' &&
-                                    _monthlyIncome > 0) ...[
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    () {
-                                      switch (_incomeFrequency) {
-                                        case 'daily':
-                                          return '≈ ${CurrencyService.format(_monthlyIncome / 22)}/day · ${CurrencyService.format(_monthlyIncome)}/mo equiv.';
-                                        case 'weekly':
-                                          return '≈ ${CurrencyService.format(_monthlyIncome / 4.33)}/week · ${CurrencyService.format(_monthlyIncome)}/mo equiv.';
-                                        case 'bimonthly':
-                                          return '≈ ${CurrencyService.format(_monthlyIncome / 2)}/release · ${CurrencyService.format(_monthlyIncome)}/mo equiv.';
-                                        default:
-                                          return '';
-                                      }
-                                    }(),
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color: cs.onPrimaryContainer
-                                            .withValues(alpha: 0.55)),
-                                  ),
-                                ],
-                              ],
-                            ),
-                            // Only show tax/savings for employed/business/working_student/freelancer
-                            if (_accountType != 'student' &&
-                                _accountType != 'unemployed' &&
-                                _accountType != 'pensioner' &&
-                                _accountType != 'general')
-                              GestureDetector(
-                                onTap: () => _showBIRBreakdown(),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                        "Tax: ~${CurrencyService.format(tax)}/mo",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: cs.onPrimaryContainer
-                                                .withValues(alpha: 0.7))),
-                                    Text(
-                                        "Save: ${CurrencyService.format(savings)}",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.green[
-                                                Theme.of(context).brightness ==
-                                                        Brightness.dark
-                                                    ? 300
-                                                    : 700])),
-                                    Text("Tap for BIR breakdown",
-                                        style: TextStyle(
-                                            fontSize: 9,
-                                            color: cs.onPrimaryContainer
-                                                .withValues(alpha: 0.4))),
+                                    if (!isAllowanceBased) ...[
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                              "Assets: ${CurrencyService.format(_totalIncome + (walletTotal > 0 ? walletTotal : _totalAssets))}",
+                                              style: const TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.green)),
+                                          Text(
+                                              "Liabilities: ${CurrencyService.format(_totalSpent + _totalDebts)}",
+                                              style: const TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.red)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      // NI-5: Net worth trend sparkline using score history as proxy
+                                      FutureBuilder<List<Map<String, dynamic>>>(
+                                        future:
+                                            DBService.getScoreHistory(days: 30),
+                                        builder: (ctx, snap) {
+                                          final history = snap.data ?? [];
+                                          if (history.length < 3)
+                                            return const SizedBox.shrink();
+                                          // Use score as a proxy trend indicator
+                                          final scores = history
+                                              .map((h) => (h['score'] as num)
+                                                  .toDouble())
+                                              .toList();
+                                          final maxScore = scores
+                                              .reduce((a, b) => a > b ? a : b)
+                                              .clamp(1.0, 100.0);
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  "Financial health trend (30 days)",
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.grey[500])),
+                                              const SizedBox(height: 4),
+                                              SizedBox(
+                                                height: 24,
+                                                child: CustomPaint(
+                                                  size: const Size(
+                                                      double.infinity, 24),
+                                                  painter: _SparklinePainter(
+                                                      scores,
+                                                      maxScore,
+                                                      isPositive
+                                                          ? Colors.green
+                                                          : Colors.orange),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text("Tap to manage assets",
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey[500])),
+                                    ],
                                   ],
                                 ),
                               ),
-                            Icon(Icons.edit,
-                                size: 16,
-                                color: cs.onPrimaryContainer
-                                    .withValues(alpha: 0.5)),
-                          ],
+                            );
+                          }),
+
+                    const SizedBox(height: 16),
+
+                    // Income card — only shown in income/wallet mode
+                    if (_incomeWalletMode)
+                      GestureDetector(
+                        onTap: _showIncomeDialog,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: cs.primaryContainer,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_incomeLabel,
+                                      style: TextStyle(
+                                          color: cs.onPrimaryContainer
+                                              .withValues(alpha: 0.7),
+                                          fontSize: 12)),
+                                  Text(CurrencyService.format(_monthlyIncome),
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: cs.onPrimaryContainer)),
+                                  // Low income warning
+                                  if (_monthlyIncome > 0 &&
+                                      _monthlyIncome < 1000) ...[
+                                    const SizedBox(height: 2),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: Colors.orange
+                                            .withValues(alpha: 0.3),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: const Text(
+                                        "⚠️ Looks low — tap to update",
+                                        style: TextStyle(
+                                            fontSize: 10, color: Colors.orange),
+                                      ),
+                                    ),
+                                  ],
+                                  // Show per-period breakdown when not monthly
+                                  if (_incomeFrequency != 'monthly' &&
+                                      _incomeFrequency != 'manual' &&
+                                      _monthlyIncome > 0) ...[
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      () {
+                                        switch (_incomeFrequency) {
+                                          case 'daily':
+                                            return '≈ ${CurrencyService.format(_monthlyIncome / 22)}/day · ${CurrencyService.format(_monthlyIncome)}/mo equiv.';
+                                          case 'weekly':
+                                            return '≈ ${CurrencyService.format(_monthlyIncome / 4.33)}/week · ${CurrencyService.format(_monthlyIncome)}/mo equiv.';
+                                          case 'bimonthly':
+                                            return '≈ ${CurrencyService.format(_monthlyIncome / 2)}/release · ${CurrencyService.format(_monthlyIncome)}/mo equiv.';
+                                          default:
+                                            return '';
+                                        }
+                                      }(),
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          color: cs.onPrimaryContainer
+                                              .withValues(alpha: 0.55)),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                              // Only show tax/savings for employed/business/working_student/freelancer
+                              if (_accountType != 'student' &&
+                                  _accountType != 'unemployed' &&
+                                  _accountType != 'pensioner' &&
+                                  _accountType != 'general')
+                                GestureDetector(
+                                  onTap: () => _showBIRBreakdown(),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          "Tax: ~${CurrencyService.format(tax)}/mo",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: cs.onPrimaryContainer
+                                                  .withValues(alpha: 0.7))),
+                                      Text(
+                                          "Save: ${CurrencyService.format(savings)}",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.green[
+                                                  Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.dark
+                                                      ? 300
+                                                      : 700])),
+                                      Text("Tap for BIR breakdown",
+                                          style: TextStyle(
+                                              fontSize: 9,
+                                              color: cs.onPrimaryContainer
+                                                  .withValues(alpha: 0.4))),
+                                    ],
+                                  ),
+                                ),
+                              Icon(Icons.edit,
+                                  size: 16,
+                                  color: cs.onPrimaryContainer
+                                      .withValues(alpha: 0.5)),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
 
                     const SizedBox(height: 16),
 

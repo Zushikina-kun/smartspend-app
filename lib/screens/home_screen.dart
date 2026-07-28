@@ -888,6 +888,13 @@ class _DashboardState extends State<Dashboard> {
   int _streak = 0; // consecutive days under budget
   List<String> _earnedBadges = [];
 
+  // ── NEW: lightweight mode + period spending limit ─────────────────────────
+  bool _incomeWalletMode =
+      true; // false = hide income/wallets, use lightweight FHS
+  double _spendingLimit = 0; // 0 = no limit set
+  String _spendingLimitPeriod = 'monthly';
+  double _spentInPeriod = 0; // current spend within the limit period
+
   final _currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
   final _lastMonth = DateFormat('yyyy-MM')
       .format(DateTime(DateTime.now().year, DateTime.now().month - 1));
@@ -936,13 +943,26 @@ class _DashboardState extends State<Dashboard> {
     final income = await incomeFuture;
     final recurring = await recurringFuture;
     final debts = await debtsFuture;
+
+    // Load new lightweight mode + spending limit settings in parallel
+    final incomeWalletMode = await DBService.getIncomeWalletMode();
+    final spendingLimit = await DBService.getSpendingLimit();
+    final spendingLimitPeriod = await DBService.getSpendingLimitPeriod();
+    final spentInPeriod = spendingLimit > 0
+        ? await DBService.getSpentInPeriod(spendingLimitPeriod)
+        : 0.0;
+
+    final expenseData = thisMonthExpenses
+        .map(
+            (e) => {'amount': e.amount, 'category': e.category, 'date': e.date})
+        .toList();
     final rawScore = ScoreService.calculateScore(
-      thisMonthExpenses
-          .map((e) =>
-              {'amount': e.amount, 'category': e.category, 'date': e.date})
-          .toList(),
+      expenseData,
       budgets: budgets,
-      monthlyIncome: income,
+      monthlyIncome: incomeWalletMode ? income : 0,
+      lightweightMode: !incomeWalletMode,
+      spendingLimit: spendingLimit,
+      spendingLimitPeriod: spendingLimitPeriod,
     );
     // Apply all FHS adjustments: decay penalty + gap penalty/bonus
     final score = await ScoreService.applyAllAdjustments(rawScore);
@@ -958,6 +978,11 @@ class _DashboardState extends State<Dashboard> {
       _budgets = budgets;
       _score = score;
       _monthlyIncome = income;
+      // Lightweight mode & spending limit state
+      _incomeWalletMode = incomeWalletMode;
+      _spendingLimit = spendingLimit;
+      _spendingLimitPeriod = spendingLimitPeriod;
+      _spentInPeriod = spentInPeriod;
       // Only show loading indicator if we don't have an insight yet
       if (_insight == "Analyzing your expenses...") _loadingInsight = true;
       final spent = <String, double>{};
@@ -1047,6 +1072,15 @@ class _DashboardState extends State<Dashboard> {
     if (mounted) setState(() => _dailyLimit = dailyLimit);
     if (dailyLimit > 0 && _dailySpent >= dailyLimit * 0.8) {
       NotificationService.showDailyLimitAlert(_dailySpent, dailyLimit);
+    }
+
+    // Period spending limit notification check
+    if (spendingLimit > 0 && spentInPeriod >= spendingLimit * 0.8) {
+      NotificationService.checkSpendingLimitAlert(
+        spent: spentInPeriod,
+        limit: spendingLimit,
+        period: spendingLimitPeriod,
+      );
     }
 
     // Spending streak calculation (#13)
@@ -1665,6 +1699,90 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Period-based spending limit progress card.
+  /// Shown whenever _spendingLimit > 0, regardless of income/wallet mode.
+  Widget _buildSpendingLimitCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ratio = _spendingLimit > 0
+        ? (_spentInPeriod / _spendingLimit).clamp(0.0, 1.0)
+        : 0.0;
+    final isOver = _spentInPeriod >= _spendingLimit;
+    final isWarning = ratio >= 0.8 && !isOver;
+    final color = isOver
+        ? Colors.red
+        : isWarning
+            ? Colors.orange
+            : cs.primary;
+    final periodLabel = {
+          'daily': 'Today',
+          'weekly': 'This Week',
+          'monthly': 'This Month',
+          'yearly': 'This Year',
+        }[_spendingLimitPeriod] ??
+        'This Month';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.07),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withValues(alpha: 0.25)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.speed_outlined, size: 16, color: color),
+                const SizedBox(width: 6),
+                Text("$periodLabel's Spending Limit",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: color)),
+                const Spacer(),
+                Text(
+                  "${CurrencyService.format(_spentInPeriod)} / ${CurrencyService.format(_spendingLimit)}",
+                  style: TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.bold, color: color),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: ratio,
+                backgroundColor: color.withValues(alpha: 0.15),
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                minHeight: 6,
+              ),
+            ),
+            const SizedBox(height: 4),
+            if (isOver)
+              Text(
+                "Limit exceeded by ${CurrencyService.format(_spentInPeriod - _spendingLimit)} — consider slowing down",
+                style: const TextStyle(fontSize: 11, color: Colors.red),
+              )
+            else if (isWarning)
+              Text(
+                "${(ratio * 100).toStringAsFixed(0)}% of limit used — ${CurrencyService.format(_spendingLimit - _spentInPeriod)} remaining",
+                style: const TextStyle(fontSize: 11, color: Colors.orange),
+              )
+            else
+              Text(
+                "${CurrencyService.format(_spendingLimit - _spentInPeriod)} remaining ${_spendingLimitPeriod == 'daily' ? 'today' : 'this $_spendingLimitPeriod'}",
+                style: TextStyle(
+                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.5)),
+              ),
           ],
         ),
       ),
@@ -2411,7 +2529,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ],
                       ),
-                    if (_monthlyIncome > 0) ...[
+                    if (_monthlyIncome > 0 && _incomeWalletMode) ...[
                       const SizedBox(height: 8),
                       Row(
                         children: [
@@ -2717,14 +2835,19 @@ class _DashboardState extends State<Dashboard> {
                 );
               }),
 
-              // Wallet balances summary — always shown, prompts setup when empty
-              _buildWalletSummaryCard(context),
+              // Wallet balances summary — only shown in income/wallet mode
+              if (_incomeWalletMode) _buildWalletSummaryCard(context),
 
-              // Quick "Log Allowance" button — adds to wallet + income
-              _buildLogAllowanceButton(context),
+              // Quick "Log Allowance" button — only in income/wallet mode
+              if (_incomeWalletMode) _buildLogAllowanceButton(context),
 
-              // Daily spending limit progress bar (#14)
-              if (_dailyLimit > 0) _buildDailyLimitCard(context),
+              // Period spending limit bar — shown whenever a limit is set,
+              // regardless of income/wallet mode
+              if (_spendingLimit > 0) _buildSpendingLimitCard(context),
+
+              // Daily spending limit progress bar (#14) — legacy daily limit
+              if (_dailyLimit > 0 && _incomeWalletMode)
+                _buildDailyLimitCard(context),
 
               // Subscription leak summary
               _buildSubscriptionSummaryCard(context),

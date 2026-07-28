@@ -43,7 +43,17 @@ class ScoreService {
     List<Map<String, dynamic>> expenses, {
     List<Budget> budgets = const [],
     double monthlyIncome = 0,
+    // Lightweight mode: when income/wallet tracking is off
+    bool lightweightMode = false,
+    double spendingLimit = 0, // period limit set by user
+    String spendingLimitPeriod = 'monthly',
   }) {
+    if (lightweightMode) {
+      return _computeLightweight(expenses,
+          budgets: budgets,
+          spendingLimit: spendingLimit,
+          spendingLimitPeriod: spendingLimitPeriod)['score'] as int;
+    }
     return _compute(expenses,
         budgets: budgets, monthlyIncome: monthlyIncome)['score'] as int;
   }
@@ -52,10 +62,249 @@ class ScoreService {
     List<Map<String, dynamic>> expenses, {
     List<Budget> budgets = const [],
     double monthlyIncome = 0,
+    bool lightweightMode = false,
+    double spendingLimit = 0,
+    String spendingLimitPeriod = 'monthly',
   }) {
+    if (lightweightMode) {
+      return _computeLightweight(expenses,
+              budgets: budgets,
+              spendingLimit: spendingLimit,
+              spendingLimitPeriod: spendingLimitPeriod)['breakdown']
+          as List<Map<String, dynamic>>;
+    }
     return _compute(expenses,
             budgets: budgets, monthlyIncome: monthlyIncome)['breakdown']
         as List<Map<String, dynamic>>;
+  }
+
+  // ── LIGHTWEIGHT MODE FHS (no income/wallet tracking) ─────────────────────
+  //
+  // When income_wallet_mode is OFF the user just wants to track spending habits.
+  // The 4 components are redesigned to only use spending data:
+  //
+  // Component 1 — Spending Restraint (25 pts)
+  //   Has the user stayed within their self-set spending limit this period?
+  //   If no limit set: partial credit based on Want/Need ratio.
+  //
+  // Component 2 — Logging Consistency (25 pts)
+  //   Logged days / active days in period (same formula as full mode).
+  //
+  // Component 3 — Category Balance (25 pts)
+  //   No single category should dominate (> 60% of total spend is unbalanced).
+  //
+  // Component 4 — Habit Streak (25 pts)
+  //   Consecutive days with at least one expense logged up to today.
+  //
+  static Map<String, dynamic> _computeLightweight(
+    List<Map<String, dynamic>> expenses, {
+    List<Budget> budgets = const [],
+    double spendingLimit = 0,
+    String spendingLimitPeriod = 'monthly',
+  }) {
+    final breakdown = <Map<String, dynamic>>[];
+
+    if (expenses.isEmpty) {
+      breakdown.add({
+        'reason': 'No expenses recorded yet — start logging to see your score',
+        'points': 0,
+        'component': 'all',
+      });
+      return {'score': 50, 'breakdown': breakdown};
+    }
+
+    final now = DateTime.now();
+    final daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
+    final daysPassed = now.day.clamp(1, daysInMonth);
+
+    // ── COMPONENT 1: SPENDING RESTRAINT (25 pts) ─────────────────────────────
+    double comp1 = 25.0;
+    String comp1Reason;
+    if (spendingLimit > 0) {
+      final totalSpent = expenses.fold(0.0, (s, e) => s + (e['amount'] as num));
+      final ratio = totalSpent / spendingLimit;
+      // Full 25 pts at ≤80% of limit; scales to 0 at 2× the limit
+      comp1 =
+          ((1.0 - ((ratio - 0.8) / 1.2).clamp(0.0, 1.0)) * 25).clamp(0.0, 25.0);
+      if (ratio <= 0.8) {
+        comp1Reason =
+            'Spending within limit ✓ (${(ratio * 100).toStringAsFixed(0)}% of $spendingLimitPeriod limit)';
+      } else if (ratio <= 1.0) {
+        comp1Reason =
+            'Approaching $spendingLimitPeriod limit — ${(ratio * 100).toStringAsFixed(0)}% used';
+      } else {
+        comp1Reason =
+            '$spendingLimitPeriod limit exceeded by ${((ratio - 1) * 100).toStringAsFixed(0)}%';
+      }
+    } else {
+      // No limit set — use Want/Need ratio as proxy
+      double wantTotal = 0, needTotal = 0;
+      for (final e in expenses) {
+        final amt = (e['amount'] as num).toDouble();
+        if ((e['is_want'] as int? ?? 0) == 1)
+          wantTotal += amt;
+        else
+          needTotal += amt;
+      }
+      final total = wantTotal + needTotal;
+      final wantRatio = total > 0 ? wantTotal / total : 0.0;
+      // 25 pts at ≤30% wants; scales to 10 pts at 70% wants
+      comp1 = ((1.0 - ((wantRatio - 0.3) / 0.4).clamp(0.0, 1.0)) * 15 + 10)
+          .clamp(10.0, 25.0);
+      comp1Reason = total > 0
+          ? 'Wants: ${(wantRatio * 100).toStringAsFixed(0)}% of spending (set a limit for a better score)'
+          : 'Set a spending limit to track restraint';
+    }
+    breakdown.add({
+      'reason': comp1Reason,
+      'points': comp1.round(),
+      'component': 'spending_restraint',
+    });
+
+    // ── COMPONENT 2: LOGGING CONSISTENCY (25 pts) ────────────────────────────
+    double comp2 = 25.0;
+    String comp2Reason;
+    final loggedDays = expenses
+        .map((e) {
+          try {
+            return (e['date'] as String).substring(0, 10);
+          } catch (_) {
+            return '';
+          }
+        })
+        .where((d) => d.isNotEmpty)
+        .toSet()
+        .length;
+    int activeDays = daysPassed.clamp(1, daysInMonth);
+    try {
+      final dates = expenses
+          .map((e) => (e['date'] as String).substring(0, 10))
+          .toList()
+        ..sort();
+      final firstDate = DateTime.parse(dates.first);
+      final span = now.difference(firstDate).inDays + 1;
+      activeDays = span.clamp(1, daysPassed);
+    } catch (_) {}
+    if (loggedDays > 0 && activeDays > loggedDays * 2) {
+      activeDays = loggedDays * 2;
+    }
+    final consistencyRatio = (loggedDays / activeDays).clamp(0.0, 1.0);
+    comp2 = consistencyRatio * 25;
+    comp2Reason = loggedDays >= activeDays
+        ? 'Logging every active day ✓'
+        : 'Logged $loggedDays of $activeDays days';
+    breakdown.add({
+      'reason': comp2Reason,
+      'points': comp2.round(),
+      'component': 'logging_consistency',
+    });
+
+    // ── COMPONENT 3: CATEGORY BALANCE (25 pts) ───────────────────────────────
+    double comp3 = 25.0;
+    String comp3Reason;
+    final catTotals = <String, double>{};
+    final totalAll = expenses.fold(0.0, (s, e) => s + (e['amount'] as num));
+    for (final e in expenses) {
+      final cat = e['category'] as String? ?? 'Others';
+      catTotals[cat] = (catTotals[cat] ?? 0) + (e['amount'] as num);
+    }
+    if (totalAll > 0 && catTotals.isNotEmpty) {
+      final topEntry =
+          catTotals.entries.reduce((a, b) => a.value > b.value ? a : b);
+      final topRatio = topEntry.value / totalAll;
+      // Full 25 pts at ≤40% concentration; scales to 0 at 100%
+      comp3 = ((1.0 - ((topRatio - 0.4) / 0.6).clamp(0.0, 1.0)) * 25)
+          .clamp(0.0, 25.0);
+      if (topRatio <= 0.4) {
+        comp3Reason = 'Spending well balanced across categories ✓';
+      } else if (topRatio <= 0.6) {
+        comp3Reason =
+            '${topEntry.key} is ${(topRatio * 100).toStringAsFixed(0)}% of spending — consider diversifying';
+      } else {
+        comp3Reason =
+            '${topEntry.key} dominates at ${(topRatio * 100).toStringAsFixed(0)}% — very concentrated';
+      }
+    } else {
+      comp3Reason = 'Not enough data yet';
+    }
+    breakdown.add({
+      'reason': comp3Reason,
+      'points': comp3.round(),
+      'component': 'category_balance',
+    });
+
+    // ── COMPONENT 4: HABIT STREAK (25 pts) ───────────────────────────────────
+    double comp4 = 25.0;
+    String comp4Reason;
+    // Count consecutive days ending today (or yesterday) with at least one log
+    final loggedSet = expenses
+        .map((e) {
+          try {
+            return DateTime.parse((e['date'] as String).substring(0, 10));
+          } catch (_) {
+            return null;
+          }
+        })
+        .whereType<DateTime>()
+        .map((d) => DateTime(d.year, d.month, d.day))
+        .toSet();
+    int streak = 0;
+    var checkDay = DateTime(now.year, now.month, now.day);
+    // If nothing logged today, start from yesterday
+    if (!loggedSet.contains(checkDay)) {
+      checkDay = checkDay.subtract(const Duration(days: 1));
+    }
+    while (loggedSet.contains(checkDay)) {
+      streak++;
+      checkDay = checkDay.subtract(const Duration(days: 1));
+    }
+    // Full 25 pts at 14+ day streak; scales proportionally below
+    comp4 = (streak / 14.0).clamp(0.0, 1.0) * 25;
+    if (streak == 0) {
+      comp4Reason = 'No recent streak — log today to start one';
+    } else if (streak >= 14) {
+      comp4Reason = '$streak-day logging streak ✓';
+    } else {
+      comp4Reason = '$streak-day streak (14 days = full score)';
+    }
+    breakdown.add({
+      'reason': comp4Reason,
+      'points': comp4.round(),
+      'component': 'habit_streak',
+    });
+
+    // ── BUDGET ADHERENCE BONUS ────────────────────────────────────────────────
+    // Even in lightweight mode, category budgets still add value.
+    // If the user has set budgets, replace Category Balance with Budget Adherence
+    // for a more precise score (same formula as full mode).
+    if (budgets.isNotEmpty) {
+      int onBudget = 0, overBudget = 0;
+      for (final b in budgets) {
+        final spent = catTotals[b.category] ?? 0;
+        final limit = b.isPercentage ? 0.0 : b.amount;
+        if (limit <= 0) continue;
+        if (spent <= limit)
+          onBudget++;
+        else
+          overBudget++;
+      }
+      final valid = onBudget + overBudget;
+      if (valid > 0) {
+        final adherence = onBudget / valid;
+        // Blend with category balance (budgets = more authoritative)
+        comp3 = adherence * 25;
+        breakdown[2] = {
+          'reason': overBudget == 0
+              ? 'All $onBudget budget${onBudget == 1 ? '' : 's'} on track ✓'
+              : '$overBudget of $valid budgets exceeded',
+          'points': comp3.round(),
+          'component': 'budget_adherence',
+        };
+      }
+    }
+
+    final rawScore = (comp1 + comp2 + comp3 + comp4).round().clamp(0, 100);
+    return {'score': rawScore, 'breakdown': breakdown};
   }
 
   static Map<String, dynamic> _compute(

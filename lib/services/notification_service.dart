@@ -304,6 +304,51 @@ class NotificationService {
     );
   }
 
+  /// Period-aware spending limit alert — works for daily/weekly/monthly/yearly limits.
+  /// Fires at 80% (warning) and 100%+ (over). Call this whenever a new expense is logged.
+  static Future<void> checkSpendingLimitAlert({
+    required double spent,
+    required double limit,
+    required String period,
+  }) async {
+    if (limit <= 0) return;
+    final ratio = spent / limit;
+    if (ratio < 0.8) return; // below warning threshold — nothing to do
+
+    await init();
+    final isOver = ratio >= 1.0;
+    final periodLabel = {
+          'daily': 'daily',
+          'weekly': 'weekly',
+          'monthly': 'monthly',
+          'yearly': 'yearly',
+        }[period] ??
+        'spending';
+
+    final title = isOver
+        ? '🚨 ${periodLabel[0].toUpperCase()}${periodLabel.substring(1)} limit exceeded'
+        : '⚠️ ${periodLabel[0].toUpperCase()}${periodLabel.substring(1)} limit at ${(ratio * 100).toStringAsFixed(0)}%';
+
+    final body = isOver
+        ? 'You\'ve spent ₱${spent.toStringAsFixed(0)} — ₱${(spent - limit).toStringAsFixed(0)} over your ₱${limit.toStringAsFixed(0)} $periodLabel limit'
+        : '₱${(limit - spent).toStringAsFixed(0)} left of your ₱${limit.toStringAsFixed(0)} $periodLabel budget';
+
+    await _plugin.show(
+      ('spending_limit_$period').hashCode,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'spending_limit',
+          'Spending Limit',
+          channelDescription: 'Period-based spending limit alerts',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+    );
+  }
+
   /// 3-tier escalating budget warning based on decay days.
   /// Day 1: Gentle nudge
   /// Day 2: Strong alert with spending comparison

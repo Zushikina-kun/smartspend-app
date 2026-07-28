@@ -139,6 +139,11 @@ class AIChatService {
     // Gap-awareness data — from StartupAlertsService
     int gapPenaltyDays = 0,
     int gapCleanDays = 0,
+    // Lightweight mode & spending limit
+    bool incomeWalletMode = true,
+    double spendingLimit = 0,
+    String spendingLimitPeriod = 'monthly',
+    double spentInPeriod = 0,
   }) {
     // Refresh user-defined categorization rules cache
     DBService.getCategoryRules().then((rules) => _userRules = rules);
@@ -218,8 +223,8 @@ class AIChatService {
               return "- ${i['name']}: ₱${remaining.toStringAsFixed(0)} remaining (₱${monthly.toStringAsFixed(0)}/mo, $paid/$totalMonths months paid)";
             }).join("\n");
 
-    // Wallet balances summary
-    final walletsSummary = wallets.isEmpty
+    // Wallet balances summary — omitted in lightweight mode
+    final walletsSummary = (wallets.isEmpty || !incomeWalletMode)
         ? ""
         : "\n\nWallet balances (cash on hand / e-wallets / banks):\n" +
             wallets.map((w) {
@@ -255,6 +260,14 @@ class AIChatService {
         ? '\n\nLogging gaps this month: ${gapPenaltyDays > 0 ? '$gapPenaltyDays unlogged-but-spent days (FHS penalty applied)' : ''}${gapPenaltyDays > 0 && gapCleanDays > 0 ? '; ' : ''}${gapCleanDays > 0 ? '$gapCleanDays confirmed no-spend days (FHS bonus applied)' : ''}'
         : '';
 
+    // Lightweight mode / spending limit context for AI
+    final modeSummary = incomeWalletMode
+        ? ''
+        : '\n[Tracking mode: LIGHTWEIGHT — no income/wallet data. FHS is based on spending habits only.]';
+    final limitSummary = spendingLimit > 0
+        ? '\nSpending limit: ₱${spendingLimit.toStringAsFixed(0)}/$spendingLimitPeriod | Spent so far: ₱${spentInPeriod.toStringAsFixed(0)} (${(spentInPeriod / spendingLimit * 100).toStringAsFixed(0)}%)'
+        : '';
+
     // Build insurance summary for AI context
     final insuranceSummary = insurancePolicies.isEmpty
         ? ""
@@ -268,7 +281,7 @@ class AIChatService {
             }).join("\n");
 
     _fullContext = """
-Account type: $accountType | Income: ${monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set'} | Score: $healthScore/100
+Account type: $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
 This month spent: ₱${totalSpent.toStringAsFixed(0)}$wantNeedSummary
 ${allTimeTotal > 0 ? 'All-time: ₱${allTimeTotal.toStringAsFixed(0)}' : ''}$monthlyTotalsSummary
 ${quizChallenge.isNotEmpty ? 'Challenge: $quizChallenge' : ''}
