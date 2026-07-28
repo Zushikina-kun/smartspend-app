@@ -1,6 +1,6 @@
 # Smart Spend — How to Run & Build
 
-**Version:** 2.7.0 | **Platform:** Android (Flutter)
+**Version:** 2.9.0 | **Platform:** Android (Flutter)
 
 ---
 
@@ -144,9 +144,9 @@ flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-i
 **Output — 3 APKs, one per CPU architecture:**
 ```
 build/app/outputs/flutter-apk/
-├── app-armeabi-v7a-release.apk  (~36 MB)  ← older/32-bit phones (Android 5+)
-├── app-arm64-v8a-release.apk    (~44 MB)  ← modern 64-bit phones ← primary
-└── app-x86_64-release.apk       (~47 MB)  ← emulators / x86 devices
+├── app-armeabi-v7a-release.apk  (~36.9 MB)  ← older/32-bit phones (Android 5+)
+├── app-arm64-v8a-release.apk    (~44.6 MB)  ← modern 64-bit phones ← primary
+└── app-x86_64-release.apk       (~47.5 MB)  ← emulators / x86 devices
 ```
 
 **Which APK to install:**

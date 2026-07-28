@@ -2022,6 +2022,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   tip =
                                       'Log expenses daily — even a quick note helps. Use Quick Log chips for common items.';
                                   break;
+                                // Lightweight mode components
+                                case 'spending_restraint':
+                                  tip = _incomeWalletMode
+                                      ? null
+                                      : 'Set a spending limit in Settings to track restraint more accurately.';
+                                  break;
+                                case 'category_balance':
+                                  tip =
+                                      'Try spreading spending across more categories. One dominant category can hide overspending.';
+                                  break;
+                                case 'habit_streak':
+                                  tip =
+                                      'Log at least one expense every day to build your streak. Even ₱0 days count if you note them.';
+                                  break;
                               }
                             }
 

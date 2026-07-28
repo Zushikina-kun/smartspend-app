@@ -234,6 +234,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     // Compute current FHS component breakdown for the component chart
     try {
       final budgets = await DBService.getBudgets();
+      final iwMode = await DBService.getIncomeWalletMode();
+      final spendLimit = await DBService.getSpendingLimit();
+      final spendPeriod = await DBService.getSpendingLimitPeriod();
       final now2 = DateTime.now();
       final currentMonth2 =
           "${now2.year}-${now2.month.toString().padLeft(2, '0')}";
@@ -249,6 +252,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         thisMonthExp,
         budgets: budgets,
         monthlyIncome: income,
+        lightweightMode: !iwMode,
+        spendingLimit: spendLimit,
+        spendingLimitPeriod: spendPeriod,
       );
       if (mounted) setState(() => _currentComponents = components);
     } catch (_) {}

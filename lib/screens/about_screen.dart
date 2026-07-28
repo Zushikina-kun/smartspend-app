@@ -29,7 +29,7 @@ class AboutScreen extends StatelessWidget {
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
             const Text(
-              "Version 2.7.0",
+              "Version 2.9.0",
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
             const SizedBox(height: 6),
@@ -110,6 +110,14 @@ class AboutScreen extends StatelessWidget {
                 "Get notified when your financial health score improves"
               ),
               ("📆 Daily Spending Limit", "Set a daily cap with notifications"),
+              (
+                "⚖️ Lightweight Mode",
+                "Optional — disable income/wallet tracking. FHS still works using spending habits only"
+              ),
+              (
+                "🎯 Period Spending Limit",
+                "Set one cap per day/week/month/year — warns at 80%, alerts at 100%"
+              ),
               (
                 "🗂️ Custom Categories",
                 "14 built-in + unlimited custom categories (Gaming, Travel, Pets, Gifts & more)"

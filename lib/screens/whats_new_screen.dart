@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.8.0';
-  static const _prefKey = 'whats_new_seen_2_8_0';
+  static const _version = '2.9.0';
+  static const _prefKey = 'whats_new_seen_2_9_0';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,54 +20,39 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🤖',
-      'Multi-Model AI (Gemini + Groq + Cerebras)',
-      'Auto-switches to next model when daily limit reached. Gemini 2.5 Flash-Lite is now default (1,000/day free, 1M context)'
-    ),
-    (
-      '🔀',
-      '29 AI Actions (was 25)',
-      'New: suggest expense cuts, simulate what-if, create debt plan, split expense (auto-creates debt for the other person)'
-    ),
-    (
-      '💬',
-      'Typing Indicator',
-      '"Peso is thinking..." with animated dots while AI processes'
-    ),
-    (
-      '📋',
-      'Long-Press Message Menu',
-      'Long-press any AI message to copy, use as prompt, or share'
-    ),
-    (
-      '💹',
-      'Peso Cost Averaging Calculator',
-      'Plan regular investments — MP2, UITFs, stocks — with year-by-year projections'
-    ),
-    (
-      '🏅',
-      'Financial Health Certificate',
-      'Shareable monthly FHS score card — share via WhatsApp, social media'
-    ),
-    (
-      '🏦',
-      'BIR Tax Breakdown',
-      'Tap income card → full monthly breakdown: BIR tax, SSS, PhilHealth, Pag-IBIG, take-home'
-    ),
-    (
-      '🧠',
-      'Philippine Financial Knowledge Base',
-      'AI now knows SSS/PhilHealth/Pag-IBIG rates, BIR TRAIN Law brackets, digital bank rates, BSP Open Finance status'
+      '⚖️',
+      'Lightweight Mode — No Income Needed',
+      'Turn off income/wallet tracking in Settings → Tracking Mode. Works for anyone — just log spending. FHS recalculates using spending habits: Spending Restraint, Consistency, Category Balance, Habit Streak.'
     ),
     (
       '🎯',
-      'Goal Deadline Alerts',
-      'Startup alert when savings goal deadline is within 7 days'
+      'Period Spending Limit',
+      'Set one cap for your total spending per day, week, month, or year. Progress bar on home screen. Warns at 80%, alerts at 100%. Independent of tracking mode.'
     ),
     (
-      '⚙️',
-      '3 Income Frequencies for All',
-      'Bimonthly (15th & 30th) now available for all account types with live monthly preview'
+      '📅',
+      'Logging Gap Detection',
+      'On startup, app asks about days with no logs. Confirm spending (FHS penalty) or no spending (clean-day bonus). Score now reflects actual behaviour, not silence.'
+    ),
+    (
+      '🤖',
+      'AI Accuracy: Names, Dates, Duplicates',
+      '"your jeepney fare for" cleaned to "Jeepney fare". Date corrections now always fire an update ACTION. 90-second DB-level duplicate guard. 503 errors silent-retry up to 3×.'
+    ),
+    (
+      '📊',
+      'Gemini 3.5 Flash + Smart Model Routing',
+      'Updated models (2.5 → 3.x). Complex financial queries auto-route to the smartest model. New financial_advice tier for SSS/tax/debt-strategy questions.'
+    ),
+    (
+      '🔄',
+      'Transactions Auto-Sort',
+      'Transaction list reloads automatically after any AI-driven edit — no more manual pull-to-refresh.'
+    ),
+    (
+      '🔍',
+      'Observability & Debug Traces',
+      'Per-request trace (latency/tokens/retries) in debug export. Silent action fails logged. Groundedness check on financial advice replies.'
     ),
   ];
 
@@ -76,7 +61,7 @@ class WhatsNewScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text("What's New in v$_version — AI & Multi-Model"),
+        title: Text("What's New in v$_version"),
         actions: [
           TextButton(
             onPressed: () async {

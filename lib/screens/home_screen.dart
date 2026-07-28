@@ -3162,7 +3162,10 @@ class _DashboardState extends State<Dashboard> {
                         final breakdown = ScoreService.getBreakdown(
                           thisMonthData,
                           budgets: _budgets,
-                          monthlyIncome: _monthlyIncome,
+                          monthlyIncome: _incomeWalletMode ? _monthlyIncome : 0,
+                          lightweightMode: !_incomeWalletMode,
+                          spendingLimit: _spendingLimit,
+                          spendingLimitPeriod: _spendingLimitPeriod,
                         );
                         showDialog(
                           context: context,

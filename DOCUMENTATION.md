@@ -1,11 +1,11 @@
 ﻿# Smart Spend — Application Documentation
 
-**Version:** 2.8.0
+**Version:** 2.9.0
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** June 13, 2026 (v2.8.0 Final — 29 AI actions including split_expense with auto debt creation, LLM task routing fast/smart, financial milestones card in Analytics, compact mode fully functional via ThemeService.visualDensity, split_with visible in expense tiles, all coding tasks complete, build 46.0 MB)
-**Build:** app-arm64-v8a-release.apk — 46.0 MB (June 13, 2026)
+**Last Updated:** July 28, 2026 (v2.9.0 — Lightweight Mode, Period Spending Limit, Logging Gap Detection, AI accuracy guardrails, model routing, observability traces, Gemini 3.x model IDs, transactions auto-sort, 7 files changed)
+**Build:** app-arm64-v8a-release.apk — 44.6 MB (July 28, 2026)
 
 ---
 
@@ -677,6 +677,31 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Home dashboard shows a progress bar for today's spending vs limit
 - Push notification at 80% of limit and when exceeded
 - Opt-in — hidden when limit is 0 or not set
+
+### 32b. Period Spending Limit (v2.9.0)
+- Set one total spending cap per **day / week / month / year** — Profile → ⚙️ Settings → Spending Limit
+- Period picker: Day | Week | Month | Year
+- Home dashboard shows a period limit progress bar when set (separate from legacy daily limit)
+- Warns at 80% (orange), alerts at 100%+ (red) — push notification via `checkSpendingLimitAlert`
+- Works independently of income/wallet mode — available in both full and lightweight mode
+- Spend is calculated in real-time via `DBService.getSpentInPeriod(period)`
+
+### 32c. Lightweight Mode (v2.9.0)
+- **Toggle:** Profile → ⚙️ Settings → Tracking Mode → "Track income & wallets" (default ON for existing users, OFF-auto-detect for new users)
+- When **OFF**: wallet card, allowance button, income card, net worth card are all hidden on home and profile screens. AI skips income/wallet advice and context.
+- When **OFF**: FHS recalculates using 4 habit-based components:
+  1. **Spending Restraint** (25pts) — vs user-set limit, or want/need ratio if no limit
+  2. **Logging Consistency** (25pts) — same logged-days/active-days formula
+  3. **Category Balance** (25pts) — full score when no single category > 40% of total
+  4. **Habit Streak** (25pts) — consecutive logged days, full score at 14
+- DB key: `income_wallet_mode` ('true'/'false'). `DBService.getIncomeWalletMode()` auto-detects existing users (returns true if income entries exist)
+
+### 32d. Logging Gap Detection (v2.9.0)
+- On startup (once per day), `StartupAlertsService._detectLoggingGaps()` finds contiguous unlogged day ranges since the first logged expense
+- Shows `_GapCheckDialog` per gap asking: "Yes I spent (forgot)" → penalty (−3 pts/day, max −15) or "Nope, nothing" → bonus (+2 pts/day, max +10)
+- Penalty/bonus stored in `gap_penalty_days` / `gap_clean_days` DB settings
+- Applied via `ScoreService.applyGapAdjustment()` on top of warning decay
+- Counters reset monthly; idle wallet and income sanity alerts skipped when mode=OFF
 
 ### 33. Bill Due Date Calendar
 - Monthly calendar view showing all financial events color-coded by type:

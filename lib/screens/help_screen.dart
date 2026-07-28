@@ -250,8 +250,8 @@ const _sections = [
       _HelpItem(
         title: "What else can the AI do?",
         body:
-            "The AI can manage almost everything in the app via chat. It supports 15 action types:\n\n"
-            "📝 Expenses: log, update (fix category/amount/name), delete (requires typing DELETE)\n"
+            "The AI can manage almost everything in the app via chat. It supports 29+ action types:\n\n"
+            "📝 Expenses: log, update (fix category/amount/name/date), delete (requires typing DELETE)\n"
             "💰 Income: set monthly income, log income entries\n"
             "📊 Budgets: set or update category budgets\n"
             "🎯 Goals: add savings goals, contribute to goals, delete goals\n"
@@ -310,6 +310,64 @@ const _sections = [
     ],
   ),
   _HelpSection(
+    title: "Tracking Mode & Spending Limit",
+    icon: Icons.tune_outlined,
+    color: Colors.teal,
+    items: [
+      _HelpItem(
+        title: "What is Lightweight Mode?",
+        body:
+            "Lightweight Mode lets you use Smart Spend without entering any income or managing wallets. "
+            "It's designed for users who just want to track spending habits.\n\n"
+            "To enable: Profile → ⚙️ App Settings → Tracking Mode → Turn off 'Track income & wallets'\n\n"
+            "When OFF:\n"
+            "• Wallet card, allowance button, and income card are hidden on the home and profile screens\n"
+            "• The AI skips income and wallet advice\n"
+            "• Financial Health Score recalculates using 4 new habit-based components\n\n"
+            "When ON (default for existing users):\n"
+            "• Full experience — wallets, income, savings rate, net worth all visible",
+        example:
+            "New user with no steady income → turn off income tracking → app still gives a meaningful FHS based on spending consistency.",
+      ),
+      _HelpItem(
+        title: "Financial Health Score in Lightweight Mode",
+        body:
+            "When income/wallet tracking is OFF, the 4 FHS components change:\n\n"
+            "1. Spending Restraint (25pts) — Did you stay within your spending limit this period? If no limit set, uses your Want/Need ratio instead.\n\n"
+            "2. Logging Consistency (25pts) — How many days did you log at least one expense vs active days?\n\n"
+            "3. Category Balance (25pts) — Is spending spread across categories? Full score when no single category exceeds 40% of total.\n\n"
+            "4. Habit Streak (25pts) — How many consecutive days did you log expenses? Full score at 14 days.",
+        example:
+            "You logged 10 of 14 days, stayed under your limit, and spread spending across 5 categories → ~75/100 FHS.",
+      ),
+      _HelpItem(
+        title: "What is the Spending Limit?",
+        body:
+            "The Spending Limit lets you set a single total cap for your spending over a chosen period — without needing to set per-category budgets.\n\n"
+            "To set: Profile → ⚙️ App Settings → Spending Limit → pick a period (Day/Week/Month/Year) → enter an amount → tap ✓\n\n"
+            "A progress bar appears on the home screen showing how much of your limit you've used.\n\n"
+            "Warnings:\n"
+            "• At 80%: orange warning — 'X% of limit used'\n"
+            "• At 100%+: red alert — 'Limit exceeded by ₱X'\n\n"
+            "Works in both full mode and lightweight mode. You can also have category budgets AND a spending limit — they operate independently.",
+        example:
+            "Set ₱500/day limit → spent ₱420 → bar shows 84%, orange warning.\nSet ₱5,000/month → spent ₱5,100 → red 'exceeded by ₱100'.",
+      ),
+      _HelpItem(
+        title: "How does the Logging Gap check work?",
+        body:
+            "On app startup (once per day), Smart Spend checks if you had any days without logged expenses since your last session.\n\n"
+            "If gaps are found, a dialog appears per gap asking:\n"
+            "• 'Yes, I spent' — you spent but forgot to log → FHS gets a small penalty (−3 pts per day, max −15)\n"
+            "• 'Nope, nothing' — genuinely no spending → FHS gets a bonus (+2 pts per day, max +10)\n\n"
+            "This makes your score reflect reality instead of penalising you for days you simply had nothing to log.\n\n"
+            "You can tap 'Skip' to answer later. Gap counters reset at the start of each month.",
+        example:
+            "Didn't log for 3 days. App asks. You say 'clean days' → FHS +6 pts bonus for confirmed no-spending.",
+      ),
+    ],
+  ),
+  _HelpSection(
     title: "Wallet Balances",
     icon: Icons.account_balance_wallet_outlined,
     color: Colors.green,
@@ -318,6 +376,7 @@ const _sections = [
         title: "What are Wallet Balances?",
         body:
             "Wallet Balances let you track how much money you actually have right now across all your accounts — separate from your income and expenses.\n\n"
+            "Note: Wallet Balances are only shown when 'Track income & wallets' is ON in Settings. If you're using Lightweight Mode, wallets are hidden to simplify the interface.\n\n"
             "Supported wallets:\n"
             "• 💵 Cash on Hand — physical money in your pocket\n"
             "• 📱 GCash, 💜 Maya, 🟢 GrabPay, 🟠 ShopeePay, 🪙 Coins.ph\n"

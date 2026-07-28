@@ -91,14 +91,18 @@ class StartupAlertsService {
 
     try {
       // 0. Income sanity check — alert if monthly income looks wrong (< ₱1,000)
-      // ₱650 (the current value) cannot be a real monthly income — it's almost
-      // certainly an initial placeholder. Surface this once per month so the
-      // user knows their FHS savings rate is being calculated incorrectly.
+      // Only fires when income/wallet tracking is actually ON.
       final income = await DBService.getMonthlyIncome();
+      final incomeWalletModeOn = await DBService.getIncomeWalletMode();
+      final spendLimit = await DBService.getSpendingLimit();
+      final spendPeriod = await DBService.getSpendingLimitPeriod();
       final incomeCheckKey = 'income_sanity_check';
       final lastIncomeCheck = await DBService.getSetting(incomeCheckKey);
       final thisMonth = DateFormat('yyyy-MM').format(DateTime.now());
-      if (income > 0 && income < 1000 && lastIncomeCheck != thisMonth) {
+      if (incomeWalletModeOn &&
+          income > 0 &&
+          income < 1000 &&
+          lastIncomeCheck != thisMonth) {
         await DBService.setSetting(incomeCheckKey, thisMonth);
         alerts.add(StartupAlert(
           title: '💰 Income Looks Too Low',
@@ -197,7 +201,10 @@ class StartupAlertsService {
       final rawScore = ScoreService.calculateScore(
         expenseData,
         budgets: budgets,
-        monthlyIncome: income,
+        monthlyIncome: incomeWalletModeOn ? income : 0,
+        lightweightMode: !incomeWalletModeOn,
+        spendingLimit: spendLimit,
+        spendingLimitPeriod: spendPeriod,
       );
       final currentScore = await ScoreService.applyAllAdjustments(rawScore);
       if (prevScoreStr != null) {
@@ -219,7 +226,7 @@ class StartupAlertsService {
       final wallets = await DBService.getWallets();
       final totalWalletBalance =
           wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
-      if (totalWalletBalance > 5000) {
+      if (incomeWalletModeOn && totalWalletBalance > 5000) {
         // Check if any expenses logged in last 14 days
         final twoWeeksAgo = DateTime.now().subtract(const Duration(days: 14));
         final recentExpenses = expenses.where((e) {

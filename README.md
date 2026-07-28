@@ -1,7 +1,7 @@
 # Smart Spend
 
 **AI-Assisted Financial Tracking & Advisory**
-Version 2.8.0 | Lucid Frame | Academic Year 2025–2026
+Version 2.9.0 | Lucid Frame | Academic Year 2025–2026
 
 ---
 
@@ -19,7 +19,10 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
-- 🤖 AI Chat Assistant — **29 agentic action types** via natural language (Gemini 2.5 Flash-Lite primary, multi-model auto-fallback)
+- 🤖 AI Chat Assistant — **29 agentic action types** via natural language (Gemini 3.1 Flash-Lite primary, multi-model auto-fallback with financial_advice routing tier)
+- ⚖️ **Lightweight Mode** — disable income/wallet tracking; FHS recalculates using spending habits only (Spending Restraint, Consistency, Category Balance, Habit Streak)
+- 🎯 **Period Spending Limit** — set one cap per day/week/month/year; progress bar + 80%/100% alerts
+- 📅 **Logging Gap Detection** — startup check for unlogged days; user confirms spending or no-spend for accurate FHS scoring
 - 💸 **Split Expenses** — "Split dinner with John" auto-logs your share + creates debt for theirs
 - 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison, **DTI ratio**, **emergency fund calculator**
 - 💰 Budget management with pace indicators and % of income mode
@@ -28,11 +31,11 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 - 🔁 Recurring transactions with due date alerts and Log All Due
 - 💵 **Wallet Balances** — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (auto-deduct on expense, transfers between wallets)
 - 🛡️ **Insurance & Contributions Tracker** — SSS, PhilHealth, Pag-IBIG, private insurance with due dates and overdue alerts
-- 🔔 **Smart Startup Alerts** — on-open notifications for overdue bills, budget exceeded, debts due, FHS drops, idle money
-- ⚙️ App Settings — toggle wallet auto-deduct, mood, impulse pause, budget alerts, balance mode
+- 🔔 **Smart Startup Alerts** — on-open notifications for overdue bills, budget exceeded, debts due, FHS drops, idle money, low income
+- ⚙️ App Settings — toggle wallet/income tracking, mood, impulse pause, budget alerts, balance mode, spending limit
 - 🔀 Auto-Categorization Rules — keyword → category mappings (fully cloud-synced)
 - 💱 Multi-currency (57 currencies, live rates)
-- 🧠 Financial Health Score (0–100, 4-component formula) — AI can explain breakdown
+- 🧠 Financial Health Score (0–100, 4-component formula, gap-aware adjustments) — AI can explain breakdown
 - 🏦 **PH Banks Database** — 20 banks, 5 e-wallets, government contributions, investment options with rates
 - ☁️ Full Firestore sync — expenses, budgets, goals, income, recurring, debts, wallets, rules, insurance
 - 🔒 App Lock (PIN + biometric, per-account)

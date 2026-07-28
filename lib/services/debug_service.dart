@@ -235,10 +235,16 @@ class DebugService {
               {'amount': e.amount, 'category': e.category, 'date': e.date})
           .toList();
       final income = await DBService.getMonthlyIncome();
+      final iwMode = await DBService.getIncomeWalletMode();
+      final spendLimit = await DBService.getSpendingLimit();
+      final spendPeriod = await DBService.getSpendingLimitPeriod();
       final breakdown = ScoreService.getBreakdown(
         thisMonthExp,
         budgets: budgets,
-        monthlyIncome: income,
+        monthlyIncome: iwMode ? income : 0,
+        lightweightMode: !iwMode,
+        spendingLimit: spendLimit,
+        spendingLimitPeriod: spendPeriod,
       );
       buffer.writeln('── FHS SCORE BREAKDOWN (this month) ───────────');
       for (final item in breakdown) {
