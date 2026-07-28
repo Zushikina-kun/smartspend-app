@@ -212,6 +212,11 @@ class DebugService {
       'level_up_70',
       'level_up_80',
       'level_up_90',
+      'last_silent_action_fail', // AI said "Logged:" but fired no valid action
+      'income_sanity_check', // month when low-income alert last shown
+      kGapPenaltyKey, // accumulated unlogged-but-spent days this month
+      kGapCleanKey, // accumulated confirmed clean days this month
+      'last_gap_check_date', // date gap detection last ran
     ];
     for (final key in notifKeys) {
       final val = await DBService.getSetting(key);

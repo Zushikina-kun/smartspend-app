@@ -4,6 +4,42 @@ import 'db_service.dart';
 import 'currency_service.dart';
 import 'score_service.dart';
 
+// ── LOGGING GAP MODEL ────────────────────────────────────────────────────────
+
+/// Represents a single gap period (one or more consecutive days without a log).
+class LoggingGap {
+  final DateTime startDate;
+  final DateTime endDate;
+  final int days;
+
+  LoggingGap({
+    required this.startDate,
+    required this.endDate,
+    required this.days,
+  });
+
+  String get label {
+    final fmt = DateFormat('MMM d');
+    if (days == 1) return fmt.format(startDate);
+    return '${fmt.format(startDate)} – ${fmt.format(endDate)}';
+  }
+}
+
+/// Result of a user's answer about a gap period.
+class GapResponse {
+  final LoggingGap gap;
+  final bool
+      hadTransactions; // true = had but forgot to log; false = truly no spending
+  final String?
+      roughDescription; // optional rough description if hadTransactions
+
+  GapResponse({
+    required this.gap,
+    required this.hadTransactions,
+    this.roughDescription,
+  });
+}
+
 /// Alert data model for on-open notifications
 class StartupAlert {
   final String title;
@@ -26,8 +62,21 @@ class StartupAlert {
 /// Service that checks for important alerts when the app opens.
 /// Shows a modal card if: bills overdue, budget exceeded, debt due,
 /// FHS dropped significantly, idle wallets, etc.
+/// Also detects multi-day logging gaps and records the user's response
+/// so the Financial Health Score can reflect reality accurately.
 class StartupAlertsService {
   static const _prefKeyLastAlert = 'last_startup_alert_date';
+
+  // ── GAP DETECTION KEYS ───────────────────────────────────────────────────
+  // Gap threshold: only ask if the user hasn't logged for this many days
+  static const _gapThresholdDays = 1;
+  // Max gap size we'll ask about (don't interrogate 3-month blackouts)
+  static const _maxGapDaysToAsk = 30;
+  // DB setting keys — imported from score_service.dart top-level constants
+  // so both services share the same key names without circular imports.
+  static const prefKeyGapPenalty = kGapPenaltyKey;
+  static const prefKeyGapBonus = kGapCleanKey;
+  static const _prefKeyLastGapCheck = 'last_gap_check_date';
 
   /// Check all alert conditions and return any that should be shown.
   /// Returns empty list if no alerts or already shown today.
@@ -41,6 +90,27 @@ class StartupAlertsService {
     final currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
 
     try {
+      // 0. Income sanity check — alert if monthly income looks wrong (< ₱1,000)
+      // ₱650 (the current value) cannot be a real monthly income — it's almost
+      // certainly an initial placeholder. Surface this once per month so the
+      // user knows their FHS savings rate is being calculated incorrectly.
+      final income = await DBService.getMonthlyIncome();
+      final incomeCheckKey = 'income_sanity_check';
+      final lastIncomeCheck = await DBService.getSetting(incomeCheckKey);
+      final thisMonth = DateFormat('yyyy-MM').format(DateTime.now());
+      if (income > 0 && income < 1000 && lastIncomeCheck != thisMonth) {
+        await DBService.setSetting(incomeCheckKey, thisMonth);
+        alerts.add(StartupAlert(
+          title: '💰 Income Looks Too Low',
+          message:
+              'Your monthly income is set to ₱${income.toStringAsFixed(0)}. '
+              'That seems too low — your Financial Health Score (especially savings rate) '
+              'may be inaccurate. Tap Profile → Income to update it.',
+          icon: Icons.account_balance_wallet_outlined,
+          color: Colors.deepOrange,
+        ));
+      }
+
       // 1. Check for exceeded budgets
       final budgets = await DBService.getBudgets();
       final expenses = await DBService.getExpenses(month: currentMonth);
@@ -123,13 +193,13 @@ class StartupAlertsService {
           .map((e) =>
               {'amount': e.amount, 'category': e.category, 'date': e.date})
           .toList();
-      final income = await DBService.getMonthlyIncome();
+      // income already loaded above in sanity check (reuse it here)
       final rawScore = ScoreService.calculateScore(
         expenseData,
         budgets: budgets,
         monthlyIncome: income,
       );
-      final currentScore = await ScoreService.applyWarningDecay(rawScore);
+      final currentScore = await ScoreService.applyAllAdjustments(rawScore);
       if (prevScoreStr != null) {
         final prevScore = int.tryParse(prevScoreStr) ?? currentScore;
         if (prevScore - currentScore >= 10) {
@@ -218,6 +288,24 @@ class StartupAlertsService {
           color: Colors.amber,
         ));
       }
+      // 8. Logging gap detection — ask about days with no entries
+      // Only fires once per day (guarded by _prefKeyLastGapCheck).
+      final gaps = await _detectLoggingGaps();
+      if (gaps.isNotEmpty) {
+        // Format a short description of the gaps found
+        final gapLabels = gaps.take(3).map((g) => g.label).join(', ');
+        final totalDays = gaps.fold<int>(0, (s, g) => s + g.days);
+        alerts.add(StartupAlert(
+          title: '📅 Missed Log Days',
+          message: totalDays == 1
+              ? 'No transactions logged on $gapLabels. Did you spend anything that day?'
+              : 'No transactions logged on $gapLabels ($totalDays days total). Did you spend on those days?',
+          icon: Icons.edit_calendar_outlined,
+          color: Colors.teal,
+          actionLabel: 'Review',
+          // The onAction callback is wired in HomeScreen after the sheet is shown
+        ));
+      }
     } catch (_) {
       // Fail silently — alerts are non-critical
     }
@@ -228,5 +316,120 @@ class StartupAlertsService {
     }
 
     return alerts;
+  }
+
+  // ── GAP DETECTION HELPERS ────────────────────────────────────────────────
+
+  /// Detect contiguous day ranges where no expense was logged.
+  /// Returns gaps sorted newest-first, capped at 3 most recent actionable periods.
+  static Future<List<LoggingGap>> _detectLoggingGaps() async {
+    try {
+      // Rate-limit: only run the gap check once per day
+      final today = DateTime.now().toIso8601String().substring(0, 10);
+      final lastCheck = await DBService.getSetting(_prefKeyLastGapCheck);
+      if (lastCheck == today) return [];
+      await DBService.setSetting(_prefKeyLastGapCheck, today);
+
+      final now = DateTime.now();
+      // Only look back within current month + previous month
+      final lookbackStart = DateTime(now.year, now.month - 1, 1);
+
+      final allExpenses = await DBService.getExpenses();
+      final loggedDates = allExpenses
+          .map((e) {
+            try {
+              return DateTime.parse(e.date.substring(0, 10));
+            } catch (_) {
+              return null;
+            }
+          })
+          .whereType<DateTime>()
+          .where((d) => !d.isBefore(lookbackStart) && !d.isAfter(now))
+          .map((d) => DateTime(d.year, d.month, d.day))
+          .toSet();
+
+      // Don't interrogate brand-new users with no data
+      if (loggedDates.isEmpty) return [];
+
+      final earliest = loggedDates.reduce((a, b) => a.isBefore(b) ? a : b);
+      final yesterday = DateTime(now.year, now.month, now.day)
+          .subtract(const Duration(days: 1));
+      if (yesterday.isBefore(earliest)) return [];
+
+      // Walk every day in the window, collect unlogged stretches
+      final gaps = <LoggingGap>[];
+      DateTime? gapStart;
+      int gapDays = 0;
+
+      for (var d = earliest;
+          !d.isAfter(yesterday);
+          d = d.add(const Duration(days: 1))) {
+        final key = DateTime(d.year, d.month, d.day);
+        if (!loggedDates.contains(key)) {
+          gapStart ??= key;
+          gapDays++;
+        } else {
+          if (gapStart != null && gapDays >= _gapThresholdDays) {
+            gaps.add(LoggingGap(
+              startDate: gapStart,
+              endDate: key.subtract(const Duration(days: 1)),
+              days: gapDays,
+            ));
+          }
+          gapStart = null;
+          gapDays = 0;
+        }
+      }
+      // Close any trailing gap that runs up to yesterday
+      if (gapStart != null && gapDays >= _gapThresholdDays) {
+        gaps.add(LoggingGap(
+          startDate: gapStart,
+          endDate: yesterday,
+          days: gapDays,
+        ));
+      }
+
+      // Drop huge blackouts (e.g. before user started using the app)
+      return gaps
+          .where((g) => g.days <= _maxGapDaysToAsk)
+          .toList()
+          .reversed // newest first
+          .take(3)
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// Public accessor — called by HomeScreen to show the interactive gap dialog.
+  static Future<List<LoggingGap>> getLoggingGaps() => _detectLoggingGaps();
+
+  /// Record the user's response to a gap inquiry so ScoreService can apply
+  /// the appropriate penalty or bonus to the Financial Health Score.
+  ///
+  /// [hadTransactions] = true  → user spent but forgot to log → adds penalty days
+  /// [hadTransactions] = false → genuinely no spending        → adds clean-day credit
+  static Future<void> recordGapResponse(GapResponse response) async {
+    try {
+      if (response.hadTransactions) {
+        final current = int.tryParse(
+                await DBService.getSetting(prefKeyGapPenalty) ?? '0') ??
+            0;
+        await DBService.setSetting(
+            prefKeyGapPenalty, (current + response.gap.days).toString());
+      } else {
+        final current =
+            int.tryParse(await DBService.getSetting(prefKeyGapBonus) ?? '0') ??
+                0;
+        await DBService.setSetting(
+            prefKeyGapBonus, (current + response.gap.days).toString());
+      }
+    } catch (_) {}
+  }
+
+  /// Reset gap counters at the start of each calendar month.
+  static Future<void> resetMonthlyGapCounters() async {
+    await DBService.setSetting(prefKeyGapPenalty, '0');
+    await DBService.setSetting(prefKeyGapBonus, '0');
   }
 }

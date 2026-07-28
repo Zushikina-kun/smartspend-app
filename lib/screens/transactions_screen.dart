@@ -5,6 +5,7 @@ import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/export_service.dart';
 import '../services/category_service.dart';
+import '../services/event_bus.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/info_button.dart';
 import 'edit_expense_screen.dart';
@@ -36,18 +37,35 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   bool _showLowConfidenceOnly = false;
   bool _showWantsOnly = false;
   bool _showNeedsOnly = false;
-  String? _activeTag; // tag filter e.g. '#capstone'
+  String? _activeTag;
+
+  // Listen for AI/external data changes (update_expense, new log, delete)
+  // so the list re-sorts automatically without the user needing to pull-to-refresh.
+  StreamSubscription<AppEvent>? _eventSub;
+  Timer? _eventDebounce;
 
   @override
   void initState() {
     super.initState();
     _load();
+    // Re-sort and reload whenever an expense is added, updated, or deleted
+    // elsewhere (e.g. via the AI chat update_expense action).
+    _eventSub = AppEventBus.instance.stream.listen((event) {
+      if (event == AppEvent.expenseChanged) {
+        _eventDebounce?.cancel();
+        _eventDebounce = Timer(const Duration(milliseconds: 400), () {
+          if (mounted) _load();
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     _searchCtrl.dispose();
     _debounce?.cancel();
+    _eventSub?.cancel();
+    _eventDebounce?.cancel();
     super.dispose();
   }
 

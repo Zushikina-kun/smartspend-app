@@ -92,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .toList();
       final rawScore = ScoreService.calculateScore(expenseData,
           budgets: budgets, monthlyIncome: income);
-      final score = await ScoreService.applyWarningDecay(rawScore);
+      final score = await ScoreService.applyAllAdjustments(rawScore);
       final breakdown = ScoreService.getBreakdown(expenseData,
           budgets: budgets, monthlyIncome: income);
 

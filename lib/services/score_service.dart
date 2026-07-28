@@ -2,6 +2,12 @@ import '../models/budget.dart';
 import 'db_service.dart';
 import 'package:flutter/material.dart' show DateUtils;
 
+// Gap DB setting keys — defined here so both ScoreService and
+// StartupAlertsService can use them without creating a circular import.
+// ScoreService reads them; StartupAlertsService writes them.
+const kGapPenaltyKey = 'gap_penalty_days';
+const kGapCleanKey = 'gap_clean_days';
+
 /// Financial Health Score — 4-component weighted formula (25% each)
 ///
 /// Component 1 — Savings Rate (25 pts)
@@ -263,6 +269,158 @@ class ScoreService {
     } catch (_) {
       return baseScore;
     }
+  }
+
+  /// Apply gap-awareness adjustment to the score.
+  ///
+  /// When a user answers the logging-gap prompt, StartupAlertsService records
+  /// either a penalty (had transactions but forgot) or a bonus (clean days).
+  ///
+  ///   Gap penalty  — each unlogged-but-spent day subtracts up to 3 pts,
+  ///                  capped at −15 pts total so one bad week doesn't crater
+  ///                  an otherwise healthy score.
+  ///
+  ///   Clean-day bonus — each confirmed no-spend day adds up to 2 pts to the
+  ///                     logging consistency component, capped at +10 pts.
+  ///                     Rewarding genuine frugal stretches makes the score
+  ///                     reflect reality instead of penalising users who simply
+  ///                     had nothing to log.
+  ///
+  /// This is applied on top of applyWarningDecay().
+  static Future<int> applyGapAdjustment(int baseScore) async {
+    try {
+      final penaltyDays =
+          int.tryParse(await DBService.getSetting(kGapPenaltyKey) ?? '0') ?? 0;
+      final bonusDays =
+          int.tryParse(await DBService.getSetting(kGapCleanKey) ?? '0') ?? 0;
+
+      // 3 pts per unlogged-but-spent day, max −15
+      final penalty = (penaltyDays * 3).clamp(0, 15);
+      // 2 pts per confirmed clean day, max +10
+      final bonus = (bonusDays * 2).clamp(0, 10);
+
+      return (baseScore - penalty + bonus).clamp(0, 100);
+    } catch (_) {
+      return baseScore;
+    }
+  }
+
+  /// Convenience: apply both decay and gap adjustment in one call.
+  /// Use this everywhere instead of calling applyWarningDecay() alone.
+  static Future<int> applyAllAdjustments(int rawScore) async {
+    final afterDecay = await applyWarningDecay(rawScore);
+    return applyGapAdjustment(afterDecay);
+  }
+
+  // ── DATA CONSISTENCY GUARDRAILS ───────────────────────────────────────────
+
+  /// Validate an expense before it is saved to the database.
+  /// Returns a [ValidationResult] with any warnings or a blocking error.
+  ///
+  /// Checks performed:
+  ///  1. Amount sanity — negative, zero, or implausibly large amounts
+  ///  2. Date sanity  — future dates more than 1 day ahead; dates before 2000
+  ///  3. Duplicate detection — same item name + same amount within ±2 minutes
+  ///     OR same item name + amount logged on the same date within the last
+  ///     60 seconds (catches AI double-fire race condition)
+  ///  4. Category mismatch — obvious mismatches (e.g. "jeepney" in Shopping)
+  static ExpenseValidation validateExpense({
+    required String itemName,
+    required double amount,
+    required String category,
+    required String date,
+    required List<Map<String, dynamic>> recentExpenses,
+    String? time,
+  }) {
+    final warnings = <String>[];
+    String? blockingError;
+
+    // 1. Amount sanity
+    if (amount <= 0) {
+      blockingError = 'Amount must be greater than zero.';
+    } else if (amount > 500000) {
+      warnings.add(
+          'Amount ₱${amount.toStringAsFixed(0)} is very high — double-check before saving.');
+    } else if (amount < 1) {
+      warnings.add('Amount ₱$amount looks unusually small.');
+    }
+
+    // 2. Date sanity
+    try {
+      final expenseDate = DateTime.parse(date.substring(0, 10));
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+      if (expenseDate.isAfter(tomorrow)) {
+        warnings.add('Date $date is in the future — is that correct?');
+      }
+      if (expenseDate.year < 2000) {
+        warnings.add('Date $date seems too far in the past.');
+      }
+    } catch (_) {
+      warnings.add('Date format "$date" could not be parsed.');
+    }
+
+    // 3. Duplicate detection
+    // Fast path: look for exact (name + amount + date) within recent expenses
+    final nameLower = itemName.trim().toLowerCase();
+    final dateKey = date.substring(0, 10);
+    final duplicates = recentExpenses.where((e) {
+      final eName = (e['item_name'] as String? ?? '').trim().toLowerCase();
+      final eAmt = (e['amount'] as num?)?.toDouble() ?? 0;
+      final eDate = (e['date'] as String? ?? '').substring(
+          0,
+          10 < (e['date'] as String? ?? '').length
+              ? 10
+              : (e['date'] as String? ?? '').length);
+      return eName == nameLower &&
+          (eAmt - amount).abs() < 0.01 &&
+          eDate == dateKey;
+    }).toList();
+
+    if (duplicates.isNotEmpty) {
+      warnings.add(
+          'Possible duplicate: "${itemName}" ₱${amount.toStringAsFixed(0)} was already logged on $dateKey. Log again?');
+    }
+
+    // 4. Obvious category mismatch hints
+    final lowerName = itemName.toLowerCase();
+    if (category == 'Shopping' &&
+        (lowerName.contains('jeep') ||
+            lowerName.contains('fare') ||
+            lowerName.contains('bus') ||
+            lowerName.contains('tricycle'))) {
+      warnings.add(
+          'Category "Shopping" may be wrong for "$itemName" — did you mean Transportation?');
+    }
+    if (category == 'Food' &&
+        (lowerName.contains('load') ||
+            lowerName.contains('bill') ||
+            lowerName.contains('electric') ||
+            lowerName.contains('internet'))) {
+      warnings.add(
+          'Category "Food" may be wrong for "$itemName" — did you mean Bills?');
+    }
+
+    return ExpenseValidation(
+      isValid: blockingError == null,
+      blockingError: blockingError,
+      warnings: warnings,
+    );
+  }
+
+  /// Cross-check that wallet balances are consistent with logged income minus
+  /// logged expenses. Returns a discrepancy amount (positive = more spent than
+  /// income on record; negative = unaccounted balance surplus).
+  ///
+  /// A large positive discrepancy suggests unreported income.
+  /// A large negative discrepancy suggests unreported expenses or wallet top-ups.
+  static double computeBalanceDiscrepancy({
+    required double totalWalletBalance,
+    required double totalIncome,
+    required double totalSpent,
+  }) {
+    // Expected balance = income received − expenses logged
+    final expected = totalIncome - totalSpent;
+    return totalWalletBalance - expected;
   }
 
   /// Check if any budget warnings should trigger decay.
@@ -580,4 +738,24 @@ class ScoreService {
 
     return milestones;
   }
+}
+
+// ── EXPENSE VALIDATION RESULT ─────────────────────────────────────────────────
+
+/// Result of ScoreService.validateExpense().
+/// [isValid]       — false means a blocking error; don't save.
+/// [blockingError] — human-readable reason (null when isValid == true).
+/// [warnings]      — non-blocking advisory messages to show the user.
+class ExpenseValidation {
+  final bool isValid;
+  final String? blockingError;
+  final List<String> warnings;
+
+  const ExpenseValidation({
+    required this.isValid,
+    this.blockingError,
+    this.warnings = const [],
+  });
+
+  bool get hasWarnings => warnings.isNotEmpty;
 }

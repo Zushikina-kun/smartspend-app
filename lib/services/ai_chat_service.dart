@@ -46,6 +46,27 @@ class AIChatService {
   // User-defined categorization rules cache — refreshed on context load
   static List<Map<String, dynamic>> _userRules = [];
 
+  // ── SESSION ACTION LOG — for in-prompt duplicate guardrail ───────────────
+  // Tracks (itemName_amount_date) fingerprints for every log_expense ACTION
+  // fired this session so the system prompt can warn the model.
+  static final List<String> _sessionActionLog = [];
+
+  /// Record that a log_expense action was fired (called by ai_screen executor).
+  static void recordFiredAction(String itemName, double amount, String date) {
+    final key =
+        '${itemName.toLowerCase().trim()}_${amount.toStringAsFixed(0)}_${date.substring(0, 10)}';
+    if (!_sessionActionLog.contains(key)) _sessionActionLog.add(key);
+    // Keep bounded — only last 20 fingerprints needed
+    if (_sessionActionLog.length > 20) _sessionActionLog.removeAt(0);
+  }
+
+  /// Build a compact fingerprint string for the system-prompt guardrail note.
+  static String _buildRecentFingerprints() {
+    if (_sessionActionLog.isEmpty) return '';
+    // Show up to last 10 to keep the prompt lean
+    return _sessionActionLog.reversed.take(10).join(', ');
+  }
+
   /// Initialize message counter from DB chat history count
   static Future<void> _initMessageCounter() async {
     if (_messagesSinceLastSummary > 0) return; // already initialized
@@ -115,6 +136,9 @@ class AIChatService {
     Map<String, double> monthlyTotals = const {},
     List<Map<String, dynamic>> fhsBreakdown = const [],
     List<Map<String, dynamic>> insurancePolicies = const [],
+    // Gap-awareness data — from StartupAlertsService
+    int gapPenaltyDays = 0,
+    int gapCleanDays = 0,
   }) {
     // Refresh user-defined categorization rules cache
     DBService.getCategoryRules().then((rules) => _userRules = rules);
@@ -226,6 +250,11 @@ class AIChatService {
                     "- ${b['component'] ?? 'unknown'}: ${(b['points'] as num?)?.toStringAsFixed(1) ?? '?'} pts — ${b['reason'] ?? ''}")
                 .join("\n");
 
+    // Gap-awareness summary — helps AI understand why the score looks low
+    final gapSummary = (gapPenaltyDays > 0 || gapCleanDays > 0)
+        ? '\n\nLogging gaps this month: ${gapPenaltyDays > 0 ? '$gapPenaltyDays unlogged-but-spent days (FHS penalty applied)' : ''}${gapPenaltyDays > 0 && gapCleanDays > 0 ? '; ' : ''}${gapCleanDays > 0 ? '$gapCleanDays confirmed no-spend days (FHS bonus applied)' : ''}'
+        : '';
+
     // Build insurance summary for AI context
     final insuranceSummary = insurancePolicies.isEmpty
         ? ""
@@ -245,11 +274,11 @@ ${allTimeTotal > 0 ? 'All-time: ₱${allTimeTotal.toStringAsFixed(0)}' : ''}$mon
 ${quizChallenge.isNotEmpty ? 'Challenge: $quizChallenge' : ''}
 ${todayMoodScore != null ? 'Mood: $todayMoodScore/5${todayMoodScore <= 2 ? ' (low — be supportive)' : todayMoodScore >= 4 ? ' (good)' : ''}' : ''}
 ${customCategories.isNotEmpty ? 'Custom cats: ${customCategories.join(', ')}' : ''}
-
+$walletsSummary
 Expenses (if not listed here, it does not exist in DB):
 $expenseSummary
 
-Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$walletsSummary$fhsSummary$insuranceSummary
+Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$fhsSummary$gapSummary$insuranceSummary
 
 Philippine Financial Reference (use when relevant):
 SSS contributions (2024): 14% of MSC — Employee 4.5%, Employer 9.5%. Brackets: ₱4K-₱30K MSC range. Min: ₱560/mo employee. Max: ₱1,350/mo employee.
@@ -609,6 +638,27 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     return 'Others';
   }
 
+  /// Sanitize generic item name prefixes the AI model sometimes produces.
+  /// Strips patterns like "your X for", "the X for", "my X for" and title-cases the result.
+  /// Examples:
+  ///   "your jeepney fare for"  → "Jeepney fare"
+  ///   "your lunch for"         → "Lunch"
+  ///   "the tricycle fare for"  → "Tricycle fare"
+  ///   "my breakfast for"       → "Breakfast"
+  ///   "Lunch"                  → "Lunch" (unchanged)
+  static String _sanitizeItemName(String raw) {
+    var name = raw.trim();
+    // Remove leading possessive/article prefixes
+    name = name.replaceFirst(
+        RegExp(r'^(your|my|the|a|an)\s+', caseSensitive: false), '');
+    // Remove trailing "for" or "for [date/reason]"
+    name = name.replaceFirst(RegExp(r'\s+for\s*.*$', caseSensitive: false), '');
+    name = name.trim();
+    if (name.isEmpty) return raw.trim(); // fallback: return original
+    // Title-case first letter only (preserve rest as-is)
+    return name[0].toUpperCase() + name.substring(1);
+  }
+
   /// Estimate appropriate max_tokens based on message type.
   /// Simple expense logging needs ~150 tokens. Advice/analysis needs ~600.
   static int _estimateMaxTokens(String message) {
@@ -680,7 +730,15 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     // Initialize counter from DB on first message of session
     await _initMessageCounter();
 
-    // Keep history bounded to last 5 exchanges (10 messages)
+    // ── GUARDRAIL: recent-log fingerprint for in-prompt duplicate awareness ──
+    // Builds a short "already logged in this session" context note injected
+    // into the system prompt so the model knows what was just fired.
+    // The full DB-level dedup still runs at action-execution time in ai_screen.
+    final recentFingerprints = _buildRecentFingerprints();
+    final guardRailNote = recentFingerprints.isNotEmpty
+        ? '\n[GUARDRAIL — already logged this session (do NOT re-log unless user explicitly asks again): $recentFingerprints]'
+        : '';
+
     // Reduced from 12 to give more token room for multi-item responses
     if (_history.length > 10) {
       _history.removeRange(0, _history.length - 10);
@@ -701,9 +759,13 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "2. MULTI-ITEM: If user lists several purchases in one message, fire ONE ACTION per item. Example: 'spent 30 jeep, 45 gatorade, 100 lunch' = 3 separate ACTION lines.\n"
         "3. DB IS TRUTH: Context below = only truth. Never say 'already logged' from memory.\n"
         "4. WALLET BALANCE: 'I have X in GCash', 'cash on hand is X', 'my cash is X' → ALWAYS use set_wallet_balance. NEVER log as income, NEVER log as expense. This is a balance update only.\n"
-        "5. DUPLICATES OK: People buy same things repeatedly. Always log.\n"
+        "5. DUPLICATES — GUARDRAIL: If the GUARDRAIL note above lists an item with the same name+amount that the user JUST mentioned in the SAME message, do NOT fire another ACTION for it. If the user is logging something for a DIFFERENT day or a genuinely new purchase, always log it. When in doubt: log it.\n"
         "6. LOGGING TONE: When logging expenses, be warm and natural — not robotic. Instead of just 'Logged: X ₱Y', add a brief friendly comment. Examples: 'Got it, logged your jeepney fare 🚌', 'Noted! Lunch for ₱100 — hope it was good 😄', 'Logged your Sting — staying energized! ⚡'. Keep it short (1 line max), then the ACTION.\n"
-        "7. SOCIAL: 'thanks/ok/yes' → short reply, no actions.\n\n"
+        "7. SOCIAL: 'thanks/ok/yes' → short reply, no actions.\n"
+        "8. SELF-CHECK: Before sending your response, verify: does each item the user mentioned have exactly ONE ACTION line? If an item appears twice in your ACTION list, remove the duplicate.\n"
+        "9. ITEM NAMES: item_name must be the real item — NEVER use generic filler like 'your X for', 'the X for', 'my X'. Use the actual item: 'Jeepney fare', 'Lunch', 'Snack', 'Breakfast', 'Tricycle fare'. If the user calls it 'jeep' log it as 'Jeepney fare'. If unsure, use the noun the user said.\n"
+        "10. DATE/TIME CORRECTIONS: When the user says 'that was on [date]', 'change date to', 'set it to [time]', 'put it on [date]' about an existing expense → fire update_expense ACTION with the corrected date/time field. Do NOT just say you fixed it. No ACTION = no fix. Example: user says 'the lunch I logged was actually on July 3 not July 8' → ACTION:{\"type\":\"update_expense\",\"item_name\":\"Lunch\",\"date\":\"2026-07-03\"}.\n\n"
+        "$guardRailNote"
         "ACTIONS (append after reply text, one per line, format: ACTION:{json}):\n"
         "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\",\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"
         "• set_budget: {\"type\":\"set_budget\",\"category\":\"Food\",\"amount\":3000}\n"
@@ -773,22 +835,63 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         AppConfig.groqApiKey.isNotEmpty;
     if (needsSwitch) AppConfig.setModel(taskModelId);
 
-    final response = await http
-        .post(
-          Uri.parse(_groqUrl),
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer ${_groqKey}",
-          },
-          body: jsonEncode({
-            "model": AppConfig.groqModel,
-            "messages": messages,
-            "temperature": 0.3,
-            // Dynamic max_tokens: simple logging needs less, advice needs more
-            "max_tokens": _estimateMaxTokens(message),
-          }),
-        )
-        .timeout(const Duration(seconds: 20));
+    // ── EXPONENTIAL BACKOFF (LLM Cheatsheet §13) ─────────────────────────────
+    // Retries silently on 503 / timeout up to 3 times with jitter.
+    // 429 (rate limit) gets model fallback instead of backoff.
+    // 401/403/400 are fatal — never retry.
+    http.Response response;
+    final maxRetries = 3;
+    final baseDelayMs = 1500; // 1.5 seconds
+    int attempt = 0;
+    while (true) {
+      try {
+        response = await http
+            .post(
+              Uri.parse(_groqUrl),
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer ${_groqKey}",
+              },
+              body: jsonEncode({
+                "model": AppConfig.groqModel,
+                "messages": messages,
+                "temperature": 0.3,
+                "max_tokens": _estimateMaxTokens(message),
+              }),
+            )
+            .timeout(const Duration(seconds: 20));
+      } on Exception {
+        // Timeout or network error — retryable
+        if (attempt < maxRetries - 1) {
+          attempt++;
+          final delayMs = (baseDelayMs * (1 << attempt)).clamp(1500, 30000);
+          final jitterMs = (delayMs *
+                  0.2 *
+                  (DateTime.now().millisecondsSinceEpoch % 100) /
+                  100)
+              .round();
+          await Future.delayed(Duration(milliseconds: delayMs + jitterMs));
+          continue;
+        }
+        if (needsSwitch) AppConfig.setModel(originalModelId);
+        rethrow;
+      }
+
+      // 503 / 529 = server overloaded — silent backoff and retry
+      if ((response.statusCode == 503 || response.statusCode == 529) &&
+          attempt < maxRetries - 1) {
+        attempt++;
+        final delayMs = (baseDelayMs * (1 << attempt)).clamp(1500, 30000);
+        final jitterMs = (delayMs *
+                0.2 *
+                (DateTime.now().millisecondsSinceEpoch % 100) /
+                100)
+            .round();
+        await Future.delayed(Duration(milliseconds: delayMs + jitterMs));
+        continue;
+      }
+      break; // success or non-retryable / max-retries-exhausted
+    }
 
     // Restore original model after task-specific routing
     if (needsSwitch) AppConfig.setModel(originalModelId);
@@ -864,6 +967,12 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         if (parsed.containsKey('category')) {
           parsed['category'] = _normalizeCategory(parsed['category'] as String);
         }
+        // Sanitize generic item name prefixes the model sometimes emits
+        // e.g. "your jeepney fare for" → "Jeepney fare"
+        if (parsed.containsKey('item_name')) {
+          parsed['item_name'] =
+              _sanitizeItemName(parsed['item_name'] as String);
+        }
         actions.add(AIAction(type: parsed['type'] as String, params: parsed));
       } catch (_) {}
     }
@@ -889,8 +998,9 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         // If AI mentioned more "Logged:" lines than it fired ACTIONs for, fill the gap
         if (logMatches.length > existingLogCount) {
           for (final logMatch in logMatches.skip(existingLogCount)) {
-            final itemName =
+            final rawName =
                 logMatch.group(1)?.replaceAll('*', '').trim() ?? 'Expense';
+            final itemName = _sanitizeItemName(rawName);
             // Skip wallet/income-related items that sneak through
             final nameLower = itemName.toLowerCase();
             if (nameLower.contains('cash on hand') ||
@@ -925,6 +1035,18 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
           }
         }
       }
+    }
+
+    // ── STRUCTURED OUTPUT VALIDATION (LLM Cheatsheet §11 / §19) ─────────────
+    // Validate every parsed action has the required fields before we return it
+    // to the executor. Invalid actions are dropped with a silent log so they
+    // never corrupt the DB with partial data.
+    final validatedActions = <AIAction>[];
+    for (final action in actions) {
+      if (_isActionValid(action)) {
+        validatedActions.add(action);
+      }
+      // Invalid actions are silently discarded — corrupt JSON / missing fields
     }
 
     // Strip all ACTION blocks from the displayed reply.
@@ -964,7 +1086,82 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     }
 
     _history.add({"role": "assistant", "content": fullReply});
-    return (fullReply, actions);
+
+    // ── DEBUG LOGGING (Cheatsheet §26 Step 4) ────────────────────────────────
+    // When the model says "Logged:" but fired zero valid actions, record the
+    // raw output to the debug log so failures are diagnosable without the user
+    // needing to report them. This catches the "it said logged but didn't"
+    // pattern observed repeatedly in the Jul 28 debug session.
+    if (validatedActions.isEmpty &&
+        RegExp(r'Logged:?\s*.+₱\d', caseSensitive: false).hasMatch(fullReply)) {
+      try {
+        await DBService.setSetting(
+          'last_silent_action_fail',
+          '${DateTime.now().toIso8601String()}|${fullReply.length > 200 ? fullReply.substring(0, 200) : fullReply}',
+        );
+      } catch (_) {}
+    }
+
+    return (fullReply, validatedActions);
+  }
+
+  /// Structured output validation (LLM Cheatsheet §11 / §19 Guardrails).
+  /// Returns true only if the action has the minimum required fields.
+  /// Prevents corrupted or hallucinated JSON from reaching the DB executor.
+  static bool _isActionValid(AIAction action) {
+    final p = action.params;
+    switch (action.type) {
+      case 'log_expense':
+        // Must have item_name and a positive amount
+        final name = p['item_name'];
+        final amt = (p['amount'] as num?)?.toDouble() ?? 0;
+        return name != null &&
+            name.toString().trim().isNotEmpty &&
+            amt > 0 &&
+            amt < 10000000; // sanity cap: ₱10M
+      case 'set_budget':
+        return p['category'] != null &&
+            (p['amount'] as num?)?.toDouble() != null;
+      case 'set_income':
+      case 'add_income':
+        final inc = (p['amount'] as num?)?.toDouble() ?? 0;
+        return inc > 0;
+      case 'set_wallet_balance':
+        return p['wallet_name'] != null && (p['balance'] as num?) != null;
+      case 'transfer_wallet':
+        return p['from_wallet'] != null &&
+            p['to_wallet'] != null &&
+            (p['amount'] as num?)?.toDouble() != null;
+      case 'update_expense':
+        // Must identify at least item_name to find the expense
+        return p['item_name'] != null &&
+            p['item_name'].toString().trim().isNotEmpty;
+      case 'delete_expense':
+        // Require explicit confirmation flag to prevent accidental deletes
+        return p['item_name'] != null && p['confirmed'] == true;
+      case 'add_goal':
+        return p['name'] != null &&
+            (p['target'] as num?)?.toDouble() != null &&
+            (p['target'] as num).toDouble() > 0;
+      case 'add_debt':
+        return p['person'] != null && (p['amount'] as num?)?.toDouble() != null;
+      case 'add_installment_plan':
+        return p['title'] != null &&
+            (p['total_amount'] as num?)?.toDouble() != null &&
+            (p['monthly_payment'] as num?)?.toDouble() != null;
+      // Actions that need no field validation — they are advisory/read-only
+      case 'explain_fhs_breakdown':
+      case 'generate_monthly_plan':
+      case 'detect_subscriptions':
+      case 'suggest_expense_cuts':
+      case 'suggest_debt_payoff':
+      case 'suggest_idle_money':
+      case 'create_debt_payment_plan':
+        return true;
+      default:
+        // Unknown action type — allow through (forward-compatible with new actions)
+        return true;
+    }
   }
 
   /// Summarize the current conversation history and store it.
@@ -1018,6 +1215,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     _messagesSinceLastSummary = 0;
     _fullContext = "";
     _userRules = [];
+    _sessionActionLog.clear();
     // Clear summaries on explicit chat clear
     DBService.clearConversationSummaries().catchError((_) {});
   }

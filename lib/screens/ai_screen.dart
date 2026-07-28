@@ -161,6 +161,16 @@ class _AIScreenState extends State<AIScreen> {
     try {
       insurancePolicies = await DBService.getInsurancePolicies();
     } catch (_) {}
+
+    // Load gap-awareness data for AI context
+    int gapPenaltyDays = 0;
+    int gapCleanDays = 0;
+    try {
+      gapPenaltyDays =
+          int.tryParse(await DBService.getSetting(kGapPenaltyKey) ?? '0') ?? 0;
+      gapCleanDays =
+          int.tryParse(await DBService.getSetting(kGapCleanKey) ?? '0') ?? 0;
+    } catch (_) {}
     final spentMap = <String, double>{};
     for (final e in monthExpenses) {
       spentMap[e.category] = (spentMap[e.category] ?? 0) + e.amount;
@@ -175,8 +185,7 @@ class _AIScreenState extends State<AIScreen> {
       budgets: budgets,
       monthlyIncome: income,
     );
-    final score = await ScoreService.applyWarningDecay(rawScore);
-    // Get FHS breakdown for AI explanation capability
+    final score = await ScoreService.applyAllAdjustments(rawScore);
     final fhsBreakdown = ScoreService.getBreakdown(
       expenseData,
       budgets: budgets,
@@ -221,6 +230,8 @@ class _AIScreenState extends State<AIScreen> {
       monthlyTotals: monthlyTotals,
       fhsBreakdown: fhsBreakdown,
       insurancePolicies: insurancePolicies,
+      gapPenaltyDays: gapPenaltyDays,
+      gapCleanDays: gapCleanDays,
     );
 
     // Restore chat history into AI memory on first load only
@@ -440,6 +451,31 @@ class _AIScreenState extends State<AIScreen> {
                 customDate ?? now.toIso8601String().substring(0, 10);
             final expenseTime =
                 customTime ?? now.toIso8601String().substring(11, 19);
+
+            // ── DB-LEVEL DUPLICATE GUARD ─────────────────────────────────────
+            // Reject if identical (name + amount + date) was already saved
+            // within the last 90 seconds — catches AI double-fire on retry.
+            // Does NOT block legitimate repeat purchases (different day / hour).
+            try {
+              final db = await DBService.getDB();
+              final cutoff =
+                  now.subtract(const Duration(seconds: 90)).toIso8601String();
+              final existing = await db.rawQuery(
+                '''SELECT id FROM expenses
+                   WHERE LOWER(item_name) = LOWER(?)
+                     AND ABS(amount - ?) < 0.01
+                     AND date = ?
+                     AND updated_at >= ?
+                   LIMIT 1''',
+                [itemName, amount, expenseDate, cutoff],
+              );
+              if (existing.isNotEmpty) {
+                // Silently skip — duplicate within 90-second window
+                break;
+              }
+            } catch (_) {
+              // Guard failure is non-fatal — proceed with insert
+            }
             // FC-3: Use is_want from AI response if provided, otherwise infer from category
             int isWant;
             if (action.params.containsKey('is_want')) {
@@ -609,6 +645,10 @@ class _AIScreenState extends State<AIScreen> {
                 }
               }
             } catch (_) {}
+
+            // ── GUARDRAIL: register this action in the session fingerprint log ──
+            // Prevents the model from re-firing the same item in subsequent turns.
+            AIChatService.recordFiredAction(itemName, amount, expenseDate);
           }
           break;
 

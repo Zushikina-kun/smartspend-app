@@ -114,12 +114,39 @@ class _HomeScreenState extends State<HomeScreen> {
     // Delay slightly so the UI is fully built first
     await Future.delayed(const Duration(milliseconds: 1200));
     if (!mounted) return;
+
+    // Monthly reset: clear gap counters at the start of each new month
+    final now = DateTime.now();
+    final lastResetKey = 'gap_monthly_reset';
+    final lastReset = await DBService.getSetting(lastResetKey) ?? '';
+    final thisMonth = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+    if (lastReset != thisMonth) {
+      await StartupAlertsService.resetMonthlyGapCounters();
+      await DBService.setSetting(lastResetKey, thisMonth);
+    }
+
     final alerts = await StartupAlertsService.checkAlerts();
     if (alerts.isEmpty || !mounted) return;
-    _showStartupAlertSheet(alerts);
+
+    // Separate the gap alert from the rest so we can handle it interactively
+    final gapAlert =
+        alerts.where((a) => a.title.contains('Missed Log')).firstOrNull;
+    final otherAlerts =
+        alerts.where((a) => !a.title.contains('Missed Log')).toList();
+
+    // Show standard alerts first
+    if (otherAlerts.isNotEmpty) {
+      await _showStartupAlertSheet(otherAlerts);
+    }
+
+    // Then show the interactive gap dialog if there is one
+    if (gapAlert != null && mounted) {
+      await Future.delayed(const Duration(milliseconds: 400));
+      if (mounted) _showGapDialog();
+    }
   }
 
-  void _showStartupAlertSheet(List<StartupAlert> alerts) {
+  Future<void> _showStartupAlertSheet(List<StartupAlert> alerts) async {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -207,6 +234,24 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  // ── LOGGING GAP DIALOG ──────────────────────────────────────────────────────
+  /// Shows an interactive dialog for each detected logging gap.
+  /// Asks the user whether they had any transactions on the missed days.
+  /// Their answer is stored so ScoreService can apply the right adjustment.
+  Future<void> _showGapDialog() async {
+    final gaps = await StartupAlertsService.getLoggingGaps();
+    if (gaps.isEmpty || !mounted) return;
+
+    for (final gap in gaps) {
+      if (!mounted) break;
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => _GapCheckDialog(gap: gap),
+      );
+    }
   }
 
   void _showQuickAccessHub(BuildContext context) {
@@ -355,6 +400,207 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(icon, color: color),
             Text(label, style: TextStyle(fontSize: 11, color: color)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── GAP CHECK DIALOG ─────────────────────────────────────────────────────────
+/// A simple, friendly dialog that asks the user whether they had any
+/// transactions during a logging gap.  Their answer is persisted via
+/// StartupAlertsService.recordGapResponse() so the FHS can account for
+/// reality (penalty for unlogged spending; bonus for genuine no-spend days).
+class _GapCheckDialog extends StatefulWidget {
+  final LoggingGap gap;
+  const _GapCheckDialog({required this.gap});
+
+  @override
+  State<_GapCheckDialog> createState() => _GapCheckDialogState();
+}
+
+class _GapCheckDialogState extends State<_GapCheckDialog> {
+  // null = not answered yet; true = yes had transactions; false = no spending
+  bool? _answer;
+  bool _saving = false;
+
+  Future<void> _submit() async {
+    if (_answer == null) return;
+    setState(() => _saving = true);
+    await StartupAlertsService.recordGapResponse(
+      GapResponse(gap: widget.gap, hadTransactions: _answer!),
+    );
+    if (mounted) Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gapDays = widget.gap.days;
+    final gapLabel = widget.gap.label;
+
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: Row(
+        children: [
+          const Text('📅', style: TextStyle(fontSize: 22)),
+          const SizedBox(width: 8),
+          const Expanded(
+            child: Text('Missed Log Check',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            gapDays == 1
+                ? 'You didn\'t log anything on $gapLabel.'
+                : 'You didn\'t log anything from $gapLabel ($gapDays days).',
+            style: const TextStyle(fontSize: 13),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'Did you have any transactions on those days?',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 14),
+          // Yes / No toggle buttons
+          Row(
+            children: [
+              Expanded(
+                child: _AnswerButton(
+                  label: 'Yes, I spent',
+                  subtitle: 'but forgot to log',
+                  icon: Icons.receipt_long_outlined,
+                  selected: _answer == true,
+                  selectedColor: Colors.orange,
+                  onTap: () => setState(() => _answer = true),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _AnswerButton(
+                  label: 'Nope, nothing',
+                  subtitle: 'clean days!',
+                  icon: Icons.check_circle_outline,
+                  selected: _answer == false,
+                  selectedColor: Colors.green,
+                  onTap: () => setState(() => _answer = false),
+                ),
+              ),
+            ],
+          ),
+          if (_answer == true) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.orange.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+              ),
+              child: const Text(
+                '💡 Head to the AI chat or Transactions tab to log those missing expenses. Your Financial Health Score will adjust once you do.',
+                style: TextStyle(fontSize: 11, height: 1.4),
+              ),
+            ),
+          ],
+          if (_answer == false) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+              ),
+              child: const Text(
+                '🌟 Nice! Clean no-spend days are great for your Financial Health Score. Keep it up!',
+                style: TextStyle(fontSize: 11, height: 1.4),
+              ),
+            ),
+          ],
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: _saving ? null : () => Navigator.of(context).pop(),
+          child:
+              Text('Skip', style: TextStyle(color: theme.colorScheme.outline)),
+        ),
+        FilledButton(
+          onPressed: _answer == null || _saving ? null : _submit,
+          child: _saving
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white))
+              : const Text('Confirm'),
+        ),
+      ],
+    );
+  }
+}
+
+/// A tap-able card used inside _GapCheckDialog for Yes / No selection.
+class _AnswerButton extends StatelessWidget {
+  final String label;
+  final String subtitle;
+  final IconData icon;
+  final bool selected;
+  final Color selectedColor;
+  final VoidCallback onTap;
+
+  const _AnswerButton({
+    required this.label,
+    required this.subtitle,
+    required this.icon,
+    required this.selected,
+    required this.selectedColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: selected
+              ? selectedColor.withValues(alpha: 0.12)
+              : Colors.grey.withValues(alpha: 0.07),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color:
+                selected ? selectedColor : Colors.grey.withValues(alpha: 0.3),
+            width: selected ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: selected ? selectedColor : Colors.grey, size: 22),
+            const SizedBox(height: 4),
+            Text(label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: selected ? selectedColor : null)),
+            Text(subtitle,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 10,
+                    color: selected
+                        ? selectedColor.withValues(alpha: 0.8)
+                        : Colors.grey)),
           ],
         ),
       ),
@@ -698,8 +944,8 @@ class _DashboardState extends State<Dashboard> {
       budgets: budgets,
       monthlyIncome: income,
     );
-    // Apply warning decay penalty (−5/day for ignored budget warnings, max −15)
-    final score = await ScoreService.applyWarningDecay(rawScore);
+    // Apply all FHS adjustments: decay penalty + gap penalty/bonus
+    final score = await ScoreService.applyAllAdjustments(rawScore);
 
     // Load budget alerts setting before setState
     final budgetAlertsEnabled =

@@ -673,10 +673,14 @@ class DBService {
       }
     }
 
+    // Always stamp updated_at on insert so the 90-second duplicate guard can
+    // query it reliably in the AI action executor.
+    toInsert['updated_at'] ??= DateTime.now().toIso8601String();
+
     await db.insert('expenses', toInsert,
         conflictAlgorithm: ConflictAlgorithm.replace);
     try {
-      await CloudService.saveExpense(data);
+      await CloudService.saveExpense(toInsert);
     } catch (_) {}
 
     // Round-Up Savings: auto-save spare change to first savings goal
