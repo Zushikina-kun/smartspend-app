@@ -1,6 +1,6 @@
 # Smart Spend — How to Run & Build
 
-**Version:** 2.9.0 | **Platform:** Android (Flutter)
+**Version:** 2.9.1 | **Platform:** Android (Flutter)
 
 ---
 

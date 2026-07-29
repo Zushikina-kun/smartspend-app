@@ -1,7 +1,7 @@
 # Smart Spend
 
 **AI-Assisted Financial Tracking & Advisory**
-Version 2.9.0 | Lucid Frame | Academic Year 2025–2026
+Version 2.9.1 | Lucid Frame | Academic Year 2025–2026
 
 ---
 
@@ -19,47 +19,36 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 ## Features
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
+- 📷 **Unified Smart Import** — one camera button opens: Live Camera (barcode/QR/receipt), Single Photo (auto-detects barcode/screenshot/receipt), Batch Screenshots (40+ platforms), Paste Text
 - 🤖 AI Chat Assistant — **29 agentic action types** via natural language (Gemini 3.1 Flash-Lite primary, multi-model auto-fallback with financial_advice routing tier)
-- ⚖️ **Lightweight Mode** — disable income/wallet tracking; FHS recalculates using spending habits only (Spending Restraint, Consistency, Category Balance, Habit Streak)
-- 🎯 **Period Spending Limit** — set one cap per day/week/month/year; progress bar + 80%/100% alerts
-- 📅 **Logging Gap Detection** — startup check for unlogged days; user confirms spending or no-spend for accurate FHS scoring
+- ⚖️ **Lightweight Mode** — disable income/wallet tracking; FHS recalculates using spending habits (Spending Restraint, Consistency, Category Balance, Habit Streak)
+- 🎯 **Multi-Period Spending Limits** — set daily/weekly/monthly/yearly caps independently; progress bars + alerts
+- 📅 **Logging Gap Detection** — startup check for unlogged days; confirm spending (penalty) or clean days (bonus) for accurate FHS
+- 🧠 **Financial Health Score** — 4-component formula that adapts to tracking mode; gap-aware adjustments; AI explains your breakdown
 - 💸 **Split Expenses** — "Split dinner with John" auto-logs your share + creates debt for theirs
-- 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison, **DTI ratio**, **emergency fund calculator**
+- 📊 Analytics: pie chart, bar chart, 50/30/20 tracker, health score trend, category comparison, DTI ratio, emergency fund calculator
 - 💰 Budget management with pace indicators and % of income mode
 - 🎯 Savings goals with contribution tracking and emergency fund auto-calc
 - 💳 Debt & lending tracker with payment plans (ShopeePayLater, GCash GLoan, etc.)
 - 🔁 Recurring transactions with due date alerts and Log All Due
-- 💵 **Wallet Balances** — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (auto-deduct on expense, transfers between wallets)
-- 🛡️ **Insurance & Contributions Tracker** — SSS, PhilHealth, Pag-IBIG, private insurance with due dates and overdue alerts
-- 🔔 **Smart Startup Alerts** — on-open notifications for overdue bills, budget exceeded, debts due, FHS drops, idle money, low income
-- ⚙️ App Settings — toggle wallet/income tracking, mood, impulse pause, budget alerts, balance mode, spending limit
+- 💵 **Wallet Balances** — Cash, GCash, Maya, BDO, BPI, 30+ PH banks (auto-deduct, transfers)
+- 🛡️ **Insurance & Contributions Tracker** — SSS, PhilHealth, Pag-IBIG, private insurance
+- 🔔 **Smart Startup Alerts** — overdue bills, exceeded budgets, debt due, FHS drops, idle money, income sanity, balance discrepancy
+- ⚙️ **App Settings** — track income/wallets toggle, mood, impulse pause, budget alerts, balance mode, compact mode
 - 🔀 Auto-Categorization Rules — keyword → category mappings (fully cloud-synced)
 - 💱 Multi-currency (57 currencies, live rates)
-- 🧠 Financial Health Score (0–100, 4-component formula, gap-aware adjustments) — AI can explain breakdown
-- 🏦 **PH Banks Database** — 20 banks, 5 e-wallets, government contributions, investment options with rates
+- 🏦 **PH Banks Database** — 20 banks, 5 e-wallets, government contributions, investment options
 - ☁️ Full Firestore sync — expenses, budgets, goals, income, recurring, debts, wallets, rules, insurance
 - 🔒 App Lock (PIN + biometric, per-account)
 - 🏆 **23 Achievements & Badges** + 10 rotating Daily Quests with streak tracking
 - 😊 Daily Mood Check-In with spending correlation
 - 🗓️ Unified Financial Calendar
-- 🏪 Import from Bank / GCash (AI-powered bulk import)
-- 🧾 Smart Receipt Import (OCR → AI item extraction → review table)
-- 📅 **Date/Time Editing** — edit expense dates, AI can change dates via chat
-- 🔤 **Text Size Accessibility** — Normal, Large, Extra Large for easier reading
-- 🔲 **High Contrast Mode** — black/white for maximum readability
-- 📦 **Compact Mode** — reduces visual density for more content on screen
-- 💰 **Round-Up Savings** — auto-save spare change to savings goals (rounds to ₱10)
-- 📈 **Price Memory** — alerts when items cost more than last time (+15% threshold)
-- 💡 **Smart Daily Allowance** — dynamic "how much can I spend today" based on remaining budget
-- 🏦 **PH Banks & Investments** — compare 20 banks, digital banks, e-wallets, investment options
-- 💹 **Peso Cost Averaging Calculator** — plan regular investments with year-by-year projections (MP2, UITFs, stocks)
-- 🏅 **Financial Health Certificate** — shareable monthly score card (share via WhatsApp, social)
-- 📖 **Financial Glossary** — 23 key terms explained in plain Filipino-English (FHS, MP2, DTI, UITF, SSS, etc.)
-- 💰 **BIR Tax Breakdown** — tap income card for full monthly deductions (BIR, SSS, PhilHealth, Pag-IBIG, take-home)
+- 💹 **Peso Cost Averaging Calculator** — MP2, UITFs, stocks with year-by-year projections
+- 🏅 **Financial Health Certificate** — shareable monthly score card
+- 📖 **Financial Glossary** — 23 key terms in plain Filipino-English
+- 💰 **BIR Tax Breakdown** — full monthly deductions (BIR, SSS, PhilHealth, Pag-IBIG, take-home)
 - 🔐 **API Security** — Firebase Remote Config + App Check (key never in APK binary)
-- 📷 Google profile photo fallback (works across devices)
-- 🌙 5 color themes + dark mode + high contrast
-- 🤖 **AI**: **29 agentic action types**, multi-model LLM switching (Gemini 2.5 Flash-Lite → Groq → Cerebras auto-fallback)
+- 🌙 5 color themes + dark mode + high contrast + compact mode
 
 ---
 
@@ -68,12 +57,13 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 | Component | Technology |
 |-----------|-----------|
 | Framework | Flutter (Dart) |
-| AI Engine | Multi-Model LLM: Gemini 2.5 Flash-Lite (primary), Gemini 2.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras LLaMA 3.1 (auto-fallback on rate limit) |
+| AI Engine | Multi-Model LLM: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras LLaMA 3.1 (auto-fallback on rate limit) |
 | Local DB | SQLite (sqflite v11) |
 | Cloud | Firebase Auth + Firestore |
 | OCR | Google ML Kit Text Recognition |
+| Barcode | Google ML Kit Barcode Scanning + MobileScanner |
 | Charts | fl_chart |
-| Backup | System share sheet (JSON, v8 format) |
+| Backup | System share sheet (JSON, v9 format) |
 | App Lock | local_auth (PIN + biometric) |
 | Exchange Rates | open.er-api.com |
 | Crash Reporting | Firebase Crashlytics |
