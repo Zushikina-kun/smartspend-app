@@ -1,3 +1,4 @@
+import 'home_screen.dart' show SpendingLimitsSheet;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -255,12 +256,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool roundUpSavings =
         (await DBService.getSetting('round_up_savings')) != 'false';
     bool compactMode = (await DBService.getSetting('compact_mode')) == 'true';
-    // New: lightweight mode + spending limit
+    // New: lightweight mode
     bool incomeWalletMode = await DBService.getIncomeWalletMode();
-    double spendingLimit = await DBService.getSpendingLimit();
-    String spendingLimitPeriod = await DBService.getSpendingLimitPeriod();
-    final limitCtrl = TextEditingController(
-        text: spendingLimit > 0 ? spendingLimit.toStringAsFixed(0) : '');
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -293,13 +290,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.account_balance_wallet_outlined,
                 title: "Auto-deduct wallets",
-                subtitle: "Deduct from Cash/GCash/Maya when logging expenses",
-                value: autoDeduct,
-                onChanged: (v) {
-                  setSheet(() => autoDeduct = v);
-                  DBService.setSetting(
-                      'wallet_auto_deduct', v ? 'true' : 'false');
-                },
+                subtitle: incomeWalletMode
+                    ? "Deduct from Cash/GCash/Maya when logging expenses"
+                    : "Requires 'Track income & wallets' to be ON",
+                value: autoDeduct && incomeWalletMode,
+                onChanged: incomeWalletMode
+                    ? (v) {
+                        setSheet(() => autoDeduct = v);
+                        DBService.setSetting(
+                            'wallet_auto_deduct', v ? 'true' : 'false');
+                      }
+                    : null,
               ),
               _settingsTile(
                 icon: Icons.emoji_emotions_outlined,
@@ -344,14 +345,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.account_balance_wallet,
                 title: "Balance mode",
-                subtitle:
-                    "Show wallet total as primary balance instead of income-based remaining",
-                value: balanceMode,
-                onChanged: (v) {
-                  setSheet(() => balanceMode = v);
-                  DBService.setSetting('balance_mode', v ? 'true' : 'false');
-                  fireEvent(AppEvent.incomeChanged);
-                },
+                subtitle: incomeWalletMode
+                    ? "Show wallet total as primary balance instead of income-based remaining"
+                    : "Requires 'Track income & wallets' to be ON",
+                value: balanceMode && incomeWalletMode,
+                onChanged: incomeWalletMode
+                    ? (v) {
+                        setSheet(() => balanceMode = v);
+                        DBService.setSetting(
+                            'balance_mode', v ? 'true' : 'false');
+                        fireEvent(AppEvent.incomeChanged);
+                      }
+                    : null,
               ),
               _settingsTile(
                 icon: Icons.savings_outlined,
@@ -403,99 +408,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fireEvent(AppEvent.incomeChanged);
                 },
               ),
-              const SizedBox(height: 12),
-              Text("Spending Limit",
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[600])),
-              const SizedBox(height: 4),
-              Text(
-                "Set a single cap for your total spending. Works in any mode.",
-                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-              ),
-              const SizedBox(height: 8),
-              // Period picker
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today_outlined,
-                      size: 18, color: Colors.grey),
-                  const SizedBox(width: 10),
-                  const Text("Period:",
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: SegmentedButton<String>(
-                      segments: const [
-                        ButtonSegment(value: 'daily', label: Text('Day')),
-                        ButtonSegment(value: 'weekly', label: Text('Week')),
-                        ButtonSegment(value: 'monthly', label: Text('Month')),
-                        ButtonSegment(value: 'yearly', label: Text('Year')),
-                      ],
-                      selected: {spendingLimitPeriod},
-                      style: ButtonStyle(
-                        visualDensity: VisualDensity.compact,
-                        textStyle: WidgetStateProperty.all(
-                            const TextStyle(fontSize: 11)),
-                      ),
-                      onSelectionChanged: (v) {
-                        setSheet(() => spendingLimitPeriod = v.first);
-                        DBService.setSpendingLimitPeriod(v.first);
-                        fireEvent(AppEvent.expenseChanged);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              // Limit amount field
-              Row(
-                children: [
-                  const Icon(Icons.price_change_outlined,
-                      size: 18, color: Colors.grey),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: limitCtrl,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      style: const TextStyle(fontSize: 13),
-                      decoration: InputDecoration(
-                        prefixText: "₱ ",
-                        hintText: "e.g. 500 for daily, 5000 for monthly",
-                        hintStyle: const TextStyle(fontSize: 11),
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.check, size: 18),
-                          tooltip: "Save limit",
-                          onPressed: () {
-                            final val = double.tryParse(limitCtrl.text) ?? 0;
-                            setSheet(() => spendingLimit = val);
-                            DBService.setSpendingLimit(val);
-                            fireEvent(AppEvent.expenseChanged);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (spendingLimit > 0)
-                    TextButton(
-                      onPressed: () {
-                        limitCtrl.clear();
-                        setSheet(() => spendingLimit = 0);
-                        DBService.setSpendingLimit(0);
-                        fireEvent(AppEvent.expenseChanged);
-                      },
-                      child: const Text("Clear",
-                          style: TextStyle(fontSize: 11, color: Colors.red)),
-                    ),
-                ],
-              ),
             ],
           ),
         ),
@@ -508,145 +420,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String title,
     required String subtitle,
     required bool value,
-    required ValueChanged<bool> onChanged,
+    required ValueChanged<bool>? onChanged, // nullable = disabled
   }) {
+    final disabled = onChanged == null;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w500)),
-                Text(subtitle,
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500])),
-              ],
-            ),
-          ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeThumbColor: Theme.of(context).colorScheme.primary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showSpendingChallengeDialog() async {
-    final existing = await DBService.getSetting('spending_challenge');
-    final ctrl = TextEditingController(
-        text: existing != null && existing != '0' ? existing : '');
-    if (!mounted) return;
-    await showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Monthly Spending Challenge"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Opacity(
+        opacity: disabled ? 0.45 : 1.0,
+        child: Row(
           children: [
-            const Text(
-              "Set a personal spending target for this month. "
-              "The app will track your progress and show a win/lose result at month end.",
-              style: TextStyle(fontSize: 13),
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: ctrl,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Monthly spending target",
-                prefixText: "${CurrencyService.symbol} ",
-                border: const OutlineInputBorder(),
-                helperText: "Leave blank to disable",
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500)),
+                  Text(subtitle,
+                      style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+                ],
               ),
+            ),
+            Switch(
+              value: value,
+              onChanged: onChanged,
+              activeThumbColor: Theme.of(context).colorScheme.primary,
             ),
           ],
         ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () async {
-              final val = double.tryParse(ctrl.text) ?? 0;
-              await DBService.setSetting('spending_challenge', val.toString());
-              if (mounted) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(val > 0
-                      ? "Challenge set: spend less than ${CurrencyService.format(val)} this month"
-                      : "Challenge disabled"),
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: Colors.green,
-                ));
-              }
-            },
-            child: const Text("Save"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDailyLimitDialog() async {
-    final limitStr = await DBService.getSetting('daily_limit');
-    final ctrl = TextEditingController(
-        text: limitStr != null && limitStr != '0' ? limitStr : '');
-    if (!mounted) return;
-    await showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Daily Spending Limit"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Set a daily spending cap. You'll get a notification when you reach 80% and when you exceed it.",
-              style: TextStyle(fontSize: 13),
-            ),
-            const SizedBox(height: 14),
-            TextField(
-              controller: ctrl,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Daily limit",
-                prefixText: "${CurrencyService.symbol} ",
-                border: const OutlineInputBorder(),
-                helperText: "Leave blank or 0 to disable",
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () async {
-              final val = double.tryParse(ctrl.text) ?? 0;
-              await DBService.setDailyLimit(val);
-              if (mounted) {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(val > 0
-                      ? "Daily limit set to ${CurrencyService.format(val)}"
-                      : "Daily limit disabled"),
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: Colors.green,
-                ));
-              }
-            },
-            child: const Text("Save"),
-          ),
-        ],
       ),
     );
   }
@@ -2402,25 +2205,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Divider(height: 1),
                           ListTile(
-                            leading: const Icon(Icons.today_outlined),
-                            title: const Text("Daily Spending Limit"),
+                            leading: const Icon(Icons.speed_outlined,
+                                color: Colors.teal),
+                            title: const Text("Spending Limits"),
                             subtitle: const Text(
-                                "Get notified when you hit your daily cap",
+                                "Set daily, weekly, monthly & yearly caps",
                                 style: TextStyle(fontSize: 11)),
                             trailing: const Icon(Icons.chevron_right),
-                            onTap: () => _showDailyLimitDialog(),
-                          ),
-                          const Divider(height: 1),
-                          // GM-8: Spending Challenge Mode
-                          ListTile(
-                            leading: const Icon(Icons.flag_outlined,
-                                color: Colors.deepOrange),
-                            title: const Text("Monthly Spending Challenge"),
-                            subtitle: const Text(
-                                "Set a personal spending target for this month",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => _showSpendingChallengeDialog(),
+                            onTap: () => SpendingLimitsSheet.show(context,
+                                onChanged: () => setState(() {})),
                           ),
                           const Divider(height: 1),
                           ListTile(

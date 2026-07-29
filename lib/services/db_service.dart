@@ -967,28 +967,61 @@ class DBService {
     await setSetting('daily_limit', limit.toString());
   }
 
-  // ── SPENDING LIMIT (period-based) ─────────────────────────────────────────
-  // Complements the old per-day 'daily_limit' with a flexible period limit.
-  // Period values: 'daily' | 'weekly' | 'monthly' | 'yearly'
+  // ── SPENDING LIMITS (multi-period, unified) ──────────────────────────────
+  // Keys: limit_daily, limit_weekly, limit_monthly, limit_yearly
+  // 0 or null = not set (disabled). Each period is independently optional.
+  // Migrates legacy 'daily_limit', 'spending_challenge', 'spending_limit_amount'.
 
-  static Future<double> getSpendingLimit() async {
-    final val = await getSetting('spending_limit_amount');
-    return double.tryParse(val ?? '') ?? 0.0;
+  static const _limitPeriods = ['daily', 'weekly', 'monthly', 'yearly'];
+
+  static Future<double> getLimitForPeriod(String period) async {
+    if (period == 'daily') {
+      final newVal = await getSetting('limit_daily');
+      if (newVal == null) {
+        final legacy =
+            double.tryParse(await getSetting('daily_limit') ?? '') ?? 0;
+        await setSetting('limit_daily', legacy.toString());
+        return legacy;
+      }
+      return double.tryParse(newVal) ?? 0;
+    }
+    if (period == 'monthly') {
+      final newVal = await getSetting('limit_monthly');
+      if (newVal == null) {
+        final challenge =
+            double.tryParse(await getSetting('spending_challenge') ?? '') ?? 0;
+        final limitAmt =
+            double.tryParse(await getSetting('spending_limit_amount') ?? '') ??
+                0;
+        final v = challenge > 0 ? challenge : limitAmt;
+        await setSetting('limit_monthly', v.toString());
+        return v;
+      }
+      return double.tryParse(newVal) ?? 0;
+    }
+    return double.tryParse(await getSetting('limit_$period') ?? '') ?? 0;
   }
 
-  static Future<void> setSpendingLimit(double amount) async {
-    await setSetting('spending_limit_amount', amount.toString());
+  static Future<void> setLimitForPeriod(String period, double amount) async {
+    await setSetting('limit_$period', amount.toString());
   }
 
-  static Future<String> getSpendingLimitPeriod() async {
-    return (await getSetting('spending_limit_period')) ?? 'monthly';
+  static Future<Map<String, double>> getAllLimits() async {
+    final results = <String, double>{};
+    for (final p in _limitPeriods) {
+      results[p] = await getLimitForPeriod(p);
+    }
+    return results;
   }
 
-  static Future<void> setSpendingLimitPeriod(String period) async {
-    await setSetting('spending_limit_period', period);
-  }
+  // Keep legacy getters so existing call sites compile during migration
+  static Future<double> getSpendingLimit() => getLimitForPeriod('monthly');
+  static Future<void> setSpendingLimit(double v) =>
+      setLimitForPeriod('monthly', v);
+  static Future<String> getSpendingLimitPeriod() async => 'monthly';
+  static Future<void> setSpendingLimitPeriod(String p) async {}
 
-  /// Returns total spent within the current spending limit period.
+  /// Returns total spent within a given period window.
   static Future<double> getSpentInPeriod(String period) async {
     final db = await getDB();
     final now = DateTime.now();
@@ -1017,6 +1050,14 @@ class DBService {
     final result = await db.rawQuery(
         'SELECT COALESCE(SUM(amount), 0) as total FROM expenses WHERE $whereClause');
     return (result.first['total'] as num?)?.toDouble() ?? 0.0;
+  }
+
+  static Future<Map<String, double>> getAllSpent() async {
+    final results = <String, double>{};
+    for (final p in _limitPeriods) {
+      results[p] = await getSpentInPeriod(p);
+    }
+    return results;
   }
 
   /// Whether income/wallet features are enabled.

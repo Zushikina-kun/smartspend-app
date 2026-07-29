@@ -888,12 +888,13 @@ class _DashboardState extends State<Dashboard> {
   int _streak = 0; // consecutive days under budget
   List<String> _earnedBadges = [];
 
-  // ── NEW: lightweight mode + period spending limit ─────────────────────────
-  bool _incomeWalletMode =
-      true; // false = hide income/wallets, use lightweight FHS
-  double _spendingLimit = 0; // 0 = no limit set
+  // ── NEW: lightweight mode + multi-period spending limits ─────────────────
+  bool _incomeWalletMode = true;
+  double _spendingLimit = 0; // kept for FHS shim
   String _spendingLimitPeriod = 'monthly';
-  double _spentInPeriod = 0; // current spend within the limit period
+  double _spentInPeriod = 0;
+  Map<String, double> _allLimits = {};
+  Map<String, double> _allSpent = {};
 
   final _currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
   final _lastMonth = DateFormat('yyyy-MM')
@@ -951,6 +952,9 @@ class _DashboardState extends State<Dashboard> {
     final spentInPeriod = spendingLimit > 0
         ? await DBService.getSpentInPeriod(spendingLimitPeriod)
         : 0.0;
+    // Multi-period limits
+    final allLimits = await DBService.getAllLimits();
+    final allSpent = await DBService.getAllSpent();
 
     final expenseData = thisMonthExpenses
         .map(
@@ -983,6 +987,8 @@ class _DashboardState extends State<Dashboard> {
       _spendingLimit = spendingLimit;
       _spendingLimitPeriod = spendingLimitPeriod;
       _spentInPeriod = spentInPeriod;
+      _allLimits = allLimits;
+      _allSpent = allSpent;
       // Only show loading indicator if we don't have an insight yet
       if (_insight == "Analyzing your expenses...") _loadingInsight = true;
       final spent = <String, double>{};
@@ -1074,13 +1080,14 @@ class _DashboardState extends State<Dashboard> {
       NotificationService.showDailyLimitAlert(_dailySpent, dailyLimit);
     }
 
-    // Period spending limit notification check
-    if (spendingLimit > 0 && spentInPeriod >= spendingLimit * 0.8) {
-      NotificationService.checkSpendingLimitAlert(
-        spent: spentInPeriod,
-        limit: spendingLimit,
-        period: spendingLimitPeriod,
-      );
+    // Multi-period limit notification checks
+    for (final period in ['daily', 'weekly', 'monthly', 'yearly']) {
+      final lim = allLimits[period] ?? 0;
+      final sp = allSpent[period] ?? 0;
+      if (lim > 0 && sp >= lim * 0.8) {
+        NotificationService.checkSpendingLimitAlert(
+            spent: sp, limit: lim, period: period);
+      }
     }
 
     // Spending streak calculation (#13)
@@ -1706,84 +1713,116 @@ class _DashboardState extends State<Dashboard> {
   }
 
   /// Period-based spending limit progress card.
-  /// Shown whenever _spendingLimit > 0, regardless of income/wallet mode.
+  /// Multi-period spending limit card — tappable to open SpendingLimitsSheet.
   Widget _buildSpendingLimitCard(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final ratio = _spendingLimit > 0
-        ? (_spentInPeriod / _spendingLimit).clamp(0.0, 1.0)
-        : 0.0;
-    final isOver = _spentInPeriod >= _spendingLimit;
-    final isWarning = ratio >= 0.8 && !isOver;
-    final color = isOver
-        ? Colors.red
-        : isWarning
-            ? Colors.orange
-            : cs.primary;
-    final periodLabel = {
-          'daily': 'Today',
-          'weekly': 'This Week',
-          'monthly': 'This Month',
-          'yearly': 'This Year',
-        }[_spendingLimitPeriod] ??
-        'This Month';
+    final active = ['daily', 'weekly', 'monthly', 'yearly']
+        .where((p) => (_allLimits[p] ?? 0) > 0)
+        .toList();
+    if (active.isEmpty) return const SizedBox.shrink();
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.07),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.25)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.speed_outlined, size: 16, color: color),
-                const SizedBox(width: 6),
-                Text("$periodLabel's Spending Limit",
+    final periodLabels = {
+      'daily': 'Today',
+      'weekly': 'This Week',
+      'monthly': 'This Month',
+      'yearly': 'This Year'
+    };
+    final periodIcons = {
+      'daily': Icons.today_outlined,
+      'weekly': Icons.view_week_outlined,
+      'monthly': Icons.calendar_month_outlined,
+      'yearly': Icons.event_note_outlined
+    };
+
+    return GestureDetector(
+      onTap: () =>
+          SpendingLimitsSheet.show(context, onChanged: () => _loadData()),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: cs.surfaceContainerHighest.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: cs.outline.withValues(alpha: 0.2)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                Icon(Icons.speed_outlined,
+                    size: 14, color: cs.onSurface.withValues(alpha: 0.55)),
+                const SizedBox(width: 5),
+                Text("Spending Limits",
                     style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: color)),
+                        color: cs.onSurface.withValues(alpha: 0.55))),
                 const Spacer(),
-                Text(
-                  "${CurrencyService.format(_spentInPeriod)} / ${CurrencyService.format(_spendingLimit)}",
-                  style: TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.bold, color: color),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: ratio,
-                backgroundColor: color.withValues(alpha: 0.15),
-                valueColor: AlwaysStoppedAnimation<Color>(color),
-                minHeight: 6,
-              ),
-            ),
-            const SizedBox(height: 4),
-            if (isOver)
-              Text(
-                "Limit exceeded by ${CurrencyService.format(_spentInPeriod - _spendingLimit)} — consider slowing down",
-                style: const TextStyle(fontSize: 11, color: Colors.red),
-              )
-            else if (isWarning)
-              Text(
-                "${(ratio * 100).toStringAsFixed(0)}% of limit used — ${CurrencyService.format(_spendingLimit - _spentInPeriod)} remaining",
-                style: const TextStyle(fontSize: 11, color: Colors.orange),
-              )
-            else
-              Text(
-                "${CurrencyService.format(_spendingLimit - _spentInPeriod)} remaining ${_spendingLimitPeriod == 'daily' ? 'today' : 'this $_spendingLimitPeriod'}",
-                style: TextStyle(
-                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.5)),
-              ),
-          ],
+                Icon(Icons.edit_outlined,
+                    size: 12, color: cs.onSurface.withValues(alpha: 0.35)),
+                const SizedBox(width: 3),
+                Text("Edit",
+                    style: TextStyle(
+                        fontSize: 10,
+                        color: cs.onSurface.withValues(alpha: 0.35))),
+              ]),
+              const SizedBox(height: 8),
+              ...active.map((period) {
+                final limit = _allLimits[period] ?? 0;
+                final spent = _allSpent[period] ?? 0;
+                final ratio = (spent / limit).clamp(0.0, 1.0);
+                final isOver = spent >= limit;
+                final isWarn = ratio >= 0.8 && !isOver;
+                final color = isOver
+                    ? Colors.red
+                    : isWarn
+                        ? Colors.orange
+                        : cs.primary;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                          Icon(periodIcons[period], size: 13, color: color),
+                          const SizedBox(width: 4),
+                          Text(periodLabels[period]!,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  color: color)),
+                          const Spacer(),
+                          Text(
+                              "${CurrencyService.format(spent)} / ${CurrencyService.format(limit)}",
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: color)),
+                        ]),
+                        const SizedBox(height: 3),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(3),
+                          child: LinearProgressIndicator(
+                              value: ratio,
+                              minHeight: 5,
+                              backgroundColor: color.withValues(alpha: 0.15),
+                              valueColor: AlwaysStoppedAnimation<Color>(color)),
+                        ),
+                        if (isOver || isWarn)
+                          Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Text(
+                                isOver
+                                    ? "Over by ${CurrencyService.format(spent - limit)}"
+                                    : "${CurrencyService.format(limit - spent)} remaining",
+                                style: TextStyle(fontSize: 9, color: color),
+                              )),
+                      ]),
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
@@ -2841,12 +2880,11 @@ class _DashboardState extends State<Dashboard> {
               // Quick "Log Allowance" button — only in income/wallet mode
               if (_incomeWalletMode) _buildLogAllowanceButton(context),
 
-              // Period spending limit bar — shown whenever a limit is set,
-              // regardless of income/wallet mode
-              if (_spendingLimit > 0) _buildSpendingLimitCard(context),
+              // Multi-period spending limits card — tappable, shown when any limit set
+              _buildSpendingLimitCard(context),
 
-              // Daily spending limit progress bar (#14) — legacy daily limit
-              if (_dailyLimit > 0 && _incomeWalletMode)
+              // Legacy daily limit bar — only shown if new system has no daily limit set
+              if (_dailyLimit > 0 && (_allLimits['daily'] ?? 0) == 0)
                 _buildDailyLimitCard(context),
 
               // Subscription leak summary
@@ -2930,93 +2968,6 @@ class _DashboardState extends State<Dashboard> {
                 expenses: _expenses,
                 budgets: _budgets,
                 monthlyIncome: _monthlyIncome,
-              ),
-
-              // GM-8: Monthly Spending Challenge card
-              FutureBuilder<String?>(
-                future: DBService.getSetting('spending_challenge'),
-                builder: (context, snap) {
-                  final target = double.tryParse(snap.data ?? '') ?? 0;
-                  if (target <= 0) return const SizedBox.shrink();
-                  final ratio = (_totalSpent / target).clamp(0.0, 1.0);
-                  final won = _totalSpent <= target;
-                  final cs = Theme.of(context).colorScheme;
-                  final now = DateTime.now();
-                  final daysLeft =
-                      DateTime(now.year, now.month + 1, 0).day - now.day;
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: won
-                            ? Colors.green.withValues(alpha: 0.07)
-                            : ratio >= 0.9
-                                ? Colors.red.withValues(alpha: 0.07)
-                                : Colors.deepOrange.withValues(alpha: 0.07),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: won
-                              ? Colors.green.withValues(alpha: 0.25)
-                              : Colors.deepOrange.withValues(alpha: 0.2),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.flag_outlined,
-                                  color: Colors.deepOrange, size: 16),
-                              const SizedBox(width: 6),
-                              const Text("Monthly Challenge",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13)),
-                              const Spacer(),
-                              Text(
-                                won
-                                    ? "On track ✓"
-                                    : ratio >= 1.0
-                                        ? "Challenge failed ✗"
-                                        : "$daysLeft days left",
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    color: won
-                                        ? Colors.green
-                                        : ratio >= 1.0
-                                            ? Colors.red
-                                            : Colors.grey,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: LinearProgressIndicator(
-                              value: ratio,
-                              minHeight: 6,
-                              backgroundColor: Colors.grey[200],
-                              valueColor: AlwaysStoppedAnimation(won
-                                  ? Colors.green
-                                  : ratio >= 0.9
-                                      ? Colors.red
-                                      : Colors.deepOrange),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "${CurrencyService.format(_totalSpent)} spent of ${CurrencyService.format(target)} target",
-                            style: TextStyle(
-                                fontSize: 11,
-                                color: cs.onSurface.withValues(alpha: 0.6)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
               ),
 
               // UX-4: Emergency fund prompt for users without one
@@ -4676,6 +4627,263 @@ class _RecurringCandidateCardState extends State<_RecurringCandidateCard> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ── UNIFIED SPENDING LIMITS SHEET ────────────────────────────────────────────
+/// Shows all 4 period limits (daily/weekly/monthly/yearly) at once.
+/// Each is independently settable or clearable.
+/// Opened from: home limit card tap, profile "Spending Limits" tile.
+class SpendingLimitsSheet extends StatefulWidget {
+  /// Called when any limit changes so the caller can reload state.
+  final VoidCallback? onChanged;
+  const SpendingLimitsSheet({super.key, this.onChanged});
+
+  /// Open as a modal bottom sheet.
+  static Future<void> show(BuildContext context, {VoidCallback? onChanged}) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => SpendingLimitsSheet(onChanged: onChanged),
+    );
+  }
+
+  @override
+  State<SpendingLimitsSheet> createState() => _SpendingLimitsSheetState();
+}
+
+class _SpendingLimitsSheetState extends State<SpendingLimitsSheet> {
+  // One controller + current value per period
+  final _ctrls = <String, TextEditingController>{};
+  final _limits = <String, double>{};
+  final _spent = <String, double>{};
+  bool _loading = true;
+
+  static const _periods = ['daily', 'weekly', 'monthly', 'yearly'];
+  static const _labels = {
+    'daily': 'Daily',
+    'weekly': 'Weekly',
+    'monthly': 'Monthly',
+    'yearly': 'Yearly',
+  };
+  static const _icons = {
+    'daily': Icons.today_outlined,
+    'weekly': Icons.view_week_outlined,
+    'monthly': Icons.calendar_month_outlined,
+    'yearly': Icons.event_note_outlined,
+  };
+  static const _hints = {
+    'daily': 'e.g. 300 for a ₱300/day cap',
+    'weekly': 'e.g. 1500 for a ₱1,500/week cap',
+    'monthly': 'e.g. 5000 for a ₱5,000/month cap',
+    'yearly': 'e.g. 60000 for a ₱60,000/year cap',
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    for (final p in _periods) {
+      _ctrls[p] = TextEditingController();
+    }
+    _load();
+  }
+
+  @override
+  void dispose() {
+    for (final c in _ctrls.values) c.dispose();
+    super.dispose();
+  }
+
+  Future<void> _load() async {
+    final limits = await DBService.getAllLimits();
+    final spent = await DBService.getAllSpent();
+    setState(() {
+      for (final p in _periods) {
+        _limits[p] = limits[p] ?? 0;
+        _spent[p] = spent[p] ?? 0;
+        _ctrls[p]!.text =
+            (_limits[p]! > 0) ? _limits[p]!.toStringAsFixed(0) : '';
+      }
+      _loading = false;
+    });
+  }
+
+  Future<void> _save(String period) async {
+    final val = double.tryParse(_ctrls[period]!.text) ?? 0;
+    await DBService.setLimitForPeriod(period, val);
+    setState(() => _limits[period] = val);
+    widget.onChanged?.call();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(val > 0
+            ? '${_labels[period]} limit set to ${CurrencyService.format(val)}'
+            : '${_labels[period]} limit cleared'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ));
+    }
+  }
+
+  Future<void> _clear(String period) async {
+    _ctrls[period]!.clear();
+    await DBService.setLimitForPeriod(period, 0);
+    setState(() => _limits[period] = 0);
+    widget.onChanged?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+          20, 20, 20, MediaQuery.of(context).viewInsets.bottom + 24),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2)),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Icon(Icons.speed_outlined, color: cs.primary, size: 22),
+                const SizedBox(width: 8),
+                const Text("Spending Limits",
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Set any combination of limits. Leave blank to skip that period.",
+              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+            ),
+            const SizedBox(height: 16),
+            if (_loading)
+              const Center(child: CircularProgressIndicator())
+            else
+              ..._periods.map((period) {
+                final limit = _limits[period] ?? 0;
+                final spent = _spent[period] ?? 0;
+                final ratio = limit > 0 ? (spent / limit).clamp(0.0, 1.0) : 0.0;
+                final isOver = limit > 0 && spent >= limit;
+                final isWarn = limit > 0 && ratio >= 0.8 && !isOver;
+                final color = isOver
+                    ? Colors.red
+                    : isWarn
+                        ? Colors.orange
+                        : cs.primary;
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(_icons[period], size: 16, color: color),
+                          const SizedBox(width: 6),
+                          Text(_labels[period]!,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: color)),
+                          const Spacer(),
+                          if (limit > 0)
+                            Text(
+                              "${CurrencyService.format(spent)} / ${CurrencyService.format(limit)}",
+                              style: TextStyle(fontSize: 11, color: color),
+                            ),
+                        ],
+                      ),
+                      if (limit > 0) ...[
+                        const SizedBox(height: 4),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: ratio,
+                            minHeight: 5,
+                            backgroundColor: color.withValues(alpha: 0.15),
+                            valueColor: AlwaysStoppedAnimation<Color>(color),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          isOver
+                              ? "Over by ${CurrencyService.format(spent - limit)}"
+                              : isWarn
+                                  ? "${(ratio * 100).toStringAsFixed(0)}% used — ${CurrencyService.format(limit - spent)} left"
+                                  : "${CurrencyService.format(limit - spent)} remaining",
+                          style: TextStyle(fontSize: 10, color: color),
+                        ),
+                      ],
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _ctrls[period],
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              style: const TextStyle(fontSize: 13),
+                              decoration: InputDecoration(
+                                prefixText: "₱ ",
+                                hintText: _hints[period],
+                                hintStyle: const TextStyle(fontSize: 11),
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                              onSubmitted: (_) => _save(period),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: const Icon(Icons.check_circle_outline,
+                                size: 22),
+                            color: cs.primary,
+                            tooltip: "Save ${_labels[period]} limit",
+                            onPressed: () => _save(period),
+                          ),
+                          if (limit > 0)
+                            IconButton(
+                              icon: const Icon(Icons.cancel_outlined, size: 20),
+                              color: Colors.red,
+                              tooltip: "Clear ${_labels[period]} limit",
+                              onPressed: () => _clear(period),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Done"),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
