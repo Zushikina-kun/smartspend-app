@@ -222,7 +222,7 @@ class StartupAlertsService {
       // Store current score for next comparison
       await DBService.setSetting('prev_fhs_score', currentScore.toString());
 
-      // 5. Check for idle wallets (unchanged 14+ days with significant balance)
+      // 5. Check for idle wallets + balance discrepancy
       final wallets = await DBService.getWallets();
       final totalWalletBalance =
           wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
@@ -245,6 +245,39 @@ class StartupAlertsService {
             color: Colors.blue,
           ));
         }
+      }
+
+      // 5b. Balance discrepancy check (ScoreService.computeBalanceDiscrepancy)
+      // If wallet total vs income−spent gap is > ₱2,000, surface it once/month.
+      // Large positive = unrecorded income (wallets have more than expected).
+      // Large negative = unrecorded expenses or missing wallet top-ups.
+      if (incomeWalletModeOn && income > 0 && totalWalletBalance > 0) {
+        try {
+          final totalIncome = await DBService.getTotalIncome();
+          final totalSpent = await DBService.getTotalSpent();
+          final discrepancy = ScoreService.computeBalanceDiscrepancy(
+            totalWalletBalance: totalWalletBalance,
+            totalIncome: totalIncome,
+            totalSpent: totalSpent,
+          );
+          final discrepancyKey = 'balance_discrepancy_check';
+          final lastCheck = await DBService.getSetting(discrepancyKey);
+          final thisMonthCheck = DateFormat('yyyy-MM').format(DateTime.now());
+          if (discrepancy.abs() > 2000 && lastCheck != thisMonthCheck) {
+            await DBService.setSetting(discrepancyKey, thisMonthCheck);
+            final isPositive = discrepancy > 0;
+            alerts.add(StartupAlert(
+              title: isPositive
+                  ? '📊 Unrecorded Income Detected'
+                  : '📊 Balance Gap Detected',
+              message: isPositive
+                  ? 'Your wallets have ${CurrencyService.format(discrepancy.abs())} more than income−expenses suggests. Any income not yet logged?'
+                  : 'Your wallets have ${CurrencyService.format(discrepancy.abs())} less than expected. Any expenses or transfers not logged?',
+              icon: Icons.account_balance_wallet_outlined,
+              color: Colors.indigo,
+            ));
+          }
+        } catch (_) {}
       }
 
       // 6. Check for overdue insurance premiums

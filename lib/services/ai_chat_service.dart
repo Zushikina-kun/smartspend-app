@@ -144,6 +144,8 @@ class AIChatService {
     double spendingLimit = 0,
     String spendingLimitPeriod = 'monthly',
     double spentInPeriod = 0,
+    Map<String, double> allLimits = const {},
+    Map<String, double> allSpent = const {},
   }) {
     // Refresh user-defined categorization rules cache
     DBService.getCategoryRules().then((rules) => _userRules = rules);
@@ -264,8 +266,23 @@ class AIChatService {
     final modeSummary = incomeWalletMode
         ? ''
         : '\n[Tracking mode: LIGHTWEIGHT — no income/wallet data. FHS is based on spending habits only.]';
-    final limitSummary = spendingLimit > 0
-        ? '\nSpending limit: ₱${spendingLimit.toStringAsFixed(0)}/$spendingLimitPeriod | Spent so far: ₱${spentInPeriod.toStringAsFixed(0)} (${(spentInPeriod / spendingLimit * 100).toStringAsFixed(0)}%)'
+    // Build multi-period limit summary — only include periods with a limit set
+    final activeLimits = ['daily', 'weekly', 'monthly', 'yearly']
+        .where((p) => (allLimits[p] ?? 0) > 0)
+        .map((p) {
+      final lim = allLimits[p]!;
+      final sp = allSpent[p] ?? 0;
+      final pct = (sp / lim * 100).toStringAsFixed(0);
+      final label = {
+        'daily': 'day',
+        'weekly': 'week',
+        'monthly': 'month',
+        'yearly': 'year'
+      }[p]!;
+      return '₱${sp.toStringAsFixed(0)}/₱${lim.toStringAsFixed(0)} this $label ($pct%)';
+    }).toList();
+    final limitSummary = activeLimits.isNotEmpty
+        ? '\nSpending limits: ${activeLimits.join(' · ')}'
         : '';
 
     // Build insurance summary for AI context

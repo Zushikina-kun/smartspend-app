@@ -172,13 +172,14 @@ class _AIScreenState extends State<AIScreen> {
           int.tryParse(await DBService.getSetting(kGapCleanKey) ?? '0') ?? 0;
     } catch (_) {}
 
-    // Load lightweight mode + spending limit for AI context
+    // Load lightweight mode + all spending limits for AI context
     final incomeWalletMode = await DBService.getIncomeWalletMode();
-    final spendingLimit = await DBService.getSpendingLimit();
-    final spendingLimitPeriod = await DBService.getSpendingLimitPeriod();
-    final spentInPeriod = spendingLimit > 0
-        ? await DBService.getSpentInPeriod(spendingLimitPeriod)
-        : 0.0;
+    final allLimits = await DBService.getAllLimits();
+    final allSpent = await DBService.getAllSpent();
+    // Legacy shim values (still used for FHS calc)
+    final spendingLimit = allLimits['monthly'] ?? 0;
+    final spendingLimitPeriod = 'monthly';
+    final spentInPeriod = allSpent['monthly'] ?? 0;
     final spentMap = <String, double>{};
     for (final e in monthExpenses) {
       spentMap[e.category] = (spentMap[e.category] ?? 0) + e.amount;
@@ -250,6 +251,8 @@ class _AIScreenState extends State<AIScreen> {
       spendingLimit: spendingLimit,
       spendingLimitPeriod: spendingLimitPeriod,
       spentInPeriod: spentInPeriod,
+      allLimits: allLimits,
+      allSpent: allSpent,
     );
 
     // Restore chat history into AI memory on first load only

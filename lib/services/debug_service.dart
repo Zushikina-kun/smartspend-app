@@ -219,6 +219,10 @@ class DebugService {
       'last_gap_check_date', // date gap detection last ran
       'ai_request_trace', // §25 rolling last-5 request traces (latency/tokens/retries)
       'last_ungrounded_advice', // §16 last advice reply flagged with no figures
+      'limit_daily', // unified spending limit — daily
+      'limit_weekly', // unified spending limit — weekly
+      'limit_monthly', // unified spending limit — monthly
+      'limit_yearly', // unified spending limit — yearly
     ];
     for (final key in notifKeys) {
       final val = await DBService.getSetting(key);

@@ -389,8 +389,6 @@ class DBService {
     } catch (_) {}
 
     // One-time migration: set is_want=1 for Entertainment and Shopping expenses
-    // that were logged before the AI started tagging them correctly
-    // Education is intentionally excluded — always a Need
     try {
       final wantMigrated = await db
           .query('settings', where: 'key = ?', whereArgs: ['is_want_migrated']);
@@ -409,6 +407,53 @@ class DBService {
         """);
         await db.insert(
             'settings', {'key': 'is_want_migrated', 'value': 'true'},
+            conflictAlgorithm: ConflictAlgorithm.ignore);
+      }
+    } catch (_) {}
+
+    // One-time migration: strip generic AI item name prefixes
+    // Cleans up names like "your jeepney fare for" → "Jeepney fare"
+    // Runs once, gated by 'item_name_sanitized' flag.
+    try {
+      final sanitized = await db.query('settings',
+          where: 'key = ?', whereArgs: ['item_name_sanitized']);
+      if (sanitized.isEmpty) {
+        // Strip leading: "your ", "my ", "the ", "a ", "an "
+        // Strip trailing: " for [anything]"
+        // Using SQLite CASE + SUBSTR — covers the most common patterns
+        // Pattern 1: starts with "your "
+        await db.execute("""
+          UPDATE expenses
+          SET item_name = TRIM(SUBSTR(item_name, 6))
+          WHERE LOWER(SUBSTR(item_name, 1, 5)) = 'your '
+        """);
+        // Pattern 2: starts with "my "
+        await db.execute("""
+          UPDATE expenses
+          SET item_name = TRIM(SUBSTR(item_name, 4))
+          WHERE LOWER(SUBSTR(item_name, 1, 3)) = 'my '
+        """);
+        // Pattern 3: starts with "the "
+        await db.execute("""
+          UPDATE expenses
+          SET item_name = TRIM(SUBSTR(item_name, 5))
+          WHERE LOWER(SUBSTR(item_name, 1, 4)) = 'the '
+        """);
+        // Pattern 4: ends with " for" (trailing suffix)
+        await db.execute("""
+          UPDATE expenses
+          SET item_name = TRIM(SUBSTR(item_name, 1, LENGTH(item_name) - 4))
+          WHERE LOWER(SUBSTR(item_name, LENGTH(item_name) - 3)) = ' for'
+        """);
+        // Title-case first letter (SQLite: UPPER first char + rest)
+        await db.execute("""
+          UPDATE expenses
+          SET item_name = UPPER(SUBSTR(item_name, 1, 1)) || SUBSTR(item_name, 2)
+          WHERE LENGTH(item_name) > 0
+            AND item_name != UPPER(SUBSTR(item_name, 1, 1)) || SUBSTR(item_name, 2)
+        """);
+        await db.insert(
+            'settings', {'key': 'item_name_sanitized', 'value': 'true'},
             conflictAlgorithm: ConflictAlgorithm.ignore);
       }
     } catch (_) {}
@@ -733,8 +778,8 @@ class DBService {
         ? await db.query('expenses',
             where: "date LIKE ?",
             whereArgs: ['$month%'],
-            orderBy: 'date DESC, id DESC')
-        : await db.query('expenses', orderBy: 'date DESC, id DESC');
+            orderBy: 'date DESC, time DESC, id DESC')
+        : await db.query('expenses', orderBy: 'date DESC, time DESC, id DESC');
     return maps.map((m) => Expense.fromMap(m)).toList();
   }
 
