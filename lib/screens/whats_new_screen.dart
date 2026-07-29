@@ -54,6 +54,11 @@ class WhatsNewScreen extends StatelessWidget {
       'Observability & Debug Traces',
       'Per-request trace (latency/tokens/retries) in debug export. Silent action fails logged. Groundedness check on financial advice replies.'
     ),
+    (
+      '📸',
+      'Batch Screenshot Import',
+      'Import from Steam, Shopee, Lazada, GCash, Grab, App Store, bank apps — up to 10 screenshots at once. AI detects platform type, extracts item name, price, date, time, and store automatically.'
+    ),
   ];
 
   @override

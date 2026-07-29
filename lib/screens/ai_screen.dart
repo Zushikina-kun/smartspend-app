@@ -177,10 +177,11 @@ class _AIScreenState extends State<AIScreen> {
     final incomeWalletMode = await DBService.getIncomeWalletMode();
     final allLimits = await DBService.getAllLimits();
     final allSpent = await DBService.getAllSpent();
-    // Legacy shim values (still used for FHS calc)
-    final spendingLimit = allLimits['monthly'] ?? 0;
-    final spendingLimitPeriod = 'monthly';
-    final spentInPeriod = allSpent['monthly'] ?? 0;
+    // Use tightest active limit for FHS lightweight Spending Restraint component
+    final tightest = await DBService.getTightestLimit();
+    final spendingLimit = tightest['limit'] as double;
+    final spendingLimitPeriod = tightest['period'] as String;
+    final spentInPeriod = tightest['spent'] as double;
     final spentMap = <String, double>{};
     for (final e in monthExpenses) {
       spentMap[e.category] = (spentMap[e.category] ?? 0) + e.amount;

@@ -1105,7 +1105,24 @@ class DBService {
     return results;
   }
 
-  /// Whether income/wallet features are enabled.
+  /// Returns the "tightest" active spending limit across all periods —
+  /// the one that constrains the user the most relative to elapsed time.
+  /// Used for FHS lightweight Spending Restraint component.
+  ///
+  /// Priority: daily (most constrained) → weekly → monthly → yearly
+  /// Returns 0 if no limits are set.
+  static Future<Map<String, dynamic>> getTightestLimit() async {
+    final limits = await getAllLimits();
+    for (final period in ['daily', 'weekly', 'monthly', 'yearly']) {
+      final lim = limits[period] ?? 0;
+      if (lim > 0) {
+        final spent = await getSpentInPeriod(period);
+        return {'limit': lim, 'spent': spent, 'period': period};
+      }
+    }
+    return {'limit': 0.0, 'spent': 0.0, 'period': 'monthly'};
+  }
+
   /// Default: true for existing users (backward-compatible), false for new users.
   static Future<bool> getIncomeWalletMode() async {
     final val = await getSetting('income_wallet_mode');

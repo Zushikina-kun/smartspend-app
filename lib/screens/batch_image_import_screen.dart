@@ -23,7 +23,7 @@ enum _ImageStatus { pending, processing, done, error }
 class _ImageEntry {
   final String path;
   _ImageStatus status;
-  String type;      // steam / shopee / receipt / etc.
+  String type; // steam / shopee / receipt / etc.
   String ocrText;
   String error;
   List<_BatchRow> rows;
@@ -118,7 +118,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
   // ── PROCESS ALL IMAGES ──────────────────────────────────────────────────────
 
   Future<void> _processAll() async {
-    final pending = _images.where((e) => e.status == _ImageStatus.pending).toList();
+    final pending =
+        _images.where((e) => e.status == _ImageStatus.pending).toList();
     if (pending.isEmpty) return;
     setState(() {
       _processing = true;
@@ -147,29 +148,32 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
     setState(() {});
 
     // Step 2: Parse with AI in batches of 3
-    final toparse = pending.where((e) => e.status == _ImageStatus.processing).toList();
+    final toparse =
+        pending.where((e) => e.status == _ImageStatus.processing).toList();
     const batchSize = 3;
     for (var i = 0; i < toparse.length; i += batchSize) {
       final batch = toparse.skip(i).take(batchSize).toList();
-      final parseBatch = batch
-          .map((e) => {'ocrText': e.ocrText, 'type': e.type})
-          .toList();
+      final parseBatch =
+          batch.map((e) => {'ocrText': e.ocrText, 'type': e.type}).toList();
 
       // Parse each image individually so we can map results back
       final futures = batch.map((entry) async {
         try {
-          final rows = await LLMService.parseScreenshot(entry.ocrText, entry.type);
-          entry.rows = rows.map((r) => _BatchRow(
-            description: r['description'] as String? ?? 'Purchase',
-            amount: (r['amount'] as num?)?.toDouble() ?? 0,
-            category: r['category'] as String? ?? 'Others',
-            isWant: (r['is_want'] as int? ?? 1) == 1,
-            date: r['date'] as String? ??
-                DateTime.now().toIso8601String().substring(0, 10),
-            shopName: r['shop_name'] as String? ?? '',
-            paymentMethod: r['payment_method'] as String? ?? 'Cash',
-            notes: r['notes'] as String? ?? '',
-          )).toList();
+          final rows =
+              await LLMService.parseScreenshot(entry.ocrText, entry.type);
+          entry.rows = rows
+              .map((r) => _BatchRow(
+                    description: r['description'] as String? ?? 'Purchase',
+                    amount: (r['amount'] as num?)?.toDouble() ?? 0,
+                    category: r['category'] as String? ?? 'Others',
+                    isWant: (r['is_want'] as int? ?? 1) == 1,
+                    date: r['date'] as String? ??
+                        DateTime.now().toIso8601String().substring(0, 10),
+                    shopName: r['shop_name'] as String? ?? '',
+                    paymentMethod: r['payment_method'] as String? ?? 'Cash',
+                    notes: r['notes'] as String? ?? '',
+                  ))
+              .toList();
           entry.status = _ImageStatus.done;
         } catch (e) {
           entry.status = _ImageStatus.error;
@@ -188,8 +192,20 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
 
   // ── IMPORT SELECTED ─────────────────────────────────────────────────────────
 
+  Future<void> _retryImage(_ImageEntry entry) async {
+    setState(() {
+      entry.status = _ImageStatus.pending;
+      entry.ocrText = '';
+      entry.type = 'unknown';
+      entry.error = '';
+      entry.rows = [];
+    });
+    await _processAll();
+  }
+
   Future<void> _importSelected() async {
-    final allRows = _images.expand((e) => e.rows).where((r) => r.selected).toList();
+    final allRows =
+        _images.expand((e) => e.rows).where((r) => r.selected).toList();
     if (allRows.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Select at least one item to import'),
@@ -209,9 +225,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
           'time': '00:00',
           'payment_method': row.paymentMethod,
           'shop_name': row.shopName.isNotEmpty ? row.shopName : null,
-          'notes': row.notes.isNotEmpty
-              ? row.notes
-              : 'Imported from screenshot',
+          'notes':
+              row.notes.isNotEmpty ? row.notes : 'Imported from screenshot',
           'ai_generated': 1,
           'confidence_score': 0.85,
           'is_want': row.isWant ? 1 : 0,
@@ -300,7 +315,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                         ? '${_images.length} image${_images.length == 1 ? '' : 's'} — '
                             '${_images.where((e) => e.status == _ImageStatus.done).length} processed'
                         : 'Pick screenshots from your gallery (up to 10)',
-                    style: TextStyle(fontSize: 12, color: cs.onPrimaryContainer),
+                    style:
+                        TextStyle(fontSize: 12, color: cs.onPrimaryContainer),
                   ),
                 ),
                 if (_processing)
@@ -310,7 +326,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                         height: 14,
                         child: CircularProgressIndicator(strokeWidth: 2)),
                     const SizedBox(width: 6),
-                    Text('$_processedCount/${_images.where((e) => e.status != _ImageStatus.pending).length}',
+                    Text(
+                        '$_processedCount/${_images.where((e) => e.status != _ImageStatus.pending).length}',
                         style: const TextStyle(fontSize: 12)),
                   ]),
               ],
@@ -332,7 +349,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                             children: [
                               Text('Extracted Items ($_totalRows)',
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 14)),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)),
                               const Spacer(),
                               if (_totalSelected > 0)
                                 Text(
@@ -359,7 +377,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                 children: [
                   // Pick more
                   OutlinedButton.icon(
-                    icon: const Icon(Icons.add_photo_alternate_outlined, size: 18),
+                    icon: const Icon(Icons.add_photo_alternate_outlined,
+                        size: 18),
                     label: Text(_images.isEmpty ? 'Pick Images' : 'Add More'),
                     onPressed: _picking || _processing ? null : _pickImages,
                   ),
@@ -462,10 +481,17 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                   Positioned.fill(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        color: _statusColor(entry.status).withValues(alpha: 0.18),
-                        child: Center(
-                            child: _statusIcon(entry.status, entry.rows.length)),
+                      child: GestureDetector(
+                        onTap: entry.status == _ImageStatus.error
+                            ? () => _retryImage(entry)
+                            : null,
+                        child: Container(
+                          color: _statusColor(entry.status)
+                              .withValues(alpha: 0.18),
+                          child: Center(
+                              child:
+                                  _statusIcon(entry.status, entry.rows.length)),
+                        ),
                       ),
                     ),
                   ),
@@ -482,7 +508,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                           color: Colors.black54,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.close, size: 12, color: Colors.white),
+                        child: const Icon(Icons.close,
+                            size: 12, color: Colors.white),
                       ),
                     ),
                   ),
@@ -513,10 +540,14 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
 
   Color _statusColor(_ImageStatus s) {
     switch (s) {
-      case _ImageStatus.processing: return Colors.blue;
-      case _ImageStatus.done: return Colors.green;
-      case _ImageStatus.error: return Colors.red;
-      default: return Colors.transparent;
+      case _ImageStatus.processing:
+        return Colors.blue;
+      case _ImageStatus.done:
+        return Colors.green;
+      case _ImageStatus.error:
+        return Colors.red;
+      default:
+        return Colors.transparent;
     }
   }
 
@@ -524,9 +555,10 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
     switch (s) {
       case _ImageStatus.processing:
         return const SizedBox(
-            width: 24, height: 24,
-            child: CircularProgressIndicator(
-                strokeWidth: 2, color: Colors.white));
+            width: 24,
+            height: 24,
+            child:
+                CircularProgressIndicator(strokeWidth: 2, color: Colors.white));
       case _ImageStatus.done:
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -536,10 +568,19 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
           ),
           child: Text('$rowCount item${rowCount == 1 ? '' : 's'}',
               style: const TextStyle(
-                  color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold)),
         );
       case _ImageStatus.error:
-        return const Icon(Icons.error_outline, color: Colors.red, size: 28);
+        return Column(mainAxisSize: MainAxisSize.min, children: const [
+          Icon(Icons.error_outline, color: Colors.red, size: 22),
+          SizedBox(height: 2),
+          Text('Tap\nretry',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.red, fontSize: 8, fontWeight: FontWeight.bold)),
+        ]);
       default:
         return const SizedBox.shrink();
     }
@@ -577,17 +618,28 @@ class _ReviewRowTileState extends State<_ReviewRowTile> {
   late TextEditingController _amountCtrl;
 
   static const _categories = [
-    'Food', 'Transportation', 'Bills', 'Shopping', 'Entertainment',
-    'Gaming', 'Health', 'Education', 'Personal Care', 'Clothing',
-    'Gifts', 'Travel', 'Pets', 'Others',
+    'Food',
+    'Transportation',
+    'Bills',
+    'Shopping',
+    'Entertainment',
+    'Gaming',
+    'Health',
+    'Education',
+    'Personal Care',
+    'Clothing',
+    'Gifts',
+    'Travel',
+    'Pets',
+    'Others',
   ];
 
   @override
   void initState() {
     super.initState();
     _nameCtrl = TextEditingController(text: widget.row.description);
-    _amountCtrl = TextEditingController(
-        text: widget.row.amount.toStringAsFixed(2));
+    _amountCtrl =
+        TextEditingController(text: widget.row.amount.toStringAsFixed(2));
   }
 
   @override
@@ -610,7 +662,8 @@ class _ReviewRowTileState extends State<_ReviewRowTile> {
             onChanged: (v) => widget.onChanged(v ?? false),
             dense: true,
             title: Text(row.description,
-                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
             subtitle: Text(
               '${row.category} · ₱${row.amount.toStringAsFixed(2)}'
               '${row.shopName.isNotEmpty ? ' · ${row.shopName}' : ''}'
@@ -670,7 +723,9 @@ class _ReviewRowTileState extends State<_ReviewRowTile> {
                             border: OutlineInputBorder()),
                         items: _categories
                             .map((c) => DropdownMenuItem(
-                                value: c, child: Text(c, style: const TextStyle(fontSize: 12))))
+                                value: c,
+                                child: Text(c,
+                                    style: const TextStyle(fontSize: 12))))
                             .toList(),
                         onChanged: (v) =>
                             setState(() => row.category = v ?? row.category),
@@ -694,8 +749,8 @@ class _ReviewRowTileState extends State<_ReviewRowTile> {
                         onTap: () async {
                           final picked = await showDatePicker(
                             context: context,
-                            initialDate: DateTime.tryParse(row.date) ??
-                                DateTime.now(),
+                            initialDate:
+                                DateTime.tryParse(row.date) ?? DateTime.now(),
                             firstDate: DateTime(2020),
                             lastDate: DateTime.now(),
                           );
@@ -716,8 +771,8 @@ class _ReviewRowTileState extends State<_ReviewRowTile> {
                                 size: 13, color: cs.primary),
                             const SizedBox(width: 4),
                             Text(row.date.substring(5),
-                                style: TextStyle(
-                                    fontSize: 12, color: cs.primary)),
+                                style:
+                                    TextStyle(fontSize: 12, color: cs.primary)),
                           ]),
                         ),
                       ),

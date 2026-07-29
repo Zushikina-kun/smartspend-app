@@ -1033,83 +1033,197 @@ Return ONLY this JSON array:
   // ── SCREENSHOT / DIGITAL RECEIPT PARSER ───────────────────────────────────
 
   /// Detect the type of screenshot from its OCR text.
-  /// Returns: 'steam' | 'shopee' | 'lazada' | 'gcash' | 'maya' | 'grab' |
-  ///          'in_app_purchase' | 'receipt' | 'unknown'
+  /// Covers PH local + international shopping, gaming, payments, food delivery,
+  /// banks, streaming, telco, and physical receipt types.
   static String detectScreenshotType(String text) {
     final lower = text.toLowerCase();
+
+    // ── GAMING / DIGITAL STORES ───────────────────────────────────────────────
     if (lower.contains('steam') ||
-        lower.contains('valve') ||
-        lower.contains('steamworks') ||
-        lower.contains('purchase confirmation') && lower.contains('game')) {
-      return 'steam';
-    }
-    if (lower.contains('shopee') ||
-        lower.contains('spaylater') ||
-        lower.contains('shopee pay')) return 'shopee';
+        lower.contains('valve corporation') ||
+        lower.contains('steamworks')) return 'steam';
+    if (lower.contains('google play') ||
+        lower.contains('play store') ||
+        lower.contains('google payment')) return 'google_play';
+    if ((lower.contains('app store') ||
+        lower.contains('itunes') ||
+        lower.contains('apple.com/bill') ||
+        (lower.contains('apple') && lower.contains('receipt'))))
+      return 'apple_appstore';
+    if (lower.contains('codashop') || lower.contains('coda shop'))
+      return 'codashop';
+    if (lower.contains('unipin')) return 'unipin';
+    if (lower.contains('garena')) return 'garena';
+    if (lower.contains('moonton') || lower.contains('mobile legends'))
+      return 'mobile_legends';
+    if (lower.contains('riot games') || lower.contains('valorant'))
+      return 'riot';
+    if (lower.contains('mihoyo') ||
+        lower.contains('hoyoverse') ||
+        lower.contains('genshin')) return 'hoyoverse';
+    if (lower.contains('playstation') ||
+        lower.contains('psn') ||
+        lower.contains('ps store')) return 'playstation';
+    if (lower.contains('xbox') || lower.contains('microsoft store'))
+      return 'xbox';
+    if (lower.contains('nintendo') || lower.contains('eshop'))
+      return 'nintendo';
+    if (lower.contains('epic games') || lower.contains('epicgames'))
+      return 'epic';
+
+    // ── PH LOCAL E-WALLETS / PAYMENTS ─────────────────────────────────────────
+    if (lower.contains('gcash')) return 'gcash';
+    if (lower.contains('maya') || lower.contains('paymaya')) return 'maya';
+    if (lower.contains('grabpay') || lower.contains('grab pay'))
+      return 'grabpay';
+    if (lower.contains('shopeepay') ||
+        lower.contains('shopee pay') ||
+        lower.contains('spaylater')) return 'shopeepay';
+    if (lower.contains('coins.ph') || lower.contains('coinsph'))
+      return 'coins_ph';
+    if (lower.contains('paymongo')) return 'paymongo';
+    if (lower.contains('paypal')) return 'paypal';
+    if (lower.contains('wise') || lower.contains('transferwise')) return 'wise';
+    if (lower.contains('remitly') ||
+        lower.contains('western union') ||
+        lower.contains('moneygram')) return 'remittance';
+    if (lower.contains('stripe')) return 'stripe';
+
+    // ── PH LOCAL SHOPPING ─────────────────────────────────────────────────────
+    if (lower.contains('shopee')) return 'shopee';
     if (lower.contains('lazada') ||
         lower.contains('lazwallet') ||
         lower.contains('lcash')) return 'lazada';
+    if (lower.contains('zalora')) return 'zalora';
+    if (lower.contains('tiktok shop') || lower.contains('tiktokshop'))
+      return 'tiktok_shop';
+    if (lower.contains('carousell')) return 'carousell';
+    if (lower.contains('facebook marketplace') ||
+        lower.contains('fb marketplace')) return 'fb_marketplace';
+
+    // ── INTERNATIONAL SHOPPING ────────────────────────────────────────────────
+    if (lower.contains('amazon') &&
+        (lower.contains('order') ||
+            lower.contains('invoice') ||
+            lower.contains('purchase'))) return 'amazon';
+    if (lower.contains('ebay')) return 'ebay';
+    if (lower.contains('aliexpress')) return 'aliexpress';
+    if (lower.contains('shein')) return 'shein';
+    if (lower.contains('temu')) return 'temu';
+    if (lower.contains('zalando')) return 'zalando';
+    if (lower.contains('asos')) return 'asos';
+    if (lower.contains('taobao') || lower.contains('tmall')) return 'taobao';
+    if (lower.contains('etsy')) return 'etsy';
+    if (lower.contains('wish.com') || lower.contains('wish order'))
+      return 'wish';
+
+    // ── FOOD DELIVERY ─────────────────────────────────────────────────────────
+    if (lower.contains('grabfood') || lower.contains('grab food'))
+      return 'grabfood';
+    if (lower.contains('foodpanda') || lower.contains('food panda'))
+      return 'foodpanda';
+    if (lower.contains('shopee food')) return 'shopee_food';
+
+    // ── GRAB RIDES ────────────────────────────────────────────────────────────
     if (lower.contains('grab') &&
         (lower.contains('order') ||
             lower.contains('ride') ||
-            lower.contains('food'))) {
-      return 'grab';
-    }
-    if (lower.contains('gcash')) return 'gcash';
-    if (lower.contains('maya') || lower.contains('paymaya')) return 'maya';
-    if (lower.contains('google play') ||
-        lower.contains('app store') ||
-        lower.contains('in-app purchase') ||
-        lower.contains('apple') && lower.contains('receipt')) {
-      return 'in_app_purchase';
-    }
-    if (lower.contains('total') || lower.contains('subtotal')) return 'receipt';
+            lower.contains('car') ||
+            lower.contains('bike') ||
+            lower.contains('delivery'))) return 'grab';
+    if (lower.contains('angkas')) return 'angkas';
+    if (lower.contains('lalamove')) return 'lalamove';
+    if (lower.contains('maxim')) return 'maxim';
+
+    // ── PH BANKS ─────────────────────────────────────────────────────────────
+    if (lower.contains('bpi') &&
+        (lower.contains('transaction') ||
+            lower.contains('transfer') ||
+            lower.contains('payment'))) return 'bpi';
+    if (lower.contains('bdo') &&
+        (lower.contains('transaction') || lower.contains('transfer')))
+      return 'bdo';
+    if (lower.contains('metrobank')) return 'metrobank';
+    if (lower.contains('unionbank') || lower.contains('union bank'))
+      return 'unionbank';
+    if (lower.contains('landbank')) return 'landbank';
+    if (lower.contains('gotyme') || lower.contains('go tyme')) return 'gotyme';
+    if (lower.contains('tonik')) return 'tonik';
+    if (lower.contains('seabank')) return 'seabank';
+    if (lower.contains('rcbc')) return 'rcbc';
+    if (lower.contains('security bank')) return 'security_bank';
+
+    // ── STREAMING / SUBSCRIPTIONS ─────────────────────────────────────────────
+    if (lower.contains('netflix')) return 'netflix';
+    if (lower.contains('spotify')) return 'spotify';
+    if (lower.contains('youtube premium') || lower.contains('youtube music'))
+      return 'youtube';
+    if (lower.contains('disney+') || lower.contains('disney plus'))
+      return 'disney_plus';
+    if (lower.contains('viu')) return 'viu';
+    if (lower.contains('vivamax')) return 'vivamax';
+    if (lower.contains('hbo') || lower.contains('max')) return 'streaming';
+
+    // ── TELCO / LOAD ──────────────────────────────────────────────────────────
+    if (lower.contains('smart') &&
+        (lower.contains('prepaid') || lower.contains('load'))) return 'smart';
+    if (lower.contains('globe') &&
+        (lower.contains('prepaid') || lower.contains('load'))) return 'globe';
+    if (lower.contains('dito')) return 'dito';
+
+    // ── PHYSICAL RECEIPTS ─────────────────────────────────────────────────────
+    if (lower.contains('jollibee') ||
+        lower.contains('mcdonald') ||
+        lower.contains('mcdo') ||
+        lower.contains('kfc') ||
+        lower.contains('mang inasal') ||
+        lower.contains('chowking') ||
+        lower.contains('greenwich') ||
+        lower.contains('shakey') ||
+        lower.contains('starbucks') ||
+        lower.contains('dunkin')) return 'receipt_fastfood';
+    if (lower.contains('sm supermarket') ||
+        lower.contains('robinsons supermarket') ||
+        lower.contains('puregold') ||
+        lower.contains('savemore') ||
+        lower.contains('shopwise') ||
+        lower.contains('waltermart') ||
+        lower.contains('landers') ||
+        lower.contains('costco')) return 'receipt_grocery';
+    if (lower.contains('mercury drug') ||
+        lower.contains('watsons') ||
+        lower.contains('rose pharmacy') ||
+        lower.contains('generika') ||
+        lower.contains('southstar drug')) return 'receipt_pharmacy';
+    if (lower.contains('national bookstore') ||
+        lower.contains('powerbooks') ||
+        lower.contains('fullybooked')) return 'receipt_bookstore';
+    if ((lower.contains('meralco') ||
+            lower.contains('pldt') ||
+            lower.contains('maynilad') ||
+            lower.contains('manila water')) &&
+        lower.contains('amount')) return 'receipt_utility';
+    if (lower.contains('total') ||
+        lower.contains('subtotal') ||
+        lower.contains('amount due') ||
+        lower.contains('grand total')) return 'receipt';
+
+    // ── GENERIC TRANSACTION HISTORY ──────────────────────────────────────────
+    if (RegExp(r'\d{4}-\d{2}-\d{2}').allMatches(text).length >= 3)
+      return 'transaction_history';
+
     return 'unknown';
   }
 
   /// Parse OCR text from a screenshot into structured expense items.
-  /// Screenshot-aware: handles Steam, Shopee, Lazada, Grab, GCash, in-app purchases.
-  /// Extracts: date, item name, price, store/platform, category.
+  /// Parse OCR text from a screenshot into structured expense items.
+  /// Screenshot-aware: works with all platform types from detectScreenshotType.
+  /// Extracts: date, TIME (when visible), item name, price, store, category.
   /// Returns same format as parseReceipt / parseTransactionHistory.
   static Future<List<Map<String, dynamic>>> parseScreenshot(
       String ocrText, String screenshotType) async {
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-    final typeHint = {
-          'steam':
-              'This is a Steam (Valve) purchase confirmation or transaction history. '
-                  'Items are PC games, DLCs, in-game items, or Steam Wallet top-ups. '
-                  'Category = Gaming. is_want = true. shop_name = "Steam".',
-          'shopee':
-              'This is a Shopee order confirmation, receipt, or transaction history. '
-                  'Extract each ordered item. Infer category from item name. '
-                  'shop_name = seller name if visible, else "Shopee". '
-                  'Payment method: look for ShopeePay, SPaylater, Credit Card, COD.',
-          'lazada': 'This is a Lazada order confirmation or receipt. '
-              'Extract each ordered item. Infer category from item name. '
-              'shop_name = seller name if visible, else "Lazada".',
-          'grab':
-              'This is a GrabFood, GrabCar, or GrabBike receipt/confirmation. '
-                  'GrabFood → category=Food, is_want=true. '
-                  'GrabCar/Bike → category=Transportation, is_want=false. '
-                  'shop_name = restaurant name for food, "Grab" for rides.',
-          'gcash': 'This is a GCash transaction screenshot. '
-              'Extract outgoing transactions (Send Money, Pay, Cash Out, Buy Load). '
-              'Skip incoming (Receive Money, Cash In). '
-              'payment_method = "GCash".',
-          'maya': 'This is a Maya (PayMaya) transaction screenshot. '
-              'Extract outgoing payments/purchases. Skip incoming. '
-              'payment_method = "Maya".',
-          'in_app_purchase':
-              'This is a Google Play, Apple App Store, or in-app purchase receipt. '
-                  'Games/apps → Gaming. Subscriptions → Bills. '
-                  'shop_name = app or game name.',
-          'receipt': 'This is a physical or digital receipt. '
-              'Extract all purchased items with individual prices.',
-          'unknown': 'This could be any purchase screenshot. '
-              'Extract all transactions, purchases, or orders you can find.',
-        }[screenshotType] ??
-        'Extract all purchases or transactions visible in this screenshot.';
+    final typeHint = _buildTypeHint(screenshotType);
 
     final system =
         '''You are a financial data extractor for a Filipino expense tracking app.
@@ -1119,25 +1233,31 @@ CONTEXT: $typeHint
 
 EXTRACTION RULES:
 1. Extract every distinct purchase or transaction line.
-2. item_name: use the actual product/game/item name. NEVER use generic names like "your purchase" or "item". Use exactly what the screenshot says.
-3. amount: the amount the user PAID (after discounts). Skip refunds, credits added.
-4. date: use the date from the screenshot if visible (YYYY-MM-DD format). Use today if missing.
-5. shop_name: platform or store name (Steam, Shopee, seller name, restaurant, etc.)
-6. category: Gaming for games/in-app, Shopping for physical goods, Food for food delivery, Transportation for rides, Bills for subscriptions.
-7. is_want: true for games, entertainment, dining out, non-essential shopping. false for groceries, medicine, transport, bills.
-8. payment_method: detect from screenshot (GCash, Maya, Credit Card, ShopeePay, SPaylater, COD, etc.) or leave "Cash".
-9. If MULTIPLE items in one order, list each as a SEPARATE entry with its own price.
-10. If only a TOTAL is visible with no line items, use the total as ONE entry named after the store/platform.
-11. Return ONLY a valid JSON array. No explanations. No markdown. Empty array [] if nothing found.
+2. item_name: use the EXACT product/game/item/service name. NEVER use "your purchase", "item", "payment", "transaction". Use what the screenshot says.
+3. amount: the amount the user PAID (after discounts). Skip refunds, credits, cashback.
+4. date: use the date from the screenshot (YYYY-MM-DD). Use today if missing.
+5. time: extract the TIME if visible (24h HH:MM format). GCash/Maya/bank show exact times — extract them. Convert 12h to 24h (e.g. 2:30 PM → 14:30). Use "" if not visible.
+6. shop_name: platform, seller, restaurant, or store name.
+7. category: infer from item name and platform type (see CATEGORY MAP).
+8. is_want: true for games, entertainment, dining out, fashion, non-essentials. false for groceries, medicine, transport, bills, utilities.
+9. payment_method: detect from screenshot (GCash, Maya, ShopeePay, SPaylater, Credit Card, Debit Card, COD, GrabPay, PayPal, Bank Transfer, Wise). Default "Cash".
+10. MULTIPLE items in one order → SEPARATE entry per item with its own price.
+11. TOTAL only visible → ONE entry named after the store/platform.
+12. Return ONLY a valid JSON array. No extra text. No markdown. Empty [] if nothing extractable.
 
 CATEGORY MAP:
-- Gaming: Steam games, DLC, in-game purchases, Google Play games, mobile top-ups, Codashop, UniPin
-- Shopping: Shopee, Lazada, physical goods, clothing, gadgets, accessories
-- Food: GrabFood, Foodpanda, restaurants, any food/drink item
-- Transportation: Grab ride, Angkas, jeep, bus, fare
-- Bills: Netflix, Spotify, subscriptions, utilities, insurance
-- Health: medicine, pharmacy, clinic, doctor
-- Others: anything that doesn't fit above''';
+- Gaming: Steam games/DLC, Google Play/App Store games, Codashop, UniPin, Garena, MLBB, Genshin, Valorant, any game top-up
+- Shopping: Shopee, Lazada, Zalora, TikTok Shop, Amazon, AliExpress, Shein, Temu, any physical goods
+- Food: GrabFood, Foodpanda, restaurants, fast food, cafes, any food/drink
+- Transportation: Grab ride, Angkas, Lalamove, Maxim, jeep, bus, fare, fuel
+- Bills: Netflix, Spotify, streaming subscriptions, utilities, internet, rent, insurance, telco load
+- Health: pharmacy, medicine, clinic, hospital, doctor
+- Education: tuition, books, school supplies, courses
+- Personal Care: salon, spa, barbershop, hygiene products
+- Clothing: clothing, shoes, fashion items, accessories
+- Travel: flights, hotels, Airbnb, tours
+- Gifts: gifts, donations, charity
+- Others: anything else''';
 
     final user = '''Screenshot OCR text (type: $screenshotType):
 
@@ -1145,25 +1265,25 @@ $ocrText
 
 Today's date: $today
 
-Return ONLY this JSON array (no extra text):
+Return ONLY this JSON array:
 [
   {
     "date": "YYYY-MM-DD",
+    "time": "HH:MM in 24h format, or empty string",
     "item_name": "exact product or service name",
     "amount": 0.00,
     "category": "Gaming|Shopping|Food|Transportation|Bills|Health|Education|Personal Care|Clothing|Gifts|Travel|Pets|Others",
     "is_want": true,
-    "shop_name": "platform or store",
-    "payment_method": "Cash|GCash|Maya|ShopeePay|Credit Card|SPaylater|COD|GrabPay",
+    "shop_name": "platform, seller, or store",
+    "payment_method": "Cash|GCash|Maya|ShopeePay|SPaylater|Credit Card|Debit Card|COD|GrabPay|PayPal|Bank Transfer|Wise|Remittance",
     "notes": ""
   }
 ]''';
 
     try {
-      final raw = await _callGroq(system, user, maxTokens: 1200);
+      final raw = await _callGroq(system, user, maxTokens: 1400);
       final cleaned =
           raw.replaceAll('```json', '').replaceAll('```', '').trim();
-
       final jsonMatch = RegExp(r'\[[\s\S]*\]').firstMatch(cleaned);
       if (jsonMatch == null) return [];
 
@@ -1180,7 +1300,15 @@ Return ONLY this JSON array (no extra text):
           date = today;
         }
 
-        // Sanitize item name — strip generic prefixes
+        // Validate and normalise time
+        String time = (item['time'] as String? ?? '').trim();
+        if (time.isNotEmpty &&
+            !RegExp(r'^\d{1,2}:\d{2}(:\d{2})?$').hasMatch(time)) {
+          time = '';
+        }
+        if (time.isEmpty) time = '00:00';
+
+        // Sanitise item name
         String name = (item['item_name'] as String? ??
                 item['description'] as String? ??
                 'Purchase')
@@ -1191,13 +1319,11 @@ Return ONLY this JSON array (no extra text):
             .replaceFirst(RegExp(r'\s+for\s*.*$', caseSensitive: false), '')
             .trim();
         if (name.isEmpty) name = 'Purchase';
-        if (name.isNotEmpty) {
-          name = name[0].toUpperCase() + name.substring(1);
-        }
+        if (name.isNotEmpty) name = name[0].toUpperCase() + name.substring(1);
 
         result.add({
           'date': date,
-          'time': '00:00',
+          'time': time,
           'description': name,
           'amount': amount,
           'category':
@@ -1214,8 +1340,165 @@ Return ONLY this JSON array (no extra text):
     }
   }
 
+  /// Build a context hint string for the AI based on detected screenshot type.
+  static String _buildTypeHint(String type) {
+    switch (type) {
+      case 'steam':
+        return 'Steam (Valve) purchase. Items = PC games, DLCs, in-game items, Steam Wallet top-ups. category=Gaming. is_want=true. shop_name="Steam". Time shown in confirmations — extract it.';
+      case 'google_play':
+        return 'Google Play Store purchase. Items = Android apps, games, in-app purchases, subscriptions. category=Gaming for games, Bills for subscriptions. shop_name = app name or "Google Play".';
+      case 'apple_appstore':
+        return 'Apple App Store / iTunes receipt. category=Gaming for games/apps, Bills for subscriptions. shop_name = app name or "App Store".';
+      case 'codashop':
+        return 'Codashop top-up. Items = mobile game top-ups (MLBB diamonds, FF diamonds, etc.). category=Gaming. is_want=true. shop_name="Codashop".';
+      case 'unipin':
+        return 'UniPin voucher/top-up. category=Gaming. shop_name="UniPin".';
+      case 'garena':
+        return 'Garena (Free Fire, AOV) top-up. category=Gaming. shop_name="Garena".';
+      case 'mobile_legends':
+        return 'Mobile Legends / Moonton purchase. category=Gaming. shop_name="Mobile Legends".';
+      case 'riot':
+        return 'Riot Games (Valorant, LoL) purchase. category=Gaming. shop_name="Riot Games".';
+      case 'hoyoverse':
+        return 'Hoyoverse (Genshin Impact, HSR) top-up. category=Gaming.';
+      case 'playstation':
+        return 'PlayStation Store purchase. category=Gaming. shop_name="PlayStation Store".';
+      case 'xbox':
+        return 'Xbox / Microsoft Store purchase. category=Gaming. shop_name="Xbox Store".';
+      case 'nintendo':
+        return 'Nintendo eShop purchase. category=Gaming. shop_name="Nintendo eShop".';
+      case 'epic':
+        return 'Epic Games Store purchase. category=Gaming. shop_name="Epic Games".';
+      case 'gcash':
+        return 'GCash transaction. Extract OUTGOING only (Send Money, Pay, QR Pay, Buy Load, Cash Out, Pay Bills). SKIP incoming (Receive Money, Cash In). payment_method="GCash". Time is shown — extract it (convert 12h to 24h).';
+      case 'maya':
+        return 'Maya (PayMaya) transaction. Extract outgoing payments/purchases. Skip incoming. payment_method="Maya". Extract time if shown.';
+      case 'grabpay':
+        return 'GrabPay transaction. Extract outgoing. payment_method="GrabPay".';
+      case 'shopeepay':
+        return 'ShopeePay or SPaylater. Extract outgoing payments. For SPaylater installments, use the installment amount charged. payment_method="ShopeePay" or "SPaylater".';
+      case 'coins_ph':
+        return 'Coins.ph transaction. Extract outgoing. payment_method="Coins.ph".';
+      case 'paypal':
+        return 'PayPal receipt. Extract payment amount in PHP (or convert from USD). payment_method="PayPal".';
+      case 'wise':
+        return 'Wise transfer receipt. Extract amount sent. payment_method="Wise".';
+      case 'remittance':
+        return 'Remittance (Western Union, Remitly, MoneyGram). Extract amount sent. category=Others.';
+      case 'paymongo':
+        return 'PayMongo receipt. Extract charged amount and merchant name.';
+      case 'stripe':
+        return 'Stripe receipt. Extract charged amount and product/service name.';
+      case 'shopee':
+        return 'Shopee order. Extract each item separately. shop_name = seller name or "Shopee". Detect payment (ShopeePay, SPaylater, GCash, COD, Credit Card).';
+      case 'lazada':
+        return 'Lazada order. Extract each item. shop_name = seller or "Lazada". Detect payment method.';
+      case 'zalora':
+        return 'Zalora fashion order. category=Clothing. shop_name="Zalora".';
+      case 'tiktok_shop':
+        return 'TikTok Shop order. Extract items and seller name.';
+      case 'carousell':
+        return 'Carousell purchase. Extract item and amount.';
+      case 'fb_marketplace':
+        return 'Facebook Marketplace transaction. Extract item and amount.';
+      case 'amazon':
+        return 'Amazon order. Extract items and prices (convert to PHP if USD). shop_name = seller or "Amazon".';
+      case 'ebay':
+        return 'eBay purchase. shop_name = seller or "eBay".';
+      case 'aliexpress':
+        return 'AliExpress order. Extract items. shop_name = seller or "AliExpress".';
+      case 'shein':
+        return 'SHEIN order. category=Clothing. shop_name="SHEIN".';
+      case 'temu':
+        return 'Temu order. shop_name="Temu".';
+      case 'zalando':
+        return 'Zalando order. category=Clothing. shop_name="Zalando".';
+      case 'asos':
+        return 'ASOS order. category=Clothing. shop_name="ASOS".';
+      case 'taobao':
+        return 'Taobao/Tmall order. Convert CNY to PHP (×7.5 approx) if needed. shop_name = store or "Taobao".';
+      case 'etsy':
+        return 'Etsy purchase. shop_name = seller or "Etsy".';
+      case 'wish':
+        return 'Wish order. shop_name="Wish".';
+      case 'grabfood':
+        return 'GrabFood order. category=Food. is_want=true. shop_name = restaurant. Extract time if shown.';
+      case 'foodpanda':
+        return 'Foodpanda order. category=Food. is_want=true. shop_name = restaurant.';
+      case 'shopee_food':
+        return 'Shopee Food order. category=Food. is_want=true. shop_name = restaurant.';
+      case 'grab':
+        return 'Grab ride (Car/Bike). category=Transportation. is_want=false. shop_name="Grab". Extract time.';
+      case 'angkas':
+        return 'Angkas ride. category=Transportation. is_want=false. shop_name="Angkas".';
+      case 'lalamove':
+        return 'Lalamove delivery. category=Transportation. shop_name="Lalamove".';
+      case 'maxim':
+        return 'Maxim ride. category=Transportation. is_want=false. shop_name="Maxim".';
+      case 'bpi':
+      case 'bdo':
+      case 'metrobank':
+      case 'unionbank':
+      case 'landbank':
+      case 'rcbc':
+      case 'security_bank':
+      case 'gotyme':
+      case 'tonik':
+      case 'seabank':
+        final bName = {
+              'bpi': 'BPI',
+              'bdo': 'BDO',
+              'metrobank': 'Metrobank',
+              'unionbank': 'UnionBank',
+              'landbank': 'Landbank',
+              'rcbc': 'RCBC',
+              'security_bank': 'Security Bank',
+              'gotyme': 'GoTyme',
+              'tonik': 'Tonik',
+              'seabank': 'SeaBank'
+            }[type] ??
+            type;
+        return '$bName bank transaction. Extract OUTGOING payments only. Skip incoming credits. Extract time if visible. payment_method="$bName".';
+      case 'netflix':
+        return 'Netflix subscription. category=Bills. is_want=true. shop_name="Netflix".';
+      case 'spotify':
+        return 'Spotify subscription. category=Bills. is_want=true. shop_name="Spotify".';
+      case 'youtube':
+        return 'YouTube Premium/Music. category=Bills. is_want=true. shop_name="YouTube".';
+      case 'disney_plus':
+        return 'Disney+ subscription. category=Bills. is_want=true. shop_name="Disney+".';
+      case 'viu':
+        return 'Viu subscription. category=Bills. shop_name="Viu".';
+      case 'vivamax':
+        return 'Vivamax subscription. category=Bills. shop_name="Vivamax".';
+      case 'streaming':
+        return 'Streaming subscription charge. category=Bills.';
+      case 'smart':
+        return 'Smart telco/load. category=Bills. shop_name="Smart".';
+      case 'globe':
+        return 'Globe telco/load. category=Bills. shop_name="Globe".';
+      case 'dito':
+        return 'DITO load/bill. category=Bills. shop_name="DITO".';
+      case 'receipt_fastfood':
+        return 'Fast food or café receipt. category=Food. shop_name = restaurant from header. Extract individual items if listed.';
+      case 'receipt_grocery':
+        return 'Grocery/supermarket receipt. category=Food. is_want=false. Extract individual items if listed. Non-food items → Shopping.';
+      case 'receipt_pharmacy':
+        return 'Pharmacy receipt. category=Health. is_want=false. Each medicine = separate entry.';
+      case 'receipt_bookstore':
+        return 'Bookstore receipt. category=Education. shop_name = bookstore name.';
+      case 'receipt_utility':
+        return 'Utility bill (Meralco, PLDT, Maynilad). category=Bills. is_want=false. Amount = total due/paid.';
+      case 'receipt':
+        return 'Physical or digital receipt. Extract all purchased items with prices. Store name is in the first 2-3 lines.';
+      case 'transaction_history':
+        return 'Transaction history table. Extract OUTGOING transactions only. Each row = one expense.';
+      default:
+        return 'Purchase screenshot. Extract all transactions, purchases, or orders. Use exact item names.';
+    }
+  }
+
   /// Parse OCR text from multiple screenshots in one batch.
-  /// Each entry in [images] has 'ocrText' and 'type' (from detectScreenshotType).
   /// Returns a flat list of all extracted transactions across all images.
   static Future<List<Map<String, dynamic>>> parseScreenshotBatch(
       List<Map<String, String>> images) async {

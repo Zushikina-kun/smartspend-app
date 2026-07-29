@@ -240,8 +240,9 @@ class DebugService {
           .toList();
       final income = await DBService.getMonthlyIncome();
       final iwMode = await DBService.getIncomeWalletMode();
-      final spendLimit = await DBService.getSpendingLimit();
-      final spendPeriod = await DBService.getSpendingLimitPeriod();
+      final tightest = await DBService.getTightestLimit();
+      final spendLimit = tightest['limit'] as double;
+      final spendPeriod = tightest['period'] as String;
       final breakdown = ScoreService.getBreakdown(
         thisMonthExp,
         budgets: budgets,

@@ -947,11 +947,10 @@ class _DashboardState extends State<Dashboard> {
 
     // Load new lightweight mode + spending limit settings in parallel
     final incomeWalletMode = await DBService.getIncomeWalletMode();
-    final spendingLimit = await DBService.getSpendingLimit();
-    final spendingLimitPeriod = await DBService.getSpendingLimitPeriod();
-    final spentInPeriod = spendingLimit > 0
-        ? await DBService.getSpentInPeriod(spendingLimitPeriod)
-        : 0.0;
+    final tightest = await DBService.getTightestLimit();
+    final spendingLimit = tightest['limit'] as double;
+    final spendingLimitPeriod = tightest['period'] as String;
+    final spentInPeriod = tightest['spent'] as double;
     // Multi-period limits
     final allLimits = await DBService.getAllLimits();
     final allSpent = await DBService.getAllSpent();

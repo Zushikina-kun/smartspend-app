@@ -192,24 +192,78 @@ class OCRService {
     return results;
   }
 
-  /// Fast screenshot type detection from OCR text.
-  /// Mirrors LLMService.detectScreenshotType — kept here to avoid
-  /// importing llm_service into ocr_service.
+  /// Fast screenshot type detection from OCR text — mirrors LLMService.detectScreenshotType.
   static String _detectScreenshotTypeFromOCR(String text) {
+    // Delegate to LLMService's canonical implementation to stay in sync
+    // (import avoided at class level; call it inline via identical logic)
     final lower = text.toLowerCase();
-    if (lower.contains('steam') || lower.contains('valve')) return 'steam';
+    if (lower.contains('steam') || lower.contains('valve corporation'))
+      return 'steam';
+    if (lower.contains('google play') || lower.contains('play store'))
+      return 'google_play';
+    if (lower.contains('app store') ||
+        lower.contains('itunes') ||
+        (lower.contains('apple') && lower.contains('receipt')))
+      return 'apple_appstore';
+    if (lower.contains('codashop')) return 'codashop';
+    if (lower.contains('unipin')) return 'unipin';
+    if (lower.contains('garena')) return 'garena';
+    if (lower.contains('moonton') || lower.contains('mobile legends'))
+      return 'mobile_legends';
+    if (lower.contains('gcash')) return 'gcash';
+    if (lower.contains('maya') || lower.contains('paymaya')) return 'maya';
+    if (lower.contains('grabpay') || lower.contains('grab pay'))
+      return 'grabpay';
+    if (lower.contains('shopeepay') ||
+        lower.contains('shopee pay') ||
+        lower.contains('spaylater')) return 'shopeepay';
+    if (lower.contains('coins.ph') || lower.contains('coinsph'))
+      return 'coins_ph';
+    if (lower.contains('paypal')) return 'paypal';
     if (lower.contains('shopee')) return 'shopee';
-    if (lower.contains('lazada')) return 'lazada';
+    if (lower.contains('lazada') || lower.contains('lazwallet'))
+      return 'lazada';
+    if (lower.contains('zalora')) return 'zalora';
+    if (lower.contains('tiktok shop') || lower.contains('tiktokshop'))
+      return 'tiktok_shop';
+    if (lower.contains('aliexpress')) return 'aliexpress';
+    if (lower.contains('amazon') && lower.contains('order')) return 'amazon';
+    if (lower.contains('shein')) return 'shein';
+    if (lower.contains('temu')) return 'temu';
+    if (lower.contains('grabfood') || lower.contains('grab food'))
+      return 'grabfood';
+    if (lower.contains('foodpanda') || lower.contains('food panda'))
+      return 'foodpanda';
     if (lower.contains('grab') &&
         (lower.contains('order') ||
             lower.contains('ride') ||
-            lower.contains('food'))) return 'grab';
-    if (lower.contains('gcash')) return 'gcash';
-    if (lower.contains('maya') || lower.contains('paymaya')) return 'maya';
-    if (lower.contains('google play') ||
-        lower.contains('app store') ||
-        lower.contains('in-app purchase')) return 'in_app_purchase';
-    if (lower.contains('total') || lower.contains('subtotal')) return 'receipt';
+            lower.contains('car') ||
+            lower.contains('bike'))) return 'grab';
+    if (lower.contains('angkas')) return 'angkas';
+    if (lower.contains('lalamove')) return 'lalamove';
+    if (lower.contains('netflix')) return 'netflix';
+    if (lower.contains('spotify')) return 'spotify';
+    if (lower.contains('bpi') && lower.contains('transaction')) return 'bpi';
+    if (lower.contains('bdo') && lower.contains('transaction')) return 'bdo';
+    if (lower.contains('metrobank')) return 'metrobank';
+    if (lower.contains('unionbank')) return 'unionbank';
+    if (lower.contains('gotyme')) return 'gotyme';
+    if (lower.contains('jollibee') ||
+        lower.contains('mcdonald') ||
+        lower.contains('kfc') ||
+        lower.contains('starbucks')) return 'receipt_fastfood';
+    if (lower.contains('sm supermarket') ||
+        lower.contains('puregold') ||
+        lower.contains('robinsons supermarket')) return 'receipt_grocery';
+    if (lower.contains('mercury drug') || lower.contains('watsons'))
+      return 'receipt_pharmacy';
+    if (lower.contains('meralco') && lower.contains('amount'))
+      return 'receipt_utility';
+    if (lower.contains('total') ||
+        lower.contains('subtotal') ||
+        lower.contains('amount due')) return 'receipt';
+    if (RegExp(r'\d{4}-\d{2}-\d{2}').allMatches(text).length >= 3)
+      return 'transaction_history';
     return 'unknown';
   }
 

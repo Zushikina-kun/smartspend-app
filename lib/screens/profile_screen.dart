@@ -56,7 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _accountType = 'employed';
   String _incomeFrequency = 'monthly';
   bool _loading = true;
-  bool _incomeWalletMode = true; // loaded in _loadStats
+  bool _incomeWalletMode = true;
+  double _spendingLimit = 0; // tightest active limit (for tip condition)
 
   @override
   void initState() {
@@ -94,8 +95,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               {'amount': e.amount, 'category': e.category, 'date': e.date})
           .toList();
       final iwMode = await DBService.getIncomeWalletMode();
-      final spendLimit = await DBService.getSpendingLimit();
-      final spendPeriod = await DBService.getSpendingLimitPeriod();
+      final tightest = await DBService.getTightestLimit();
+      final spendLimit = tightest['limit'] as double;
+      final spendPeriod = tightest['period'] as String;
       final rawScore = ScoreService.calculateScore(expenseData,
           budgets: budgets,
           monthlyIncome: iwMode ? income : 0,
@@ -135,6 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _accountType = accountType;
           _incomeFrequency = incomeFreq;
           _incomeWalletMode = iwMode;
+          _spendingLimit = tightest['limit'] as double;
           _loading = false;
         });
       }
@@ -1830,7 +1833,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 case 'spending_restraint':
                                   tip = _incomeWalletMode
                                       ? null
-                                      : 'Set a spending limit in Settings to track restraint more accurately.';
+                                      : (_spendingLimit == 0
+                                          ? 'Set a spending limit in Settings → Spending Limits to track restraint more accurately.'
+                                          : 'Your spending is pushing the limit. Try reducing discretionary purchases.');
                                   break;
                                 case 'category_balance':
                                   tip =

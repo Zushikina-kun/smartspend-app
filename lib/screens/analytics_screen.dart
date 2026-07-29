@@ -235,8 +235,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     try {
       final budgets = await DBService.getBudgets();
       final iwMode = await DBService.getIncomeWalletMode();
-      final spendLimit = await DBService.getSpendingLimit();
-      final spendPeriod = await DBService.getSpendingLimitPeriod();
+      final tightest = await DBService.getTightestLimit();
+      final spendLimit = tightest['limit'] as double;
+      final spendPeriod = tightest['period'] as String;
       final now2 = DateTime.now();
       final currentMonth2 =
           "${now2.year}-${now2.month.toString().padLeft(2, '0')}";

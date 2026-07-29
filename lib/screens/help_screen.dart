@@ -365,6 +365,30 @@ const _sections = [
         example:
             "Didn't log for 3 days. App asks. You say 'clean days' → FHS +6 pts bonus for confirmed no-spending.",
       ),
+      _HelpItem(
+        title: "Batch Screenshot Import — How does it work?",
+        body:
+            "Tap the 📷 photo library icon in the AI chat (or Profile → Batch Screenshot Import) to import purchases from multiple screenshots at once.\n\n"
+            "Supported platforms (40+ types auto-detected):\n"
+            "• 🎮 Gaming: Steam, Google Play, App Store, Codashop, UniPin, Garena, MLBB, Genshin, Valorant, PlayStation, Xbox, Nintendo\n"
+            "• 🛍️ PH Shopping: Shopee, Lazada, Zalora, TikTok Shop, Carousell\n"
+            "• 🌐 International: Amazon, AliExpress, Shein, Temu, eBay, Etsy, Taobao\n"
+            "• 🍔 Food Delivery: GrabFood, Foodpanda, Shopee Food\n"
+            "• 🚗 Transport: Grab rides, Angkas, Lalamove, Maxim\n"
+            "• 💳 E-wallets: GCash, Maya, GrabPay, ShopeePay, Coins.ph, PayPal, Wise\n"
+            "• 🏦 Banks: BPI, BDO, Metrobank, UnionBank, GoTyme, Tonik, SeaBank\n"
+            "• 📺 Streaming: Netflix, Spotify, YouTube, Disney+, Viu, Vivamax\n"
+            "• 🧾 Physical receipts: fast food, grocery, pharmacy, utility bills\n\n"
+            "How to use:\n"
+            "1. Tap the photo library icon in the AI chat\n"
+            "2. Pick up to 10 screenshots from your gallery\n"
+            "3. Tap 'Extract' — the app OCRs each image and calls the AI\n"
+            "4. Review the extracted items — edit name, amount, category, date, or want/need tag\n"
+            "5. Tap 'Import' to add all selected items to your expenses\n\n"
+            "Tip: GCash, bank apps, and Grab show exact transaction times — the app extracts these too, not just the date.",
+        example:
+            "Pick 5 Steam purchase screenshots → Extract → AI finds 5 game purchases with titles, prices, dates → review → import all at once.",
+      ),
     ],
   ),
   _HelpSection(

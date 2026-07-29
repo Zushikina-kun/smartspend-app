@@ -94,8 +94,9 @@ class StartupAlertsService {
       // Only fires when income/wallet tracking is actually ON.
       final income = await DBService.getMonthlyIncome();
       final incomeWalletModeOn = await DBService.getIncomeWalletMode();
-      final spendLimit = await DBService.getSpendingLimit();
-      final spendPeriod = await DBService.getSpendingLimitPeriod();
+      final tightest = await DBService.getTightestLimit();
+      final spendLimit = tightest['limit'] as double;
+      final spendPeriod = tightest['period'] as String;
       final incomeCheckKey = 'income_sanity_check';
       final lastIncomeCheck = await DBService.getSetting(incomeCheckKey);
       final thisMonth = DateFormat('yyyy-MM').format(DateTime.now());
