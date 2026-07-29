@@ -21,6 +21,7 @@ import 'chat_history_screen.dart';
 import 'smart_camera_screen.dart';
 import 'add_expense_screen.dart';
 import 'bank_import_screen.dart';
+import 'batch_image_import_screen.dart';
 
 class AIScreen extends StatefulWidget {
   const AIScreen({super.key});
@@ -2078,7 +2079,28 @@ class _AIScreenState extends State<AIScreen> {
                     constraints: const BoxConstraints(),
                   ),
                   const SizedBox(width: 2),
-                  // Voice button
+                  // Batch screenshot import
+                  IconButton(
+                    icon: Icon(Icons.photo_library_outlined,
+                        size: 20, color: Theme.of(context).colorScheme.primary),
+                    onPressed: _sending
+                        ? null
+                        : () async {
+                            final imported = await Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) =>
+                                      const BatchImageImportScreen()),
+                            );
+                            if (imported == true && mounted) {
+                              _loadContext(silent: true);
+                            }
+                          },
+                    tooltip: "Batch Screenshot Import",
+                    padding: const EdgeInsets.all(6),
+                    constraints: const BoxConstraints(),
+                  ),
+                  const SizedBox(width: 2),
                   IconButton(
                     icon: Icon(
                       _isListening ? Icons.stop_circle : Icons.mic,

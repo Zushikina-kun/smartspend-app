@@ -26,6 +26,7 @@ import 'package:file_picker/file_picker.dart';
 import 'login_screen.dart';
 import 'about_screen.dart';
 import 'bank_import_screen.dart';
+import 'batch_image_import_screen.dart';
 import 'help_screen.dart';
 import 'pin_setup_screen.dart';
 import 'manage_categories_screen.dart';
@@ -2024,6 +2025,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => const BankImportScreen())),
+                          ),
+                          const Divider(height: 1),
+                          ListTile(
+                            leading: const Icon(Icons.photo_library_outlined,
+                                color: Colors.indigo),
+                            title: const Text("Batch Screenshot Import"),
+                            subtitle: const Text(
+                                "Import from Steam, Shopee, Lazada, GCash screenshots — up to 10 at once",
+                                style: TextStyle(fontSize: 11)),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        const BatchImageImportScreen())),
                           ),
                           const Divider(height: 1),
                           ListTile(

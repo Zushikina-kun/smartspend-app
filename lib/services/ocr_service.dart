@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 class OCRService {
@@ -125,6 +127,90 @@ class OCRService {
       return 'transaction_history'; // multiple dates = likely a history table
     }
     return 'receipt'; // default
+  }
+
+  // ── BATCH IMAGE PROCESSING ─────────────────────────────────────────────────
+
+  /// Pick up to [maxImages] images from the gallery at once.
+  /// Returns a list of image file paths.
+  static Future<List<String>> pickMultipleImages({int maxImages = 10}) async {
+    final picker = ImagePicker();
+    final images = await picker.pickMultiImage(
+      imageQuality: 90,
+      maxWidth: 2048,
+    );
+    if (images.isEmpty) return [];
+    return images.take(maxImages).map((x) => x.path).toList();
+  }
+
+  /// Run OCR on a single image path and return raw text.
+  /// Uses document mode (raw OCR, no receipt cleaning) for screenshots.
+  static Future<String> scanImageRaw(String path) async {
+    return _scan(path, cleanForReceipt: false);
+  }
+
+  /// Process a batch of image paths in parallel:
+  /// OCR each image, detect its type, return structured list ready for
+  /// LLMService.parseScreenshotBatch().
+  ///
+  /// Returns list of maps with keys: 'path', 'ocrText', 'type', 'error'.
+  static Future<List<Map<String, String>>> processBatch(
+      List<String> paths) async {
+    const concurrency = 3; // process 3 images at a time
+    final results = List<Map<String, String>>.filled(
+        paths.length, {'path': '', 'ocrText': '', 'type': 'unknown'});
+
+    for (var i = 0; i < paths.length; i += concurrency) {
+      final batch = paths.sublist(i, (i + concurrency).clamp(0, paths.length));
+      final batchResults = await Future.wait(
+        batch.asMap().entries.map((entry) async {
+          final idx = i + entry.key;
+          final path = entry.value;
+          try {
+            final text = await scanImageRaw(path);
+            final type = _detectScreenshotTypeFromOCR(text);
+            return MapEntry(idx, {
+              'path': path,
+              'ocrText': text,
+              'type': type,
+              'error': '',
+            });
+          } catch (e) {
+            return MapEntry(idx, {
+              'path': path,
+              'ocrText': '',
+              'type': 'unknown',
+              'error': e.toString().replaceAll('Exception: ', ''),
+            });
+          }
+        }),
+      );
+      for (final entry in batchResults) {
+        results[entry.key] = entry.value;
+      }
+    }
+    return results;
+  }
+
+  /// Fast screenshot type detection from OCR text.
+  /// Mirrors LLMService.detectScreenshotType — kept here to avoid
+  /// importing llm_service into ocr_service.
+  static String _detectScreenshotTypeFromOCR(String text) {
+    final lower = text.toLowerCase();
+    if (lower.contains('steam') || lower.contains('valve')) return 'steam';
+    if (lower.contains('shopee')) return 'shopee';
+    if (lower.contains('lazada')) return 'lazada';
+    if (lower.contains('grab') &&
+        (lower.contains('order') ||
+            lower.contains('ride') ||
+            lower.contains('food'))) return 'grab';
+    if (lower.contains('gcash')) return 'gcash';
+    if (lower.contains('maya') || lower.contains('paymaya')) return 'maya';
+    if (lower.contains('google play') ||
+        lower.contains('app store') ||
+        lower.contains('in-app purchase')) return 'in_app_purchase';
+    if (lower.contains('total') || lower.contains('subtotal')) return 'receipt';
+    return 'unknown';
   }
 
   static String _cleanReceiptText(String raw) {

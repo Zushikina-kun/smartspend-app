@@ -1029,4 +1029,214 @@ Return ONLY this JSON array:
       throw Exception("Could not parse receipt: $e");
     }
   }
+
+  // ── SCREENSHOT / DIGITAL RECEIPT PARSER ───────────────────────────────────
+
+  /// Detect the type of screenshot from its OCR text.
+  /// Returns: 'steam' | 'shopee' | 'lazada' | 'gcash' | 'maya' | 'grab' |
+  ///          'in_app_purchase' | 'receipt' | 'unknown'
+  static String detectScreenshotType(String text) {
+    final lower = text.toLowerCase();
+    if (lower.contains('steam') ||
+        lower.contains('valve') ||
+        lower.contains('steamworks') ||
+        lower.contains('purchase confirmation') && lower.contains('game')) {
+      return 'steam';
+    }
+    if (lower.contains('shopee') ||
+        lower.contains('spaylater') ||
+        lower.contains('shopee pay')) return 'shopee';
+    if (lower.contains('lazada') ||
+        lower.contains('lazwallet') ||
+        lower.contains('lcash')) return 'lazada';
+    if (lower.contains('grab') &&
+        (lower.contains('order') ||
+            lower.contains('ride') ||
+            lower.contains('food'))) {
+      return 'grab';
+    }
+    if (lower.contains('gcash')) return 'gcash';
+    if (lower.contains('maya') || lower.contains('paymaya')) return 'maya';
+    if (lower.contains('google play') ||
+        lower.contains('app store') ||
+        lower.contains('in-app purchase') ||
+        lower.contains('apple') && lower.contains('receipt')) {
+      return 'in_app_purchase';
+    }
+    if (lower.contains('total') || lower.contains('subtotal')) return 'receipt';
+    return 'unknown';
+  }
+
+  /// Parse OCR text from a screenshot into structured expense items.
+  /// Screenshot-aware: handles Steam, Shopee, Lazada, Grab, GCash, in-app purchases.
+  /// Extracts: date, item name, price, store/platform, category.
+  /// Returns same format as parseReceipt / parseTransactionHistory.
+  static Future<List<Map<String, dynamic>>> parseScreenshot(
+      String ocrText, String screenshotType) async {
+    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    final typeHint = {
+          'steam':
+              'This is a Steam (Valve) purchase confirmation or transaction history. '
+                  'Items are PC games, DLCs, in-game items, or Steam Wallet top-ups. '
+                  'Category = Gaming. is_want = true. shop_name = "Steam".',
+          'shopee':
+              'This is a Shopee order confirmation, receipt, or transaction history. '
+                  'Extract each ordered item. Infer category from item name. '
+                  'shop_name = seller name if visible, else "Shopee". '
+                  'Payment method: look for ShopeePay, SPaylater, Credit Card, COD.',
+          'lazada': 'This is a Lazada order confirmation or receipt. '
+              'Extract each ordered item. Infer category from item name. '
+              'shop_name = seller name if visible, else "Lazada".',
+          'grab':
+              'This is a GrabFood, GrabCar, or GrabBike receipt/confirmation. '
+                  'GrabFood → category=Food, is_want=true. '
+                  'GrabCar/Bike → category=Transportation, is_want=false. '
+                  'shop_name = restaurant name for food, "Grab" for rides.',
+          'gcash': 'This is a GCash transaction screenshot. '
+              'Extract outgoing transactions (Send Money, Pay, Cash Out, Buy Load). '
+              'Skip incoming (Receive Money, Cash In). '
+              'payment_method = "GCash".',
+          'maya': 'This is a Maya (PayMaya) transaction screenshot. '
+              'Extract outgoing payments/purchases. Skip incoming. '
+              'payment_method = "Maya".',
+          'in_app_purchase':
+              'This is a Google Play, Apple App Store, or in-app purchase receipt. '
+                  'Games/apps → Gaming. Subscriptions → Bills. '
+                  'shop_name = app or game name.',
+          'receipt': 'This is a physical or digital receipt. '
+              'Extract all purchased items with individual prices.',
+          'unknown': 'This could be any purchase screenshot. '
+              'Extract all transactions, purchases, or orders you can find.',
+        }[screenshotType] ??
+        'Extract all purchases or transactions visible in this screenshot.';
+
+    final system =
+        '''You are a financial data extractor for a Filipino expense tracking app.
+Extract purchases/transactions from screenshot OCR text.
+
+CONTEXT: $typeHint
+
+EXTRACTION RULES:
+1. Extract every distinct purchase or transaction line.
+2. item_name: use the actual product/game/item name. NEVER use generic names like "your purchase" or "item". Use exactly what the screenshot says.
+3. amount: the amount the user PAID (after discounts). Skip refunds, credits added.
+4. date: use the date from the screenshot if visible (YYYY-MM-DD format). Use today if missing.
+5. shop_name: platform or store name (Steam, Shopee, seller name, restaurant, etc.)
+6. category: Gaming for games/in-app, Shopping for physical goods, Food for food delivery, Transportation for rides, Bills for subscriptions.
+7. is_want: true for games, entertainment, dining out, non-essential shopping. false for groceries, medicine, transport, bills.
+8. payment_method: detect from screenshot (GCash, Maya, Credit Card, ShopeePay, SPaylater, COD, etc.) or leave "Cash".
+9. If MULTIPLE items in one order, list each as a SEPARATE entry with its own price.
+10. If only a TOTAL is visible with no line items, use the total as ONE entry named after the store/platform.
+11. Return ONLY a valid JSON array. No explanations. No markdown. Empty array [] if nothing found.
+
+CATEGORY MAP:
+- Gaming: Steam games, DLC, in-game purchases, Google Play games, mobile top-ups, Codashop, UniPin
+- Shopping: Shopee, Lazada, physical goods, clothing, gadgets, accessories
+- Food: GrabFood, Foodpanda, restaurants, any food/drink item
+- Transportation: Grab ride, Angkas, jeep, bus, fare
+- Bills: Netflix, Spotify, subscriptions, utilities, insurance
+- Health: medicine, pharmacy, clinic, doctor
+- Others: anything that doesn't fit above''';
+
+    final user = '''Screenshot OCR text (type: $screenshotType):
+
+$ocrText
+
+Today's date: $today
+
+Return ONLY this JSON array (no extra text):
+[
+  {
+    "date": "YYYY-MM-DD",
+    "item_name": "exact product or service name",
+    "amount": 0.00,
+    "category": "Gaming|Shopping|Food|Transportation|Bills|Health|Education|Personal Care|Clothing|Gifts|Travel|Pets|Others",
+    "is_want": true,
+    "shop_name": "platform or store",
+    "payment_method": "Cash|GCash|Maya|ShopeePay|Credit Card|SPaylater|COD|GrabPay",
+    "notes": ""
+  }
+]''';
+
+    try {
+      final raw = await _callGroq(system, user, maxTokens: 1200);
+      final cleaned =
+          raw.replaceAll('```json', '').replaceAll('```', '').trim();
+
+      final jsonMatch = RegExp(r'\[[\s\S]*\]').firstMatch(cleaned);
+      if (jsonMatch == null) return [];
+
+      final parsed = jsonDecode(jsonMatch.group(0)!) as List;
+      final result = <Map<String, dynamic>>[];
+      for (final item in parsed) {
+        if (item is! Map) continue;
+        final amount = (item['amount'] as num?)?.toDouble() ?? 0;
+        if (amount <= 0) continue;
+
+        String date = item['date'] as String? ?? today;
+        if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(date) ||
+            DateTime.tryParse(date) == null) {
+          date = today;
+        }
+
+        // Sanitize item name — strip generic prefixes
+        String name = (item['item_name'] as String? ??
+                item['description'] as String? ??
+                'Purchase')
+            .trim();
+        name = name
+            .replaceFirst(
+                RegExp(r'^(your |my |the |a |an )', caseSensitive: false), '')
+            .replaceFirst(RegExp(r'\s+for\s*.*$', caseSensitive: false), '')
+            .trim();
+        if (name.isEmpty) name = 'Purchase';
+        if (name.isNotEmpty) {
+          name = name[0].toUpperCase() + name.substring(1);
+        }
+
+        result.add({
+          'date': date,
+          'time': '00:00',
+          'description': name,
+          'amount': amount,
+          'category':
+              _normalizeCategory(item['category'] as String? ?? 'Others'),
+          'is_want': (item['is_want'] as bool? ?? true) ? 1 : 0,
+          'payment_method': item['payment_method'] as String? ?? 'Cash',
+          'notes': item['notes'] as String? ?? '',
+          'shop_name': item['shop_name'] as String? ?? '',
+        });
+      }
+      return result;
+    } catch (e) {
+      throw Exception('Could not parse screenshot: $e');
+    }
+  }
+
+  /// Parse OCR text from multiple screenshots in one batch.
+  /// Each entry in [images] has 'ocrText' and 'type' (from detectScreenshotType).
+  /// Returns a flat list of all extracted transactions across all images.
+  static Future<List<Map<String, dynamic>>> parseScreenshotBatch(
+      List<Map<String, String>> images) async {
+    final results = <Map<String, dynamic>>[];
+    // Process in parallel — max 3 concurrent to avoid rate limits
+    const batchSize = 3;
+    for (var i = 0; i < images.length; i += batchSize) {
+      final batch = images.skip(i).take(batchSize).toList();
+      final batchResults = await Future.wait(
+        batch.map((img) =>
+            parseScreenshot(img['ocrText'] ?? '', img['type'] ?? 'unknown')
+                .catchError((_) => <Map<String, dynamic>>[])),
+      );
+      for (final r in batchResults) {
+        results.addAll(r);
+      }
+      // Small delay between batches to respect rate limits
+      if (i + batchSize < images.length) {
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+    }
+    return results;
+  }
 }
