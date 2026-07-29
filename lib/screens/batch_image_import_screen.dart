@@ -11,7 +11,9 @@ import '../services/event_bus.dart';
 /// The app OCRs each image, detects its type, then calls the AI to extract all
 /// purchases into a unified review list before importing.
 class BatchImageImportScreen extends StatefulWidget {
-  const BatchImageImportScreen({super.key});
+  /// Optional pre-loaded image paths — used when routing from single-photo mode.
+  final List<String> preloadedPaths;
+  const BatchImageImportScreen({super.key, this.preloadedPaths = const []});
 
   @override
   State<BatchImageImportScreen> createState() => _BatchImageImportScreenState();
@@ -69,7 +71,19 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
   bool _importing = false;
   int _processedCount = 0;
 
-  // Colour + label per screenshot type
+  @override
+  void initState() {
+    super.initState();
+    // Pre-load images if provided (e.g. from single-photo routing)
+    if (widget.preloadedPaths.isNotEmpty) {
+      for (final p in widget.preloadedPaths) {
+        _images.add(_ImageEntry(path: p));
+      }
+      // Auto-start processing after first frame
+      WidgetsBinding.instance.addPostFrameCallback((_) => _processAll());
+    }
+  }
+
   static const _typeColors = {
     'steam': Color(0xFF1b2838),
     'shopee': Colors.orange,

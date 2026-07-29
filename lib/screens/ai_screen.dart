@@ -8,6 +8,8 @@ import 'package:share_plus/share_plus.dart';
 import 'dart:async';
 import '../services/ai_chat_service.dart';
 import '../services/db_service.dart';
+import '../services/llm_service.dart';
+import '../services/ocr_service.dart';
 import '../services/score_service.dart';
 import '../services/voice_service.dart';
 import '../services/event_bus.dart';
@@ -1618,6 +1620,240 @@ class _AIScreenState extends State<AIScreen> {
     });
   }
 
+  // ── UNIFIED SMART IMPORT ─────────────────────────────────────────────────
+
+  /// Shows the unified Smart Import bottom sheet — one entry point for all
+  /// image/text import modes: Live Camera, Single Photo, Batch Screenshots,
+  /// and Paste Text.
+  void _showSmartImportSheet() {
+    final cs = Theme.of(context).colorScheme;
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle bar
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(children: [
+                Icon(Icons.camera_enhance, color: cs.primary, size: 20),
+                const SizedBox(width: 8),
+                const Text("Smart Import",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ]),
+              const SizedBox(height: 4),
+              Text("Import expenses from any source",
+                  style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              const SizedBox(height: 14),
+              // 2×2 grid of import options
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 2.6,
+                children: [
+                  _importTile(
+                    ctx,
+                    icon: Icons.camera_alt_outlined,
+                    label: "Live Camera",
+                    sublabel: "Scan barcode / receipt",
+                    color: cs.primary,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _handleSmartCamera();
+                    },
+                  ),
+                  _importTile(
+                    ctx,
+                    icon: Icons.image_outlined,
+                    label: "Single Photo",
+                    sublabel: "One receipt or screenshot",
+                    color: Colors.teal,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _handleSinglePhoto();
+                    },
+                  ),
+                  _importTile(
+                    ctx,
+                    icon: Icons.photo_library_outlined,
+                    label: "Batch Screenshots",
+                    sublabel: "Shopee, Steam, GCash…",
+                    color: Colors.indigo,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _handleBatchImport();
+                    },
+                  ),
+                  _importTile(
+                    ctx,
+                    icon: Icons.content_paste_outlined,
+                    label: "Paste Text",
+                    sublabel: "GCash / BPI / Maya export",
+                    color: Colors.orange,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _handlePasteImport();
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _importTile(
+    BuildContext ctx, {
+    required IconData icon,
+    required String label,
+    required String sublabel,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withValues(alpha: 0.25)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(label,
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: color)),
+                  Text(sublabel,
+                      style: TextStyle(
+                          fontSize: 10, color: color.withValues(alpha: 0.7)),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Single photo from gallery — auto-routes to BatchImageImportScreen for
+  /// screenshots (Steam, Shopee, GCash, etc.) or BankImportScreen for
+  /// receipts/transaction history.
+  Future<void> _handleSinglePhoto() async {
+    try {
+      final paths = await OCRService.pickMultipleImages(maxImages: 1);
+      if (paths.isEmpty || !mounted) return;
+      final path = paths.first;
+
+      // Show brief processing snackbar
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Row(children: [
+          SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                  strokeWidth: 2, color: Colors.white)),
+          SizedBox(width: 12),
+          Text("Analyzing image..."),
+        ]),
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 8),
+      ));
+
+      final ocrText = await OCRService.scanImageRaw(path);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
+
+      final screenshotType = LLMService.detectScreenshotType(ocrText);
+      final docType = OCRService.detectDocumentType(ocrText);
+
+      // Receipts and transaction history → BankImportScreen (structured text parser)
+      // Screenshots of apps → BatchImageImportScreen (screenshot-aware AI parser)
+      final isReceiptOrDoc =
+          docType == 'receipt' || docType == 'transaction_history';
+      final isScreenshot = !isReceiptOrDoc && screenshotType != 'unknown';
+
+      if (isScreenshot) {
+        // Route to batch screen pre-loaded with this one image
+        final imported = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(
+              builder: (_) => BatchImageImportScreen(preloadedPaths: [path])),
+        );
+        if (imported == true && mounted) _loadContext(silent: true);
+      } else if (isReceiptOrDoc || ocrText.isNotEmpty) {
+        // Receipt / transaction history / fallback → text-based import
+        final source = docType == 'transaction_history' ? 'GCash' : 'Receipt';
+        final imported = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(
+              builder: (_) =>
+                  BankImportScreen(prefillText: ocrText, sourceLabel: source)),
+        );
+        if (imported == true && mounted) _loadContext(silent: true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              "Could not read image: ${e.toString().replaceAll('Exception: ', '')}"),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+    }
+  }
+
+  /// Batch screenshot import — open BatchImageImportScreen.
+  Future<void> _handleBatchImport() async {
+    final imported = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => const BatchImageImportScreen()),
+    );
+    if (imported == true && mounted) _loadContext(silent: true);
+  }
+
+  /// Paste text import — open BankImportScreen with no prefill (user pastes).
+  Future<void> _handlePasteImport() async {
+    final imported = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => const BankImportScreen()),
+    );
+    if (imported == true && mounted) _loadContext(silent: true);
+  }
+
   Future<void> _handleSmartCamera() async {
     // Open unified Smart Camera Screen — Auto/Receipt/Barcode + Gallery
     final result = await Navigator.push<ScanResult>(
@@ -2070,34 +2306,12 @@ class _AIScreenState extends State<AIScreen> {
               ),
               child: Row(
                 children: [
-                  // Smart Camera button
+                  // Unified Smart Import button — camera + gallery + batch + paste
                   IconButton(
                     icon: Icon(Icons.camera_enhance,
                         size: 22, color: Theme.of(context).colorScheme.primary),
-                    onPressed: _sending ? null : _handleSmartCamera,
-                    tooltip: "Camera & Scanner",
-                    padding: const EdgeInsets.all(6),
-                    constraints: const BoxConstraints(),
-                  ),
-                  const SizedBox(width: 2),
-                  // Batch screenshot import
-                  IconButton(
-                    icon: Icon(Icons.photo_library_outlined,
-                        size: 20, color: Theme.of(context).colorScheme.primary),
-                    onPressed: _sending
-                        ? null
-                        : () async {
-                            final imported = await Navigator.push<bool>(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      const BatchImageImportScreen()),
-                            );
-                            if (imported == true && mounted) {
-                              _loadContext(silent: true);
-                            }
-                          },
-                    tooltip: "Batch Screenshot Import",
+                    onPressed: _sending ? null : _showSmartImportSheet,
+                    tooltip: "Smart Import",
                     padding: const EdgeInsets.all(6),
                     constraints: const BoxConstraints(),
                   ),
