@@ -96,10 +96,20 @@ class _SmartSpendAppState extends State<SmartSpendApp>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
-      // Record when app went to background
+    if (state == AppLifecycleState.paused) {
+      // App genuinely sent to background — start the lock countdown.
+      // Note: we do NOT start on 'inactive' because that state fires when
+      // a system overlay appears *over* the app: image picker, file manager,
+      // gallery, camera, share sheet, permission dialog, etc.
+      // Starting the timer on inactive would lock the app whenever the user
+      // spends more than 3 minutes browsing their gallery.
       _backgroundedAt ??= DateTime.now();
+    } else if (state == AppLifecycleState.inactive) {
+      // System overlay is showing (gallery/camera/file picker/share sheet).
+      // Do NOT start the lock timer here — the user is still "in" the app
+      // from their perspective. Reset any existing timer so returning from
+      // a long gallery session doesn't trigger the lock.
+      _backgroundedAt = null;
     } else if (state == AppLifecycleState.resumed) {
       _checkLockOnResume();
     } else if (state == AppLifecycleState.detached) {

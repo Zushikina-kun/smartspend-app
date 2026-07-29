@@ -896,6 +896,10 @@ class _DashboardState extends State<Dashboard> {
   Map<String, double> _allLimits = {};
   Map<String, double> _allSpent = {};
 
+  // Track the most recently added expense date so budget/limit alerts
+  // are suppressed when a historical (past-month) entry was just logged.
+  String? _lastAddedExpenseDate;
+
   final _currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
   final _lastMonth = DateFormat('yyyy-MM')
       .format(DateTime(DateTime.now().year, DateTime.now().month - 1));
@@ -913,6 +917,14 @@ class _DashboardState extends State<Dashboard> {
         // Reset insight cache on income change (covers logout/account switch)
         if (event == AppEvent.incomeChanged) {
           _lastInsightExpenseCount = -1;
+        }
+        // Capture the most recently inserted expense date before reloading
+        // so the budget/limit alert section can decide whether to suppress
+        // notifications for historical (past-month) entries.
+        if (event == AppEvent.expenseChanged) {
+          DBService.getExpenses().then((exps) {
+            if (exps.isNotEmpty) _lastAddedExpenseDate = exps.first.date;
+          }).catchError((_) {});
         }
         _loadData();
       }
@@ -1049,12 +1061,18 @@ class _DashboardState extends State<Dashboard> {
       }).toList();
 
       // Fire budget alert notifications — graduated thresholds: 50%, 80%, 100%
+      // ONLY fire for current-month totals that crossed a threshold on THIS reload.
+      // This prevents historical expense entries from triggering "budget exceeded"
+      // alerts — a past-month expense doesn't affect this month's budget status.
+      final alertsForCurrentPeriod = _lastAddedExpenseDate == null ||
+          _lastAddedExpenseDate!.startsWith(_currentMonth);
       for (final b in budgets) {
         final spentAmt = spent[b.category] ?? 0;
         final ratio = b.amount > 0 ? spentAmt / b.amount : 0.0;
-        if (ratio >= 1.0 || ratio >= 0.8 || ratio >= 0.5) {
-          if (budgetAlertsEnabled)
-            NotificationService.showBudgetAlert(b.category, spentAmt, b.amount);
+        if ((ratio >= 1.0 || ratio >= 0.8 || ratio >= 0.5) &&
+            budgetAlertsEnabled &&
+            alertsForCurrentPeriod) {
+          NotificationService.showBudgetAlert(b.category, spentAmt, b.amount);
         }
       }
 
@@ -1080,9 +1098,19 @@ class _DashboardState extends State<Dashboard> {
     }
 
     // Multi-period limit notification checks
+    // Only fire when the last-added expense is in the current period
+    final lastDate = _lastAddedExpenseDate;
+    final nowStr = DateTime.now().toIso8601String();
+    final isCurrentDay = lastDate == nowStr.substring(0, 10);
+    final isCurrentMonth =
+        lastDate == null || lastDate.startsWith(nowStr.substring(0, 7));
     for (final period in ['daily', 'weekly', 'monthly', 'yearly']) {
       final lim = allLimits[period] ?? 0;
       final sp = allSpent[period] ?? 0;
+      // Skip daily limit alert for non-today entries
+      if (period == 'daily' && !isCurrentDay) continue;
+      // Skip monthly/weekly/yearly alerts for past-month entries
+      if (period != 'daily' && !isCurrentMonth) continue;
       if (lim > 0 && sp >= lim * 0.8) {
         NotificationService.checkSpendingLimitAlert(
             spent: sp, limit: lim, period: period);

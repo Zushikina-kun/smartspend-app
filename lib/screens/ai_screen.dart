@@ -596,13 +596,26 @@ class _AIScreenState extends State<AIScreen> {
                 }
               }
             } catch (_) {}
+            // ── DATE GUARD: only fire per-transaction warnings for current-period entries ──
+            // Logging a historical expense (last month, last year) should not
+            // trigger budget alerts, "that's higher than usual", or price memory
+            // snackbars — those compare against current-period limits/averages.
+            final expenseDateKey =
+                expenseDate; // already set above (YYYY-MM-DD)
+            final currentDayKey =
+                DateTime.now().toIso8601String().substring(0, 10);
+            final currentMonthKey =
+                DateTime.now().toIso8601String().substring(0, 7);
+            final isCurrentMonth = expenseDateKey.startsWith(currentMonthKey);
+            final isCurrentDay = expenseDateKey == currentDayKey;
+
             try {
               final allExp = await DBService.getExpenses();
               final catAmounts = allExp
                   .where((e) => e.category == category && e.amount > 0)
                   .map((e) => e.amount)
                   .toList();
-              if (catAmounts.length >= 3) {
+              if (isCurrentMonth && catAmounts.length >= 3) {
                 final avg =
                     catAmounts.reduce((a, b) => a + b) / catAmounts.length;
                 if (amount > avg * 2.5) {
@@ -617,61 +630,64 @@ class _AIScreenState extends State<AIScreen> {
                   }
                 }
               }
-              // Price Memory — check if this specific item costs more than last time
-              final sameItems = allExp
-                  .where((e) =>
-                      e.itemName.toLowerCase() == itemName.toLowerCase() &&
-                      e.amount > 0 &&
-                      e.amount != amount)
-                  .toList();
-              if (sameItems.isNotEmpty && mounted) {
-                final lastPrice = sameItems.first.amount;
-                if (amount > lastPrice * 1.15) {
-                  // 15%+ price increase
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "📈 Price up: $itemName was ${CurrencyService.format(lastPrice)} last time (+${((amount / lastPrice - 1) * 100).toStringAsFixed(0)}%)"),
-                    backgroundColor: Colors.blue,
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 3),
-                  ));
+              // Price Memory — only show for current-day entries
+              if (isCurrentDay) {
+                final sameItems = allExp
+                    .where((e) =>
+                        e.itemName.toLowerCase() == itemName.toLowerCase() &&
+                        e.amount > 0 &&
+                        e.amount != amount)
+                    .toList();
+                if (sameItems.isNotEmpty && mounted) {
+                  final lastPrice = sameItems.first.amount;
+                  if (amount > lastPrice * 1.15) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "📈 Price up: $itemName was ${CurrencyService.format(lastPrice)} last time (+${((amount / lastPrice - 1) * 100).toStringAsFixed(0)}%)"),
+                      backgroundColor: Colors.blue,
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 3),
+                    ));
+                  }
                 }
               }
             } catch (_) {}
 
-            // Proactive budget insight — check if this expense pushes category near/over budget
-            try {
-              final budgets = await DBService.getBudgets();
-              final budget =
-                  budgets.where((b) => b.category == category).firstOrNull;
-              if (budget != null && budget.amount > 0) {
-                final currentMonth =
-                    DateFormat('yyyy-MM').format(DateTime.now());
-                final catExpenses = await DBService.getExpensesByCategory(
-                    category,
-                    month: currentMonth);
-                final catTotal =
-                    catExpenses.fold<double>(0, (s, e) => s + e.amount);
-                final ratio = catTotal / budget.amount;
-                if (ratio >= 1.0 && mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "🚨 $category budget exceeded! Spent ${CurrencyService.format(catTotal)} of ${CurrencyService.format(budget.amount)} budget."),
-                    backgroundColor: Colors.red,
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 5),
-                  ));
-                } else if (ratio >= 0.8 && mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "⚠️ $category budget at ${(ratio * 100).toStringAsFixed(0)}% — ${CurrencyService.format(budget.amount - catTotal)} remaining."),
-                    backgroundColor: Colors.orange,
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 4),
-                  ));
+            // Budget insight — only for current-month entries
+            if (isCurrentMonth) {
+              try {
+                final budgets = await DBService.getBudgets();
+                final budget =
+                    budgets.where((b) => b.category == category).firstOrNull;
+                if (budget != null && budget.amount > 0) {
+                  final currentMonth =
+                      DateFormat('yyyy-MM').format(DateTime.now());
+                  final catExpenses = await DBService.getExpensesByCategory(
+                      category,
+                      month: currentMonth);
+                  final catTotal =
+                      catExpenses.fold<double>(0, (s, e) => s + e.amount);
+                  final ratio = catTotal / budget.amount;
+                  if (ratio >= 1.0 && mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "🚨 $category budget exceeded! Spent ${CurrencyService.format(catTotal)} of ${CurrencyService.format(budget.amount)} budget."),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 5),
+                    ));
+                  } else if (ratio >= 0.8 && mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "⚠️ $category budget at ${(ratio * 100).toStringAsFixed(0)}% — ${CurrencyService.format(budget.amount - catTotal)} remaining."),
+                      backgroundColor: Colors.orange,
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 4),
+                    ));
+                  }
                 }
-              }
-            } catch (_) {}
+              } catch (_) {}
+            } // end isCurrentMonth budget check
 
             // ── GUARDRAIL: register this action in the session fingerprint log ──
             // Prevents the model from re-firing the same item in subsequent turns.

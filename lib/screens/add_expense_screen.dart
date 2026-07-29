@@ -175,7 +175,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     }
 
     // Impulse pause mechanic — for Want-tagged expenses above 2× category average
-    final impulseEnabled = (await DBService.getSetting('impulse_pause_enabled')) != 'false';
+    final impulseEnabled =
+        (await DBService.getSetting('impulse_pause_enabled')) != 'false';
     if (impulseEnabled && _isWant && amount > 0) {
       try {
         final allExp = await DBService.getExpenses();
@@ -260,9 +261,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       });
 
       // NI-6: Warn if user committed to "done spending today"
+      // Only warn if the expense date is actually today — not for historical entries
       final doneVal = await DBService.getSetting('done_spending_today');
       final today = DateTime.now().toIso8601String().substring(0, 10);
-      if (doneVal == today && mounted) {
+      final expDate = _selectedDate.substring(0, 10);
+      if (doneVal == today && expDate == today && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               "⚠️ You said you were done spending today — but that's okay!"),
@@ -274,7 +277,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
       // Auto-deduct from matching wallet
       try {
-        final autoDeductSetting = await DBService.getSetting('wallet_auto_deduct');
+        final autoDeductSetting =
+            await DBService.getSetting('wallet_auto_deduct');
         if (autoDeductSetting == 'false') throw Exception('disabled');
         String? walletName;
         if (_selectedPayment == 'Cash')
