@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.0';
-  static const _prefKey = 'whats_new_seen_2_9_0';
+  static const _version = '2.9.1';
+  static const _prefKey = 'whats_new_seen_2_9_1';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,44 +20,34 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '⚖️',
-      'Lightweight Mode — No Income Needed',
-      'Turn off income/wallet tracking in Settings → Tracking Mode. Works for anyone — just log spending. FHS recalculates using spending habits: Spending Restraint, Consistency, Category Balance, Habit Streak.'
-    ),
-    (
-      '🎯',
-      'Period Spending Limit',
-      'Set one cap for your total spending per day, week, month, or year. Progress bar on home screen. Warns at 80%, alerts at 100%. Independent of tracking mode.'
-    ),
-    (
-      '📅',
-      'Logging Gap Detection',
-      'On startup, app asks about days with no logs. Confirm spending (FHS penalty) or no spending (clean-day bonus). Score now reflects actual behaviour, not silence.'
-    ),
-    (
-      '🤖',
-      'AI Accuracy: Names, Dates, Duplicates',
-      '"your jeepney fare for" cleaned to "Jeepney fare". Date corrections now always fire an update ACTION. 90-second DB-level duplicate guard. 503 errors silent-retry up to 3×.'
-    ),
-    (
-      '📊',
-      'Gemini 3.5 Flash + Smart Model Routing',
-      'Updated models (2.5 → 3.x). Complex financial queries auto-route to the smartest model. New financial_advice tier for SSS/tax/debt-strategy questions.'
-    ),
-    (
-      '🔄',
-      'Transactions Auto-Sort',
-      'Transaction list reloads automatically after any AI-driven edit — no more manual pull-to-refresh.'
+      '📷',
+      'Unified Smart Import',
+      'One camera button now opens a 2×2 sheet: Live Camera, Single Photo, Batch Screenshots, Paste Text. Single Photo auto-detects barcodes, receipts, and app screenshots — routes to the right screen automatically.'
     ),
     (
       '🔍',
-      'Observability & Debug Traces',
-      'Per-request trace (latency/tokens/retries) in debug export. Silent action fails logged. Groundedness check on financial advice replies.'
+      'Barcode Detection from Gallery',
+      'Pick a photo of a barcode or QR code from your gallery — decoded and sent to AI chat for product lookup, just like the live camera.'
+    ),
+    (
+      '🧠',
+      'FHS Explained — Two Modes',
+      'Full mode: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency. Lightweight mode: Spending Restraint, Consistency, Category Balance, Habit Streak. Score adjusts automatically for gap days and budget decay.'
     ),
     (
       '📸',
-      'Batch Screenshot Import',
-      'Import from Steam, Shopee, Lazada, GCash, Grab, App Store, bank apps — up to 10 screenshots at once. AI detects platform type, extracts item name, price, date, time, and store automatically.'
+      '40+ Screenshot Types Auto-Detected',
+      'Steam, Shopee, Lazada, GCash, Maya, GrabFood, Grab rides, Netflix, Spotify, BPI, BDO, GoTyme, App Store, Google Play, and 30+ more — each gets its own AI extraction prompt.'
+    ),
+    (
+      '🕐',
+      'Time Extracted from Screenshots',
+      'GCash, Maya, Grab, and bank receipts now include the exact transaction time — not just the date.'
+    ),
+    (
+      '⚖️',
+      'FHS Uses Tightest Spending Limit',
+      'Set a daily limit? Spending Restraint uses it. Set weekly only? That gets used. The tightest active period always wins.'
     ),
   ];
 

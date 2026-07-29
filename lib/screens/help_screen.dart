@@ -392,6 +392,129 @@ const _sections = [
     ],
   ),
   _HelpSection(
+    title: "Financial Health Score (FHS)",
+    icon: Icons.health_and_safety_outlined,
+    color: Colors.green,
+    items: [
+      _HelpItem(
+        title: "What is the Financial Health Score?",
+        body:
+            "The Financial Health Score (FHS) is a 0–100 score calculated from your current month's expense data. It appears on your home screen, profile, analytics, and the shareable Financial Health Certificate.\n\n"
+            "The score is made of 4 components, each worth up to 25 points. The components depend on which tracking mode you're using in Settings:\n\n"
+            "───────────────────────────────\n"
+            "FULL MODE (Track income & wallets: ON)\n"
+            "───────────────────────────────\n"
+            "1. Savings Rate (25pts)\n"
+            "   How much of your income you save vs the 20% target.\n"
+            "   Full score when saving ≥20% of income. Scales down below that.\n\n"
+            "2. Overspend Control (25pts)\n"
+            "   Days where your spending stayed within your daily budget.\n"
+            "   Full score when no days exceeded. 0 pts when every day exceeded.\n\n"
+            "3. Budget Adherence (25pts)\n"
+            "   Percentage of your category budgets that stayed within their limit.\n"
+            "   Full score when all budgets are on track. No budgets set = full score (not penalised).\n\n"
+            "4. Logging Consistency (25pts)\n"
+            "   How regularly you log expenses vs active days in the period.\n"
+            "   Full score when logging every day.\n\n"
+            "───────────────────────────────\n"
+            "LIGHTWEIGHT MODE (Track income & wallets: OFF)\n"
+            "───────────────────────────────\n"
+            "1. Spending Restraint (25pts)\n"
+            "   Did you stay within your spending limit this period?\n"
+            "   If no limit is set, uses your Want/Need ratio instead.\n\n"
+            "2. Logging Consistency (25pts)\n"
+            "   Same formula as full mode — logged days vs active days.\n\n"
+            "3. Category Balance (25pts)\n"
+            "   Is spending spread across categories? Full score when no single category exceeds 40% of total.\n\n"
+            "4. Habit Streak (25pts)\n"
+            "   Consecutive days with at least one expense logged. Full score at 14 days.",
+        example:
+            "Full mode: Income ₱15,000, spent ₱12,000, saved ₱3,000 (20%) = 25 pts Savings Rate.\nLightweight mode: 12-day streak = 21/25 pts Habit Streak.",
+      ),
+      _HelpItem(
+        title: "What adjustments are applied to the score?",
+        body:
+            "After the 4 components are totalled (0–100), two adjustments are applied:\n\n"
+            "1. Warning Decay (−5 pts/day, max −15)\n"
+            "   If you exceeded a budget and spending continued the next day, the score loses 5 pts/day.\n"
+            "   Resets when all budgets return to on-track.\n\n"
+            "2. Gap Adjustment (−3 or +2 pts/day)\n"
+            "   When the app detects days with no logged expenses, it asks you on startup:\n"
+            "   • If you say 'Yes I spent but forgot to log' → −3 pts per gap day (max −15)\n"
+            "   • If you say 'No spending, clean days' → +2 pts per clean day (max +10)\n"
+            "   This makes the score reflect reality instead of penalising silence.\n\n"
+            "Both adjustments are cleared at the start of each month.",
+        example:
+            "Raw score 75 → budget warning ignored 2 days (−10) → confirmed 3 clean no-spend days (+6) = Final score 71.",
+      ),
+      _HelpItem(
+        title: "How do I improve my score?",
+        body: "Full Mode:\n"
+            "• Save at least 20% of your income\n"
+            "• Stay within your daily budget (income ÷ days in month)\n"
+            "• Set category budgets and keep spending below them\n"
+            "• Log expenses every day — even ₱0 days count for consistency\n\n"
+            "Lightweight Mode:\n"
+            "• Set a spending limit (Profile → Spending Limits) — Spending Restraint gets a real benchmark\n"
+            "• Log something every day — Habit Streak is the fastest way to boost your score\n"
+            "• Spread spending across categories — avoid one category dominating\n\n"
+            "Both modes:\n"
+            "• When asked about logging gaps, be honest — confirmed clean days give bonus points\n"
+            "• Don't ignore budget warnings — the Warning Decay resets when you get back on track",
+      ),
+      _HelpItem(
+        title: "Where does the score appear?",
+        body: "The FHS score appears in multiple places:\n\n"
+            "• Home screen — main score card with a tap for full breakdown\n"
+            "• Profile screen — score card with component breakdown and tips\n"
+            "• Analytics screen — score history chart + component breakdown chart\n"
+            "• AI chat — AI knows your current score and can explain it\n"
+            "• Financial Health Certificate — shareable monthly score card\n"
+            "• Achievements screen — badges for reaching 60/70/80/90+\n"
+            "• Startup alert — notifies you if score drops 10+ points overnight",
+      ),
+    ],
+  ),
+  _HelpSection(
+    title: "Smart Import",
+    icon: Icons.camera_enhance_outlined,
+    color: Colors.teal,
+    items: [
+      _HelpItem(
+        title: "What is Smart Import?",
+        body:
+            "Smart Import is a single unified entry point for importing expenses from any source — camera, gallery, screenshots, or pasted text.\n\n"
+            "Tap the 📷 camera icon in the AI chat to open it. You'll see 4 options:\n\n"
+            "1. Live Camera — Point at a barcode/QR or tap the shutter to scan a receipt or transaction document\n\n"
+            "2. Single Photo — Pick one image from your gallery. The app automatically detects what it is:\n"
+            "   • Barcode/QR code → product lookup → describe in AI chat\n"
+            "   • App screenshot (Steam/Shopee/GCash/etc.) → AI extracts items\n"
+            "   • Receipt or transaction history → text-based import screen\n\n"
+            "3. Batch Screenshots — Pick up to 10 screenshots at once. Each is analysed independently with a platform-specific AI prompt. Supports 40+ platforms.\n\n"
+            "4. Paste Text — Open the import screen to paste GCash history, BPI CSV, or any bank statement text.",
+        example:
+            "Tap 📷 → Single Photo → pick a GCash screenshot → app detects it's GCash → extracts your payments automatically.",
+      ),
+      _HelpItem(
+        title: "What platforms does Batch Screenshots support?",
+        body: "The app auto-detects 40+ platform types from OCR text:\n\n"
+            "🎮 Gaming: Steam, Google Play, App Store, Codashop, UniPin, Garena, Mobile Legends, Genshin Impact, Valorant, PlayStation, Xbox, Nintendo, Epic Games\n\n"
+            "🛍️ PH Shopping: Shopee, Lazada, Zalora, TikTok Shop, Carousell, FB Marketplace\n\n"
+            "🌐 International: Amazon, AliExpress, Shein, Temu, eBay, Etsy, Taobao, ASOS, Zalando, Wish\n\n"
+            "🍔 Food Delivery: GrabFood, Foodpanda, Shopee Food\n\n"
+            "🚗 Rides: Grab, Angkas, Lalamove, Maxim\n\n"
+            "💳 E-wallets: GCash, Maya, GrabPay, ShopeePay, Coins.ph, PayPal, Wise, remittance services\n\n"
+            "🏦 PH Banks: BPI, BDO, Metrobank, UnionBank, GoTyme, Tonik, SeaBank, RCBC\n\n"
+            "📺 Streaming: Netflix, Spotify, YouTube Premium, Disney+, Viu, Vivamax\n\n"
+            "📱 Telco: Smart, Globe, DITO\n\n"
+            "🧾 Physical Receipts: fast food, grocery, pharmacy, bookstore, utility bills\n\n"
+            "Each type gets its own AI extraction prompt — for example, GCash extracts outgoing transactions only and includes the exact time; Steam extracts game names and prices; Shopee extracts each order item separately.",
+        example:
+            "Pick 3 screenshots: 1 Steam purchase, 1 Shopee order, 1 GCash send — each gets analysed by a different AI prompt tuned to that platform.",
+      ),
+    ],
+  ),
+  _HelpSection(
     title: "Wallet Balances",
     icon: Icons.account_balance_wallet_outlined,
     color: Colors.green,

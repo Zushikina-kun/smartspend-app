@@ -29,7 +29,7 @@ class AboutScreen extends StatelessWidget {
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
             const Text(
-              "Version 2.9.0",
+              "Version 2.9.1",
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
             const SizedBox(height: 6),
@@ -66,8 +66,12 @@ class AboutScreen extends StatelessWidget {
               ("↩️ Shake to Undo", "Shake phone to undo last AI action"),
               ("📊 Analytics & Charts", "Pie, bar, daily trend + comparison"),
               (
+                "📷 Smart Import",
+                "One camera button → Live Camera, Single Photo (auto-detects barcode/receipt/screenshot), Batch Screenshots, Paste Text"
+              ),
+              (
                 "🧠 Financial Health Score",
-                "4-component formula: Savings, Overspend, Budget, Logging"
+                "4-component formula — changes based on tracking mode. Full mode: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency. Lightweight mode: Spending Restraint, Consistency, Category Balance, Habit Streak"
               ),
               (
                 "📈 FHS Component Breakdown",

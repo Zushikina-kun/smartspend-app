@@ -11,6 +11,8 @@ import '../services/db_service.dart';
 import '../services/llm_service.dart';
 import '../services/ocr_service.dart';
 import '../services/score_service.dart';
+import '../services/barcode_lookup_service.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import '../services/voice_service.dart';
 import '../services/event_bus.dart';
 import '../services/currency_service.dart';
@@ -1792,6 +1794,53 @@ class _AIScreenState extends State<AIScreen> {
         duration: Duration(seconds: 8),
       ));
 
+      // ── STEP 1: Try barcode detection first ─────────────────────────────
+      // Gallery images of product barcodes / QR codes get decoded here,
+      // exactly like the live camera flow does for real-time scans.
+      String? barcodeValue;
+      String? barcodeFormat;
+      try {
+        final inputImage = InputImage.fromFilePath(path);
+        final scanner = BarcodeScanner();
+        final barcodes = await scanner.processImage(inputImage);
+        await scanner.close();
+        if (barcodes.isNotEmpty && barcodes.first.rawValue != null) {
+          barcodeValue = barcodes.first.rawValue;
+          barcodeFormat = barcodes.first.format.name;
+        }
+      } catch (_) {}
+
+      if (barcodeValue != null && mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        await DBService.insertScan(barcodeValue);
+        // Look up product info
+        ProductInfo? productInfo;
+        try {
+          productInfo = await BarcodeLookupService.lookup(barcodeValue);
+        } catch (_) {}
+        final prefill = productInfo != null
+            ? 'I bought ${productInfo.displayName}${productInfo.estimatedPrice != null ? ' for ${productInfo.estimatedPrice!.toStringAsFixed(0)}' : ''}'
+            : 'Barcode: $barcodeValue\n\nI bought: ';
+        final reviewed = await Navigator.push<String>(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ScanReviewScreen(
+              initialText: prefill,
+              title:
+                  productInfo != null ? 'Confirm Product' : 'Describe Product',
+              isBarcode: true,
+              barcodeFormat: barcodeFormat,
+            ),
+          ),
+        );
+        if (reviewed != null && reviewed.isNotEmpty && mounted) {
+          _controller.text = reviewed;
+          await _send();
+        }
+        return;
+      }
+
+      // ── STEP 2: OCR + smart routing ─────────────────────────────────────
       final ocrText = await OCRService.scanImageRaw(path);
       if (!mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();

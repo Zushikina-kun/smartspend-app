@@ -1,11 +1,11 @@
 ﻿# Smart Spend — Application Documentation
 
-**Version:** 2.9.0
+**Version:** 2.9.1
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** July 28, 2026 (v2.9.0 — Lightweight Mode, Period Spending Limit, Logging Gap Detection, AI accuracy guardrails, model routing, observability traces, Gemini 3.x model IDs, transactions auto-sort, 7 files changed)
-**Build:** app-arm64-v8a-release.apk — 44.6 MB (July 28, 2026)
+**Last Updated:** July 28, 2026 (v2.9.1 — Unified Smart Import, barcode-from-gallery, FHS docs update, help/about sweep)
+**Build:** app-arm64-v8a-release.apk — 44.7 MB (July 28, 2026)
 
 ---
 
@@ -87,28 +87,47 @@ All input methods are accessible from the AI chat screen via 3 buttons in the in
 | Method | Description |
 |--------|-------------|
 | **Voice** | Tap the mic button — speak naturally, AI parses and logs automatically |
-| **Smart Scanner** | Tap the camera button — live viewfinder auto-detects barcodes/QR; receipt mode toggle for tall receipts; shutter for OCR; gallery import available |
+| **Smart Import** | Tap the camera icon → unified 2×2 sheet: Live Camera, Single Photo, Batch Screenshots, Paste Text (see below) |
 | **Manual Entry** | Tap the pencil button — opens a form with all fields pre-shown; date picker included; works fully offline without AI |
 | **AI Chat (text)** | Type in plain language — AI parses and logs directly |
 
 **Manual Entry form:** Item name, amount, category, payment method, shop, notes, date picker. AI can optionally pre-fill fields via the Analyze button, but the form is always usable without it.
 
-**Smart Scanner pipeline:** Camera → Mode toggle (Barcode/Receipt) → Auto-detect (barcode or OCR) → Smart routing:
-- **Barcode/QR** → Scan Review Screen → describe product → AI chat
-- **Receipt with 3+ prices or "total"** → "Import Items" button → Import Receipt screen → AI parses items → review table → bulk import
-- **Simple text/single item** → Scan Review Screen → AI chat
+**Smart Import — Unified Entry Point (camera icon in AI chat):**
 
-**Scanner features:**
+The camera icon opens a 2×2 bottom sheet with 4 import modes:
+
+1. **Live Camera** — live viewfinder with auto barcode/QR detection; receipt mode toggle (square → tall guide); shutter for OCR capture
+2. **Single Photo** — pick one image from gallery, auto-routed:
+   - Barcode/QR detected → product lookup → AI chat
+   - App screenshot (Steam/Shopee/GCash/etc.) → BatchImageImportScreen with image pre-loaded
+   - Receipt or transaction history → BankImportScreen with OCR text pre-filled
+3. **Batch Screenshots** — pick up to 10 images; each OCR'd, type detected, AI-parsed with a platform-specific prompt; unified review list with editable fields
+4. **Paste Text** — opens BankImportScreen for pasting GCash/BPI/Maya/any bank export
+
+**Smart Import — Screenshot Type Detection (40+ types):**
+
+The app detects platform type from OCR text and applies a dedicated AI extraction prompt per type:
+- Gaming: Steam, Google Play, App Store, Codashop, UniPin, Garena, MLBB, Genshin, Valorant, PlayStation, Xbox, Nintendo, Epic
+- PH Shopping: Shopee, Lazada, Zalora, TikTok Shop, Carousell
+- International: Amazon, AliExpress, Shein, Temu, eBay, Etsy, Taobao
+- Food delivery: GrabFood, Foodpanda, Shopee Food
+- Rides: Grab, Angkas, Lalamove, Maxim
+- E-wallets: GCash, Maya, GrabPay, ShopeePay, Coins.ph, PayPal, Wise
+- Banks: BPI, BDO, Metrobank, UnionBank, GoTyme, Tonik, SeaBank, RCBC
+- Streaming: Netflix, Spotify, YouTube, Disney+, Viu, Vivamax
+- Physical receipts: fastfood, grocery, pharmacy, bookstore, utility bills
+- Transaction history (any bank)
+
+**Dark screenshot enhancement:** For screenshots with average luminance < 100 (e.g. Steam dark theme), the image is inverted + contrast-boosted before OCR to improve text recognition.
+
+**Scanner features (Live Camera mode):**
 - Live barcode/QR auto-detection with animated detection box
-- Receipt mode toggle — switches guide from 260×260 square to 220×360 tall rectangle (amber color)
-- Shutter button for receipt/document OCR with orientation fix
-- Gallery import — barcode-first, falls back to OCR
-- Barcode repeat detection — shows "[Scanned X times before]" if previously scanned
-- OCR quality check — warns user if extracted text looks garbled
+- Receipt mode toggle — switches guide from 260×260 square to 220×360 tall (amber)
+- Shutter button for receipt/document OCR with EXIF orientation fix
+- Barcode repeat detection — shows "[Scanned X times before]"
+- OCR quality check — warns if extracted text looks garbled
 - Torch toggle
-- **"Import Items" button** in Scan Review Screen — appears when 3+ price lines detected
-- **Receipt import mode** in BankImportScreen — uses LLMService.parseReceipt() for item-level extraction
-- Auto-parses when opened from OCR (no manual "Parse" tap needed)
 
 All AI-parsed inputs pass through `LLMService.parseExpense()` which returns structured JSON:
 `item_name`, `category`, `amount`, `date`, `shop_name`, `payment_method`, `confidence_score`
@@ -117,7 +136,7 @@ Low-confidence entries (< 0.7) are flagged with an orange dot on the expense til
 
 ---
 
-### 2. AI Engine — Multi-Model (Gemini 2.5 Flash-Lite / Groq / Cerebras)
+### 2. AI Engine — Multi-Model (Gemini 3.1 Flash-Lite / Groq / Cerebras)
 - **Expense Parsing** — converts natural language to structured expense data
 - **Spending Insights** — analyzes patterns and generates bullet-point insights on the dashboard
 - **Financial Advice** — personalized tips based on income, spending, and predictions
@@ -255,21 +274,51 @@ The AI executes **29 action types** directly — data is written to the DB immed
 
 ### 6. Financial Health Score (0–100)
 
-The score uses a **4-component weighted formula** (25 pts each) based on the paper's specification. Score is calculated from **this month's expenses only** — consistent across Home, Analytics, and Profile screens.
+The FHS uses a **4-component weighted formula** (25 pts each). Score is calculated from **this month's expenses only** and is consistent across Home, Analytics, and Profile screens. The exact components depend on which tracking mode is active in Settings.
 
-- Tap the score card on Home for a full breakdown dialog with each component's contribution and actionable tips
-- Score breakdown in Profile shows each factor with its point contribution
+#### Full Mode (Track income & wallets: ON)
 
 | Component | What it measures | Max pts |
 |-----------|-----------------|---------|
-| Savings Rate | Actual savings vs 20% of income target | 25 |
-| Overspend Control | Days where spending stayed within daily budget | 25 |
-| Budget Adherence | % of budget categories that stayed within limit | 25 |
-| Logging Consistency | Regularity of expense entries vs active days | 25 |
+| Savings Rate | Actual savings vs 20% of income target. Full score when saving ≥20%. | 25 |
+| Overspend Control | Days where daily spending stayed within (income ÷ days in month). Full score when zero days exceeded. | 25 |
+| Budget Adherence | % of category budgets that stayed within their limit. No budgets set = full score (not penalised). | 25 |
+| Logging Consistency | Logged days / active days since first expense. Full score when logging every day. | 25 |
 
-**Warning Decay:** If a budget is exceeded and spending continues the next day, score loses 5 pts/day (max −15 pts over 3 days). Resets when budgets return to on-track. 3-tier escalation notifications fire on each decay day.
+#### Lightweight Mode (Track income & wallets: OFF)
 
-**Fallback:** If no income is set, partial credit is given for components that require income.
+| Component | What it measures | Max pts |
+|-----------|-----------------|---------|
+| Spending Restraint | Spending vs the tightest active limit (daily → weekly → monthly → yearly). No limit set: uses Want/Need ratio instead. | 25 |
+| Logging Consistency | Same formula as full mode. | 25 |
+| Category Balance | No single category should exceed 40% of total spend. Full score at ≤40% concentration. | 25 |
+| Habit Streak | Consecutive days with at least one expense logged. Full score at 14+ days. | 25 |
+
+Budget adherence blends into lightweight mode if category budgets are set.
+
+#### Score Adjustments (applied after component sum)
+
+Two adjustments are applied on top of the raw component total:
+
+1. **Warning Decay** — if a budget was exceeded and spending continued the next day, score loses 5 pts/day (max −15 pts over 3 days). Resets when all budgets return to on-track. 3-tier escalation notifications fire on each decay day.
+
+2. **Gap Adjustment** — on startup, the app detects days with no logged expenses and asks the user:
+   - "Yes I spent but forgot" → −3 pts per gap day (max −15)
+   - "No spending, clean days" → +2 pts per clean day (max +10)
+   Both counters reset at the start of each new month.
+
+**Final score = component sum + decay adjustment + gap adjustment, clamped 0–100.**
+
+#### Score Surfaces
+- Home screen score card (tappable for breakdown dialog)
+- Profile screen score card with component breakdown + tips per component
+- Analytics screen: score history chart + component breakdown chart
+- AI chat context: AI knows current score and can explain it
+- Financial Health Certificate (shareable)
+- Achievements: badges at 60/70/80/90+
+- Startup alert: notifies on 10+ point overnight drop
+
+**Fallback (Full Mode only):** If no income is set, partial credit is given for income-dependent components (Savings Rate gets 10–20 pts based on total spending level).
 
 ---
 
