@@ -1734,8 +1734,19 @@ class _DashboardState extends State<Dashboard> {
     };
 
     return GestureDetector(
-      onTap: () =>
-          SpendingLimitsSheet.show(context, onChanged: () => _loadData()),
+      onTap: () => SpendingLimitsSheet.show(context, onChanged: () {
+        // Immediate state refresh + full data reload for instant visual update
+        DBService.getAllLimits().then((lim) {
+          DBService.getAllSpent().then((sp) {
+            if (mounted)
+              setState(() {
+                _allLimits = lim;
+                _allSpent = sp;
+              });
+          });
+        });
+        _loadData();
+      }),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Container(

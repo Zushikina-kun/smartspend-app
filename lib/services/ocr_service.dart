@@ -20,14 +20,13 @@ class OCRService {
   }
 
   static Future<String> _scan(String path,
-      {required bool cleanForReceipt}) async {
+      {required bool cleanForReceipt, bool enhanceDark = false}) async {
     final file = File(path);
     if (!await file.exists()) {
       throw Exception("Image file not found.");
     }
 
-    // Fix image orientation before OCR (handles sideways/upside-down photos)
-    final correctedPath = await _fixOrientation(path);
+    final correctedPath = await _fixOrientation(path, enhanceDark: enhanceDark);
 
     final inputImage = InputImage.fromFilePath(correctedPath);
     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
@@ -84,23 +83,57 @@ class OCRService {
     }
   }
 
-  /// Fix EXIF orientation — rotates image to upright before OCR
-  static Future<String> _fixOrientation(String path) async {
+  /// Fix EXIF orientation and optionally enhance contrast for dark screenshots.
+  /// Rotates image to upright, then if the image is predominantly dark
+  /// (average luminance < 128), inverts or brightens it so ML Kit can
+  /// read white-on-dark text (Steam, dark-themed app receipts, etc.)
+  static Future<String> _fixOrientation(String path,
+      {bool enhanceDark = false}) async {
     try {
       final bytes = await File(path).readAsBytes();
       final decoded = img.decodeImage(bytes);
       if (decoded == null) return path;
 
       // img package auto-applies EXIF orientation on decode
-      // Re-encode to apply the correction — use quality 95 to preserve OCR accuracy
-      final fixed = img.encodeJpg(decoded, quality: 95);
+      img.Image processed = decoded;
+
+      if (enhanceDark) {
+        // Sample a 50×50 patch from the centre to estimate luminance
+        final cx = processed.width ~/ 2;
+        final cy = processed.height ~/ 2;
+        double lumSum = 0;
+        int samples = 0;
+        for (var y = cy - 25; y < cy + 25 && y < processed.height; y++) {
+          for (var x = cx - 25; x < cx + 25 && x < processed.width; x++) {
+            final px = processed.getPixel(x, y);
+            // Luminance ≈ 0.299R + 0.587G + 0.114B
+            lumSum += 0.299 * px.r + 0.587 * px.g + 0.114 * px.b;
+            samples++;
+          }
+        }
+        final avgLum = samples > 0 ? lumSum / samples : 128;
+
+        if (avgLum < 100) {
+          // Dark screenshot — invert so white text becomes black on white
+          // (ML Kit reads black-on-white far more reliably)
+          processed = img.invert(processed);
+          // Then apply a contrast boost to sharpen the now-dark text
+          processed =
+              img.adjustColor(processed, contrast: 1.4, brightness: 1.1);
+        } else if (avgLum < 140) {
+          // Mid-range — just boost contrast slightly
+          processed = img.adjustColor(processed, contrast: 1.2);
+        }
+      }
+
+      final fixed = img.encodeJpg(processed, quality: 95);
       final dir = await getTemporaryDirectory();
       final outPath =
           '${dir.path}/ocr_fixed_${DateTime.now().millisecondsSinceEpoch}.jpg';
       await File(outPath).writeAsBytes(fixed);
       return outPath;
     } catch (_) {
-      return path; // fallback to original if anything fails
+      return path;
     }
   }
 
@@ -145,8 +178,9 @@ class OCRService {
 
   /// Run OCR on a single image path and return raw text.
   /// Uses document mode (raw OCR, no receipt cleaning) for screenshots.
+  /// Applies dark-image contrast enhancement for Steam/dark-themed apps.
   static Future<String> scanImageRaw(String path) async {
-    return _scan(path, cleanForReceipt: false);
+    return _scan(path, cleanForReceipt: false, enhanceDark: true);
   }
 
   /// Process a batch of image paths in parallel:
