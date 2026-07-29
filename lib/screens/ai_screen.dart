@@ -568,10 +568,15 @@ class _AIScreenState extends State<AIScreen> {
                 "Logged: $itemName ${CurrencyService.format(amount)}");
 
             // Auto-deduct from matching wallet based on payment method
+            // Only deduct for today's entries — past-date expenses didn't
+            // affect the current wallet balance at the time they happened.
             try {
               final autoDeductSetting =
                   await DBService.getSetting('wallet_auto_deduct');
               if (autoDeductSetting == 'false') throw Exception('disabled');
+              if (expenseDate !=
+                  DateTime.now().toIso8601String().substring(0, 10))
+                throw Exception('backdated');
               final paymentMethod =
                   action.params['payment_method'] as String? ?? 'Cash';
               String? walletName;

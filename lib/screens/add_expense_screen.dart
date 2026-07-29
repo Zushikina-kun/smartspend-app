@@ -175,9 +175,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     }
 
     // Impulse pause mechanic — for Want-tagged expenses above 2× category average
+    // Only fires for today's entries — skip for historical/backdated expenses
     final impulseEnabled =
         (await DBService.getSetting('impulse_pause_enabled')) != 'false';
-    if (impulseEnabled && _isWant && amount > 0) {
+    final expDateForImpulse = _selectedDate.substring(0, 10);
+    final todayForImpulse = DateTime.now().toIso8601String().substring(0, 10);
+    final isBackdated = expDateForImpulse != todayForImpulse;
+    if (impulseEnabled && _isWant && amount > 0 && !isBackdated) {
       try {
         final allExp = await DBService.getExpenses();
         final catAmounts = allExp
@@ -276,10 +280,13 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       }
 
       // Auto-deduct from matching wallet
+      // Only deduct for today's entries — backdated expenses happened in the past
+      // and your current wallet balance has no relation to them.
       try {
         final autoDeductSetting =
             await DBService.getSetting('wallet_auto_deduct');
         if (autoDeductSetting == 'false') throw Exception('disabled');
+        if (isBackdated) throw Exception('backdated'); // skip for past dates
         String? walletName;
         if (_selectedPayment == 'Cash')
           walletName = 'Cash on Hand';

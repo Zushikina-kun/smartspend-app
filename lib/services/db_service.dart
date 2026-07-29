@@ -728,10 +728,15 @@ class DBService {
       await CloudService.saveExpense(toInsert);
     } catch (_) {}
 
-    // Round-Up Savings: auto-save spare change to first savings goal
+    // Round-Up Savings: auto-save spare change to first savings goal.
+    // Only applies to today's expenses — backdated historical entries should
+    // not affect the current savings goal balance.
     try {
       final roundUpEnabled = await getSetting('round_up_savings');
-      if (roundUpEnabled != 'false') {
+      final expDate = toInsert['date'] as String? ?? '';
+      final todayDate = DateTime.now().toIso8601String().substring(0, 10);
+      final isToday = expDate.startsWith(todayDate);
+      if (roundUpEnabled != 'false' && isToday) {
         final roundTo = 10.0; // Round to nearest ₱10
         final remainder = amount % roundTo;
         if (remainder > 0) {
