@@ -4,7 +4,7 @@
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2025–2026
-**Last Updated:** July 28, 2026 (v2.9.1 — Unified Smart Import, barcode-from-gallery, FHS docs update, help/about sweep)
+**Last Updated:** July 28, 2026 (v2.9.1 — Unified Smart Import, barcode-from-gallery, FHS docs update, help/about sweep; bug fixes: app lock during image picking, historical transaction false alerts, impulse pause / wallet deduct / round-up date guards)
 **Build:** app-arm64-v8a-release.apk — 44.7 MB (July 28, 2026)
 
 ---
@@ -488,7 +488,7 @@ All account types get access to all features. The label, income categories, budg
 - Optional app-level lock — enabled from Profile → App Lock
 - Requires a 4-digit PIN to set up; biometric auto-prompts if device supports it
 - Lock screen appears on cold start and app resume **only when a user is logged in**
-- **Grace period: 3 minutes** — brief interruptions (share sheets, camera, file pickers) do not trigger the lock; only triggers after 3+ minutes in background or full app close
+- **Grace period: 3 minutes** — the lock timer only starts when the app is genuinely backgrounded (`AppLifecycleState.paused`). The `inactive` state (which fires when system overlays appear: image picker, gallery browser, camera, share sheet, permission dialogs) does **not** start the timer and actually **resets** it. This means browsing your gallery for 30 minutes will not lock the app when you return.
 - Never appears on login/register/onboarding screens (no session = no lock)
 - "Not you? Log out" link on lock screen for account switching
 - Disable from Profile → App Lock → confirm removal
@@ -833,6 +833,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Triggers in `add_expense_screen.dart` when saving a Want-tagged expense above 2× category average
 - Shows a dialog: "Was this planned?" with context (amount vs average)
 - User can still save — it's a reflection prompt, not a block
+- **Date-aware:** Only fires for today's entries. Backdated/historical expenses (past days, past months) skip the impulse pause entirely — there's no value in questioning a purchase that already happened months ago.
 
 ### 45. Loss Aversion Budget Alerts
 - `showBudgetAlert()` now links overspend to the user's top incomplete savings goal
@@ -858,6 +859,31 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 
 ### 49. Micro-Expense Clustering Card
 - Analytics card grouping small frequent purchases (≤₱200, appearing 3+ times)
+
+### 50. Historical Transaction Date-Awareness
+
+When logging a backdated (past-day or past-month) expense, the app suppresses all present-day alerts and side-effects that would be misleading or incorrect. This applies across all input methods (manual form, AI chat, batch import).
+
+**What is suppressed for backdated entries:**
+
+| Feature | Why suppressed for historical entries |
+|---------|--------------------------------------|
+| Impulse pause dialog | No point asking "was this planned?" about a purchase from months ago |
+| Wallet auto-deduct | Current wallet balance has nothing to do with a past transaction |
+| Round-up savings | Spare change from a past purchase shouldn't affect today's savings goal |
+| Budget alert notifications | Budget limits apply to the current month, not past months |
+| Spending limit notifications | Daily/weekly/monthly limits only count current-period spending |
+| "Done spending today" warning | Only relevant if the expense is actually today |
+| "Higher than usual" avg-spend snackbar | Only fires for current-month entries |
+| Price memory snackbar | Only fires for same-day entries |
+| Budget insight snackbar (80%/100%) | Only fires for current-month category spend |
+
+**How detection works:**
+
+- `add_expense_screen`: compares `_selectedDate` against `today`; sets `isBackdated` flag used by impulse pause and wallet deduct
+- `ai_screen` (log_expense executor): computes `isCurrentMonth` and `isCurrentDay` from `expenseDate` before running any post-log checks
+- `home_screen` (`_loadData`): reads `_lastAddedExpenseDate` (set in event listener from most recent DB row) before firing notification calls
+- `db_service` (`insertExpense`): checks `toInsert['date'].startsWith(today)` before round-up savings
 - Shows per-item count and total, plus combined monthly total and annual projection
 - Sorted by total descending; top 4 shown
 

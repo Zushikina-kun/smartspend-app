@@ -562,9 +562,10 @@ const _sections = [
             "• Payment method 'Maya' → deducts from Maya wallet\n"
             "• Same for GrabPay, ShopeePay\n\n"
             "This keeps your wallet balances accurate without manual updates.\n\n"
+            "Note: Auto-deduct only applies to today's expenses. If you're logging a backdated purchase (from a past day or past month), no deduction happens — your current wallet balance has nothing to do with money you spent months ago.\n\n"
             "You can disable this in App Settings if you prefer to update wallets manually.",
         example:
-            "Log ₱30 jeepney fare (Cash) → Cash on Hand goes from ₱697 to ₱667 automatically.",
+            "Log ₱30 jeepney fare today (Cash) → Cash on Hand goes from ₱697 to ₱667 automatically.\nLog the same fare from last Tuesday → no deduction, wallet stays the same.",
       ),
       _HelpItem(
         title: "Log Allowance button",
@@ -1035,7 +1036,10 @@ const _sections = [
       _HelpItem(
         title: "App Lock (PIN + Biometric)",
         body:
-            "Profile → App Lock. Set a 4-digit PIN. The app locks after 3 minutes in the background. Biometric (fingerprint/face) is supported if your device has it.",
+            "Profile → App Lock. Set a 4-digit PIN. The lock triggers after 3 minutes of the app being genuinely in the background. Biometric (fingerprint / face unlock) is supported if your device has it.\n\n"
+            "Important: the lock timer only starts when the app is actually sent to the background (e.g. you pressed the home button or switched to another app). System overlays that appear *over* the app — image picker, gallery browser, camera, share sheet, permission dialogs — do NOT start the timer. This means you can spend as long as you need browsing your gallery to pick screenshots without being locked out when you return.",
+        example:
+            "Browsing gallery for 10 minutes to pick screenshots → return to app → no lock screen.\nSwitch to another app for 4+ minutes → return → lock screen appears.",
       ),
       _HelpItem(
         title: "Account isolation",
@@ -1564,9 +1568,10 @@ const _sections = [
       _HelpItem(
         title: "Impulse Pause Mechanic",
         body:
-            "When you log a Want-tagged expense that's more than 2× your usual amount for that category, a dialog appears asking 'Was this planned?' You can still save it — this is just a moment to reflect before confirming.",
+            "When you log a Want-tagged expense that's more than 2× your usual amount for that category, a dialog appears asking 'Was this planned?' You can still save it — this is just a moment to reflect before confirming.\n\n"
+            "Note: Impulse pause only fires for today's expenses. If you're logging a past purchase (backdating an entry from last month or last week), the prompt is skipped — there's no point questioning a decision that was made months ago.",
         example:
-            "Usual food spend ₱150 → log ₱400 Want → 'Was this planned?' → tap Yes to save.",
+            "Usual food spend ₱150 → log ₱400 Want for today → 'Was this planned?' → tap Yes to save.\nLogging a ₱400 purchase from 3 months ago → no prompt, saves directly.",
       ),
       _HelpItem(
         title: "Loss Aversion Budget Alerts",

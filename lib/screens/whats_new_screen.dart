@@ -49,6 +49,16 @@ class WhatsNewScreen extends StatelessWidget {
       'FHS Uses Tightest Spending Limit',
       'Set a daily limit? Spending Restraint uses it. Set weekly only? That gets used. The tightest active period always wins.'
     ),
+    (
+      '🔒',
+      'App Lock Fixed for Gallery / Image Picker',
+      'Browsing your gallery to pick screenshots no longer triggers the lock screen. The 3-minute timer only starts when the app is actually backgrounded — not when the gallery overlay is open.'
+    ),
+    (
+      '📅',
+      'Historical Entries No Longer Trigger Current Alerts',
+      'Logging a past-month transaction no longer fires budget alerts, spending limit warnings, impulse pause, wallet deductions, or round-up savings. All those are now correctly scoped to today / this month only.'
+    ),
   ];
 
   @override
