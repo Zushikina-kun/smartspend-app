@@ -1,7 +1,30 @@
 # SmartSpend — Complete Task Status
-**Version:** 2.7.0
-**Last Updated:** June 11, 2026
+**Version:** 2.9.1 (Final)
+**Last Updated:** July 28, 2026
 **Purpose:** Definitive status of all tasks — done, deferred, blocked, and why.
+
+> ⚠️ This document's SECTION 1 (done list) is accurate as of June 2026 (v2.7.0).
+> For the complete final feature list including all v2.8.0–v2.9.1 additions, see:
+> **`docs/SmartSpend_Capstone2_Documentation_Reference.md`**
+
+## ADDITIONS SINCE v2.7.0 (Sessions June–July 2026)
+- [x] Multi-model LLM: Gemini 3.1 Flash-Lite / 3.5 Flash + task-based routing
+- [x] 29 agentic actions (was 25 — added suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense)
+- [x] Lightweight Mode (FHS without income/wallet tracking)
+- [x] Multi-period Spending Limits (daily/weekly/monthly/yearly independently)
+- [x] Logging Gap Detection + FHS gap penalty/bonus
+- [x] FHS dual-mode (full + lightweight components)
+- [x] Batch Screenshot Import (40+ platforms, time extraction, dark image enhancement)
+- [x] Unified Smart Import (camera + single photo + batch + paste text)
+- [x] Barcode detection from gallery
+- [x] Observability traces per AI request
+- [x] Financial_advice task tier for complex queries
+- [x] Historical transaction date-awareness (all current-period alerts date-guarded)
+- [x] FHS logging consistency scoped to current month (not first-ever expense)
+- [x] App lock fixed for gallery/image picker
+- [x] Achievements log_14 streak scoped to last 30 days
+- [x] google-services.json removed from git + SECURITY.md added
+- [x] GitHub release v2.9.1 published
 
 ---
 

@@ -1,6 +1,8 @@
 # SmartSpend — Competitor Analysis & Feature Ideas
-**Research Date:** May 20, 2026 | **Version:** 2.7.0
+**Research Date:** May 20, 2026 | **Version:** 2.9.1 (Final)
 **Sources:** PCMag, NerdWallet, Cleo, YNAB, Monarch Money, Copilot, Rocket Money, Bright Money, Wally, Monefy, Era, BSP CFIS 2025, behavioral finance research
+
+> ⚠️ For current feature status and capstone numbers, see **`SmartSpend_Capstone2_Documentation_Reference.md`**
 
 ---
 
@@ -8,7 +10,7 @@
 
 | Feature | SmartSpend | Cleo | YNAB | Monarch | Copilot | Rocket Money | Bright | Wally | Monefy |
 |---------|-----------|------|------|---------|---------|--------------|--------|-------|--------|
-| AI Chat Assistant | ✅ 25 actions | ✅ Snarky AI | ❌ | ❌ | ✅ Basic | ❌ | ✅ | ✅ AI | ❌ |
+| AI Chat Assistant | ✅ **29 actions** | ✅ Snarky AI | ❌ | ❌ | ✅ Basic | ❌ | ✅ | ✅ AI | ❌ |
 | Voice Input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | OCR Receipt Scan | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Barcode Scan + Lookup | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -18,13 +20,13 @@
 | Financial Health Score | ✅ 4-component | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Subscription Detection | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ Auto-cancel | ❌ | ❌ | ❌ |
 | Bill Negotiation | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
-| Round-Up Savings | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Round-Up Savings | ✅ **Done** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Debt Payoff Strategy | ✅ AI | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Investment Tracking | ❌ | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Couple/Family Sharing | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ |
 | Net Worth Tracking | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Cash Flow Forecast | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Gamification | ✅ 16 badges | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Gamification | ✅ **23 badges** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Mood Tracking | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | Insurance Tracker | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | PH Banks Database | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |

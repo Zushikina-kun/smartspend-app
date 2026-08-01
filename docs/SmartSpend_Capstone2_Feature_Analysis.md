@@ -1,7 +1,11 @@
 # SmartSpend — Complete Capstone 2 Feature Analysis
-**Date:** June 2026 | **Version:** 2.0 (Combined Old + New Ideas)
+**Date:** July 2026 | **Version:** 2.9.1 (Final)
 **Source:** Course slides, research, team brainstorming
-**Status tracking added by Kiro**
+**Status tracking updated by Kiro — July 28, 2026**
+
+> ⚠️ For the most up-to-date capstone documentation, see:
+> **`docs/SmartSpend_Capstone2_Documentation_Reference.md`**
+> This file retains the original ideas and planning history.
 
 ---
 
@@ -42,16 +46,11 @@ Name "Peso" not yet used — currently "SmartSpend AI". Can rename.
 
 ## SECTION 1 — AGENTIC AI (EXPANDED)
 
-### Full Action Type Roster: Target 30 Total
-**Already implemented (25):** log_expense, set_budget, set_income, add_goal, update_goal, delete_goal, add_income, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, explain_fhs_breakdown, compare_periods, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, delete_by_date
+### Full Action Type Roster: 29 Implemented ✅
+**All 29 implemented as of v2.9.1:**
+log_expense, set_budget, set_income, add_income, add_goal, update_goal, delete_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, delete_by_date, add_installment_plan, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, explain_fhs_breakdown, compare_periods, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense
 
-**Missing 5 from the list of 30:**
-- [ ] `flag_anomaly_explanation` — explains anomaly + what to do (auto-triggered)
-- [ ] `suggest_expense_cuts` — analyzes categories, identifies reductions
-- [ ] `create_debt_payment_plan` — schedule across ALL debts with timeline
-- [ ] `simulate_what_if` — "what if I save ₱500 more/month?" FHS projection
-- [ ] `business_daily_summary` — Business Mode: revenue, expenses, net profit (Business Mode needed first)
-- [ ] `create_invoice` — Business Mode: invoice generator
+**Status:** ✅ **ALL DONE** — 29 agentic actions implemented (was 0 in Capstone 1)
 
 ### More Human AI Personality
 - [ ] Use user's name naturally ("Hey Brix, about that monitor purchase...")
@@ -127,7 +126,7 @@ If expense date is in the past:
 - [ ] Manual override: user can tap and switch mid-conversation
 - [ ] Store model preference in SQLite
 
-**Status:** ✅ Groq + LLaMA 3.1 8B implemented. Multi-model routing not yet done.
+**Status:** ✅ **ALL DONE** — Multi-model LLM switching: Gemini 3.1 Flash-Lite / 3.5 Flash → Groq LLaMA 3.3 70B → 3.1 8B → Cerebras. Task-based routing (fast/smart/financial_advice tiers).
 
 ---
 
@@ -360,26 +359,30 @@ SmartSpend explicitly states it does not provide professional financial advice. 
 |---------|----------|--------|
 | Dynamic expandable chatbox | 🔴 Critical | ✅ Done |
 | More human AI personality | 🔴 Critical | ✅ Done |
-| Wallet-First Architecture | 🔴 Critical | 🔄 Partial |
+| Wallet-First Architecture | 🔴 Critical | ✅ Done (Lightweight Mode toggle) |
 | Date/time CRUD fix | 🔴 Critical | ✅ Done |
-| Multi-model LLM switching | 🟡 High | ❌ Not started |
-| 5 remaining agentic actions | 🟡 High | ❌ Not started |
-| Business Mode (Revenue + P&L + AI) | 🟡 High | ❌ Not started |
+| Multi-model LLM switching | 🟡 High | ✅ Done (5 providers, task routing) |
+| 29 agentic actions | 🟡 High | ✅ Done |
+| Business Mode (Revenue + P&L + AI) | 🟡 High | ❌ Deferred post-capstone |
 | Insurance Tracker Phase 1 | 🟡 High | ✅ Done |
 | Pop-up reminders on app open | 🟡 High | ✅ Done |
 | Idle money insights | 🟢 Medium | ✅ Done |
-| Philippine Financial Knowledge Base | 🟢 Medium | 🔄 Partial |
-| Business Mode (Inventory + Invoice) | 🟢 Medium | ❌ Not started |
-| Brankas API prototype | 🟢 Medium | ❌ Not started |
-| Market insights (AI + public APIs) | 🟢 Medium | ❌ Not started |
-| Screenshot OCR for balance updates | 🟢 Medium | ❌ Extend Smart Scanner |
-| UI accessibility improvements | 🟢 Medium | ✅ Done (text size, contrast) |
+| Philippine Financial Knowledge Base | 🟢 Medium | ✅ Done (injected in AI context) |
+| Batch Screenshot Import (40+ platforms) | 🟢 Medium | ✅ Done (v2.9.0) |
+| Logging Gap Detection | 🟢 Medium | ✅ Done (v2.9.0) |
+| Lightweight Mode (no income tracking) | 🟢 Medium | ✅ Done (v2.9.0) |
+| Multi-period Spending Limits | 🟢 Medium | ✅ Done (v2.9.0) |
+| Unified Smart Import | 🟢 Medium | ✅ Done (v2.9.1) |
+| Business Mode (Inventory + Invoice) | 🟢 Medium | ❌ Deferred post-capstone |
+| Brankas API prototype | 🟢 Medium | ❌ Deferred (BSP framework still maturing) |
+| Market insights (AI + public APIs) | 🟢 Medium | ❌ Deferred post-capstone |
+| UI accessibility improvements | 🟢 Medium | ✅ Done (text size, contrast, compact) |
 | Mascot design | 🔵 Low | ❌ Not started |
 | Full PH bank database | 🔵 Low | ✅ Done (20 banks JSON) |
-| BIR tax estimates | 🔵 Low | ❌ Not started |
-| PSE/mutual fund calculator | 🔵 Low | ✅ PCA Calculator done |
-| Financial Glossary / Learning Mode | 🔵 Low | ❌ Not started |
-| Multi-language UI (Filipino) | 🔵 Low | ❌ Not started |
+| BIR tax estimates | 🔵 Low | ✅ Done (BIR breakdown in profile) |
+| PSE/mutual fund calculator | 🔵 Low | ✅ Done (PCA Calculator) |
+| Financial Glossary / Learning Mode | 🔵 Low | ✅ Done (23 terms) |
+| Multi-language UI (Filipino) | 🔵 Low | ❌ Deferred post-capstone |
 
 ---
 

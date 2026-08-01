@@ -1,7 +1,26 @@
 # SmartSpend — Master Roadmap & To-Do List
-**Version:** 2.8.0  
-**Date:** June 13, 2026  
-**Status:** Capstone 2 Active Development (Defense Prep Phase)
+**Version:** 2.9.1 (Final)
+**Date:** July 28, 2026
+**Status:** Final Release — Capstone 2 Complete
+
+> ⚠️ This document reflects the June 2026 planning phase. For the final build status, see **`docs/SmartSpend_Capstone2_Documentation_Reference.md`**
+
+---
+
+## ✅ COMPLETED AS OF v2.9.1 (additions since June 2026)
+- [x] Multi-model LLM with task-based routing (fast/smart/financial_advice)
+- [x] 29 agentic actions (split_expense, suggest_expense_cuts, simulate_what_if, create_debt_payment_plan added)
+- [x] Lightweight Mode (FHS without income tracking)
+- [x] Multi-period Spending Limits (daily/weekly/monthly/yearly)
+- [x] Logging Gap Detection + FHS gap adjustment
+- [x] Batch Screenshot Import (40+ platform types)
+- [x] Unified Smart Import (camera button with 4 modes)
+- [x] Barcode detection from gallery images
+- [x] FHS logging consistency scoped to current month
+- [x] Historical transaction date-awareness (no false alerts for backdated entries)
+- [x] App lock fixed for gallery/image picker (inactive state handling)
+- [x] Security: google-services.json removed from git tracking + SECURITY.md
+- [x] GitHub release v2.9.1 published with 3 split APKs
 
 ---
 

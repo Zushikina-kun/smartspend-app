@@ -1,7 +1,9 @@
 # SmartSpend — Capstone 2 Paper Revision Guide
 **For:** Lucid Frame — Cyrille John M. Rubis (Documentation Lead)
-**Date:** June 2026 | **Version:** v2.8.0 Final
+**Date:** July 28, 2026 | **Version:** v2.9.1 Final
 **Purpose:** Source of truth for revising Chapters 1–5 of the capstone thesis paper
+
+> ⚠️ Also see **`docs/SmartSpend_Capstone2_Documentation_Reference.md`** — the most comprehensive single-file reference for capstone documentation, with all current numbers, quotes, and comparison tables.
 
 ---
 
@@ -144,14 +146,15 @@ See `docs/LLM_Comparison_Table_Ch3.md` for full benchmarking table.
 
 **Summary for paper:**
 
-Primary: **Gemini 2.5 Flash-Lite** (Google AI Studio)
+Primary: **Gemini 3.1 Flash-Lite** (Google AI Studio)
 - 1,000 requests/day FREE — sufficient for 60 req/user/day limit
 - 1 million token context window
 - Best reasoning quality among free models
 - Filipino-English: excellent (multilingual training)
 - Function calling: native support
+- Replaces Gemini 2.5 Flash-Lite (deprecated/unavailable to new users as of 2026)
 
-Fallback chain: Gemini 2.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1 70B
+Fallback chain: Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1 70B
 
 **Why not GPT-4o/Claude 3.5:** Require paid API keys — not viable for academic project with no budget.
 **Why not self-hosted (Mistral/Phi-3):** Poor Filipino-English understanding; no reliable hosted free API.
@@ -204,15 +207,17 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 4. **Interview Findings** — themes from qualitative analysis
 5. **FHS Validation** — does the formula correlate with user-reported financial health?
 
-### Key Numbers to Report (from current build)
+### Key Numbers to Report (from v2.9.1 final build)
 - **29 AI agentic actions** implemented
-- **5 LLM providers** with automatic failover
+- **5 LLM providers** with automatic failover + task-based routing (fast/smart/financial_advice)
 - **23 achievement badges** + 10 daily quests
 - **14 expense categories**, **9 payment methods**, **57 currencies**
 - **20 PH banks** in comparison database
-- **6 input modalities**: text chat, voice, OCR receipt, barcode, manual form, bank import
-- **7 startup alert conditions**
-- **4-component FHS formula** (savings rate, overspend control, budget adherence, logging consistency)
+- **7 input modalities**: text chat, voice, live camera, single photo (auto-detect), batch screenshots (40+ platforms), paste text, manual form
+- **7 startup alert conditions** (plus gap detection, income sanity, balance discrepancy)
+- **4-component FHS formula** — Full Mode and Lightweight Mode variants
+- **FHS adjustments**: Warning Decay (−5/day) + Gap Adjustment (−3/+2 per day)
+- **40+ screenshot platforms** detected automatically in batch import
 
 ---
 

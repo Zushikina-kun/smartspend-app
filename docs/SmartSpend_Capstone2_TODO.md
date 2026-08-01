@@ -1,6 +1,9 @@
 # SmartSpend — Capstone 2 & Future Development TODO
-**Date:** June 12, 2026 | **Status:** Active Development (v2.8.0)
-**Source:** Panel feedback + Claude analysis + team brainstorming
+**Date:** July 28, 2026 | **Status:** v2.9.1 Final Release
+**Source:** Panel feedback + development history
+
+> ⚠️ For the most up-to-date capstone documentation, see:
+> **`docs/SmartSpend_Capstone2_Documentation_Reference.md`**
 
 ---
 
@@ -14,24 +17,9 @@
 
 ## 🔴 CRITICAL — Address Panel Concerns
 
-### 1. Expanded Agentic AI Actions ✅ COMPLETE (28 total)
+### 1. Expanded Agentic AI Actions ✅ COMPLETE (29 total)
 **Why:** Panel said LLM should do "something important and heavy"
-- [x] `plan_salary_split` — AI creates 50/30/20 budget from salary
-- [x] `analyze_goal_feasibility` — checks if savings rate supports a goal
-- [x] `suggest_debt_payoff_order` — avalanche vs snowball recommendation
-- [x] `compute_contribution` — estimate PhilHealth/SSS from income
-- [x] `detect_subscriptions` — flag forgotten subscriptions
-- [x] `suggest_idle_money` — trigger when wallet unchanged 14+ days
-- [x] `generate_monthly_plan` — start-of-month spending plan from history
-- [x] `explain_fhs_breakdown` — plain Filipino-English FHS explanation with tips
-- [x] `compare_periods` — narrative comparison of two months
-- [x] `project_savings_timeline` — "when will I save enough for X?"
-- [x] `transfer_wallet` — move money between wallets
-- [x] `delete_by_date` — bulk delete expenses by date range
-- [x] `suggest_expense_cuts` — analyze categories, identify reductions
-- [x] `simulate_what_if` — project impact of a financial change
-- [x] `create_debt_payment_plan` — create repayment schedule across all debts
-**Total: 28 agentic actions (was 0 in Capstone 1)**
+All 29 actions implemented including: suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense, and all original actions.
 
 ### 2. Date/Time CRUD for All Data ✅ COMPLETE
 **Why:** Panel noted users can't modify dates of existing expenses
@@ -138,11 +126,14 @@
 - [x] Streak tracking (logging + score streaks)
 - [x] New badges: Spare Change Hero, Wallet Wizard, Insurance Aware, Century Club, Score Star, Financial Literate, App Explorer
 
-### 15. Smart Scanner Overhaul ✅ COMPLETE
-- [x] Barcode product lookup (Open Food Facts API + local PH database)
-- [x] OCR quality improved (95% JPEG, 1200 char limit)
-- [x] Receipt detection threshold lowered (2 items → import screen)
-- [x] Price Memory alerts (15%+ price increase notification)
+### 15. Smart Scanner / Unified Smart Import ✅ COMPLETE (v2.9.1)
+- [x] Barcode product lookup
+- [x] OCR quality improved
+- [x] Receipt detection and routing
+- [x] Price Memory alerts
+- [x] **Unified Smart Import** — single camera button: Live Camera, Single Photo (auto-detects barcode/receipt/screenshot), Batch Screenshots (40+ platforms), Paste Text
+- [x] Barcode detection from gallery images
+- [x] Screenshot contrast enhancement for dark themes
 
 ### 16. Behavioral Finance Features ✅ COMPLETE
 - [x] Round-Up Savings (auto-save spare change to ₱10)
