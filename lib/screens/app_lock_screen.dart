@@ -51,10 +51,19 @@ class _AppLockScreenState extends State<AppLockScreen> {
   }
 
   void _unlock() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => widget.destination),
-    );
+    // If the lock screen was pushed ON TOP of the app (resume scenario),
+    // pop it so we return to whatever was under it.
+    // If it was pushed as the root/replacement (cold start), we must
+    // pushReplacement. We detect which case we're in by checking whether
+    // we can pop.
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => widget.destination),
+      );
+    }
   }
 
   Future<void> _logout() async {
