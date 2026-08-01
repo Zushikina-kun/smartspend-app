@@ -452,28 +452,35 @@ class ScoreService {
     double comp4 = 25.0;
     String comp4Reason;
     if (expenses.isNotEmpty) {
-      // Count unique days with at least one expense logged
-      final loggedDays = expenses
+      // Only consider current-month expenses for logging consistency.
+      // Historical (past-month/past-year) entries must not inflate activeDays —
+      // a single entry from 18 months ago would otherwise make the span 550+ days
+      // and tank the score even if the user has been logging every day this month.
+      final currentMonthKey =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}';
+      final thisMonthDates = expenses
           .map((e) => (e['date'] as String).substring(0, 10))
-          .toSet()
-          .length;
-      // Active days = span from first expense to today (more accurate than full month)
-      int activeDays = daysPassed.clamp(1, daysInMonth);
-      try {
-        final dates = expenses
-            .map((e) => (e['date'] as String).substring(0, 10))
-            .toList()
-          ..sort();
-        final firstDate = DateTime.parse(dates.first);
-        final span = now.difference(firstDate).inDays + 1;
-        activeDays = span.clamp(1, daysPassed);
-      } catch (_) {}
+          .where((d) => d.startsWith(currentMonthKey))
+          .toSet();
 
-      // Backdated bulk-entry fairness: if the user logged expenses on many
-      // different past dates in a short time (retroactive entry), the raw
-      // loggedDays/activeDays ratio would be very low even though they did
-      // log consistently. Cap activeDays at 2× loggedDays so retroactive
-      // entry doesn't tank the score unfairly.
+      final loggedDays = thisMonthDates.length;
+      // activeDays = days elapsed since start of month, capped at days in month
+      int activeDays = daysPassed.clamp(1, daysInMonth);
+
+      // If user only started logging partway through the month, be fair:
+      // use the span from their first logged day this month (not day 1).
+      if (thisMonthDates.isNotEmpty) {
+        try {
+          final firstThisMonth = thisMonthDates
+              .map((d) => DateTime.parse(d))
+              .reduce((a, b) => a.isBefore(b) ? a : b);
+          final span = now.difference(firstThisMonth).inDays + 1;
+          activeDays = span.clamp(1, daysPassed);
+        } catch (_) {}
+      }
+
+      // Retroactive bulk-entry fairness: cap activeDays at 2× loggedDays
+      // so catching up on missed days doesn't unfairly penalise the score.
       if (loggedDays > 0 && activeDays > loggedDays * 2) {
         activeDays = loggedDays * 2;
       }
@@ -483,7 +490,7 @@ class ScoreService {
       if (loggedDays >= activeDays) {
         comp4Reason = "Logging every active day ✓";
       } else {
-        comp4Reason = "Logged $loggedDays of $activeDays days";
+        comp4Reason = "Logged $loggedDays of $activeDays days this month";
       }
     } else {
       comp4 = 0.0;

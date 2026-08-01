@@ -125,14 +125,27 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         expenses.where((e) => e.notes != null && e.notes!.isNotEmpty).length;
     if (withNotes >= 10) earned.add('notes_10');
 
-    // 14-day logging streak
+    // 14-day logging streak — only counts consecutive days ending today (or yesterday).
+    // Uses only expenses from the last 30 days to prevent backdated historical
+    // entries from inflating the streak artificially.
     final now = DateTime.now();
+    final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+    final recentDates = expenses
+        .where((e) {
+          try {
+            return DateTime.parse(e.date).isAfter(thirtyDaysAgo);
+          } catch (_) {
+            return false;
+          }
+        })
+        .map((e) => e.date.substring(0, 10))
+        .toSet();
     int logStreak = 0;
-    for (int d = 0; d < 60; d++) {
+    for (int d = 0; d < 30; d++) {
       final checkDate = DateTime(now.year, now.month, now.day - d)
           .toIso8601String()
           .substring(0, 10);
-      if (expenses.any((e) => e.date == checkDate))
+      if (recentDates.contains(checkDate))
         logStreak++;
       else
         break;
