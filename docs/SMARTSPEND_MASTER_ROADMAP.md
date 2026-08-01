@@ -299,5 +299,5 @@
 
 ---
 
-*SmartSpend v2.8.0 — Ready for Capstone 2 Defense*  
-*Lucid Frame | Lorma Colleges BSIT | June 2026*
+*SmartSpend v2.9.1 — Final Release*
+*Lucid Frame | Lorma Colleges BSIT | August 2026*

@@ -21,7 +21,7 @@ The following files contain sensitive credentials and are intentionally excluded
 
 The `google-services.json` file was previously committed to this repository. **It has since been removed from tracking.** If you find a copy in the git history, the API key inside it should be treated as potentially exposed.
 
-**Recommended action:** Rotate the Firebase API key in the Firebase Console (Project Settings → General → Web API Key → Regenerate). This invalidates any previously committed key.
+**Recommended action:** The API key in the old commits is already restricted by SHA-1 certificate fingerprint — it only works with APKs signed by your registered keystores. Someone with just the key and no matching signed APK cannot use it. However, if you want extra peace of mind, you can rotate it in Google Cloud Console → APIs & Services → Credentials.
 
 Your actual user data is protected by **Firestore Security Rules** — the API key alone cannot read or write user data without passing those rules. However, rotating it is still good practice.
 

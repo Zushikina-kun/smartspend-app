@@ -20,11 +20,11 @@
 
 | Model | Provider | Context Window | Speed (tokens/s) | Filipino-English | Tool Use | Cost | Selected? |
 |-------|----------|---------------|-------------------|-----------------|----------|------|-----------|
-| **Gemini 2.5 Flash-Lite** | Google | 1,000,000 | ~200 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (1,000/day) | ✅ **PRIMARY** (v2.8.0) |
-| **Gemini 2.5 Flash** | Google | 1,000,000 | ~150 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (250/day) | ✅ **FALLBACK 1** (v2.8.0) |
-| **LLaMA 3.3 70B** | Groq | 128,000 | ~315 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (14,400/day) | ✅ **FALLBACK 2** (v2.8.0) |
-| **LLaMA 3.1 8B Instant** | Groq | 8,192 | ~800 t/s | ★★★★☆ (Good) | ★★★★☆ | **Free** (14,400/day) | ✅ **FALLBACK 3** (v2.8.0) |
-| **LLaMA 3.1 70B** | Cerebras | 128,000 | ~400 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (1M tokens/day) | ✅ **FALLBACK 4** (v2.8.0) |
+| **Gemini 3.1 Flash-Lite** | Google | 1,000,000 | ~200 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (1,000/day) | ✅ **PRIMARY** (v2.9.1) |
+| **Gemini 3.5 Flash** | Google | 1,000,000 | ~150 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (250/day) | ✅ **FALLBACK 1** (v2.9.1) |
+| **LLaMA 3.3 70B** | Groq | 128,000 | ~315 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (14,400/day) | ✅ **FALLBACK 2** (v2.9.1) |
+| **LLaMA 3.1 8B Instant** | Groq | 8,192 | ~800 t/s | ★★★★☆ (Good) | ★★★★☆ | **Free** (14,400/day) | ✅ **FALLBACK 3** (v2.9.1) |
+| **LLaMA 3.1 70B** | Cerebras | 128,000 | ~400 t/s | ★★★★★ (Excellent) | ★★★★★ | **Free** (1M tokens/day) | ✅ **FALLBACK 4** (v2.9.1) |
 | GPT-4o | OpenAI | 128,000 | ~80 t/s | ★★★★★ (Excellent) | ★★★★★ | $5/1M input tokens | ❌ Cost |
 | GPT-4o Mini | OpenAI | 128,000 | ~120 t/s | ★★★★☆ (Good) | ★★★★★ | $0.15/1M input | ❌ No free tier |
 | Claude 3.5 Sonnet | Anthropic | 200,000 | ~70 t/s | ★★★★★ (Excellent) | ★★★★★ | $3/1M input | ❌ Cost |

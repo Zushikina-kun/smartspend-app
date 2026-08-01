@@ -1036,10 +1036,11 @@ const _sections = [
       _HelpItem(
         title: "App Lock (PIN + Biometric)",
         body:
-            "Profile → App Lock. Set a 4-digit PIN. The lock triggers after 3 minutes of the app being genuinely in the background. Biometric (fingerprint / face unlock) is supported if your device has it.\n\n"
-            "Important: the lock timer only starts when the app is actually sent to the background (e.g. you pressed the home button or switched to another app). System overlays that appear *over* the app — image picker, gallery browser, camera, share sheet, permission dialogs — do NOT start the timer. This means you can spend as long as you need browsing your gallery to pick screenshots without being locked out when you return.",
+            "Profile → App Lock. Set a 4-digit PIN. The lock screen only appears when you open the app fresh (cold start) — it does NOT appear when you switch to another app and come back, or during normal use.\n\n"
+            "This matches the behaviour of GCash, Maya, and most banking apps — you authenticate once on open, then use the app freely.\n\n"
+            "Biometric (fingerprint / face unlock) is supported if your device has it — it auto-prompts on app open.",
         example:
-            "Browsing gallery for 10 minutes to pick screenshots → return to app → no lock screen.\nSwitch to another app for 4+ minutes → return → lock screen appears.",
+            "Open app → biometric prompt once → unlocked for the whole session.\nSwitch to Instagram and come back → no lock prompt.",
       ),
       _HelpItem(
         title: "Account isolation",

@@ -487,8 +487,8 @@ All account types get access to all features. The label, income categories, budg
 ### 15a. App Lock (PIN + Biometric)
 - Optional app-level lock — enabled from Profile → App Lock
 - Requires a 4-digit PIN to set up; biometric auto-prompts if device supports it
-- Lock screen appears on cold start and app resume **only when a user is logged in**
-- **Grace period: 3 minutes** — the lock timer only starts when the app is genuinely backgrounded (`AppLifecycleState.paused`). The `inactive` state (which fires when system overlays appear: image picker, gallery browser, camera, share sheet, permission dialogs) does **not** start the timer and actually **resets** it. This means browsing your gallery for 30 minutes will not lock the app when you return.
+- **Lock screen only appears on cold start (app opened fresh)** — it does NOT appear when switching apps, returning from background, or using system overlays
+- This matches the UX of GCash, Maya, and most banking apps — authenticate once on open, not every time you alt-tab
 - Never appears on login/register/onboarding screens (no session = no lock)
 - "Not you? Log out" link on lock screen for account switching
 - Disable from Profile → App Lock → confirm removal
@@ -727,7 +727,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Push notification at 80% of limit and when exceeded
 - Opt-in — hidden when limit is 0 or not set
 
-### 32b. Period Spending Limit (v2.9.0)
+### 32b. Period Spending Limit (v2.9.1)
 - Set one total spending cap per **day / week / month / year** — Profile → ⚙️ Settings → Spending Limit
 - Period picker: Day | Week | Month | Year
 - Home dashboard shows a period limit progress bar when set (separate from legacy daily limit)
@@ -735,7 +735,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Works independently of income/wallet mode — available in both full and lightweight mode
 - Spend is calculated in real-time via `DBService.getSpentInPeriod(period)`
 
-### 32c. Lightweight Mode (v2.9.0)
+### 32c. Lightweight Mode (v2.9.1)
 - **Toggle:** Profile → ⚙️ Settings → Tracking Mode → "Track income & wallets" (default ON for existing users, OFF-auto-detect for new users)
 - When **OFF**: wallet card, allowance button, income card, net worth card are all hidden on home and profile screens. AI skips income/wallet advice and context.
 - When **OFF**: FHS recalculates using 4 habit-based components:
@@ -745,7 +745,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
   4. **Habit Streak** (25pts) — consecutive logged days, full score at 14
 - DB key: `income_wallet_mode` ('true'/'false'). `DBService.getIncomeWalletMode()` auto-detects existing users (returns true if income entries exist)
 
-### 32d. Logging Gap Detection (v2.9.0)
+### 32d. Logging Gap Detection (v2.9.1)
 - On startup (once per day), `StartupAlertsService._detectLoggingGaps()` finds contiguous unlogged day ranges since the first logged expense
 - Shows `_GapCheckDialog` per gap asking: "Yes I spent (forgot)" → penalty (−3 pts/day, max −15) or "Nope, nothing" → bonus (+2 pts/day, max +10)
 - Penalty/bonus stored in `gap_penalty_days` / `gap_clean_days` DB settings
@@ -1652,7 +1652,7 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 📋 Pending Work & Roadmap
 
-*Last updated: June 13, 2026 (v2.8.0 Final). All coding tasks complete.*
+*Last updated: August 2, 2026 (v2.9.1 Final). All coding tasks complete.*
 
 ### ✅ COMPLETED IN SESSIONS 13–15 (v2.8.0)
 

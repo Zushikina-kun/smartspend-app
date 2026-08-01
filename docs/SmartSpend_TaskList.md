@@ -30,7 +30,7 @@
 
 ## SECTION 1 — FULLY DONE ✅
 
-Everything here is confirmed built, tested, and in the current build (v2.7.0 — June 11, 2026).
+Everything here is confirmed built, tested, and in the current build (v2.9.1 — August 2, 2026).
 
 ### Sessions 13–14 (May–June 2026) — New
 - [x] 25 AI agentic actions (plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, compute_contribution, detect_subscriptions, suggest_idle_money, generate_monthly_plan, explain_fhs_breakdown, compare_periods, project_savings_timeline, transfer_wallet, delete_by_date)
