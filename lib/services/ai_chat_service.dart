@@ -806,7 +806,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "4. WALLET BALANCE: 'I have X in GCash', 'cash on hand is X', 'my cash is X' → ALWAYS use set_wallet_balance. NEVER log as income, NEVER log as expense. This is a balance update only.\n"
         "5. DUPLICATES — GUARDRAIL: If the GUARDRAIL note above lists an item with the same name+amount that the user JUST mentioned in the SAME message, do NOT fire another ACTION for it. If the user is logging something for a DIFFERENT day or a genuinely new purchase, always log it. When in doubt: log it.\n"
         "6. LOGGING TONE: When logging expenses, be warm and natural — not robotic. Instead of just 'Logged: X ₱Y', add a brief friendly comment. Examples: 'Got it, logged your jeepney fare 🚌', 'Noted! Lunch for ₱100 — hope it was good 😄', 'Logged your Sting — staying energized! ⚡'. Keep it short (1 line max), then the ACTION.\n"
-        "7. SOCIAL: 'thanks/ok/yes' → short reply, no actions.\n"
+        "7. SOCIAL: 'thanks/ok/yes/salamat/sige/oo' → short reply, no actions. Use Filipino terms naturally when the user uses them: paluwagan, utang, bayad, pang-araw-araw, piso, laman ng bulsa, ipon, gastos, singil.\n"
         "8. SELF-CHECK: Before sending your response, verify: does each item the user mentioned have exactly ONE ACTION line? If an item appears twice in your ACTION list, remove the duplicate.\n"
         "9. ITEM NAMES: item_name must be the real item — NEVER use generic filler like 'your X for', 'the X for', 'my X'. Use the actual item: 'Jeepney fare', 'Lunch', 'Snack', 'Breakfast', 'Tricycle fare'. If the user calls it 'jeep' log it as 'Jeepney fare'. If unsure, use the noun the user said.\n"
         "10. DATE/TIME CORRECTIONS: When the user says 'that was on [date]', 'change date to', 'set it to [time]', 'put it on [date]' about an existing expense → fire update_expense ACTION with the corrected date/time field. Do NOT just say you fixed it. No ACTION = no fix. Example: user says 'the lunch I logged was actually on July 3 not July 8' → ACTION:{\"type\":\"update_expense\",\"item_name\":\"Lunch\",\"date\":\"2026-07-03\"}.\n\n"
@@ -817,10 +817,10 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "• set_income: {\"type\":\"set_income\",\"amount\":25000}\n"
         "• add_income: {\"type\":\"add_income\",\"title\":\"X\",\"amount\":600,\"category\":\"Allowance\"}\n"
         "• add_goal: {\"type\":\"add_goal\",\"name\":\"X\",\"target\":50000}\n"
-        "• update_goal: {\"type\":\"update_goal\",\"name\":\"X\",\"amount\":500}\n"
+        "• update_goal: {\"type\":\"update_goal\",\"name\":\"X\",\"amount\":500} — also accepts: \"deadline\":\"YYYY-MM-DD\" to change goal deadline\n"
         "• delete_goal: {\"type\":\"delete_goal\",\"name\":\"X\"}\n"
         "• add_debt: {\"type\":\"add_debt\",\"title\":\"X\",\"person\":\"Y\",\"amount\":500,\"debt_type\":\"owe\"}\n"
-        "• update_debt: {\"type\":\"update_debt\",\"person\":\"Y\",\"payment\":500}\n"
+        "• update_debt: {\"type\":\"update_debt\",\"person\":\"Y\",\"payment\":500} — also accepts: \"due_date\":\"YYYY-MM-DD\" to change debt due date\n"
         "• add_recurring: {\"type\":\"add_recurring\",\"title\":\"X\",\"amount\":299,\"category\":\"Bills\",\"frequency\":\"monthly\",\"is_expense\":true}\n"
         "• delete_recurring: {\"type\":\"delete_recurring\",\"title\":\"X\"}\n"
         "• set_account_type: {\"type\":\"set_account_type\",\"account_type\":\"student\"}\n"
@@ -1226,10 +1226,15 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         return p['from_wallet'] != null &&
             p['to_wallet'] != null &&
             (p['amount'] as num?)?.toDouble() != null;
-      case 'update_expense':
-        // Must identify at least item_name to find the expense
-        return p['item_name'] != null &&
-            p['item_name'].toString().trim().isNotEmpty;
+      case 'update_goal':
+        // Must identify at least name to find the goal; amount OR deadline required
+        return p['name'] != null &&
+            p['name'].toString().trim().isNotEmpty &&
+            (p['amount'] != null || p['deadline'] != null);
+      case 'update_debt':
+        // Must identify at least person; payment OR due_date required
+        return p['person'] != null &&
+            (p['payment'] != null || p['due_date'] != null);
       case 'delete_expense':
         // Require explicit confirmation flag to prevent accidental deletes
         return p['item_name'] != null && p['confirmed'] == true;

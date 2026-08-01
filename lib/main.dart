@@ -13,6 +13,7 @@ import 'services/currency_service.dart';
 import 'services/notification_service.dart';
 import 'services/app_lock_service.dart';
 import 'services/app_config.dart';
+import 'services/db_service.dart';
 
 final themeService = ThemeService();
 
@@ -58,7 +59,10 @@ void main() async {
     NotificationService.checkDebtsDue();
     NotificationService.checkGoalDeadlines();
     NotificationService.checkDailyBriefing();
-    NotificationService.checkAnomalyDetection();
+    // Anomaly detection — only if not disabled in settings
+    DBService.getSetting('anomaly_detection_enabled').then((val) {
+      if (val != 'false') NotificationService.checkAnomalyDetection();
+    }).catchError((_) => NotificationService.checkAnomalyDetection());
     NotificationService.checkCategoryVelocity();
     NotificationService.checkWantSpendingAlert();
     runApp(const SmartSpendApp());

@@ -736,10 +736,11 @@ class _AIScreenState extends State<AIScreen> {
           break;
 
         case 'update_goal':
-          // Contribute an amount to an existing savings goal by name
+          // Contribute an amount to a savings goal, or update its deadline
           final goalName = action.params['name'] as String?;
           final contribution = (action.params['amount'] as num?)?.toDouble();
-          if (goalName != null && contribution != null && contribution > 0) {
+          final newDeadline = action.params['deadline'] as String?;
+          if (goalName != null) {
             final goals = await DBService.getGoals();
             final match = goals
                 .where((g) => (g['name'] as String)
@@ -747,13 +748,22 @@ class _AIScreenState extends State<AIScreen> {
                     .contains(goalName.toLowerCase()))
                 .firstOrNull;
             if (match != null) {
-              final newAmount =
-                  ((match['current_amount'] as num).toDouble() + contribution)
-                      .clamp(0.0, (match['target_amount'] as num).toDouble());
-              await DBService.updateGoal(
-                  {...match, 'current_amount': newAmount});
-              _showActionSnackbar(
-                  "Added ${CurrencyService.format(contribution)} to ${match['name']}");
+              // Update deadline if provided
+              if (newDeadline != null && newDeadline.isNotEmpty) {
+                await DBService.updateGoal({...match, 'deadline': newDeadline});
+                _showActionSnackbar(
+                    "Goal deadline updated: ${match['name']} → $newDeadline");
+              }
+              // Contribute amount if provided
+              if (contribution != null && contribution > 0) {
+                final newAmount =
+                    ((match['current_amount'] as num).toDouble() + contribution)
+                        .clamp(0.0, (match['target_amount'] as num).toDouble());
+                await DBService.updateGoal(
+                    {...match, 'current_amount': newAmount});
+                _showActionSnackbar(
+                    "Added ${CurrencyService.format(contribution)} to ${match['name']}");
+              }
             } else {
               _showActionSnackbar("Goal '$goalName' not found");
             }
@@ -1032,10 +1042,11 @@ class _AIScreenState extends State<AIScreen> {
           break;
 
         case 'update_debt':
-          // Record a partial or full payment toward a debt
+          // Record a payment toward a debt, or update its due date
           final debtPerson = action.params['person'] as String?;
           final debtPayment = (action.params['payment'] as num?)?.toDouble();
-          if (debtPerson != null && debtPayment != null && debtPayment > 0) {
+          final newDueDate = action.params['due_date'] as String?;
+          if (debtPerson != null) {
             final debts = await DBService.getDebts();
             final match = debts
                 .where((d) => (d['person'] as String)
@@ -1043,12 +1054,21 @@ class _AIScreenState extends State<AIScreen> {
                     .contains(debtPerson.toLowerCase()))
                 .firstOrNull;
             if (match != null) {
-              final newPaid =
-                  ((match['paid_amount'] as num).toDouble() + debtPayment)
-                      .clamp(0.0, (match['amount'] as num).toDouble());
-              await DBService.updateDebt({...match, 'paid_amount': newPaid});
-              _showActionSnackbar(
-                  "Recorded ₱${debtPayment.toStringAsFixed(0)} payment to ${match['person']}");
+              // Update due date if provided
+              if (newDueDate != null && newDueDate.isNotEmpty) {
+                await DBService.updateDebt({...match, 'due_date': newDueDate});
+                _showActionSnackbar(
+                    "Due date updated for ${match['person']}: $newDueDate");
+              }
+              // Record payment if provided
+              if (debtPayment != null && debtPayment > 0) {
+                final newPaid =
+                    ((match['paid_amount'] as num).toDouble() + debtPayment)
+                        .clamp(0.0, (match['amount'] as num).toDouble());
+                await DBService.updateDebt({...match, 'paid_amount': newPaid});
+                _showActionSnackbar(
+                    "Recorded ₱${debtPayment.toStringAsFixed(0)} payment to ${match['person']}");
+              }
             } else {
               _showActionSnackbar("Could not find debt for '$debtPerson'");
             }

@@ -11,6 +11,7 @@ import '../services/theme_service.dart';
 import '../services/db_service.dart';
 import '../services/cloud_service.dart';
 import '../services/score_service.dart';
+import '../services/app_config.dart';
 import '../services/export_service.dart';
 import '../services/tax_service.dart';
 import '../services/demo_service.dart';
@@ -262,6 +263,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool compactMode = (await DBService.getSetting('compact_mode')) == 'true';
     // New: lightweight mode
     bool incomeWalletMode = await DBService.getIncomeWalletMode();
+    bool anomalyEnabled =
+        (await DBService.getSetting('anomaly_detection_enabled')) != 'false';
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -388,6 +391,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               const SizedBox(height: 12),
+              Text("AI Model",
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600])),
+              const SizedBox(height: 4),
+              Text(
+                "Switch the AI model manually. Auto-fallback still applies when a limit is reached.",
+                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              ),
+              const SizedBox(height: 8),
+              ...AppConfig.availableModels.map((m) {
+                final isActive = AppConfig.activeModelId == m.$1;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: InkWell(
+                    onTap: () {
+                      setSheet(() {});
+                      AppConfig.setModel(m.$1);
+                      DBService.setSetting('preferred_model', m.$1);
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isActive
+                            ? Theme.of(ctx)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.1)
+                            : Colors.grey.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: isActive
+                              ? Theme.of(ctx)
+                                  .colorScheme
+                                  .primary
+                                  .withValues(alpha: 0.4)
+                              : Colors.grey.withValues(alpha: 0.2),
+                          width: isActive ? 1.5 : 1,
+                        ),
+                      ),
+                      child: Row(children: [
+                        Icon(
+                          isActive
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_unchecked,
+                          size: 18,
+                          color: isActive
+                              ? Theme.of(ctx).colorScheme.primary
+                              : Colors.grey,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(m.$2,
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      color: isActive
+                                          ? Theme.of(ctx).colorScheme.primary
+                                          : null)),
+                              Text(m.$3,
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.grey[500])),
+                            ],
+                          ),
+                        ),
+                      ]),
+                    ),
+                  ),
+                );
+              }),
+              const SizedBox(height: 12),
               Text("Tracking Mode",
                   style: TextStyle(
                       fontSize: 13,
@@ -412,6 +492,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fireEvent(AppEvent.incomeChanged);
                 },
               ),
+              const SizedBox(height: 12),
+              Text("Notifications",
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600])),
+              const SizedBox(height: 8),
+              _settingsTile(
+                icon: Icons.search_outlined,
+                title: "Spending anomaly alerts",
+                subtitle:
+                    "Weekly notification when a category spikes 2.5× above usual (every Sunday)",
+                value: anomalyEnabled,
+                onChanged: (v) {
+                  setSheet(() => anomalyEnabled = v);
+                  DBService.setSetting(
+                      'anomaly_detection_enabled', v ? 'true' : 'false');
+                },
+              ),
             ],
           ),
         ),
@@ -424,7 +523,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String title,
     required String subtitle,
     required bool value,
-    required ValueChanged<bool>? onChanged, // nullable = disabled
+    required ValueChanged<bool>? onChanged,
   }) {
     final disabled = onChanged == null;
     return Padding(
