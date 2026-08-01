@@ -78,98 +78,26 @@ class SmartSpendApp extends StatefulWidget {
   State<SmartSpendApp> createState() => _SmartSpendAppState();
 }
 
-class _SmartSpendAppState extends State<SmartSpendApp>
-    with WidgetsBindingObserver {
-  final _navigatorKey = GlobalKey<NavigatorState>();
-  bool _lockShowing = false;
-  bool _justUnlocked = false; // prevents re-lock on resumed event after unlock
-  DateTime? _backgroundedAt;
-  static const _lockAfterSeconds = 180; // 3 minutes
+class _SmartSpendAppState extends State<SmartSpendApp> {
+  // App lock is now handled only at login/splash — not on resume.
+  // Users should not need to re-authenticate every time they switch apps.
+  // The AppLockScreen is still used by SplashScreen for the initial
+  // PIN/biometric check when the app is opened fresh after a logout.
 
   @override
   void initState() {
     super.initState();
     themeService.addListener(() => setState(() {}));
-    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      // App genuinely sent to background — start the lock countdown.
-      // Note: we do NOT start on 'inactive' because that state fires when
-      // a system overlay appears *over* the app: image picker, file manager,
-      // gallery, camera, share sheet, permission dialog, etc.
-      // Starting the timer on inactive would lock the app whenever the user
-      // spends more than 3 minutes browsing their gallery.
-      _backgroundedAt ??= DateTime.now();
-      _justUnlocked = false; // genuine background — clear unlock debounce
-    } else if (state == AppLifecycleState.inactive) {
-      // System overlay is showing (gallery/camera/file picker/share sheet).
-      // Do NOT start the lock timer here — the user is still "in" the app
-      // from their perspective. Reset any existing timer so returning from
-      // a long gallery session doesn't trigger the lock.
-      _backgroundedAt = null;
-    } else if (state == AppLifecycleState.resumed) {
-      _checkLockOnResume();
-    } else if (state == AppLifecycleState.detached) {
-      // App fully closed — reset so it locks on next open
-      _backgroundedAt = null;
-    }
-  }
-
-  Future<void> _checkLockOnResume() async {
-    if (_lockShowing) return;
-    if (_justUnlocked)
-      return; // just unlocked — ignore the post-unlock resumed event
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-    final lockEnabled = await AppLockService.isEnabled();
-    final hasPin = await AppLockService.hasPin();
-    if (!lockEnabled || !hasPin) return;
-
-    // Only lock if backgrounded for more than 3 minutes
-    // This prevents the lock from triggering during brief interruptions
-    // like share sheets, file pickers, camera, etc.
-    final bg = _backgroundedAt;
-    if (bg != null) {
-      final secondsAway = DateTime.now().difference(bg).inSeconds;
-      if (secondsAway < _lockAfterSeconds) {
-        _backgroundedAt = null; // reset
-        return; // too brief — don't lock
-      }
-    }
-    _backgroundedAt = null; // reset
-
-    _lockShowing = true;
-    _justUnlocked = false;
-    _navigatorKey.currentState
-        ?.push(
-      MaterialPageRoute(
-        builder: (_) => AppLockScreen(destination: const HomeScreen()),
-        fullscreenDialog: true,
-      ),
-    )
-        .then((_) {
-      _lockShowing = false;
-      _justUnlocked = true;
-      // Clear the flag after a short window so normal future resumes work
-      Future.delayed(const Duration(seconds: 2), () {
-        _justUnlocked = false;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: _navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Smart Spend',
       themeMode: themeService.themeMode,
