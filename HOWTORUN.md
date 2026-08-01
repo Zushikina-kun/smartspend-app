@@ -28,18 +28,24 @@ cd smartspend-app
 
 ## 2. Firebase Setup
 
-The app requires Firebase. The `google-services.json` file is **not included in the repo** (contains API keys).
+The app requires Firebase. The `google-services.json` file is **not included in the repo** (contains API keys — see `SECURITY.md`).
 
+A template with placeholder values is at `android/app/google-services.json.example`.
+
+To set up your own:
 1. Go to [Firebase Console](https://console.firebase.google.com)
-2. Open the **SmartSpend** project (or create one)
-3. Download `google-services.json` from Project Settings → Android app
-4. Place it at: `android/app/google-services.json`
+2. Open the **SmartSpend** project (or create a new one)
+3. Go to Project Settings → Android app (package: `com.lucidframe.smartspend_app`)
+4. Download `google-services.json`
+5. Place it at: `android/app/google-services.json`
 
 Firebase services used:
 - **Firebase Auth** — email/password + Google Sign-In
 - **Firestore** — cloud data sync
 - **Firebase Crashlytics** — crash reporting
 - **Firebase App Check** — Play Integrity (release builds)
+
+> **Note for the original dev team:** If you need the original `google-services.json`, get it from Brix or download it fresh from the Firebase Console. The copy that was previously committed has been removed from tracking — see `SECURITY.md`.
 
 ---
 

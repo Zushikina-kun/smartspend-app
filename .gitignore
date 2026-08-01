@@ -62,6 +62,11 @@ docs/Ideas/
 # API keys and secrets — never commit these to a public repository
 lib/services/app_config.dart
 
+# Firebase config — contains real API keys, project IDs, OAuth client IDs.
+# Each developer must obtain their own google-services.json from Firebase Console.
+# See HOWTORUN.md §2 for setup instructions.
+android/app/google-services.json
+
 # Android release signing — never commit keystore or key.properties
 android/key.properties
 android/app/*.jks
