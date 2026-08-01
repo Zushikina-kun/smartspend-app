@@ -82,7 +82,8 @@ class _SmartSpendAppState extends State<SmartSpendApp>
     with WidgetsBindingObserver {
   final _navigatorKey = GlobalKey<NavigatorState>();
   bool _lockShowing = false;
-  DateTime? _backgroundedAt; // track when app went to background
+  bool _justUnlocked = false; // prevents re-lock on resumed event after unlock
+  DateTime? _backgroundedAt;
   static const _lockAfterSeconds = 180; // 3 minutes
 
   @override
@@ -108,6 +109,7 @@ class _SmartSpendAppState extends State<SmartSpendApp>
       // Starting the timer on inactive would lock the app whenever the user
       // spends more than 3 minutes browsing their gallery.
       _backgroundedAt ??= DateTime.now();
+      _justUnlocked = false; // genuine background — clear unlock debounce
     } else if (state == AppLifecycleState.inactive) {
       // System overlay is showing (gallery/camera/file picker/share sheet).
       // Do NOT start the lock timer here — the user is still "in" the app
@@ -124,6 +126,8 @@ class _SmartSpendAppState extends State<SmartSpendApp>
 
   Future<void> _checkLockOnResume() async {
     if (_lockShowing) return;
+    if (_justUnlocked)
+      return; // just unlocked — ignore the post-unlock resumed event
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
     final lockEnabled = await AppLockService.isEnabled();
@@ -144,14 +148,22 @@ class _SmartSpendAppState extends State<SmartSpendApp>
     _backgroundedAt = null; // reset
 
     _lockShowing = true;
+    _justUnlocked = false;
     _navigatorKey.currentState
         ?.push(
-          MaterialPageRoute(
-            builder: (_) => AppLockScreen(destination: const HomeScreen()),
-            fullscreenDialog: true,
-          ),
-        )
-        .then((_) => _lockShowing = false);
+      MaterialPageRoute(
+        builder: (_) => AppLockScreen(destination: const HomeScreen()),
+        fullscreenDialog: true,
+      ),
+    )
+        .then((_) {
+      _lockShowing = false;
+      _justUnlocked = true;
+      // Clear the flag after a short window so normal future resumes work
+      Future.delayed(const Duration(seconds: 2), () {
+        _justUnlocked = false;
+      });
+    });
   }
 
   @override
