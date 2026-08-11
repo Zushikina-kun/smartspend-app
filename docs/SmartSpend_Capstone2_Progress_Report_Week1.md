@@ -7,7 +7,7 @@
 |---|---|
 | **Project Title** | SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture |
 | **Group Name** | Lucid Frame |
-| **Course** | Bachelor of Science in Information Technology (BSIT) |
+| **Course** | Bachelor of Science in Information Technology (BSIT) — 4th Year, 1st Semester |
 | **Institution** | Lorma Colleges, College of Computer Studies and Engineering (CCSE) |
 | **Academic Year** | 2026–2027, 1st Semester |
 | **Date Submitted** | August 11, 2026 — Week 1 |

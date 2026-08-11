@@ -28,7 +28,7 @@
 - Djaunathan Albert S. Madayag — Project Manager & QA Lead
 
 **Institution:** Lorma Colleges, College of Computer Studies and Engineering (CCSE)
-**Program:** Bachelor of Science in Information Technology (BSIT)
+**Program:** Bachelor of Science in Information Technology (BSIT) — 4th Year, 1st Semester
 **Academic Year:** 2026–2027, 1st Semester
 
 ---
