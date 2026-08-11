@@ -210,7 +210,7 @@ smartspend-app/
 ├── pubspec.yaml                   # Dependencies
 ├── DOCUMENTATION.md               # Full technical docs
 ├── HOWTORUN.md                    # This file
-└── KIRO_CONTEXT.md                # AI assistant context
+└── SECURITY.md                    # Security policy and credential info
 ```
 
 ---

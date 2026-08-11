@@ -121,11 +121,11 @@ Distribute both `arm64-v8a` and `armeabi-v7a` to cover all Android phones.
 |------|---------|
 | `DOCUMENTATION.md` | Full technical documentation |
 | `HOWTORUN.md` | Setup, run, and build instructions |
-| `KIRO_CONTEXT.md` | AI assistant context — architecture, conventions, current state |
-| `FINAL_STATUS.md` | Complete fix history across all sessions |
-| `SmartSpend_PendingIssues.md` | Known issues and their status |
-| `SmartSpend_Master_TODO.md` | Feature backlog |
-| `SmartSpend_QA_Brief.txt` | QA tester guide |
+| `SECURITY.md` | Security policy and credential management |
+| `docs/SmartSpend_Defense_Reviewer.md` | Pre-defense quick reference — all key numbers, FHS formula, Q&A |
+| `docs/SmartSpend_Capstone2_Documentation_Reference.md` | Single source of truth for capstone paper documentation |
+| `docs/SmartSpend_Demo_Script.md` | Demo script for video / live presentation |
+| `docs/SmartSpend_Capstone2_Progress_Report_Week1.md` | Week 1 Capstone 2 progress report |
 
 ---
 

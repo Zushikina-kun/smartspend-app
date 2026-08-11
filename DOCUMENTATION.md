@@ -1625,7 +1625,7 @@ Both `AIChatService` and `LLMService` use comprehensive Filipino-aware category 
 9. Typed models for SavingsGoal, Debt, Income tables
 10. AI savings plan advisor — budget cut suggestions to reach savings goals
 
-> See `FINAL_STATUS.md` → Future Roadmap & Wishlist for detailed blockers and implementation plans for each item.
+> See `docs/SmartSpend_Capstone2_Documentation_Reference.md` → Future Roadmap section for detailed blockers and implementation plans for each item.
 
 ---
 
@@ -1928,6 +1928,6 @@ These are intentional design decisions or platform constraints — not bugs.
 
 ---
 
-*Smart Spend v2.5.0 — Lucid Frame*
+*Smart Spend v2.9.1 — Lucid Frame*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2026–2027 (1st Semester)*

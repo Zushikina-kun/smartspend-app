@@ -267,7 +267,7 @@ These are not bugs — they're intentional design decisions or platform constrai
 
 ---
 
-## SECTION 6 — PENDING ISSUES FROM SmartSpend_PendingIssues.md
+## SECTION 6 — PENDING ISSUES (Historical)
 
 | # | Issue | Status |
 |---|-------|--------|
