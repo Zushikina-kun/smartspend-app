@@ -140,7 +140,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Build size | 44.7 MB (arm64-v8a, obfuscated) |
 | GitHub | https://github.com/Zushikina-kun/smartspend-app |
 | Group | Lucid Frame |
-| School | Lorma Colleges — CCSE, BSIT |
+| School | Lorma Colleges — CCSE, BSIT 4th Year |
 | Academic Year | 2026–2027, 1st Semester |
 
 ---
