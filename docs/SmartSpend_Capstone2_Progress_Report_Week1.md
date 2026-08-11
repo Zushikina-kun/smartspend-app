@@ -45,7 +45,7 @@
 - **APK size:** 44.7 MB (arm64-v8a release, split, obfuscated)
 - **GitHub repository:** https://github.com/Zushikina-kun/smartspend-app
 - **GitHub release:** https://github.com/Zushikina-kun/smartspend-app/releases/tag/v2.9.1
-- **Repository visibility:** Public (as of August 2026)
+- **Repository visibility:** Public (August 2026) — with Non-Commercial LICENSE (Lucid Frame retains all commercial rights)
 
 ### 2.2 Development Completion Summary
 
@@ -61,8 +61,11 @@
 | Wallet balances (30+ PH banks) | ✅ Complete | Auto-deduct, transfers |
 | Insurance & contributions tracker | ✅ Complete | SSS, PhilHealth, Pag-IBIG |
 | Firebase cloud sync | ✅ Complete | Full Firestore sync |
-| App Lock (PIN + Biometric) | ✅ Complete | Cold-start only, no interruptions |
-| Smart Import (camera + gallery) | ✅ Complete | 40+ screenshot platform types |
+| App Lock (PIN + Biometric) | ✅ Complete | Cold-start only (no resume interruptions — matches GCash/Maya UX) |
+| Smart Import (camera + gallery) | ✅ Complete | 40+ screenshot platform types, barcode from gallery, dark image enhancement |
+| AI Model Selector | ✅ Complete | Manual selection from 5 providers in Settings |
+| Spending Anomaly Alert Toggle | ✅ Complete | Enable/disable weekly spike notifications in Settings |
+| Goal deadline + Debt due date via AI | ✅ Complete | AI can update deadline/due_date via chat |
 | Achievements & Gamification | ✅ Complete | 23 badges, 10 daily quests |
 | Unified Spending Limits | ✅ Complete | Daily/weekly/monthly/yearly |
 | Lightweight Mode | ✅ Complete | FHS without income tracking |
@@ -82,14 +85,16 @@
 **Recent significant commits:**
 | Commit | Description | Date |
 |--------|-------------|------|
-| `37e37ed` | Final docs sweep — app lock, model names | Aug 2, 2026 |
-| `679fb45` | LICENSE added (Non-Commercial) | Aug 2, 2026 |
-| `214f69a` | App lock simplified (cold-start only) | Aug 2, 2026 |
-| `95ae049` | AI model selector, Filipino terms, date edit | Aug 1, 2026 |
+| `b9c38de` | Manuscript fix guide for Google Docs corrections | Aug 2, 2026 |
+| `37e37ed` | Final v2.9.1 docs sweep — app lock, model names | Aug 2, 2026 |
+| `679fb45` | LICENSE added (Non-Commercial, Lucid Frame) | Aug 2, 2026 |
+| `214f69a` | App lock simplified (cold-start only, like GCash/Maya) | Aug 2, 2026 |
+| `95ae049` | AI model selector, anomaly toggle, Filipino terms, goal/debt date edit | Aug 1, 2026 |
 | `890330a` | Capstone 2 documentation reference file | Aug 1, 2026 |
-| `0eef294` | Security: google-services.json removed | Aug 1, 2026 |
-| `f86b2fd` | FHS accuracy fixes | Jul 28, 2026 |
+| `0eef294` | Security: google-services.json removed from tracking | Aug 1, 2026 |
+| `f86b2fd` | FHS accuracy: logging consistency current-month only | Jul 28, 2026 |
 | `c810ca5` | Unified Smart Import (4-mode camera) | Jul 28, 2026 |
+| `eeea0b6` | Historical entry date guards (no false alerts) | Jul 28, 2026 |
 
 ### 3.2 System Prototype
 The system is fully functional and deployed as a release APK.

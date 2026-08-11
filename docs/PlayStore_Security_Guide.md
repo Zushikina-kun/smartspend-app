@@ -1,5 +1,7 @@
 # SmartSpend — Play Store Deployment & Security Guide
-**Version:** 2.7.0 | **Date:** May 2026
+**Version:** 2.9.1 | **Date:** August 2026
+
+> **Security update (August 2026):** `google-services.json` has been removed from git tracking. The Firebase API key is already SHA-1 restricted — it only works with APKs signed by the registered keystores. Repository is now public with a Non-Commercial LICENSE.
 
 ---
 
@@ -44,7 +46,8 @@
 | **Auth Security** | Firebase Auth (email + Google OAuth) | ✅ Implemented |
 | **Local Data** | SQLite (on-device, not accessible to other apps) | ✅ Implemented |
 | **Crash Reporting** | Firebase Crashlytics | ✅ Implemented |
-| **Git Security** | `app_config.dart` in `.gitignore` | ✅ Implemented |
+| **Git Security** | `app_config.dart` + `google-services.json` in `.gitignore` | ✅ Implemented |
+| **Repository** | Public with Non-Commercial LICENSE | ✅ Implemented |
 
 ---
 
