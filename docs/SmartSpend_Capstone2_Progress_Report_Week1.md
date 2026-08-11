@@ -9,9 +9,10 @@
 | **Group Name** | Lucid Frame |
 | **Course** | Bachelor of Science in Information Technology (BSIT) |
 | **Institution** | Lorma Colleges, College of Computer Studies and Engineering (CCSE) |
-| **Academic Year** | 2025–2026 |
+| **Academic Year** | 2026–2027, 1st Semester |
 | **Date Submitted** | August 2026 — Week 1 |
 | **Teacher-in-Charge** | Janelli M. Mendez, DIT |
+| **Reference** | Capstone Project 2 Syllabus — 1st Sem AY2026-2027 (see docs/Capstone_Project_2_Syllabus_1st_Sem_AY2026-2027.docx) |
 
 ---
 

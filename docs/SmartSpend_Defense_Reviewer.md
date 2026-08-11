@@ -230,5 +230,5 @@ A: SmartSpend provides general financial information for educational purposes on
 
 ---
 
-*SmartSpend v2.9.1 — Lucid Frame | Lorma Colleges CCSE BSIT 2025–2026*
+*SmartSpend v2.9.1 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*
