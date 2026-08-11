@@ -10,7 +10,7 @@
 | **Course** | Bachelor of Science in Information Technology (BSIT) |
 | **Institution** | Lorma Colleges, College of Computer Studies and Engineering (CCSE) |
 | **Academic Year** | 2026–2027, 1st Semester |
-| **Date Submitted** | August 2026 — Week 1 |
+| **Date Submitted** | August 11, 2026 — Week 1 |
 | **Teacher-in-Charge** | Janelli M. Mendez, DIT |
 | **Reference** | Capstone Project 2 Syllabus — 1st Sem AY2026-2027 (see docs/Capstone_Project_2_Syllabus_1st_Sem_AY2026-2027.docx) |
 
@@ -78,24 +78,29 @@
 ## 3. PROOF OF PROGRESS
 
 ### 3.1 GitHub Repository Evidence
-- **Total commits:** 100+ commits over the development period
-- **Latest commit:** `37e37ed` — "docs: final v2.9.1 sweep"
+- **Total commits:** 110+ commits over the development period
+- **Latest commit:** `529252f` — "fix: LICENSE copyright year + dead file refs cleanup"
 - **Public repository:** https://github.com/Zushikina-kun/smartspend-app
 - **Branch:** master (production-ready)
 
 **Recent significant commits:**
 | Commit | Description | Date |
 |--------|-------------|------|
-| `b9c38de` | Manuscript fix guide for Google Docs corrections | Aug 2, 2026 |
-| `37e37ed` | Final v2.9.1 docs sweep — app lock, model names | Aug 2, 2026 |
+| `529252f` | LICENSE year fix, dead file refs removed from README/HOWTORUN | Aug 11, 2026 |
+| `5887556` | Docs: fix table count 18→20, screens 31→36, services 23→26 (code-verified) | Aug 11, 2026 |
+| `ac5e688` | Source: version 2.9.1 in pubspec, backup export, debug log, barcode UA | Aug 11, 2026 |
+| `04f649f` | Final AY2026-2027 sweep — all 16 docs updated | Aug 11, 2026 |
+| `a532927` | Add Capstone 2 syllabus + academic year fix | Aug 11, 2026 |
+| `816f003` | Docs cleanup — Defense Reviewer, Progress Report, Security Guide | Aug 11, 2026 |
+| `b9c38de` | Manuscript fix guide for Google Docs corrections | Aug 11, 2026 |
+| `3c0fff0` | Week 1 Progress Report added | Aug 11, 2026 |
+| `37e37ed` | Final v2.9.1 docs sweep — app lock, model names, version stamps | Aug 2, 2026 |
 | `679fb45` | LICENSE added (Non-Commercial, Lucid Frame) | Aug 2, 2026 |
-| `214f69a` | App lock simplified (cold-start only, like GCash/Maya) | Aug 2, 2026 |
+| `214f69a` | App lock simplified — cold-start only, no resume interruptions | Aug 2, 2026 |
 | `95ae049` | AI model selector, anomaly toggle, Filipino terms, goal/debt date edit | Aug 1, 2026 |
 | `890330a` | Capstone 2 documentation reference file | Aug 1, 2026 |
 | `0eef294` | Security: google-services.json removed from tracking | Aug 1, 2026 |
 | `f86b2fd` | FHS accuracy: logging consistency current-month only | Jul 28, 2026 |
-| `c810ca5` | Unified Smart Import (4-mode camera) | Jul 28, 2026 |
-| `eeea0b6` | Historical entry date guards (no false alerts) | Jul 28, 2026 |
 
 ### 3.2 System Prototype
 The system is fully functional and deployed as a release APK.
@@ -115,24 +120,32 @@ The system is fully functional and deployed as a release APK.
 | Document | Location | Status |
 |----------|----------|--------|
 | Application Documentation (DOCUMENTATION.md) | /DOCUMENTATION.md | ✅ Complete — v2.9.1 |
+| How to Run & Build | /HOWTORUN.md | ✅ Complete |
+| README | /README.md | ✅ Complete |
+| Security Policy | /SECURITY.md | ✅ Complete |
+| LICENSE | /LICENSE | ✅ Complete — 2026–2027 |
 | Capstone 2 Documentation Reference | /docs/SmartSpend_Capstone2_Documentation_Reference.md | ✅ Complete |
+| Defense Reviewer (pre-defense cheat sheet) | /docs/SmartSpend_Defense_Reviewer.md | ✅ Complete |
+| Week 1 Progress Report (this document) | /docs/SmartSpend_Capstone2_Progress_Report_Week1.md | ✅ Complete |
 | Competitor Analysis & Feature Ideas | /docs/Competitor_Analysis_and_Feature_Ideas.md | ✅ Updated v2.9.1 |
 | Capstone 2 TODO & Feature Analysis | /docs/SmartSpend_Capstone2_Feature_Analysis.md | ✅ Updated v2.9.1 |
 | LLM Comparison Table (Chapter 3) | /docs/LLM_Comparison_Table_Ch3.md | ✅ Updated v2.9.1 |
 | Paper Guide (Chapters 1–5) | /docs/SmartSpend_Capstone_Paper_Guide.md | ✅ Updated v2.9.1 |
+| Manuscript Fix Guide (Google Docs corrections) | /docs/SmartSpend_Manuscript_Fix_Guide.md | ✅ Complete |
 | Demo Script | /docs/SmartSpend_Demo_Script.md | ✅ Updated v2.9.1 |
 | Master Roadmap | /docs/SMARTSPEND_MASTER_ROADMAP.md | ✅ Updated v2.9.1 |
-| How to Run & Build | /HOWTORUN.md | ✅ Complete |
-| README | /README.md | ✅ Complete |
-| Security Policy | /SECURITY.md | ✅ Complete |
-| LICENSE | /LICENSE | ✅ Complete |
+| Task List (complete status of all tasks) | /docs/SmartSpend_TaskList.md | ✅ Updated v2.9.1 |
+| Capstone 2 TODO | /docs/SmartSpend_Capstone2_TODO.md | ✅ Updated v2.9.1 |
+| Play Store & Security Guide | /docs/PlayStore_Security_Guide.md | ✅ Updated v2.9.1 |
+| Capstone Paper (manuscript draft) | /docs/SMARTSPEND Capstone Docs.md | ✅ Chapters 1–2 complete |
+| Capstone 2 Syllabus | /docs/Capstone_Project_2_Syllabus_1st_Sem_AY2026-2027.docx | ✅ Reference copy |
 
 ### 3.4 Key Technical Metrics
 
 | Metric | Value |
 |--------|-------|
-| Total screens | 31 screens |
-| Total services | 23 services |
+| Total screens | 36 screens |
+| Total services | 26 services |
 | AI agentic actions | 29 actions |
 | LLM providers (auto-failover) | 5 providers |
 | Expense categories | 14 built-in + unlimited custom |
@@ -140,7 +153,7 @@ The system is fully functional and deployed as a release APK.
 | Daily quests | 10 rotating |
 | Screenshot platforms detected | 40+ types |
 | PH banks in database | 20 banks + 5 e-wallets |
-| SQLite v11, 20 tables) |
+| SQLite schema | v11, 20 tables |
 | Firebase services used | Auth, Firestore, Crashlytics, App Check, Remote Config |
 
 ---
@@ -264,6 +277,7 @@ Key screens to show:)*
 | July 28, 2026 | Development session | Lucid Frame | Debug session, gap detection, AI guardrails |
 | August 1, 2026 | Development session | Lucid Frame | App lock fix, docs sweep, GitHub release |
 | August 2, 2026 | Reorientation | Lucid Frame | Week 1 progress report, Capstone 2 timeline |
+| August 11, 2026 | Documentation session | Lucid Frame | Full docs sweep — AY2026-2027 update, version consistency audit, LICENSE fix, dead reference cleanup |
 
 ---
 
