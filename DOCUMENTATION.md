@@ -1652,7 +1652,7 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 📋 Pending Work & Roadmap
 
-*Last updated: August 2, 2026 (v2.9.1 Final). All coding tasks complete.*
+*Last updated: August 11, 2026 (v2.9.1 Final). All coding tasks complete.*
 
 ### ✅ COMPLETED IN SESSIONS 13–15 (v2.8.0)
 
@@ -1855,10 +1855,10 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 🗺️ Complete Feature Status & Roadmap
 
-### ✅ Fully Implemented (v2.5.0)
+### ✅ Fully Implemented (v2.9.1 Final)
 
 All features listed in sections 1–62 of this document are fully built and working in the current build. Key highlights:
-- **29 AI action types** (v2.8.0): log_expense, set_budget, set_income, add_income, add_goal, update_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, delete_goal, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, delete_by_date, split_expense
+- **29 AI action types** (v2.9.1): log_expense, set_budget, set_income, add_income, add_goal, update_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, delete_goal, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, delete_by_date, split_expense
 - **62+ features** across all screens
 - **Wallet Balances** — Cash on Hand, GCash, Maya, 17 PH banks, remittance centers (section 61)
 - **Firebase App Check** — Play Integrity integrated, monitoring mode (section 62)
@@ -1875,8 +1875,8 @@ These features were planned but deferred because they require significant archit
 | Feature | Why Deferred | Estimated Effort | When |
 |---------|-------------|-----------------|------|
 | ~~**Multi-wallet system** (GCash/Cash/Bank/Savings)~~ | ✅ **DONE** — Wallet Balances feature tracks Cash on Hand, GCash, Maya, 17 banks, remittance centers. Note: this is balance tracking, not full multi-wallet with transfers. | — | Implemented v2.5.0 |
-| **Transfer transactions** (Cash → GCash top-up) | Needs wallet system first. New transaction type that must be excluded from expense analytics. | High | After wallet system |
-| **Spending heatmap calendar** | Custom Flutter widget showing daily spend intensity by color. No DB needed but significant UI work. | Medium | Capstone 2 |
+| ~~**Transfer transactions** (Cash → GCash top-up)~~ | ✅ **DONE** — `transfer_wallet` AI action implemented. Wallet-to-wallet transfers supported via AI chat. | — | Implemented v2.9.1 |
+| ~~**Spending heatmap calendar**~~ | ✅ **DONE** — Day-of-week heatmap implemented in Analytics screen. | — | Implemented v2.9.1 |
 | **Debt payment timeline** | Visual payoff projection chart per debt. Data exists, just needs visualization. | Medium | Capstone 2 |
 | **PDF export (monthly summary)** | Needs `pdf` + `printing` packages (~2MB APK increase). Clean printable report for parents/employers. | Medium | Capstone 2 |
 | **Quick-log chip customization** | Let users pin specific expenses as permanent quick-log chips. Currently auto-derived from history. | Low | Capstone 2 |
@@ -1884,7 +1884,7 @@ These features were planned but deferred because they require significant archit
 | **Investment tracking** (MP2, stocks, crypto) | New wallet type with manual balance updates. No live price feeds in v1. | Low (after wallet) | Capstone 2 |
 | **FHS trend annotations** | Markers on score history chart showing what caused drops. | Low | Capstone 2 |
 | **Biometric lock for sensitive screens** | Per-screen biometric re-auth for Debts/Net Worth. App-level lock already exists. | Low | Capstone 2 |
-| **Google profile picture as default avatar** | Fetch `user.photoURL` from Firebase Auth on Google Sign-In. Low effort, medium value. | Low | Before Play Store |
+| ~~**Google profile picture as default avatar**~~ | ✅ **DONE** — `photoUrl` field exists in `user_profile`; synced via Firebase Auth `user.photoURL`. | — | Implemented |
 
 ---
 
