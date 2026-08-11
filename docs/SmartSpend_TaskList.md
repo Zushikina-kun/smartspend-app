@@ -1,13 +1,14 @@
 # SmartSpend — Complete Task Status
 **Version:** 2.9.1 (Final)
-**Last Updated:** July 28, 2026
+**Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** August 11, 2026
 **Purpose:** Definitive status of all tasks — done, deferred, blocked, and why.
 
-> ⚠️ This document's SECTION 1 (done list) is accurate as of June 2026 (v2.7.0).
+> ⚠️ This document's SECTION 1 (done list) is accurate as of August 2026 (v2.9.1).
 > For the complete final feature list including all v2.8.0–v2.9.1 additions, see:
 > **`docs/SmartSpend_Capstone2_Documentation_Reference.md`**
 
-## ADDITIONS SINCE v2.7.0 (Sessions June–July 2026)
+## ADDITIONS SINCE v2.7.0 (Sessions June–August 2026)
 - [x] Multi-model LLM: Gemini 3.1 Flash-Lite / 3.5 Flash + task-based routing
 - [x] 29 agentic actions (was 25 — added suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense)
 - [x] Lightweight Mode (FHS without income/wallet tracking)
@@ -324,4 +325,4 @@ These are not bugs — they're intentional design decisions or platform constrai
 
 *SmartSpend v2.5.0 — Lucid Frame*
 *Brix A. Directo (Lead Developer), Cyrille John M. Rubis (UI/UX), Djaunathan Albert S. Madayag (PM/QA)*
-*Lorma Colleges — CCSE, BSIT, City of San Fernando, La Union — 2025–2026*
+*Lorma Colleges — CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*

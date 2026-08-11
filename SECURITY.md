@@ -51,7 +51,7 @@ Before publishing to the Google Play Store:
 
 ## Reporting Security Issues
 
-This is an academic capstone project (Lorma Colleges, BSIT 2025–2026).
+This is an academic capstone project (Lorma Colleges, BSIT 2026–2027, 1st Semester).
 If you find a security issue, please open a GitHub issue or contact the development team directly.
 
 **Team:** Lucid Frame — Brix A. Directo, Cyrille John M. Rubis, Djaunathan Albert S. Madayag

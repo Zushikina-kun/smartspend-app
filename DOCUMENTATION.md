@@ -3,9 +3,9 @@
 **Version:** 2.9.1
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
-**Academic Year:** 2025–2026
-**Last Updated:** July 28, 2026 (v2.9.1 — Unified Smart Import, barcode-from-gallery, FHS docs update, help/about sweep; bug fixes: app lock during image picking, historical transaction false alerts, impulse pause / wallet deduct / round-up date guards)
-**Build:** app-arm64-v8a-release.apk — 44.7 MB (July 28, 2026)
+**Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** August 11, 2026 (v2.9.1 Final — all features complete, docs updated, repo public)
+**Build:** app-arm64-v8a-release.apk — 44.7 MB (August 11, 2026)
 
 ---
 
@@ -1641,7 +1641,7 @@ Both `AIChatService` and `LLMService` use comprehensive Filipino-aware category 
 
 ## 📄 License
 
-Developed as a capstone requirement for academic year 2025–2026.
+Developed as a capstone requirement for academic year 2026–2027, 1st Semester.
 All rights reserved by **Lucid Frame**, 2026.
 
 ---
@@ -1930,4 +1930,4 @@ These are intentional design decisions or platform constraints — not bugs.
 
 *Smart Spend v2.5.0 — Lucid Frame*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
-*Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2025–2026*
+*Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2026–2027 (1st Semester)*

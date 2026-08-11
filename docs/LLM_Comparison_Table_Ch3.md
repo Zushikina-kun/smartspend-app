@@ -1,5 +1,5 @@
 # LLM Comparative Analysis — Chapter 3 Reference
-**SmartSpend Capstone 2 | Lucid Frame | June 2026 (Updated)**
+**SmartSpend Capstone 2 | Lucid Frame | August 2026 | AY2026-2027, 1st Sem**
 
 ---
 

@@ -295,5 +295,5 @@ We, the members of Lucid Frame, hereby certify that the information in this prog
 ---
 
 *SmartSpend v2.9.1 — Lucid Frame*
-*Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2025–2026*
+*Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2026–2027 (1st Semester)*
 *Adviser: Janelli M. Mendez, DIT*

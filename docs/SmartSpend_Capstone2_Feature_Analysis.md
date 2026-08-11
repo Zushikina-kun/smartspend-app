@@ -1,7 +1,7 @@
 # SmartSpend — Complete Capstone 2 Feature Analysis
-**Date:** July 2026 | **Version:** 2.9.1 (Final)
+**Date:** August 11, 2026 | **Version:** 2.9.1 (Final) | **Academic Year:** 2026–2027, 1st Semester
 **Source:** Course slides, research, team brainstorming
-**Status tracking updated by Kiro — July 28, 2026**
+**Status tracking updated by Kiro — August 11, 2026**
 
 > ⚠️ For the most up-to-date capstone documentation, see:
 > **`docs/SmartSpend_Capstone2_Documentation_Reference.md`**
@@ -386,5 +386,5 @@ SmartSpend explicitly states it does not provide professional financial advice. 
 
 ---
 
-*SmartSpend — Lucid Frame | Lorma Colleges CCSE BSIT 2025-2026*
+*SmartSpend — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
 *Compiled June 2026 — All ideas old + new, with research-backed implementation notes*

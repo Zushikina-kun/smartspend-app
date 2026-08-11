@@ -236,7 +236,7 @@ The assistant is designed to be flexible and approachable, using a warm and conv
 
 To further support healthy financial behavior, SmartSpend incorporates a behavioral intervention layer grounded in principles of behavioral finance. An Impulse Pause mechanism prompts users to reflect before confirming large Want-tagged expenses, encouraging more deliberate spending decisions. In addition, velocity alerts notify users when their spending rate significantly exceeds typical patterns. The system also includes a daily mood check-in feature that tracks emotional states alongside financial activity, enabling a mood-and-spending correlation view.
 
-A gamification layer featuring 16 achievement badges and spending streak tracking further reinforces positive financial habits by rewarding consistent logging and budget adherence. This feature helps users recognize how emotional states may influence financial decisions—an important factor in impulsive spending behavior (Bitrián et al., 2021).
+A gamification layer featuring 23 achievement badges and spending streak tracking further reinforces positive financial habits by rewarding consistent logging and budget adherence. This feature helps users recognize how emotional states may influence financial decisions—an important factor in impulsive spending behavior (Bitrián et al., 2021).
 
 SmartSpend functions not only as an expense tracker but also as an AI-powered assistant that enhances users’ financial literacy. The proposed solution provides benefits to the following groups:
 

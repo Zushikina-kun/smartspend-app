@@ -1,6 +1,7 @@
 # Smart Spend — How to Run & Build
 
 **Version:** 2.9.1 | **Platform:** Android (Flutter)
+**Academic Year:** 2026–2027, 1st Semester
 
 ---
 
@@ -290,4 +291,4 @@ Primary test device: **Poco X6 Pro** (Android 16, HyperOS 2)
 
 ---
 
-*Smart Spend — Lucid Frame | Lorma Colleges CCSE, BSIT | 2025–2026*
+*Smart Spend — Lucid Frame | Lorma Colleges CCSE, BSIT | 2026–2027 (1st Semester)*

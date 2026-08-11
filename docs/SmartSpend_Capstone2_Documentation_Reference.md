@@ -1,5 +1,6 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.1 | **Date:** July 28, 2026
+**Version:** 2.9.1 | **Date:** August 11, 2026
+**Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
@@ -15,7 +16,7 @@
 
 **Platform:** Android (Flutter/Dart)
 **Version:** 2.9.1 (Final)
-**Build date:** July 28, 2026
+**Build date:** August 11, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
 **Target SDK:** Android 16 (API 36)
@@ -28,7 +29,7 @@
 
 **Institution:** Lorma Colleges, College of Computer Studies and Engineering (CCSE)
 **Program:** Bachelor of Science in Information Technology (BSIT)
-**Academic Year:** 2025–2026
+**Academic Year:** 2026–2027, 1st Semester
 
 ---
 
@@ -506,5 +507,5 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 ---
 
 *SmartSpend v2.9.1 — Lucid Frame*
-*Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2025–2026*
-*Last updated: July 28, 2026*
+*Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
+*Last updated: August 11, 2026*

@@ -1,6 +1,7 @@
 # SmartSpend — Master Roadmap & To-Do List
 **Version:** 2.9.1 (Final)
-**Date:** July 28, 2026
+**Date:** August 11, 2026
+**Academic Year:** 2026–2027, 1st Semester
 **Status:** Final Release — Capstone 2 Complete
 
 > ⚠️ This document reflects the June 2026 planning phase. For the final build status, see **`docs/SmartSpend_Capstone2_Documentation_Reference.md`**

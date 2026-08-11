@@ -1,5 +1,5 @@
 # SmartSpend — Capstone 2 & Future Development TODO
-**Date:** July 28, 2026 | **Status:** v2.9.1 Final Release
+**Date:** August 11, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Status:** v2.9.1 Final Release
 **Source:** Panel feedback + development history
 
 > ⚠️ For the most up-to-date capstone documentation, see:
@@ -184,4 +184,4 @@ All 29 actions implemented including: suggest_expense_cuts, simulate_what_if, cr
 
 ---
 
-*SmartSpend — Lucid Frame | Lorma Colleges CCSE BSIT 2025-2026*
+*SmartSpend — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*

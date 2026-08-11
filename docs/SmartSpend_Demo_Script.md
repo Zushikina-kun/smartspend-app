@@ -256,4 +256,4 @@
 
 ---
 
-*SmartSpend v2.6.0 — Lucid Frame — Lorma Colleges CCSE BSIT 2025–2026*
+*SmartSpend v2.9.1 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
