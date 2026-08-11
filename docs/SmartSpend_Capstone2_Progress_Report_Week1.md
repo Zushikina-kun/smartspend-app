@@ -283,10 +283,11 @@ Key screens to show:)*
 
 ## 10. ADVISER CONSULTATION NOTES
 
-*(To be filled in during/after Week 1 consultation with Janelli M. Mendez, DIT)*
+*(To be filled in during/after Week 1 consultation)*
 
 **Consultation date:** _______________
-**Adviser:** Janelli M. Mendez, DIT
+**Teacher-in-Charge:** Janelli M. Mendez, DIT
+**Capstone Adviser:** Johnny Verzola, MTS *(note: adviser status pending — Verzola advised the group to seek a new adviser for Capstone 2 due to his expected resignation; reassignment to be confirmed with department)*
 **Issues raised:**
 - _______________
 **Recommendations:**
@@ -310,4 +311,5 @@ We, the members of Lucid Frame, hereby certify that the information in this prog
 
 *SmartSpend v2.9.1 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2026–2027 (1st Semester)*
-*Adviser: Janelli M. Mendez, DIT*
+*Teacher-in-Charge: Janelli M. Mendez, DIT*
+*Capstone Adviser: Johnny Verzola, MTS (reassignment pending)*
