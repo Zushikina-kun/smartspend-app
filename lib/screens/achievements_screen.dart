@@ -193,7 +193,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             0;
     if (impulseDeclines >= 5) earned.add('impulse_5');
 
-    // NEW BADGES — v2.7.0
+    // NEW BADGES — v2.9.1
 
     // Century Club — 100+ total expenses
     if (expenses.length >= 100) earned.add('expenses_100');

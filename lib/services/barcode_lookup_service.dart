@@ -48,7 +48,7 @@ class BarcodeLookupService {
   static Future<ProductInfo?> _openFoodFactsLookup(String barcode) async {
     final url = '$_openFoodFactsUrl/$barcode.json';
     final response = await http.get(Uri.parse(url), headers: {
-      'User-Agent': 'SmartSpend/2.7.0'
+      'User-Agent': 'SmartSpend/2.9.1'
     }).timeout(const Duration(seconds: 5));
 
     if (response.statusCode != 200) return null;
