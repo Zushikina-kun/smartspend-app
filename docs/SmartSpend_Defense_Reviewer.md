@@ -25,7 +25,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 |------|-----------|-----|
 | App framework | Flutter (Dart) | Cross-platform, single codebase, near-native performance |
 | AI/LLM | Multi-provider: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, 8B, Cerebras | Auto-failover, always available, all free tier |
-| Local database | SQLite via sqflite (v11, 18 tables) | Works offline, fast, no cost |
+| Local database | SQLite via sqflite (v11, 20 tables) | Works offline, fast, no cost |
 | Cloud sync | Firebase Firestore | Free tier, bidirectional sync, UID-scoped security rules |
 | Authentication | Firebase Auth | Google Sign-In + email/password |
 | OCR | Google ML Kit Text Recognition | On-device, no API key, works offline |
@@ -123,14 +123,14 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 |------|-------|
 | Version | 2.9.1 (Final) |
 | Platform | Android (Flutter) |
-| Database | SQLite version 11, 18 tables |
+| Database | SQLite version 11, 20 tables |
 | AI providers | 5 (auto-failover) |
 | Primary model | Gemini 3.1 Flash-Lite |
 | Daily AI limit | 60 messages/user |
 | AI agentic actions | 29 |
 | Currencies supported | 57 |
-| Screens | 31 |
-| Services | 23 |
+| Screens | 36 |
+| Services | 26 |
 | Achievement badges | 23 |
 | Daily quests | 10 rotating |
 | Expense categories | 14 built-in + unlimited custom |

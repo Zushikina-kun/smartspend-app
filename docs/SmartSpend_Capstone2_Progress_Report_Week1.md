@@ -140,7 +140,7 @@ The system is fully functional and deployed as a release APK.
 | Daily quests | 10 rotating |
 | Screenshot platforms detected | 40+ types |
 | PH banks in database | 20 banks + 5 e-wallets |
-| SQLite schema version | v11 (18 tables) |
+| SQLite v11, 20 tables) |
 | Firebase services used | Auth, Firestore, Crashlytics, App Check, Remote Config |
 
 ---

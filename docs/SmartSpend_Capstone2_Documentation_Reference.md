@@ -157,7 +157,7 @@ The FHS and all associated alerts are **current-period aware**:
 | Component | Technology | Details |
 |-----------|-----------|---------|
 | Framework | Flutter (Dart) | 3.x stable, Android target |
-| Local DB | SQLite via sqflite | v11 schema, 11+ tables |
+| Local DB | SQLite via sqflite | v11 schema, 20 tables |
 | Cloud Sync | Firebase Firestore | Free Spark plan, real-time sync |
 | Authentication | Firebase Auth | Email/password + Google Sign-In |
 | Crash Reporting | Firebase Crashlytics | Automatic crash collection |
@@ -332,7 +332,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 ## 8. DATABASE SCHEMA
 
-**SQLite v11** — 14+ tables:
+**SQLite v11** — 20 tables:
 
 | Table | Purpose |
 |-------|---------|
@@ -354,6 +354,8 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | wallets | Cash and e-wallet balances |
 | user_profile | User information |
 | chat_history | AI conversation messages |
+| installments | Installment payment records |
+| insurance_policies | Insurance policy tracker |
 
 **New settings keys (v2.9.1):**
 - `income_wallet_mode` — true/false (Lightweight Mode)
