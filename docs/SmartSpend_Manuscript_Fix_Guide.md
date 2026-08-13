@@ -133,6 +133,141 @@ If you find any other occurrence of "version 8" referring to the backup format, 
 
 ---
 
+---
+
+## FIX 11 — Account types: clarify they are flexible adaptive labels, not rigid classifications
+**Panel recommendation #12:** "Make it general — remove rigid account type classifications"
+**Where:** Chapter 1, Technical Background section OR Purpose and Description section
+**How to find it (CTRL+F):** `account type`
+
+**Context:** The panel wanted the app to feel general-purpose, not restricted. SmartSpend already does this — the 8 account types are adaptive labels that change UI copy (e.g., "allowance" vs "salary"), not hard restrictions. The manuscript just never explains this clearly.
+
+**Find any sentence that describes account types (likely near the Setup/Onboarding section) and ADD this clarification right after it:**
+
+> The account type selection serves as an adaptive label that personalizes the language and default suggestions within the application. For example, users who select "Student" will see "allowance" instead of "salary," and budget suggestions are adjusted to reflect a student's typical spending context. Users may change their account type at any time from the profile settings. This design ensures that the system is accessible and meaningful to a wide range of users — from students to employed adults, business owners, freelancers, and retirees — without restricting any features based on the selected type.
+
+*(If there is no existing mention of account types in the manuscript body, add this paragraph at the end of the Purpose and Description section, before the Beneficiaries heading.)*
+
+---
+
+## FIX 12 — Reframe target population: Parents as PRIMARY, young professionals as secondary
+**Panel recommendations #13 and #14:** "Who is really the best target population?" / "Consider parents as the primary target"
+**Where:** Chapter 1, Statement of Objectives AND Chapter 2, Population and Locale
+
+**PART A — Statement of Objectives**
+**How to find it (CTRL+F):** `parents aged 35 to 55 and young professionals aged 21 to 35`
+
+**CURRENT TEXT (find this — it appears in the Objectives paragraph):**
+> This study aims to design, develop, and evaluate SmartSpend, an AI-assisted mobile financial tracking and advisory application for personal financial management among parents aged 35 to 55 and young professionals aged 21 to 35 in La Union, Philippines.
+
+**REPLACE WITH:**
+> This study aims to design, develop, and evaluate SmartSpend, an AI-assisted mobile financial tracking and advisory application for personal financial management, with a primary focus on parents aged 35 to 55 as the main target population, and young professionals aged 21 to 35 as a secondary demographic, in La Union, Philippines.
+
+**PART B — Population and Locale**
+**How to find it (CTRL+F):** `The target population consists of parents and young professionals`
+
+**CURRENT TEXT (find this):**
+> The target population consists of parents and young professionals who are actively involved in managing personal or household finances.
+
+**REPLACE WITH:**
+> The primary target population of this study consists of parents aged 35 to 55 who serve as the principal household financial decision-makers in Filipino families. Based on the 2021 BSP Financial Inclusion Survey, this demographic group manages the majority of household budgeting, bill payments, and daily financial decisions, yet exhibits the lowest rates of formal financial account ownership and structured budgeting behavior among all adult demographics (Bangko Sentral ng Pilipinas, 2021). A secondary population of young professionals aged 21 to 35 is also included, representing working individuals who independently manage their own income and expenses and represent a growing segment of digital financial tool users in the Philippines.
+
+---
+
+## FIX 13 — Add explicit respondent screening criteria
+**Panel recommendation #15:** "Proper respondents — define specific screening criteria"
+**Where:** Chapter 2, Population and Locale section
+**How to find it (CTRL+F):** `The researchers will utilize purposive sampling`
+
+**CURRENT TEXT (find this):**
+> The researchers will utilize purposive sampling in selecting participants. This method allows the intentional selection of individuals who have relevant experience in budgeting, expense tracking, and financial decision-making. This approach ensures that the collected data is meaningful and directly aligned with the objectives of the study by selecting participants based on their relevance to the research variables.
+
+**REPLACE WITH:**
+> The researchers will utilize purposive sampling in selecting participants. This method allows the intentional selection of individuals who have relevant experience in budgeting, expense tracking, and financial decision-making, ensuring that the collected data is meaningful and directly aligned with the research objectives.
+>
+> **Inclusion criteria for parent respondents (n=20):**
+> - Aged 35 to 55 years old
+> - Currently serving as a primary household financial manager (responsible for budgeting, bill payments, and daily expense decisions)
+> - Resident of San Fernando City or surrounding municipalities in La Union
+> - Owns or has regular access to an Android smartphone
+>
+> **Inclusion criteria for young professional respondents (n=10):**
+> - Aged 21 to 35 years old
+> - Currently employed or self-employed with independent management of personal income and expenses
+> - Resident of or working in San Fernando City, La Union
+> - Owns or has regular access to an Android smartphone
+>
+> Individuals who do not meet the age range, do not actively manage personal or household finances, or do not have access to an Android device are excluded from the study.
+
+---
+
+## FIX 14 — Add citation justifying the young professional 21–35 age range
+**Panel recommendation #16:** "For respondents, there should be studies and references to support why you chose them"
+**Where:** Chapter 2, Population and Locale section — the paragraph that defines young professionals
+**How to find it (CTRL+F):** `young professionals are defined as working individuals aged 21 to 35`
+
+**CURRENT TEXT (find this):**
+> For the purposes of this research, parents are defined as adults aged 35 to 55 who act as primary household financial managers, while young professionals are defined as working individuals aged 21 to 35 who manage their own income and expenses.
+
+**REPLACE WITH:**
+> For the purposes of this research, parents are defined as adults aged 35 to 55 who act as primary household financial managers. According to the 2021 BSP Financial Inclusion Survey, this age group represents the principal financial decision-makers in Filipino households and is among the demographics with the lowest rates of structured budgeting despite having the highest household financial responsibility (Bangko Sentral ng Pilipinas, 2021). Young professionals are defined as working individuals aged 21 to 35 who independently manage their own income and expenses. This age range aligns with the classification used by the BSP Financial Inclusion Survey and the Philippine Statistics Authority's Labor Force Survey, which identify 20–35 year-olds as early-career workers who are entering the formal workforce and beginning to establish independent financial management habits (Bangko Sentral ng Pilipinas, 2021; Philippine Statistics Authority, 2021).
+
+---
+
+## FIX 15 — Name Benjie G. Bucasas explicitly as technical/system validator
+**Panel recommendation #26:** "Experts must validate the system itself, not just the questionnaire"
+**Where:** Chapter 2, Population and Locale section — the validators table (Table 2.1) AND the Data Gathering section
+**How to find it (CTRL+F):** `Technical Reviewer (SUS Process)`
+
+**PART A — In Table 2.1, find:**
+> | Technical Reviewer (SUS Process) | 1 |
+
+**REPLACE WITH:**
+> | Technical Validator (System & SUS Process) | 1 |
+
+**PART B — Find the paragraph that describes Benjie G. Bucasas's role:**
+**How to find it (CTRL+F):** `The System Usability Scale (SUS) evaluation process will be reviewed by a subject matter expert`
+
+**CURRENT TEXT (find this):**
+> The System Usability Scale (SUS) evaluation process will be reviewed by a subject matter expert in information technology to ensure proper administration and alignment with usability testing standards.
+
+**REPLACE WITH:**
+> The System Usability Scale (SUS) evaluation process and the overall technical functionality of the SmartSpend system will be reviewed by **Benjie G. Bucasas**, a subject matter expert in information technology, to ensure proper administration of the usability evaluation and to validate that the system's technical implementation aligns with established software development and usability testing standards. This expert validation covers both the correctness of the SUS evaluation process and an independent assessment of the system's core technical features.
+
+---
+
+## FIX 16 — Strengthen the Data Gathering procedure with specific steps
+**Panel recommendation #27:** "Data gathering tools and procedures — specify step by step"
+**Where:** Chapter 2, Data Gathering Tools and Procedure section
+**How to find it (CTRL+F):** `For the first objective, data will be gathered through survey questionnaires and interviews`
+
+**CURRENT TEXT (find the opening of this section):**
+> For the first objective, data will be gathered through survey questionnaires and interviews. The survey questionnaire will be used to collect quantitative data regarding the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals.
+
+**ADD the following paragraph immediately AFTER the full Data Gathering section (after the last paragraph about SUS), as a new sub-section:**
+
+> **Step-by-Step Data Gathering Procedure**
+>
+> *Step 1 — Questionnaire Preparation and Validation (Objective 1):*
+> The survey questionnaire will be drafted by the research team and submitted to Susan C. Arquisal for content validation. Revisions will be made based on her feedback before distribution.
+>
+> *Step 2 — Respondent Identification and Consent (Objective 1):*
+> Thirty (30) respondents will be identified using purposive sampling based on the defined inclusion criteria. Each respondent will be given a consent form explaining the purpose of the study, their rights, and the confidentiality of their responses. Signed consent forms will be collected before questionnaire distribution.
+>
+> *Step 3 — Survey Distribution and Collection (Objective 1):*
+> The validated questionnaire will be distributed in printed form to the 20 parent respondents and 10 young professional respondents in San Fernando City, La Union. Respondents will complete the survey independently. Interviews will be conducted with selected respondents to gather supplementary qualitative insights.
+>
+> *Step 4 — LLM Technical Benchmarking (Objective 2):*
+> A comparative evaluation of candidate LLM APIs will be conducted by the lead developer using a standardized set of Filipino-English expense parsing prompts. Response latency, accuracy, context window, and cost will be recorded and tabulated in Table 2.2 (Chapter 3).
+>
+> *Step 5 — System Demonstration and SUS Evaluation (Objective 3):*
+> Following system development, each respondent will be given a live demonstration of the SmartSpend application using the built-in Demo Mode. After the demonstration, respondents will independently complete the 10-item SUS questionnaire. The process will be overseen by Benjie G. Bucasas to ensure proper administration.
+>
+> *Step 6 — Data Tabulation and Analysis:*
+> Survey responses will be tallied and analyzed for frequency and percentage. SUS scores will be computed per respondent and averaged to produce a final SUS score, which will be interpreted against the Bangor et al. (2009) adjective scale.
+
+---
+
 ## SUMMARY CHECKLIST
 
 Use this to track your progress in Google Docs:
@@ -147,6 +282,12 @@ Use this to track your progress in Google Docs:
 - [ ] Fix 8 — Any other "version 8" backup references → version 9
 - [ ] Fix 9 — Any second occurrence of "16 achievement badges" → 23
 - [ ] Fix 10 — (Optional) Input methods list — add Smart Import
+- [ ] Fix 11 — Account types: add clarification they are flexible adaptive labels
+- [ ] Fix 12 — Reframe target population: parents PRIMARY, young professionals secondary (2 spots)
+- [ ] Fix 13 — Add explicit respondent screening/inclusion criteria
+- [ ] Fix 14 — Add citations justifying the 21–35 young professional age range
+- [ ] Fix 15 — Name Benjie G. Bucasas as technical/system validator (2 spots: Table 2.1 + paragraph)
+- [ ] Fix 16 — Add step-by-step data gathering procedure sub-section
 
 ---
 
