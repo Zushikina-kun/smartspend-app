@@ -297,7 +297,77 @@ Key screens to show:)*
 
 ---
 
-## 11. DECLARATION
+## 11. PANEL RECOMMENDATIONS STATUS
+
+Status of all 29 panel recommendations from the Capstone 1 re-defense evaluation.
+
+### ✅ FULLY ADDRESSED IN MANUSCRIPT (21 of 29)
+
+| # | Recommendation | How It Was Addressed |
+|---|---|---|
+| 1 | Graphs — visual data (bar chart of PH financial literacy rates) | Figure 1.1 caption and placeholder inserted in manuscript (BSP, 2021; Inquiro, 2024) |
+| 2 | Basis of study must have real evidence, not personal opinion | BSP 2021, PSA FIES 2021, Flores 2025, World Bank 2022, Inquiro 2024 — all cited throughout Project Context |
+| 3 | Real financial problem identified with data | BSP: only 2% answered all 6 literacy questions; PSA FIES: households spend beyond income; Flores 2025: "come-what-may" attitude |
+| 4 | International and national gap with evidence | Table 1.1 — Three-Level Gap Analysis (International / National PH / Demographic) |
+| 5 | Solution follows naturally from identified problem | Narrative flows: gap → SmartSpend solution throughout Project Context |
+| 6 | Compare to existing apps | Table 1.2 — Feature Comparison vs Tarsi, YNAB, Monarch, Copilot, PocketGuard |
+| 7 | Find existing projects with results, gaps, and recommendations | Tarsi, YNAB, Monarch, Copilot, PocketGuard — each discussed with specific gap analysis |
+| 8 | Articles proving financial problems exist (mahal ang gasolina, debt culture) | Flores 2025 (debt culture, come-what-may), BSP 2021, PSA FIES 2021, World Bank 2022 |
+| 9 | Literature Review as separate objective | Correctly NOT added as separate objective — per Lorma template, RRL is integrated into Project Context (confirmed by adviser feedback v3/v4) |
+| 10 | Comparative analysis of LLMs — justify best choice | Table 2.2 in Ch3 draft: Groq/LLaMA 3.1, Gemini 2.0 Flash, GPT-4o, Mistral compared across 4 criteria |
+| 11 | LLM processing and feedback — explain how it works | Zero-shot/few-shot prompting paragraph present; user feedback for prompt refinement explained |
+| 17 | Descriptive developmental label — correct terminology | "descriptive-developmental research approach" explicitly stated in Research Design section |
+| 18 | FHS basis and computation — explain clearly | Full 4-component formula with weights, both modes (Full + Lightweight), detailed in Ch3 draft |
+| 19 | FHS must be bounded — 0 floor, 100 cap | "The score is bounded at all times between 0 and 100" — explicitly stated in manuscript |
+| 20 | Consequence for ignoring spending warning | FHS decay: −5 pts/day, max −15, with 3-tier escalation system — documented in manuscript |
+| 21 | Behavioral analysis — system analyzes behavior patterns | Mood tracking, impulse pause, velocity alerts, spending correlation, behavioral intervention layer |
+| 22 | Clarify scope — tracker, savings, investment, bank | Scope & Limitations: no bank integration (BSP reason), no investment features, no professional advice |
+| 23 | SUS — how evaluated, who takes it, target score | Target ≥ 80, 30 respondents, Bangor et al. 2009 — stated in Research Design |
+| 24 | Financial expert validator connected to target population | Susan C. Arquisal (BSC Management, active business owner) named with credentials and role |
+| 28 | Specify each Kanban phase with concrete tasks and deliverables | Table 2.3 — all 7 phases with Key Tasks + Deliverable columns |
+| 29 | Weekly, monthly, and yearly expense summaries | Weekly/monthly/yearly summaries documented; Period Comparison, Heatmap, Forecast in Analytics |
+
+---
+
+### ⚠️ ADDRESSED — STILL NEEDS GOOGLE DOCS UPDATE (7 of 29)
+
+These are done in the fix guide (`docs/SmartSpend_Manuscript_Fix_Guide.md`) — Cyrille needs to apply them in Google Docs.
+
+| # | Recommendation | Fix # | What to Apply in Google Docs |
+|---|---|---|---|
+| 12 | Make it general — remove rigid account type classifications | Fix 11 | Add paragraph explaining account types are flexible adaptive labels, not restrictions |
+| 13 | Who is really the best target population? | Fix 12 | Reframe main objective sentence — parents PRIMARY, young professionals secondary |
+| 14 | Parents as primary target | Fix 12 | Rewrite Population and Locale opening paragraph — parents framed as primary |
+| 15 | Proper respondents — define screening criteria | Fix 13 | Add two bulleted inclusion criteria lists (parents and young professionals) |
+| 16 | References to support why these respondents were chosen | Fix 14 | Expand age definition sentence with BSP 2021 + PSA 2021 citations for both groups |
+| 26 | Experts must validate the system itself, not just questionnaire | Fix 15 | Update Table 2.1 label + expand Benjie G. Bucasas paragraph to include system validation |
+| 27 | Data gathering tools and procedures — step by step | Fix 16 | Add new "Step-by-Step Data Gathering Procedure" sub-section (6 numbered steps) |
+
+**Reference:** All fix text is in `docs/SmartSpend_Manuscript_Fix_Guide.md` (Fixes 11–16). Use CTRL+F in Google Docs to find the exact location for each fix.
+
+---
+
+### ❌ STILL PENDING — REQUIRES PHYSICAL ACTION (2 of 29)
+
+| # | Recommendation | What Is Needed | Who |
+|---|---|---|---|
+| 1 | Figure 1.1 — actual bar chart image | The caption placeholder exists in the manuscript. The actual bar chart graphic (financial literacy rates by demographic group, from BSP 2021 and Inquiro 2024 data) must be created and inserted in Google Docs | Cyrille — create chart in Google Sheets or Canva, paste into Google Docs at Figure 1.1 |
+| 25 | Validator signature | Susan C. Arquisal's signature line exists in Appendix A. Her physical or digital signature must be obtained and placed on the document before final submission | Brix — request signature from Susan C. Arquisal |
+
+---
+
+### SUMMARY
+
+| Status | Count |
+|--------|-------|
+| ✅ Fully addressed in manuscript | 21 |
+| ⚠️ Fix written — needs Google Docs update | 7 |
+| ❌ Requires physical action | 2 |
+| **Total** | **29** |
+
+---
+
+## 12. DECLARATION
 
 We, the members of Lucid Frame, hereby certify that the information in this progress report is accurate and reflects the current state of our Capstone Project 2. All group members have coordinated and verified the contents of this report.
 
