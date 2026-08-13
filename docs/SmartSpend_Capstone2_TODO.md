@@ -1,5 +1,5 @@
 # SmartSpend — Capstone 2 & Future Development TODO
-**Date:** August 11, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Status:** v2.9.1 Final Release
+**Date:** August 11, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Status:** v2.9.2
 **Source:** Panel feedback + development history
 
 > ⚠️ For the most up-to-date capstone documentation, see:

@@ -32,7 +32,7 @@
 
 **Key differentiator:** The only free, offline-capable Filipino-English financial app that combines voice/camera/screenshot input with 29 agentic AI actions, a dual-mode Financial Health Score, and Philippine-specific financial knowledge (SSS, PhilHealth, Pag-IBIG, BIR TRAIN Law, PH banks).
 
-**Current Version:** 2.9.1 (Final Build)
+**Current Version:** 2.9.2
 **Platform:** Android (Flutter/Dart)
 **Status:** ✅ Development complete — entering documentation and defense phase
 
@@ -41,11 +41,11 @@
 ## 2. CURRENT SYSTEM STATUS
 
 ### 2.1 Application Build
-- **Version:** 2.9.1 (Final Release)
+- **Version:** 2.9.2
 - **Build date:** August 2, 2026
 - **APK size:** 44.7 MB (arm64-v8a release, split, obfuscated)
 - **GitHub repository:** https://github.com/Zushikina-kun/smartspend-app
-- **GitHub release:** https://github.com/Zushikina-kun/smartspend-app/releases/tag/v2.9.1
+- **GitHub release:** https://github.com/Zushikina-kun/smartspend-app/releases/tag/v2.9.2
 - **Repository visibility:** Public (August 2026) — with Non-Commercial LICENSE (Lucid Frame retains all commercial rights)
 
 ### 2.2 Development Completion Summary
@@ -105,13 +105,13 @@
 ### 3.2 System Prototype
 The system is fully functional and deployed as a release APK.
 
-**Download link:** https://github.com/Zushikina-kun/smartspend-app/releases/tag/v2.9.1
+**Download link:** https://github.com/Zushikina-kun/smartspend-app/releases/tag/v2.9.2
 
 | APK File | Size | Target Device |
 |----------|------|---------------|
-| SmartSpend-v2.9.1-arm64-v8a.apk | 44.7 MB | Modern phones (2018+) |
-| SmartSpend-v2.9.1-armeabi-v7a.apk | 37.0 MB | Older/32-bit phones |
-| SmartSpend-v2.9.1-x86_64.apk | 47.6 MB | Emulators |
+| SmartSpend-v2.9.2-arm64-v8a.apk | 44.7 MB | Modern phones (2018+) |
+| SmartSpend-v2.9.2-armeabi-v7a.apk | 37.0 MB | Older/32-bit phones |
+| SmartSpend-v2.9.2-x86_64.apk | 47.6 MB | Emulators |
 
 **Primary test device:** Poco X6 Pro (Android 16, HyperOS 2) — all features verified working.
 
@@ -119,7 +119,7 @@ The system is fully functional and deployed as a release APK.
 
 | Document | Location | Status |
 |----------|----------|--------|
-| Application Documentation (DOCUMENTATION.md) | /DOCUMENTATION.md | ✅ Complete — v2.9.1 |
+| Application Documentation (DOCUMENTATION.md) | /DOCUMENTATION.md | ✅ Complete — v2.9.2 |
 | How to Run & Build | /HOWTORUN.md | ✅ Complete |
 | README | /README.md | ✅ Complete |
 | Security Policy | /SECURITY.md | ✅ Complete |
@@ -127,16 +127,16 @@ The system is fully functional and deployed as a release APK.
 | Capstone 2 Documentation Reference | /docs/SmartSpend_Capstone2_Documentation_Reference.md | ✅ Complete |
 | Defense Reviewer (pre-defense cheat sheet) | /docs/SmartSpend_Defense_Reviewer.md | ✅ Complete |
 | Week 1 Progress Report (this document) | /docs/SmartSpend_Capstone2_Progress_Report_Week1.md | ✅ Complete |
-| Competitor Analysis & Feature Ideas | /docs/Competitor_Analysis_and_Feature_Ideas.md | ✅ Updated v2.9.1 |
-| Capstone 2 TODO & Feature Analysis | /docs/SmartSpend_Capstone2_Feature_Analysis.md | ✅ Updated v2.9.1 |
-| LLM Comparison Table (Chapter 3) | /docs/LLM_Comparison_Table_Ch3.md | ✅ Updated v2.9.1 |
-| Paper Guide (Chapters 1–5) | /docs/SmartSpend_Capstone_Paper_Guide.md | ✅ Updated v2.9.1 |
+| Competitor Analysis & Feature Ideas | /docs/Competitor_Analysis_and_Feature_Ideas.md | ✅ Updated v2.9.2 |
+| Capstone 2 TODO & Feature Analysis | /docs/SmartSpend_Capstone2_Feature_Analysis.md | ✅ Updated v2.9.2 |
+| LLM Comparison Table (Chapter 3) | /docs/LLM_Comparison_Table_Ch3.md | ✅ Updated v2.9.2 |
+| Paper Guide (Chapters 1–5) | /docs/SmartSpend_Capstone_Paper_Guide.md | ✅ Updated v2.9.2 |
 | Manuscript Fix Guide (Google Docs corrections) | /docs/SmartSpend_Manuscript_Fix_Guide.md | ✅ Complete |
-| Demo Script | /docs/SmartSpend_Demo_Script.md | ✅ Updated v2.9.1 |
-| Master Roadmap | /docs/SMARTSPEND_MASTER_ROADMAP.md | ✅ Updated v2.9.1 |
-| Task List (complete status of all tasks) | /docs/SmartSpend_TaskList.md | ✅ Updated v2.9.1 |
-| Capstone 2 TODO | /docs/SmartSpend_Capstone2_TODO.md | ✅ Updated v2.9.1 |
-| Play Store & Security Guide | /docs/PlayStore_Security_Guide.md | ✅ Updated v2.9.1 |
+| Demo Script | /docs/SmartSpend_Demo_Script.md | ✅ Updated v2.9.2 |
+| Master Roadmap | /docs/SMARTSPEND_MASTER_ROADMAP.md | ✅ Updated v2.9.2 |
+| Task List (complete status of all tasks) | /docs/SmartSpend_TaskList.md | ✅ Updated v2.9.2 |
+| Capstone 2 TODO | /docs/SmartSpend_Capstone2_TODO.md | ✅ Updated v2.9.2 |
+| Play Store & Security Guide | /docs/PlayStore_Security_Guide.md | ✅ Updated v2.9.2 |
 | Capstone Paper (manuscript draft) | /docs/SMARTSPEND Capstone Docs.md | ✅ Chapters 1–2 complete |
 | Capstone 2 Syllabus | /docs/Capstone_Project_2_Syllabus_1st_Sem_AY2026-2027.docx | ✅ Reference copy |
 
@@ -379,7 +379,7 @@ We, the members of Lucid Frame, hereby certify that the information in this prog
 
 ---
 
-*SmartSpend v2.9.1 — Lucid Frame*
+*SmartSpend v2.9.2 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2026–2027 (1st Semester)*
 *Teacher-in-Charge: Janelli M. Mendez, DIT*
 *Capstone Adviser: Johnny Verzola, MTS (reassignment pending)*
