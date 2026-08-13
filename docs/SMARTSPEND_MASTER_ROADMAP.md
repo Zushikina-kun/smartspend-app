@@ -1,5 +1,5 @@
 # SmartSpend — Master Roadmap & To-Do List
-**Version:** 2.9.1 (Final)
+**Version:** 2.9.2
 **Date:** August 11, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **Status:** Final Release — Capstone 2 Complete
@@ -300,5 +300,5 @@
 
 ---
 
-*SmartSpend v2.9.1 — Final Release*
+*SmartSpend v2.9.2 — Final Release*
 *Lucid Frame | Lorma Colleges BSIT | August 2026*

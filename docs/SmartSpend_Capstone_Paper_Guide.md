@@ -1,6 +1,6 @@
 # SmartSpend — Capstone 2 Paper Revision Guide
 **For:** Lucid Frame — Cyrille John M. Rubis (Documentation Lead)
-**Date:** August 11, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.1 Final
+**Date:** August 11, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.2
 **Purpose:** Source of truth for revising Chapters 1–5 of the capstone thesis paper
 
 > ⚠️ Also see **`docs/SmartSpend_Capstone2_Documentation_Reference.md`** — the most comprehensive single-file reference for capstone documentation, with all current numbers, quotes, and comparison tables.

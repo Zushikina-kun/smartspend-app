@@ -1,5 +1,5 @@
 # SmartSpend — Complete Capstone 2 Feature Analysis
-**Date:** August 11, 2026 | **Version:** 2.9.1 (Final) | **Academic Year:** 2026–2027, 1st Semester
+**Date:** August 11, 2026 | **Version:** 2.9.2 | **Academic Year:** 2026–2027, 1st Semester
 **Source:** Course slides, research, team brainstorming
 **Status tracking updated by Kiro — August 11, 2026**
 

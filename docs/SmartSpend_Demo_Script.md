@@ -1,5 +1,5 @@
-﻿# 🎤 SmartSpend Demo Script (Video Recording / Zoom)
-**v2.9.1 | Lucid Frame | August 2026**
+# 🎤 SmartSpend Demo Script (Video Recording / Zoom)
+**v2.9.2 | Lucid Frame | August 2026**
 **Format: Pre-recorded video OR live Zoom screen share**
 **Time: ~9 min demo + Q&A after**
 
@@ -256,4 +256,4 @@
 
 ---
 
-*SmartSpend v2.9.1 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
+*SmartSpend v2.9.2 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*

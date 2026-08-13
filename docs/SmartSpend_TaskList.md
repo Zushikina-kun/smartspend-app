@@ -1,5 +1,5 @@
 # SmartSpend — Complete Task Status
-**Version:** 2.9.1 (Final)
+**Version:** 2.9.2
 **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** August 11, 2026
 **Purpose:** Definitive status of all tasks — done, deferred, blocked, and why.
