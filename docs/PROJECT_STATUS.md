@@ -23,12 +23,33 @@
 | **Week 15–17** | Revisions & submission | Revise based on panel feedback, final manuscript | All |
 
 ### Pending documentation tasks
-- [ ] Complete Chapter 3 — FHS formula write-up, LLM architecture, database schema diagram
-- [ ] Complete Chapter 4 — screenshots per feature, testing results table
-- [ ] SUS survey — conduct with 30 respondents, tabulate results
-- [ ] Chapter 5 — Conclusions & Recommendations
-- [ ] Abstract, acknowledgements, bibliography (APA format)
-- [ ] Appendices — survey instrument, source code snippets, user manual
+- [ ] **Chapter 3** — FHS formula write-up, LLM architecture justification, database schema diagram, Kanban phase breakdown *(Cyrille + Brix, Week 2)*
+- [ ] **Chapter 4** — Screenshots per feature, SUS results table, FHS validation, interview findings *(Cyrille, Week 3)*
+- [ ] **Chapter 5** — Conclusions & Recommendations *(Cyrille, Week 8–10)*
+- [ ] **Abstract, acknowledgements, bibliography** — APA format *(Cyrille, Week 8–10)*
+- [ ] **SUS survey** — conduct with 30 respondents (20 parents, 10 young professionals), tabulate results *(Djaunathan, Week 7)*
+- [ ] **Appendices** — survey instrument, source code snippets, user manual *(Cyrille, Week 8–10)*
+- [ ] **Figure 1.1 bar chart** — create bar chart of PH financial literacy rates (BSP 2021, Inquiro 2024) and insert in Google Docs *(Cyrille)*
+- [ ] **Validator signatures** — have both validators fill in credentials and sign the two Appendix A certificates *(Brix)*
+- [ ] **Confirm new Capstone adviser** — request reassignment from department *(All)*
+
+### Google Docs manuscript fixes still pending (apply from `docs/MANUSCRIPT_FIXES.md`):
+- [ ] Fix 2/8 — "version 8 format" → "version 9 format" (backup)
+- [ ] Fix 3 — API key not embedded, uses Remote Config
+- [ ] Fix 4 — Multi-wallet fully implemented (not future development)
+- [ ] Fix 5 — App lock cold-start only (like GCash/Maya)
+- [ ] Fix 6 — FHS section: add Lightweight Mode
+- [ ] Fix 7 — Table 1.2: add 5 new feature rows
+- [ ] Fix 10 — Input methods: add Smart Import
+- [ ] Fix 11 — Account types: clarify as flexible adaptive labels
+- [ ] Fix 12 — Parents as PRIMARY target (2 spots: Objectives + Population section)
+- [ ] Fix 13 — Add respondent screening/inclusion criteria
+- [ ] Fix 14 — Add citation justifying 21–35 young professional age range
+- [ ] Fix 15 (Part A only) — Table 2.1 label: "Technical Reviewer" → "Technical Validator (System & SUS Process)"
+- [ ] Fix 16 — Add step-by-step data gathering procedure sub-section
+- [ ] Fix 17 — Table 1.2: add BudgetPH and Alkansya AI columns
+- [ ] Fix 18 — Table 2.2: expand LLM comparison to 13 models (when writing Chapter 3)
+- [ ] Fix 19 (partially done) — Remaining spots: Data Gathering validator paragraph + Fix 16 Step 1
 
 ---
 
@@ -37,12 +58,19 @@
 ### v2.9.2 — Latest (August 2026)
 - [x] Version bump 2.9.1 → 2.9.2 across all source and docs
 - [x] Full docs sweep — AY2026-2027, all dates, footers, academic year
-- [x] Comprehensive App & LLM Benchmark (BENCHMARK.md) — 14 apps, 10 LLMs
+- [x] Comprehensive App & LLM Benchmark (BENCHMARK.md) — 20+ apps, 19 LLMs, August 2026 data
 - [x] System Overview doc for adviser/panel (SYSTEM_OVERVIEW.md)
 - [x] Manuscript Fix Guide expanded to 19 fixes
-- [x] Credential-based anonymous validator certificates (Appendix A)
-- [x] Panel recommendations status tracked in progress report
-- [x] GitHub release v2.9.2 published
+- [x] Credential-based anonymous validator certificates (Appendix A) — applied in manuscript
+- [x] Panel recommendations status tracked in PROGRESS_REPORT_WEEK1.md
+- [x] Docs folder cleaned up — 6 overlapping files fused, all renamed to short ALL-CAPS names
+- [x] GitHub release v2.9.2 published with 3 APKs
+- [x] BENCHMARK.md expanded: Monarch 2026 updates, Sentimo, SweldoWise, Lista PH, Cleo, Era, EveryDollar, Honeydue, Empower; LLaMA 4 Scout, Grok 4.6, DeepSeek V4, Qwen3, Gemini 3.7 Flash added
+- [x] DEFENSE_REVIEWER.md: BudgetPH Q&A, paluwagan gap Q&A, validator Q&A added
+- [x] DEMO_SCRIPT.md: Smart Import PART 2 rewritten, badge count fixed 16→23, Q&A expanded
+- [x] MANUSCRIPT_FIXES.md: Fix-15 contradiction with Fix-19 resolved
+- [x] Fix-15 vs Fix-19 contradiction resolved — credential-based approach confirmed final
+- [x] All version stamps correct (DOCUMENTATION.md, HOWTORUN.md, CAPSTONE_REFERENCE.md version history)
 
 ### v2.9.1 — July–August 2026
 - [x] Multi-model LLM: Gemini 3.1 Flash-Lite primary + 4 fallbacks (Gemini 3.5, Groq 70B, Groq 8B, Cerebras)
