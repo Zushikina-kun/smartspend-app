@@ -311,7 +311,7 @@ If you find any other occurrence of "version 8" referring to the backup format, 
 **Where:** Chapter 3 draft (or Chapter 2 if it's currently placed there), Table 2.2
 **How to find it (CTRL+F):** `Table 2.2. Comparative Evaluation of LLM APIs`
 
-**Context:** The manuscript currently shows only 4 models (Groq/LLaMA 3.1, Gemini 2.0 Flash, GPT-4o, Mistral). The actual benchmarked selection now covers 13 models. The full benchmark is in `docs/LLM_Comparison_Table_Ch3.md`.
+**Context:** The manuscript currently shows only 4 models (Groq/LLaMA 3.1, Gemini 2.0 Flash, GPT-4o, Mistral). The actual benchmarked selection now covers 13 models. The full benchmark is in `docs/BENCHMARK.md`.
 
 **REPLACE the current Table 2.2 with this expanded version:**
 
@@ -448,16 +448,16 @@ These things from the actual app should be in Chapter 3:
 
 1. **LLM selection justification** — Primary: Gemini 3.1 Flash-Lite (1,000/day FREE, 1M context, Filipino-English excellent). Fallback chain: Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1. Reason for NOT using GPT-4o: paid only, not viable for academic deployment.
 
-2. **FHS formula** — Both modes. Use the exact tables from `docs/SmartSpend_Capstone2_Documentation_Reference.md` Section 4.
+2. **FHS formula** — Both modes. Use the exact tables from `docs/CAPSTONE_REFERENCE.md` Section 4.
 
 3. **Architecture quote** (ready to paste into paper):
    > "SmartSpend implements a multi-provider agentic AI system using dynamic full-context injection from a local SQLite database, enabling autonomous financial data management without the infrastructure overhead of traditional RAG pipelines. The multi-provider routing architecture ensures continuous AI availability through automatic failover across five free-tier LLM providers, with task-based routing to match query complexity with model capability."
 
 4. **Why not RAG** — per-user data (20-50 expenses, 5-10 budgets, 3-5 goals) fits entirely in the model's context window. No vector search needed.
 
-5. **29 agentic actions** — list is in `docs/SmartSpend_Capstone2_Documentation_Reference.md` Section 3.
+5. **29 agentic actions** — list is in `docs/CAPSTONE_REFERENCE.md` Section 3.
 
 ---
 
 *Fix guide prepared by Kiro — based on comparing the manuscript against the actual v2.9.1 build*
-*For questions: refer to `docs/SmartSpend_Capstone2_Documentation_Reference.md` for all accurate numbers*
+*For questions: refer to `docs/CAPSTONE_REFERENCE.md` for all accurate numbers*

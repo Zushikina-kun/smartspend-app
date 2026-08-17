@@ -298,7 +298,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 ## COMPARISON TO EXISTING APPS
 
-> For the full 14-app feature matrix see `docs/SmartSpend_App_and_LLM_Benchmark.md`.
+> For the full 14-app feature matrix see `docs/BENCHMARK.md`.
 
 | Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | **SmartSpend** |
 |---------|-------|------|---------|---------|----------|-------------|---------------|

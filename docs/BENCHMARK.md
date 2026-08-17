@@ -339,3 +339,103 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 
 *SmartSpend v2.9.2 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
+
+---
+
+## PART 4 — BEHAVIORAL FINANCE RESEARCH INSIGHTS
+
+### BSP CFIS 2025 Key Findings
+- Filipino account ownership dropped to 50% (from 56% in 2021)
+- 74% correctly answered financial literacy questions (up from 69% in 2021)
+- E-wallet adoption is the primary driver of financial inclusion
+- "Come-what-may" attitude toward financial planning persists
+
+### Behavioral Nudge Techniques That Work
+1. **Default opt-in** — auto-enable savings features (round-ups, budget alerts)
+2. **Loss aversion framing** — "You'll lose ₱X from your laptop fund" > "Save ₱X"
+3. **Social comparison** — "Users like you save 15% of income" (anonymous)
+4. **Streak mechanics** — consecutive days of good behavior (no-spend days, under-budget days)
+5. **Micro-commitments** — small daily actions that compound (₱10/day = ₱3,650/year)
+6. **Progress visualization** — progress bars, milestone celebrations, confetti
+7. **Timely interventions** — nudge at the moment of decision (impulse pause)
+
+### What SmartSpend Already Implements
+- ✅ Loss aversion — budget alerts linked to savings goals
+- ✅ Impulse pause mechanic — prompts reflection before large Want purchases
+- ✅ Progress visualization — goal progress bars, FHS score, streak counters
+- ✅ Streak mechanics — daily quests, achievements, logging streaks
+- ✅ Timely interventions — startup alerts, budget warnings on expense logging
+- ✅ Micro-commitments — round-up savings (spare change to ₱10)
+- ✅ Spending personality profiling — computed from actual data, no AI call needed
+
+### Feature Implementation Priority (Behavioral Research Basis)
+
+| # | Feature | Status | Effort | Research Basis |
+|---|---------|--------|--------|----------------|
+| 1 | Round-Up Savings | ✅ Done | Small | Bright Money, micro-commitment theory |
+| 2 | No-Spend Day Streaks | ✅ Done (via daily quests) | Small | Gamification + streak mechanics |
+| 3 | Price Memory alerts | ✅ Done | Small | Loss aversion — "this costs more than last time" |
+| 4 | Spending Personality Profile | ✅ Done | Small | Behavioral finance profiling |
+| 5 | Proactive AI Insights | ✅ Done (startup alerts) | Medium | Anticipatory AI coaching |
+| 6 | Weekly Money Report | ✅ Done (startup alerts + AI) | Small | Automated financial review |
+| 7 | Bill Countdown on Home | ✅ Done (upcoming chips) | Small | Proactive bill management |
+| 8 | Shared Expenses / Split Bills | ✅ Done (split_expense AI action) | Medium | Collaborative finance |
+| 9 | Paluwagan Tracker | ❌ Not yet — BudgetPH has this | Medium | Core Filipino rotating savings |
+| 10 | "Can I Afford This?" Button | ✅ Done (analyze_goal_feasibility) | Small | Real-time affordability check |
+
+---
+
+## PART 5 — LLM TECHNICAL BENCHMARKING (Chapter 3 Reference)
+
+### Selection Criteria
+
+| Criterion | Weight | Description |
+|-----------|--------|-------------|
+| Filipino-English Accuracy | 25% | Ability to understand and respond in Taglish |
+| Speed / Latency | 20% | Response time for real-time mobile (<3 seconds ideal) |
+| Tool Use / Function Calling | 20% | Reliable structured JSON output for agentic actions |
+| Cost / Free Tier | 15% | Free tier suitable for academic project |
+| Context Window | 10% | Token limit for system prompt + context + history |
+| Reasoning Quality | 10% | Financial advice accuracy and logical consistency |
+
+### Full Benchmarking Table
+
+| Model | Provider | Context Window | Speed (t/s) | Filipino-English | Tool Use | Free Tier | Selected? |
+|-------|----------|---------------|-------------|-----------------|----------|-----------|-----------|
+| **Gemini 3.1 Flash-Lite** | Google | 1,000,000 | ~400–600 | ★★★★★ | ★★★★★ | ✅ 1,000/day | ✅ **PRIMARY** |
+| **Gemini 3.5 Flash** | Google | 1,000,000 | ~200–400 | ★★★★★ | ★★★★★ | ✅ 250/day | ✅ Fallback 1 |
+| **LLaMA 3.3 70B** | Groq LPU | 128,000 | ~315 | ★★★★☆ | ★★★★★ | ✅ 14,400/day | ✅ Fallback 2 |
+| **LLaMA 3.1 8B** | Groq LPU | 8,192 | ~800 | ★★★★☆ | ★★★★☆ | ✅ 14,400/day | ✅ Fallback 3 |
+| **LLaMA 3.1 70B** | Cerebras WSE | 128,000 | ~1,800 | ★★★★☆ | ★★★★☆ | ✅ 1M tokens/day | ✅ Fallback 4 |
+| GPT-4o | OpenAI | 128,000 | ~80–120 | ★★★★★ | ★★★★★ | ❌ Paid | ❌ Cost |
+| Claude 3.5 Sonnet | Anthropic | 200,000 | ~70–100 | ★★★★★ | ★★★★★ | ❌ Paid | ❌ Cost |
+| Gemini 2.0 Flash | Google | 1,000,000 | ~150 | ★★★★☆ | ★★★★☆ | ⚠️ 15 req/min | ❌ Superseded |
+| Mistral 7B | Mistral AI | 32,000 | ~600 | ★★★☆☆ | ★★★☆☆ | ✅ Self-host | ❌ Poor Filipino |
+| Phi-3 Mini 3.8B | Microsoft | 4,096 | ~900 | ★★☆☆☆ | ★★☆☆☆ | ✅ Local | ❌ Too small |
+| Gemma 2 9B | Google | 8,192 | ~500 | ★★★☆☆ | ★★★☆☆ | ✅ Local | ❌ No hosted API |
+| GPT-4o Mini | OpenAI | 128,000 | ~120 | ★★★★☆ | ★★★★★ | ❌ No free tier | ❌ Cost |
+| Mixtral 8x7B | Mistral/Groq | 32,000 | ~400 | ★★★☆☆ | ★★★★☆ | ✅ Groq | ❌ Poor Filipino |
+
+### Current 5-Provider Failover Chain (v2.9.2)
+
+| Priority | Provider | Model | Free Limit | Role |
+|----------|----------|-------|------------|------|
+| 1 (Primary) | Google | Gemini 3.1 Flash-Lite | 1,000 req/day | Best Filipino-English, 1M context |
+| 2 | Google | Gemini 3.5 Flash | 250 req/day | Higher reasoning quality |
+| 3 | Groq LPU | LLaMA 3.3 70B | 14,400 req/day | Best open-source reasoning, ~315 t/s |
+| 4 | Groq LPU | LLaMA 3.1 8B | 14,400 req/day | Fastest simple queries, ~800 t/s |
+| 5 | Cerebras WSE | LLaMA 3.1 70B | 1M tokens/day | Highest raw throughput (~1,800 t/s) |
+
+### Why Context Injection (Not RAG)
+A typical SmartSpend user has 20–50 expenses, 5–10 budgets, 3–5 goals — all fitting in ~1,000 tokens. RAG's vector search overhead is unnecessary when the full dataset can be injected directly into each AI message.
+
+### Actual Performance Metrics (SmartSpend v2.9.2)
+
+| Metric | Value |
+|--------|-------|
+| Average response time | 0.8–1.5 seconds |
+| Action parsing success rate | ~95% (with fallback parser: ~99%) |
+| Multi-item logging success | ~90% |
+| Daily message limit | 60/day (device-wide) |
+| Token usage per message | ~2,000–4,000 (system + context + history + response) |
+| Conversation summarization | Every 10 messages (saves 40–70% tokens) |

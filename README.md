@@ -122,10 +122,16 @@ Distribute both `arm64-v8a` and `armeabi-v7a` to cover all Android phones.
 | `DOCUMENTATION.md` | Full technical documentation |
 | `HOWTORUN.md` | Setup, run, and build instructions |
 | `SECURITY.md` | Security policy and credential management |
-| `docs/SmartSpend_Defense_Reviewer.md` | Pre-defense quick reference — all key numbers, FHS formula, Q&A |
-| `docs/SmartSpend_Capstone2_Documentation_Reference.md` | Single source of truth for capstone paper documentation |
-| `docs/SmartSpend_Demo_Script.md` | Demo script for video / live presentation |
-| `docs/SmartSpend_Capstone2_Progress_Report_Week1.md` | Week 1 Capstone 2 progress report |
+| `docs/SYSTEM_OVERVIEW.md` | System architecture and overview — for adviser/panel |
+| `docs/DEFENSE_REVIEWER.md` | Pre-defense quick reference — key numbers, FHS formula, Q&A |
+| `docs/DEMO_SCRIPT.md` | Demo script for video recording or live Zoom |
+| `docs/CAPSTONE_REFERENCE.md` | Single source of truth for capstone paper documentation |
+| `docs/PAPER_GUIDE.md` | Chapter-by-chapter guide for writing Chapters 1–5 |
+| `docs/MANUSCRIPT_FIXES.md` | 19 step-by-step Google Docs fixes (CTRL+F locations included) |
+| `docs/BENCHMARK.md` | 14-app comparison + 13-model LLM benchmark + behavioral finance |
+| `docs/PROJECT_STATUS.md` | What's done, what's left, roadmap, timeline, coding conventions |
+| `docs/PLAYSTORE_GUIDE.md` | Play Store deployment and API security guide |
+| `docs/PROGRESS_REPORT_WEEK1.md` | Week 1 Capstone 2 progress report |
 
 ---
 
