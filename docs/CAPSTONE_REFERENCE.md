@@ -367,7 +367,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 ## 9. COMPETITOR COMPARISON (for Chapter 2)
 
-> For the full 14-app matrix see `docs/SmartSpend_App_and_LLM_Benchmark.md`.
+> For the full 14-app matrix see `docs/BENCHMARK.md`.
 
 | Feature | SmartSpend | YNAB | Monarch | Copilot | Rocket Money | Tarsi (PH) | **BudgetPH** | **Alkansya AI** |
 |---------|-----------|------|---------|---------|--------------|------------|-------------|----------------|

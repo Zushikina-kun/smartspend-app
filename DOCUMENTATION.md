@@ -1625,7 +1625,7 @@ Both `AIChatService` and `LLMService` use comprehensive Filipino-aware category 
 9. Typed models for SavingsGoal, Debt, Income tables
 10. AI savings plan advisor — budget cut suggestions to reach savings goals
 
-> See `docs/SmartSpend_Capstone2_Documentation_Reference.md` → Future Roadmap section for detailed blockers and implementation plans for each item.
+> See `docs/CAPSTONE_REFERENCE.md` → Future Roadmap section for detailed blockers and implementation plans for each item.
 
 ---
 
@@ -1726,8 +1726,8 @@ All rights reserved by **Lucid Frame**, 2026.
 | Pre-survey (Objective 1) | ⏳ Pending |
 | SUS testing — 30 respondents | ⏳ Pending |
 | Qualitative interviews (5-10) | ⏳ Pending |
-| Chapter 2 — Related Literature | ⏳ Pending — use docs/Competitor_Analysis |
-| Chapter 3 — Methodology | ⏳ Pending — use docs/LLM_Comparison_Table_Ch3 |
+| Chapter 2 — Related Literature | ⏳ Pending — use docs/BENCHMARK.md |
+| Chapter 3 — Methodology | ⏳ Pending — use docs/BENCHMARK.md (LLM section) + docs/CAPSTONE_REFERENCE.md |
 | Privacy Policy (Play Store) | ⏳ Pending |
 | UX-6 | Time-of-day spending analysis | Low | "You spend most between 12–1 PM" — time field already stored |
 | UX-7 | AI proactive check-in on app open | Medium | "You haven't logged in 2 days — want to catch up?" |

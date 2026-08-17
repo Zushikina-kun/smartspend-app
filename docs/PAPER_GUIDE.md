@@ -3,7 +3,7 @@
 **Date:** August 11, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.2
 **Purpose:** Source of truth for revising Chapters 1–5 of the capstone thesis paper
 
-> ⚠️ Also see **`docs/SmartSpend_Capstone2_Documentation_Reference.md`** — the most comprehensive single-file reference for capstone documentation, with all current numbers, quotes, and comparison tables.
+> ⚠️ Also see **`docs/CAPSTONE_REFERENCE.md`** — the most comprehensive single-file reference for capstone documentation, with all current numbers, quotes, and comparison tables.
 
 ---
 
@@ -59,7 +59,7 @@ Design, develop, and evaluate SmartSpend — an AI-assisted mobile personal fina
 - Direct bank integration (BSP Open Finance API still in early pilot — UnionBank only as of July 2025)
 - Real-time stock market data (planned post-capstone)
 - AI model fine-tuning (context injection used instead)
-- Professional financial advice (disclaimer required — see Section 17 of SMARTSPEND_MASTER_ROADMAP.md)
+- Professional financial advice (disclaimer required — see Section 17 of docs/BENCHMARK.md)
 
 ### Significance
 - **Students/Young Professionals:** First app combining Taglish AI + offline capability + PH financial knowledge
@@ -78,7 +78,7 @@ Design, develop, and evaluate SmartSpend — an AI-assisted mobile personal fina
 4. **50/30/20 Budgeting Rule** (Elizabeth Warren, 2005) — SmartSpend implements this as a built-in analytics tracker
 
 ### Related Applications
-See `docs/SmartSpend_App_and_LLM_Benchmark.md` for the full comparison table (14 apps, including BudgetPH and Alkansya AI).
+See `docs/BENCHMARK.md` for the full comparison table (14 apps, including BudgetPH and Alkansya AI).
 
 **Summary for paper:**
 | App | AI | Offline | Filipino Context | Free | PH-Specific |
@@ -142,7 +142,7 @@ The FHS is a **4-component weighted formula** (25 points each, total 100):
 **Empty state:** Returns 50 (neutral) — new users not penalized for having no data
 
 ### LLM Selection Justification
-See `docs/LLM_Comparison_Table_Ch3.md` for full benchmarking table.
+See `docs/BENCHMARK.md` for full benchmarking table.
 
 **Summary for paper:**
 
