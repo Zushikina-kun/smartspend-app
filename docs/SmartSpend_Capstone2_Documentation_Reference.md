@@ -367,29 +367,37 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 ## 9. COMPETITOR COMPARISON (for Chapter 2)
 
-| Feature | SmartSpend | Cleo | YNAB | Monarch | GCash | Tarsi (PH) |
-|---------|-----------|------|------|---------|-------|------------|
-| AI Chat (agentic) | ✅ 29 actions | ✅ Snarky AI | ❌ | ❌ | ❌ | ❌ |
-| Filipino-English AI | ✅ Full Taglish | ❌ | ❌ | ❌ | Partial | ✅ Partial |
-| Voice Input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| OCR Receipt | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Barcode Scan | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Batch Screenshots (40+ platforms) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Offline Mode | ✅ Full | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Financial Health Score | ✅ Dual-mode | ✅ | ❌ | ❌ | ❌ | ❌ |
-| PH Gov Contributions (SSS/PhilHealth/Pag-IBIG) | ✅ | ❌ | ❌ | ❌ | Partial | ❌ |
-| Insurance Tracker | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Round-Up Savings | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Gamification (badges/quests) | ✅ 23 badges | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Free (no subscription) | ✅ Always | Freemium | $14.99/mo | $9.99/mo | ✅ | ✅ |
-| Spending Limits (multi-period) | ✅ Daily/Weekly/Monthly/Yearly | ❌ | ✅ | ✅ | ❌ | ❌ |
-| Logging Gap Detection | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+> For the full 14-app matrix see `docs/SmartSpend_App_and_LLM_Benchmark.md`.
+
+| Feature | SmartSpend | YNAB | Monarch | Copilot | Rocket Money | Tarsi (PH) | **BudgetPH** | **Alkansya AI** |
+|---------|-----------|------|---------|---------|--------------|------------|-------------|----------------|
+| AI Chat (agentic) | ✅ 29 actions | ❌ | ❌ | ⚠️ Basic | ❌ | ❌ | ⚠️ Insights | ✅ Chat |
+| Filipino-English AI | ✅ Full Taglish | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ❌ | ✅ |
+| Voice Input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| OCR Receipt | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Barcode Scan | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Batch Screenshots (40+ platforms) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Offline Mode | ✅ Full | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
+| Financial Health Score | ✅ Dual-mode | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ |
+| PH Gov (SSS/PhilHealth/Pag-IBIG) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Records | ❌ |
+| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ |
+| 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Gamification (badges/quests) | ✅ 23 badges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ |
+| Free (no subscription) | ✅ Always | ❌ $14.99/mo | ❌ $9.99/mo | ❌ $10.99/mo | ⚠️ Limited | ✅ | ✅ | ⚠️ Limited |
+| Spending Limits (multi-period) | ✅ Daily/Wk/Mo/Yr | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Logging Gap Detection | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Insurance Tracker | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Round-Up Savings | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 **SmartSpend unique advantages:**
-- Only app with multi-platform screenshot batch import (40+ types)
-- Only app combining Taglish AI + offline + PH financial knowledge + free
-- Only app with multi-period spending limits (daily/weekly/monthly/yearly) + FHS dual-mode
-- Only app asking users about unlogged days to make FHS accurate
+- Only app with 29 agentic AI actions — AI takes real autonomous actions on user data
+- Only app combining Taglish AI + offline + PH financial knowledge + free + multi-modal input
+- Only app with batch screenshot import (40+ platform types auto-detected)
+- Only app with dual-mode FHS (Full + Lightweight) + Logging Gap Detection
+
+**BudgetPH gap SmartSpend should address (future):**
+- Paluwagan tracker — uniquely Filipino rotating savings group feature
+- 15th & 30th payday cycle — payday-aware budgeting reset
 
 ---
 
