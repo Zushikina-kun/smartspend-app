@@ -58,9 +58,9 @@ Smart Spend is **not** a banking app. It does not process payments or transfer m
                                          │
                               ┌──────────▼──────────────────────┐
                               │   Multi-Model LLM Routing       │
-                              │  1. Gemini 2.5 Flash-Lite       │
+                              │  1. Gemini 3.1 Flash-Lite       │
                               │     (primary, 1,000/day free)   │
-                              │  2. Gemini 2.5 Flash            │
+                              │  2. Gemini 3.5 Flash            │
                               │     (fallback 1, 250/day free)  │
                               │  3. Groq LLaMA 3.3 70B          │
                               │     (fallback 2, 14,400/day)    │
@@ -141,7 +141,7 @@ Low-confidence entries (< 0.7) are flagged with an orange dot on the expense til
 - **Spending Insights** — analyzes patterns and generates bullet-point insights on the dashboard
 - **Financial Advice** — personalized tips based on income, spending, and predictions
 - **AI Chat** — conversational assistant with full financial context injection
-- **Multi-Model Routing** — Gemini 2.5 Flash-Lite (primary) → Gemini 2.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras. Auto-fallback on 429. User can switch manually via model chip in AI appbar.
+- **Multi-Model Routing** — Gemini 3.1 Flash-Lite (primary) → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras. Auto-fallback on 429. User can switch manually via model chip in AI appbar.
 
 #### AI Architecture — Agentic AI with Context Injection
 
@@ -1233,7 +1233,7 @@ The app shows an offline banner when there's no internet. All core tracking feat
 |-----------|-----------|
 | Framework | Flutter 3.x (Dart) |
 | AI / LLM | Groq API — llama-3.1-8b-instant |
-| Local Database | SQLite via sqflite (v10) |
+| Local Database | SQLite via sqflite (v11) |
 | Cloud Database | Firebase Firestore — Spark plan (full bidirectional sync) |
 | Authentication | Firebase Auth (email + Google OAuth) |
 | Crash Reporting | Firebase Crashlytics |
