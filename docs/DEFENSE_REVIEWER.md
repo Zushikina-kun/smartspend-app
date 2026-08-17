@@ -189,6 +189,15 @@ A: All core features work — manual expense logging, all analytics, budgets, go
 **Q: vs GCash / bank apps?**
 A: They handle actual money movement. SmartSpend is a tracker and advisor — doesn't touch your money. Tracks all payment methods (cash, GCash, card, etc.) in one place.
 
+**Q: How does SmartSpend compare to BudgetPH?**
+A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (29 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (23 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
+
+**Q: Why doesn't SmartSpend have a paluwagan tracker?**
+A: Paluwagan is on the post-capstone roadmap as the highest-priority Filipino-specific feature. The core system architecture supports it — it would use the existing debt/recurring infrastructure with a new rotating-round tracking layer. It was deprioritized during Capstone 2 to focus on the AI agentic system and Financial Health Score, which are the primary academic contributions. BudgetPH currently has this feature.
+
+**Q: Why is the validator's name optional on the certificate?**
+A: The validation certificates use a credential-based approach — the validator's qualifications (educational background, occupation, years of experience) establish their credibility, not their name. This is academically sound: what matters is that the validator is qualified, not who they are personally. The format complies with ethical research standards on participant and collaborator privacy. If the validator chooses to disclose their name, the optional field is available.
+
 **Q: Is it only for students?**
 A: No. 8 account types: Employed, Business Owner, Freelancer, Working Student, Student, Pensioner/Retiree, Unemployed, General/Other. Each adapts labels and features.
 

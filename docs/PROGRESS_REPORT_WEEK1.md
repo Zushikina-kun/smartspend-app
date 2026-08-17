@@ -128,7 +128,7 @@ The system is fully functional and deployed as a release APK.
 | Defense Reviewer (pre-defense cheat sheet) | /docs/DEFENSE_REVIEWER.md | ✅ Complete |
 | Week 1 Progress Report (this document) | /docs/PROGRESS_REPORT_WEEK1.md | ✅ Complete |
 | Competitor Analysis & Feature Ideas | /docs/BENCHMARK.md | ✅ Updated v2.9.2 |
-| **App & LLM Benchmark (14 apps, 10 LLMs)** | /docs/BENCHMARK.md | ✅ New — Aug 2026 |
+| **App & LLM Benchmark (14 apps, 13 LLMs)** | /docs/BENCHMARK.md | ✅ New — Aug 2026 |
 | **System Overview (adviser/panel reference)** | /docs/SYSTEM_OVERVIEW.md | ✅ New — Aug 2026 |
 | Capstone 2 TODO & Feature Analysis | /docs/BENCHMARK.md | ✅ Updated v2.9.2 |
 | LLM Comparison Table (Chapter 3) | /docs/BENCHMARK.md | ✅ Updated v2.9.2 |
@@ -266,7 +266,7 @@ Key screens to show:)*
 ### 8.4 SUS Evaluation
 - **Status:** Pending — to be conducted in Week 7 after Pre-Final Defense
 - **Target score:** ≥ 80 (Good classification per Bangor et al., 2009)
-- **Validator:** Susan C. Arquisal (survey design), Benjie G. Bucasas (SUS process)
+- **Validator:** Subject matter expert in financial management (survey content validation) + subject matter expert in IT (system and SUS evaluation) — credentials documented in Appendix A validation certificates, names optional
 
 ---
 

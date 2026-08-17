@@ -1,7 +1,7 @@
 # SmartSpend — Comprehensive App & LLM Benchmark
 ## Competitor Analysis + AI Model Comparison
-**Last Updated:** August 2026 | **Version:** 2.9.2 | **Group:** Lucid Frame
-**Sources:** PCMag 2026, NerdWallet 2026, CNBC 2026, AIMUltiple 2026, Artificial Analysis 2026, Gemini API Docs, Groq/Cerebras benchmarks, micro1.ai REALM benchmark, juaninvestor.com, BudgetPH, Alkansya AI
+**Last Updated:** August 17, 2026 | **Version:** 2.9.2 | **Group:** Lucid Frame
+**Sources:** PCMag 2026, NerdWallet 2026, CNBC 2026, AIMUltiple 2026, Artificial Analysis 2026, Gemini API Docs, Groq/Cerebras benchmarks, micro1.ai REALM benchmark, juaninvestor.com, BudgetPH, Alkansya AI, Sentimo, Monarch Money What's New 2026, Google DeepMind Gemini 3.7 Flash (Aug 2026)
 
 > Content was paraphrased and summarized for compliance with licensing restrictions.
 
@@ -12,10 +12,10 @@
 ### 1.1 Apps Included in This Analysis
 
 **International / Cross-Platform:**
-YNAB, Monarch Money, Copilot Money, Quicken Simplifi, Rocket Money, PocketGuard, Goodbudget, Spendee, Wally, Monefy
+YNAB, Monarch Money, Copilot Money, Quicken Simplifi, Rocket Money, PocketGuard, Goodbudget, Spendee, Wally, Monefy, Cleo, Era, EveryDollar, Honeydue, Empower
 
 **Philippine / Filipino-Context:**
-Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Money Manager (Realbyte), GoodBudget PH
+Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, Lista PH, Money Manager (Realbyte)
 
 **SmartSpend** (our system — for comparison)
 
@@ -93,6 +93,40 @@ Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Money Manager (Realby
 
 ---
 
+### 1.2b Additional Apps — Extended Comparison
+
+Apps not in the main matrix above, included for completeness:
+
+| Feature | SmartSpend | Cleo | Era | EveryDollar | Honeydue | Empower | Lista PH | Sentimo | SweldoWise |
+|---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Platform** | Android | iOS+Web | iOS+Web | Android+iOS | Android+iOS | Android+iOS+Web | Android | Android | Android |
+| **Cost** | Free | Freemium | Freemium | Free/$12.99mo | Free | Free (basic) | Free | Free | Free |
+| **AI chat / assistant** | ✅ 29 actions | ✅ Snarky AI advisor | ✅ Q&A only | ❌ | ❌ | ⚠️ Insights only | ❌ | ❌ | ❌ |
+| **Natural language input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Financial Health Score** | ✅ 0–100 | ✅ Score | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Offline mode** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| **Bank sync** | ❌ manual | ✅ | ✅ | ✅ Paid | ✅ | ✅ | ❌ manual | ❌ manual | ❌ manual |
+| **Filipino context** | ✅ Full | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ✅ Full | ✅ Full |
+| **Gamification** | ✅ 23 badges | ✅ Challenges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Streaks/KBoy | ❌ |
+| **Budget method** | Category + limit | Envelope AI | Zero-based | Zero-based | Shared | Overview | Simple | Sweldo-cycle | Sweldo-cycle |
+| **Couples / shared** | ❌ | ❌ | ❌ | ❌ | ✅ Core feature | ❌ | ❌ | ❌ | ❌ |
+| **Investment tracking** | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ Full | ❌ | ❌ | ⚠️ MP2 only |
+| **OCR / receipt scan** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Voice input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Batch screenshots** | ✅ 40+ platforms | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **SSS/PhilHealth/Pag-IBIG** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ⚠️ MP2 |
+| **Free (no subscription)** | ✅ Always free | Freemium | Freemium | ✅ Basic free | ✅ | ✅ Basic | ✅ | ✅ | ✅ |
+
+**Notes:**
+- **Cleo** — Strong AI personality and gamification but no Filipino language, US/UK focused, no offline. The snarky AI advisor is their differentiator. SmartSpend has deeper agentic actions; Cleo is better at behavioral nudging with personality.
+- **Era** — AI-first budgeting app (2024–2026). Clean interface, zero-based, investment tracking, AI Q&A from own data. iOS/Web only. No Filipino context, no offline, paid after trial.
+- **EveryDollar** — Dave Ramsey's zero-based budget app. Simple, free basic tier, Android+iOS. Manual entry only in free version. No AI, no offline, no Filipino context.
+- **Honeydue** — Purpose-built for couples to share finances. Tracks bills, balances, and spending together. No AI, no FHS, no offline. Niche but strong for couples.
+- **Empower** (formerly Personal Capital) — Free portfolio and net worth tracker with investment analysis. Strong for investment tracking and retirement planning. No budgeting AI, US-bank-centric.
+- **Lista PH** — Filipino personal finance app on Android. Simple manual expense tracking, goal setting, free. No AI, no FHS, no gamification. Lighter alternative to SmartSpend for basic needs.
+
+---
+
 ### 1.3 SmartSpend vs Closest Competitors — Summary
 
 #### vs BudgetPH (KindlyF)
@@ -116,13 +150,19 @@ BudgetPH is the most direct Filipino-context competitor discovered during this r
 **Gap SmartSpend can address:** Paluwagan and 15th/30th payday cycle support would significantly strengthen SmartSpend's Filipino-first positioning against BudgetPH.
 
 #### vs Alkansya AI
-Also Filipino-context, iOS-only, with a simple AI chat for expense entry. Far less comprehensive than SmartSpend — no FHS, no analytics, no badges, no voice input, Android not supported.
+Filipino-context, iOS-only, with a simple AI chat for expense entry. Notably, Alkansya (alkansya.online — a separate web app) now includes a Financial Health Score feature. However it is far less comprehensive than SmartSpend — no offline mode, no voice input, Android not supported, no batch screenshot import, no gamification badges.
+
+#### vs Sentimo *(New — 2026)*
+Sentimo is a Filipino budget and bill tracker launched in 2026 for Android. It features a sweldo-cycle-aware budget planner, bill tracking (Meralco, PLDT), ipon (savings) goals, and a gamification layer with streaks, challenges, and "KBoy" — a carabao mascot. Strong on gamification and Filipino bill tracking. No AI chat, no OCR, no offline sync, no FHS. It competes on the gamification angle where SmartSpend also plays, but SmartSpend has a deeper badge system (23 badges vs Sentimo's streaks) plus the full AI advisory layer Sentimo lacks.
+
+#### vs SweldoWise / SweldoTrack *(New — 2026)*
+New Filipino apps targeting sweldo-cycle tracking, MP2 contributions, and debt management. SweldoWise (sweldowise.ph) focuses specifically on tracking finances between payday dates. SweldoTrack (sweldotrack.online) covers bills, savings, and spending around payday. Both are niche tools — no AI, no FHS, no multi-modal input. SmartSpend covers the same payday cycle needs via its Lightweight Mode and wallet system, but lacks the explicit 15th/30th cutoff feature both these apps offer.
 
 #### vs YNAB
 YNAB is the global gold standard for zero-based budgeting — every peso has a job. However, it requires bank connectivity, costs $14.99/month, has no AI chat, and doesn't work for Filipinos using cash, GCash, or informal credit. SmartSpend is entirely free and works offline.
 
 #### vs Monarch Money
-Best overall international app per PCMag 2026. Strong investment tracking, couple sharing, and cash flow forecasting. But iOS+web focused, requires bank API, no Filipino context, no voice/OCR, and no offline mode. SmartSpend wins on AI depth, Filipino context, and accessibility.
+**Updated August 2026:** Monarch added an AI Assistant (plain-language financial Q&A from your actual data), receipt scanning (upload or email-forward receipts, AI matches to transactions), Goals 3.0 (investment-linked goals, debt paydown budgeting), and a new Plus tier with long-term planning and business finance tools. It is now the most AI-capable international app. Still requires bank API (US/Canada only), costs $9.99–$19.99/mo, iOS+web+Android, no offline, no Filipino context. SmartSpend still leads on agentic AI (29 autonomous actions vs Monarch's Q&A-only assistant), Filipino language, offline capability, and free pricing.
 
 #### vs Copilot Money
 AI-categorization is strong but iOS-only, no offline, and no Filipino support. SmartSpend's AI goes much further — 29 actions vs Copilot's passive categorization.
@@ -148,8 +188,11 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 | Gap | Who Has It | Priority |
 |-----|-----------|----------|
 | Paluwagan tracker | BudgetPH | High — uniquely Filipino, missing from SmartSpend |
-| 15th & 30th payday cycle | BudgetPH | Medium — payday-aware budgeting |
-| Couple / family sharing | Monarch, Wally, Goodbudget | Medium |
+| 15th & 30th payday cycle | BudgetPH, SweldoWise, SweldoTrack | High — payday-aware budgeting reset |
+| Mascot / personality layer | Sentimo (KBoy carabao) | Low — fun UX differentiator |
+| Couple / family sharing | Monarch (Goals 3.0), Wally, Goodbudget | Medium |
+| AI Q&A from own data | Monarch (2026 AI Assistant) | ✅ Done — SmartSpend has 29 agentic actions |
+| Receipt email forwarding | Monarch (July 2026) | Low — SmartSpend has OCR + batch screenshots |
 | Investment tracking | Monarch, Copilot, Simplifi | Low (out of scope for capstone) |
 | iOS / web version | All competitors | Post-capstone |
 | Bank sync (automated) | Most international apps | Not feasible in PH (no open banking API) |
@@ -163,12 +206,13 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 This section covers the models most relevant to a mobile financial assistant context: fast, free-tier accessible, Filipino-English capable, and suitable for agentic (action-taking) AI.
 
 **Frontier models (paid or limited free):**
-GPT-5.6 (OpenAI) · Claude Fable 5 / Sonnet 5 (Anthropic) · Gemini 3.1 Pro (Google)
+GPT-5.6 (OpenAI) · Claude Fable 5 / Sonnet 5 (Anthropic) · Gemini 3.1 Pro / 3.7 Flash (Google, Aug 2026) · Grok 4.6 (xAI, Aug 2026)
 
 **Mid-tier / efficient models (free or low cost):**
-Gemini 3.1 Flash-Lite · Gemini 2.5 Flash · Groq LLaMA 3.3 70B · Groq LLaMA 3.1 8B · Cerebras LLaMA 3.1
+Gemini 3.1 Flash-Lite · Gemini 3.5 Flash · Groq LLaMA 3.3 70B · Groq LLaMA 3.1 8B · Groq LLaMA 4 Scout · Cerebras LLaMA 3.1 · DeepSeek V4 Flash · Qwen 3 32B
 
 **Open-source (self-hostable):**
+Mistral 7B · LLaMA 3.1 8B / 70B · Qwen 3.2 27B · DeepSeek V3 weights · LLaMA 4 Scout (local)
 Mistral 7B / 8×7B · LLaMA 3.1 8B / 70B · DeepSeek V3
 
 ---
@@ -180,15 +224,20 @@ Based on multiple 2026 benchmarks (AIMUltiple Finance LLM Benchmark, micro1.ai R
 | Model | Financial Reasoning | Filipino-English NLP | Speed (tokens/s) | Free Tier | Best For |
 |-------|--------------------|--------------------|-----------------|-----------|----------|
 | **GPT-5.6 (Terra)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~80–120 | ❌ Paid | Spreadsheet workflows, investment memos, broad task coverage |
-| **Claude Fable 5** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~60–100 | ❌ Paid | Long-form reasoning, reading full financial documents, nuanced financial narratives |
+| **Claude Fable 5** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~60–100 | ❌ Paid | Long-form reasoning, reading full financial documents |
+| **Gemini 3.7 Flash** *(new Aug 13 2026)* | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ~300–500 | ❌ Paid ($0.75/1M in) | Frontier quality at mid-tier price; best new Gemini for financial reasoning |
+| **Grok 4.6** *(xAI, Aug 2026)* | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ~100–200 | ❌ API paid ($2/1M) | Strong reasoning, real-time search integration, agentic tasks |
 | **Gemini 3.1 Pro** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ~100–150 | ⚠️ 100 RPD | Google Workspace integration, live web context, multimodal |
-| **Gemini 2.5 Flash** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ~200–400 | ⚠️ 250 RPD | Balanced speed/quality, long context (1M tokens) |
+| **Gemini 3.5 Flash** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ~200–400 | ⚠️ 250 RPD | Balanced speed/quality, long context (1M tokens) |
 | **Gemini 3.1 Flash-Lite** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ~400–600 | ✅ **1,000 RPD** | **High-volume free-tier mobile use — SmartSpend primary** |
-| **Groq LLaMA 3.3 70B** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~400 (LPU) | ✅ Free | High-quality reasoning at low latency, best open-source financial reasoning |
-| **Groq LLaMA 3.1 8B** | ⭐⭐⭐ | ⭐⭐⭐⭐ | ~600–800 (LPU) | ✅ Free | Fast simple queries, expense parsing |
+| **Groq LLaMA 3.3 70B** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~315 (LPU) | ✅ ~14,400 RPD | High-quality reasoning at low latency, best open-source financial reasoning |
+| **Groq LLaMA 4 Scout** *(2026)* | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~400 (LPU) | ✅ ~14,400 RPD | Multimodal MoE, long 109K context, strong tool use — newer option on Groq free |
+| **Groq LLaMA 3.1 8B** | ⭐⭐⭐ | ⭐⭐⭐⭐ | ~800 (LPU) | ✅ ~14,400 RPD | Fast simple queries, expense parsing |
 | **Cerebras LLaMA 3.1** | ⭐⭐⭐ | ⭐⭐⭐ | ~1,800–3,000 | ✅ Free | Fastest raw throughput — good for ultra-low latency |
+| **DeepSeek V4 Flash** *(2026)* | ⭐⭐⭐⭐ | ⭐⭐⭐ | ~200 | ⚠️ Paid ($0.14/1M, 5M free trial tokens) | Very cheap frontier-class math/reasoning; weaker Filipino context |
+| **Qwen 3 32B** *(Alibaba, 2026)* | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~150–300 | ✅ Free on OpenRouter (preview) | Strong multilingual (incl. Filipino), hybrid thinking mode, Apache 2.0 open weights |
 | **Mistral 7B** | ⭐⭐ | ⭐⭐ | Varies | ✅ Self-host | Privacy-preserving, offline/air-gapped — lower en-PH accuracy |
-| **DeepSeek V3** | ⭐⭐⭐ | ⭐⭐ | ~200 | ✅ Free API | Strong math reasoning, weaker Filipino context |
+| **DeepSeek V3 weights** | ⭐⭐⭐ | ⭐⭐ | ~200 | ✅ Self-host (MIT) | Strong math reasoning, weaker Filipino context; R1 API retired July 2026 |
 
 *Ratings are relative (1–5 stars) based on published benchmarks cited above. Not absolute scores.*
 
@@ -331,7 +380,7 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 
 ---
 
-*Sources: PCMag Best Personal Finance Apps 2026 (pcmag.com), NerdWallet Best Budget Apps 2026 (nerdwallet.com), CNBC Best Budgeting Apps 2026 (cnbc.com), BudgetPH product page (budget.kindlyf.com), Alkansya AI App Store listing (apps.apple.com), AIMUltiple Finance LLM Benchmark (aimultiple.com/finance-llm), micro1.ai REALM Financial Benchmark (micro1.ai/benchmark/realm-financial), Gemini API rate limits and pricing (ai.google.dev), Groq/Cerebras speed benchmarks (spheron.network, edenai.co, digitalapplied.com), getaleph.com LLM Finance Teams 2026, azilen.com Best LLMs Financial Analysis 2026, ArXiv 2507.22936 Evaluating LLMs in Financial NLP*
+*Sources: PCMag Best Personal Finance Apps 2026 (pcmag.com), NerdWallet Best Budget Apps 2026 (nerdwallet.com), CNBC Best Budgeting Apps 2026 (cnbc.com), BudgetPH (budget.kindlyf.com), Alkansya (alkansya.online), Sentimo (sentimoapp.com), SweldoWise (sweldowise.ph), Lista PH (Google Play), Cleo app (meetcleo.com), Era app (era.app), Empower (empower.me), Honeydue (honeydue.com), Monarch Money What's New Aug 2026 (monarch.com/blog), Groq free tier limits (pricepertoken.com/endpoints/groq/free, grizzlypeaksoftware.com), Groq LLaMA 4 Scout/Maverick launch (groq.com), Gemini 3.7 Flash announcement Aug 13 2026 (blog.google, felloai.com/gemini-pricing), Gemini API rate limits (ai.google.dev), Grok 4.6 release Aug 2026 (felloai.com/grok-pricing), DeepSeek V4 pricing (cloudzero.com/blog/deepseek-pricing), DeepSeek R1 retirement July 2026 (deepseek.ai/deepseek-r1), Qwen3 release Apr 2026 (alibabagroup.com), AIMUltiple Finance LLM Benchmark (aimultiple.com/finance-llm), micro1.ai REALM Financial Benchmark (micro1.ai/benchmark/realm-financial), Groq/Cerebras speed benchmarks (spheron.network, edenai.co), getaleph.com LLM Finance Teams 2026, ArXiv 2507.22936 Evaluating LLMs in Financial NLP*
 
 *Content was paraphrased and summarized for compliance with licensing restrictions.*
 
@@ -404,17 +453,23 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 |-------|----------|---------------|-------------|-----------------|----------|-----------|-----------|
 | **Gemini 3.1 Flash-Lite** | Google | 1,000,000 | ~400–600 | ★★★★★ | ★★★★★ | ✅ 1,000/day | ✅ **PRIMARY** |
 | **Gemini 3.5 Flash** | Google | 1,000,000 | ~200–400 | ★★★★★ | ★★★★★ | ✅ 250/day | ✅ Fallback 1 |
-| **LLaMA 3.3 70B** | Groq LPU | 128,000 | ~315 | ★★★★☆ | ★★★★★ | ✅ 14,400/day | ✅ Fallback 2 |
-| **LLaMA 3.1 8B** | Groq LPU | 8,192 | ~800 | ★★★★☆ | ★★★★☆ | ✅ 14,400/day | ✅ Fallback 3 |
+| **LLaMA 3.3 70B** | Groq LPU | 128,000 | ~315 | ★★★★☆ | ★★★★★ | ✅ ~14,400/day | ✅ Fallback 2 |
+| **LLaMA 4 Scout** *(new 2026)* | Groq LPU | 109,000 | ~400 | ★★★★☆ | ★★★★★ | ✅ ~14,400/day | ✅ Potential Fallback |
+| **LLaMA 3.1 8B** | Groq LPU | 8,192 | ~800 | ★★★★☆ | ★★★★☆ | ✅ ~14,400/day | ✅ Fallback 3 |
 | **LLaMA 3.1 70B** | Cerebras WSE | 128,000 | ~1,800 | ★★★★☆ | ★★★★☆ | ✅ 1M tokens/day | ✅ Fallback 4 |
-| GPT-4o | OpenAI | 128,000 | ~80–120 | ★★★★★ | ★★★★★ | ❌ Paid | ❌ Cost |
-| Claude 3.5 Sonnet | Anthropic | 200,000 | ~70–100 | ★★★★★ | ★★★★★ | ❌ Paid | ❌ Cost |
+| **Qwen 3 32B** *(Alibaba, 2026)* | OpenRouter | 128,000 | ~150–300 | ★★★★☆ | ★★★★★ | ✅ Free preview | ❌ Less tested |
+| GPT-5.6 (Terra) | OpenAI | 1,050,000 | ~80–120 | ★★★★★ | ★★★★★ | ❌ Paid | ❌ Cost |
+| Claude Fable 5 / Sonnet 5 | Anthropic | 200,000 | ~70–100 | ★★★★★ | ★★★★★ | ❌ Paid | ❌ Cost |
+| **Gemini 3.7 Flash** *(new Aug 2026)* | Google | 1,048,576 | ~300–500 | ★★★★★ | ★★★★★ | ❌ Paid ($0.75/1M in) | ❌ No free tier yet |
+| Grok 4.6 *(xAI, Aug 2026)* | xAI | 500,000 | ~100–200 | ★★★★☆ | ★★★★★ | ❌ API paid ($2/1M) | ❌ Cost |
+| DeepSeek V4 Flash *(2026)* | DeepSeek | 1,000,000 | ~200 | ★★★★☆ | ★★★☆☆ | ⚠️ $0.14/1M (5M free trial) | ❌ Weaker Filipino |
 | Gemini 2.0 Flash | Google | 1,000,000 | ~150 | ★★★★☆ | ★★★★☆ | ⚠️ 15 req/min | ❌ Superseded |
 | Mistral 7B | Mistral AI | 32,000 | ~600 | ★★★☆☆ | ★★★☆☆ | ✅ Self-host | ❌ Poor Filipino |
 | Phi-3 Mini 3.8B | Microsoft | 4,096 | ~900 | ★★☆☆☆ | ★★☆☆☆ | ✅ Local | ❌ Too small |
 | Gemma 2 9B | Google | 8,192 | ~500 | ★★★☆☆ | ★★★☆☆ | ✅ Local | ❌ No hosted API |
 | GPT-4o Mini | OpenAI | 128,000 | ~120 | ★★★★☆ | ★★★★★ | ❌ No free tier | ❌ Cost |
 | Mixtral 8x7B | Mistral/Groq | 32,000 | ~400 | ★★★☆☆ | ★★★★☆ | ✅ Groq | ❌ Poor Filipino |
+| DeepSeek V3 weights *(self-host)* | DeepSeek/MIT | 64,000 | ~60–100 | ★★★★☆ | ★★★☆☆ | ✅ MIT open weights | ❌ Poor Filipino, needs GPU |
 
 ### Current 5-Provider Failover Chain (v2.9.2)
 

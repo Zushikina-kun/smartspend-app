@@ -64,17 +64,27 @@
 
 ---
 
-## 📷 PART 2 — Scanner — 45 sec
+## 📷 PART 2 — Smart Import & Scanner — 1.5 min
 
 📱 **TAP** camera icon (bottom-left of input row)
 
 🗣️ **NARRATE:**
-> "Smart Scanner — auto-detects barcodes live. For receipts, switch to Receipt mode."
+> "This single button opens SmartSpend's unified import system — four modes in one sheet."
 
-📱 **TAP** mode toggle (shows amber guide)
+📱 **SHOW** the 4-mode bottom sheet
 
 🗣️ **NARRATE:**
-> "If a receipt has multiple items, an 'Import Items' button appears — routes to the Import screen where AI extracts each item individually with categories."
+> "Live Camera for barcodes and receipts. Single Photo auto-detects what it is. Batch Screenshots — and this is unique — lets you pick up to 10 screenshots and the app figures out the platform automatically."
+
+📱 **TAP** Batch Screenshots → pick 2-3 screenshots (Shopee or Steam if available)
+
+🗣️ **NARRATE:**
+> "It detected Shopee and Steam — each gets its own AI extraction prompt tuned for that platform. 40+ platforms supported including GCash, Lazada, GrabFood, Netflix, BPI."
+
+📱 **TAP** back → **TAP** Live Camera → **SHOW** receipt mode toggle
+
+🗣️ **NARRATE:**
+> "For receipts, switch to receipt mode. If a receipt has multiple items, an Import screen opens so you review each item before saving."
 
 📱 **TAP** back to return to AI screen
 
@@ -180,7 +190,8 @@
 📱 **SCROLL** to badges row (if visible)
 
 🗣️ **NARRATE:**
-> "16 achievement badges, spending streaks, impulse pause for large Want purchases, subscription auto-detection."
+🗣️ **NARRATE:**
+> "23 achievement badges, spending streaks, impulse pause for large Want purchases, subscription auto-detection."
 
 ---
 
@@ -213,13 +224,15 @@
 | Why not bank API? | PH has no open banking APIs. Manual import instead. |
 | AI mistakes? | Human-in-the-loop + confidence score + shake-to-undo. |
 | Data privacy? | No PII to API. Only expense text + anonymized summary. |
-| FHS basis? | UNSGSA framework. 4×25 pts. Income-relative. |
+| FHS basis? | UNSGSA framework. 4×25 pts. Income-relative. Two modes: Full (income-based) and Lightweight (habit-based). |
+| How does FHS work? | 4 components × 25 pts = 100. Full Mode: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency. Lightweight: Spending Restraint, Consistency, Category Balance, Habit Streak. Plus Warning Decay and Gap Adjustment. |
 | vs GCash? | GCash shows what you spent. We tell you what it means. |
+| vs BudgetPH? | BudgetPH is closest Filipino competitor — has paluwagan and 15th/30th payday cycle. SmartSpend leads on agentic AI (29 actions), multi-modal input, offline mode, and gamification. |
 | Backend? | No. Serverless. Zero hosting costs. |
 | Context injection vs RAG? | Small data fits in one prompt. RAG is overkill. |
 | 30 respondents? | Capstone study. Purposive. Nielsen: 5 finds 85% of issues. |
 | Balance Mode? | Normal = allowance left. Balance = actual cash. Display only. |
-| What's next? | Wallet transfers, backend proxy, Play Store. |
+| What's next? | Paluwagan tracker, backend proxy, Play Store. |
 | Demo Mode? | Login → Skip. Pre-populated Filipino student data. |
 
 ---
@@ -241,10 +254,11 @@
 ---
 
 ## 🔄 RECORDING ORDER
+also update recording order to reflect new PART 2:
 ```
 1. Home TOP (spending card — visible without scrolling)
 2. AI tab (voice → text → wallet → question)
-3. Camera icon → Scanner (brief)
+3. Camera icon → Smart Import sheet (show 4 modes, demo Batch Screenshots briefly)
 4. Home → SCROLL to wallet card (green) + Log Allowance (blue)
 5. Profile → App Settings → Balance Mode toggle
 6. Analytics tab (scroll: pie → 50/30/20 → score trend → market → AI advice)

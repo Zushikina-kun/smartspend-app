@@ -214,25 +214,29 @@ If you find any other occurrence of "version 8" referring to the backup format, 
 
 ---
 
-## FIX 15 — Name Benjie G. Bucasas explicitly as technical/system validator
+## FIX 15 — ~~Name Benjie G. Bucasas explicitly as technical/system validator~~
+> ⚠️ **NOTE: Fix 15 is PARTIALLY SUPERSEDED by Fix 19.**
+> Fix 19 changed the approach to credential-based, optional-name validation certificates.
+> **Only apply Fix 15 Part A (Table 2.1 label change) — do NOT apply Fix 15 Part B (adding the name explicitly).**
+> The certificate itself is handled by Fix 19 with the optional-name format.
+
 **Panel recommendation #26:** "Experts must validate the system itself, not just the questionnaire"
-**Where:** Chapter 2, Population and Locale section — the validators table (Table 2.1) AND the Data Gathering section
+**Where:** Chapter 2, Population and Locale section — the validators table (Table 2.1) ONLY
 **How to find it (CTRL+F):** `Technical Reviewer (SUS Process)`
 
-**PART A — In Table 2.1, find:**
+**PART A — Apply this: In Table 2.1, find:**
 > | Technical Reviewer (SUS Process) | 1 |
 
 **REPLACE WITH:**
 > | Technical Validator (System & SUS Process) | 1 |
 
-**PART B — Find the paragraph that describes Benjie G. Bucasas's role:**
+**PART B — SKIP THIS PART** *(superseded by Fix 19 — the paragraph should use credential-based language, not a specific name)*
+
+**PART C — Find the paragraph that describes the technical validator's role:**
 **How to find it (CTRL+F):** `The System Usability Scale (SUS) evaluation process will be reviewed by a subject matter expert`
 
-**CURRENT TEXT (find this):**
-> The System Usability Scale (SUS) evaluation process will be reviewed by a subject matter expert in information technology to ensure proper administration and alignment with usability testing standards.
-
-**REPLACE WITH:**
-> The System Usability Scale (SUS) evaluation process and the overall technical functionality of the SmartSpend system will be reviewed by **Benjie G. Bucasas**, a subject matter expert in information technology, to ensure proper administration of the usability evaluation and to validate that the system's technical implementation aligns with established software development and usability testing standards. This expert validation covers both the correctness of the SUS evaluation process and an independent assessment of the system's core technical features.
+**REPLACE WITH (credential-based version):**
+> The System Usability Scale (SUS) evaluation process and the overall technical functionality of the SmartSpend system will be reviewed by a subject matter expert in information technology, whose qualifications are documented in the Technical Validation Certificate (Appendix A). This expert validation covers both the correctness of the SUS evaluation process and an independent assessment of the system's core technical features.
 
 ---
 
@@ -434,7 +438,7 @@ Use this to track your progress in Google Docs:
 - [ ] Fix 12 — Reframe target population: parents PRIMARY, young professionals secondary (2 spots)
 - [ ] Fix 13 — Add explicit respondent screening/inclusion criteria
 - [ ] Fix 14 — Add citations justifying the 21–35 young professional age range
-- [ ] Fix 15 — Name Benjie G. Bucasas as technical/system validator (2 spots: Table 2.1 + paragraph)
+- [ ] Fix 15 — Table 2.1 label only: "Technical Reviewer" → "Technical Validator (System & SUS Process)" *(Part A only — Part B superseded by Fix 19)*
 - [ ] Fix 16 — Add step-by-step data gathering procedure sub-section
 - [ ] Fix 17 — Table 1.2 (add BudgetPH and Alkansya AI as new app columns)
 - [ ] Fix 18 — Table 2.2 (expand LLM comparison from 4 to 13 models)

@@ -166,7 +166,7 @@ Fallback chain: Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B �
 | Component | Technology | Version |
 |-----------|-----------|---------|
 | Framework | Flutter (Dart) | 3.x stable |
-| Local DB | SQLite via sqflite | v11 (11 tables) |
+| Local DB | SQLite via sqflite | v11 (20 tables) |
 | Cloud Sync | Firebase Firestore | Free Spark plan |
 | Authentication | Firebase Auth (email + Google) | — |
 | Crash Reporting | Firebase Crashlytics | — |
@@ -192,7 +192,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 - Score calculation: odd items (score-1), even items (5-score), sum × 2.5
 - Scale: 0-100, where ≥80 = Good, ≥68 = Above Average
 - Target: **80 or above** (Good classification)
-- **Validators:** Susan C. Arquisal (survey design), Benjie G. Bucasas (SUS process)
+- **Validators:** Subject matter expert in financial management (survey content) + subject matter expert in IT (system and SUS evaluation) — credentials documented in Appendix A validation certificates, names optional
 
 ---
 
@@ -207,7 +207,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 4. **Interview Findings** — themes from qualitative analysis
 5. **FHS Validation** — does the formula correlate with user-reported financial health?
 
-### Key Numbers to Report (from v2.9.1 final build)
+### Key Numbers to Report (from v2.9.2 final build)
 - **29 AI agentic actions** implemented
 - **5 LLM providers** with automatic failover + task-based routing (fast/smart/financial_advice)
 - **23 achievement badges** + 10 daily quests
