@@ -315,7 +315,7 @@ A total of thirty (30) respondents will be selected using purposive sampling. Tw
 
 This demographic composition reflects evidence from the BSP Financial Inclusion Survey (2021) that parents in the 35 to 55 age group serve as primary household financial decision-makers and are among the groups with the lowest rates of formal financial account ownership and structured budgeting — making them a critical and underserved target population for a financial management tool (Bangko Sentral ng Pilipinas, 2021).
 
-The survey questionnaire will be reviewed by Susan C. Arquisal, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with experience in financial management and business operations, prior to distribution. This review ensures that the questions are appropriate, relevant, and grounded in the actual financial management experiences of the target population.
+The survey questionnaire will be reviewed by a subject matter expert in financial management and business operations, prior to distribution. The expert's qualifications — including educational background, occupation, and years of experience in financial management — will be documented in the Content Validation Certificate (Appendix A). This credential-based validation approach ensures that the questions are appropriate, relevant, and grounded in the actual financial management experiences of the target population, while respecting the evaluator's privacy preferences regarding name disclosure.
 
 The respondents will participate in both the needs assessment phase and the system evaluation phase. Their feedback will be essential in identifying real-world financial challenges and in assessing the usability, effectiveness, and practicality of the SmartSpend mobile application in supporting everyday financial management for both parents and young professionals.
 
@@ -604,29 +604,63 @@ What features would you like to suggest for improvement?
 
 ---
 
-**CONTENT VALIDATION CERTIFICATE**
+**CONTENT VALIDATION CERTIFICATE — SURVEY QUESTIONNAIRE**
 
-This survey questionnaire has been reviewed for content 
+This survey questionnaire has been reviewed for content validity
+and is deemed appropriate and relevant to the financial management
+experiences of the target population.
 
-validity and is deemed appropriate and relevant to the 
+Educational Background  : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
-financial management experiences of the target population.
+                          *(e.g., BS Commerce, BS Accountancy,*
 
-Validator's Name  : Susan C. Arquisal
+                          *BS Business Administration, or equivalent)*
 
-Credentials       : Bachelor of Science in Commerce,
+Occupation              : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
-                    Major in Management;
+                          *(e.g., Business Owner, Financial Officer,*
 
-                    Active Business Owner with experience
+                          *Accountant, Financial Adviser, etc.)*
 
-                    in financial management and business
+Years of Experience     : \_\_\_\_\_ years in financial management
 
-                    operations
+                          and/or business operations
 
-Signature         : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+Signature               : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
-Date            	   : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+Name *(optional)*       : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Date                    : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+---
+
+**TECHNICAL VALIDATION CERTIFICATE — SYSTEM AND SUS EVALUATION**
+
+The SmartSpend system and its usability evaluation process have
+been reviewed by a subject matter expert in Information Technology
+to ensure technical soundness and proper SUS administration.
+
+Educational Background  : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+                          *(e.g., BS Information Technology,*
+
+                          *BS Computer Science, or equivalent)*
+
+Occupation              : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+                          *(e.g., Software Developer, IT Instructor,*
+
+                          *Systems Analyst, IT Professional, etc.)*
+
+Years of Experience     : \_\_\_\_\_ years in IT / software development
+
+                          and/or usability evaluation
+
+Signature               : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Name *(optional)*       : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Date                    : \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 ---
 
