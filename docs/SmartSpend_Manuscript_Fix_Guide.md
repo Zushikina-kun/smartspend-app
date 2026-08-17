@@ -349,6 +349,73 @@ If you find any other occurrence of "version 8" referring to the backup format, 
 
 ---
 
+---
+
+## FIX 19 — Validation certificates: credential-based, optional name
+**Approach:** Validators establish credibility through qualifications (degree, occupation, years of experience), not by required name disclosure. Name field is optional.
+
+**PART A — Appendix A: Survey Content Validation Certificate**
+**How to find it (CTRL+F):** `CONTENT VALIDATION CERTIFICATE`
+
+**REPLACE the entire certificate block with:**
+
+> **CONTENT VALIDATION CERTIFICATE — SURVEY QUESTIONNAIRE**
+>
+> This survey questionnaire has been reviewed for content validity and is deemed appropriate and relevant to the financial management experiences of the target population.
+>
+> Educational Background : ________________________________
+> *(e.g., BS Commerce, BS Accountancy, BS Business Administration, or equivalent)*
+>
+> Occupation : ________________________________
+> *(e.g., Business Owner, Financial Officer, Accountant, Financial Adviser, etc.)*
+>
+> Years of Experience : _____ years in financial management and/or business operations
+>
+> Signature : _______________________________
+>
+> Name *(optional)* : _______________________________
+>
+> Date : _______________________________
+
+**PART B — Add a second certificate block immediately after the first (for the technical validator)**
+
+> **TECHNICAL VALIDATION CERTIFICATE — SYSTEM AND SUS EVALUATION**
+>
+> The SmartSpend system and its usability evaluation process have been reviewed by a subject matter expert in Information Technology to ensure technical soundness and proper SUS administration.
+>
+> Educational Background : ________________________________
+> *(e.g., BS Information Technology, BS Computer Science, or equivalent)*
+>
+> Occupation : ________________________________
+> *(e.g., Software Developer, IT Instructor, Systems Analyst, IT Professional, etc.)*
+>
+> Years of Experience : _____ years in IT / software development and/or usability evaluation
+>
+> Signature : _______________________________
+>
+> Name *(optional)* : _______________________________
+>
+> Date : _______________________________
+
+**PART C — Population and Locale section**
+**How to find it (CTRL+F):** `The survey questionnaire will be reviewed by Susan C. Arquisal`
+
+**REPLACE with:**
+> The survey questionnaire will be reviewed by a subject matter expert in financial management and business operations, prior to distribution. The expert's qualifications — including educational background, occupation, and years of experience in financial management — will be documented in the Content Validation Certificate (Appendix A). This credential-based validation approach ensures that the questions are appropriate, relevant, and grounded in the actual financial management experiences of the target population, while respecting the evaluator's privacy preferences regarding name disclosure.
+
+**PART D — Data Gathering section**
+**How to find it (CTRL+F):** `survey was validated by a Content Validator (Susan C. Arquisal)`
+
+**REPLACE with:**
+> The survey questionnaire will be subjected to content validation by a subject matter expert in financial management and business operations, whose qualifications are documented in the Content Validation Certificate (Appendix A).
+
+**PART E — Step-by-Step Data Gathering (Fix 16, Step 1)**
+Update the first step to remove Susan's name:
+> *Step 1 — Questionnaire Preparation and Validation (Objective 1):*
+> The survey questionnaire will be drafted by the research team and submitted to a subject matter expert in financial management for content validation. The expert's credentials (educational background, occupation, years of experience) will be recorded in the Content Validation Certificate. Revisions will be made based on their feedback before distribution.
+
+---
+
 ## SUMMARY CHECKLIST
 
 Use this to track your progress in Google Docs:
@@ -371,6 +438,7 @@ Use this to track your progress in Google Docs:
 - [ ] Fix 16 — Add step-by-step data gathering procedure sub-section
 - [ ] Fix 17 — Table 1.2 (add BudgetPH and Alkansya AI as new app columns)
 - [ ] Fix 18 — Table 2.2 (expand LLM comparison from 4 to 13 models)
+- [ ] Fix 19 — Replace named validation certificates with credential-based optional-name format (5 spots: Appendix A ×2, Population section, Data Gathering section, Fix 16 Step 1)
 
 ---
 

@@ -354,7 +354,7 @@ These are done in the fix guide (`docs/SmartSpend_Manuscript_Fix_Guide.md`) — 
 | # | Recommendation | What Is Needed | Who |
 |---|---|---|---|
 | 1 | Figure 1.1 — actual bar chart image | The caption placeholder exists in the manuscript. The actual bar chart graphic (financial literacy rates by demographic group, from BSP 2021 and Inquiro 2024 data) must be created and inserted in Google Docs | Cyrille — create chart in Google Sheets or Canva, paste into Google Docs at Figure 1.1 |
-| 25 | Validator signature | Susan C. Arquisal's signature line exists in Appendix A. Her physical or digital signature must be obtained and placed on the document before final submission | Brix — request signature from Susan C. Arquisal |
+| 25 | Validator signature | Appendix A validation certificates redesigned — credential-based format (degree, occupation, years of experience). Name field is **optional**. Physical signing still needed but name disclosure is not required. See Fix 19 in fix guide | Cyrille — have validators fill in credentials and sign |
 
 ---
 

@@ -469,7 +469,7 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 2. Completes 10-item SUS questionnaire (1-5 Likert)
 3. Score = (odd-item scores − 1) + (5 − even-item scores), sum × 2.5
 
-**Validators:** Susan C. Arquisal (survey design), Benjie G. Bucasas (SUS process)
+**Validators:** Subject matter expert in financial management (survey content validation) + subject matter expert in IT (system and SUS process validation) — credentials documented in validation certificates, name optional per evaluator preference.
 
 ---
 
