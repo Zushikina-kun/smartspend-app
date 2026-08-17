@@ -163,9 +163,9 @@ The FHS and all associated alerts are **current-period aware**:
 | Crash Reporting | Firebase Crashlytics | Automatic crash collection |
 | API Security | Firebase Remote Config | API keys never in APK binary |
 | App Check | Firebase App Check | Debug mode (monitoring); Play Integrity for Play Store |
-| AI — Primary | Groq LLaMA 3.3 70B | Current default, 60 req/user/day cap |
-| AI — Gemini | Gemini 3.1 Flash-Lite / 3.5 Flash | When Gemini key is configured |
-| AI — Fallback | Cerebras LLaMA 3.1 70B | Last-resort fallback |
+| AI — Primary | Gemini 3.1 Flash-Lite (Google) | 1,000 req/day free, 1M context, best Filipino-English |
+| AI — Fallback 1/2 | Gemini 3.5 Flash / Groq LLaMA 3.3 70B | Auto-failover when primary limit hit |
+| AI — Fallback 3/4 | Groq LLaMA 3.1 8B / Cerebras LLaMA 3.1 | Speed fallbacks — up to 1,800 t/s |
 | OCR | Google ML Kit Text Recognition | Latin script, EXIF-corrected |
 | Barcode | ML Kit Barcode Scanning + MobileScanner | Live + gallery detection |
 | Charts | fl_chart | Pie, bar, line, scatter |
@@ -401,13 +401,13 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 - Best reasoning quality among free models
 - Filipino-English: excellent (multilingual training)
 - Function calling: native support
-- Not deprecated (replaces Gemini 2.5 Flash-Lite which is no longer available to new users)
+- Not deprecated (replaces Gemini 2.5 Flash-Lite which was retired from new API users in early 2026)
 
 ### Fallback: Groq LLaMA 3.3 70B
 - 14,400 requests/day FREE
 - ~315 tokens/second — near-instant responses
 - Strong function calling and reasoning
-- Current default model while Gemini key is being configured
+- Used as Fallback 2 in the auto-failover chain (Primary is Gemini 3.1 Flash-Lite)
 
 ### Why not GPT-4o/Claude:
 Require paid API keys — not viable for academic project without budget.

@@ -28,7 +28,7 @@
 | GPT-4o | OpenAI | 128,000 | ~80 t/s | ★★★★★ (Excellent) | ★★★★★ | $5/1M input tokens | ❌ Cost |
 | GPT-4o Mini | OpenAI | 128,000 | ~120 t/s | ★★★★☆ (Good) | ★★★★★ | $0.15/1M input | ❌ No free tier |
 | Claude 3.5 Sonnet | Anthropic | 200,000 | ~70 t/s | ★★★★★ (Excellent) | ★★★★★ | $3/1M input | ❌ Cost |
-| Gemini 2.0 Flash | Google | 1,000,000 | ~150 t/s | ★★★★☆ (Good) | ★★★★☆ | Free (15 req/min) | ❌ Superseded by 2.5 |
+| Gemini 2.0 Flash | Google | 1,000,000 | ~150 t/s | ★★★★☆ (Good) | ★★★★☆ | Free (15 req/min) | ❌ Superseded by 3.1 |
 | Mistral 7B | Mistral AI | 32,000 | ~600 t/s | ★★★☆☆ (Fair) | ★★★☆☆ | Free (self-host) | ❌ Filipino weak |
 | Phi-3 Mini (3.8B) | Microsoft | 4,096 | ~900 t/s | ★★☆☆☆ (Poor) | ★★☆☆☆ | Free (local) | ❌ Too small |
 | Gemma 2 9B | Google | 8,192 | ~500 t/s | ★★★☆☆ (Fair) | ★★★☆☆ | Free (local) | ❌ No hosted API |
@@ -38,13 +38,13 @@
 
 ## v2.8.0 Multi-Model Architecture
 
-SmartSpend v2.8.0 implements a **multi-provider LLM routing system** that:
-1. Uses **Gemini 2.5 Flash-Lite** as default (best quality, 1M context, 1,000 req/day free)
+SmartSpend v2.9.2 implements a **multi-provider LLM routing system** that:
+1. Uses **Gemini 3.1 Flash-Lite** as default (best quality, 1M context, 1,000 req/day free)
 2. Auto-falls back through the chain when daily limit hit: Flash-Lite → Flash → Groq 70B → Groq 8B → Cerebras
 3. User can manually switch models via the model chip in the AI appbar
 4. Keys stored in `app_config.dart` (`.gitignore`) and optionally in Firebase Remote Config
 
-**Why Gemini 2.5 Flash-Lite is now primary:**
+**Why Gemini 3.1 Flash-Lite is the primary model:**
 - Higher reasoning quality than LLaMA 3.1 8B (better financial analysis)
 - Larger context window (1M vs 8K) — fits more user data
 - 1,000 requests/day free — sufficient for 60 req/user/day limit
@@ -64,18 +64,25 @@ SmartSpend v2.8.0 implements a **multi-provider LLM routing system** that:
 
 ### Why Others Were Excluded:
 - **GPT-4o / Claude 3.5** — Superior quality but require paid API keys. Not viable for a college capstone with no funding.
-- **Gemini 2.0 Flash** — Strong free-tier candidate and designated as backup. Lower tool-use reliability than LLaMA 3.1 in testing.
+- **Gemini 2.0 Flash** — Superseded by Gemini 3.1 Flash-Lite and Gemini 3.5 Flash which offer better quality, larger context, and higher free quotas.
 - **Mistral / Phi-3 / Gemma** — Weaker Filipino-English understanding. Would require extensive prompt engineering to handle Taglish input.
 - **LLaMA 3.1 70B** — Better quality but 2-3x slower on Groq. The 8B model is sufficient for expense parsing and financial advice.
 
 ---
 
-## Fallback Plan
+## Current Provider Chain (v2.9.2)
 
-If Groq's free tier becomes unavailable or rate-limited:
-1. **Primary fallback:** Gemini 2.0 Flash via Google AI Studio (free, 15 req/min)
-2. **Secondary fallback:** Together AI free tier (LLaMA 3.1 8B, 60 req/min)
-3. **Architecture note:** Switching requires only changing `AppConfig.groqBaseUrl` and `AppConfig.groqModel` — no app rebuild needed for end users if done via remote config.
+The system uses an automatic failover chain across 5 free-tier providers:
+
+| Priority | Provider | Model | Free Limit | Role |
+|----------|----------|-------|------------|------|
+| 1 (Primary) | Google | Gemini 3.1 Flash-Lite | 1,000 req/day | Best Filipino-English, 1M context |
+| 2 | Google | Gemini 3.5 Flash | 250 req/day | Higher reasoning quality |
+| 3 | Groq LPU | LLaMA 3.3 70B | 14,400 req/day | Best open-source reasoning, ~315 t/s |
+| 4 | Groq LPU | LLaMA 3.1 8B | 14,400 req/day | Fastest simple queries, ~800 t/s |
+| 5 | Cerebras WSE | LLaMA 3.1 70B | 1M tokens/day | Highest raw throughput (~1,800 t/s) |
+
+If all providers hit daily limits, manual expense entry via the + form works fully offline without AI.
 
 ---
 

@@ -298,17 +298,26 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 ## COMPARISON TO EXISTING APPS
 
-| Feature | Tarsi | YNAB | Monarch | Copilot | **SmartSpend** |
-|---------|-------|------|---------|---------|---------------|
-| Offline mode | ✅ | ❌ | ❌ | ❌ | ✅ |
-| AI chat assistant | ❌ | ❌ | ❌ | ❌ | ✅ 29 actions |
-| Financial Health Score | ❌ | ❌ | ❌ | ❌ | ✅ 0–100 |
-| Filipino-English AI | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Batch screenshot import | ❌ | ❌ | ❌ | ❌ | ✅ 40+ platforms |
-| Free (no subscription) | ✅ | ❌ $15/mo | ❌ $10/mo | ❌ $11/mo | ✅ |
-| PH banks / GCash / SSS | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Voice input (en-PH) | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Works without bank API | ✅ | ❌ | ❌ | ❌ | ✅ |
+> For the full 14-app feature matrix see `docs/SmartSpend_App_and_LLM_Benchmark.md`.
+
+| Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | **SmartSpend** |
+|---------|-------|------|---------|---------|----------|-------------|---------------|
+| Offline mode | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| AI chat assistant | ❌ | ❌ | ❌ | ⚠️ Basic | ⚠️ Insights | ✅ Chat | ✅ **29 actions** |
+| Financial Health Score | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ | ✅ 0–100 dual-mode |
+| Filipino-English AI | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ Full Taglish |
+| Batch screenshot import | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 40+ platforms |
+| Voice input (en-PH) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| OCR receipt scanning | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| PH banks / GCash / SSS | ❌ | ❌ | ❌ | ❌ | ⚠️ Partial | ❌ | ✅ Full |
+| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ |
+| 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Free (no subscription) | ✅ | ❌ $15/mo | ❌ $10/mo | ❌ $11/mo | ✅ | ⚠️ Limited | ✅ |
+| Gamification | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ✅ 23 badges |
+| Works without bank API | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+
+**SmartSpend leads:** Only app with 29 agentic AI actions + offline + Filipino-English + free + multi-modal input.
+**Closest Filipino competitor:** BudgetPH — strong on paluwagan, 15th/30th cycle, and budget scoring, but no voice/OCR/barcode/agentic AI.
 
 ---
 

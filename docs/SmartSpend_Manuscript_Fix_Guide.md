@@ -268,6 +268,87 @@ If you find any other occurrence of "version 8" referring to the backup format, 
 
 ---
 
+## FIX 17 — Table 1.2 Feature Comparison (add BudgetPH and Alkansya AI as new app columns)
+**Panel recommendation #6 + new Filipino competitor research**
+**Where:** Chapter 1, Table 1.2 — Feature Comparison of SmartSpend with Existing Financial Applications
+**How to find it (CTRL+F):** `Table 1.2. Feature Comparison`
+
+**Context:** Two Filipino-first competitors now exist that the panel should see compared — BudgetPH (budget.kindlyf.com) and Alkansya AI. Both launched in 2025–2026 and target Filipino users.
+
+**Current table header (find this):**
+> | Feature | Tarsi | YNAB | Monarch | Copilot | SmartSpend |
+
+**REPLACE the entire Table 1.2 with this expanded version** (add two new columns and four new rows):
+
+| Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | SmartSpend |
+|---------|-------|------|---------|---------|----------|-------------|-----------|
+| Offline mode | Yes | No | No | No | Yes | No | Yes |
+| LLM chat assistant | No | No | No | No | No (insights only) | Yes (basic) | Yes |
+| Financial Health Score | No | No | No | No | Yes (simpler) | No | Yes (0–100) |
+| OCR receipt scanning | Yes | No | No | No | No | No | Yes |
+| Voice input (en-PH) | No | No | No | No | No | No | Yes |
+| Spending behavior analysis | No | No | No | No | No | No | Yes |
+| Bank synchronization | No | Yes | Yes | Yes | CSV import | No | No |
+| Free tier (Android) | Yes | No | No | No | Yes (PWA) | Limited | Yes |
+| General financial Q&A | No | No | No | No | No | Yes | Yes |
+| Market price estimates | No | No | No | No | No | No | Yes |
+| Financial product guidance | No | No | No | No | No | No | Yes |
+| Batch screenshot import (40+ platforms) | No | No | No | No | No | No | Yes |
+| Multi-period spending limits | No | No | No | No | Yes | No | Yes |
+| Filipino-English AI (Taglish) | No | No | No | No | No | Yes | Yes |
+| Paluwagan tracker | No | No | No | No | Yes | No | No |
+| 15th & 30th payday cycle | No | No | No | No | Yes | No | No |
+
+*(In Google Docs, add two new columns "BudgetPH" and "Alkansya AI" before the SmartSpend column. Add the new rows at the bottom of the table.)*
+
+**Caption update:**
+> **Table 1.2. Feature Comparison of SmartSpend with Existing Financial Applications (including Filipino-context apps)**
+
+---
+
+## FIX 18 — Table 2.2 LLM Comparison (expand from 4 models to current 13-model benchmark)
+**Panel recommendation #10 — "Comparative analysis of LLMs"**
+**Where:** Chapter 3 draft (or Chapter 2 if it's currently placed there), Table 2.2
+**How to find it (CTRL+F):** `Table 2.2. Comparative Evaluation of LLM APIs`
+
+**Context:** The manuscript currently shows only 4 models (Groq/LLaMA 3.1, Gemini 2.0 Flash, GPT-4o, Mistral). The actual benchmarked selection now covers 13 models. The full benchmark is in `docs/LLM_Comparison_Table_Ch3.md`.
+
+**REPLACE the current Table 2.2 with this expanded version:**
+
+**Table 2.2. Comparative Evaluation of LLM APIs for SmartSpend Integration**
+
+| LLM / Model | Provider | Context Window | Speed (t/s) | Filipino-English | Tool Use / JSON | Free Tier | Selected? |
+|-------------|----------|---------------|-------------|-----------------|----------------|-----------|-----------|
+| **Gemini 3.1 Flash-Lite** | Google | 1,000,000 | ~400–600 | ★★★★★ Excellent | ★★★★★ | ✅ 1,000 req/day | ✅ **PRIMARY** |
+| **Gemini 3.5 Flash** | Google | 1,000,000 | ~200–400 | ★★★★★ Excellent | ★★★★★ | ✅ 250 req/day | ✅ Fallback 1 |
+| **LLaMA 3.3 70B** | Groq LPU | 128,000 | ~315 | ★★★★☆ Good | ★★★★★ | ✅ 14,400 req/day | ✅ Fallback 2 |
+| **LLaMA 3.1 8B** | Groq LPU | 8,192 | ~800 | ★★★★☆ Good | ★★★★☆ | ✅ 14,400 req/day | ✅ Fallback 3 |
+| **LLaMA 3.1 70B** | Cerebras WSE | 128,000 | ~1,800 | ★★★★☆ Good | ★★★★☆ | ✅ 1M tokens/day | ✅ Fallback 4 |
+| GPT-4o | OpenAI | 128,000 | ~80–120 | ★★★★★ Excellent | ★★★★★ | ❌ Paid only | ❌ Cost |
+| GPT-4o Mini | OpenAI | 128,000 | ~120 | ★★★★☆ Good | ★★★★★ | ❌ No free tier | ❌ Cost |
+| Claude 3.5 Sonnet | Anthropic | 200,000 | ~70–100 | ★★★★★ Excellent | ★★★★★ | ❌ Paid only | ❌ Cost |
+| Gemini 2.0 Flash | Google | 1,000,000 | ~150 | ★★★★☆ Good | ★★★★☆ | ⚠️ 15 req/min | ❌ Superseded |
+| Mistral 7B | Mistral AI | 32,000 | ~600 | ★★★☆☆ Fair | ★★★☆☆ | ✅ Self-host | ❌ Poor Filipino |
+| Phi-3 Mini 3.8B | Microsoft | 4,096 | ~900 | ★★☆☆☆ Poor | ★★☆☆☆ | ✅ Local | ❌ Too small |
+| Gemma 2 9B | Google | 8,192 | ~500 | ★★★☆☆ Fair | ★★★☆☆ | ✅ Local | ❌ No hosted API |
+| Mixtral 8x7B | Mistral/Groq | 32,000 | ~400 | ★★★☆☆ Fair | ★★★★☆ | ✅ Groq | ❌ Poor Filipino |
+
+**Selection criteria used (weighted):**
+1. Filipino-English accuracy (25%) — ability to parse Taglish expense descriptions
+2. Speed / Latency (20%) — response time for real-time mobile interaction (<3 seconds)
+3. Tool use / JSON reliability (20%) — consistent structured output for agentic actions
+4. Free tier availability (15%) — no cost for academic deployment
+5. Context window (10%) — fits user's full financial data injection
+6. Financial reasoning quality (10%) — accuracy on PH financial advisory queries
+
+**Why Gemini 3.1 Flash-Lite was selected as primary:**
+> Gemini 3.1 Flash-Lite offers the highest free request quota (1,000 req/day) among all evaluated models, combined with excellent Filipino-English understanding from Google's multilingual training, native function calling support, and a 1-million token context window. This makes it the optimal primary model for an academic mobile deployment serving up to 60 requests per user per day without cost.
+
+**Why not GPT-4o or Claude:**
+> Both require paid API keys with no sufficient free tier for sustained academic use. Their quality advantage does not justify the cost barrier for a capstone study.
+
+---
+
 ## SUMMARY CHECKLIST
 
 Use this to track your progress in Google Docs:
@@ -288,6 +369,8 @@ Use this to track your progress in Google Docs:
 - [ ] Fix 14 — Add citations justifying the 21–35 young professional age range
 - [ ] Fix 15 — Name Benjie G. Bucasas as technical/system validator (2 spots: Table 2.1 + paragraph)
 - [ ] Fix 16 — Add step-by-step data gathering procedure sub-section
+- [ ] Fix 17 — Table 1.2 (add BudgetPH and Alkansya AI as new app columns)
+- [ ] Fix 18 — Table 2.2 (expand LLM comparison from 4 to 13 models)
 
 ---
 

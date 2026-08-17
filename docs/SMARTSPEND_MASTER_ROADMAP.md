@@ -79,7 +79,8 @@
 | Chapter 4 | Results & Impact | ⏳ In progress | User testing data | Djaunathan (QA) |
 
 **References available:**
-- `docs/Competitor_Analysis_and_Feature_Ideas.md` — 9 apps compared
+- `docs/SmartSpend_App_and_LLM_Benchmark.md` — 14 apps compared + 10 LLMs benchmarked across 4 task types
+- `docs/Competitor_Analysis_and_Feature_Ideas.md` — original 9-app analysis with feature ideas
 - `docs/LLM_Comparison_Table_Ch3.md` — 10 LLM models benchmarked
 
 ### 2.3 Play Store Readiness
