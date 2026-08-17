@@ -62,6 +62,7 @@ Everything here is confirmed built, tested, and in the current build (v2.9.1 —
 - [x] Emergency fund outlier exclusion (3x category average + >₱1,000 + Want = excluded)
 - [x] 7 debug log bugs fixed (wallet double-logging, ACTION regex, is_want coercion, duplicate income, low income warning, fallback parser exclusions, ACTION format fix)
 - [x] Competitor analysis document (docs/Competitor_Analysis_and_Feature_Ideas.md)
+- [x] Comprehensive app & LLM benchmark (docs/SmartSpend_App_and_LLM_Benchmark.md) — 14 apps, 10 LLMs, 4 task types
 - [x] LLM comparison table for Chapter 3 (docs/LLM_Comparison_Table_Ch3.md)
 - [x] Play Store security guide (docs/PlayStore_Security_Guide.md)
 - [x] Capstone 2 Feature Analysis (docs/SmartSpend_Capstone2_Feature_Analysis.md)

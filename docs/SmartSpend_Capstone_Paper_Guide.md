@@ -78,20 +78,20 @@ Design, develop, and evaluate SmartSpend — an AI-assisted mobile personal fina
 4. **50/30/20 Budgeting Rule** (Elizabeth Warren, 2005) — SmartSpend implements this as a built-in analytics tracker
 
 ### Related Applications
-See `docs/Competitor_Analysis_and_Feature_Ideas.md` for the full comparison table.
+See `docs/SmartSpend_App_and_LLM_Benchmark.md` for the full comparison table (14 apps, including BudgetPH and Alkansya AI).
 
 **Summary for paper:**
-| App | AI | Offline | Filipino Language | Free | PH-Specific |
+| App | AI | Offline | Filipino Context | Free | PH-Specific |
 |-----|----|---------|--------------------|------|-------------|
-| Cleo | ✅ Snarky AI | ❌ | ❌ | Freemium | ❌ |
-| YNAB | ❌ | ❌ | ❌ | $14.99/mo | ❌ |
-| Monarch Money | Limited | ❌ | ❌ | $9.99/mo | ❌ |
-| GCash | ❌ (payments) | ❌ | Partial | ✅ Free | ✅ Partial |
+| YNAB | ❌ | ❌ | ❌ | ❌ $14.99/mo | ❌ |
+| Monarch Money | ⚠️ Limited | ❌ | ❌ | ❌ $9.99/mo | ❌ |
+| Copilot | ⚠️ Categorization | ❌ iOS only | ❌ | ❌ $10.99/mo | ❌ |
 | Tarsi (PH) | ❌ | ✅ | ✅ Partial | ✅ | ✅ Partial |
-| Lista (PH) | ❌ | ✅ | ✅ Partial | ✅ | ✅ Partial |
-| **SmartSpend** | ✅ 29 actions | ✅ Full | ✅ Full Taglish | ✅ Completely | ✅ Full |
+| **BudgetPH** | ✅ Insights | ✅ | ✅ Full Filipino | ✅ | ✅ Full |
+| **Alkansya AI** | ✅ Chat | ❌ | ✅ Filipino | ⚠️ Limited | ✅ Partial |
+| **SmartSpend** | ✅ 29 actions | ✅ Full | ✅ Full Taglish+AI | ✅ Completely | ✅ Full |
 
-**Key gap:** No existing app combines all five: Taglish AI + offline + PH financial knowledge + free + multi-modal input.
+**Key gap:** No existing app combines all six: Taglish AI + 29 agentic actions + offline + PH financial knowledge + free + multi-modal input. BudgetPH is the closest Filipino-first competitor but lacks voice input, OCR, barcode, and agentic AI.
 
 ### Related Studies
 - **Flores (2025)** — Financial freedom of Filipino workers: come-what-may attitude, informal savings, high debt without plan
@@ -120,7 +120,7 @@ Services Layer (AIChatService, DBService, ScoreService, etc.)
     ↓
 SQLite Local DB ←→ Firebase Firestore (cloud sync)
     ↓
-Multi-Model LLM API (Gemini 2.5 Flash-Lite → Gemini 2.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras)
+Multi-Model LLM API (Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras)
 ```
 
 **AI Architecture:** Agentic AI with dynamic context injection (NOT RAG)
@@ -152,7 +152,7 @@ Primary: **Gemini 3.1 Flash-Lite** (Google AI Studio)
 - Best reasoning quality among free models
 - Filipino-English: excellent (multilingual training)
 - Function calling: native support
-- Replaces Gemini 2.5 Flash-Lite (deprecated/unavailable to new users as of 2026)
+- Replaces Gemini 2.5 Flash-Lite (deprecated — unavailable to new API users as of early 2026)
 
 Fallback chain: Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1 70B
 
@@ -170,7 +170,7 @@ Fallback chain: Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B �
 | Cloud Sync | Firebase Firestore | Free Spark plan |
 | Authentication | Firebase Auth (email + Google) | — |
 | Crash Reporting | Firebase Crashlytics | — |
-| AI APIs | Gemini 2.5 Flash-Lite (primary), Groq, Cerebras | — |
+| AI APIs | Gemini 3.1 Flash-Lite (primary), Groq LLaMA 3.3 70B, Cerebras LLaMA 3.1 | — |
 | OCR | Google ML Kit Text Recognition | Latin script |
 | Barcode | mobile_scanner + Google ML Kit | — |
 | Barcode Lookup | Open Food Facts API + local PH DB | Free, no key |
@@ -261,7 +261,7 @@ A: RAG (Retrieval-Augmented Generation) is designed for large knowledge bases (t
 A: Yes — both through the UI (date picker + time picker in Edit Expense) and via AI chat ("move that grocery to last Tuesday"). All expense fields are fully editable.
 
 **Q: "What if the LLM API goes down?"**
-A: SmartSpend implements a 5-provider automatic fallback: Gemini 2.5 Flash-Lite → Gemini 2.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1. If all models hit daily limits, manual expense entry via the + button still works without AI.
+A: SmartSpend implements a 5-provider automatic fallback: Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1. If all models hit daily limits, manual expense entry via the + button still works without AI.
 
 **Q: "Why no bank integration?"**
 A: Philippine open banking (BSP Open Finance) only launched in pilot in July 2025 with UnionBank as the first participant. SmartSpend's architecture is designed for integration as the framework matures. Currently, users can import GCash/bank history via text paste or OCR screenshot.

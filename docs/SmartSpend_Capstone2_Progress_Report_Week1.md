@@ -128,6 +128,8 @@ The system is fully functional and deployed as a release APK.
 | Defense Reviewer (pre-defense cheat sheet) | /docs/SmartSpend_Defense_Reviewer.md | ✅ Complete |
 | Week 1 Progress Report (this document) | /docs/SmartSpend_Capstone2_Progress_Report_Week1.md | ✅ Complete |
 | Competitor Analysis & Feature Ideas | /docs/Competitor_Analysis_and_Feature_Ideas.md | ✅ Updated v2.9.2 |
+| **App & LLM Benchmark (14 apps, 10 LLMs)** | /docs/SmartSpend_App_and_LLM_Benchmark.md | ✅ New — Aug 2026 |
+| **System Overview (adviser/panel reference)** | /docs/SmartSpend_System_Overview.md | ✅ New — Aug 2026 |
 | Capstone 2 TODO & Feature Analysis | /docs/SmartSpend_Capstone2_Feature_Analysis.md | ✅ Updated v2.9.2 |
 | LLM Comparison Table (Chapter 3) | /docs/LLM_Comparison_Table_Ch3.md | ✅ Updated v2.9.2 |
 | Paper Guide (Chapters 1–5) | /docs/SmartSpend_Capstone_Paper_Guide.md | ✅ Updated v2.9.2 |
@@ -310,11 +312,11 @@ Status of all 29 panel recommendations from the Capstone 1 re-defense evaluation
 | 3 | Real financial problem identified with data | BSP: only 2% answered all 6 literacy questions; PSA FIES: households spend beyond income; Flores 2025: "come-what-may" attitude |
 | 4 | International and national gap with evidence | Table 1.1 — Three-Level Gap Analysis (International / National PH / Demographic) |
 | 5 | Solution follows naturally from identified problem | Narrative flows: gap → SmartSpend solution throughout Project Context |
-| 6 | Compare to existing apps | Table 1.2 — Feature Comparison vs Tarsi, YNAB, Monarch, Copilot, PocketGuard |
-| 7 | Find existing projects with results, gaps, and recommendations | Tarsi, YNAB, Monarch, Copilot, PocketGuard — each discussed with specific gap analysis |
+| 6 | Compare to existing apps | Table 1.2 — Feature Comparison vs Tarsi, YNAB, Monarch, Copilot, PocketGuard, **BudgetPH**, **Alkansya AI** (Fix 17 in fix guide adds the two new Filipino app columns) |
+| 7 | Find existing projects with results, gaps, and recommendations | Tarsi, YNAB, Monarch, Copilot, PocketGuard — each discussed; **BudgetPH and Alkansya AI added** in `docs/SmartSpend_App_and_LLM_Benchmark.md` with full gap analysis |
 | 8 | Articles proving financial problems exist (mahal ang gasolina, debt culture) | Flores 2025 (debt culture, come-what-may), BSP 2021, PSA FIES 2021, World Bank 2022 |
 | 9 | Literature Review as separate objective | Correctly NOT added as separate objective — per Lorma template, RRL is integrated into Project Context (confirmed by adviser feedback v3/v4) |
-| 10 | Comparative analysis of LLMs — justify best choice | Table 2.2 in Ch3 draft: Groq/LLaMA 3.1, Gemini 2.0 Flash, GPT-4o, Mistral compared across 4 criteria |
+| 10 | Comparative analysis of LLMs — justify best choice | Table 2.2 in Ch3 draft now covers **13 models** (Gemini 3.1 Flash-Lite primary + 4 fallbacks + 8 evaluated/rejected) across 6 criteria — see `docs/LLM_Comparison_Table_Ch3.md` and Fix 18 in fix guide |
 | 11 | LLM processing and feedback — explain how it works | Zero-shot/few-shot prompting paragraph present; user feedback for prompt refinement explained |
 | 17 | Descriptive developmental label — correct terminology | "descriptive-developmental research approach" explicitly stated in Research Design section |
 | 18 | FHS basis and computation — explain clearly | Full 4-component formula with weights, both modes (Full + Lightweight), detailed in Ch3 draft |
