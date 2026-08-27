@@ -1,6 +1,6 @@
 # SmartSpend — System Overview
 ## How the Application Works
-**Version:** 2.9.6 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.7 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 **Prepared for:** Adviser Introduction & Panel Defense Reference
 
 ---
@@ -289,10 +289,10 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 | Item | Status |
 |------|--------|
-| System development | ✅ Complete — v2.9.6 |
+| System development | ✅ Complete — v2.9.7 |
 | All 20 modules | ✅ Implemented and tested |
 | GitHub repository | ✅ Public — github.com/Zushikina-kun/smartspend-app |
-| Release APK | ✅ Available — v2.9.6 (arm64-v8a: 44.7 MB) |
+| Release APK | ✅ Available — v2.9.7 (arm64-v8a: 44.7 MB) |
 | Chapters 1 & 2 | ✅ Complete in manuscript |
 | Panel recommendations (29) | ✅ 21 done / 7 ready to apply in Google Docs / 2 physical action pending |
 | Pre-final defense readiness | ✅ Confirmed by teacher-in-charge |
@@ -328,7 +328,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 ---
 
-*SmartSpend v2.9.6 — Lucid Frame*
+*SmartSpend v2.9.7 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Capstone Adviser: Johnny Verzola, MTS (reassignment pending)*

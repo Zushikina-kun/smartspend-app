@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.6 | **Date:** August 27, 2026
+**Version:** 2.9.7 | **Date:** August 27, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.6).
+> All figures are accurate to the final build (v2.9.7).
 
 ---
 
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.6
+**Version:** 2.9.7
 **Build date:** August 11, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -363,7 +363,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | installments | Installment payment records |
 | insurance_policies | Insurance policy tracker |
 
-**New settings keys (v2.9.1):**
+**New settings keys (v2.9.3+):**
 - `income_wallet_mode` — true/false (Lightweight Mode)
 - `limit_daily` / `limit_weekly` / `limit_monthly` / `limit_yearly` — spending limits
 - `gap_penalty_days` / `gap_clean_days` — FHS gap adjustments
@@ -543,6 +543,6 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-*SmartSpend v2.9.6 — Lucid Frame*
+*SmartSpend v2.9.7 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
 *Last updated: August 27, 2026*

@@ -771,7 +771,7 @@ These things from the actual app should be in Chapter 3:
 
 ---
 
-*Fix guide prepared by Kiro — based on comparing the manuscript against the actual v2.9.1 build*
+*Fix guide prepared by Kiro — based on comparing the manuscript against the actual v2.9.7 build — all fixes now applied in docs/manuscript/SMARTSPEND_REVISED_MANUSCRIPT.md*
 *For questions: refer to `docs/CAPSTONE_REFERENCE.md` for all accurate numbers*
 
 
