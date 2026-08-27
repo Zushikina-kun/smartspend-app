@@ -1,5 +1,5 @@
 # SmartSpend — Capstone Defense Reviewer
-**Version 2.9.3 | August 2026 | Lucid Frame**
+**Version 2.9.4 | August 2026 | Lucid Frame**
 
 > Quick-reference guide for the defense presentation. Read this before your pre-final and final defenses.
 
@@ -121,7 +121,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | 2.9.3 |
+| Version | 2.9.4 |
 | Platform | Android (Flutter) |
 | Database | SQLite version 11, 20 tables |
 | AI providers | 5 (auto-failover) |

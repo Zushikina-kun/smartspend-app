@@ -1,6 +1,6 @@
 # SmartSpend — System Overview
 ## How the Application Works
-**Version:** 2.9.3 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.4 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 **Prepared for:** Adviser Introduction & Panel Defense Reference
 
 ---
@@ -284,7 +284,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 | Item | Status |
 |------|--------|
-| System development | ✅ Complete — v2.9.3 |
+| System development | ✅ Complete — v2.9.4 |
 | All 20 modules | ✅ Implemented and tested |
 | GitHub repository | ✅ Public — github.com/Zushikina-kun/smartspend-app |
 | Release APK | ✅ Available — v2.9.2 (arm64-v8a: 44.7 MB) |

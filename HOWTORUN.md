@@ -1,6 +1,6 @@
 # Smart Spend — How to Run & Build
 
-**Version:** 2.9.3 | **Platform:** Android (Flutter)
+**Version:** 2.9.4 | **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
 
 ---
