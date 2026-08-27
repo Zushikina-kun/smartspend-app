@@ -543,3 +543,163 @@ Nielsen, J. (2006). *Progressive disclosure*. Nielsen Norman Group. https://www.
 Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. *Cognitive Science, 12*(2), 257–285.
 
 *Content was paraphrased and summarized for compliance with licensing restrictions.*
+
+---
+
+## PART 11 — GENERAL vs FINANCE-SPECIALIZED LLMs FOR SMARTSPEND
+
+### 11.1 Core Finding
+
+> **A financial application does not require a finance-specialized LLM as its primary language model. Modern general-purpose frontier LLMs are highly capable in financial reasoning and often perform at or above specialized financial models on broad personal-finance tasks. Finance-specialized models offer advantages on specific financial NLP tasks but are not universally superior.**
+
+The more important architectural decision is whether the LLM is used as the sole intelligence (wrong) or as the natural-language layer on top of deterministic financial logic (correct).
+
+Source: FrontierFinance benchmark (arXiv:2608.11683, 2026); Li et al. (2024) Survey of FinLLMs; FinRCA-Bench (arXiv:2608.18534, 2026) on retrieval importance.
+
+---
+
+### 11.2 Categories of Financial AI Models
+
+**Category 1 — Financial NLP models** (FinBERT, FLANG)
+Designed for classification, sentiment, NER, financial-language understanding. NOT conversational assistants. Only relevant if SmartSpend adds specialized financial sentiment analysis.
+
+**Category 2 — Finance instruction-tuned LLMs** (FinGPT, FinMA/PIXIU, InvestLM, FinTral)
+General foundation models specialized using financial datasets. FinGPT (Liu et al., 2023) uses LoRA/QLoRA fine-tuning on 34+ financial data sources. Research (arXiv:2507.08015) confirms FinGPT is strong at classification/sentiment but significantly weaker on reasoning, QA, and summarization compared to frontier general models.
+
+**Category 3 — Financial reasoning LLMs** (Fin-R1)
+Fin-R1 (Liu et al., 2025; arXiv:2503.16252) is a 7B-parameter model trained with reinforcement learning on financial reasoning datasets. Achieves SOTA on FinQA and ConvFinQA benchmarks with an average score of 75.2, second place overall in its evaluation. Important as a research baseline.
+
+**Category 4 — General-purpose frontier LLMs** (GPT-5.6, Gemini 3.1, Claude, DeepSeek V4)
+Not exclusively financial but highly capable in financial tasks when given proper context. FrontierFinance benchmark (2026) found that tool harness architecture significantly affects performance — stronger than base LLM choice alone.
+
+---
+
+### 11.3 Why "Finance LLM = Better Finance AI" Is Incorrect for SmartSpend
+
+| Task | Best Tool |
+|------|-----------|
+| OCR text extraction | Google ML Kit (not LLM) |
+| Receipt parsing / JSON extraction | General multimodal LLM (Gemini 3.1 Flash-Lite) |
+| Expense categorization | LLM + deterministic rules + user history |
+| Financial calculations (FHS, budget, savings rate) | Application code — **never LLM** |
+| Natural language explanation of score | General LLM with injected context |
+| Filipino-English conversational advice | General multilingual LLM |
+| Financial reasoning / QA | General frontier LLM or Fin-R1 (research) |
+| Specialized financial sentiment | FinBERT (only if needed) |
+
+**Key insight:** A finance LLM trained on earnings reports and SEC filings may be worse than a general LLM at "analyze my Shopee purchases and explain my spending habits in Filipino."
+
+---
+
+### 11.4 Model Landscape — August 2026
+
+> **Note for paper:** Prices and rankings change rapidly. Cite official provider documentation for current figures, and label this section "Current Model Landscape — August 2026."
+
+| Model | Input $/1M | Output $/1M | Context | Receipt | Reasoning | Filipino | Free Tier |
+|-------|-----------|------------|---------|---------|-----------|---------|-----------|
+| GPT-5.6 Sol | $5.00 | $30.00 | 1.05M | ★★★★★ | ★★★★★ | ★★★★ | ❌ |
+| GPT-5.6 Terra | $2.00 | $12.00 | 1.05M | ★★★★★ | ★★★★★ | ★★★★ | ❌ |
+| GPT-5.6 Luna | $0.20 | $1.20 | 1.05M | ★★★★ | ★★★★ | ★★★★ | ❌ |
+| Gemini 3.1 Flash-Lite | $0.25 | $1.50 | 1M | ★★★★★ | ★★★★ | ★★★★★ | ✅ 1,000/day |
+| Gemini 3.1 Pro | ~$1.25 | ~$5.00 | 2M | ★★★★★ | ★★★★★ | ★★★★★ | ✅ 100/day |
+| DeepSeek V4 Pro | $0.435 | $0.87 | 1M | ★★★★ | ★★★★★ | ★★★ | ⚠️ 5M trial |
+| Fin-R1 (7B) | Free (self-host) | — | 128K | ★★ | ★★★★★ | ★★★ | ✅ |
+| FinGPT (research) | Free (self-host) | — | Varies | ★★ | ★★★ | ★★ | ✅ |
+
+*Sources: OpenAI pricing (developers.openai.com, post July 30 2026 cut); Google AI pricing (ai.google.dev); DeepSeek API docs (api-docs.deepseek.com); Fin-R1 (arXiv:2503.16252). Content paraphrased for compliance.*
+
+**Why SmartSpend uses Gemini 3.1 Flash-Lite as primary:**
+1. Highest free tier (1,000 req/day) — sufficient for 60 req/user/day academic deployment
+2. Best Filipino-English multilingual performance (Google's training data coverage)
+3. 1M token context window — fits full user financial context
+4. Native function calling / structured JSON output
+5. Multimodal (can handle images/receipts)
+
+---
+
+### 11.5 SmartSpend Hybrid AI Architecture
+
+Based on FrontierFinance (2026) finding that tool harness matters more than base LLM; FinRCA-Bench (2026) finding that retrieval architecture dramatically affects accuracy; FinDeepIndicator (2026) finding that LLMs degrade in numerical execution.
+
+**Three-layer architecture:**
+
+```
+Layer 1 — Data (SQLite / Firestore)
+  ↓ structured retrieval
+Layer 2 — Deterministic Engine (score_service.dart, financial formulas)
+  ↓ calculated metrics
+Layer 3 — Generative AI (LLM explains results, answers questions)
+  ↓ natural language output
+```
+
+**Why this is architecturally superior:**
+- No hallucinated account balances, scores, or transaction data
+- Consistent scores — same input always produces same FHS
+- Auditable — every number traceable to a formula
+- Cheaper — LLM only generates text, never computes numbers
+- Safer — LLM cannot override the finance engine
+
+**Aligned with SmartSpend's existing design:** `ScoreService.calculateScore()` is deterministic; AI receives pre-calculated context and generates explanations. The 29 agentic actions write to the database but do not compute the FHS.
+
+---
+
+### 11.6 SmartSpend Safety Principles for AI
+
+Based on InvestLogicBench (arXiv:2608.06108, 2026) finding that models produce plausible but ungrounded reasoning; FinDeepIndicator (2026) finding severe numerical degradation.
+
+**Hard rules SmartSpend enforces:**
+1. LLM never calculates FHS, budget utilization, or savings rate — always the finance engine
+2. LLM context injection always includes pre-calculated values before each message
+3. AI responses reference user's actual data (not invented values) — enforced by context injection architecture
+4. Financial advice disclaimer required on all AI responses
+
+---
+
+### 11.7 Proposed SmartSpend LLM Evaluation Methodology
+
+The most valuable Capstone contribution would be a **custom SmartSpend evaluation dataset** rather than relying only on vendor benchmarks.
+
+**Recommended 5 test categories:**
+
+| Category | What it tests | Metric |
+|----------|--------------|--------|
+| A. Receipt extraction | OCR text → JSON (merchant, items, total, date) | Field accuracy, JSON validity |
+| B. Expense classification | "Jollibee order ₱149" → category | Accuracy, F1 |
+| C. Numerical accuracy | Given income/expenses, compute savings rate | Exact match |
+| D. Financial reasoning | "My food spending is ₱7,000 vs ₱3,000 budget. What should I do?" | Correctness, groundedness |
+| E. Hallucination resistance | "How much is in my GCash?" (no data provided) | Correct refusal rate |
+
+**Models to benchmark:** Gemini 3.1 Flash-Lite (current primary), LLaMA 3.3 70B (current fallback), Fin-R1 (finance specialist), GPT-5.6 Luna (low-cost general), DeepSeek V4 Pro (budget alternative).
+
+**Research questions this addresses:**
+- RQ: Does finance-specific specialization improve results on SmartSpend's mixed personal-finance workload?
+- RQ: Which model provides the best capability-to-cost ratio for SmartSpend?
+- RQ: Does Gemini 3.1 Flash-Lite outperform finance-specialized models on Filipino-English expense parsing?
+
+---
+
+### 11.8 APA References (Part 11)
+
+Arcila, A., et al. (2026). *FrontierFinance: A challenging benchmark for measuring frontier intelligence of finance agents*. arXiv:2608.11683. https://arxiv.org/abs/2608.11683
+
+Bai, J., et al. (2024). *FinTral: A family of GPT-4 level multimodal financial large language models*. arXiv:2402.10986. https://arxiv.org/abs/2402.10986
+
+Liu, X., et al. (2023). *FinGPT: Open-source financial large language models*. arXiv:2306.06031. https://arxiv.org/abs/2306.06031
+
+Liu, Z., et al. (2025). *Fin-R1: A large language model for financial reasoning through reinforcement learning*. arXiv:2503.16252. https://arxiv.org/abs/2503.16252
+
+OpenAI. (2026). *GPT-5.6 model family — API pricing*. https://developers.openai.com/api/docs/pricing
+
+Google AI for Developers. (2026). *Gemini API pricing*. https://ai.google.dev/gemini-api/docs/pricing
+
+DeepSeek. (2026). *Models and pricing*. https://api-docs.deepseek.com/quick_start/pricing/
+
+Xiao, Z., et al. (2026). *FinRCA-Bench: Benchmarking evidence retrieval and reasoning for financial AI systems*. arXiv:2608.18534. https://arxiv.org/abs/2608.18534
+
+Wu, S., et al. (2023). *BloombergGPT: A large language model for finance*. arXiv:2303.17564. https://arxiv.org/abs/2303.17564
+
+Xie, Q., et al. (2023). *PIXIU: A large language model, instruction data and evaluation benchmark for finance*. arXiv:2306.05443. https://arxiv.org/abs/2306.05443
+
+Li, Z., et al. (2024). *A survey of large language models for financial applications*. arXiv:2406.11903. https://arxiv.org/abs/2406.11903
+
+*Content was paraphrased and summarized for compliance with licensing restrictions.*
