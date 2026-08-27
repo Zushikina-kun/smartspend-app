@@ -53,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double _totalDebts = 0;
   List<Map<String, dynamic>> _scoreBreakdown = [];
   List<Map<String, dynamic>> _wallets = [];
+  List<Map<String, dynamic>> _thisMonthExpenses = [];
   UserProfile? _profile;
   String _accountType = 'employed';
   String _incomeFrequency = 'monthly';
@@ -139,6 +140,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _incomeFrequency = incomeFreq;
           _incomeWalletMode = iwMode;
           _spendingLimit = tightest['limit'] as double;
+          _thisMonthExpenses = thisMonthExpenses
+              .map((e) =>
+                  {'amount': e.amount, 'category': e.category, 'date': e.date})
+              .toList();
           _loading = false;
         });
       }
@@ -629,7 +634,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 value: showDTI,
                 onChanged: (v) {
                   setSheet(() => showDTI = v);
-                  DBService.setSetting('show_dti', v ? 'true' : 'false'); fireEvent(AppEvent.incomeChanged);
+                  DBService.setSetting('show_dti', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
                 },
               ),
               _settingsTile(
@@ -650,7 +656,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 value: showMilestones,
                 onChanged: (v) {
                   setSheet(() => showMilestones = v);
-                  DBService.setSetting('show_milestones', v ? 'true' : 'false'); fireEvent(AppEvent.incomeChanged);
+                  DBService.setSetting('show_milestones', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
                 },
               ),
               _settingsTile(
@@ -2128,6 +2135,126 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 16),
                     ],
+
+                    // Financial Management Score — separate from FHS
+                    // Measures HOW WELL the user is using SmartSpend
+                    FutureBuilder<Map<String, dynamic>>(
+                      future: () async {
+                        final goals = await DBService.getGoals();
+                        final budgets = await DBService.getBudgets();
+                        return FinancialManagement.getFinancialManagementScore(
+                          thisMonthExpenses: _thisMonthExpenses,
+                          budgets: budgets,
+                          goals: goals,
+                          monthlyIncome: _monthlyIncome,
+                          incomeWalletMode: _incomeWalletMode,
+                          wallets: _wallets,
+                        );
+                      }(),
+                      builder: (ctx, snap) {
+                        if (!snap.hasData) return const SizedBox.shrink();
+                        final fms = snap.data!;
+                        final fmsScore = fms['score'] as int;
+                        final fmsLabel = fms['label'] as String;
+                        final fmsBd =
+                            fms['breakdown'] as List<Map<String, dynamic>>;
+                        final fmsColor = fmsScore >= 85
+                            ? Colors.purple
+                            : fmsScore >= 70
+                                ? Colors.blue
+                                : fmsScore >= 50
+                                    ? Colors.teal
+                                    : Colors.grey;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(children: [
+                                Text("Financial Management",
+                                    style: Theme.of(ctx).textTheme.titleMedium),
+                                const SizedBox(width: 6),
+                                const InfoButton(
+                                  title: "Financial Management Score",
+                                  body:
+                                      "Measures how well you USE SmartSpend — separate from your actual financial health.\n\n"
+                                      "Components:\n"
+                                      "• Logging Consistency — recording expenses daily\n"
+                                      "• Budget Setup — having category budgets configured\n"
+                                      "• Goal Tracking — savings goals with progress\n"
+                                      "• Data Completeness — income and wallet data entered\n\n"
+                                      "Based on: MindsBudget spending-discipline methodology + research recommendation to separate financial health outcomes from management behavior.",
+                                  size: 14,
+                                ),
+                              ]),
+                            ),
+                            const SizedBox(height: 8),
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(children: [
+                                      Text("$fmsScore / 100",
+                                          style: TextStyle(
+                                              fontSize: 26,
+                                              fontWeight: FontWeight.bold,
+                                              color: fmsColor)),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                          child: Text(fmsLabel,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: fmsColor,
+                                                  fontWeight:
+                                                      FontWeight.w500))),
+                                    ]),
+                                    const SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: fmsScore / 100,
+                                        minHeight: 7,
+                                        backgroundColor:
+                                            fmsColor.withValues(alpha: 0.12),
+                                        valueColor:
+                                            AlwaysStoppedAnimation(fmsColor),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    ...fmsBd.map((item) {
+                                      final pts = item['points'] as int;
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 6),
+                                        child: Row(children: [
+                                          Expanded(
+                                              child: Text(
+                                                  '${item['label']} — ${item['reason']}',
+                                                  style: const TextStyle(
+                                                      fontSize: 11))),
+                                          Text('$pts/25',
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: pts >= 20
+                                                      ? Colors.green
+                                                      : pts >= 12
+                                                          ? Colors.orange
+                                                          : Colors.red)),
+                                        ]),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        );
+                      },
+                    ),
 
                     // Settings
                     Card(

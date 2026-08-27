@@ -1025,3 +1025,224 @@ class ExpenseValidation {
 
   bool get hasWarnings => warnings.isNotEmpty;
 }
+
+// ── FINANCIAL MANAGEMENT SCORE ───────────────────────────────────────────────
+// Separate from the Financial Health Score.
+// Measures HOW WELL the user manages their finances using SmartSpend.
+// Based on: Sweller (1988) Cognitive Load Theory; Nielsen (2006) Progressive Disclosure;
+// MindsBudget spending-discipline methodology; research recommendation to separate
+// financial health outcomes from financial management behavior.
+//
+// Components (25 pts each = 100 total):
+//   1. Logging Consistency — how regularly expenses are recorded
+//   2. Budget Setup       — whether the user has set up budgets/limits
+//   3. Goal Tracking      — whether savings goals exist and are maintained
+//   4. Data Completeness  — income set + wallets used (if income mode on)
+extension FinancialManagement on ScoreService {
+  /// Returns a Financial Management Score (0–100) with breakdown.
+  /// This score measures HOW WELL the user is using SmartSpend,
+  /// separate from their actual financial health outcomes.
+  static Future<Map<String, dynamic>> getFinancialManagementScore({
+    required List<Map<String, dynamic>> thisMonthExpenses,
+    required List<dynamic> budgets,
+    required List<Map<String, dynamic>> goals,
+    required double monthlyIncome,
+    required bool incomeWalletMode,
+    required List<Map<String, dynamic>> wallets,
+  }) async {
+    final breakdown = <Map<String, dynamic>>[];
+    final now = DateTime.now();
+    final daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
+    final daysPassed = now.day.clamp(1, daysInMonth);
+
+    // ── 1. LOGGING CONSISTENCY (25 pts) ──────────────────────────────────────
+    // Same formula as FHS Full Mode Component 4, but lives here instead.
+    double comp1 = 0;
+    String comp1Reason;
+    if (thisMonthExpenses.isNotEmpty) {
+      final currentMonthKey =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}';
+      final thisMonthDates = thisMonthExpenses
+          .map((e) => (e['date'] as String).substring(0, 10))
+          .where((d) => d.startsWith(currentMonthKey))
+          .toSet();
+      final loggedDays = thisMonthDates.length;
+      int activeDays = daysPassed.clamp(1, daysInMonth);
+      if (thisMonthDates.isNotEmpty) {
+        try {
+          final firstThisMonth = thisMonthDates
+              .map((d) => DateTime.parse(d))
+              .reduce((a, b) => a.isBefore(b) ? a : b);
+          final span = now.difference(firstThisMonth).inDays + 1;
+          activeDays = span.clamp(1, daysPassed);
+        } catch (_) {}
+      }
+      if (loggedDays > 0 && activeDays > loggedDays * 2) {
+        activeDays = loggedDays * 2;
+      }
+      final ratio = (loggedDays / activeDays).clamp(0.0, 1.0);
+      comp1 = ratio * 25;
+      comp1Reason = loggedDays >= activeDays
+          ? 'Logging every active day ✓'
+          : 'Logged $loggedDays of $activeDays days this month';
+    } else {
+      comp1Reason = 'Start logging to build your management score';
+    }
+    breakdown.add({
+      'label': 'Logging Consistency',
+      'points': comp1.round(),
+      'max': 25,
+      'reason': comp1Reason,
+      'icon': 'edit',
+    });
+
+    // ── 2. BUDGET SETUP (25 pts) ──────────────────────────────────────────────
+    // Rewards having budgets configured and maintained.
+    double comp2 = 0;
+    String comp2Reason;
+    if (budgets.isEmpty) {
+      comp2 = 0;
+      comp2Reason = 'Set category budgets to improve this score';
+    } else if (budgets.length >= 5) {
+      comp2 = 25;
+      comp2Reason = '${budgets.length} budgets configured ✓';
+    } else {
+      comp2 = (budgets.length / 5.0).clamp(0.0, 1.0) * 25;
+      comp2Reason =
+          '${budgets.length} budget${budgets.length == 1 ? '' : 's'} — add more categories for full score';
+    }
+    breakdown.add({
+      'label': 'Budget Setup',
+      'points': comp2.round(),
+      'max': 25,
+      'reason': comp2Reason,
+      'icon': 'tune',
+    });
+
+    // ── 3. GOAL TRACKING (25 pts) ─────────────────────────────────────────────
+    // Rewards having active savings goals with progress.
+    double comp3 = 0;
+    String comp3Reason;
+    if (goals.isEmpty) {
+      comp3 = 0;
+      comp3Reason = 'Set savings goals to improve this score';
+    } else {
+      final activeGoals =
+          goals.where((g) => (g['target_amount'] as num? ?? 0) > 0).length;
+      final progressGoals = goals.where((g) {
+        final target = (g['target_amount'] as num? ?? 0).toDouble();
+        final current = (g['current_amount'] as num? ?? 0).toDouble();
+        return target > 0 && current > 0;
+      }).length;
+      if (activeGoals >= 2 && progressGoals >= 1) {
+        comp3 = 25;
+        comp3Reason =
+            '$activeGoals goals tracked, $progressGoals with progress ✓';
+      } else if (activeGoals >= 1) {
+        comp3 = 15;
+        comp3Reason =
+            '$activeGoals goal${activeGoals == 1 ? '' : 's'} — start contributing to increase score';
+      } else {
+        comp3 = 5;
+        comp3Reason = 'Set target amounts for your goals';
+      }
+    }
+    breakdown.add({
+      'label': 'Goal Tracking',
+      'points': comp3.round(),
+      'max': 25,
+      'reason': comp3Reason,
+      'icon': 'flag',
+    });
+
+    // ── 4. DATA COMPLETENESS (25 pts) ─────────────────────────────────────────
+    // Rewards having income set and wallets configured (when in income mode).
+    double comp4 = 0;
+    String comp4Reason;
+    if (!incomeWalletMode) {
+      // Lightweight mode: just check that a spending limit is set
+      final limitSet = await DBService.getSetting('limit_monthly') != null ||
+          await DBService.getSetting('limit_weekly') != null ||
+          await DBService.getSetting('limit_daily') != null;
+      comp4 = limitSet ? 25 : 10;
+      comp4Reason = limitSet
+          ? 'Spending limit configured ✓'
+          : 'Set a spending limit for a more accurate score';
+    } else {
+      double pts = 0;
+      if (monthlyIncome > 0) pts += 12;
+      final walletCount =
+          wallets.where((w) => (w['balance'] as num? ?? 0) > 0).length;
+      if (walletCount >= 1) pts += 13;
+      comp4 = pts.clamp(0, 25);
+      if (monthlyIncome > 0 && walletCount >= 1) {
+        comp4Reason = 'Income and wallet data entered ✓';
+      } else if (monthlyIncome > 0) {
+        comp4Reason = 'Income set — add wallet balances to complete';
+      } else {
+        comp4Reason = 'Enter your income to unlock full scoring';
+      }
+    }
+    breakdown.add({
+      'label': 'Data Completeness',
+      'points': comp4.round(),
+      'max': 25,
+      'reason': comp4Reason,
+      'icon': 'cloud_done',
+    });
+
+    final totalScore = (comp1 + comp2 + comp3 + comp4).round().clamp(0, 100);
+
+    // Label
+    final String label;
+    if (totalScore >= 85) {
+      label = 'Expert Tracker';
+    } else if (totalScore >= 70) {
+      label = 'Active Manager';
+    } else if (totalScore >= 50) {
+      label = 'Getting Started';
+    } else {
+      label = 'Set Up Your Profile';
+    }
+
+    return {
+      'score': totalScore,
+      'label': label,
+      'breakdown': breakdown,
+    };
+  }
+}
+
+// ── SCORE TREND ───────────────────────────────────────────────────────────────
+extension ScoreTrend on ScoreService {
+  /// Returns the difference between today's FHS and the score from ~30 days ago.
+  /// Positive = improving, Negative = declining, 0 = not enough history.
+  static Future<int> getScoreTrend() async {
+    try {
+      final history = await DBService.getScoreHistory(days: 35);
+      if (history.length < 5) return 0;
+      // Current score = average of last 3 entries
+      final recent = history.reversed.take(3).toList();
+      final recentAvg =
+          recent.map((h) => (h['score'] as int)).reduce((a, b) => a + b) ~/
+              recent.length;
+      // Past score = average of entries around 25-35 days ago
+      final old = history.where((h) {
+        try {
+          final d = DateTime.parse(h['date'] as String);
+          final diff = DateTime.now().difference(d).inDays;
+          return diff >= 25 && diff <= 35;
+        } catch (_) {
+          return false;
+        }
+      }).toList();
+      if (old.isEmpty) return 0;
+      final oldAvg =
+          old.map((h) => (h['score'] as int)).reduce((a, b) => a + b) ~/
+              old.length;
+      return recentAvg - oldAvg;
+    } catch (_) {
+      return 0;
+    }
+  }
+}

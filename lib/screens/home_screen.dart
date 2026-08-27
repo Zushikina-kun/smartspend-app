@@ -1316,9 +1316,38 @@ class _DashboardState extends State<Dashboard> {
   }
 
   String _scoreLabel(int s) {
-    if (s >= 80) return "Good 🟢";
-    if (s >= 60) return "Fair 🟡";
-    return "Needs Attention 🔴";
+    if (s >= 90) return "Excellent 👑";
+    if (s >= 80) return "Great 🏆";
+    if (s >= 70) return "Good ⭐";
+    if (s >= 60) return "Fair 🌱";
+    return "Needs Work 📉";
+  }
+
+  /// Per-component actionable recommendation shown in FHS breakdown dialog.
+  static String _componentRec(String component, int pts, bool incomeMode) {
+    if (pts >= 20) return ''; // good enough — no tip needed
+    switch (component) {
+      case 'savings_rate':
+        return pts == 0
+            ? 'Set your income first to track savings rate'
+            : 'Try saving ₱500 more per month to improve this component';
+      case 'overspend_control':
+        return 'Avoid spending more than your daily budget (income ÷ days in month) on most days';
+      case 'budget_adherence':
+        return pts == 0
+            ? 'Set category budgets (e.g. Food, Transport) to enable this component'
+            : 'Keep spending under your category limits — especially the ones marked over budget';
+      case 'logging_consistency':
+        return 'Log at least one expense every day you spend money — even a small one';
+      case 'spending_restraint':
+        return 'Stay within your ${incomeMode ? 'spending limit' : 'set spending limit'} — try the daily view to track pace';
+      case 'category_balance':
+        return 'Spread spending across more categories instead of concentrating on one';
+      case 'habit_streak':
+        return 'Log something every day — a 14-day streak earns full points here';
+      default:
+        return 'Keep improving your habits to raise this component';
+    }
   }
 
   Widget _buildRecurringAutoLogCard(BuildContext context) {
@@ -3195,24 +3224,108 @@ class _DashboardState extends State<Dashboard> {
                         showDialog(
                           context: context,
                           builder: (_) => AlertDialog(
-                            title: Text("Health Score: $_score / 100"),
+                            title: Row(
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                        "Financial Health: $_score / 100")),
+                                Text(
+                                  _score >= 80
+                                      ? "🏆"
+                                      : _score >= 60
+                                          ? "⭐"
+                                          : "📉",
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                              ],
+                            ),
                             content: SingleChildScrollView(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    _score >= 80
-                                        ? "🟢 Good — keep it up!"
-                                        : _score >= 60
-                                            ? "🟡 Fair — a few areas to improve."
-                                            : "🔴 Needs Attention — review your spending.",
-                                    style: const TextStyle(fontSize: 13),
+                                  // Score classification label
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: (_score >= 80
+                                              ? Colors.green
+                                              : _score >= 60
+                                                  ? Colors.orange
+                                                  : Colors.red)
+                                          .withValues(alpha: 0.12),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      _score >= 90
+                                          ? "👑 Excellent — Elite financial habits"
+                                          : _score >= 80
+                                              ? "🏆 Great — Strong financial control"
+                                              : _score >= 70
+                                                  ? "⭐ Good — On the right track"
+                                                  : _score >= 60
+                                                      ? "🌱 Fair — Building momentum"
+                                                      : "📉 Needs Work — Focus on core habits",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: _score >= 80
+                                            ? Colors.green[700]
+                                            : _score >= 60
+                                                ? Colors.orange[700]
+                                                : Colors.red[700],
+                                      ),
+                                    ),
                                   ),
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: 14),
+                                  // Top strength & weakness
+                                  Builder(builder: (_) {
+                                    if (breakdown.isEmpty)
+                                      return const SizedBox.shrink();
+                                    final sorted = [...breakdown]..sort(
+                                        (a, b) => (b['points'] as int)
+                                            .compareTo(a['points'] as int));
+                                    final strongest = sorted.first;
+                                    final weakest = sorted.last;
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(children: [
+                                          const Text("✅ ",
+                                              style: TextStyle(fontSize: 13)),
+                                          Expanded(
+                                              child: Text(
+                                                  "Strength: ${strongest['reason']}",
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.green))),
+                                        ]),
+                                        const SizedBox(height: 4),
+                                        Row(children: [
+                                          const Text("⚠️ ",
+                                              style: TextStyle(fontSize: 13)),
+                                          Expanded(
+                                              child: Text(
+                                                  "Focus area: ${weakest['reason']}",
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.orange))),
+                                        ]),
+                                        const Divider(height: 20),
+                                      ],
+                                    );
+                                  }),
+                                  // Component breakdown with labels and recommendations
+                                  const Text("Score Breakdown",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold)),
+                                  const SizedBox(height: 10),
                                   ...breakdown.map((item) {
                                     final pts = item['points'] as int;
-                                    final maxPts = 25;
+                                    const maxPts = 25;
                                     final pctFill =
                                         (pts / maxPts).clamp(0.0, 1.0);
                                     final barColor = pts >= 20
@@ -3220,44 +3333,75 @@ class _DashboardState extends State<Dashboard> {
                                         : pts >= 12
                                             ? Colors.orange
                                             : Colors.red;
+                                    final String componentLabel = pts >= 20
+                                        ? "Good"
+                                        : pts >= 12
+                                            ? "Fair"
+                                            : "Needs Work";
+                                    // Per-component recommendations
+                                    final String rec = _componentRec(
+                                        item['component'] as String? ?? '',
+                                        pts,
+                                        _incomeWalletMode);
                                     return Padding(
                                       padding:
-                                          const EdgeInsets.only(bottom: 10),
+                                          const EdgeInsets.only(bottom: 12),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
+                                          Row(children: [
+                                            Expanded(
                                                 child: Text(
                                                     item['reason'] as String,
                                                     style: const TextStyle(
-                                                        fontSize: 12)),
-                                              ),
-                                              Text(
-                                                "$pts / $maxPts",
+                                                        fontSize: 12))),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 2),
+                                              decoration: BoxDecoration(
+                                                  color: barColor.withValues(
+                                                      alpha: 0.13),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Text(componentLabel,
+                                                  style: TextStyle(
+                                                      fontSize: 9,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: barColor)),
+                                            ),
+                                            const SizedBox(width: 6),
+                                            Text("$pts/$maxPts",
                                                 style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: barColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: barColor)),
+                                          ]),
                                           const SizedBox(height: 4),
                                           ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(3),
                                             child: LinearProgressIndicator(
-                                              value: pctFill,
-                                              minHeight: 5,
-                                              backgroundColor: Colors.grey[200],
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(
-                                                      barColor),
-                                            ),
+                                                value: pctFill,
+                                                minHeight: 5,
+                                                backgroundColor:
+                                                    Colors.grey[200],
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        barColor)),
                                           ),
+                                          if (rec.isNotEmpty && pts < 20) ...[
+                                            const SizedBox(height: 4),
+                                            Text("💡 $rec",
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.grey[600],
+                                                    fontStyle:
+                                                        FontStyle.italic)),
+                                          ],
                                         ],
                                       ),
                                     );
@@ -3267,13 +3411,12 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             actions: [
                               TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text("Got it"),
-                              ),
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("Got it")),
                               TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
-                                  widget.onNavigate(3); // go to Profile tab
+                                  widget.onNavigate(3);
                                 },
                                 child: const Text("Full Details →"),
                               ),
@@ -3323,12 +3466,35 @@ class _DashboardState extends State<Dashboard> {
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSecondaryContainer)),
-                            Text(_scoreLabel(_score),
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondaryContainer)),
+                            Row(
+                              children: [
+                                Text(_scoreLabel(_score),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondaryContainer)),
+                                const SizedBox(width: 6),
+                                // Score trend vs last week
+                                FutureBuilder<int>(
+                                  future: ScoreTrend.getScoreTrend(),
+                                  builder: (_, snap) {
+                                    final diff = snap.data ?? 0;
+                                    if (diff == 0)
+                                      return const SizedBox.shrink();
+                                    final up = diff > 0;
+                                    return Text(
+                                      '${up ? '↑' : '↓'}${diff.abs()} this month',
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              up ? Colors.green : Colors.red),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                             // BT-2: Show decay indicator when active
                             FutureBuilder<int>(
                               future: ScoreService.getDecayDays(),
@@ -3483,6 +3649,11 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 );
               }),
+
+              const SizedBox(height: 12),
+
+              // Weekly Category Summary — "how much on each vs usual this week"
+              _WeeklyCategoryCard(expenses: _expenses),
 
               const SizedBox(height: 12),
 
@@ -3946,6 +4117,197 @@ class _BillCalendarMiniCard extends StatelessWidget {
 }
 
 // ── DAILY CHALLENGES WIDGET (GM-1) ───────────────────────────────────────────
+// ── WEEKLY CATEGORY SUMMARY ─────────────────────────────────────────────────
+/// Shows each category's spending THIS week vs the 4-week average.
+/// Labels each as High / Normal / Low with color coding.
+/// Gives users actionable insight: "you're spending more on Food than usual this week."
+class _WeeklyCategoryCard extends StatelessWidget {
+  final List<dynamic> expenses;
+
+  const _WeeklyCategoryCard({required this.expenses});
+
+  static const _catIcons = <String, IconData>{
+    'Food': Icons.restaurant_outlined,
+    'Transportation': Icons.directions_bus_outlined,
+    'Shopping': Icons.shopping_bag_outlined,
+    'Entertainment': Icons.sports_esports_outlined,
+    'Bills': Icons.receipt_long_outlined,
+    'Health': Icons.favorite_border,
+    'Education': Icons.school_outlined,
+    'Gaming': Icons.videogame_asset_outlined,
+    'Personal Care': Icons.spa_outlined,
+    'Clothing': Icons.checkroom_outlined,
+    'Gifts': Icons.card_giftcard_outlined,
+    'Travel': Icons.flight_outlined,
+    'Pets': Icons.pets_outlined,
+    'Others': Icons.more_horiz,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final now = DateTime.now();
+
+    // This week: Mon–Sun of current week
+    final weekStart = now.subtract(Duration(days: now.weekday - 1));
+    final weekStartStr = weekStart.toIso8601String().substring(0, 10);
+    final todayStr = now.toIso8601String().substring(0, 10);
+
+    // This week's expenses
+    final thisWeek = <String, double>{};
+    for (final e in expenses) {
+      final date = (e.date as String).substring(0, 10);
+      if (date.compareTo(weekStartStr) >= 0 && date.compareTo(todayStr) <= 0) {
+        thisWeek[e.category] = (thisWeek[e.category] ?? 0) + e.amount;
+      }
+    }
+
+    if (thisWeek.isEmpty) return const SizedBox.shrink();
+
+    // Past 4 complete weeks average per category
+    final weeklyAvg = <String, double>{};
+    for (int w = 1; w <= 4; w++) {
+      final wStart = weekStart.subtract(Duration(days: 7 * w));
+      final wEnd = wStart.add(const Duration(days: 6));
+      final wStartStr = wStart.toIso8601String().substring(0, 10);
+      final wEndStr = wEnd.toIso8601String().substring(0, 10);
+      for (final e in expenses) {
+        final date = (e.date as String).substring(0, 10);
+        if (date.compareTo(wStartStr) >= 0 && date.compareTo(wEndStr) <= 0) {
+          weeklyAvg[e.category] = (weeklyAvg[e.category] ?? 0) + e.amount / 4;
+        }
+      }
+    }
+
+    // Only show categories that appear this week
+    final cats = thisWeek.keys.toList()
+      ..sort((a, b) => thisWeek[b]!.compareTo(thisWeek[a]!));
+
+    if (cats.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 0),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest.withValues(alpha: 0.35),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.bar_chart_outlined,
+                    size: 15, color: cs.onSurface.withValues(alpha: 0.55)),
+                const SizedBox(width: 6),
+                Text("This Week by Category",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: cs.onSurface.withValues(alpha: 0.55))),
+                const SizedBox(width: 4),
+                InfoButton(
+                  title: "Weekly Category Summary",
+                  body:
+                      "Shows how much you spent in each category THIS week compared to your usual weekly average.\n\n"
+                      "🔴 HIGH — more than 130% of your usual\n"
+                      "🟡 NORMAL — 70–130% of your usual\n"
+                      "🟢 LOW — less than 70% of your usual\n\n"
+                      "Use this to spot categories where you're overspending before the month ends.",
+                  size: 13,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            ...cats.take(5).map((cat) {
+              final thisAmt = thisWeek[cat] ?? 0;
+              final avgAmt = weeklyAvg[cat] ?? 0;
+              final ratio = avgAmt > 0 ? thisAmt / avgAmt : -1.0;
+
+              // Determine label, color, description
+              final String label;
+              final Color labelColor;
+              final String tip;
+
+              if (ratio < 0 || avgAmt < 10) {
+                // No history — just show amount, no label
+                label = 'New';
+                labelColor = cs.onSurface.withValues(alpha: 0.4);
+                tip = 'No past data yet';
+              } else if (ratio > 1.30) {
+                label = '↑ High';
+                labelColor = Colors.red;
+                tip =
+                    '${(ratio * 100 - 100).toStringAsFixed(0)}% above your usual';
+              } else if (ratio < 0.70) {
+                label = '↓ Low';
+                labelColor = Colors.green;
+                tip =
+                    '${(100 - ratio * 100).toStringAsFixed(0)}% below your usual';
+              } else {
+                label = '→ Normal';
+                labelColor = Colors.orange.shade700;
+                tip = 'Typical week for $cat';
+              }
+
+              final icon = _catIcons[cat] ?? Icons.category_outlined;
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 7),
+                child: Row(
+                  children: [
+                    Icon(icon,
+                        size: 15, color: cs.onSurface.withValues(alpha: 0.55)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(cat,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: cs.onSurface.withValues(alpha: 0.8))),
+                    ),
+                    Text(CurrencyService.format(thisAmt),
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: labelColor.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Tooltip(
+                        message: tip,
+                        child: Text(label,
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: labelColor)),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+            if (cats.length > 5)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text('+${cats.length - 5} more categories this week',
+                    style: TextStyle(
+                        fontSize: 10,
+                        color: cs.onSurface.withValues(alpha: 0.4))),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── DAILY CHALLENGES WIDGET ──────────────────────────────────────────────────
 class _DailyChallengesWidget extends StatefulWidget {
   final List<Expense> expenses;
   final List<Budget> budgets;

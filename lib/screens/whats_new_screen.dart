@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.4';
-  static const _prefKey = 'whats_new_seen_2_9_4';
+  static const _version = '2.9.5';
+  static const _prefKey = 'whats_new_seen_2_9_5';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,10 +20,26 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '⚙️',
-      'Minimal Mode — Hide Any Section',
-      'App Settings now has "Home Screen" and "Analytics" sections where you can individually hide cards you don\'t need: subscription summary, quick-log chips, badges, mood check-in, forecast, prediction, DTI, emergency fund, milestones, and market insights. Core sections always stay visible.'
+      '📊',
+      'Weekly Category Summary',
+      'New card on the home screen shows each spending category this week vs your usual — labeled High, Normal, or Low. Long-press the label for the exact percentage vs your average. Helps you catch overspending before the month ends.'
     ),
+    (
+      '🧠',
+      'Financial Management Score',
+      'A new score (0–100) on your Profile page separate from the Financial Health Score. It measures how well you USE SmartSpend — logging consistency, budget setup, goal tracking, and data completeness. Based on research recommendation to separate financial health outcomes from management behavior.'
+    ),
+    (
+      '📈',
+      'FHS Score Trend',
+      'The Financial Health Score card now shows +X or -X vs last month, so you can see if you\'re improving or declining over time.'
+    ),
+    (
+      '💡',
+      'Richer FHS Breakdown',
+      'The score breakdown dialog now shows: score classification label, your top strength, your focus area, per-component Good/Fair/Needs Work labels, and a specific actionable tip for each weak component.'
+    ),
+    ('App Settings now has "Home Screen" and "Analytics" sections where you can individually hide cards you don\'t need: subscription summary, quick-log chips, badges, mood check-in, forecast, prediction, DTI, emergency fund, milestones, and market insights. Core sections always stay visible.'),
     (
       '🔧',
       'Cleaner Home Screen',
