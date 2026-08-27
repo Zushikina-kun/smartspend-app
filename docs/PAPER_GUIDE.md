@@ -1,6 +1,6 @@
 # SmartSpend — Capstone 2 Paper Revision Guide
 **For:** Lucid Frame — Cyrille John M. Rubis (Documentation Lead)
-**Date:** August 11, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.2
+**Date:** August 27, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.6
 **Purpose:** Source of truth for revising Chapters 1–5 of the capstone thesis paper
 
 > ⚠️ Also see **`docs/CAPSTONE_REFERENCE.md`** — the most comprehensive single-file reference for capstone documentation, with all current numbers, quotes, and comparison tables.
@@ -207,7 +207,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 4. **Interview Findings** — themes from qualitative analysis
 5. **FHS Validation** — does the formula correlate with user-reported financial health?
 
-### Key Numbers to Report (from v2.9.2 final build)
+### Key Numbers to Report (from v2.9.6 final build)
 - **29 AI agentic actions** implemented
 - **5 LLM providers** with automatic failover + task-based routing (fast/smart/financial_advice)
 - **23 achievement badges** + 10 daily quests
