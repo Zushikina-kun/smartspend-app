@@ -1,7 +1,7 @@
 # Smart Spend
 
 **AI-Assisted Financial Tracking & Advisory**
-Version 2.9.2 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 2.9.3 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
 ---
 
@@ -129,6 +129,8 @@ Distribute both `arm64-v8a` and `armeabi-v7a` to cover all Android phones.
 | `docs/PAPER_GUIDE.md` | Chapter-by-chapter guide for writing Chapters 1–5 |
 | `docs/MANUSCRIPT_FIXES.md` | 19 step-by-step Google Docs fixes (CTRL+F locations included) |
 | `docs/BENCHMARK.md` | 14-app comparison + 13-model LLM benchmark + behavioral finance |
+| `docs/RESEARCH_BASIS.md` | Academic citations for every feature — FHS, LLM, gamification, behavioral finance |
+| `docs/APPLICATION_PIPELINE.md` | How the app works step by step, for anyone to understand |
 | `docs/PROJECT_STATUS.md` | What's done, what's left, roadmap, timeline, coding conventions |
 | `docs/PLAYSTORE_GUIDE.md` | Play Store deployment and API security guide |
 | `docs/PROGRESS_REPORT_WEEK1.md` | Week 1 Capstone 2 progress report |

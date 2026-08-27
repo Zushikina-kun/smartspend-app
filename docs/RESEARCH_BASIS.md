@@ -1,6 +1,6 @@
 # SmartSpend — Research Basis & Academic References
 ## Theoretical Foundations for All Features and Functions
-**Version:** 2.9.2 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.3 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **Purpose:** This document answers the question "where did you get the basis for this?" for every major feature. Use this when writing Chapter 2 (Review of Related Literature) and defending before the panel.
 
 > **For Ma'am:** Every feature in SmartSpend is grounded in an existing framework, research, book, or validated standard — not made up. This document traces each one.
@@ -404,3 +404,40 @@ Yang, H., et al. (2023). *FinGPT: Democratizing internet-scale data for financia
 *SmartSpend v2.9.2 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Prepared for: Chapter 2 (Review of Related Literature), Chapter 3 (Methodology) defense preparation, and adviser consultation*
+
+---
+
+## PART 9 — CUSTOMIZABLE MINIMAL MODE (v2.9.3)
+
+### Feature Description
+SmartSpend v2.9.3 adds per-section visibility toggles in App Settings. Users can individually hide 10 optional sections across the home screen and analytics, keeping only the core sections they need.
+
+**Core sections always visible (cannot be hidden):**
+- Home: Spending summary, FHS score card, wallet balances, budgets/limits, bill calendar, feature portals
+- Analytics: Pie chart, 50/30/20 tracker, Want vs Need breakdown, FHS trend
+
+**Optional sections (individually toggleable):**
+- Home: Subscription summary, quick-log chips, badges row, mood check-in, cash flow forecast, behavioral prediction
+- Analytics: Debt-to-Income ratio, emergency fund calculator, financial milestones, market insights
+
+### Research Basis
+
+**Cognitive Load Theory:**
+> Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. *Cognitive Science, 12*(2), 257–285.
+
+Cognitive Load Theory establishes that humans have a limited working memory capacity. When an interface presents too many elements simultaneously, users experience cognitive overload — reducing comprehension and increasing abandonment. Hiding non-essential UI elements for users who don't need them directly reduces cognitive load, improving usability and task completion rates.
+
+**Progressive Disclosure (UX Design Principle):**
+> Nielsen, J. (2006). *Progressive disclosure*. Nielsen Norman Group. https://www.nngroup.com/articles/progressive-disclosure/
+
+Progressive disclosure is the UX principle of only showing information necessary for the current task, revealing advanced features only when the user actively seeks them. SmartSpend's visibility toggles implement this principle — the default "show all" state preserves full functionality, while the option to hide sections enables a minimal view for users who find the full UI overwhelming.
+
+**Technology Acceptance Model — Perceived Ease of Use:**
+> Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. *MIS Quarterly, 13*(3), 319–340.
+
+Davis (1989) established that perceived ease of use is a primary driver of technology adoption. For non-technical and non-finance-savvy users — the primary target population of SmartSpend (parents aged 35–55) — a simpler, cleaner interface increases perceived ease of use, which in turn increases adoption and continued use.
+
+**Panel Defense Justification:**
+*"Why did you add so many sections if you're going to let users hide them?"*
+
+> "Each section addresses a specific behavioral finance or user need — subscriptions for awareness, forecasts for planning, badges for motivation. But we acknowledge that not every user needs all features simultaneously. The visibility toggles follow the progressive disclosure principle (Nielsen, 2006) — they don't remove features, they surface only what each user values, reducing cognitive load (Sweller, 1988) while preserving full capability for power users."

@@ -1,6 +1,6 @@
 # SmartSpend — Application Pipeline
 ## How the App Works, Start to Finish
-**Version:** 2.9.2 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.3 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **For:** Anyone — adviser, panel, new team member, or user
 
 ---

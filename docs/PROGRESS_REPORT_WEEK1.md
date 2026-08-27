@@ -119,7 +119,7 @@ The system is fully functional and deployed as a release APK.
 
 | Document | Location | Status |
 |----------|----------|--------|
-| Application Documentation (DOCUMENTATION.md) | /DOCUMENTATION.md | ✅ Complete — v2.9.2 |
+| Application Documentation (DOCUMENTATION.md) | /DOCUMENTATION.md | ✅ Complete — v2.9.3 |
 | How to Run & Build | /HOWTORUN.md | ✅ Complete |
 | README | /README.md | ✅ Complete |
 | Security Policy | /SECURITY.md | ✅ Complete |
@@ -127,18 +127,20 @@ The system is fully functional and deployed as a release APK.
 | Capstone 2 Documentation Reference | /docs/CAPSTONE_REFERENCE.md | ✅ Complete |
 | Defense Reviewer (pre-defense cheat sheet) | /docs/DEFENSE_REVIEWER.md | ✅ Complete |
 | Week 1 Progress Report (this document) | /docs/PROGRESS_REPORT_WEEK1.md | ✅ Complete |
-| Competitor Analysis & Feature Ideas | /docs/BENCHMARK.md | ✅ Updated v2.9.2 |
+| Competitor Analysis & Feature Ideas | /docs/BENCHMARK.md | ✅ Updated v2.9.3 |
 | **App & LLM Benchmark (14 apps, 13 LLMs)** | /docs/BENCHMARK.md | ✅ New — Aug 2026 |
 | **System Overview (adviser/panel reference)** | /docs/SYSTEM_OVERVIEW.md | ✅ New — Aug 2026 |
-| Capstone 2 TODO & Feature Analysis | /docs/BENCHMARK.md | ✅ Updated v2.9.2 |
-| LLM Comparison Table (Chapter 3) | /docs/BENCHMARK.md | ✅ Updated v2.9.2 |
-| Paper Guide (Chapters 1–5) | /docs/PAPER_GUIDE.md | ✅ Updated v2.9.2 |
+| **Research Basis (all feature academic citations)** | /docs/RESEARCH_BASIS.md | ✅ New — Aug 2026 |
+| **Application Pipeline (how app works)** | /docs/APPLICATION_PIPELINE.md | ✅ New — Aug 2026 |
+| Capstone 2 TODO & Feature Analysis | /docs/BENCHMARK.md | ✅ Updated v2.9.3 |
+| LLM Comparison Table (Chapter 3) | /docs/BENCHMARK.md | ✅ Updated v2.9.3 |
+| Paper Guide (Chapters 1–5) | /docs/PAPER_GUIDE.md | ✅ Updated v2.9.3 |
 | Manuscript Fix Guide (Google Docs corrections) | /docs/MANUSCRIPT_FIXES.md | ✅ Complete |
-| Demo Script | /docs/DEMO_SCRIPT.md | ✅ Updated v2.9.2 |
-| Master Roadmap | /docs/PROJECT_STATUS.md | ✅ Updated v2.9.2 |
-| Task List (complete status of all tasks) | /docs/PROJECT_STATUS.md | ✅ Updated v2.9.2 |
-| Capstone 2 TODO | /docs/PROJECT_STATUS.md | ✅ Updated v2.9.2 |
-| Play Store & Security Guide | /docs/PLAYSTORE_GUIDE.md | ✅ Updated v2.9.2 |
+| Demo Script | /docs/DEMO_SCRIPT.md | ✅ Updated v2.9.3 |
+| Master Roadmap | /docs/PROJECT_STATUS.md | ✅ Updated v2.9.3 |
+| Task List (complete status of all tasks) | /docs/PROJECT_STATUS.md | ✅ Updated v2.9.3 |
+| Capstone 2 TODO | /docs/PROJECT_STATUS.md | ✅ Updated v2.9.3 |
+| Play Store & Security Guide | /docs/PLAYSTORE_GUIDE.md | ✅ Updated v2.9.3 |
 | Capstone Paper (manuscript draft) | /docs/SMARTSPEND Capstone Docs.md | ✅ Chapters 1–2 complete |
 | Capstone 2 Syllabus | /docs/Capstone_Project_2_Syllabus_1st_Sem_AY2026-2027.docx | ✅ Reference copy |
 
