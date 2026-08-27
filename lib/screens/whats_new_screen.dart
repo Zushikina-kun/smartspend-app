@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.6';
-  static const _prefKey = 'whats_new_seen_2_9_6';
+  static const _version = '2.9.7';
+  static const _prefKey = 'whats_new_seen_2_9_7';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,15 +21,19 @@ class WhatsNewScreen extends StatelessWidget {
   static const _features = [
     (
       '⚙️',
-      'App Settings — Now Fully Scrollable',
-      'The App Settings sheet is completely rebuilt: it now scrolls so all options are reachable, no more grayed-out or hidden sections. Auto-deduct wallets and Balance mode no longer require income mode to be ON first.'
+      'App Settings — Dedicated Full Screen',
+      'App Settings is now a dedicated full screen (no more bottom sheet). Fully scrollable with no cutoff, works on every device. All 19 toggles are always visible and always interactive — no grayed-out restrictions.'
     ),
     (
       '🪶',
       'Lite Mode — One-Tap Clean View',
-      'A new "Lite Mode" toggle at the top of App Settings hides ALL optional sections in one tap — subscriptions, quick-log chips, badges, mood, forecast, prediction, DTI, emergency fund, milestones, and market insights. Toggle individual sections back ON anytime.'
+      'A "Lite Mode" toggle at the top of App Settings hides ALL optional sections in one tap — subscriptions, quick-log chips, badges, mood, forecast, prediction, DTI, emergency fund, milestones, and market insights. Toggle individual sections back ON anytime.'
     ),
-    ('New card on the home screen shows each spending category this week vs your usual — labeled High, Normal, or Low. Long-press the label for the exact percentage vs your average. Helps you catch overspending before the month ends.'),
+    (
+      '📊',
+      'Weekly Category Card',
+      'A new card on the home screen shows each spending category this week vs your usual — labeled High, Normal, or Low. Long-press the label for the exact percentage vs your average. Helps you catch overspending before the month ends.'
+    ),
     (
       '🧠',
       'Financial Management Score',
@@ -45,7 +49,11 @@ class WhatsNewScreen extends StatelessWidget {
       'Richer FHS Breakdown',
       'The score breakdown dialog now shows: score classification label, your top strength, your focus area, per-component Good/Fair/Needs Work labels, and a specific actionable tip for each weak component.'
     ),
-    ('App Settings now has "Home Screen" and "Analytics" sections where you can individually hide cards you don\'t need: subscription summary, quick-log chips, badges, mood check-in, forecast, prediction, DTI, emergency fund, milestones, and market insights. Core sections always stay visible.'),
+    (
+      '👁️',
+      'Section Visibility Toggles',
+      'App Settings now has "Home Screen" and "Analytics" sections where you can individually hide cards you don\'t need: subscription summary, quick-log chips, badges, mood check-in, forecast, prediction, DTI, emergency fund, milestones, and market insights. Core sections always stay visible.'
+    ),
     (
       '🔧',
       'Cleaner Home Screen',
