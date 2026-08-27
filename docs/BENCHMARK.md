@@ -206,13 +206,16 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 This section covers the models most relevant to a mobile financial assistant context: fast, free-tier accessible, Filipino-English capable, and suitable for agentic (action-taking) AI.
 
 **Frontier models (paid or limited free):**
-GPT-5.6 (OpenAI) · Claude Fable 5 / Sonnet 5 (Anthropic) · Gemini 3.1 Pro / 3.7 Flash (Google, Aug 2026) · Grok 4.6 (xAI, Aug 2026)
+GPT-5.6 Sol ($5/$30 per 1M tokens) · GPT-5.6 Terra ($2/$12) · GPT-5.6 Luna ($0.20/$1.20, post July 30 2026 price cut) · Claude Fable 5 / Sonnet 5 (Anthropic) · Gemini 3.1 Pro / 3.7 Flash (Google, Aug 2026) · Grok 4.6 (xAI, Aug 2026)
 
-**Mid-tier / efficient models (free or low cost):**
-Gemini 3.1 Flash-Lite · Gemini 3.5 Flash · Groq LLaMA 3.3 70B · Groq LLaMA 3.1 8B · Groq LLaMA 4 Scout · Cerebras LLaMA 3.1 · DeepSeek V4 Flash · Qwen 3 32B
+**Mid-tier / efficient models (free or very low cost):**
+Gemini 3.1 Flash-Lite ($0.25/$1.50, 1,000/day free tier) · Gemini 3.5 Flash (250/day free) · Groq LLaMA 3.3 70B · Groq LLaMA 3.1 8B · Groq LLaMA 4 Scout · Cerebras LLaMA 3.1 · DeepSeek V4 Flash/Pro ($0.14–$0.435/$0.28–$0.87, 5M trial tokens) · Qwen 3 32B (free on OpenRouter)
+
+**Finance-specialized models (research baselines):**
+Fin-R1 (7B params, SOTA FinQA/ConvFinQA, free self-host) · FinGPT (strong sentiment/classification, weaker reasoning) · FinBERT (NLP/sentiment only, not conversational)
 
 **Open-source (self-hostable):**
-Mistral 7B · LLaMA 3.1 8B / 70B · Qwen 3.2 27B · DeepSeek V3 weights · LLaMA 4 Scout (local)
+Mistral 7B · LLaMA 3.1 8B/70B · Qwen 3.2 27B · DeepSeek V3 weights · Fin-R1
 Mistral 7B / 8×7B · LLaMA 3.1 8B / 70B · DeepSeek V3
 
 ---
@@ -223,7 +226,10 @@ Based on multiple 2026 benchmarks (AIMUltiple Finance LLM Benchmark, micro1.ai R
 
 | Model | Financial Reasoning | Filipino-English NLP | Speed (tokens/s) | Free Tier | Best For |
 |-------|--------------------|--------------------|-----------------|-----------|----------|
-| **GPT-5.6 (Terra)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~80–120 | ❌ Paid | Spreadsheet workflows, investment memos, broad task coverage |
+| **GPT-5.6 Sol** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~80–120 | ❌ $5/$30 per 1M | Complex professional work, frontier reasoning |
+| **GPT-5.6 Terra** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~80–120 | ❌ $2/$12 per 1M | Best cost/quality balance for production |
+| **GPT-5.6 Luna** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~120 | ❌ $0.20/$1.20 per 1M | Best paid-tier value for high-volume tasks |
+| **Fin-R1 (7B)** *(finance specialist)* | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | Varies (self-host) | ✅ Self-host | SOTA FinQA/ConvFinQA avg 75.2; research baseline |
 | **Claude Fable 5** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ~60–100 | ❌ Paid | Long-form reasoning, reading full financial documents |
 | **Gemini 3.7 Flash** *(new Aug 13 2026)* | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ~300–500 | ❌ Paid ($0.75/1M in) | Frontier quality at mid-tier price; best new Gemini for financial reasoning |
 | **Grok 4.6** *(xAI, Aug 2026)* | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ~100–200 | ❌ API paid ($2/1M) | Strong reasoning, real-time search integration, agentic tasks |
