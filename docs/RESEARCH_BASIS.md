@@ -1,6 +1,6 @@
 # SmartSpend — Research Basis & Academic References
 ## Theoretical Foundations for All Features and Functions
-**Version:** 2.9.5 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.6 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **Purpose:** This document answers the question "where did you get the basis for this?" for every major feature. Use this when writing Chapter 2 (Review of Related Literature) and defending before the panel.
 
 > **For Ma'am:** Every feature in SmartSpend is grounded in an existing framework, research, book, or validated standard — not made up. This document traces each one.
@@ -501,11 +501,11 @@ If income, debt, or emergency fund data is missing, the score should indicate "u
 | Spending control as core component | ✅ Components 2+3 (Overspend Control + Budget Adherence) | None |
 | Score labels (Excellent/Good/Fair/Needs Work) | ✅ 5-tier classification (v2.9.5) | Resolved |
 | Per-component explanations | ✅ Breakdown dialog with reason per component | None |
-| Top strength / top weakness | ✅ Added in v2.9.5 | Resolved |
-| Per-component actionable recommendations | ✅ Added in v2.9.5 | Resolved |
-| Score trend (vs last month) | ✅ Added in v2.9.5 | Resolved |
-| Logging as separate metric, not FHS | ✅ Financial Management Score added in v2.9.5 | Resolved |
-| Weekly category comparison | ✅ Weekly Category Card added in v2.9.5 | Resolved |
+| Top strength / top weakness | ✅ Added in v2.9.6 | Resolved |
+| Per-component actionable recommendations | ✅ Added in v2.9.6 | Resolved |
+| Score trend (vs last month) | ✅ Added in v2.9.6 | Resolved |
+| Logging as separate metric, not FHS | ✅ Financial Management Score added in v2.9.6 | Resolved |
+| Weekly category comparison | ✅ Weekly Category Card added in v2.9.6 | Resolved |
 | Emergency fund as a component | ⚠️ Emergency fund calculator exists in Analytics but is not an FHS component | Future enhancement |
 | Net worth as a component | ⚠️ Net worth tracking exists but is not part of FHS formula | Future enhancement |
 | Missing data handling (explicit "unmeasured") | ⚠️ Partial — income absence gives partial credit, no explicit "unmeasured" label | Future enhancement |
