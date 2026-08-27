@@ -22,6 +22,11 @@ Most Filipinos do not track finances because:
 - Apps give no meaningful feedback — just a list of expenses
 - No free, offline-capable option with AI exists for the Philippine market
 
+**Key context (August 2026):**
+- 99% of Filipinos shop online, but only 52% actively use mobile banking apps (NielsenIQ, 2026)
+- GCash has 41.5M monthly users — but tracking what you spend it on still requires a dedicated tool
+- 49% of global consumers now use AI for savings/investment decisions (EY, 2026) — demand for AI finance tools is mainstream, not experimental
+
 **SmartSpend's answer:** Remove the manual effort entirely using AI, and give users a score that makes their financial behavior visible and actionable.
 
 ---
@@ -287,7 +292,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | System development | ✅ Complete — v2.9.6 |
 | All 20 modules | ✅ Implemented and tested |
 | GitHub repository | ✅ Public — github.com/Zushikina-kun/smartspend-app |
-| Release APK | ✅ Available — v2.9.2 (arm64-v8a: 44.7 MB) |
+| Release APK | ✅ Available — v2.9.6 (arm64-v8a: 44.7 MB) |
 | Chapters 1 & 2 | ✅ Complete in manuscript |
 | Panel recommendations (29) | ✅ 21 done / 7 ready to apply in Google Docs / 2 physical action pending |
 | Pre-final defense readiness | ✅ Confirmed by teacher-in-charge |
@@ -300,28 +305,30 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 > For the full 14-app feature matrix see `docs/BENCHMARK.md`.
 
-| Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | **SmartSpend** |
-|---------|-------|------|---------|---------|----------|-------------|---------------|
-| Offline mode | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
-| AI chat assistant | ❌ | ❌ | ❌ | ⚠️ Basic | ⚠️ Insights | ✅ Chat | ✅ **29 actions** |
-| Financial Health Score | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ | ✅ 0–100 dual-mode |
-| Filipino-English AI | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ Full Taglish |
-| Batch screenshot import | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 40+ platforms |
-| Voice input (en-PH) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| OCR receipt scanning | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| PH banks / GCash / SSS | ❌ | ❌ | ❌ | ❌ | ⚠️ Partial | ❌ | ✅ Full |
-| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ |
-| 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| Free (no subscription) | ✅ | ❌ $15/mo | ❌ $10/mo | ❌ $11/mo | ✅ | ⚠️ Limited | ✅ |
-| Gamification | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ✅ 23 badges |
-| Works without bank API | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | GCash Pera Coach | **SmartSpend** |
+|---------|-------|------|---------|---------|----------|-------------|-----------------|---------------|
+| Offline mode | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
+| AI chat assistant | ❌ | ❌ | ❌ | ⚠️ Basic | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A | ✅ **29 actions** |
+| Financial Health Score | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ | ❌ | ✅ 0–100 dual-mode |
+| Filipino-English AI | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ PH languages | ✅ Full Taglish |
+| Expense Tracking | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| Batch screenshot import | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ 40+ platforms |
+| Voice input (en-PH) | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| OCR receipt scanning | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
+| PH banks / GCash / SSS | ❌ | ❌ | ❌ | ❌ | ⚠️ Partial | ❌ | ✅ GCash only | ✅ Full |
+| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ | ❌ |
+| 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Free (no subscription) | ✅ | ❌ $15/mo | ❌ $10/mo | ❌ $11/mo | ✅ | ⚠️ Limited | ✅ (GCash req) | ✅ |
+| Gamification | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ | ✅ 23 badges |
+| Works without bank API | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
 
 **SmartSpend leads:** Only app with 29 agentic AI actions + offline + Filipino-English + free + multi-modal input.
 **Closest Filipino competitor:** BudgetPH — strong on paluwagan, 15th/30th cycle, and budget scoring, but no voice/OCR/barcode/agentic AI.
+**Notable 2026 entrant:** GCash Pera Coach (March 2026) — AI literacy tool inside GCash, not an expense tracker. Validates the PH AI finance market but solves a different problem.
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame*
+*SmartSpend v2.9.6 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Capstone Adviser: Johnny Verzola, MTS (reassignment pending)*

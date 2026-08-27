@@ -227,6 +227,7 @@
 | FHS basis? | UNSGSA framework. 4×25 pts. Income-relative. Two modes: Full (income-based) and Lightweight (habit-based). |
 | How does FHS work? | 4 components × 25 pts = 100. Full Mode: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency. Lightweight: Spending Restraint, Consistency, Category Balance, Habit Streak. Plus Warning Decay and Gap Adjustment. |
 | vs GCash? | GCash shows what you spent. We tell you what it means. |
+| vs GCash Pera Coach? | GCash Pera Coach (March 2026, built with Microsoft) teaches financial concepts via Q&A inside the GCash app. SmartSpend tracks your actual spending, gives you an FHS, and has 29 autonomous AI actions. Different tools for different needs. |
 | vs BudgetPH? | BudgetPH is closest Filipino competitor — has paluwagan and 15th/30th payday cycle. SmartSpend leads on agentic AI (29 actions), multi-modal input, offline mode, and gamification. |
 | Backend? | No. Serverless. Zero hosting costs. |
 | Context injection vs RAG? | Small data fits in one prompt. RAG is overkill. |
@@ -270,4 +271,4 @@ also update recording order to reflect new PART 2:
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
+*SmartSpend v2.9.6 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*

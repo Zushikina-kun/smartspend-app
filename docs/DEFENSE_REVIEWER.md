@@ -142,6 +142,9 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Group | Lucid Frame |
 | School | Lorma Colleges — CCSE, BSIT 4th Year |
 | Academic Year | 2026–2027, 1st Semester |
+| PH financial inclusion (BSP 2025) | 50% adult account ownership; 86% household access |
+| GCash monthly users (Bloomberg 2026) | 41.5 million |
+| PH AI finance users (EY 2026) | 18% of consumers use AI for budgeting |
 
 ---
 
@@ -188,6 +191,9 @@ A: All core features work — manual expense logging, all analytics, budgets, go
 
 **Q: vs GCash / bank apps?**
 A: They handle actual money movement. SmartSpend is a tracker and advisor — doesn't touch your money. Tracks all payment methods (cash, GCash, card, etc.) in one place.
+
+**Q: How does SmartSpend compare to GCash Pera Coach?**
+A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI-powered financial literacy coach embedded inside GCash. It provides Q&A and financial education in English and Filipino — but it doesn't track expenses, has no Financial Health Score, no offline mode, and no agentic actions. SmartSpend is a dedicated financial management system: it tracks your actual spending, computes an FHS, runs 29 autonomous AI actions, and works fully offline. Pera Coach teaches you about money; SmartSpend manages your money. They're complementary tools, not substitutes.
 
 **Q: How does SmartSpend compare to BudgetPH?**
 A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (29 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (23 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
@@ -239,5 +245,5 @@ A: SmartSpend provides general financial information for educational purposes on
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
+*SmartSpend v2.9.6 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*

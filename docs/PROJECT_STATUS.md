@@ -55,6 +55,19 @@
 
 ## WHAT IS DONE ✅
 
+### v2.9.6 — August 2026
+- [x] **App Settings fully rebuilt** — DraggableScrollableSheet (85% initial height, draggable to full), fully scrollable, all 20+ tiles accessible
+- [x] **Lite Mode one-tap toggle** — at the TOP of App Settings, turns off all 10 optional sections simultaneously
+- [x] **No more grayed-out toggles** — Auto-deduct wallets and Balance mode always interactive (removed all `onChanged: null` restrictions)
+- [x] **Docs sweep** — all 11 docs updated to v2.9.6 version stamps
+- [x] **Research expansion** — RESEARCH_BASIS.md Parts 12 & 13 added: GCash Pera Coach competitor, EY 2026 AI consumer stats, Plaid Intelligent Finance 2026, PSA PDESA 2025, NielsenIQ 2026, Deloitte 2026 agentic AI, Spendception (Meyll et al. 2025), WJAETS 2025 gamification study, SWS March 2026 PH inclusion data, Bloomberg GCash 41.5M users
+- [x] **BENCHMARK.md** — GCash Pera Coach added to extended comparison table; PART 6 Global AI Stats added; updated to v2.9.6
+- [x] **CAPSTONE_REFERENCE.md** — v2.9.6 version history entry, Pera Coach Q&A added, competitor table expanded, references list expanded
+- [x] **SYSTEM_OVERVIEW.md** — competitor table expanded with Pera Coach, new PH stats added
+- [x] **DEFENSE_REVIEWER.md** — Pera Coach Q&A added, key numbers table expanded with 2026 stats
+- [x] **All doc footers** — updated from v2.9.2 → v2.9.6
+- [x] GitHub release v2.9.6 published with 3 APKs (arm64: 44.7MB, armeabi: 37MB, x86_64: 47.6MB)
+
 ### v2.9.5 — August 2026
 - [x] **New feature:** Weekly Category Card on home screen — shows each category's spend this week vs 4-week average, labeled High/Normal/Low with color coding and tooltips
 - [x] **New feature:** Financial Management Score (0–100) on Profile screen — separate score measuring HOW WELL the user uses SmartSpend (logging, budget setup, goal tracking, data completeness)
@@ -245,5 +258,5 @@
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame*
+*SmartSpend v2.9.6 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027 (1st Semester)*

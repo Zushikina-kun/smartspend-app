@@ -401,10 +401,6 @@ Yang, H., et al. (2023). *FinGPT: Democratizing internet-scale data for financia
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame*
-*Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
-*Prepared for: Chapter 2 (Review of Related Literature), Chapter 3 (Methodology) defense preparation, and adviser consultation*
-
 ---
 
 ## PART 9 — CUSTOMIZABLE MINIMAL MODE (v2.9.3)
@@ -703,3 +699,206 @@ Xie, Q., et al. (2023). *PIXIU: A large language model, instruction data and eva
 Li, Z., et al. (2024). *A survey of large language models for financial applications*. arXiv:2406.11903. https://arxiv.org/abs/2406.11903
 
 *Content was paraphrased and summarized for compliance with licensing restrictions.*
+
+---
+
+## PART 12 — UPDATED PHILIPPINE FINANCIAL CONTEXT (August 2026)
+
+### 12.1 Financial Inclusion — Latest Statistics
+
+**BSP Consumer Finance and Inclusion Survey (CFIS) 2025:**
+- Filipino adult account ownership fell to **50%** (from 56% in 2021), but household access rose to **86%**, indicating that many families rely on a single member's account for shared household finances (Bangko Sentral ng Pilipinas, 2025; GMA Network, 2026).
+- **74%** of Filipinos correctly answered basic financial literacy questions (up from 69% in 2021), showing improvement but still leaving a significant education gap.
+- E-wallet adoption is the primary driver of financial inclusion — GCash alone now serves **41.5 million monthly users** and has become a financial infrastructure layer for millions of lower-income, women, and provincial users (Bloomberg, 2026).
+
+**SWS March 2026 Survey (Social Weather Stations):**
+- A separate March 2026 SWS survey of 1,500 respondents found overall Philippine financial inclusion now at **58%**: 43% reported having an e-money account, 21% reported having a bank account (CoinGeek, 2026; SWS, 2026).
+- The rise is largely driven by mobile e-wallet adoption, not traditional banking.
+
+**PSA Philippine Digital Economy Satellite Account (PDESA) 2025:**
+- The Philippine digital economy reached **₱2.74 trillion** in GVA in 2025 — **9.8% of GDP** (PSA, 2025; GMA Network, 2026; Rappler, 2026).
+- E-commerce accounted for 32.2% of digital economy contributions. Digital payments services are growing rapidly.
+- The digital economy employed **10.39 million Filipinos** in 2025 — 21.2% of total employment.
+
+**NielsenIQ Philippine Consumer Finance Report 2026:**
+- **99%** of Filipinos shopped online in the past six months, yet only **52%** actively use mobile banking apps, and only **29%** use internet banking (NielsenIQ, 2026).
+- This gap — near-universal online commerce but low structured financial app usage — confirms the need for an accessible, low-friction financial management tool like SmartSpend.
+
+**Why these statistics matter for SmartSpend:**
+These figures confirm the persistent gap between digital commerce adoption (high) and structured financial management behavior (low) among Filipinos. SmartSpend directly bridges this gap by meeting users where they already are — using e-wallets and mobile apps daily — and converting that behavior into structured financial tracking without requiring bank connectivity.
+
+**APA Citations:**
+> Bangko Sentral ng Pilipinas. (2025). *Consumer Finance and Inclusion Survey (CFIS) 2025*. BSP.
+
+> Bloomberg. (2026). *How the Philippines' first fintech unicorn is minting financial inclusion*. https://sponsored.bloomberg.com/article/mynt/how-the-philippines-first-fintech-unicorn-is-minting-financial-inclusion
+
+> Social Weather Stations. (2026, March). *SWS financial inclusion survey: Philippines financial inclusion rises to 58%*. Cited in CoinGeek (2026). https://coingeek.com/10-point-surge-pushes-philippines-financial-inclusion-to-58/
+
+> Philippine Statistics Authority. (2025). *Philippine Digital Economy Satellite Account (PDESA) 2025: Digital economy contributes 9.8% to GDP*. PSA. https://psa.gov.ph
+
+> NielsenIQ. (2026). *The new financial reality: How Filipino consumers are spending, saving, and banking in 2026*. https://nielseniq.com/global/en/insights/report/2026/the-new-financial-reality-how-filipino-consumers-are-spending-saving-and-banking-in-2026/
+
+---
+
+### 12.2 GCash Pera Coach — Philippine AI Financial Competitor (March 2026)
+
+**Source:**
+> GCash / Mynt. (2026, March 20). *GCash launches country's first AI financial coach embedded in e-wallet to strengthen financial literacy* [Press release]. PR Newswire. https://www.prnewswire.com/apac/news-releases/ph-fintech-gcash-launches-countrys-first-ai-financial-coach-embedded-in-e-wallet-to-strengthen-financial-literacy-302718569.html
+
+**What it is:** Pera Coach (formerly GCoach AI) is an AI-powered financial literacy feature embedded directly within the GCash app. Developed in partnership with Microsoft, it provides personalized financial education and guidance in both English and Filipino national languages. It is available free to all Fully Verified GCash users.
+
+**What it does:**
+- Responds to user queries about financial goals, budget considerations, and risk appetite
+- Provides tailored, on-demand financial education
+- Converses in multiple Philippine languages (not just English)
+- Focuses on financial literacy and guidance — not autonomous action-taking
+
+**How SmartSpend differs from GCash Pera Coach:**
+
+| | GCash Pera Coach | SmartSpend |
+|--|-----------------|-----------|
+| Platform | Embedded in GCash e-wallet app | Standalone Android app |
+| AI capability | Q&A and financial guidance only | 29 agentic actions (takes real actions on user data) |
+| Expense tracking | ❌ No expense logging | ✅ Full expense tracking + analytics |
+| Financial Health Score | ❌ No | ✅ Dual-mode FHS (0–100) |
+| Offline mode | ❌ Requires internet | ✅ Full offline SQLite |
+| Languages | English + Filipino languages | English + Filipino-English (Taglish) |
+| Bank/wallet integration | ✅ GCash balance visible | ❌ Manual tracking only |
+| Gamification | ❌ No | ✅ 23 badges, 10 quests |
+| Available to | GCash Fully Verified users | All Android users |
+
+**Significance for the capstone:**
+GCash Pera Coach is the most prominent Filipino-market AI financial tool as of 2026. Its launch validates the academic and commercial relevance of AI-assisted financial guidance for Filipino users — directly supporting the research premise of SmartSpend. However, Pera Coach is limited to advisory/educational AI within an e-wallet. SmartSpend's agentic AI (29 actions), full expense tracking, FHS, and offline-first architecture make it a distinct and more comprehensive financial management system.
+
+**For the panel:** If asked "GCash already has AI — why does SmartSpend still matter?", the answer is: GCash Pera Coach is a literacy/advisory feature embedded in a payments app. SmartSpend is a dedicated financial management system with autonomous AI actions, behavioral scoring, and full offline capability. They address different user needs and are not direct substitutes.
+
+---
+
+### 12.3 Digital Payments and Spending Behavior — New Research
+
+**Spendception — Reduced Psychological Resistance to Digital Spending:**
+
+> Meyll, T., et al. (2025). Spendception: The psychological impact of digital payments on consumer purchase behavior and impulse buying. *Behavioral Sciences, 15*(3), 387. https://doi.org/10.3390/bs15030387
+
+The "Spendception" paper (PMC/MDPI, 2025) documents the phenomenon where digital payment methods reduce the psychological pain of spending — making purchases feel less financially significant than equivalent cash transactions. Key finding: digital payment systems made buying feel less noticeable, leading to increased spending without users realizing the financial impact.
+
+**How SmartSpend responds to Spendception:**
+- The Impulse Pause mechanic counteracts Spendception by reintroducing a deliberate pause — recreating the "pain of paying" at the moment of large Want purchases
+- The FHS Warning Decay system makes the long-term cost of ignored budget warnings numerically visible — providing a financial reality check that e-wallet transactions otherwise obscure
+- The weekly category card (High/Normal/Low vs 4-week average) provides ongoing awareness of spending drift caused by the ease of digital payments
+
+> Also relevant: Exploring the Psychological and Behavioral Effects of Mobile Payment Systems on Consumer Spending. In *Lecture Notes in Networks and Systems* (Springer, 2025). https://link.springer.com/chapter/10.1007/978-3-031-84636-6_26
+
+**Digital Nudges and Financial Inclusion (Springer 2026):**
+
+> Digital nudges and financial inclusion: A study on behavioral interventions influencing rural consumers' adoption of formal financial services in India. In *Lecture Notes in Networks and Systems* (Springer, 2026). https://link.springer.com/content/pdf/10.1007/978-3-032-00343-0_14.pdf
+
+Key finding: Gamified and visual nudges significantly enhance engagement, particularly among younger users. Audio-based nudges were effective in prompting immediate actions, especially among older adults and those with lower digital literacy. This directly validates SmartSpend's multi-modal nudge approach (visual FHS score, badge pop-ups, startup alert cards, impulse pause dialog).
+
+---
+
+## PART 13 — AI IN PERSONAL FINANCE — GLOBAL CONTEXT (August 2026)
+
+### 13.1 Consumer AI Adoption Statistics
+
+**EY Global AI Survey, April 2026:**
+> Ernst & Young. (2026, April). *Nearly half of global consumers now use AI to guide savings and investment decisions*. EY Newsroom. https://www.ey.com/en_gl/newsroom/2026/04/nearly-half-of-global-consumers-now-use-ai-to-guide-savings-and-investment-decisions
+
+Key findings:
+- **49%** of global consumers used AI to support savings and investment decisions in the past six months (EY, 2026)
+- **21%** used AI for financial product recommendations
+- **18%** used AI for budgeting, household finance management, and trading support
+- **50%** believe AI could help detect and prevent financial fraud
+
+**Why this matters for SmartSpend:** These EY figures establish that AI-assisted financial management is mainstream consumer behavior as of 2026, not experimental. SmartSpend is positioned squarely in the 18% use case (budgeting and household finance management), with additional capabilities in the 21% use case (financial product recommendations via AI advisory).
+
+**EY Autonomous AI Report, March 2026:**
+> Ernst & Young. (2026, March). *EY survey: Autonomous AI is no longer theoretical as adoption grows*. EY Newsroom. https://www.ey.com/en_nl/newsroom/2026/03/ey-survey-autonomous-ai-is-no-longer-theoretical-as-adoption-grows-despite-ongoing-trust-concerns
+
+Key findings:
+- 84% of respondents used AI in the past six months
+- **16% globally** report using AI systems that act without human intervention (autonomous/agentic AI)
+- SmartSpend's agentic architecture (29 autonomous actions) is at the frontier of this trend
+
+**Plaid State of Intelligent Finance Report, Spring 2026:**
+> Plaid. (2026, Spring). *State of intelligent finance report*. https://plaid.com/blog/state-of-intelligent-finance-report-spring-2026/
+
+Key findings:
+- **60%** of consumers expect AI to save them time in financial tasks
+- **58%** expect AI to reduce financial stress
+- **53%** expect AI to take the guesswork out of financial decisions
+- Areas with the most AI opportunity: savings, investing, budgeting, and debt management — exactly SmartSpend's core features
+- The AI market in personal finance alone is projected to grow to approximately **$3.7 billion by 2033** (Plaid, 2026)
+
+**Cambridge Judge Business School — Agentic AI Era (2025):**
+> Cambridge Judge Business School. (2025). *From automation to autonomy: The agentic AI era of financial services*. https://www.jbs.cam.ac.uk/2025/from-automation-to-autonomy-the-agentic-ai-era-of-financial-services/
+
+Documents the evolution from rule-based AI automation to agentic AI systems that can make decisions and act autonomously in financial contexts — the same architectural principle underlying SmartSpend's 29-action agentic system.
+
+**Deloitte 2026 — Agentic AI in Wealth Management:**
+> Deloitte. (2026). *Agentic AI boosts wealth management: How AI agents enhance productivity*. https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
+
+Key finding: Agentic AI capabilities could help firms lower cost-to-serve, enhance advice quality, and improve client experience. SmartSpend applies the same agentic AI principles at the personal (consumer) level — democratizing access to the type of AI-assisted financial management previously available only to wealth management firm clients.
+
+---
+
+### 13.2 Revised Summary Table — AI in Personal Finance Research Basis
+
+| Research Finding | Source | SmartSpend Application |
+|-----------------|--------|----------------------|
+| 49% global consumers used AI for savings/investment in 6 months | EY (2026) | Validates AI-assisted finance as mainstream consumer use case |
+| 18% used AI specifically for budgeting and household finance | EY (2026) | Direct validation of SmartSpend's primary use case |
+| 60% expect AI to save them time; 58% to reduce financial stress | Plaid (2026) | SmartSpend's multi-modal input reduces manual effort; FHS reduces anxiety |
+| AI personal finance market → $3.7B by 2033 | Plaid (2026) | Confirms long-term commercial and academic relevance |
+| 16% globally using autonomous/agentic AI | EY (2026) | SmartSpend's 29 agentic actions are at the forefront of this adoption trend |
+| Agentic AI lowers cost-to-serve and enhances advice quality | Deloitte (2026) | SmartSpend provides wealth-management-grade AI guidance at zero cost |
+| Digital payments reduce psychological pain of spending (Spendception) | Meyll et al. (2025) | Justifies Impulse Pause, Warning Decay, FHS visibility mechanics |
+| Gamified nudges boost engagement esp. for younger users | Springer (2026) | Validates SmartSpend's badge + quest + streak system |
+| GCash Pera Coach — first PH embedded AI financial coach | GCash/Microsoft (2026) | Validates PH-specific AI finance market; SmartSpend is more comprehensive |
+| PH digital economy = 9.8% of GDP (₱2.74T) | PSA (2025) | Confirms growing digital context SmartSpend operates in |
+| 99% Filipinos shop online but only 52% use mobile banking | NielsenIQ (2026) | Confirms gap between digital activity and structured financial management |
+
+---
+
+### 13.3 Full APA Reference List (New Sources — Parts 12 & 13)
+
+Bangko Sentral ng Pilipinas. (2025). *Consumer Finance and Inclusion Survey (CFIS) 2025*. BSP.
+
+Bloomberg. (2026). *How the Philippines' first fintech unicorn is minting financial inclusion*. https://sponsored.bloomberg.com/article/mynt/how-the-philippines-first-fintech-unicorn-is-minting-financial-inclusion
+
+Cambridge Judge Business School. (2025). *From automation to autonomy: The agentic AI era of financial services*. University of Cambridge. https://www.jbs.cam.ac.uk/2025/from-automation-to-autonomy-the-agentic-ai-era-of-financial-services/
+
+Deloitte. (2026). *Agentic AI boosts wealth management*. Deloitte Insights. https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
+
+Ernst & Young. (2026a). *Nearly half of global consumers now use AI to guide savings and investment decisions*. EY. https://www.ey.com/en_gl/newsroom/2026/04/nearly-half-of-global-consumers-now-use-ai-to-guide-savings-and-investment-decisions
+
+Ernst & Young. (2026b). *EY survey: Autonomous AI is no longer theoretical*. EY. https://www.ey.com/en_nl/newsroom/2026/03/ey-survey-autonomous-ai-is-no-longer-theoretical-as-adoption-grows-despite-ongoing-trust-concerns
+
+GCash / Mynt. (2026). *GCash launches country's first AI financial coach* [Press release]. PR Newswire. https://www.prnewswire.com/apac/news-releases/ph-fintech-gcash-launches-countrys-first-ai-financial-coach-embedded-in-e-wallet-to-strengthen-financial-literacy-302718569.html
+
+Meyll, T., et al. (2025). Spendception: The psychological impact of digital payments on consumer purchase behavior and impulse buying. *Behavioral Sciences, 15*(3), 387. https://doi.org/10.3390/bs15030387
+
+NielsenIQ. (2026). *The new financial reality: How Filipino consumers are spending, saving, and banking in 2026*. NielsenIQ. https://nielseniq.com/global/en/insights/report/2026/the-new-financial-reality-how-filipino-consumers-are-spending-saving-and-banking-in-2026/
+
+Philippine Statistics Authority. (2025). *Philippine Digital Economy Satellite Account (PDESA) 2025*. PSA. https://psa.gov.ph
+
+Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://plaid.com/blog/state-of-intelligent-finance-report-spring-2026/
+
+Social Weather Stations. (2026, March). *SWS survey: Philippines financial inclusion survey*. Cited in CoinGeek (2026). https://coingeek.com/10-point-surge-pushes-philippines-financial-inclusion-to-58/
+
+Springer. (2026). *Digital nudges and financial inclusion: A study on behavioral interventions influencing rural consumers' adoption of formal financial services in India*. Lecture Notes in Networks and Systems. https://link.springer.com/content/pdf/10.1007/978-3-032-00343-0_14.pdf
+
+Springer. (2025). *Exploring the psychological and behavioral effects of mobile payment systems on consumer spending: A theoretical perspective*. Lecture Notes in Networks and Systems. https://link.springer.com/chapter/10.1007/978-3-031-84636-6_26
+
+Strivecloud. (2026). *Fintech app gamification: Data shows 22% boost in saving habits*. https://strivecloud.io/blog/mobile-app-gamification-fintech
+
+Wajid, F., et al. (2025). Gamification: Revolutionizing financial planning systems. *World Journal of Advanced Engineering Technology and Sciences*. https://www.wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0158.pdf
+
+*Content was paraphrased and summarized for compliance with licensing restrictions.*
+
+---
+
+*SmartSpend v2.9.6 — Lucid Frame*
+*Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
+*Prepared for: Chapter 2 (Review of Related Literature), Chapter 3 (Methodology) defense preparation, and adviser consultation*
+*Last updated: August 2026*

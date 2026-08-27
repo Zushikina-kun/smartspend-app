@@ -1,6 +1,6 @@
 # SmartSpend — Comprehensive App & LLM Benchmark
 ## Competitor Analysis + AI Model Comparison
-**Last Updated:** August 17, 2026 | **Version:** 2.9.2 | **Group:** Lucid Frame
+**Last Updated:** August 27, 2026 | **Version:** 2.9.6 | **Group:** Lucid Frame
 **Sources:** PCMag 2026, NerdWallet 2026, CNBC 2026, AIMUltiple 2026, Artificial Analysis 2026, Gemini API Docs, Groq/Cerebras benchmarks, micro1.ai REALM benchmark, juaninvestor.com, BudgetPH, Alkansya AI, Sentimo, Monarch Money What's New 2026, Google DeepMind Gemini 3.7 Flash (Aug 2026)
 
 > Content was paraphrased and summarized for compliance with licensing restrictions.
@@ -97,25 +97,22 @@ Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, 
 
 Apps not in the main matrix above, included for completeness:
 
-| Feature | SmartSpend | Cleo | Era | EveryDollar | Honeydue | Empower | Lista PH | Sentimo | SweldoWise |
-|---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Platform** | Android | iOS+Web | iOS+Web | Android+iOS | Android+iOS | Android+iOS+Web | Android | Android | Android |
-| **Cost** | Free | Freemium | Freemium | Free/$12.99mo | Free | Free (basic) | Free | Free | Free |
-| **AI chat / assistant** | ✅ 29 actions | ✅ Snarky AI advisor | ✅ Q&A only | ❌ | ❌ | ⚠️ Insights only | ❌ | ❌ | ❌ |
-| **Natural language input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Financial Health Score** | ✅ 0–100 | ✅ Score | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Offline mode** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| **Bank sync** | ❌ manual | ✅ | ✅ | ✅ Paid | ✅ | ✅ | ❌ manual | ❌ manual | ❌ manual |
-| **Filipino context** | ✅ Full | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ✅ Full | ✅ Full |
-| **Gamification** | ✅ 23 badges | ✅ Challenges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Streaks/KBoy | ❌ |
-| **Budget method** | Category + limit | Envelope AI | Zero-based | Zero-based | Shared | Overview | Simple | Sweldo-cycle | Sweldo-cycle |
-| **Couples / shared** | ❌ | ❌ | ❌ | ❌ | ✅ Core feature | ❌ | ❌ | ❌ | ❌ |
-| **Investment tracking** | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ Full | ❌ | ❌ | ⚠️ MP2 only |
-| **OCR / receipt scan** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Voice input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Batch screenshots** | ✅ 40+ platforms | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **SSS/PhilHealth/Pag-IBIG** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ⚠️ MP2 |
-| **Free (no subscription)** | ✅ Always free | Freemium | Freemium | ✅ Basic free | ✅ | ✅ Basic | ✅ | ✅ | ✅ |
+| Feature | SmartSpend | Cleo | Era | EveryDollar | Honeydue | Empower | Lista PH | Sentimo | SweldoWise | GCash Pera Coach |
+|---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Platform** | Android | iOS+Web | iOS+Web | Android+iOS | Android+iOS | Android+iOS+Web | Android | Android | Android | Android (inside GCash) |
+| **Cost** | Free | Freemium | Freemium | Free/$12.99mo | Free | Free (basic) | Free | Free | Free | Free (GCash verified users) |
+| **AI chat / assistant** | ✅ 29 actions | ✅ Snarky AI advisor | ✅ Q&A only | ❌ | ❌ | ⚠️ Insights only | ❌ | ❌ | ❌ | ✅ Q&A + financial literacy |
+| **Natural language input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ (Taglish + Filipino) |
+| **Expense tracking** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ (education/advice only) |
+| **Financial Health Score** | ✅ 0–100 | ✅ Score | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Offline mode** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| **Bank sync** | ❌ manual | ✅ | ✅ | ✅ Paid | ✅ | ✅ | ❌ manual | ❌ manual | ❌ manual | ✅ (GCash balance) |
+| **Filipino context** | ✅ Full | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ✅ Full | ✅ Full | ✅ Full + PH languages |
+| **Gamification** | ✅ 23 badges | ✅ Challenges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Streaks/KBoy | ❌ | ❌ |
+| **Agentic actions** | ✅ 29 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **OCR / receipt scan** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Voice input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Free (no subscription)** | ✅ Always free | Freemium | Freemium | ✅ Basic free | ✅ | ✅ Basic | ✅ | ✅ | ✅ | ✅ (requires GCash) |
 
 **Notes:**
 - **Cleo** — Strong AI personality and gamification but no Filipino language, US/UK focused, no offline. The snarky AI advisor is their differentiator. SmartSpend has deeper agentic actions; Cleo is better at behavioral nudging with personality.
@@ -124,6 +121,7 @@ Apps not in the main matrix above, included for completeness:
 - **Honeydue** — Purpose-built for couples to share finances. Tracks bills, balances, and spending together. No AI, no FHS, no offline. Niche but strong for couples.
 - **Empower** (formerly Personal Capital) — Free portfolio and net worth tracker with investment analysis. Strong for investment tracking and retirement planning. No budgeting AI, US-bank-centric.
 - **Lista PH** — Filipino personal finance app on Android. Simple manual expense tracking, goal setting, free. No AI, no FHS, no gamification. Lighter alternative to SmartSpend for basic needs.
+- **GCash Pera Coach** *(new March 2026)* — Embedded AI financial literacy coach inside the GCash app, developed with Microsoft. Converses in English and Filipino languages. Provides financial guidance and literacy education on-demand. Free for Fully Verified GCash users. **Critical distinction from SmartSpend:** Pera Coach is an advisory/literacy tool embedded in a payments app — no expense tracking, no FHS, no offline mode, no agentic actions. SmartSpend is a dedicated financial management system. They solve different problems: Pera Coach teaches financial concepts; SmartSpend manages and tracks actual financial behavior.
 
 ---
 
@@ -361,7 +359,7 @@ Both are paid-only with no free tier sufficient for sustained daily use. For aca
 
 | Phase | Change | Reason |
 |-------|--------|--------|
-| **Current (v2.9.2)** | Flash-Lite primary, 5-provider fallback | Free, sufficient for 30 respondents |
+| **Current (v2.9.6)** | Flash-Lite primary, 5-provider fallback | Free, sufficient for 30 respondents |
 | **Post-capstone** | Upgrade `financial_advice` tier to Gemini 2.5 Flash | Better PH financial knowledge, still affordable |
 | **Play Store launch** | Add backend proxy (Cloud Function or Vercel) | Move API key off device entirely |
 | **Scale (1,000+ users)** | Evaluate GPT-5.6 Terra or Claude Sonnet 5 for premium tier | Better reasoning at scale, can charge subscription |
@@ -386,13 +384,79 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 
 ---
 
+---
+
+## PART 6 — GLOBAL AI IN PERSONAL FINANCE — CONTEXT & STATISTICS (August 2026)
+
+### 6.1 AI Adoption in Consumer Finance
+
+*(Content paraphrased for compliance with licensing restrictions. Sources cited below.)*
+
+**EY Global AI Consumer Survey, April 2026:**
+- **49%** of global consumers used AI to support savings and investment decisions in the past six months
+- **21%** used AI for financial product recommendations
+- **18%** used AI specifically for budgeting and household finance management
+- **50%** believe AI could help detect and prevent financial fraud
+- Source: Ernst & Young (2026a) — https://www.ey.com/en_gl/newsroom/2026/04/nearly-half-of-global-consumers-now-use-ai-to-guide-savings-and-investment-decisions
+
+**EY Autonomous AI Report, March 2026:**
+- 84% of respondents used AI in the prior six months
+- **16% globally** report using AI systems that act autonomously without human intervention
+- SmartSpend's 29 agentic actions represent this frontier of AI-as-actor in personal finance
+- Source: Ernst & Young (2026b) — https://www.ey.com/en_nl/newsroom/2026/03/ey-survey-autonomous-ai-is-no-longer-theoretical-as-adoption-grows-despite-ongoing-trust-concerns
+
+**Plaid State of Intelligent Finance, Spring 2026:**
+- **60%** of consumers expect AI to save them time on financial tasks
+- **58%** expect AI to reduce financial stress
+- **53%** expect AI to take the guesswork out of financial decisions
+- AI personal finance market projected to reach **$3.7 billion by 2033**
+- Source: Plaid (2026) — https://plaid.com/blog/state-of-intelligent-finance-report-spring-2026/
+
+**Deloitte 2026 — Agentic AI in Wealth Management:**
+- Agentic AI capabilities can lower cost-to-serve, enhance advice quality, and improve client experience in financial services
+- SmartSpend applies these same principles at the consumer level — democratizing access to AI-assisted financial management
+- Source: Deloitte (2026) — https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
+
+### 6.2 Philippine Digital Finance Statistics (August 2026)
+
+| Statistic | Value | Source |
+|-----------|-------|--------|
+| Filipino adult account ownership | 50% | BSP CFIS 2025 |
+| Household financial access | 86% | BSP CFIS 2025 |
+| PH financial inclusion (SWS survey) | 58% | SWS March 2026 |
+| GCash monthly active users | 41.5 million | Bloomberg 2026 |
+| PH digital economy GVA | ₱2.74 trillion (9.8% of GDP) | PSA PDESA 2025 |
+| Filipinos who shopped online (6 months) | 99% | NielsenIQ 2026 |
+| Filipinos using mobile banking apps | 52% | NielsenIQ 2026 |
+| Digital wallets share of e-commerce | 28% (~US$5.6B) | 2C2P 2026 |
+
+These figures collectively show that while digital commerce and e-wallet use are nearly universal in the Philippines, structured financial management app adoption lags far behind. SmartSpend addresses this gap by meeting users in the digital-first behavior they already practice (e-wallet use, screenshot saving, online shopping) and converting that into structured financial tracking.
+
+### 6.3 References — Part 6
+
+Deloitte. (2026). *Agentic AI boosts wealth management*. https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
+
+Ernst & Young. (2026a). *Nearly half of global consumers now use AI to guide savings and investment decisions*. https://www.ey.com/en_gl/newsroom/2026/04/nearly-half-of-global-consumers-now-use-ai-to-guide-savings-and-investment-decisions
+
+Ernst & Young. (2026b). *EY survey: Autonomous AI is no longer theoretical*. https://www.ey.com/en_nl/newsroom/2026/03/ey-survey-autonomous-ai-is-no-longer-theoretical-as-adoption-grows-despite-ongoing-trust-concerns
+
+NielsenIQ. (2026). *The new financial reality: How Filipino consumers are spending, saving, and banking in 2026*. https://nielseniq.com/global/en/insights/report/2026/the-new-financial-reality-how-filipino-consumers-are-spending-saving-and-banking-in-2026/
+
+Philippine Statistics Authority. (2025). *Philippine Digital Economy Satellite Account (PDESA) 2025*. https://psa.gov.ph
+
+Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://plaid.com/blog/state-of-intelligent-finance-report-spring-2026/
+
+*Content was paraphrased and summarized for compliance with licensing restrictions.*
+
+---
+
 *Sources: PCMag Best Personal Finance Apps 2026 (pcmag.com), NerdWallet Best Budget Apps 2026 (nerdwallet.com), CNBC Best Budgeting Apps 2026 (cnbc.com), BudgetPH (budget.kindlyf.com), Alkansya (alkansya.online), Sentimo (sentimoapp.com), SweldoWise (sweldowise.ph), Lista PH (Google Play), Cleo app (meetcleo.com), Era app (era.app), Empower (empower.me), Honeydue (honeydue.com), Monarch Money What's New Aug 2026 (monarch.com/blog), Groq free tier limits (pricepertoken.com/endpoints/groq/free, grizzlypeaksoftware.com), Groq LLaMA 4 Scout/Maverick launch (groq.com), Gemini 3.7 Flash announcement Aug 13 2026 (blog.google, felloai.com/gemini-pricing), Gemini API rate limits (ai.google.dev), Grok 4.6 release Aug 2026 (felloai.com/grok-pricing), DeepSeek V4 pricing (cloudzero.com/blog/deepseek-pricing), DeepSeek R1 retirement July 2026 (deepseek.ai/deepseek-r1), Qwen3 release Apr 2026 (alibabagroup.com), AIMUltiple Finance LLM Benchmark (aimultiple.com/finance-llm), micro1.ai REALM Financial Benchmark (micro1.ai/benchmark/realm-financial), Groq/Cerebras speed benchmarks (spheron.network, edenai.co), getaleph.com LLM Finance Teams 2026, ArXiv 2507.22936 Evaluating LLMs in Financial NLP*
 
 *Content was paraphrased and summarized for compliance with licensing restrictions.*
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame*
+*SmartSpend v2.9.6 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 
 ---
@@ -477,7 +541,7 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 | Mixtral 8x7B | Mistral/Groq | 32,000 | ~400 | ★★★☆☆ | ★★★★☆ | ✅ Groq | ❌ Poor Filipino |
 | DeepSeek V3 weights *(self-host)* | DeepSeek/MIT | 64,000 | ~60–100 | ★★★★☆ | ★★★☆☆ | ✅ MIT open weights | ❌ Poor Filipino, needs GPU |
 
-### Current 5-Provider Failover Chain (v2.9.2)
+### Current 5-Provider Failover Chain (v2.9.6)
 
 | Priority | Provider | Model | Free Limit | Role |
 |----------|----------|-------|------------|------|
@@ -490,7 +554,7 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 ### Why Context Injection (Not RAG)
 A typical SmartSpend user has 20–50 expenses, 5–10 budgets, 3–5 goals — all fitting in ~1,000 tokens. RAG's vector search overhead is unnecessary when the full dataset can be injected directly into each AI message.
 
-### Actual Performance Metrics (SmartSpend v2.9.2)
+### Actual Performance Metrics (SmartSpend v2.9.6)
 
 | Metric | Value |
 |--------|-------|

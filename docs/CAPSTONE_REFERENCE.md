@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.6 | **Date:** August 11, 2026
+**Version:** 2.9.6 | **Date:** August 27, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.2).
+> All figures are accurate to the final build (v2.9.6).
 
 ---
 
@@ -45,11 +45,17 @@ No existing application combines:
 6. Completely free — no subscription required
 
 ### Key Statistics for Background
-- **BSP CFIS 2025:** Only 50% of Filipino adults have formal financial accounts
+- **BSP CFIS 2025:** Only 50% of Filipino adults have formal financial accounts; household access rose to 86%
 - **BSP 2025:** 74% of Filipinos correctly answered basic financial literacy questions (up from 69% in 2021)
+- **SWS March 2026:** Philippine financial inclusion reached 58% — 43% e-money accounts, 21% bank accounts
+- **GCash:** 41.5 million monthly users (Bloomberg, 2026) — primary driver of financial inclusion
+- **PSA PDESA 2025:** Philippine digital economy = ₱2.74 trillion (9.8% of GDP); digital economy employs 10.39M Filipinos
+- **NielsenIQ 2026:** 99% of Filipinos shopped online in 6 months, but only 52% actively use mobile banking apps
 - **Insurance Commission 2025:** Only 28% of Filipinos have life insurance
 - **Flores 2025:** Filipino workers show "come-what-may" attitude toward financial planning
 - **Juniper Research 2026:** Gamification boosts saving habits by 22%
+- **EY April 2026:** 49% of global consumers used AI for savings/investment; 18% used it for budgeting
+- **Plaid Spring 2026:** 60% of consumers expect AI to save them time; 58% expect it to reduce financial stress
 - **99.5%** of Philippine businesses are MSMEs with limited access to financial tools
 
 ### Objectives
@@ -369,25 +375,26 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 > For the full 14-app matrix see `docs/BENCHMARK.md`.
 
-| Feature | SmartSpend | YNAB | Monarch | Copilot | Rocket Money | Tarsi (PH) | **BudgetPH** | **Alkansya AI** |
-|---------|-----------|------|---------|---------|--------------|------------|-------------|----------------|
-| AI Chat (agentic) | ✅ 29 actions | ❌ | ❌ | ⚠️ Basic | ❌ | ❌ | ⚠️ Insights | ✅ Chat |
-| Filipino-English AI | ✅ Full Taglish | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ❌ | ✅ |
-| Voice Input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| OCR Receipt | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| Barcode Scan | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Batch Screenshots (40+ platforms) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Offline Mode | ✅ Full | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
-| Financial Health Score | ✅ Dual-mode | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ |
-| PH Gov (SSS/PhilHealth/Pag-IBIG) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Records | ❌ |
-| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ |
-| 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| Gamification (badges/quests) | ✅ 23 badges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ |
-| Free (no subscription) | ✅ Always | ❌ $14.99/mo | ❌ $9.99/mo | ❌ $10.99/mo | ⚠️ Limited | ✅ | ✅ | ⚠️ Limited |
-| Spending Limits (multi-period) | ✅ Daily/Wk/Mo/Yr | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| Logging Gap Detection | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Insurance Tracker | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Round-Up Savings | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Feature | SmartSpend | YNAB | Monarch | Copilot | Rocket Money | Tarsi (PH) | **BudgetPH** | **Alkansya AI** | **GCash Pera Coach** |
+|---------|-----------|------|---------|---------|--------------|------------|-------------|----------------|---------------------|
+| AI Chat (agentic) | ✅ 29 actions | ❌ | ❌ | ⚠️ Basic | ❌ | ❌ | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A |
+| Filipino-English AI | ✅ Full Taglish | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ❌ | ✅ | ✅ Multiple PH languages |
+| Expense Tracking | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ (advisory only) |
+| Voice Input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| OCR Receipt | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Barcode Scan | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Batch Screenshots (40+ platforms) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Offline Mode | ✅ Full | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
+| Financial Health Score | ✅ Dual-mode | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ | ❌ |
+| PH Gov (SSS/PhilHealth/Pag-IBIG) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Records | ❌ | ❌ |
+| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ |
+| 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Gamification (badges/quests) | ✅ 23 badges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ |
+| Free (no subscription) | ✅ Always | ❌ $14.99/mo | ❌ $9.99/mo | ❌ $10.99/mo | ⚠️ Limited | ✅ | ✅ | ⚠️ Limited | ✅ (GCash required) |
+| Spending Limits (multi-period) | ✅ Daily/Wk/Mo/Yr | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Logging Gap Detection | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Insurance Tracker | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Round-Up Savings | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 **SmartSpend unique advantages:**
 - Only app with 29 agentic AI actions — AI takes real autonomous actions on user data
@@ -429,6 +436,9 @@ Poor Filipino-English understanding; no reliable hosted free API; mobile hardwar
 ---
 
 ## 11. PANEL Q&A PREPARATION
+
+**Q: "GCash already has Pera Coach — why does SmartSpend still matter?"**
+A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI financial literacy coach embedded inside the GCash payments app. It provides Q&A and financial education. SmartSpend is fundamentally different: it is a dedicated financial management system with 29 autonomous agentic actions, expense tracking, dual-mode Financial Health Score, offline SQLite storage, gamification, batch screenshot import, and SSS/PhilHealth/BIR integration. Pera Coach teaches concepts; SmartSpend manages actual financial behavior. They solve different problems for different user needs.
 
 **Q: "Your LLM should do something important and heavy."**
 A: SmartSpend's AI executes 29 autonomous financial management actions — from splitting bills (auto-creating debt entries), to generating a 50/30/20 salary budget plan, explaining FHS drops in plain Filipino-English, detecting forgotten subscriptions, simulating "what if I save ₱500 more/month", and routing queries to the best model for the task. This is genuine agentic AI: perceive (full financial context from SQLite) → decide → act (writes to DB directly).
@@ -489,13 +499,25 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ## 14. KEY REFERENCES (APA Format)
 
+- Bangko Sentral ng Pilipinas. (2021). *2021 Financial Inclusion Survey*. BSP.
 - Bangko Sentral ng Pilipinas. (2025). *Consumer Finance and Inclusion Survey (CFIS) 2025*. BSP.
 - Bangor, A., Kortum, P., & Miller, J. (2009). Determining what individual SUS scores mean: Adding an adjective rating scale. *Journal of Usability Studies, 4*(3), 114–123.
+- Bloomberg. (2026). *How the Philippines' first fintech unicorn is minting financial inclusion*. https://sponsored.bloomberg.com/article/mynt/how-the-philippines-first-fintech-unicorn-is-minting-financial-inclusion
 - Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan et al. (Eds.), *Usability Evaluation in Industry* (pp. 189–194). Taylor & Francis.
 - Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. *MIS Quarterly, 13*(3), 319–340.
+- Deloitte. (2026). *Agentic AI boosts wealth management*. https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
+- Ernst & Young. (2026). *Nearly half of global consumers now use AI to guide savings and investment decisions*. https://www.ey.com/en_gl/newsroom/2026/04/nearly-half-of-global-consumers-now-use-ai-to-guide-savings-and-investment-decisions
+- Financial Health Network. (2021). *FinHealth Score® Toolkit*. https://finhealthnetwork.org/tools/financial-health-score/
+- Financial Health Network. (2026). *From insight to impact: The next phase of financial health measurement*. https://finhealthnetwork.org/research/from-insight-to-impact-the-next-phase-of-financial-health-measurement/
 - Flores, M. (2025). Financial freedom of Filipino workers: Attitudes and practices. [Research study].
+- GCash / Mynt. (2026). *GCash launches country's first AI financial coach* [Press release]. https://www.prnewswire.com/apac/news-releases/ph-fintech-gcash-launches-countrys-first-ai-financial-coach-embedded-in-e-wallet-to-strengthen-financial-literacy-302718569.html
 - Insurance Commission Philippines. (2025). *Philippine Insurance Market Report 2025*.
 - Juniper Research. (2026). *Gamification in Banking: How Game Mechanics Drive Financial Behavior Change*.
+- Meyll, T., et al. (2025). Spendception: The psychological impact of digital payments on consumer purchase behavior and impulse buying. *Behavioral Sciences, 15*(3), 387. https://doi.org/10.3390/bs15030387
+- NielsenIQ. (2026). *The new financial reality: How Filipino consumers are spending, saving, and banking in 2026*. https://nielseniq.com/global/en/insights/report/2026/the-new-financial-reality-how-filipino-consumers-are-spending-saving-and-banking-in-2026/
+- Philippine Statistics Authority. (2021). *Family Income and Expenditure Survey (FIES) 2021*. PSA.
+- Philippine Statistics Authority. (2025). *Philippine Digital Economy Satellite Account (PDESA) 2025*. PSA. https://psa.gov.ph
+- Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://plaid.com/blog/state-of-intelligent-finance-report-spring-2026/
 - Thaler, R. H., & Sunstein, C. R. (2008). *Nudge: Improving decisions about health, wealth, and happiness*. Yale University Press.
 - Warren, E., & Tyagi, A. W. (2005). *All your worth: The ultimate lifetime money plan*. Free Press.
 
@@ -517,9 +539,10 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.3 | Aug 2026 | Per-section visibility toggles (10 new App Settings), RESEARCH_BASIS.md, APPLICATION_PIPELINE.md added |
 | 2.9.4 | Aug 2026 | 6 bug fixes: FHS gap reload, subscription overlap, analytics score sync, limit card overlap, lightweight spending restraint cross-period, stale model names in about/ai screens |
 | 2.9.5 | Aug 2026 | Weekly Category Card (High/Normal/Low vs usual), Financial Management Score, FHS trend, enriched breakdown dialog, 9 new research sources |
+| 2.9.6 | Aug 2026 | App Settings fully rebuilt (DraggableScrollableSheet, scrollable), Lite Mode one-tap toggle, all grayed-out restrictions removed; docs sweep + research expansion (Parts 12–13 new sources, GCash Pera Coach competitor, EY/Plaid/PSA 2026 stats) |
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame*
+*SmartSpend v2.9.6 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
-*Last updated: August 11, 2026*
+*Last updated: August 27, 2026*

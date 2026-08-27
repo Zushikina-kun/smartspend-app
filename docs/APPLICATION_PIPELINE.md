@@ -362,7 +362,7 @@ End of month
 
 ---
 
-## KEY NUMBERS (v2.9.2)
+## KEY NUMBERS (v2.9.6)
 
 | What | How many |
 |------|---------|
@@ -396,7 +396,7 @@ End of month
 
 ---
 
-*SmartSpend v2.9.2 — Lucid Frame*
+*SmartSpend v2.9.6 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Teacher-in-Charge: Janelli M. Mendez, DIT | Capstone Adviser: Johnny Verzola, MTS (reassignment pending)*
