@@ -1,5 +1,5 @@
 # SmartSpend — Project Status
-**Version:** 2.9.4 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.5 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** August 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
@@ -55,7 +55,14 @@
 
 ## WHAT IS DONE ✅
 
-### v2.9.4 — August 2026
+### v2.9.5 — August 2026
+- [x] **New feature:** Weekly Category Card on home screen — shows each category's spend this week vs 4-week average, labeled High/Normal/Low with color coding and tooltips
+- [x] **New feature:** Financial Management Score (0–100) on Profile screen — separate score measuring HOW WELL the user uses SmartSpend (logging, budget setup, goal tracking, data completeness)
+- [x] **New feature:** FHS score trend — shows +/−X vs last month on the FHS card
+- [x] **Enriched FHS breakdown dialog** — score classification label, top strength, top weakness, per-component Good/Fair/Needs Work labels, actionable tip per weak component
+- [x] **Research expansion:** RESEARCH_BASIS.md Part 10 — 9 new sources (Financial Health Network 2026, Rateweb, Elenvo, MindsBudget, WalletHub, FinToolSuite, Khazneh, Foresight, PFScores)
+- [x] **Score labels updated** to 5-tier: Excellent/Great/Good/Fair/Needs Work (was Good/Fair/Needs Attention)
+- [x] **What's New screen** updated with v2.9.5 features
 - [x] **Bug fix:** Gap dialog now triggers FHS score reload immediately after user answers (score was previously stale until next app event)
 - [x] **Bug fix:** Subscription summary card and auto-detection prompt no longer both show simultaneously
 - [x] **Bug fix:** Analytics FHS breakdown now shows the adjusted score (same as home screen, including decay/gap penalties)
