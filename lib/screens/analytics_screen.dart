@@ -77,6 +77,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   bool _showEmergencyFund = true;
   bool _showMilestones = true;
   bool _showMarketInsights = true;
+  // Adjusted FHS score (with decay + gap adjustments, matches home screen)
+  int _currentAdjustedScore = 0;
   StreamSubscription? _eventSub;
 
   List<dynamic> _glanceBudgets = []; // full budget list for category breakdown
@@ -274,7 +276,21 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         spendingLimit: spendLimit,
         spendingLimitPeriod: spendPeriod,
       );
-      if (mounted) setState(() => _currentComponents = components);
+      // Apply adjustments so breakdown score matches the home screen score
+      final rawScore = ScoreService.calculateScore(
+        thisMonthExp,
+        budgets: budgets,
+        monthlyIncome: iwMode ? income : 0,
+        lightweightMode: !iwMode,
+        spendingLimit: spendLimit,
+        spendingLimitPeriod: spendPeriod,
+      );
+      final adjustedScore = await ScoreService.applyAllAdjustments(rawScore);
+      if (mounted)
+        setState(() {
+          _currentComponents = components;
+          _currentAdjustedScore = adjustedScore;
+        });
     } catch (_) {}
 
     // Load budget list for category breakdown (non-blocking)
@@ -1999,8 +2015,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       if (_currentComponents.isNotEmpty) ...[
                         Row(
                           children: [
-                            const Text("Score Components (This Month)",
-                                style: TextStyle(
+                            Text(
+                                "Score Components — $_currentAdjustedScore / 100",
+                                style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold)),
                             const SizedBox(width: 6),
                             const InfoButton(

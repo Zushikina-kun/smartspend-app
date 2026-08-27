@@ -47,12 +47,15 @@ class ScoreService {
     bool lightweightMode = false,
     double spendingLimit = 0, // period limit set by user
     String spendingLimitPeriod = 'monthly',
+    double spentInPeriod =
+        -1, // actual spent in the limit's period (-1 = use expenses list)
   }) {
     if (lightweightMode) {
       return _computeLightweight(expenses,
           budgets: budgets,
           spendingLimit: spendingLimit,
-          spendingLimitPeriod: spendingLimitPeriod)['score'] as int;
+          spendingLimitPeriod: spendingLimitPeriod,
+          spentInPeriod: spentInPeriod)['score'] as int;
     }
     return _compute(expenses,
         budgets: budgets, monthlyIncome: monthlyIncome)['score'] as int;
@@ -65,12 +68,14 @@ class ScoreService {
     bool lightweightMode = false,
     double spendingLimit = 0,
     String spendingLimitPeriod = 'monthly',
+    double spentInPeriod = -1,
   }) {
     if (lightweightMode) {
       return _computeLightweight(expenses,
               budgets: budgets,
               spendingLimit: spendingLimit,
-              spendingLimitPeriod: spendingLimitPeriod)['breakdown']
+              spendingLimitPeriod: spendingLimitPeriod,
+              spentInPeriod: spentInPeriod)['breakdown']
           as List<Map<String, dynamic>>;
     }
     return _compute(expenses,
@@ -101,6 +106,7 @@ class ScoreService {
     List<Budget> budgets = const [],
     double spendingLimit = 0,
     String spendingLimitPeriod = 'monthly',
+    double spentInPeriod = -1, // actual spent for the limit's period
   }) {
     final breakdown = <Map<String, dynamic>>[];
 
@@ -121,7 +127,11 @@ class ScoreService {
     double comp1 = 25.0;
     String comp1Reason;
     if (spendingLimit > 0) {
-      final totalSpent = expenses.fold(0.0, (s, e) => s + (e['amount'] as num));
+      // Use the actual period-specific spent amount if provided (avoids
+      // cross-period mismatch when limit is daily/weekly but expenses are monthly)
+      final totalSpent = spentInPeriod >= 0
+          ? spentInPeriod
+          : expenses.fold(0.0, (s, e) => s + (e['amount'] as num));
       final ratio = totalSpent / spendingLimit;
       // Full 25 pts at ≤80% of limit; scales to 0 at 2× the limit
       comp1 =
