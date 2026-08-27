@@ -896,6 +896,14 @@ class _DashboardState extends State<Dashboard> {
   Map<String, double> _allLimits = {};
   Map<String, double> _allSpent = {};
 
+  // ── SECTION VISIBILITY (user-controlled via App Settings) ────────────────
+  bool _showSubscriptions = true;
+  bool _showQuickLog = true;
+  bool _showBadges = true;
+  bool _showMoodHome = true;
+  bool _showForecast = true;
+  bool _showPrediction = true;
+
   // Track the most recently added expense date so budget/limit alerts
   // are suppressed when a historical (past-month) entry was just logged.
   String? _lastAddedExpenseDate;
@@ -985,6 +993,18 @@ class _DashboardState extends State<Dashboard> {
     // Load budget alerts setting before setState
     final budgetAlertsEnabled =
         (await DBService.getSetting('budget_alerts_enabled')) != 'false';
+    // Section visibility settings
+    final showSubscriptions =
+        (await DBService.getSetting('show_subscriptions')) != 'false';
+    final showQuickLog =
+        (await DBService.getSetting('show_quick_log')) != 'false';
+    final showBadges = (await DBService.getSetting('show_badges')) != 'false';
+    final showMoodHome =
+        (await DBService.getSetting('show_mood_home')) != 'false';
+    final showForecast =
+        (await DBService.getSetting('show_forecast')) != 'false';
+    final showPrediction =
+        (await DBService.getSetting('show_prediction')) != 'false';
     if (!mounted) return; // widget may have been disposed during async gap
     setState(() {
       _expenses = expenses;
@@ -1000,6 +1020,13 @@ class _DashboardState extends State<Dashboard> {
       _spentInPeriod = spentInPeriod;
       _allLimits = allLimits;
       _allSpent = allSpent;
+      // Section visibility
+      _showSubscriptions = showSubscriptions;
+      _showQuickLog = showQuickLog;
+      _showBadges = showBadges;
+      _showMoodHome = showMoodHome;
+      _showForecast = showForecast;
+      _showPrediction = showPrediction;
       // Only show loading indicator if we don't have an insight yet
       if (_insight == "Analyzing your expenses...") _loadingInsight = true;
       final spent = <String, double>{};
@@ -2926,7 +2953,7 @@ class _DashboardState extends State<Dashboard> {
                 _buildDailyLimitCard(context),
 
               // Subscription leak summary
-              _buildSubscriptionSummaryCard(context),
+              if (_showSubscriptions) _buildSubscriptionSummaryCard(context),
 
               // Subscription auto-detection prompt
               if (_recurringCandidates.isNotEmpty)
@@ -2936,13 +2963,15 @@ class _DashboardState extends State<Dashboard> {
                 ),
 
               // Quick-log chips (most frequent expenses)
-              if (_quickLogItems.isNotEmpty) _buildQuickLogChips(context),
+              if (_showQuickLog && _quickLogItems.isNotEmpty)
+                _buildQuickLogChips(context),
 
               // Spending streaks & badges (#13)
-              if (_earnedBadges.isNotEmpty) _buildBadgesRow(context),
+              if (_showBadges && _earnedBadges.isNotEmpty)
+                _buildBadgesRow(context),
 
               // Daily mood check-in
-              _MoodCheckInWidget(),
+              if (_showMoodHome) _MoodCheckInWidget(),
 
               // NI-6: "Done spending today" toggle
               _DoneSpendingToggle(),
@@ -3128,10 +3157,10 @@ class _DashboardState extends State<Dashboard> {
                 }),
 
               // Cash Flow Forecast card
-              _buildCashFlowCard(context),
+              if (_showForecast) _buildCashFlowCard(context),
 
               // Behavioral Prediction card
-              _buildPredictionCard(context),
+              if (_showPrediction) _buildPredictionCard(context),
               Row(
                 children: [
                   Expanded(

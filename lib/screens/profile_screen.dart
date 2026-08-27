@@ -265,6 +265,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool incomeWalletMode = await DBService.getIncomeWalletMode();
     bool anomalyEnabled =
         (await DBService.getSetting('anomaly_detection_enabled')) != 'false';
+    // Home screen section visibility
+    bool showSubscriptions =
+        (await DBService.getSetting('show_subscriptions')) != 'false';
+    bool showQuickLog =
+        (await DBService.getSetting('show_quick_log')) != 'false';
+    bool showBadges = (await DBService.getSetting('show_badges')) != 'false';
+    bool showMoodHome =
+        (await DBService.getSetting('show_mood_home')) != 'false';
+    bool showForecast =
+        (await DBService.getSetting('show_forecast')) != 'false';
+    bool showPrediction =
+        (await DBService.getSetting('show_prediction')) != 'false';
+    // Analytics section visibility
+    bool showDTI = (await DBService.getSetting('show_dti')) != 'false';
+    bool showEmergencyFund =
+        (await DBService.getSetting('show_emergency_fund')) != 'false';
+    bool showMilestones =
+        (await DBService.getSetting('show_milestones')) != 'false';
+    bool showMarketInsights =
+        (await DBService.getSetting('show_market_insights')) != 'false';
 
     if (!mounted) return;
     showModalBottomSheet(
@@ -509,6 +529,139 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setSheet(() => anomalyEnabled = v);
                   DBService.setSetting(
                       'anomaly_detection_enabled', v ? 'true' : 'false');
+                },
+              ),
+              const SizedBox(height: 12),
+              Text("Home Screen — Show/Hide Sections",
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600])),
+              const SizedBox(height: 4),
+              Text(
+                "Toggle optional cards on the home screen. Core cards (spending summary, FHS score, budgets) are always shown.",
+                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              ),
+              const SizedBox(height: 8),
+              _settingsTile(
+                icon: Icons.autorenew_outlined,
+                title: "Subscription summary",
+                subtitle: "Card showing detected recurring subscriptions",
+                value: showSubscriptions,
+                onChanged: (v) {
+                  setSheet(() => showSubscriptions = v);
+                  DBService.setSetting(
+                      'show_subscriptions', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.flash_on_outlined,
+                title: "Quick-log chips",
+                subtitle: "One-tap chips for your most frequent expenses",
+                value: showQuickLog,
+                onChanged: (v) {
+                  setSheet(() => showQuickLog = v);
+                  DBService.setSetting('show_quick_log', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.emoji_events_outlined,
+                title: "Achievement badges row",
+                subtitle: "Shows your earned badges on the home screen",
+                value: showBadges,
+                onChanged: (v) {
+                  setSheet(() => showBadges = v);
+                  DBService.setSetting('show_badges', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.emoji_emotions_outlined,
+                title: "Mood check-in (home)",
+                subtitle: "Daily mood prompt on the home screen",
+                value: showMoodHome,
+                onChanged: (v) {
+                  setSheet(() => showMoodHome = v);
+                  DBService.setSetting('show_mood_home', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.waterfall_chart_outlined,
+                title: "Cash flow forecast",
+                subtitle: "Projected income vs spending card",
+                value: showForecast,
+                onChanged: (v) {
+                  setSheet(() => showForecast = v);
+                  DBService.setSetting('show_forecast', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.psychology_outlined,
+                title: "Behavioral prediction card",
+                subtitle: "AI prediction of end-of-month spending",
+                value: showPrediction,
+                onChanged: (v) {
+                  setSheet(() => showPrediction = v);
+                  DBService.setSetting('show_prediction', v ? 'true' : 'false');
+                  fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              const SizedBox(height: 12),
+              Text("Analytics — Show/Hide Sections",
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600])),
+              const SizedBox(height: 4),
+              Text(
+                "Toggle optional analytics cards. Pie chart, 50/30/20, and Want/Need are always shown.",
+                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              ),
+              const SizedBox(height: 8),
+              _settingsTile(
+                icon: Icons.account_balance_outlined,
+                title: "Debt-to-Income ratio",
+                subtitle: "DTI card in Analytics screen",
+                value: showDTI,
+                onChanged: (v) {
+                  setSheet(() => showDTI = v);
+                  DBService.setSetting('show_dti', v ? 'true' : 'false'); fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.health_and_safety_outlined,
+                title: "Emergency fund calculator",
+                subtitle: "How many months of expenses you have saved",
+                value: showEmergencyFund,
+                onChanged: (v) {
+                  setSheet(() => showEmergencyFund = v);
+                  DBService.setSetting(
+                      'show_emergency_fund', v ? 'true' : 'false');
+                },
+              ),
+              _settingsTile(
+                icon: Icons.flag_outlined,
+                title: "Financial milestones",
+                subtitle: "Timeline of your financial achievements",
+                value: showMilestones,
+                onChanged: (v) {
+                  setSheet(() => showMilestones = v);
+                  DBService.setSetting('show_milestones', v ? 'true' : 'false'); fireEvent(AppEvent.incomeChanged);
+                },
+              ),
+              _settingsTile(
+                icon: Icons.currency_exchange_outlined,
+                title: "Market insights (exchange rates)",
+                subtitle: "Live PHP exchange rates card in Analytics",
+                value: showMarketInsights,
+                onChanged: (v) {
+                  setSheet(() => showMarketInsights = v);
+                  DBService.setSetting(
+                      'show_market_insights', v ? 'true' : 'false');
                 },
               ),
             ],

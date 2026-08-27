@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.2';
-  static const _prefKey = 'whats_new_seen_2_9_2';
+  static const _version = '2.9.3';
+  static const _prefKey = 'whats_new_seen_2_9_3';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();

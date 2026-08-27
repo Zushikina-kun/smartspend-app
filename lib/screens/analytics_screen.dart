@@ -72,6 +72,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   List<Map<String, dynamic>> _scoreHistory = [];
   List<Map<String, dynamic>> _currentComponents = [];
   bool _showAdvancedCharts = false;
+  // Section visibility (controlled from App Settings)
+  bool _showDTI = true;
+  bool _showEmergencyFund = true;
+  bool _showMilestones = true;
+  bool _showMarketInsights = true;
   StreamSubscription? _eventSub;
 
   List<dynamic> _glanceBudgets = []; // full budget list for category breakdown
@@ -111,6 +116,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         await DBService.getSetting('account_type') ?? 'employed';
     final paydayStr = await DBService.getSetting('payday_date');
     final paydayDate = int.tryParse(paydayStr ?? '1') ?? 1;
+    // Section visibility
+    final showDTI = (await DBService.getSetting('show_dti')) != 'false';
+    final showEmergencyFund =
+        (await DBService.getSetting('show_emergency_fund')) != 'false';
+    final showMilestones =
+        (await DBService.getSetting('show_milestones')) != 'false';
+    final showMarketInsights =
+        (await DBService.getSetting('show_market_insights')) != 'false';
 
     // Filter by period
     final now = DateTime.now();
@@ -213,6 +226,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       _cachedCategoryTotals = catTotals;
       _cachedMonthlyTotals = last6;
       _cachedDailyTotals = dailyTotals;
+      _showDTI = showDTI;
+      _showEmergencyFund = showEmergencyFund;
+      _showMilestones = showMilestones;
+      _showMarketInsights = showMarketInsights;
       _loading = false;
     });
 
@@ -2523,16 +2540,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     const SizedBox(height: 16),
 
                     // Debt-to-Income Ratio
-                    _buildDebtToIncomeCard(context),
-                    const SizedBox(height: 16),
+                    if (_showDTI) ...[
+                      _buildDebtToIncomeCard(context),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Emergency Fund Calculator
-                    _buildEmergencyFundCard(context),
-                    const SizedBox(height: 16),
+                    if (_showEmergencyFund) ...[
+                      _buildEmergencyFundCard(context),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Financial Milestones
-                    _buildMilestonesCard(context),
-                    const SizedBox(height: 16),
+                    if (_showMilestones) ...[
+                      _buildMilestonesCard(context),
+                      const SizedBox(height: 16),
+                    ],
 
                     // Tax & Savings Card — for employed/business/working_student/freelancer
                     if (_accountType != 'student' &&
@@ -2887,8 +2910,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ),
 
                     // Market Insights — live PHP exchange rates + financial literacy
-                    const _MarketInsightsCard(),
-                    const SizedBox(height: 16),
+                    if (_showMarketInsights) ...[
+                      const _MarketInsightsCard(),
+                      const SizedBox(height: 16),
+                    ],
 
                     // AI Financial Advice
                     if (_loadingAdvice || _aiAdvice != null)
