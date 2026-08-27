@@ -1,5 +1,5 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.2 | **Date:** August 11, 2026
+**Version:** 2.9.3 | **Date:** August 11, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.2
+**Version:** 2.9.3
 **Build date:** August 11, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -514,6 +514,7 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9 | Jul 2026 | Lightweight Mode, Multi-period limits, Logging Gap Detection, Batch Screenshot Import |
 | 2.9.1 | Jul 28, 2026 | Unified Smart Import, barcode-from-gallery, FHS dual-mode docs, security hardening, bug fixes |
 | 2.9.2 | Aug 2026 | Full docs cleanup, BENCHMARK.md (14 apps, 13 LLMs), SYSTEM_OVERVIEW.md, 19 manuscript fixes, credential-based validator certificates, AY2026-2027 sweep |
+| 2.9.3 | Aug 2026 | Per-section visibility toggles (10 new App Settings), RESEARCH_BASIS.md, APPLICATION_PIPELINE.md added |
 
 ---
 

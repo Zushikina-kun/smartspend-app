@@ -1,5 +1,5 @@
 # SmartSpend — Project Status
-**Version:** 2.9.2 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.3 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** August 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
@@ -55,7 +55,14 @@
 
 ## WHAT IS DONE ✅
 
-### v2.9.2 — Latest (August 2026)
+### v2.9.3 — August 2026
+- [x] Per-section visibility toggles — 10 new toggles in App Settings under "Home Screen" and "Analytics" sections
+- [x] Home: subscription summary, quick-log chips, badges row, mood check-in, cash flow forecast, behavioral prediction — all individually hideable
+- [x] Analytics: DTI card, emergency fund calculator, milestones card, market insights — all individually hideable
+- [x] All core sections always visible (spending summary, FHS score, pie chart, 50/30/20, wallets, budgets)
+- [x] All toggles default ON — existing users unaffected
+- [x] Full docs sweep to v2.9.3, RESEARCH_BASIS.md + APPLICATION_PIPELINE.md added
+- [x] GitHub release v2.9.3 published
 - [x] Version bump 2.9.1 → 2.9.2 across all source and docs
 - [x] Full docs sweep — AY2026-2027, all dates, footers, academic year
 - [x] Comprehensive App & LLM Benchmark (BENCHMARK.md) — 20+ apps, 19 LLMs, August 2026 data
