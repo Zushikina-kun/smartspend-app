@@ -2014,7 +2014,8 @@ class _AIScreenState extends State<AIScreen> {
         actions: [
           const InfoButton(
             title: "Smart AI Assistant",
-            body: "Your personal finance AI — powered by Llama 3.1 8B.\n\n"
+            body:
+                "Your personal finance AI — powered by Gemini 3.1 Flash-Lite (primary) with 5-provider auto-failover.\n\n"
                 "The AI knows your expenses, budgets, goals, income, debts, and mood.\n\n"
                 "💡 Try asking:\n"
                 "• \"Spent 30 for jeepney\" — logs instantly\n"

@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.3';
-  static const _prefKey = 'whats_new_seen_2_9_3';
+  static const _version = '2.9.4';
+  static const _prefKey = 'whats_new_seen_2_9_4';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,16 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '⚙️',
+      'Minimal Mode — Hide Any Section',
+      'App Settings now has "Home Screen" and "Analytics" sections where you can individually hide cards you don\'t need: subscription summary, quick-log chips, badges, mood check-in, forecast, prediction, DTI, emergency fund, milestones, and market insights. Core sections always stay visible.'
+    ),
+    (
+      '🔧',
+      'Cleaner Home Screen',
+      'Subscription summary and auto-detection prompt no longer show at the same time. Gap dialog now refreshes your FHS score immediately after you answer. Analytics FHS breakdown now matches the home screen score exactly.'
+    ),
     (
       '📷',
       'Unified Smart Import',

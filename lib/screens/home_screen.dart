@@ -252,6 +252,8 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (ctx) => _GapCheckDialog(gap: gap),
       );
     }
+    // Fire AppEvent so the Dashboard child reloads and applies the gap adjustments
+    if (mounted) fireEvent(AppEvent.incomeChanged);
   }
 
   void _showQuickAccessHub(BuildContext context) {
@@ -986,6 +988,7 @@ class _DashboardState extends State<Dashboard> {
       lightweightMode: !incomeWalletMode,
       spendingLimit: spendingLimit,
       spendingLimitPeriod: spendingLimitPeriod,
+      spentInPeriod: spentInPeriod,
     );
     // Apply all FHS adjustments: decay penalty + gap penalty/bonus
     final score = await ScoreService.applyAllAdjustments(rawScore);
@@ -1017,6 +1020,7 @@ class _DashboardState extends State<Dashboard> {
       _incomeWalletMode = incomeWalletMode;
       _spendingLimit = spendingLimit;
       _spendingLimitPeriod = spendingLimitPeriod;
+      _spentInPeriod = spentInPeriod;
       _spentInPeriod = spentInPeriod;
       _allLimits = allLimits;
       _allSpent = allSpent;
@@ -2948,15 +2952,17 @@ class _DashboardState extends State<Dashboard> {
               // Multi-period spending limits card — tappable, shown when any limit set
               _buildSpendingLimitCard(context),
 
-              // Legacy daily limit bar — only shown if new system has no daily limit set
-              if (_dailyLimit > 0 && (_allLimits['daily'] ?? 0) == 0)
+              // Legacy daily limit bar — only shown when NEW system has NO limits at all
+              // (prevents both cards showing when user has legacy daily + new non-daily limits)
+              if (_dailyLimit > 0 && _allLimits.values.every((v) => v == 0))
                 _buildDailyLimitCard(context),
 
               // Subscription leak summary
               if (_showSubscriptions) _buildSubscriptionSummaryCard(context),
 
-              // Subscription auto-detection prompt
-              if (_recurringCandidates.isNotEmpty)
+              // Subscription auto-detection prompt — only show if subscription summary is hidden
+              // (avoids showing two subscription-related cards simultaneously)
+              if (!_showSubscriptions && _recurringCandidates.isNotEmpty)
                 _RecurringCandidateCard(
                   candidates: _recurringCandidates,
                   onDismissed: () => setState(() {}),
@@ -3184,6 +3190,7 @@ class _DashboardState extends State<Dashboard> {
                           lightweightMode: !_incomeWalletMode,
                           spendingLimit: _spendingLimit,
                           spendingLimitPeriod: _spendingLimitPeriod,
+                          spentInPeriod: _spentInPeriod,
                         );
                         showDialog(
                           context: context,

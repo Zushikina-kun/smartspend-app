@@ -29,7 +29,7 @@ class AboutScreen extends StatelessWidget {
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
             const Text(
-              "Version 2.9.3",
+              "Version 2.9.4",
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
             const SizedBox(height: 6),
@@ -58,7 +58,10 @@ class AboutScreen extends StatelessWidget {
               ("📷 OCR Receipt Scanner", "Scan receipts with your camera"),
               ("📦 Barcode Scanner", "Scan + save barcode history"),
               ("✏️ Manual Entry", "Type expenses in plain language"),
-              ("🤖 AI Chat Assistant", "Powered by Groq LLaMA 3.1"),
+              (
+                "🤖 AI Chat Assistant",
+                "Powered by Gemini 3.1 Flash-Lite (5-provider auto-failover)"
+              ),
               (
                 "🧾 AI Expense Logging",
                 "AI logs expenses, debts, income & goals"
@@ -381,13 +384,13 @@ class AboutScreen extends StatelessWidget {
 
             _infoCard(context, [
               "Framework: Flutter (Dart)",
-              "AI Engine: Groq API — LLaMA 3.1 8B Instant (25 agentic actions)",
+              "AI Engine: Multi-model LLM — Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras (29 agentic actions, auto-failover)",
               "Local Database: SQLite (sqflite) v11",
               "Cloud Auth & Sync: Firebase Auth + Firestore",
               "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules, insurance_policies",
               "OCR: Google ML Kit Text Recognition",
               "Charts: fl_chart",
-              "Backup v8: System share sheet — expenses, budgets, goals, income, recurring, debts, payment plans, categories, rules, mood log, wallets (file_picker for restore)",
+              "Backup v9: System share sheet — expenses, budgets, goals, income, recurring, debts, payment plans, categories, rules, mood log, wallets, insurance (file_picker for restore)",
               "App Lock: local_auth (PIN + biometric, per-account)",
               "Exchange Rates: open.er-api.com",
               "Crash Reporting: Firebase Crashlytics",
@@ -408,7 +411,7 @@ class AboutScreen extends StatelessWidget {
               "Group Name: Lucid Frame",
               "Project Type: Capstone / Thesis Project",
               "Platform: Android Mobile Application",
-              "Academic Year: 2025–2026",
+              "Academic Year: 2026–2027, 1st Semester",
               "School: Lorma Colleges — CCSE, BSIT",
               "Location: City of San Fernando, La Union",
             ]),
