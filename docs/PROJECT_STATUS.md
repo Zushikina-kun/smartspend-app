@@ -1,5 +1,5 @@
 # SmartSpend — Project Status
-**Version:** 2.9.3 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.4 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** August 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
@@ -55,7 +55,15 @@
 
 ## WHAT IS DONE ✅
 
-### v2.9.3 — August 2026
+### v2.9.4 — August 2026
+- [x] **Bug fix:** Gap dialog now triggers FHS score reload immediately after user answers (score was previously stale until next app event)
+- [x] **Bug fix:** Subscription summary card and auto-detection prompt no longer both show simultaneously
+- [x] **Bug fix:** Analytics FHS breakdown now shows the adjusted score (same as home screen, including decay/gap penalties)
+- [x] **Bug fix:** Legacy daily limit card no longer appears alongside the new spending limit card
+- [x] **Bug fix:** Lightweight FHS Spending Restraint now uses the correct period-specific spent amount (daily limit no longer compared to monthly expenses)
+- [x] **Stale content fixed:** about_screen, ai_screen — Groq LLaMA 3.1 → Gemini 3.1 Flash-Lite, 25 actions → 29 actions, Backup v8 → v9, 2025-2026 → 2026-2027
+- [x] **What's New updated:** v2.9.3/v2.9.4 features added to whats_new_screen
+- [x] GitHub release v2.9.4 published
 - [x] Per-section visibility toggles — 10 new toggles in App Settings under "Home Screen" and "Analytics" sections
 - [x] Home: subscription summary, quick-log chips, badges row, mood check-in, cash flow forecast, behavioral prediction — all individually hideable
 - [x] Analytics: DTI card, emergency fund calculator, milestones card, market insights — all individually hideable
