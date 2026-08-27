@@ -63,7 +63,7 @@
 - [x] **Lite Mode toggle** pinned at top under "QUICK PRESETS" heading — impossible to miss
 - [x] **profile_screen.dart** — old 635-line `_showSettingsSheet` + `_settingsTile` removed; replaced with `Navigator.push` to new full screen
 - [x] **whats_new_screen.dart** — fixed 2 malformed single-string tuples causing build failures; updated to v2.9.7 entry
-- [x] **Full revised manuscript** — `docs/research capstone docs/SMARTSPEND_REVISED_MANUSCRIPT.md` (1,070 lines, 106KB): complete Chapters 1–4 + Abstract + References (50+ APA) + Appendices A–D; all 19 panel fixes applied; new 2025–2026 research data integrated; follows Lorma 4-chapter template exactly
+- [x] **Full revised manuscript** — `docs/manuscript/SMARTSPEND_REVISED_MANUSCRIPT.md` (1,070 lines, 106KB): complete Chapters 1–4 + Abstract + References (50+ APA) + Appendices A–D; all 19 panel fixes applied; new 2025–2026 research data integrated; follows Lorma 4-chapter template exactly
 - [x] **Docs audit** — all doc footers updated v2.9.2→v2.9.6; RESEARCH_BASIS Parts 12–13 added (GCash Pera Coach, EY 2026, Plaid 2026, PSA 2025, NielsenIQ 2026, Deloitte 2026, Spendception)
 - [x] GitHub release v2.9.7 published with 3 APKs (arm64: 44.7MB, armeabi: 37.1MB, x86_64: 47.6MB)
 
@@ -76,7 +76,7 @@
 - [x] **BENCHMARK.md** — GCash Pera Coach added to extended comparison table; PART 6 Global AI Stats added; updated to v2.9.6
 - [x] **CAPSTONE_REFERENCE.md** — v2.9.6 version history entry, Pera Coach Q&A added, competitor table expanded, references list expanded
 - [x] **SYSTEM_OVERVIEW.md** — competitor table expanded with Pera Coach, new PH stats added
-- [x] **DEFENSE_REVIEWER.md** — Pera Coach Q&A added, key numbers table expanded with 2026 stats
+- [x] **DEFENSE_GUIDE.md** — Pera Coach Q&A added, key numbers table expanded with 2026 stats *(merged from DEFENSE_REVIEWER.md + DEMO_SCRIPT.md)*
 - [x] **All doc footers** — updated from v2.9.2 → v2.9.6
 - [x] GitHub release v2.9.6 published with 3 APKs (arm64: 44.7MB, armeabi: 37MB, x86_64: 47.6MB)
 
@@ -113,9 +113,9 @@
 - [x] Docs folder cleaned up — 6 overlapping files fused, all renamed to short ALL-CAPS names
 - [x] GitHub release v2.9.2 published with 3 APKs
 - [x] BENCHMARK.md expanded: Monarch 2026 updates, Sentimo, SweldoWise, Lista PH, Cleo, Era, EveryDollar, Honeydue, Empower; LLaMA 4 Scout, Grok 4.6, DeepSeek V4, Qwen3, Gemini 3.7 Flash added
-- [x] DEFENSE_REVIEWER.md: BudgetPH Q&A, paluwagan gap Q&A, validator Q&A added
-- [x] DEMO_SCRIPT.md: Smart Import PART 2 rewritten, badge count fixed 16→23, Q&A expanded
-- [x] MANUSCRIPT_FIXES.md: Fix-15 contradiction with Fix-19 resolved
+- [x] DEFENSE_GUIDE.md (was DEFENSE_REVIEWER.md): BudgetPH Q&A, paluwagan gap Q&A, validator Q&A added
+- [x] DEFENSE_GUIDE.md (was DEMO_SCRIPT.md): Smart Import PART 2 rewritten, badge count fixed 16→23, Q&A expanded
+- [x] MANUSCRIPT_GUIDE.md (was MANUSCRIPT_FIXES.md): Fix-15 contradiction with Fix-19 resolved
 - [x] Fix-15 vs Fix-19 contradiction resolved — credential-based approach confirmed final
 - [x] All version stamps correct (DOCUMENTATION.md, HOWTORUN.md, CAPSTONE_REFERENCE.md version history)
 
