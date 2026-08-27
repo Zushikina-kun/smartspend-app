@@ -1,6 +1,6 @@
 # SmartSpend — Project Status
-**Version:** 2.9.6 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** August 2026
+**Version:** 2.9.7 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** August 27, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/CAPSTONE_REFERENCE.md`
@@ -23,37 +23,49 @@
 | **Week 15–17** | Revisions & submission | Revise based on panel feedback, final manuscript | All |
 
 ### Pending documentation tasks
-- [ ] **Chapter 3** — FHS formula write-up, LLM architecture justification, database schema diagram, Kanban phase breakdown *(Cyrille + Brix, Week 2)*
-- [ ] **Chapter 4** — Screenshots per feature, SUS results table, FHS validation, interview findings *(Cyrille, Week 3)*
-- [ ] **Chapter 5** — Conclusions & Recommendations *(Cyrille, Week 8–10)*
-- [ ] **Abstract, acknowledgements, bibliography** — APA format *(Cyrille, Week 8–10)*
 - [ ] **SUS survey** — conduct with 30 respondents (20 parents, 10 young professionals), tabulate results *(Djaunathan, Week 7)*
-- [ ] **Appendices** — survey instrument, source code snippets, user manual *(Cyrille, Week 8–10)*
+- [ ] **Chapter 3 actual data** — insert survey results frequency tables + SUS scores into `SMARTSPEND_REVISED_MANUSCRIPT.md` Chapter III after data collection *(Cyrille, Week 7)*
 - [ ] **Figure 1.1 bar chart** — create bar chart of PH financial literacy rates (BSP 2021, Inquiro 2024) and insert in Google Docs *(Cyrille)*
+- [ ] **Figure 1.2 IPO diagram** — create conceptual framework IPO diagram and insert in Google Docs *(Cyrille)*
+- [ ] **Figure 2.1 SUS interpretation chart** — insert in Google Docs *(Cyrille)*
+- [ ] **Figure 2.2 Kanban board diagram** — create and insert in Google Docs *(Cyrille)*
 - [ ] **Validator signatures** — have both validators fill in credentials and sign the two Appendix A certificates *(Brix)*
+- [ ] **Curriculum Vitae** — add CV section (Brix, Cyrille, Djaunathan) to Google Docs manuscript *(All)*
 - [ ] **Confirm new Capstone adviser** — request reassignment from department *(All)*
+- [ ] **Apply Google Docs manuscript fixes** — copy revised text from `SMARTSPEND_REVISED_MANUSCRIPT.md` into the Google Docs version (all Fixes 1–19 are already incorporated in the .md file) *(Cyrille)*
 
-### Google Docs manuscript fixes still pending (apply from `docs/MANUSCRIPT_FIXES.md`):
-- [ ] Fix 2/8 — "version 8 format" → "version 9 format" (backup)
-- [ ] Fix 3 — API key not embedded, uses Remote Config
-- [ ] Fix 4 — Multi-wallet fully implemented (not future development)
-- [ ] Fix 5 — App lock cold-start only (like GCash/Maya)
-- [ ] Fix 6 — FHS section: add Lightweight Mode
-- [ ] Fix 7 — Table 1.2: add 5 new feature rows
-- [ ] Fix 10 — Input methods: add Smart Import
-- [ ] Fix 11 — Account types: clarify as flexible adaptive labels
-- [ ] Fix 12 — Parents as PRIMARY target (2 spots: Objectives + Population section)
-- [ ] Fix 13 — Add respondent screening/inclusion criteria
-- [ ] Fix 14 — Add citation justifying 21–35 young professional age range
-- [ ] Fix 15 (Part A only) — Table 2.1 label: "Technical Reviewer" → "Technical Validator (System & SUS Process)"
-- [ ] Fix 16 — Add step-by-step data gathering procedure sub-section
-- [ ] Fix 17 — Table 1.2: add BudgetPH and Alkansya AI columns
-- [ ] Fix 18 — Table 2.2: expand LLM comparison to 13 models (when writing Chapter 3)
-- [ ] Fix 19 (partially done) — Remaining spots: Data Gathering validator paragraph + Fix 16 Step 1
+### ✅ Already completed (all Fixes 1–19 applied in SMARTSPEND_REVISED_MANUSCRIPT.md):
+- [x] Fix 1/9 — "16 achievement badges" → "23 achievement badges"
+- [x] Fix 2/8 — "version 8 format" → "version 9 format"
+- [x] Fix 3 — API key not embedded, uses Firebase Remote Config
+- [x] Fix 4 — Multi-wallet fully implemented (not future development)
+- [x] Fix 5 — App lock cold-start only (like GCash/Maya)
+- [x] Fix 6 — FHS section: dual-mode (Full + Lightweight) fully explained
+- [x] Fix 7 — Table 1.2: 8-app comparison including BudgetPH, Alkansya AI, GCash Pera Coach, 18 features
+- [x] Fix 10 — Input methods: Smart Import 6-mode system added
+- [x] Fix 11 — Account types: flexible adaptive labels clarified
+- [x] Fix 12 — Parents as PRIMARY target (Objectives + Population section)
+- [x] Fix 13 — Respondent screening/inclusion criteria (4 bullets each group)
+- [x] Fix 14 — Citation justifying 21–35 young professional age range (BSP 2021, PSA 2021)
+- [x] Fix 15 (Part A) — Table 2.1: "Technical Validator (System & SUS Process)"
+- [x] Fix 16 — Step-by-step 6-procedure data gathering section added
+- [x] Fix 17 — Table 1.2: BudgetPH, Alkansya AI, GCash Pera Coach columns added
+- [x] Fix 18 — Table 2.2: 15-model LLM comparison (expanded from 4)
+- [x] Fix 19 — Credential-based optional-name validation certificates (Appendix A)
 
 ---
 
 ## WHAT IS DONE ✅
+
+### v2.9.7 — August 27, 2026
+- [x] **App Settings converted to dedicated full screen** (`settings_screen.dart`) — fully scrollable on all devices, no more bottom sheet cutoff
+- [x] **All 19 toggles always visible and interactive** — no grayed-out restrictions, always tappable
+- [x] **Lite Mode toggle** pinned at top under "QUICK PRESETS" heading — impossible to miss
+- [x] **profile_screen.dart** — old 635-line `_showSettingsSheet` + `_settingsTile` removed; replaced with `Navigator.push` to new full screen
+- [x] **whats_new_screen.dart** — fixed 2 malformed single-string tuples causing build failures; updated to v2.9.7 entry
+- [x] **Full revised manuscript** — `docs/research capstone docs/SMARTSPEND_REVISED_MANUSCRIPT.md` (1,070 lines, 106KB): complete Chapters 1–4 + Abstract + References (50+ APA) + Appendices A–D; all 19 panel fixes applied; new 2025–2026 research data integrated; follows Lorma 4-chapter template exactly
+- [x] **Docs audit** — all doc footers updated v2.9.2→v2.9.6; RESEARCH_BASIS Parts 12–13 added (GCash Pera Coach, EY 2026, Plaid 2026, PSA 2025, NielsenIQ 2026, Deloitte 2026, Spendception)
+- [x] GitHub release v2.9.7 published with 3 APKs (arm64: 44.7MB, armeabi: 37.1MB, x86_64: 47.6MB)
 
 ### v2.9.6 — August 2026
 - [x] **App Settings fully rebuilt** — DraggableScrollableSheet (85% initial height, draggable to full), fully scrollable, all 20+ tiles accessible
