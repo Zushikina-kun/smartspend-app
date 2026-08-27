@@ -441,3 +441,105 @@ Davis (1989) established that perceived ease of use is a primary driver of techn
 *"Why did you add so many sections if you're going to let users hide them?"*
 
 > "Each section addresses a specific behavioral finance or user need — subscriptions for awareness, forecasts for planning, badges for motivation. But we acknowledge that not every user needs all features simultaneously. The visibility toggles follow the progressive disclosure principle (Nielsen, 2006) — they don't remove features, they surface only what each user values, reducing cognitive load (Sweller, 1988) while preserving full capability for power users."
+
+---
+
+## PART 10 — EXPANDED FINANCIAL HEALTH SCORE RESEARCH (August 2026)
+
+### 10.1 Why This Research Was Added
+
+The research below responds to an important architectural question raised during adviser consultation:
+> *"Should logging consistency be part of the Financial Health Score, or is financial health something different from financial management behavior?"*
+
+After reviewing 12+ existing financial health scoring systems, the research confirms: **financial health and financial management behavior are distinct concepts that should ideally be measured separately.** SmartSpend v2.9.5 implements both a Financial Health Score and a separate Financial Management Score as a result.
+
+---
+
+### 10.2 Key Research Findings
+
+**Finding 1 — Financial health is multidimensional (Financial Health Network, 2015/2026)**
+No single metric captures financial health. The most established framework (FHN FinHealth Score®) measures across 4 pillars: Spend, Save, Borrow, Plan/Protect — using 8 indicators. A high income alone does not equal financial health; neither does good credit or high savings in isolation.
+
+> Financial Health Network. (2021). *FinHealth Score® Toolkit*. https://finhealthnetwork.org/tools/financial-health-score/
+> Financial Health Network. (2026). *From insight to impact: The next phase of financial health measurement*. https://finhealthnetwork.org/research/from-insight-to-impact-the-next-phase-of-financial-health-measurement/
+
+**Finding 2 — Score explainability is essential (Foresight, MindsBudget, Rateweb)**
+Users should never receive a number without an explanation. Best-practice implementations show: score label, per-component breakdown, top strength, top weakness, and a specific actionable recommendation per component. A score that only says "64" provides no guidance. A score that says "64 — Fair: your Emergency savings cover only 1.7 months, target is 3 months" is actionable.
+
+**Finding 3 — Logging consistency ≠ financial health outcome (research consensus)**
+A user who meticulously logs every transaction is not necessarily financially healthier than one who rarely logs. Logging is a *financial management behavior* — it improves data visibility, which can *lead to* better decisions, but it is not itself a financial health indicator. Recommendation: separate logging from the health score and treat it as a data quality / management metric.
+
+**Finding 4 — Score trend matters (Khazneh, AccountaPal, FIRE)**
+A static score of 75 communicates less than a score of 75 with "+8 vs last month." Financial trajectory (improving/declining) is important context. SmartSpend now shows a monthly trend indicator alongside the FHS score.
+
+**Finding 5 — Missing data should be explicit, not assumed zero (Elenvo)**
+If income, debt, or emergency fund data is missing, the score should indicate "unmeasured" rather than silently assuming ₱0. SmartSpend handles this by giving partial credit and showing explicit prompts when data is missing.
+
+---
+
+### 10.3 Financial Health Scoring Systems Reviewed
+
+| System | Scale | Main Components | Philosophy | SmartSpend Relevance |
+|--------|-------|----------------|------------|---------------------|
+| **Financial Health Network FinHealth Score®** | 0–100 | Spend, Save, Borrow, Plan/Protect (8 indicators) | Holistic financial health | Primary academic reference; established in 2015, updated 2026 |
+| **Rateweb** | 0–100 | Savings (22%), Debt (18%), Emergency (18%), Net Worth (15%), Goals (12%), Insurance (10%), Budget (5%) | Holistic | Transparent weights; shows budget adherence doesn't need to dominate |
+| **Elenvo** | 0–100 | 6 dimensions: Retirement, Emergency, Debt, Cash Flow, Protection, Tax | Comprehensive planning | Explicit handling of missing data — "unmeasured" not "zero" |
+| **MindsBudget** | 0–100 | Spending Rate (30%), Discipline (25%), Month Stability (20%), Emergency Runway (25%) | Behavioral/resilience | Most directly comparable to SmartSpend's transaction-based approach |
+| **WalletHub WalletScore** | Proprietary | Credit, Spending, Emergency, Retirement (age-weighted) | Holistic | Dynamic weights by life stage |
+| **FinToolSuite** | 0–100 | Savings (25%), Emergency (25%), Debt (25%), Net Worth (25%) | Simple equal-weight | Simplest defensible equal-weight model |
+| **Khazneh** | 0–100 | Savings, DTI, Emergency, Net Worth trend | Trajectory-focused | Validates score trend display |
+| **Foresight** | 0–100 | Funds, Debt, Wealth, Income, Momentum → qualitative states (Calm/Stable/Stretched/Risky) | Qualitative labels | Validates rich score labels in SmartSpend |
+| **PFScores** | 0–750 | Debt Management, Savings Discipline, Risk Protection | Financial fitness | Scale is arbitrary; 0–100 is simpler to communicate |
+
+---
+
+### 10.4 SmartSpend FHS vs Research Recommendations
+
+| Research Recommendation | SmartSpend Implementation | Gap? |
+|------------------------|--------------------------|------|
+| Savings rate as core component | ✅ Component 1 (Full Mode) — 25% | None |
+| Spending control as core component | ✅ Components 2+3 (Overspend Control + Budget Adherence) | None |
+| Score labels (Excellent/Good/Fair/Needs Work) | ✅ 5-tier classification (v2.9.5) | Resolved |
+| Per-component explanations | ✅ Breakdown dialog with reason per component | None |
+| Top strength / top weakness | ✅ Added in v2.9.5 | Resolved |
+| Per-component actionable recommendations | ✅ Added in v2.9.5 | Resolved |
+| Score trend (vs last month) | ✅ Added in v2.9.5 | Resolved |
+| Logging as separate metric, not FHS | ✅ Financial Management Score added in v2.9.5 | Resolved |
+| Weekly category comparison | ✅ Weekly Category Card added in v2.9.5 | Resolved |
+| Emergency fund as a component | ⚠️ Emergency fund calculator exists in Analytics but is not an FHS component | Future enhancement |
+| Net worth as a component | ⚠️ Net worth tracking exists but is not part of FHS formula | Future enhancement |
+| Missing data handling (explicit "unmeasured") | ⚠️ Partial — income absence gives partial credit, no explicit "unmeasured" label | Future enhancement |
+
+---
+
+### 10.5 Defense Answer: "Why is Logging Consistency still in the FHS?"
+
+**Short answer (for panel):**
+> "SmartSpend's current FHS formula was designed in Capstone 1 and validated through our adviser feedback process. For Capstone 2, based on additional research into financial health scoring frameworks, we have separated logging behavior into a new Financial Management Score. The FHS retains Logging Consistency as one of four components because in the absence of bank integration — which is not available in the Philippine context — consistent logging is the primary data source for all other FHS components. Without logging, savings rate and overspend control cannot be accurately computed."
+
+**Technical justification:**
+> For a mobile app without bank API access (BSP Open Finance only launched pilot in July 2025), the only data source is user-entered expenses. Logging consistency therefore serves a dual role: it directly measures financial tracking behavior AND it is a prerequisite for accurate computation of the other three FHS components. This is explicitly acknowledged as a design constraint in SmartSpend's Scope and Limitations section.
+
+---
+
+### 10.6 Full APA Reference List (New Sources from This Research)
+
+Financial Health Network. (2015). *FinHealth Score® framework: Eight indicators across four pillars*. Financial Health Network. https://finhealthnetwork.org/about/what-is-financial-health/
+
+Financial Health Network. (2026). *From insight to impact: The next phase of financial health measurement*. https://finhealthnetwork.org/research/from-insight-to-impact-the-next-phase-of-financial-health-measurement/
+
+Rateweb. (2026). *Financial health score — how it works*. https://rateweb.co.za/financial-health
+
+Elenvo AI. (2026). *How a financial health score is calculated*. https://www.elenvo.ai/methodology
+
+MindsBudget. (2026). *Free financial health score quiz*. https://www.mindsbudget.com/tools/financial-health-score
+
+WalletHub. (2026). *WalletScore: Free financial health score*. https://wallethub.com/wallet-score
+
+FinToolSuite. (2026). *Financial health dashboard*. https://fintoolsuite.com/en/tools/financial-health/financial-health-dashboard/
+
+Nielsen, J. (2006). *Progressive disclosure*. Nielsen Norman Group. https://www.nngroup.com/articles/progressive-disclosure/
+
+Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. *Cognitive Science, 12*(2), 257–285.
+
+*Content was paraphrased and summarized for compliance with licensing restrictions.*
