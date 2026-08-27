@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.5';
-  static const _prefKey = 'whats_new_seen_2_9_5';
+  static const _version = '2.9.6';
+  static const _prefKey = 'whats_new_seen_2_9_6';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,10 +20,16 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '📊',
-      'Weekly Category Summary',
-      'New card on the home screen shows each spending category this week vs your usual — labeled High, Normal, or Low. Long-press the label for the exact percentage vs your average. Helps you catch overspending before the month ends.'
+      '⚙️',
+      'App Settings — Now Fully Scrollable',
+      'The App Settings sheet is completely rebuilt: it now scrolls so all options are reachable, no more grayed-out or hidden sections. Auto-deduct wallets and Balance mode no longer require income mode to be ON first.'
     ),
+    (
+      '🪶',
+      'Lite Mode — One-Tap Clean View',
+      'A new "Lite Mode" toggle at the top of App Settings hides ALL optional sections in one tap — subscriptions, quick-log chips, badges, mood, forecast, prediction, DTI, emergency fund, milestones, and market insights. Toggle individual sections back ON anytime.'
+    ),
+    ('New card on the home screen shows each spending category this week vs your usual — labeled High, Normal, or Low. Long-press the label for the exact percentage vs your average. Helps you catch overspending before the month ends.'),
     (
       '🧠',
       'Financial Management Score',
