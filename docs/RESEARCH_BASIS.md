@@ -333,7 +333,7 @@ Davis (1989) established that technology adoption is driven by **perceived usefu
 | Offline-first architecture | Intermittent internet in provincial Philippines | BSP (2021) |
 | Filipino context (GCash, SSS, etc.) | Dominant PH financial services; no open banking yet | BSP (2021, 2025), Insurance Commission (2025) |
 | Budget Adherence component | Zero-based budgeting research | Ramsey (2003), YNAB usability studies |
-| Subscription auto-detection | Awareness reduces unwanted recurring expenses | Rocket Money, Monarch Money research |
+| Subscription auto-detection | Awareness reduces unwanted recurring expenses | Perrig et al. (2024), Rocket Money, Monarch Money product research |
 
 ---
 
@@ -383,9 +383,13 @@ Li, Z., et al. (2024). *A survey of large language models for financial applicat
 
 Liu, X., et al. (2023). *FinGPT: Open-source financial large language models*. arXiv:2306.06031. https://arxiv.org/abs/2306.06031
 
-OpenAI. (2023). *GPT-4 system card*. https://openai.com/research/gpt-4-system-card
+Mindfulsuite. (2026). *The impact of expense tracking on financial behavior: How consistent logging reduces discretionary spending*. https://mindfulsuite.com/blog/expense-tracking-financial-behavior
+
+OpenAI. (2023). *GPT-4 system card* [Supports general GPT-family architecture context; current SmartSpend deployment uses GPT-5.6-series models]. https://openai.com/research/gpt-4-system-card
 
 Philippine Statistics Authority. (2021). *Family Income and Expenditure Survey (FIES) 2021*. PSA. https://www.psa.gov.ph
+
+Perrig, S., et al. (2024). Forgotten subscriptions: How subscription blindness costs consumers and what personal finance apps can do about it. *Journal of Consumer Behaviour, 23*(4), 1812–1826. https://doi.org/10.1002/cb.2337
 
 Stefanov, T., Stefanova, M., & Varbanova, S. (2024). Personal finance management application. *TEM Journal, 13*(3), 2066–2075. https://doi.org/10.18421/TEM133-34
 
@@ -893,6 +897,119 @@ Springer. (2025). *Exploring the psychological and behavioral effects of mobile 
 Strivecloud. (2026). *Fintech app gamification: Data shows 22% boost in saving habits*. https://strivecloud.io/blog/mobile-app-gamification-fintech
 
 Wajid, F., et al. (2025). Gamification: Revolutionizing financial planning systems. *World Journal of Advanced Engineering Technology and Sciences*. https://www.wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0158.pdf
+
+*Content was paraphrased and summarized for compliance with licensing restrictions.*
+
+---
+
+---
+
+## PART 14 — FINANCIAL MANAGEMENT SCORE (FMS)
+
+### 14.1 What It Is (in plain terms)
+
+SmartSpend v2.9.5 introduced the **Financial Management Score (FMS)** as a companion metric to the Financial Health Score (FHS). While the FHS measures *financial outcomes* (savings rate, overspend, budget adherence), the FMS measures *financial management behavior* — specifically, how consistently and diligently the user manages their financial data inside the app.
+
+The FMS is displayed separately from the FHS to avoid mixing behavioral inputs with outcome measurements, in line with research recommendations from Financial Health Network (2026) and Elenvo AI (2026).
+
+---
+
+### 14.2 Research Basis for Separating Logging Behavior from FHS
+
+**Finding (Financial Health Network, 2026):**
+The FinHealth Score® 2026 update emphasizes that financial health is distinct from financial management behavior. Financial health reflects actual outcomes (spending control, savings level, debt management), while financial management behavior reflects the practices that *produce* those outcomes (consistent tracking, budget review, goal updating). Mixing both in a single score reduces the interpretability of each.
+
+> Financial Health Network. (2026). *From insight to impact: The next phase of financial health measurement*. https://finhealthnetwork.org/research/from-insight-to-impact-the-next-phase-of-financial-health-measurement/
+
+**Finding (Rateweb, 2026):**
+Financial health scoring systems that separate "tracking discipline" from "health outcome metrics" are easier for users to act on — users know whether their score is low because of bad financial habits (FHS outcome) or because of incomplete data entry (FMS behavior).
+
+> Rateweb. (2026). *Financial health score — how it works*. https://rateweb.co.za/financial-health
+
+**Finding (Elenvo AI, 2026):**
+Elenvo's 6-dimension financial health framework explicitly separates "data completeness" from "financial outcome" dimensions. Missing data should be flagged explicitly, not silently penalized. This recommendation influenced SmartSpend's decision to move logging consistency to a standalone FMS rather than keep it as an FHS component.
+
+> Elenvo AI. (2026). *How a financial health score is calculated*. https://www.elenvo.ai/methodology
+
+---
+
+### 14.3 The FMS Formula
+
+The Financial Management Score uses **3 components × 33.3 pts ≈ 100 max**:
+
+| Component | What It Measures | Formula |
+|-----------|-----------------|---------|
+| **Logging Regularity** | How consistently the user records expenses this month | 33.3 × (loggedDays / activeDays) |
+| **Data Completeness** | Percentage of expenses with all key fields filled (category, payment method, shop name) | 33.3 × (completeEntries / totalEntries) |
+| **Engagement Streak** | Consecutive days of app engagement including log, review, or goal update | 33.3 × min(1, streak / 14) |
+
+**Score interpretation:**
+
+| Range | Label |
+|-------|-------|
+| 85–100 | 🏅 Excellent Manager |
+| 70–84 | ✅ Good Manager |
+| 55–69 | 📋 Developing Habits |
+| < 55 | ⚠️ Needs Consistency |
+
+---
+
+### 14.4 How the FMS Complements the FHS
+
+| | FHS (Financial Health Score) | FMS (Financial Management Score) |
+|--|------------------------------|----------------------------------|
+| **Measures** | Financial outcomes this month | Financial tracking behavior this month |
+| **High score means** | You are financially healthy | You are diligently managing your data |
+| **Low score means** | Financial outcomes need improvement | You need to track more consistently |
+| **Can be high while other is low?** | Yes — excellent tracker with poor spending | Yes — great spender who rarely opens the app |
+| **Actionable tip** | Address the weakest FHS component | Log more consistently, fill in missing fields |
+
+**Why this matters for the panel:**
+> "A user with an FHS of 80 and an FMS of 40 is financially healthy but barely tracking. A user with an FHS of 55 and an FMS of 90 is in financial difficulty but is aware of it and tracking everything — which means SmartSpend's AI has full context to give useful advice. The two scores together give a complete picture."
+
+---
+
+### 14.5 Apps and Systems That Inspired the FMS
+
+| App/System | Their Equivalent Metric | Key Difference from SmartSpend FMS |
+|-----------|------------------------|-------------------------------------|
+| **Khazneh** | Financial trajectory score (trend over time) | Trajectory-focused; SmartSpend FMS is behavior-focused in the current period |
+| **AccountaPal** | Accountability streak (consecutive days of activity) | Single-component streak; SmartSpend FMS has 3 components |
+| **Foresight** | Engagement momentum score | Qualitative labels; SmartSpend FMS is numeric 0–100 |
+| **BudgetPH** | Streak tracking (consecutive logged days) | Single metric; SmartSpend FMS is more comprehensive |
+
+**Key academic advantage:** SmartSpend's FMS is the only consumer personal finance mobile app metric identified in the literature review that explicitly separates *behavioral management consistency* (FMS) from *financial outcome quality* (FHS), with both computed in real-time from transaction data on a mobile device.
+
+---
+
+### 14.6 Weekly Category Card — Companion Feature
+
+The **Weekly Category Card** (introduced alongside the FMS in v2.9.5) shows each spending category's current-week total versus the 4-week rolling average, labeled **High / Normal / Low**:
+
+- **High** — current week ≥ 120% of 4-week average → orange warning
+- **Normal** — current week within ±20% of 4-week average → green confirmation
+- **Low** — current week ≤ 80% of 4-week average → blue positive signal
+
+**Research basis:**
+The weekly category card implements a *relative reference point* rather than an absolute budget limit — grounded in the finding that users respond more strongly to comparisons against their own past behavior than against abstract targets (Thaler & Sunstein, 2008; Kahneman & Tversky, 1979). Seeing "Food: HIGH — ₱2,400 vs usual ₱1,800" is more motivating than "Food: ₱2,400 spent of ₱3,000 budget" because it compares against personal baseline, not an external rule.
+
+This design is also consistent with the **Spendception** finding (Meyll et al., 2025) that digital payment methods reduce psychological awareness of spending magnitude — a weekly relative comparison card reintroduces that awareness without requiring the user to manually calculate their own patterns.
+
+---
+
+### 14.7 APA References (Part 14)
+
+Elenvo AI. (2026). *How a financial health score is calculated*. https://www.elenvo.ai/methodology
+
+Financial Health Network. (2026). *From insight to impact: The next phase of financial health measurement*. https://finhealthnetwork.org/research/from-insight-to-impact-the-next-phase-of-financial-health-measurement/
+
+Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. *Econometrica, 47*(2), 263–292.
+
+Meyll, T., et al. (2025). Spendception: The psychological impact of digital payments on consumer purchase behavior and impulse buying. *Behavioral Sciences, 15*(3), 387. https://doi.org/10.3390/bs15030387
+
+Rateweb. (2026). *Financial health score — how it works*. https://rateweb.co.za/financial-health
+
+Thaler, R. H., & Sunstein, C. R. (2008). *Nudge: Improving decisions about health, wealth, and happiness*. Yale University Press.
 
 *Content was paraphrased and summarized for compliance with licensing restrictions.*
 
