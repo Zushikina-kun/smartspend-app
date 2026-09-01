@@ -131,7 +131,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | 2.9.6 |
+| Version | 2.9.7 |
 | Platform | Android (Flutter) |
 | Database | SQLite version 11, 20 tables |
 | AI providers | 5 (auto-failover) |
@@ -219,6 +219,24 @@ A: No. 8 account types: Employed, Business Owner, Freelancer, Working Student, S
 
 **Q: Financial advice disclaimer?**
 A: SmartSpend provides general financial information for educational purposes only, not personalized professional advice. Consistent with how Mint, YNAB, and Cleo operate globally.
+
+**Q: Why is Gemini 3.7 Flash not in your fallback chain?**
+A: Gemini 3.7 Flash was released August 13, 2026 — after SmartSpend's core architecture was finalized. It is also a paid-only model ($0.75 per 1M input tokens) with no free tier at the time of writing. Our fallback chain is built entirely on free-tier providers to ensure zero operating cost for an academic deployment. Gemini 3.7 Flash is the most capable option for a post-capstone production upgrade of the `financial_advice` routing tier.
+
+**Q: What about Groq LLaMA 4 Scout? Why isn't it in your fallback chain?**
+A: LLaMA 4 Scout is available on Groq's free tier and was evaluated during development. It is a strong model — multimodal, 109K context, strong tool use. However, at the time our failover chain was finalized, LLaMA 3.3 70B had more extensive real-world reliability data for Taglish expense parsing. LLaMA 4 Scout is listed in our benchmarking table (BENCHMARK.md Part 5) as a "Potential Fallback" and is a viable candidate to replace LLaMA 3.1 8B in a post-capstone architecture update.
+
+**Q: Financial Management Score — how is it different from FHS? Isn't it redundant?**
+A: They measure completely different things. The FHS measures financial *outcomes* — are you saving 20%, are you staying within budget, are your spending levels controlled? The FMS measures financial *management behavior* — are you logging consistently, are your entries complete, are you engaging with the app regularly? A user can have a high FHS (great financial outcomes) and a low FMS (rarely opens the app — all data was entered in one session). The two scores together give a complete picture: financial health AND financial discipline. This separation is grounded in Financial Health Network (2026) and Elenvo AI (2026) research recommendations, which explicitly distinguish health outcomes from management behaviors.
+
+**Q: What happens when ALL 5 API providers are simultaneously rate-limited?**
+A: If all 5 providers return 429 (rate limit) errors simultaneously, the AI chat screen shows a friendly error: "All AI providers are currently busy. Please try again in a few minutes or use manual entry." The app remains fully functional — all core features (manual expense logging, budgets, goals, analytics, FHS, wallets, debts) work entirely without AI. The rate limit resets within minutes for Groq and Cerebras (per-minute limits) or at midnight for daily limits. In practice, with 5 providers offering a combined ~30,000+ requests/day, simultaneous exhaustion is highly unlikely for a 30-respondent academic study.
+
+**Q: What is the Weekly Category Card?**
+A: The Weekly Category Card compares each spending category's current-week total against the 4-week rolling average and labels it High, Normal, or Low. High means current week is 20%+ above your usual — orange warning. Normal means within ±20% of your usual — green. Low means 20%+ below — blue positive signal. It is grounded in behavioral finance research showing that relative personal comparisons (vs your own past) are more motivating than absolute budget limits (vs an external target). Seeing "Food: HIGH — ₱2,400 vs your usual ₱1,800" is more actionable than "₱2,400 spent of ₱3,000 budget."
+
+**Q: Why is there a ScanReviewScreen defined twice in code?**
+A: ScanReviewScreen serves two distinct purposes that require different UI layouts, so two implementations exist: one for single-image review (after a receipt or screenshot is scanned from the camera) and one for batch review (after multiple screenshots are imported). The batch version handles a list of parsed results with per-item edit fields and a bulk-confirm workflow, while the single version is a simpler confirm/edit/discard flow. Both are intentional and are reached from different navigation paths — not a bug or duplication error. The naming could be improved in a refactor (e.g., BatchScanReviewScreen vs SingleScanReviewScreen) which is on the post-capstone list.
 
 ---
 
@@ -450,7 +468,6 @@ A: SmartSpend provides general financial information for educational purposes on
 📱 **SCROLL** to badges row (if visible)
 
 🗣️ **NARRATE:**
-🗣️ **NARRATE:**
 > "23 achievement badges, spending streaks, impulse pause for large Want purchases, subscription auto-detection."
 
 ---
@@ -515,7 +532,6 @@ A: SmartSpend provides general financial information for educational purposes on
 ---
 
 ## 🔄 RECORDING ORDER
-also update recording order to reflect new PART 2:
 ```
 1. Home TOP (spending card — visible without scrolling)
 2. AI tab (voice → text → wallet → question)

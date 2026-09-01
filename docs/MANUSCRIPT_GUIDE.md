@@ -166,7 +166,7 @@ Primary: **Gemini 3.1 Flash-Lite** (Google AI Studio)
 
 Fallback chain: Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1 70B
 
-**Why not GPT-4o/Claude 3.5:** Require paid API keys — not viable for academic project with no budget.
+**Why not GPT-5.6/Claude Fable 5:** Require paid API keys — not viable for academic project with no budget.
 **Why not self-hosted (Mistral/Phi-3):** Poor Filipino-English understanding; no reliable hosted free API.
 
 **Architecture justification quote (use in paper):**
@@ -223,7 +223,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 - **23 achievement badges** + 10 daily quests
 - **14 expense categories**, **9 payment methods**, **57 currencies**
 - **20 PH banks** in comparison database
-- **7 input modalities**: text chat, voice, live camera, single photo (auto-detect), batch screenshots (40+ platforms), paste text, manual form
+- **6 input modalities**: AI chat (text), voice, live camera, single photo (auto-detect), batch screenshots (40+ platforms), paste text — plus manual form entry (no AI required)
 - **7 startup alert conditions** (plus gap detection, income sanity, balance discrepancy)
 - **4-component FHS formula** — Full Mode and Lightweight Mode variants
 - **FHS adjustments**: Warning Decay (−5/day) + Gap Adjustment (−3/+2 per day)

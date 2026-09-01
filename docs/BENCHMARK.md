@@ -121,6 +121,7 @@ Apps not in the main matrix above, included for completeness:
 - **Honeydue** — Purpose-built for couples to share finances. Tracks bills, balances, and spending together. No AI, no FHS, no offline. Niche but strong for couples.
 - **Empower** (formerly Personal Capital) — Free portfolio and net worth tracker with investment analysis. Strong for investment tracking and retirement planning. No budgeting AI, US-bank-centric.
 - **Lista PH** — Filipino personal finance app on Android. Simple manual expense tracking, goal setting, free. No AI, no FHS, no gamification. Lighter alternative to SmartSpend for basic needs.
+- **Wingman Money** *(Australia, 2026)* — AI-assisted personal finance app that computes a Financial Health Score (0–100) based on the Financial Health Network framework, combining daily spending behaviors with long-term wellbeing indicators. Strong FHS implementation with trajectory tracking and score explainability. No offline mode, no Filipino context, no agentic actions, not available outside Australia/NZ markets. **Key comparison point:** Wingman Money validates that an FHS computed from behavioral data (not surveys) is commercially viable. SmartSpend's FHS is directly comparable, adds dual-mode (Full + Lightweight), and runs fully offline on a free-tier stack.
 - **GCash Pera Coach** *(new March 2026)* — Embedded AI financial literacy coach inside the GCash app, developed with Microsoft. Converses in English and Filipino languages. Provides financial guidance and literacy education on-demand. Free for Fully Verified GCash users. **Critical distinction from SmartSpend:** Pera Coach is an advisory/literacy tool embedded in a payments app — no expense tracking, no FHS, no offline mode, no agentic actions. SmartSpend is a dedicated financial management system. They solve different problems: Pera Coach teaches financial concepts; SmartSpend manages and tracks actual financial behavior.
 
 ---
@@ -259,13 +260,13 @@ SmartSpend uses LLMs for 4 specific task types. Here's how each model performs p
 | GPT-5.6 | Excellent | Moderate | Best overall NLP but costly |
 | Claude Fable 5 | Excellent | Moderate | Strong instruction following |
 | Gemini 3.1 Flash-Lite | Very Good | Very Fast | **Best balance for free-tier mobile — correctly handles Tagalog/Taglish** |
-| Gemini 2.5 Flash | Excellent | Fast | Better quality than Flash-Lite, 4× fewer free requests/day |
+| Gemini 3.5 Flash | Excellent | Fast | Better quality than Flash-Lite, 4× fewer free requests/day |
 | Groq LLaMA 3.3 70B | Good | Fast | Handles Filipino reasonably well |
 | Groq LLaMA 3.1 8B | Adequate | Very Fast | Sometimes misclassifies Filipino food items |
 | Mistral 7B | Weak | Fast | Poor Tagalog/Taglish handling |
 | DeepSeek V3 | Adequate | Moderate | Weaker Filipino context |
 
-**Winner for this task:** Gemini 3.1 Flash-Lite (free-tier) or Gemini 2.5 Flash (better quality, fewer free requests)
+**Winner for this task:** Gemini 3.1 Flash-Lite (free-tier) or Gemini 3.5 Flash (better quality, fewer free requests)
 
 #### Task B — Financial Advisory (SSS, BIR TRAIN Law, debt strategy, savings plans)
 *"How do I apply for SSS Flexi Fund? How much should I save to retire at 55?"*
@@ -279,7 +280,7 @@ SmartSpend uses LLMs for 4 specific task types. Here's how each model performs p
 | Groq LLaMA 3.3 70B | Good | Adequate | General financial advice quality, weaker PH specifics |
 | DeepSeek V3 | Good | Weak | Strong math but limited PH context |
 
-**Winner for this task:** Gemini 3.1 Pro or Gemini 2.5 Flash — but paid or lower RPD. Flash-Lite is adequate for most queries at free tier.
+**Winner for this task:** Gemini 3.1 Pro or Gemini 3.5 Flash — but paid or lower RPD. Flash-Lite is adequate for most queries at free tier.
 
 #### Task C — Agentic Action Execution (parse intent → return correct JSON action type)
 *System must reliably return: {"type":"log_expense","amount":150,"category":"Food","merchant":"Jollibee","want_need":"Want"}*
@@ -288,13 +289,13 @@ SmartSpend uses LLMs for 4 specific task types. Here's how each model performs p
 |-------|-----------------|----------------------|-------|
 | GPT-5.6 | Near-perfect | Excellent | Best JSON reliability overall |
 | Claude Fable 5 / Sonnet 5 | Near-perfect | Excellent | High SWE-bench scores — strong for structured outputs |
-| Gemini 2.5 Flash | Excellent | Excellent | Strong instruction-following, reliable JSON output |
+| Gemini 3.5 Flash | Excellent | Excellent | Strong instruction-following, reliable JSON output |
 | Gemini 3.1 Flash-Lite | Very Good | Good | Occasionally misidentifies action type on ambiguous inputs |
 | Groq LLaMA 3.3 70B | Good | Good | Reliable for well-defined prompts |
 | Groq LLaMA 3.1 8B | Adequate | Adequate | More occasional JSON format errors |
 | Cerebras LLaMA 3.1 | Adequate | Adequate | Speed is the advantage; quality similar to LLaMA 3.1 8B |
 
-**Winner for this task:** GPT-5.6 or Claude, but both are paid. Among free-tier: Gemini 2.5 Flash > Flash-Lite > Groq 70B.
+**Winner for this task:** GPT-5.6 or Claude, but both are paid. Among free-tier: Gemini 3.5 Flash > Flash-Lite > Groq 70B.
 
 #### Task D — Conversation & Context Retention
 *(Multi-turn conversation where AI must remember prior context injected from SQLite)*
@@ -304,7 +305,7 @@ SmartSpend uses LLMs for 4 specific task types. Here's how each model performs p
 | Gemini 3.1 Pro | 2M tokens | Excellent | Best context window — can handle full financial history |
 | Claude Fable 5 | 200K tokens | Excellent | Best at synthesizing long documents |
 | GPT-5.6 | 1.05M tokens | Excellent | Strong multi-turn reliability |
-| Gemini 2.5 Flash | 1M tokens | Very Good | Good balance |
+| Gemini 3.5 Flash | 1M tokens | Very Good | Good balance |
 | Gemini 3.1 Flash-Lite | 1M tokens | Good | Adequate for per-user context injection (~2K–5K tokens typically) |
 | Groq LLaMA 3.3 70B | 128K tokens | Good | More than enough for SmartSpend's context injection size |
 
@@ -339,10 +340,11 @@ Both are paid-only with no free tier sufficient for sustained daily use. For aca
 
 ### 2.5 LLM Financial Accuracy — Published Benchmark Summary
 
-*(Content was paraphrased for compliance with licensing restrictions. Sources: AIMUltiple Finance LLM Benchmark Aug 2026, micro1.ai REALM Financial Benchmark Apr 2026, SurgeHQ Finance Eval, ArXiv 2507.22936)*
+*(Content was paraphrased for compliance with licensing restrictions. Sources: AIMUltiple Finance LLM Benchmark Aug 2026, micro1.ai REALM Financial Benchmark Apr 2026, SurgeHQ Finance Eval, ArXiv 2507.22936, FrontierFinance arXiv:2608.11683)*
 
 **Key findings from published 2026 benchmarks:**
 
+- **FrontierFinance Benchmark** (Arcila et al., 2026; arXiv:2608.11683) — the most comprehensive 2026 benchmark for finance AI agents, testing frontier models on 30 financial task categories including expense analysis, tax computation, debt strategy, and multilingual financial Q&A. Key finding: **tool harness architecture** (how the LLM is called and what context it receives) affects performance more than the base model choice alone. This directly validates SmartSpend's context-injection agentic architecture over naive API calls. GPT-5.6 and Claude Fable 5 lead, but Gemini Flash-Lite performs competitively on multilingual (including Filipino-English) sub-tasks.
 - **GPT-5.6** leads in 6 of 7 financial reasoning domains per SurgeHQ evaluation, with the broadest coverage across task types
 - **Claude Fable 5** scored the highest on the Hebbia Finance Benchmark (90.34% accuracy), particularly excelling at reading and synthesizing lengthy financial documents
 - **Gemini 3.1 Pro** leads in tasks requiring live web context and Google Workspace integration, with the best performance on factual financial Q&A where current data is needed
@@ -351,7 +353,7 @@ Both are paid-only with no free tier sufficient for sustained daily use. For aca
 - **Cerebras** leads all providers on raw inference speed (up to 3,000 tokens/second on identical models vs Groq's ~476 tokens/second), but Groq leads on time-to-first-token (under 200ms), which is more relevant for conversational UX
 - **Mistral and DeepSeek** are viable for privacy-preserving or self-hosted deployments but show lower accuracy on Filipino-English inputs
 
-**Implication for SmartSpend:** Our current primary model (Gemini 3.1 Flash-Lite) is the correct choice for the free-tier mobile deployment. For post-capstone production, upgrading the `financial_advice` routing tier to Gemini 2.5 Flash or Gemini 3.1 Pro would noticeably improve PH-specific advisory accuracy.
+**Implication for SmartSpend:** Our current primary model (Gemini 3.1 Flash-Lite) is the correct choice for the free-tier mobile deployment. For post-capstone production, upgrading the `financial_advice` routing tier to Gemini 3.5 Flash or Gemini 3.1 Pro would noticeably improve PH-specific advisory accuracy.
 
 ---
 
@@ -360,7 +362,7 @@ Both are paid-only with no free tier sufficient for sustained daily use. For aca
 | Phase | Change | Reason |
 |-------|--------|--------|
 | **Current (v2.9.7)** | Flash-Lite primary, 5-provider fallback | Free, sufficient for 30 respondents |
-| **Post-capstone** | Upgrade `financial_advice` tier to Gemini 2.5 Flash | Better PH financial knowledge, still affordable |
+| **Post-capstone** | Upgrade `financial_advice` tier to Gemini 3.5 Flash | Better PH financial knowledge, still affordable |
 | **Play Store launch** | Add backend proxy (Cloud Function or Vercel) | Move API key off device entirely |
 | **Scale (1,000+ users)** | Evaluate GPT-5.6 Terra or Claude Sonnet 5 for premium tier | Better reasoning at scale, can charge subscription |
 
@@ -386,9 +388,9 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 
 ---
 
-## PART 6 — GLOBAL AI IN PERSONAL FINANCE — CONTEXT & STATISTICS (August 2026)
+## PART 4 — GLOBAL AI IN PERSONAL FINANCE — CONTEXT & STATISTICS (August 2026)
 
-### 6.1 AI Adoption in Consumer Finance
+### 4.1 AI Adoption in Consumer Finance
 
 *(Content paraphrased for compliance with licensing restrictions. Sources cited below.)*
 
@@ -417,7 +419,7 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 - SmartSpend applies these same principles at the consumer level — democratizing access to AI-assisted financial management
 - Source: Deloitte (2026) — https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
 
-### 6.2 Philippine Digital Finance Statistics (August 2026)
+### 4.2 Philippine Digital Finance Statistics (August 2026)
 
 | Statistic | Value | Source |
 |-----------|-------|--------|
@@ -432,7 +434,7 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 
 These figures collectively show that while digital commerce and e-wallet use are nearly universal in the Philippines, structured financial management app adoption lags far behind. SmartSpend addresses this gap by meeting users in the digital-first behavior they already practice (e-wallet use, screenshot saving, online shopping) and converting that into structured financial tracking.
 
-### 6.3 References — Part 6
+### 4.3 References — Part 4
 
 Deloitte. (2026). *Agentic AI boosts wealth management*. https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
 
@@ -461,7 +463,7 @@ Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://pl
 
 ---
 
-## PART 4 — BEHAVIORAL FINANCE RESEARCH INSIGHTS
+## PART 5 — BEHAVIORAL FINANCE RESEARCH INSIGHTS
 
 ### BSP CFIS 2025 Key Findings
 - Filipino account ownership dropped to 50% (from 56% in 2021)
@@ -504,7 +506,7 @@ Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://pl
 
 ---
 
-## PART 5 — LLM TECHNICAL BENCHMARKING (Chapter 3 Reference)
+## PART 6 — LLM TECHNICAL BENCHMARKING (Chapter 3 Reference)
 
 ### Selection Criteria
 

@@ -812,7 +812,7 @@ Nielsen, J. (2006). *Progressive disclosure*. Nielsen Norman Group. https://www.
 
 NielsenIQ. (2026). *The new financial reality: How Filipino consumers are spending, saving, and banking in 2026*. https://nielseniq.com/global/en/insights/report/2026/the-new-financial-reality-how-filipino-consumers-are-spending-saving-and-banking-in-2026/
 
-OpenAI. (2024). *GPT-4 technical report*. https://arxiv.org/abs/2303.08774
+OpenAI. (2024). *GPT-4 technical report* [Cited for general GPT-family architecture context; SmartSpend's current deployment references the GPT-5.6 model series]. https://arxiv.org/abs/2303.08774
 
 Philippine Statistics Authority. (2021). *Family Income and Expenditure Survey (FIES) 2021*. PSA. https://www.psa.gov.ph
 

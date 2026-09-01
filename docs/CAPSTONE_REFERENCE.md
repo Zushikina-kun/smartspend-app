@@ -45,7 +45,7 @@ No existing application combines:
 6. Completely free — no subscription required
 
 ### Key Statistics for Background
-- **BSP CFIS 2025:** Only 50% of Filipino adults have formal financial accounts; household access rose to 86%
+- **BSP CFIS 2025:** Only 50% of Filipino adults have formal financial accounts (down from 56% in 2021); household access rose to 86%
 - **BSP 2025:** 74% of Filipinos correctly answered basic financial literacy questions (up from 69% in 2021)
 - **SWS March 2026:** Philippine financial inclusion reached 58% — 43% e-money accounts, 21% bank accounts
 - **GCash:** 41.5 million monthly users (Bloomberg, 2026) — primary driver of financial inclusion
@@ -55,7 +55,7 @@ No existing application combines:
 - **Flores 2025:** Filipino workers show "come-what-may" attitude toward financial planning
 - **Juniper Research 2026:** Gamification boosts saving habits by 22%
 - **EY April 2026:** 49% of global consumers used AI for savings/investment; 18% used it for budgeting
-- **Plaid Spring 2026:** 60% of consumers expect AI to save them time; 58% expect it to reduce financial stress
+- **Plaid Spring 2026:** 60% of consumers expect AI to save them time; 58% expect it to reduce financial stress; AI personal finance market projected to reach **$3.7 billion by 2033**
 - **99.5%** of Philippine businesses are MSMEs with limited access to financial tools
 
 ### Objectives
@@ -424,7 +424,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 - Strong function calling and reasoning
 - Used as Fallback 2 in the auto-failover chain (Primary is Gemini 3.1 Flash-Lite)
 
-### Why not GPT-4o/Claude:
+### Why not GPT-5.6/Claude Fable 5:
 Require paid API keys — not viable for academic project without budget.
 
 ### Why not self-hosted (Mistral, Phi-3, Llama.cpp):
@@ -518,7 +518,10 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 - Philippine Statistics Authority. (2021). *Family Income and Expenditure Survey (FIES) 2021*. PSA.
 - Philippine Statistics Authority. (2025). *Philippine Digital Economy Satellite Account (PDESA) 2025*. PSA. https://psa.gov.ph
 - Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://plaid.com/blog/state-of-intelligent-finance-report-spring-2026/
+- Springer. (2025). *Exploring the psychological and behavioral effects of mobile payment systems on consumer spending*. In *Lecture Notes in Networks and Systems*. https://link.springer.com/chapter/10.1007/978-3-031-84636-6_26
+- Springer. (2026). *Digital nudges and financial inclusion: A study on behavioral interventions influencing rural consumers' adoption of formal financial services*. In *Lecture Notes in Networks and Systems*. https://link.springer.com/content/pdf/10.1007/978-3-032-00343-0_14.pdf
 - Thaler, R. H., & Sunstein, C. R. (2008). *Nudge: Improving decisions about health, wealth, and happiness*. Yale University Press.
+- Wajid, F., et al. (2025). Gamification: Revolutionizing financial planning systems. *World Journal of Advanced Engineering Technology and Sciences*. https://www.wjaets.com/sites/default/files/fulltext_pdf/WJAETS-2025-0158.pdf
 - Warren, E., & Tyagi, A. W. (2005). *All your worth: The ultimate lifetime money plan*. Free Press.
 
 ---
@@ -531,8 +534,8 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.0 | Jan 2026 | AI chat (first version), basic analytics |
 | 2.5 | Mar 2026 | Multi-modal input (voice, OCR, barcode), wallet system |
 | 2.6 | Apr 2026 | Release signing, Google Sign-In fix |
-| 2.7 | May 2026 | 23 badges, 10 quests, DTI, Emergency Fund, PCA Calculator |
-| 2.8 | Jun 2026 | 29 AI actions, Insurance tracker, Bank comparison, split_expense |
+| 2.7 | May 2026 | 10 quests, DTI, Emergency Fund, PCA Calculator |
+| 2.8 | Jun 2026 | 23 badges (up from 16), 29 AI actions, Insurance tracker, Bank comparison, split_expense |
 | 2.9 | Jul 2026 | Lightweight Mode, Multi-period limits, Logging Gap Detection, Batch Screenshot Import |
 | 2.9.1 | Jul 28, 2026 | Unified Smart Import, barcode-from-gallery, FHS dual-mode docs, security hardening, bug fixes |
 | 2.9.2 | Aug 2026 | Full docs cleanup, BENCHMARK.md (14 apps, 13 LLMs), SYSTEM_OVERVIEW.md, 19 manuscript fixes, credential-based validator certificates, AY2026-2027 sweep |

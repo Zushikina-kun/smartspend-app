@@ -322,6 +322,56 @@ Two adjustments are applied on top of the raw component total:
 
 ---
 
+### 6a. Financial Management Score (FMS) — v2.9.5+
+
+The **Financial Management Score** is a companion metric to the FHS that measures *how consistently and diligently the user manages their financial data* in the app — separate from financial outcomes.
+
+**Why separate from FHS:**
+Financial health (FHS) measures outcomes — are you saving, are you staying within budget? Financial management behavior (FMS) measures the discipline of tracking — are you logging regularly, is your data complete? A user can have a great FHS while rarely opening the app, or a low FHS but perfect data discipline. Separating them gives more actionable insight on what to improve.
+
+#### FMS Components (3 components × 33.3 pts ≈ 100 max)
+
+| Component | What it measures | Max |
+|-----------|-----------------|-----|
+| **Logging Regularity** | loggedDays / activeDays this month | 33.3 |
+| **Data Completeness** | % of expenses with all key fields filled (category, payment method, shop name) | 33.3 |
+| **Engagement Streak** | Consecutive days of app activity (log, review, or goal update) — full at 14 days | 33.3 |
+
+#### FMS Score Labels
+| Range | Label |
+|-------|-------|
+| 85–100 | 🏅 Excellent Manager |
+| 70–84 | ✅ Good Manager |
+| 55–69 | 📋 Developing Habits |
+| < 55 | ⚠️ Needs Consistency |
+
+#### Score Surfaces
+- Home screen alongside FHS score card
+- Analytics screen with month-over-month trend
+- AI chat context: AI can reference FMS when giving advice about tracking habits
+- Research basis: Financial Health Network (2026), Elenvo AI (2026) — see `docs/RESEARCH_BASIS.md` Part 14
+
+---
+
+### 6b. Weekly Category Card — v2.9.5+
+
+The **Weekly Category Card** surfaces on the Home screen and Analytics, showing each spending category's current-week total vs the 4-week rolling average with a High / Normal / Low label.
+
+**Labels:**
+- 🔴 **High** — current week ≥ 120% of 4-week average (spending unusually high this week)
+- ✅ **Normal** — current week within ±20% of 4-week average
+- 🔵 **Low** — current week ≤ 80% of 4-week average (spending unusually low — positive signal)
+
+**Why relative comparison (not absolute budget):**
+Comparisons against the user's own past behavior are more psychologically motivating than comparisons against an abstract budget target — grounded in behavioral finance research (Thaler & Sunstein, 2008; Kahneman & Tversky, 1979). Seeing "Food: HIGH — ₱2,400 vs your usual ₱1,800" is more actionable than "₱2,400 spent of ₱3,000 budget."
+
+**Implementation detail:**
+- Rolling average computed from last 4 complete calendar weeks (excludes current partial week)
+- Cards sorted by deviation magnitude — most anomalous categories shown first
+- Tapping a High card navigates directly to the category drill-down in Analytics
+
+---
+
 ### 7. Transactions Screen
 - Full searchable expense list
 - Search with 300ms debounce
