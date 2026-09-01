@@ -80,21 +80,22 @@ def insert_many_at(doc, index, elements):
         insert_at(doc, index + offset, elem)
 
 def _p(text, bold=False, italic=False,
-       align="both", sb=12, sa=12, fi=720,
-       font=FONT, size=12):
+       align="both", sb=0, sa=0, fi=720,
+       font=FONT, size=12, ls=480):
     """
     Build a <w:p> XML element with direct run formatting.
     align: 'both'=justify  'center'  'right'  'left'
-    sb/sa: space before/after in pt
-    fi:    first-line indent in twips  (720 = 0.5";  0 = none)
+    sb/sa: space before/after in pt  (0 = no explicit — use blank paras instead)
+    fi:    first-line indent in twips  (720 = 0.5\";  0 = none)
     size:  font size in pt
+    ls:    line spacing in 240ths  (240=single, 276=1.15x, 360=1.5x, 480=double)
+           Use 480 for ALL body text to match Lorma templates.
     """
-    sb_twips = int(sb * 20)
-    sa_twips = int(sa * 20)
-    sz_half  = int(size * 2)          # w:sz uses half-points
+    sz_half  = int(size * 2)
     bold_xml = "<w:b/><w:bCs/>" if bold   else ""
     ital_xml = "<w:i/><w:iCs/>" if italic else ""
     fi_xml   = f'<w:ind w:firstLine="{fi}"/>' if fi else ""
+    ls_xml   = f'<w:spacing w:line="{ls}" w:lineRule="auto"/>' if ls else ""
     t_esc    = (str(text)
                 .replace("&", "&amp;").replace("<", "&lt;")
                 .replace(">", "&gt;").replace('"', "&quot;"))
@@ -102,7 +103,7 @@ def _p(text, bold=False, italic=False,
         f'<w:p xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
         f'<w:pPr>'
         f'<w:jc w:val="{align}"/>'
-        f'<w:spacing w:before="{sb_twips}" w:after="{sa_twips}"/>'
+        f'{ls_xml}'
         f'{fi_xml}'
         f'</w:pPr>'
         f'<w:r>'
@@ -128,31 +129,33 @@ def _blank():
     return _p("", sb=0, sa=0, fi=0)
 
 def _section_hdr(text):
-    """UPPERCASE bold centered section heading."""
-    return _p(text, bold=True, align="center", sb=12, sa=12, fi=0)
+    """UPPERCASE bold centered section heading — ls=276 (1.15x) matching templates."""
+    return _p(text, bold=True, align="center", fi=0, ls=276)
 
 def _sub_hdr(text):
-    """Bold left-aligned subsection label."""
-    return _p(text, bold=True, align="both", sb=12, sa=6, fi=0)
+    """Bold left-aligned subsection label — double spaced, no extra sb/sa."""
+    return _p(text, bold=True, align="both", fi=0, ls=480)
 
 def _body(text, italic=False):
-    """Standard body: justify, 0.5\" indent, 12pt sb/sa."""
-    return _p(text, italic=italic, align="both", sb=12, sa=12, fi=720)
+    """Standard body: justify, 0.5\" indent, double spaced (ls=480) — matches both templates."""
+    return _p(text, italic=italic, align="both", fi=720, ls=480)
 
 def _body0(text, bold=False, italic=False):
-    """Body without first-line indent (numbered items, refs)."""
-    return _p(text, bold=bold, italic=italic, align="both", sb=6, sa=6, fi=0)
+    """Body without first-line indent (numbered items, refs) — double spaced, no explicit sb/sa."""
+    return _p(text, bold=bold, italic=italic, align="both", fi=0, ls=480)
 
 def _right(text, bold=True):
     return _p(text, bold=bold, align="right", sb=6, sa=6, fi=0)
 
-def _multi_run(segments, align="both", sb=12, sa=12, fi=720):
+def _multi_run(segments, align="both", sb=0, sa=0, fi=720, ls=480):
     """
     Build a paragraph with multiple runs of different formatting.
     segments: list of (text, bold, italic) tuples
     """
     sb_t = int(sb * 20); sa_t = int(sa * 20)
+    ls_tag = f'<w:spacing w:line="{ls}" w:lineRule="auto"/>' if ls else ''
     fi_x = f'<w:ind w:firstLine="{fi}"/>' if fi else ""
+    ls_x  = ls_tag if 'ls_tag' in dir() else ''
     parts = []
     for text, bold, italic in segments:
         b = "<w:b/><w:bCs/>" if bold else ""
@@ -235,7 +238,7 @@ def _table_xml(rows_data, col_widths_pct=None):
                      .replace(">","&gt;").replace('"',"&quot;"))
             p_xml = (
                 f'<w:p xmlns:w="{NS_W}">'
-                f'<w:pPr><w:spacing w:before="40" w:after="40"/></w:pPr>'
+                f'<w:pPr><w:spacing w:before="0" w:after="0" w:line="240" w:lineRule="auto"/></w:pPr>'
                 f'<w:r><w:rPr>'
                 f'<w:rFonts w:ascii="{FONT}" w:hAnsi="{FONT}" w:cs="{FONT}"/>'
                 f'<w:sz w:val="{sz_half}"/><w:szCs w:val="{sz_half}"/>{b}'
