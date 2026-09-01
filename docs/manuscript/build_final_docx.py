@@ -52,25 +52,35 @@ def src_els(start, end):
 def get_text(el):
     return "".join(t.text or "" for t in el.findall(".//{%s}t" % NS)).strip()
 
-# ── Create output doc from scratch, copy page setup from source ────────────────
-out = Document()
-# Copy page setup
+# ── Create output doc — START FROM SOURCE COPY so all part relationships
+#    (image blobs, fonts, styles, settings) are automatically carried over.
+#    Then we REPLACE the body content completely.
+# ────────────────────────────────────────────────────────────────────────────────
+import shutil
+shutil.copy2(SRC, OUT)              # copy source → output to inherit ALL relationships
+out = Document(OUT)                 # open the copy
+
+# Clear the body completely — remove all existing paragraphs and tables
+body = out.element.body
+for child in list(body):
+    tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
+    if tag in ("p", "tbl", "sdt"):  # keep sectPr (section properties at end)
+        body.remove(child)
+
+# Verify page setup inherited correctly
 src_sec = src.sections[0]
 out_sec = out.sections[0]
+# Ensure margins match (should already match since it's a copy)
 out_sec.page_width    = src_sec.page_width
 out_sec.page_height   = src_sec.page_height
 out_sec.top_margin    = src_sec.top_margin
 out_sec.bottom_margin = src_sec.bottom_margin
 out_sec.left_margin   = src_sec.left_margin
 out_sec.right_margin  = src_sec.right_margin
-out_sec.header_distance = src_sec.header_distance
 out_sec.footer_distance = src_sec.footer_distance
 
-# Remove the default empty paragraph Word adds to a new Document
-for child in list(out.element.body):
-    out.element.body.remove(child)
+# body is already set above — no need to clear again
 
-body = out.element.body
 
 def append(el):
     body.append(copy.deepcopy(el) if el.getparent() is not None else el)
