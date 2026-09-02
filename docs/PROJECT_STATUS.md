@@ -247,6 +247,37 @@
 
 ---
 
+## DOCUMENT TOOLING BACKLOG
+*(Added Sep 2026 — research needed before implementation)*
+
+The main capstone manuscript (`SMARTSPEND_FINAL_V5.docx`, `SMARTSPEND_REVISED_MANUSCRIPT.md`, template PDFs) currently requires manual round-trips: edit in `.md`, rebuild via `build_final_docx.py`, check visually. This section lists tools and approaches to research and plan for faster, more reliable document work.
+
+### Tools to Research & Evaluate
+
+| # | Tool / Approach | What to Investigate | Priority |
+|---|----------------|---------------------|----------|
+| 1 | **MCP Filesystem + python-docx** | Whether setting up a filesystem MCP server + python-docx gives Kiro the ability to read, diff, and write `.docx` files directly without a build script round-trip | High |
+| 2 | **Pandoc integration** | Pandoc can convert between `.md` ↔ `.docx` ↔ `.pdf` preserving styles. Research: can it apply Lorma template styles reliably? Can it be driven from the build script? | High |
+| 3 | **PDF reading (pdfplumber / pymupdf)** | Research tools that can extract text + layout from the template PDFs so Kiro can read the actual formatting rules (margins, fonts, line spacing) from the files rather than inferring them | High |
+| 4 | **Mammoth.js / docx2python** | Libraries for reading existing `.docx` files and comparing them to our output — useful for automated formatting audits against Lorma templates | Medium |
+| 5 | **LibreOffice CLI headless** | `soffice --headless --convert-to pdf` can render `.docx` to `.pdf` for visual checking. Research: can this run on Windows in this environment and be piped into a diff tool? | Medium |
+| 6 | **Google Docs API** | Research whether the Google Docs API can be used to push changes from our `.md` source directly into the Google Doc version (Cyrille's working copy) — avoiding the manual copy-paste workflow entirely | Medium |
+| 7 | **Diff-based manuscript revision** | Instead of rebuilding the full DOCX every time, research a patch/diff approach: detect only changed sections in the `.md` and apply targeted `python-docx` mutations, preserving existing formatting | Medium |
+| 8 | **APA citation validator** | Research Python libraries (e.g. `citeproc-py`, `pybtex`) that can validate APA formatting of all references in `SMARTSPEND_REVISED_MANUSCRIPT.md` automatically | Low |
+
+### Research Questions to Answer Before Implementing
+
+1. Can `build_final_docx.py` be extended to accept a diff/patch rather than full rebuild — reducing build time from ~30s to ~5s?
+2. Can Pandoc produce output that passes visual inspection against the Lorma CCSE template (margins, header styles, TOC format)?
+3. What is the best way to give Kiro persistent read access to `.docx` and `.pdf` files — MCP server, a helper script that extracts to `.txt`, or a dedicated tool?
+4. Can the Google Docs API be authenticated via a service account for automated pushes, without requiring manual OAuth every session?
+5. Is LibreOffice headless viable in the `C:\xampp` environment for automated PDF rendering and visual diff?
+
+### Next Step
+When ready: research items 1–3 first (highest leverage), then design a unified "doc pipeline" that can: read template → compare output → apply targeted fixes → export PDF for visual review — all triggerable from a single command.
+
+---
+
 ## KNOWN CONSTRAINTS (for defense Q&A)
 
 | Constraint | Explanation | Mitigation |
