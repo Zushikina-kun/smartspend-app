@@ -3621,7 +3621,11 @@ class _DashboardState extends State<Dashboard> {
                               ? Colors.teal
                               : Colors.grey;
                   return GestureDetector(
-                    onTap: () => widget.onNavigate(4), // 4 = Profile tab
+                    onTap: () {
+                      // Signal ProfileScreen to scroll to FMS section
+                      ProfileScreen.scrollToFMS = true;
+                      widget.onNavigate(4); // 4 = Profile tab
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 10),

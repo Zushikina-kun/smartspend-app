@@ -37,6 +37,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   List<Expense> _thisMonthExpenses =
       []; // always current calendar month — used by 50/30/20, Wants vs Needs, Allowance Overview
   bool _loading = true;
+  bool _incomeWalletMode = true; // mirrors the income_wallet_mode setting
   double _monthlyIncome = 0;
   String? _aiAdvice;
   bool _loadingAdvice = false;
@@ -118,6 +119,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         await DBService.getSetting('account_type') ?? 'employed';
     final paydayStr = await DBService.getSetting('payday_date');
     final paydayDate = int.tryParse(paydayStr ?? '1') ?? 1;
+    // Load income_wallet_mode so we can gate income-based cards
+    final iwMode = await DBService.getIncomeWalletMode();
     // Section visibility
     final showDTI = (await DBService.getSetting('show_dti')) != 'false';
     final showEmergencyFund =
@@ -224,6 +227,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       _thisMonthExpenses =
           allExpenses.where((e) => e.date.startsWith(currentMonthKey)).toList();
       _monthlyIncome = income;
+      _incomeWalletMode = iwMode;
       _accountType = accountType;
       _cachedCategoryTotals = catTotals;
       _cachedMonthlyTotals = last6;
@@ -1767,11 +1771,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             const InfoButton(
                               title: "Health Score History",
                               body:
-                                  "Shows your Financial Health Score for each day over the last 30 days.\n\n"
+                                  "Shows your Financial Health Score for each day the app was opened over the last 30 days.\n\n"
                                   "🟢 Green dot = Good (80+)\n"
                                   "🟡 Orange dot = Fair (60–79)\n"
                                   "🔴 Red dot = Needs Attention (<60)\n\n"
-                                  "Score drops are usually caused by: exceeding a budget, not logging for several days, or spending more than your income.",
+                                  "Why are there so few data points?\n"
+                                  "The score is only recorded on days you open the app — days you don't open it aren't tracked. The fewer times you've opened the app this month, the fewer points on the chart.\n\n"
+                                  "Score drops are usually caused by: exceeding a budget, not logging for several days, or spending more than your daily limit.",
                               size: 14,
                             ),
                           ],
@@ -2345,6 +2351,81 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ),
                       ],
 
+                      // Score history placeholder — shown when too few data points
+                      // (score only saved on days the app is opened)
+                      if (_scoreHistory.length < 2) ...[
+                        Builder(builder: (ctx) {
+                          final cs = Theme.of(ctx).colorScheme;
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: cs.surfaceContainerHighest
+                                  .withValues(alpha: 0.35),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                  color: cs.outline.withValues(alpha: 0.15)),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(Icons.show_chart,
+                                    size: 20,
+                                    color: cs.onSurface.withValues(alpha: 0.4)),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Health Score History (30 days)',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: cs.onSurface
+                                                .withValues(alpha: 0.65)),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        _scoreHistory.isEmpty
+                                            ? 'No history yet — your score is recorded each time you open the app. Check back after a few sessions.'
+                                            : 'Only ${_scoreHistory.length} data point so far — your score is recorded each time you open the app. Use the app on more days to build your history chart.',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: cs.onSurface
+                                                .withValues(alpha: 0.5),
+                                            height: 1.4),
+                                      ),
+                                      if (_scoreHistory.isNotEmpty) ...[
+                                        const SizedBox(height: 8),
+                                        Row(children: [
+                                          Text(
+                                            'Current score: ',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.55)),
+                                          ),
+                                          Text(
+                                            '${(_scoreHistory.last['score'] as num?)?.toInt() ?? 0}/100',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.bold,
+                                                color: cs.primary),
+                                          ),
+                                        ]),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        const SizedBox(height: 16),
+                      ],
+
                       // Prediction card
                       if (predicted > 0) ...[
                         Container(
@@ -2747,9 +2828,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       );
                     }),
 
-                    // 50/30/20 Rule Tracker
-                    _build503020Card(context),
-                    const SizedBox(height: 16),
+                    // 50/30/20 Rule Tracker — only shown in income mode
+                    // In Lightweight Mode, income is disabled so this would
+                    // use stale income data and give meaningless percentages.
+                    if (_incomeWalletMode) _build503020Card(context),
+                    if (_incomeWalletMode) const SizedBox(height: 16),
 
                     // Want vs Need breakdown (#9)
                     _buildWantNeedCard(context),
@@ -2773,8 +2856,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       const SizedBox(height: 16),
                     ],
 
-                    // Tax & Savings Card — for employed/business/working_student/freelancer
-                    if (_accountType != 'student' &&
+                    // Tax & Savings Card — only in income mode for employed/business/working_student/freelancer
+                    if (_incomeWalletMode &&
+                        _accountType != 'student' &&
                         _accountType != 'unemployed' &&
                         _accountType != 'pensioner' &&
                         _accountType != 'general')
@@ -2881,10 +2965,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ),
 
                     // Overview Card — for student/unemployed/pensioner/general
-                    if (_accountType == 'student' ||
-                        _accountType == 'unemployed' ||
-                        _accountType == 'pensioner' ||
-                        _accountType == 'general')
+                    // Only shown in income mode (allowance/budget/pension tracking ON)
+                    if (_incomeWalletMode &&
+                        (_accountType == 'student' ||
+                            _accountType == 'unemployed' ||
+                            _accountType == 'pensioner' ||
+                            _accountType == 'general'))
                       GestureDetector(
                         onTap: _showIncomeDialog,
                         child: Container(
