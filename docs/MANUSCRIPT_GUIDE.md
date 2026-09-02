@@ -1,5 +1,5 @@
 # SmartSpend — Manuscript Guide
-**Version:** 2.9.7 | **August 2026** | **Lucid Frame**
+**Version:** 2.9.8 | **August 2026** | **Lucid Frame**
 
 > One document for all manuscript-related work.
 > PART 1 = Paper revision guide (how to write each chapter, what to say).
@@ -10,7 +10,7 @@
 # PART 1 — PAPER GUIDE (How to Write Each Section)
 
 **For:** Lucid Frame — Cyrille John M. Rubis (Documentation Lead)
-**Date:** August 27, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.7
+**Date:** August 27, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.8
 **Purpose:** Source of truth for revising Chapters 1–5 of the capstone thesis paper
 
 > ⚠️ Also see **`docs/CAPSTONE_REFERENCE.md`** — the most comprehensive single-file reference for capstone documentation, with all current numbers, quotes, and comparison tables.
@@ -217,7 +217,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 4. **Interview Findings** — themes from qualitative analysis
 5. **FHS Validation** — does the formula correlate with user-reported financial health?
 
-### Key Numbers to Report (from v2.9.7 final build)
+### Key Numbers to Report (from v2.9.8 final build)
 - **31 AI agentic actions** implemented
 - **5 LLM providers** with automatic failover + task-based routing (fast/smart/financial_advice)
 - **23 achievement badges** + 10 daily quests
@@ -771,10 +771,10 @@ These things from the actual app should be in Chapter 3:
 
 ---
 
-*Fix guide prepared by Kiro — based on comparing the manuscript against the actual v2.9.7 build — all fixes now applied in docs/manuscript/SMARTSPEND_REVISED_MANUSCRIPT.md*
+*Fix guide prepared by Kiro — based on comparing the manuscript against the actual v2.9.8 build — all fixes now applied in docs/manuscript/SMARTSPEND_REVISED_MANUSCRIPT.md*
 *For questions: refer to `docs/CAPSTONE_REFERENCE.md` for all accurate numbers*
 
 
 ---
 
-*SmartSpend v2.9.7 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*
+*SmartSpend v2.9.8 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*

@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.7 | **Date:** August 27, 2026
+**Version:** 2.9.8 | **Date:** August 27, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.7).
+> All figures are accurate to the final build (v2.9.8).
 
 ---
 
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.7
+**Version:** 2.9.8
 **Build date:** August 11, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -545,9 +545,11 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.4 | Aug 2026 | 6 bug fixes: FHS gap reload, subscription overlap, analytics score sync, limit card overlap, lightweight spending restraint cross-period, stale model names in about/ai screens |
 | 2.9.5 | Aug 2026 | Weekly Category Card (High/Normal/Low vs usual), Financial Management Score, FHS trend, enriched breakdown dialog, 9 new research sources |
 | 2.9.6 | Aug 2026 | App Settings fully rebuilt (DraggableScrollableSheet, scrollable), Lite Mode one-tap toggle, all grayed-out restrictions removed; docs sweep + research expansion (Parts 12–13 new sources, GCash Pera Coach competitor, EY/Plaid/PSA 2026 stats) |
+| 2.9.7 | Aug 2026 | Comprehensive audit fixes (30+ issues); FMS + Weekly Category Card on Home+Analytics; FHS unmeasured label; recurring auto-add; ScanReviewScreen dedup fix; 30+ docs fixes across 9 files |
+| 2.9.8 | Sep 2026 | AI coverage expansion: 31 agentic actions (added set_spending_limit + add_insurance_policy); Taglish triggers for all action types; budget routing to smart tier; set_budget fallback parser; auto-rules in context; multi-item logging typo resilience |
 
 ---
 
-*SmartSpend v2.9.7 — Lucid Frame*
+*SmartSpend v2.9.8 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
-*Last updated: August 27, 2026*
+*Last updated: September 2, 2026*

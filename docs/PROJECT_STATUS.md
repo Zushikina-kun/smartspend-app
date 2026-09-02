@@ -1,5 +1,5 @@
 # SmartSpend — Project Status
-**Version:** 2.9.7 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.8 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** August 27, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
@@ -57,15 +57,15 @@
 
 ## WHAT IS DONE ✅
 
-### v2.9.7 — August 27, 2026
+### v2.9.8 — August 27, 2026
 - [x] **App Settings converted to dedicated full screen** (`settings_screen.dart`) — fully scrollable on all devices, no more bottom sheet cutoff
 - [x] **All 19 toggles always visible and interactive** — no grayed-out restrictions, always tappable
 - [x] **Lite Mode toggle** pinned at top under "QUICK PRESETS" heading — impossible to miss
 - [x] **profile_screen.dart** — old 635-line `_showSettingsSheet` + `_settingsTile` removed; replaced with `Navigator.push` to new full screen
-- [x] **whats_new_screen.dart** — fixed 2 malformed single-string tuples causing build failures; updated to v2.9.7 entry
+- [x] **whats_new_screen.dart** — fixed 2 malformed single-string tuples causing build failures; updated to v2.9.8 entry
 - [x] **Full revised manuscript** — `docs/manuscript/SMARTSPEND_REVISED_MANUSCRIPT.md` (1,070 lines, 106KB): complete Chapters 1–4 + Abstract + References (50+ APA) + Appendices A–D; all 19 panel fixes applied; new 2025–2026 research data integrated; follows Lorma 4-chapter template exactly
 - [x] **Docs audit** — all doc footers updated v2.9.2→v2.9.6; RESEARCH_BASIS Parts 12–13 added (GCash Pera Coach, EY 2026, Plaid 2026, PSA 2025, NielsenIQ 2026, Deloitte 2026, Spendception)
-- [x] GitHub release v2.9.7 published with 3 APKs (arm64: 44.7MB, armeabi: 37.1MB, x86_64: 47.6MB)
+- [x] GitHub release v2.9.8 published with 3 APKs (arm64: 44.7MB, armeabi: 37.1MB, x86_64: 47.6MB)
 
 ### v2.9.6 — August 2026
 - [x] **App Settings fully rebuilt** — DraggableScrollableSheet (85% initial height, draggable to full), fully scrollable, all 20+ tiles accessible
@@ -270,5 +270,5 @@
 
 ---
 
-*SmartSpend v2.9.7 — Lucid Frame*
+*SmartSpend v2.9.8 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027 (1st Semester)*
