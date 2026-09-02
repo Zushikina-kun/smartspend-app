@@ -7,7 +7,7 @@ In Partial Fulfillment of the requirements for the degree of Bachelor of Science
 **Researchers:** Directo, Brix A. · Rubis, Cyrille John M. · Madayag, Djaunathan Albert S.
 **Adviser:** Verzola, Johnny Flores, MTS
 **Teacher-in-Charge:** Mendez, Janelli M., DIT
-**Academic Year:** 2026–2027, 1st Semester | **Version:** 2.9.7
+**Academic Year:** 2026–2027, 1st Semester | **Version:** 2.9.8
 
 ---
 
@@ -390,7 +390,7 @@ The Kanban board is divided into seven columns representing workflow stages: Bac
 | Design | Design SQLite schema (20 tables); define FHS formula and weights; create UI wireframes and data flow diagrams | System architecture diagram; database schema; FHS formula documentation |
 | Development | Build expense tracking module; integrate Gemini 3.1 Flash-Lite API; add multi-modal import (OCR, voice, barcode, batch screenshots, paste text); implement FHS engine and Warning Decay; Firebase sync; gamification | Functional app build; all 31 agentic actions operational |
 | Testing | Unit testing for LLM parsing accuracy; SUS evaluation with 30 respondents; qualitative interviews; bug documentation | SUS scores; parsing accuracy observations; bug log |
-| Deployment | Build release APKs (split per ABI, obfuscated); prepare Demo Mode with realistic Filipino sample data; publish to GitHub Releases | Release APKs (v2.9.7); project documentation |
+| Deployment | Build release APKs (split per ABI, obfuscated); prepare Demo Mode with realistic Filipino sample data; publish to GitHub Releases | Release APKs (v2.9.8); project documentation |
 | Done/Review | Analyze SUS scores; review user feedback; identify improvements; document recommendations for future development | Final evaluation report; post-capstone roadmap (paluwagan tracker, backend proxy, Play Store submission, iOS port) |
 
 *[End of Chapter II]*
@@ -467,7 +467,7 @@ A typical SmartSpend user has 20–50 expenses, 5–10 budgets, and 3–5 goals 
 **Multi-Provider Architecture Justification:**
 > "SmartSpend implements a multi-provider agentic AI system using dynamic full-context injection from a local SQLite database, enabling autonomous financial data management without the infrastructure overhead of traditional RAG pipelines. The multi-provider routing architecture ensures continuous AI availability through automatic failover across five free-tier LLM providers, with task-based routing to match query complexity with model capability." (SmartSpend Architecture, 2026)
 
-**Actual Performance Metrics (SmartSpend v2.9.7):**
+**Actual Performance Metrics (SmartSpend v2.9.8):**
 
 | Metric | Value |
 |---|---|
@@ -594,14 +594,14 @@ Based on research recommendation (Financial Health Network, 2026; Rateweb, 2026;
 
 ---
 
-### System Development Results — SmartSpend v2.9.7
+### System Development Results — SmartSpend v2.9.8
 
 The SmartSpend mobile application was developed across seven Kanban phases, resulting in a fully functional Android application with the following technical specifications:
 
 | Item | Value |
 |---|---|
 | Platform | Android (Flutter/Dart) |
-| Version | 2.9.7 |
+| Version | 2.9.8 |
 | SQLite schema | Version 11, 20 tables |
 | APK size (arm64-v8a) | 44.7 MB (release, obfuscated, split) |
 | AI providers | 5 (auto-failover chain) |
@@ -625,7 +625,7 @@ The SmartSpend mobile application was developed across seven Kanban phases, resu
 - *Design:* SQLite v11 schema (20 tables); FHS dual-mode formula; UI wireframes and navigation flows
 - *Development:* All 31 agentic actions operational; 6-modality Smart Import system; Firebase Remote Config API key security; FHS engine with Warning Decay and Gap Adjustment; 23 badges and 10 daily quests; App Settings full-screen with Lite Mode and 10 visibility toggles
 - *Testing:* LLM parsing accuracy ~95–99%; all critical user flows tested on Poco X6 Pro (Android 16)
-- *Deployment:* Three split APK variants published to GitHub Releases (v2.9.7)
+- *Deployment:* Three split APK variants published to GitHub Releases (v2.9.8)
 
 ---
 
@@ -673,7 +673,7 @@ This study designed, developed, and evaluated **SmartSpend** — an AI-assisted 
 
 **Regarding Objective 1** — the assessment of financial management practices: The survey and interview data confirmed the presence of the financial management challenges identified in the literature — specifically the manual effort burden of traditional expense tracking, irregular budgeting behavior, and the absence of visible consequences for ignoring financial warnings. These findings directly validated the design rationale for SmartSpend's core features: multi-modal AI input to eliminate manual effort, the Financial Health Score to provide visible financial feedback, and the Warning Decay mechanism to make the consequences of ignoring budget warnings tangible and persistent.
 
-**Regarding Objective 2** — system design, development, and LLM benchmarking: SmartSpend v2.9.7 was successfully designed and developed as a fully functional Android application featuring 31 autonomous AI actions, a dual-mode Financial Health Score (Full Mode and Lightweight Mode), 6 input modalities, multi-modal Smart Import across 40+ platform types, offline-first SQLite architecture, Firebase cloud synchronization, and a gamification system with 23 achievement badges and 10 daily quests.
+**Regarding Objective 2** — system design, development, and LLM benchmarking: SmartSpend v2.9.8 was successfully designed and developed as a fully functional Android application featuring 31 autonomous AI actions, a dual-mode Financial Health Score (Full Mode and Lightweight Mode), 6 input modalities, multi-modal Smart Import across 40+ platform types, offline-first SQLite architecture, Firebase cloud synchronization, and a gamification system with 23 achievement badges and 10 daily quests.
 
 The comparative technical benchmarking of 15 LLM API providers confirmed that **Gemini 3.1 Flash-Lite** (Google AI Studio) is the most appropriate primary model for SmartSpend's academic deployment — offering the highest free-tier request quota (1,000/day), the best Filipino-English multilingual performance among free-tier models, a 1-million token context window, and native function calling support. The multi-provider failover architecture (Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1) ensures continuous AI availability at zero cost.
 
@@ -1056,7 +1056,7 @@ Date: _______________________________
 
 ---
 
-*SmartSpend v2.9.7 — Lucid Frame*
+*SmartSpend v2.9.8 — Lucid Frame*
 *Lorma Colleges, College of Computer Studies and Engineering*
 *Bachelor of Science in Information Technology — 4th Year, 1st Semester*
 *Academic Year 2026–2027*

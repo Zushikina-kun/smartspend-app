@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.7';
-  static const _prefKey = 'whats_new_seen_2_9_7';
+  static const _version = '2.9.8';
+  static const _prefKey = 'whats_new_seen_2_9_8';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,61 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🤖',
+      'AI Now Understands Filipino/Taglish for All Actions',
+      'You can now set budgets, add debts, log income, create goals, and add recurring bills in Filipino. '
+          '"Budget ko sa pagkain 3000", "may utang ako kay John ng 500", "sweldo ko 25000" — all work directly.'
+    ),
+    (
+      '💰',
+      'Set Spending Limits via AI',
+      'Tell the AI "set daily limit to 200 pesos" or "limitahan ang gastos ko ng 500 kada araw" '
+          'and it sets your spending cap directly — no need to go to App Settings.'
+    ),
+    (
+      '🏥',
+      'Add Insurance & Contributions via AI',
+      'Say "SSS ko 560 monthly" or "add PhilHealth contribution 250 a month" and the AI creates '
+          'the entry in your Insurance Tracker automatically. Works for life insurance too.'
+    ),
+    (
+      '📋',
+      'AI Knows Your Auto-Rules',
+      'The AI can now see and describe your auto-categorization rules. '
+          '"What rules do I have?" now gives a real answer.'
+    ),
+    (
+      '✅',
+      'Multi-Item Logging More Reliable',
+      'Logging multiple expenses in one message is more robust — catches typos like "spen", '
+          'handles commas and "and" connectors, and uses a smarter model for complex multi-item messages.'
+    ),
+    (
+      '🔄',
+      'Recurring Auto-Add from Pattern Card',
+      'When SmartSpend detects a recurring pattern, tapping "Add Recurring" now saves '
+          'the entry directly — no more navigating to an empty screen.'
+    ),
+    (
+      '📊',
+      'Financial Management Score on Home & Analytics',
+      'The Financial Management Score (FMS) now appears on the Home screen as a compact strip '
+          'and on the Analytics screen alongside the FHS breakdown. Tap the strip to see the full breakdown in Profile.'
+    ),
+    (
+      '⚠️',
+      'FHS Unmeasured Label',
+      'When income is not set, the Savings Rate component now shows "Unmeasured" with a grey '
+          'indicator instead of a silent partial score — more transparent and honest.'
+    ),
+    (
+      '🛠️',
+      'Duplicate ScanReviewScreen Fixed',
+      'A latent code conflict (two classes with the same name) was resolved. '
+          'The camera import flow is now cleaner and more stable.'
+    ),
+  ];
     (
       '⚙️',
       'App Settings — Dedicated Full Screen',

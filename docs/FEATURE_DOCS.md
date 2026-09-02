@@ -1,10 +1,10 @@
 # Smart Spend — Application Documentation
 
-**Version:** 2.9.7
+**Version:** 2.9.8
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** August 27, 2026 (v2.9.7 — docs restructure, Settings full screen, research expansion, GCash Pera Coach competitor added)
+**Last Updated:** August 27, 2026 (v2.9.8 — docs restructure, Settings full screen, research expansion, GCash Pera Coach competitor added)
 **Build:** app-arm64-v8a-release.apk — 44.7 MB (August 2026)
 
 ---
@@ -1702,7 +1702,7 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 📋 Pending Work & Roadmap
 
-*Last updated: August 27, 2026 (v2.9.7). All coding tasks complete.*
+*Last updated: August 27, 2026 (v2.9.8). All coding tasks complete.*
 
 ### ✅ COMPLETED IN SESSIONS 13–15 (v2.8.0)
 
@@ -1908,7 +1908,7 @@ All rights reserved by **Lucid Frame**, 2026.
 ### ✅ Fully Implemented (v2.9.1 Final)
 
 All features listed in sections 1–62 of this document are fully built and working in the current build. Key highlights:
-- **31 AI action types** (v2.9.7): log_expense, set_budget, set_income, add_income, add_goal, update_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, delete_goal, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, delete_by_date, split_expense, set_spending_limit, add_insurance_policy
+- **31 AI action types** (v2.9.8): log_expense, set_budget, set_income, add_income, add_goal, update_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, delete_goal, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, delete_by_date, split_expense, set_spending_limit, add_insurance_policy
 - **62+ features** across all screens
 - **Wallet Balances** — Cash on Hand, GCash, Maya, 17 PH banks, remittance centers (section 61)
 - **Firebase App Check** — Play Integrity integrated, monitoring mode (section 62)
@@ -1978,6 +1978,6 @@ These are intentional design decisions or platform constraints — not bugs.
 
 ---
 
-*SmartSpend v2.9.7 — Lucid Frame*
+*SmartSpend v2.9.8 — Lucid Frame*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2026–2027 (1st Semester)*
