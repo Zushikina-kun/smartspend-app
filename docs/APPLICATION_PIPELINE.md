@@ -235,7 +235,7 @@
 USER'S PHONE
 │
 ├── Flutter App (UI + Logic)
-│   ├── 36 screens
+│   ├── 37 screens
 │   ├── 26 services
 │   └── Event Bus (real-time refresh between screens)
 │
@@ -367,7 +367,7 @@ End of month
 | What | How many |
 |------|---------|
 | AI agentic action types | 29 |
-| App screens | 36 |
+| App screens | 37 |
 | Backend services | 26 |
 | SQLite tables | 20 |
 | LLM providers (auto-failover) | 5 |

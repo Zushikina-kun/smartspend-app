@@ -139,7 +139,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Daily AI limit | 60 messages/user |
 | AI agentic actions | 29 |
 | Currencies supported | 57 |
-| Screens | 36 |
+| Screens | 37 |
 | Services | 26 |
 | Achievement badges | 23 |
 | Daily quests | 10 rotating |

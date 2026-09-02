@@ -615,7 +615,7 @@ The SmartSpend mobile application was developed across seven Kanban phases, resu
 | Daily quests | 10 rotating |
 | Currencies supported | 57 |
 | Backup format | JSON v9 |
-| App screens | 36 |
+| App screens | 37 |
 | Backend services | 26 |
 | GitHub repository | https://github.com/Zushikina-kun/smartspend-app |
 

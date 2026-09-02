@@ -12,6 +12,7 @@ import '../services/score_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../services/notification_service.dart';
+import '../services/ai_chat_service.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
@@ -5051,12 +5052,75 @@ class _RecurringCandidateCardState extends State<_RecurringCandidateCard> {
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
-                  onPressed: () {
-                    _dismiss(id);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const RecurringScreen()));
+                  onPressed: () async {
+                    // Auto-save the recurring entry directly — no need to open
+                    // a separate screen. The user already confirmed by tapping.
+                    final now = DateTime.now();
+                    // Compute next_date based on frequency
+                    DateTime nextDate;
+                    switch (freq) {
+                      case 'weekly':
+                        nextDate = now.add(const Duration(days: 7));
+                        break;
+                      case 'daily':
+                        nextDate = now.add(const Duration(days: 1));
+                        break;
+                      case 'yearly':
+                        nextDate = DateTime(now.year + 1, now.month, now.day);
+                        break;
+                      case 'monthly':
+                      default:
+                        // Same day next month
+                        final nextMonth = now.month == 12
+                            ? DateTime(now.year + 1, 1, now.day)
+                            : DateTime(now.year, now.month + 1, now.day);
+                        nextDate = nextMonth;
+                    }
+                    // Infer category from description
+                    final cat = AIChatService.suggestCategory(desc);
+                    final todayStr = now.toIso8601String().substring(0, 10);
+                    final nextStr = nextDate.toIso8601String().substring(0, 10);
+                    try {
+                      await DBService.insertRecurring({
+                        'title': desc,
+                        'amount': amt,
+                        'category': cat.isEmpty ? 'Bills' : cat,
+                        'frequency': freq,
+                        'next_date': nextStr,
+                        'start_date': todayStr,
+                        'is_expense': 1,
+                        'notes': 'Auto-added from recurring pattern',
+                      });
+                      _dismiss(id);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                '✓ "$desc" added as $freq recurring (${CurrencyService.format(amt)})'),
+                            backgroundColor: Colors.teal,
+                            behavior: SnackBarBehavior.floating,
+                            action: SnackBarAction(
+                              label: 'View',
+                              textColor: Colors.white,
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const RecurringScreen())),
+                            ),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      _dismiss(id);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Could not add recurring: $e'),
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    }
                   },
                 ),
               ),
