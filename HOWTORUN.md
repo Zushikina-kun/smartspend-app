@@ -200,7 +200,7 @@ smartspend-app/
 ├── lib/
 │   ├── main.dart                  # App entry point
 │   ├── models/                    # Data models (Expense, Budget, UserProfile)
-│   ├── screens/                   # All UI screens (36 screens)
+│   ├── screens/                   # All UI screens (37 screens)
 │   ├── services/                  # Business logic & data layer (26 services)
 │   └── widgets/                   # Reusable widgets
 ├── android/

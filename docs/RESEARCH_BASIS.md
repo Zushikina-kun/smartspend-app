@@ -935,13 +935,14 @@ Elenvo's 6-dimension financial health framework explicitly separates "data compl
 
 ### 14.3 The FMS Formula
 
-The Financial Management Score uses **3 components × 33.3 pts ≈ 100 max**:
+The Financial Management Score uses **4 components × 25 pts = 100 max** — matching the same balanced structure as the FHS:
 
-| Component | What It Measures | Formula |
-|-----------|-----------------|---------|
-| **Logging Regularity** | How consistently the user records expenses this month | 33.3 × (loggedDays / activeDays) |
-| **Data Completeness** | Percentage of expenses with all key fields filled (category, payment method, shop name) | 33.3 × (completeEntries / totalEntries) |
-| **Engagement Streak** | Consecutive days of app engagement including log, review, or goal update | 33.3 × min(1, streak / 14) |
+| Component | What It Measures | Max Points |
+|-----------|-----------------|-----------|
+| **Logging Consistency** | How regularly expenses are recorded this month — loggedDays / activeDays | 25 |
+| **Budget Setup** | Whether the user has configured category budgets or spending limits (full score at 5+ budgets) | 25 |
+| **Goal Tracking** | Whether savings goals exist and have active progress (full score at 2+ goals with contributions) | 25 |
+| **Data Completeness** | Income and wallet data entered (if income mode is ON); or partial credit based on expense data quality | 25 |
 
 **Score interpretation:**
 
@@ -949,8 +950,10 @@ The Financial Management Score uses **3 components × 33.3 pts ≈ 100 max**:
 |-------|-------|
 | 85–100 | 🏅 Excellent Manager |
 | 70–84 | ✅ Good Manager |
-| 55–69 | 📋 Developing Habits |
-| < 55 | ⚠️ Needs Consistency |
+| 50–69 | 📋 Developing Habits |
+| < 50 | ⚠️ Needs Consistency |
+
+> **Implementation note:** The FMS score labels and colors are rendered in `profile_screen.dart` using the same scale. Purple ≥ 85, blue ≥ 70, teal ≥ 50, grey below 50.
 
 ---
 

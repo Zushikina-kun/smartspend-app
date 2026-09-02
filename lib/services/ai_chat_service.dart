@@ -690,7 +690,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
   }
 
   /// Estimate appropriate max_tokens based on message type.
-  /// Simple expense logging needs ~150 tokens. Advice/analysis needs ~600.
+  /// Simple expense logging needs ~200 tokens. Multi-item needs ~900.
   static int _estimateMaxTokens(String message) {
     final lower = message.toLowerCase();
     // Bulk rename/capitalization fix — needs many ACTION lines
@@ -698,19 +698,30 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         lower.contains('rename') ||
         lower.contains('fix the name') ||
         lower.contains('fix name')) {
+      return 900;
+    }
+    // ── MULTI-ITEM DETECTION ─────────────────────────────────────────────────
+    // Broad verb list catches typos: "spen", "spe", "nabayad", "nag-", etc.
+    // A message with 2+ amounts separated by comma/and/then is multi-item.
+    final amountCount = RegExp(r'\d+').allMatches(lower).length;
+    final hasSpendVerb = RegExp(
+            r'\b(spent|spen|spe|spend|bought|buy|paid|pay|purchased|ate|drank|rode|took|nabili|nagbayad|nagbili|nagbayad|nabayaran|nagastos|ginastos|gastos|bayad)\b')
+        .hasMatch(lower);
+    final hasMultiItemConnector = lower.contains(',') ||
+        RegExp(r'\band\b').hasMatch(lower) ||
+        RegExp(r'\bthen\b').hasMatch(lower) ||
+        RegExp(r'\bfor\b.*\bfor\b').hasMatch(lower); // "30 for X, 45 for Y"
+    if (amountCount >= 2 && hasSpendVerb && hasMultiItemConnector) {
+      // Each item needs ~200 tokens (reply + ACTION). Scale up with item count.
+      final extraItems = (amountCount - 1).clamp(1, 6);
+      return (600 + extraItems * 100).clamp(800, 1200);
+    }
+    if (amountCount >= 3 && hasSpendVerb) {
+      // Multiple amounts even without connector words — still multi-item
       return 800;
     }
-    // Multi-item expense logging — detect commas, 'and', 'then', multiple amounts
-    final amountCount = RegExp(r'\d+').allMatches(lower).length;
-    if (amountCount >= 3 &&
-        RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
-            .hasMatch(lower)) {
-      return 600;
-    }
-    // Expense logging — short confirmation + one ACTION line needed
-    if (RegExp(r'\b(spent|bought|paid|purchased|ate|drank|rode|took|nabili|nagbayad)\b')
-            .hasMatch(lower) &&
-        RegExp(r'\d').hasMatch(lower)) {
+    // Single expense logging — short confirmation + one ACTION line
+    if (hasSpendVerb && RegExp(r'\d').hasMatch(lower)) {
       return 450;
     }
     // List/view requests — moderate length
@@ -742,10 +753,17 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         .hasMatch(lower)) {
       return 'financial_advice';
     }
-    // Fast tasks: logging, balance updates, simple queries
-    if (RegExp(
-            r'\b(spent|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya)\b')
-        .hasMatch(lower)) {
+    // Fast tasks: single-item logging, balance updates, simple queries
+    // Multi-item logs (comma/and + multiple amounts) route to smart tier instead
+    final lowerD = lower;
+    final amtCountD = RegExp(r'\d+').allMatches(lowerD).length;
+    final isMultiItem = amtCountD >= 2 &&
+        (lowerD.contains(',') || RegExp(r'\band\b').hasMatch(lowerD)) &&
+        RegExp(r'\b(spent|spen|spe|spend|bought|paid|ate|drank|rode|took|nabili|nagbayad|nagbili|gastos|bayad)\b')
+            .hasMatch(lowerD);
+    if (!isMultiItem &&
+        RegExp(r'\b(spent|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya)\b')
+            .hasMatch(lowerD)) {
       return 'fast';
     }
     // Smart tasks: analysis, planning, advice, complex questions
@@ -800,8 +818,8 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "You are SmartSpend AI — a warm, financially-savvy Filipino-English companion. Be conversational and practical. Use **bold** and bullets only when helpful.\n\n"
         "SCOPE: Personal finance, PH banking (BDO/BPI/Metrobank/Landbank/UnionBank/RCBC/Security/EastWest/PSBank), digital banks (Maya Bank 3.5%/GoTyme 5%/Tonik 4%/Seabank 3%/UNObank), e-wallets (GCash/Maya/GrabPay/ShopeePay/Coins.ph), SSS/PhilHealth/Pag-IBIG, investments (MP2 6-7%/T-bills 5-6%/time deposits 4-6%), insurance, prices, deals. Steer non-finance questions back gently.\n\n"
         "RULES:\n"
-        "1. ALWAYS LOG: When user mentions spending/buying with an amount → fire log_expense ACTION. No exceptions. Multiple items = multiple ACTION lines.\n"
-        "2. MULTI-ITEM: If user lists several purchases in one message, fire ONE ACTION per item. Example: 'spent 30 jeep, 45 gatorade, 100 lunch' = 3 separate ACTION lines.\n"
+        "1. ALWAYS LOG: When user mentions spending/buying with an amount → fire log_expense ACTION. No exceptions. Multiple items = multiple ACTION lines. Also catch typos like 'spen', 'spe', 'nagastos', 'ginastos'.\n"
+        "2. MULTI-ITEM: If user lists several purchases in one message, fire ONE ACTION per item. Example: 'spent 30 jeep, 45 gatorade, 100 lunch' = 3 separate ACTION lines. Also matches: 'spen 30 for transport, 30 for lunch and 45 for super glue' = 3 ACTION lines.\n"
         "3. DB IS TRUTH: Context below = only truth. Never say 'already logged' from memory.\n"
         "4. WALLET BALANCE: 'I have X in GCash', 'cash on hand is X', 'my cash is X' → ALWAYS use set_wallet_balance. NEVER log as income, NEVER log as expense. This is a balance update only.\n"
         "5. DUPLICATES — GUARDRAIL: If the GUARDRAIL note above lists an item with the same name+amount that the user JUST mentioned in the SAME message, do NOT fire another ACTION for it. If the user is logging something for a DIFFERENT day or a genuinely new purchase, always log it. When in doubt: log it.\n"
