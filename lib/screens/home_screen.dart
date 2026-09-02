@@ -3581,6 +3581,101 @@ class _DashboardState extends State<Dashboard> {
 
               const SizedBox(height: 12),
 
+              // ── FMS STRIP — Financial Management Score ────────────────────
+              // Compact strip below FHS+Budget row so both scores are visible
+              // on the home screen. Tapping navigates to Profile for full
+              // breakdown. Research: Khazneh (2026) / AccountaPal — management
+              // behavior score should be co-located with health outcome score.
+              FutureBuilder<Map<String, dynamic>>(
+                future: () async {
+                  final goals = await DBService.getGoals();
+                  final budgets = await DBService.getBudgets();
+                  final expMaps = _expenses
+                      .where((e) => e.date.startsWith(_currentMonth))
+                      .map((e) => {
+                            'item_name': e.itemName,
+                            'amount': e.amount,
+                            'date': e.date,
+                            'category': e.category,
+                          })
+                      .toList();
+                  return FinancialManagement.getFinancialManagementScore(
+                    thisMonthExpenses: expMaps,
+                    budgets: budgets,
+                    goals: goals,
+                    monthlyIncome: _monthlyIncome,
+                    incomeWalletMode: _incomeWalletMode,
+                    wallets: _wallets,
+                  );
+                }(),
+                builder: (ctx, snap) {
+                  if (!snap.hasData) return const SizedBox.shrink();
+                  final fms = snap.data!;
+                  final fmsScore = fms['score'] as int;
+                  final fmsLabel = fms['label'] as String;
+                  final fmsColor = fmsScore >= 85
+                      ? Colors.purple
+                      : fmsScore >= 70
+                          ? Colors.blue
+                          : fmsScore >= 50
+                              ? Colors.teal
+                              : Colors.grey;
+                  return GestureDetector(
+                    onTap: () => widget.onNavigate(4), // 4 = Profile tab
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: fmsColor.withValues(alpha: 0.06),
+                        borderRadius: BorderRadius.circular(12),
+                        border:
+                            Border.all(color: fmsColor.withValues(alpha: 0.18)),
+                      ),
+                      child: Row(children: [
+                        Icon(Icons.manage_accounts_outlined,
+                            size: 15, color: fmsColor.withValues(alpha: 0.7)),
+                        const SizedBox(width: 6),
+                        Text('Management Score',
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: Theme.of(ctx)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.6))),
+                        const SizedBox(width: 8),
+                        Text('$fmsScore / 100',
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: fmsColor)),
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: fmsColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(fmsLabel,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: fmsColor)),
+                        ),
+                        const Spacer(),
+                        Text('See breakdown →',
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Theme.of(ctx).colorScheme.primary,
+                                decoration: TextDecoration.underline)),
+                      ]),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 12),
+
               // Spending Personality card
               Builder(builder: (ctx) {
                 final expenseData = _expenses

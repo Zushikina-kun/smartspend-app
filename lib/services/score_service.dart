@@ -357,7 +357,8 @@ class ScoreService {
         comp1Reason = "Spending exceeds income — no savings";
       }
     } else {
-      // No income set — give partial credit based on spending level
+      // No income set — give partial credit based on spending level.
+      // Mark as unmeasured so the UI can surface a distinct indicator.
       final totalSpent =
           expenses.fold(0.0, (sum, e) => sum + (e['amount'] as num));
       comp1 = totalSpent < 5000
@@ -365,12 +366,16 @@ class ScoreService {
           : totalSpent < 10000
               ? 15.0
               : 10.0;
-      comp1Reason = "Set your income for accurate savings tracking";
+      comp1Reason =
+          "Unmeasured — set your income for accurate savings tracking";
     }
     breakdown.add({
       'reason': comp1Reason,
       'points': comp1.round(),
       'component': 'savings_rate',
+      // Flag so the UI can show a distinct 'unmeasured' indicator instead of
+      // a red bar — partial credit is given but the metric is data-limited.
+      if (monthlyIncome <= 0) 'unmeasured': true,
     });
 
     // ── COMPONENT 2: OVERSPEND CONTROL (25 pts) ──────────────────────────────
