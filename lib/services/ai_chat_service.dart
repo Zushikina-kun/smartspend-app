@@ -309,7 +309,10 @@ class AIChatService {
             categoryRules
                 .take(10)
                 .map((r) => '"${r['keyword']}"→${r['category']}')
-                .join(', '); $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
+                .join(', ');
+
+    _fullContext = """
+Account type: $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
 This month spent: ₱${totalSpent.toStringAsFixed(0)}$wantNeedSummary
 ${allTimeTotal > 0 ? 'All-time: ₱${allTimeTotal.toStringAsFixed(0)}' : ''}$monthlyTotalsSummary
 ${quizChallenge.isNotEmpty ? 'Challenge: $quizChallenge' : ''}
