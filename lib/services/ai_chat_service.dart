@@ -146,9 +146,14 @@ class AIChatService {
     double spentInPeriod = 0,
     Map<String, double> allLimits = const {},
     Map<String, double> allSpent = const {},
+    List<Map<String, dynamic>> categoryRules = const [],
   }) {
     // Refresh user-defined categorization rules cache
-    DBService.getCategoryRules().then((rules) => _userRules = rules);
+    if (categoryRules.isNotEmpty) {
+      _userRules = categoryRules;
+    } else {
+      DBService.getCategoryRules().then((rules) => _userRules = rules);
+    }
     final expenseSummary = expenses.isEmpty
         ? "No expenses recorded yet."
         : _buildExpenseSummary(expenses);
@@ -297,13 +302,19 @@ class AIChatService {
               return "- $name: ₱${premium.toStringAsFixed(0)}/$freq${nextDue.isNotEmpty ? ' (due: $nextDue)' : ''}";
             }).join("\n");
 
-    _fullContext = """
-Account type: $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
+    // Build category rules summary for AI context
+    final rulesSummary = categoryRules.isEmpty
+        ? ""
+        : "\nAuto-rules (keyword→category): " +
+            categoryRules
+                .take(10)
+                .map((r) => '"${r['keyword']}"→${r['category']}')
+                .join(', '); $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
 This month spent: ₱${totalSpent.toStringAsFixed(0)}$wantNeedSummary
 ${allTimeTotal > 0 ? 'All-time: ₱${allTimeTotal.toStringAsFixed(0)}' : ''}$monthlyTotalsSummary
 ${quizChallenge.isNotEmpty ? 'Challenge: $quizChallenge' : ''}
 ${todayMoodScore != null ? 'Mood: $todayMoodScore/5${todayMoodScore <= 2 ? ' (low — be supportive)' : todayMoodScore >= 4 ? ' (good)' : ''}' : ''}
-${customCategories.isNotEmpty ? 'Custom cats: ${customCategories.join(', ')}' : ''}
+${customCategories.isNotEmpty ? 'Custom cats: ${customCategories.join(', ')}' : ''}$rulesSummary
 $walletsSummary
 Expenses (if not listed here, it does not exist in DB):
 $expenseSummary
@@ -767,8 +778,9 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       return 'fast';
     }
     // Smart tasks: analysis, planning, advice, complex questions
+    // NOTE: 'budget' explicitly included — budget-setting should use best model
     if (RegExp(
-            r'\b(analyze|plan|advice|suggest|explain|compare|feasib|what if|simulate|debt|goal|invest|sss|philhealth|bir)\b')
+            r'\b(analyze|plan|advice|suggest|explain|compare|feasib|what if|simulate|debt|goal|invest|sss|philhealth|bir|budget|limit|insurance|recurring|saving|ipon|utang|layunin|sweldo|kita|buwanang)\b')
         .hasMatch(lower)) {
       return 'smart';
     }
@@ -827,7 +839,16 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "7. SOCIAL: 'thanks/ok/yes/salamat/sige/oo' → short reply, no actions. Use Filipino terms naturally when the user uses them: paluwagan, utang, bayad, pang-araw-araw, piso, laman ng bulsa, ipon, gastos, singil.\n"
         "8. SELF-CHECK: Before sending your response, verify: does each item the user mentioned have exactly ONE ACTION line? If an item appears twice in your ACTION list, remove the duplicate.\n"
         "9. ITEM NAMES: item_name must be the real item — NEVER use generic filler like 'your X for', 'the X for', 'my X'. Use the actual item: 'Jeepney fare', 'Lunch', 'Snack', 'Breakfast', 'Tricycle fare'. If the user calls it 'jeep' log it as 'Jeepney fare'. If unsure, use the noun the user said.\n"
-        "10. DATE/TIME CORRECTIONS: When the user says 'that was on [date]', 'change date to', 'set it to [time]', 'put it on [date]' about an existing expense → fire update_expense ACTION with the corrected date/time field. Do NOT just say you fixed it. No ACTION = no fix. Example: user says 'the lunch I logged was actually on July 3 not July 8' → ACTION:{\"type\":\"update_expense\",\"item_name\":\"Lunch\",\"date\":\"2026-07-03\"}.\n\n"
+        "10. DATE/TIME CORRECTIONS: When the user says 'that was on [date]', 'change date to', 'set it to [time]', 'put it on [date]' about an existing expense → fire update_expense ACTION with the corrected date/time field. Do NOT just say you fixed it. No ACTION = no fix. Example: user says 'the lunch I logged was actually on July 3 not July 8' → ACTION:{\"type\":\"update_expense\",\"item_name\":\"Lunch\",\"date\":\"2026-07-03\"}.\n"
+        "11. TAGLISH ACTIONS — non-expense actions also work in Filipino/Taglish:\n"
+        "   SET BUDGET: 'budget ko sa pagkain 3000', 'itakda ang food budget sa 3000', 'pag-ibayuhin ang budget sa Transportation' → set_budget\n"
+        "   SET INCOME: 'sweldo ko 25000', 'kita ko kada buwan 18000', 'allowance ko 3000 bawat linggo' → set_income\n"
+        "   ADD GOAL: 'gusto ko mag-ipon ng 50000 para sa laptop', 'layunin ko 10000 para sa bakasyon' → add_goal\n"
+        "   ADD DEBT: 'may utang ako kay John na 500', 'nanghiram ako kay Maria ng 1000', 'pinautang ko si Pedro ng 300' → add_debt\n"
+        "   UPDATE DEBT: 'nabayaran ko na si John ng 200', 'binayaran ko si Maria ng 500', 'paid 300 to Pedro' → update_debt\n"
+        "   ADD RECURRING: 'buwanang bayad sa Netflix 299', 'lingguhang gastos sa pamasahe 150', 'monthly bill sa Meralco 1200' → add_recurring\n"
+        "   SET LIMIT: 'limitahan ang gastos ko ng 500 kada araw', 'daily limit ko 200 pesos', 'monthly spending limit 8000' → set_spending_limit\n"
+        "   ADD INSURANCE/CONTRIBUTION: 'SSS ko 560 monthly', 'PhilHealth contribution 250 a month', 'dagdagan ang insurance ko' → add_insurance_policy\n\n"
         "$guardRailNote"
         "ACTIONS (append after reply text, one per line, format: ACTION:{json}):\n"
         "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\",\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"
@@ -865,7 +886,11 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "• create_debt_payment_plan: {\"type\":\"create_debt_payment_plan\"}\n"
         "  Use when user asks 'help me pay off my debts', 'create a debt payment schedule'. Create timeline across all debts.\n"
         "• split_expense: {\"type\":\"split_expense\",\"item_name\":\"Dinner\",\"total_amount\":800,\"split_with\":\"John\",\"your_share\":400}\n"
-        "  Use when user says 'split the bill with John', 'shared lunch with Maria ₱500', 'we split dinner'. Logs your share as expense and creates debt for the other person's share.\n\n"
+        "  Use when user says 'split the bill with John', 'shared lunch with Maria ₱500', 'we split dinner'. Logs your share as expense and creates debt for the other person's share.\n"
+        "• set_spending_limit: {\"type\":\"set_spending_limit\",\"period\":\"daily\",\"amount\":500}\n"
+        "  period = 'daily' | 'weekly' | 'monthly' | 'yearly'. Use when user says 'set daily limit to 500', 'limitahan ang gastos ko ng 200 araw-araw', 'monthly spending cap 8000'.\n"
+        "• add_insurance_policy: {\"type\":\"add_insurance_policy\",\"name\":\"SSS\",\"premium_amount\":560,\"frequency\":\"monthly\",\"type_name\":\"government\"}\n"
+        "  type_name = 'government' | 'life' | 'health' | 'vehicle' | 'other'. frequency = 'monthly' | 'quarterly' | 'yearly'. Use when user says 'SSS ko 560/month', 'add PhilHealth contribution', 'bagong insurance policy'.\n\n"
         "CATEGORIES: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others.\n"
         "is_want: true=discretionary (snacks/drinks/junk food, entertainment, gaming, shopping, gifts, travel, dining out at restaurants). false=essential (meals/breakfast/lunch/dinner/brunch, transport, groceries, medicine, tuition, bills, health).\n"
         "IMPORTANT is_want rules: Breakfast/Lunch/Dinner/Brunch/Meal → is_want:false (essential food). Snacks/drinks/energy drinks/junk food → is_want:true. Jeepney/tricycle/bus/commute → is_want:false. Games/steam → is_want:true.\n"
@@ -1107,6 +1132,41 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       }
     }
 
+    // ── FALLBACK: set_budget ─────────────────────────────────────────────────
+    // If AI confirmed a budget set (e.g. "Budget set: Food ₱3,000" or
+    // "Food budget updated to ₱3000") but the ACTION JSON failed to parse,
+    // reconstruct the action from the confirmation text.
+    if (actions.where((a) => a.type == 'set_budget').isEmpty) {
+      // Pattern: "Budget set: <category> → ₱<amount>" (our snackbar format)
+      // Pattern: "<category> budget.*₱<amount>" (natural AI confirmation)
+      final budgetFallbackMatches = RegExp(
+              r'(?:Budget set:?\s+|budget(?:\s+set(?:\s+to)?)?:?\s*)([A-Za-z ]+?)\s*(?:→|to|:|-|–)?\s*₱(\d+(?:,\d+)?(?:\.\d+)?)',
+              caseSensitive: false)
+          .allMatches(fullReply);
+      for (final m in budgetFallbackMatches) {
+        final rawCat = m.group(1)?.trim() ?? '';
+        final rawAmt = m.group(2)?.replaceAll(',', '') ?? '';
+        final amount = double.tryParse(rawAmt) ?? 0;
+        // Only add if no proper set_budget action for this category already exists
+        final catNorm = _normalizeCategory(rawCat).isEmpty
+            ? rawCat
+            : _normalizeCategory(rawCat);
+        final alreadyExists = actions.any((a) =>
+            a.type == 'set_budget' &&
+            (a.params['category'] as String?)
+                    ?.toLowerCase()
+                    .contains(rawCat.toLowerCase()) ==
+                true);
+        if (amount > 0 && rawCat.isNotEmpty && !alreadyExists) {
+          actions.add(AIAction(type: 'set_budget', params: {
+            'type': 'set_budget',
+            'category': catNorm,
+            'amount': amount,
+          }));
+        }
+      }
+    }
+
     // ── STRUCTURED OUTPUT VALIDATION (LLM Cheatsheet §11 / §19) ─────────────
     // Validate every parsed action has the required fields before we return it
     // to the executor. Invalid actions are dropped with a silent log so they
@@ -1275,6 +1335,15 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       case 'suggest_idle_money':
       case 'create_debt_payment_plan':
         return true;
+      case 'set_spending_limit':
+        final period = p['period'] as String?;
+        final limitAmt = (p['amount'] as num?)?.toDouble() ?? -1;
+        return period != null &&
+            ['daily', 'weekly', 'monthly', 'yearly'].contains(period) &&
+            limitAmt >= 0; // 0 = clear the limit
+      case 'add_insurance_policy':
+        return p['name'] != null &&
+            (p['premium_amount'] as num?)?.toDouble() != null;
       default:
         // Unknown action type — allow through (forward-compatible with new actions)
         return true;

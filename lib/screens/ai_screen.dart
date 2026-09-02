@@ -167,6 +167,12 @@ class _AIScreenState extends State<AIScreen> {
       insurancePolicies = await DBService.getInsurancePolicies();
     } catch (_) {}
 
+    // Load auto-categorization rules for AI context
+    List<Map<String, dynamic>> categoryRules = [];
+    try {
+      categoryRules = await DBService.getCategoryRules();
+    } catch (_) {}
+
     // Load gap-awareness data for AI context
     int gapPenaltyDays = 0;
     int gapCleanDays = 0;
@@ -259,6 +265,7 @@ class _AIScreenState extends State<AIScreen> {
       spentInPeriod: spentInPeriod,
       allLimits: allLimits,
       allSpent: allSpent,
+      categoryRules: categoryRules,
     );
 
     // Restore chat history into AI memory on first load only
@@ -1434,6 +1441,71 @@ class _AIScreenState extends State<AIScreen> {
             fireEvent(AppEvent.expenseChanged);
             _showActionSnackbar(
                 "💸 Split logged: ${CurrencyService.format(yourShare)} your share — ${CurrencyService.format(theirShare)} owed by $splitPerson");
+          }
+          break;
+
+        case 'set_spending_limit':
+          // Set a daily / weekly / monthly / yearly spending cap
+          // AI can trigger this via "set daily limit to 500" or Taglish equivalents
+          final limitPeriod = action.params['period'] as String? ?? 'monthly';
+          final limitAmount =
+              (action.params['amount'] as num?)?.toDouble() ?? 0;
+          if (['daily', 'weekly', 'monthly', 'yearly'].contains(limitPeriod)) {
+            await DBService.setLimitForPeriod(limitPeriod, limitAmount);
+            fireEvent(AppEvent.incomeChanged); // refresh home limit card
+            if (limitAmount > 0) {
+              _showActionSnackbar(
+                  "Spending limit set: ₱${limitAmount.toStringAsFixed(0)} / $limitPeriod");
+            } else {
+              _showActionSnackbar("Spending limit cleared for $limitPeriod");
+            }
+          }
+          break;
+
+        case 'add_insurance_policy':
+          // Add an insurance policy or PH government contribution entry
+          final insName =
+              action.params['name'] as String? ?? 'Insurance Policy';
+          final insPremium =
+              (action.params['premium_amount'] as num?)?.toDouble();
+          final insFreq = action.params['frequency'] as String? ?? 'monthly';
+          final insType = action.params['type_name'] as String? ?? 'other';
+          final insDueDay = action.params['due_day'] as int?;
+          if (insPremium != null && insPremium > 0) {
+            final now = DateTime.now();
+            String nextDue;
+            switch (insFreq) {
+              case 'quarterly':
+                final qMonth = (now.month + 3 - 1) % 12 + 1;
+                final qYear = now.month + 3 > 12 ? now.year + 1 : now.year;
+                nextDue = DateTime(qYear, qMonth, insDueDay ?? now.day)
+                    .toIso8601String()
+                    .substring(0, 10);
+                break;
+              case 'yearly':
+                nextDue =
+                    DateTime(now.year + 1, now.month, insDueDay ?? now.day)
+                        .toIso8601String()
+                        .substring(0, 10);
+                break;
+              default: // monthly
+                final nm = now.month == 12
+                    ? DateTime(now.year + 1, 1, insDueDay ?? now.day)
+                    : DateTime(now.year, now.month + 1, insDueDay ?? now.day);
+                nextDue = nm.toIso8601String().substring(0, 10);
+            }
+            await DBService.insertInsurancePolicy({
+              'name': insName,
+              'type': insType,
+              'premium_amount': insPremium,
+              'frequency': insFreq,
+              'next_due_date': nextDue,
+              'notes': 'Added via AI chat',
+              'created_at': now.toIso8601String(),
+            });
+            fireEvent(AppEvent.expenseChanged);
+            _showActionSnackbar(
+                "✅ $insName added: ₱${insPremium.toStringAsFixed(0)}/$insFreq (next due: $nextDue)");
           }
           break;
       }
