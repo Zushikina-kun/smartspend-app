@@ -39,6 +39,10 @@ import 'achievements_screen.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  /// Set to true before navigating to Profile to auto-scroll to FMS section.
+  /// The ProfileScreen clears this flag after scrolling.
+  static bool scrollToFMS = false;
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -61,10 +65,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _incomeWalletMode = true;
   double _spendingLimit = 0; // tightest active limit (for tip condition)
 
+  final _scrollCtrl = ScrollController();
+  final _fmsKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
     _loadStats();
+    // Scroll to FMS section if flagged (e.g. tapped 'See breakdown' on home)
+    if (ProfileScreen.scrollToFMS) {
+      ProfileScreen.scrollToFMS = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Future.delayed(const Duration(milliseconds: 400), () {
+          if (_fmsKey.currentContext != null) {
+            Scrollable.ensureVisible(
+              _fmsKey.currentContext!,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOut,
+              alignment: 0.1, // scroll so FMS card is near the top
+            );
+          }
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _loadStats() async {
@@ -146,6 +175,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               .toList();
           _loading = false;
         });
+        // If flagged to scroll to FMS (e.g. from Home screen strip), do it now
+        // that data is loaded and FMS card will be visible in the next frame.
+        if (ProfileScreen.scrollToFMS && mounted) {
+          ProfileScreen.scrollToFMS = false;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Future.delayed(const Duration(milliseconds: 400), () {
+              if (mounted && _fmsKey.currentContext != null) {
+                Scrollable.ensureVisible(
+                  _fmsKey.currentContext!,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  alignment: 0.1,
+                );
+              }
+            });
+          });
+        }
       }
 
       // Load debts for net worth calculation
@@ -1245,6 +1291,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           : RefreshIndicator(
               onRefresh: _loadStats,
               child: SingleChildScrollView(
+                controller: _scrollCtrl,
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
@@ -1706,6 +1753,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     // Financial Management Score — separate from FHS
                     // Measures HOW WELL the user is using SmartSpend
+                    // _fmsKey is used by the scroll-to-FMS feature (tapping
+                    // "See breakdown →" on the Home screen FMS strip)
+                    SizedBox(key: _fmsKey, height: 0),
                     FutureBuilder<Map<String, dynamic>>(
                       future: () async {
                         final goals = await DBService.getGoals();

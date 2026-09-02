@@ -192,8 +192,12 @@ class ScoreService {
           .toList()
         ..sort();
       final firstDate = DateTime.parse(dates.first);
-      final span = now.difference(firstDate).inDays + 1;
-      activeDays = span.clamp(1, daysPassed);
+      // Only apply "count from first entry" fairness if user started after day 7
+      // — prevents inflated scores when a single entry marks "100% of active days"
+      if (firstDate.day > 7) {
+        final span = now.difference(firstDate).inDays + 1;
+        activeDays = span.clamp(1, daysPassed);
+      }
     } catch (_) {}
     if (loggedDays > 0 && activeDays > loggedDays * 2) {
       activeDays = loggedDays * 2;
@@ -483,14 +487,22 @@ class ScoreService {
       int activeDays = daysPassed.clamp(1, daysInMonth);
 
       // If user only started logging partway through the month, be fair:
-      // use the span from their first logged day this month (not day 1).
+      // give a grace period — if they started AFTER day 7 this month,
+      // count from their first entry. If within the first 7 days, always use
+      // full daysPassed so logging on day 1 of 2 = 50%, not 100%.
       if (thisMonthDates.isNotEmpty) {
         try {
           final firstThisMonth = thisMonthDates
               .map((d) => DateTime.parse(d))
               .reduce((a, b) => a.isBefore(b) ? a : b);
-          final span = now.difference(firstThisMonth).inDays + 1;
-          activeDays = span.clamp(1, daysPassed);
+          // Only apply the "count from first entry" fairness if the user
+          // genuinely started mid-month (after the 7th)
+          if (firstThisMonth.day > 7) {
+            final span = now.difference(firstThisMonth).inDays + 1;
+            activeDays = span.clamp(1, daysPassed);
+          }
+          // If they started on day 1–7, activeDays stays as daysPassed —
+          // this makes the score honest: 1 day logged of 2 elapsed = 50%
         } catch (_) {}
       }
 
@@ -1078,8 +1090,11 @@ extension FinancialManagement on ScoreService {
           final firstThisMonth = thisMonthDates
               .map((d) => DateTime.parse(d))
               .reduce((a, b) => a.isBefore(b) ? a : b);
-          final span = now.difference(firstThisMonth).inDays + 1;
-          activeDays = span.clamp(1, daysPassed);
+          // Only apply "count from first entry" fairness if user started after day 7
+          if (firstThisMonth.day > 7) {
+            final span = now.difference(firstThisMonth).inDays + 1;
+            activeDays = span.clamp(1, daysPassed);
+          }
         } catch (_) {}
       }
       if (loggedDays > 0 && activeDays > loggedDays * 2) {
