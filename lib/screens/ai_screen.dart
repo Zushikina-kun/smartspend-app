@@ -23,6 +23,7 @@ import '../models/expense.dart';
 import '../widgets/info_button.dart';
 import 'chat_history_screen.dart';
 import 'smart_camera_screen.dart';
+import 'scan_review_screen.dart';
 import 'add_expense_screen.dart';
 import 'bank_import_screen.dart';
 import 'batch_image_import_screen.dart';
