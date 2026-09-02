@@ -1642,28 +1642,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               }
                             }
 
+                            final isUnmeasured = item['unmeasured'] == true;
+
                             return ListTile(
                               dense: true,
-                              leading: Icon(
-                                positive
-                                    ? Icons.add_circle_outline
-                                    : Icons.remove_circle_outline,
-                                color: positive ? Colors.green : Colors.red,
-                                size: 18,
-                              ),
+                              leading: isUnmeasured
+                                  ? const Icon(Icons.help_outline,
+                                      color: Colors.grey, size: 18)
+                                  : Icon(
+                                      positive
+                                          ? Icons.add_circle_outline
+                                          : Icons.remove_circle_outline,
+                                      color:
+                                          positive ? Colors.green : Colors.red,
+                                      size: 18,
+                                    ),
                               title: Text(reason,
-                                  style: const TextStyle(fontSize: 13)),
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: isUnmeasured
+                                          ? Colors.grey[600]
+                                          : null,
+                                      fontStyle: isUnmeasured
+                                          ? FontStyle.italic
+                                          : FontStyle.normal)),
                               subtitle: tip != null
                                   ? Text(tip,
                                       style: const TextStyle(
                                           fontSize: 11, color: Colors.orange))
                                   : null,
-                              trailing: Text(
-                                "${positive ? '+' : ''}${item['points']}pts",
-                                style: TextStyle(
-                                    color: positive ? Colors.green : Colors.red,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                              trailing: isUnmeasured
+                                  ? Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 7, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Colors.grey.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                            color: Colors.grey
+                                                .withValues(alpha: 0.3)),
+                                      ),
+                                      child: const Text('Unmeasured',
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600)),
+                                    )
+                                  : Text(
+                                      "${positive ? '+' : ''}${item['points']}pts",
+                                      style: TextStyle(
+                                          color: positive
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                             );
                           }).toList(),
                         ),

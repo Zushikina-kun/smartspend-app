@@ -2088,31 +2088,89 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                         Expanded(
                                           child: Text(
                                             item['reason'] as String,
-                                            style:
-                                                const TextStyle(fontSize: 12),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color:
+                                                  (item['unmeasured'] == true)
+                                                      ? Colors.grey[500]
+                                                      : null,
+                                              fontStyle:
+                                                  (item['unmeasured'] == true)
+                                                      ? FontStyle.italic
+                                                      : FontStyle.normal,
+                                            ),
                                           ),
                                         ),
-                                        Text(
-                                          "$pts / 25",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                            color: barColor,
+                                        // Unmeasured shows a grey chip instead
+                                        // of a colour-coded score.
+                                        if (item['unmeasured'] == true)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 7, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey
+                                                  .withValues(alpha: 0.12),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                              border: Border.all(
+                                                  color: Colors.grey
+                                                      .withValues(alpha: 0.3)),
+                                            ),
+                                            child: const Text('?/25',
+                                                style: TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                          )
+                                        else
+                                          Text(
+                                            "$pts / 25",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: barColor,
+                                            ),
                                           ),
-                                        ),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: LinearProgressIndicator(
-                                        value: ratio,
-                                        minHeight: 8,
-                                        backgroundColor: Colors.grey[200],
-                                        valueColor:
-                                            AlwaysStoppedAnimation(barColor),
+                                    // Unmeasured: dashed grey bar; measured: coloured bar
+                                    if (item['unmeasured'] == true)
+                                      Container(
+                                        height: 8,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey
+                                              .withValues(alpha: 0.12),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          border: Border.all(
+                                              color: Colors.grey
+                                                  .withValues(alpha: 0.25),
+                                              width: 1),
+                                        ),
+                                        child: Row(children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 6),
+                                            child: Text('No income set',
+                                                style: TextStyle(
+                                                    fontSize: 9,
+                                                    color: Colors.grey[400])),
+                                          ),
+                                        ]),
+                                      )
+                                    else
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: LinearProgressIndicator(
+                                          value: ratio,
+                                          minHeight: 8,
+                                          backgroundColor: Colors.grey[200],
+                                          valueColor:
+                                              AlwaysStoppedAnimation(barColor),
+                                        ),
                                       ),
-                                    ),
                                     // Literacy tip for low-scoring components
                                     if (tip != null) ...[
                                       const SizedBox(height: 6),
@@ -2144,6 +2202,147 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
+
+                        // ── FMS MINI-CARD (Financial Management Score) ───────
+                        // Surfaced here so the panel can see both health outcome
+                        // (FHS) and management behavior (FMS) side by side.
+                        // Research basis: Khazneh (2026), AccountaPal — score
+                        // trajectory is more useful when both metrics are visible.
+                        FutureBuilder<Map<String, dynamic>>(
+                          future: () async {
+                            final goals = await DBService.getGoals();
+                            final budgets = await DBService.getBudgets();
+                            final wallets = await DBService.getWallets();
+                            final iwMode =
+                                await DBService.getIncomeWalletMode();
+                            final expMaps = _thisMonthExpenses
+                                .map((e) => {
+                                      'item_name': e.itemName,
+                                      'amount': e.amount,
+                                      'date': e.date,
+                                      'category': e.category,
+                                    })
+                                .toList();
+                            return FinancialManagement
+                                .getFinancialManagementScore(
+                              thisMonthExpenses: expMaps,
+                              budgets: budgets,
+                              goals: goals,
+                              monthlyIncome: _monthlyIncome,
+                              incomeWalletMode: iwMode,
+                              wallets: wallets,
+                            );
+                          }(),
+                          builder: (ctx, snap) {
+                            if (!snap.hasData) return const SizedBox.shrink();
+                            final fms = snap.data!;
+                            final fmsScore = fms['score'] as int;
+                            final fmsLabel = fms['label'] as String;
+                            final fmsBd =
+                                fms['breakdown'] as List<Map<String, dynamic>>;
+                            final fmsColor = fmsScore >= 85
+                                ? Colors.purple
+                                : fmsScore >= 70
+                                    ? Colors.blue
+                                    : fmsScore >= 50
+                                        ? Colors.teal
+                                        : Colors.grey;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(children: [
+                                  const Text('Financial Management Score',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                  const SizedBox(width: 6),
+                                  const InfoButton(
+                                    title: 'Financial Management Score',
+                                    body:
+                                        'Separate from Financial Health Score.\n\n'
+                                        'Measures HOW WELL you use SmartSpend:\n'
+                                        '• Logging Consistency — recording expenses daily\n'
+                                        '• Budget Setup — category budgets configured\n'
+                                        '• Goal Tracking — savings goals with progress\n'
+                                        '• Data Completeness — income and wallet data\n\n'
+                                        'A high FHS + low FMS = financially healthy '
+                                        'but rarely tracking. Both scores together '
+                                        'give the full picture.',
+                                    size: 14,
+                                  ),
+                                ]),
+                                const SizedBox(height: 10),
+                                Container(
+                                  padding: const EdgeInsets.all(14),
+                                  decoration: BoxDecoration(
+                                    color: fmsColor.withValues(alpha: 0.06),
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                        color: fmsColor.withValues(alpha: 0.2)),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(children: [
+                                        Text('$fmsScore / 100',
+                                            style: TextStyle(
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color: fmsColor)),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                            child: Text(fmsLabel,
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: fmsColor,
+                                                    fontWeight:
+                                                        FontWeight.w500))),
+                                      ]),
+                                      const SizedBox(height: 8),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: LinearProgressIndicator(
+                                          value: fmsScore / 100,
+                                          minHeight: 7,
+                                          backgroundColor:
+                                              fmsColor.withValues(alpha: 0.12),
+                                          valueColor:
+                                              AlwaysStoppedAnimation(fmsColor),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      // 2-column component grid
+                                      ...List.generate(
+                                          (fmsBd.length / 2).ceil(), (row) {
+                                        final left = fmsBd[row * 2];
+                                        final right = row * 2 + 1 < fmsBd.length
+                                            ? fmsBd[row * 2 + 1]
+                                            : null;
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 6),
+                                          child: Row(children: [
+                                            Expanded(
+                                                child: _fmsCompCell(
+                                                    ctx, left, fmsColor)),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                                child: right != null
+                                                    ? _fmsCompCell(
+                                                        ctx, right, fmsColor)
+                                                    : const SizedBox.shrink()),
+                                          ]),
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                              ],
+                            );
+                          },
+                        ),
                       ],
 
                       // Prediction card
@@ -3032,6 +3231,38 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ),
               ),
             ),
+    );
+  }
+
+  // ── FMS component cell — used by the mini-card in the score breakdown section ──
+  Widget _fmsCompCell(
+      BuildContext ctx, Map<String, dynamic> item, Color fmsColor) {
+    final pts = item['points'] as int;
+    final label = item['label'] as String;
+    final cellColor = pts >= 20
+        ? Colors.green
+        : pts >= 12
+            ? Colors.orange
+            : Colors.red;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: cellColor.withValues(alpha: 0.07),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: cellColor.withValues(alpha: 0.2)),
+      ),
+      child: Row(children: [
+        Text('$pts',
+            style: TextStyle(
+                fontSize: 13, fontWeight: FontWeight.bold, color: cellColor)),
+        const Text('/25', style: TextStyle(fontSize: 10, color: Colors.grey)),
+        const SizedBox(width: 4),
+        Expanded(
+            child: Text(label,
+                style: const TextStyle(
+                    fontSize: 10, overflow: TextOverflow.ellipsis),
+                maxLines: 1)),
+      ]),
     );
   }
 
