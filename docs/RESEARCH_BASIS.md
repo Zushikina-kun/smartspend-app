@@ -1,6 +1,6 @@
 # SmartSpend — Research Basis & Academic References
 ## Theoretical Foundations for All Features and Functions
-**Version:** 2.9.8 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.9 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **Purpose:** This document answers the question "where did you get the basis for this?" for every major feature. Use this when writing Chapter 2 (Review of Related Literature) and defending before the panel.
 
 > **For Ma'am:** Every feature in SmartSpend is grounded in an existing framework, research, book, or validated standard — not made up. This document traces each one.
@@ -1018,7 +1018,7 @@ Thaler, R. H., & Sunstein, C. R. (2008). *Nudge: Improving decisions about healt
 
 ---
 
-*SmartSpend v2.9.8 — Lucid Frame*
+*SmartSpend v2.9.9 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Prepared for: Chapter 2 (Review of Related Literature), Chapter 3 (Methodology) defense preparation, and adviser consultation*
 *Last updated: August 2026*

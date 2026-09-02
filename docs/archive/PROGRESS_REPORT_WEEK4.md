@@ -1,5 +1,5 @@
 # CAPSTONE PROJECT 2 — WEEK 4 PROGRESS REPORT
-## AI System Expansion, Documentation Audit & v2.9.8 Release
+## AI System Expansion, Documentation Audit & v2.9.9 Release
 
 ---
 
@@ -42,7 +42,7 @@
 
 | Item | Value |
 |------|-------|
-| Version | 2.9.8+8 |
+| Version | 2.9.9+8 |
 | Build date | September 2, 2026 |
 | APK size (arm64-v8a) | 44.8 MB (obfuscated, split, shrunk) |
 | GitHub repository | https://github.com/Zushikina-kun/smartspend-app |
@@ -75,7 +75,7 @@
 - **Total commits this week:** 14 commits (August 27 – September 2, 2026)
 - **Latest commit:** `0014e57` — "fix: remove duplicate old feature entries from whats_new_screen.dart"
 - **Public repository:** https://github.com/Zushikina-kun/smartspend-app
-- **Latest release:** v2.9.8 (September 2, 2026)
+- **Latest release:** v2.9.9 (September 2, 2026)
 
 **Commits this week (chronological):**
 
@@ -97,11 +97,11 @@
 
 | APK File | Size | Target Device |
 |----------|------|---------------|
-| SmartSpend-v2.9.8-arm64-v8a.apk | 44.8 MB | Modern phones (2018+) — primary |
-| SmartSpend-v2.9.8-armeabi-v7a.apk | 37.1 MB | Older/32-bit phones |
-| SmartSpend-v2.9.8-x86_64.apk | 47.8 MB | Emulators |
+| SmartSpend-v2.9.9-arm64-v8a.apk | 44.8 MB | Modern phones (2018+) — primary |
+| SmartSpend-v2.9.9-armeabi-v7a.apk | 37.1 MB | Older/32-bit phones |
+| SmartSpend-v2.9.9-x86_64.apk | 47.8 MB | Emulators |
 
-**Primary test device:** Poco X6 Pro (Android 16, HyperOS 2) — all features verified working on v2.9.8.
+**Primary test device:** Poco X6 Pro (Android 16, HyperOS 2) — all features verified working on v2.9.9.
 
 ### 3.3 Key Work Done This Week
 
@@ -162,14 +162,14 @@ All changes validated with `dart analyze` — zero errors before building.
 #### D — Version 2.9.8 Release
 
 - `pubspec.yaml` bumped to `2.9.8+8`
-- `whats_new_screen.dart` updated with 9 new feature cards (v2.9.8 changes)
+- `whats_new_screen.dart` updated with 9 new feature cards (v2.9.9 changes)
 - `backup_service.dart` app_version updated to `2.9.8`
 - All docs updated: `2.9.7` → `2.9.8` across 13 files
-- Version history rows added to `CAPSTONE_REFERENCE.md` (v2.9.7 and v2.9.8 entries)
+- Version history rows added to `CAPSTONE_REFERENCE.md` (v2.9.7 and v2.9.9 entries)
 - Release build successful: Flutter 3.41.6, all 3 ABI variants clean
-- GitHub Release v2.9.8 published with 3 APKs attached
+- GitHub Release v2.9.9 published with 3 APKs attached
 
-### 3.4 Key Technical Metrics (v2.9.8)
+### 3.4 Key Technical Metrics (v2.9.9)
 
 | Metric | Value |
 |--------|-------|
@@ -223,7 +223,7 @@ All changes validated with `dart analyze` — zero errors before building.
 
 ## 5. AI ARCHITECTURE — 31 AGENTIC ACTIONS
 
-### Action Types (v2.9.8)
+### Action Types (v2.9.9)
 
 | Category | Actions |
 |----------|---------|
@@ -259,9 +259,9 @@ All changes validated with `dart analyze` — zero errors before building.
 | How to Run & Build | /HOWTORUN.md | ✅ v2.9.8 |
 | Application Documentation | /docs/FEATURE_DOCS.md | ✅ v2.9.8 |
 | Capstone 2 Reference | /docs/CAPSTONE_REFERENCE.md | ✅ v2.9.8 |
-| Defense Guide | /docs/DEFENSE_GUIDE.md | ✅ v2.9.8 — 6 new Q&As added |
-| Benchmark (14 apps, 13 LLMs) | /docs/BENCHMARK.md | ✅ v2.9.8 — Wingman Money + FrontierFinance added |
-| Research Basis | /docs/RESEARCH_BASIS.md | ✅ v2.9.8 — Part 14 (FMS) added |
+| Defense Guide | /docs/DEFENSE_GUIDE.md | ✅ v2.9.9 — 6 new Q&As added |
+| Benchmark (14 apps, 13 LLMs) | /docs/BENCHMARK.md | ✅ v2.9.9 — Wingman Money + FrontierFinance added |
+| Research Basis | /docs/RESEARCH_BASIS.md | ✅ v2.9.9 — Part 14 (FMS) added |
 | System Overview | /docs/SYSTEM_OVERVIEW.md | ✅ v2.9.8 |
 | Manuscript Guide | /docs/MANUSCRIPT_GUIDE.md | ✅ v2.9.8 |
 | Application Pipeline | /docs/APPLICATION_PIPELINE.md | ✅ v2.9.8 |
@@ -278,7 +278,7 @@ All changes validated with `dart analyze` — zero errors before building.
 | Week 1 (Aug 11) | Project Reorientation | Progress report, adviser consultation | ✅ Done |
 | Week 2 (Aug 18) | Chapter 3 discussion | Finalize Chapter 3 — LLM justification, architecture, FHS formula | ✅ Done — in SMARTSPEND_REVISED_MANUSCRIPT.md |
 | Week 3 (Aug 25) | Chapter 4 development | Write Chapter 4 — screenshots, FHS, feature walkthrough | ✅ Done — draft complete |
-| **Week 4 (Sep 1)** | **Final software check** | **AI coverage expansion, documentation audit, v2.9.8 release** | **✅ Done this week** |
+| **Week 4 (Sep 1)** | **Final software check** | **AI coverage expansion, documentation audit, v2.9.9 release** | **✅ Done this week** |
 | Week 5 (Sep 8) | Pre-Final Defense prep | Finalize presentation, rehearse demo flow | 🔜 Next |
 | Week 6 (Sep 15) | Pre-Final Defense | Present to panel | 🔜 Upcoming |
 | Week 7 (Sep 22) | Testing & debugging | Address panel feedback, SUS survey | 🔜 Upcoming |
@@ -295,7 +295,7 @@ All changes validated with `dart analyze` — zero errors before building.
 
 ---
 
-## 8. TESTING RESULTS (v2.9.8)
+## 8. TESTING RESULTS (v2.9.9)
 
 ### 8.1 Build Testing
 - ✅ Debug build — passes on Poco X6 Pro (Android 16)
@@ -333,7 +333,7 @@ All changes validated with `dart analyze` — zero errors before building.
 |--------|-----------|-------------|
 | Brix A. Directo | AI coverage audit + 6 gap fixes (new actions, Taglish prompt, routing, fallback parser, rules context); research-backed app improvements (FMS surfacing, FHS unmeasured); bug fixes (ScanReviewScreen duplicate, fullContext string corruption from version bump); release build + GitHub Release v2.9.8 | 20–25 hrs |
 | Cyrille John M. Rubis | Documentation audit review; manuscript formatting preparation; Google Docs fixes coordination | 8–10 hrs |
-| Djaunathan Albert S. Madayag | Testing coordination; QA verification of v2.9.8 on test device; progress report preparation | 6–8 hrs |
+| Djaunathan Albert S. Madayag | Testing coordination; QA verification of v2.9.9 on test device; progress report preparation | 6–8 hrs |
 
 ---
 
@@ -342,7 +342,7 @@ All changes validated with `dart analyze` — zero errors before building.
 **Consultation date:** _______________
 **Teacher-in-Charge:** Janelli M. Mendez, DIT
 **Topics to raise:**
-- v2.9.8 release — 31 agentic actions, Taglish AI coverage, FMS on Home/Analytics
+- v2.9.9 release — 31 agentic actions, Taglish AI coverage, FMS on Home/Analytics
 - Pre-Final Defense scheduling (Week 6 target)
 - SUS survey instrument approval
 - Manuscript draft status — Chapters 1–4 complete; Chapter 5 pending
@@ -370,6 +370,6 @@ We, the members of Lucid Frame, hereby certify that the information in this prog
 
 ---
 
-*SmartSpend v2.9.8 — Lucid Frame*
+*SmartSpend v2.9.9 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2026–2027 (1st Semester)*
 *Teacher-in-Charge: Janelli M. Mendez, DIT*

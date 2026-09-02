@@ -1,5 +1,5 @@
 # SmartSpend — Play Store Deployment & Security Guide
-**Version:** 2.9.8 | **Date:** August 2026
+**Version:** 2.9.9 | **Date:** August 2026
 
 > **Security update (August 2026):** `google-services.json` has been removed from git tracking. The Firebase API key is already SHA-1 restricted — it only works with APKs signed by the registered keystores. Repository is now public with a Non-Commercial LICENSE.
 
@@ -156,4 +156,4 @@ With our current setup:
 
 ---
 
-*SmartSpend v2.9.8 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
+*SmartSpend v2.9.9 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*

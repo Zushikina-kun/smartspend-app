@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.8';
-  static const _prefKey = 'whats_new_seen_2_9_8';
+  static const _version = '2.9.9';
+  static const _prefKey = 'whats_new_seen_2_9_9';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,58 +20,39 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🤖',
-      'AI Now Understands Filipino/Taglish for All Actions',
-      'You can now set budgets, add debts, log income, create goals, and add recurring bills in Filipino. '
-          '"Budget ko sa pagkain 3000", "may utang ako kay John ng 500", "sweldo ko 25000" — all work directly.'
-    ),
-    (
-      '💰',
-      'Set Spending Limits via AI',
-      'Tell the AI "set daily limit to 200 pesos" or "limitahan ang gastos ko ng 500 kada araw" '
-          'and it sets your spending cap directly — no need to go to App Settings.'
-    ),
-    (
-      '🏥',
-      'Add Insurance & Contributions via AI',
-      'Say "SSS ko 560 monthly" or "add PhilHealth contribution 250 a month" and the AI creates '
-          'the entry in your Insurance Tracker automatically. Works for life insurance too.'
-    ),
-    (
-      '📋',
-      'AI Knows Your Auto-Rules',
-      'The AI can now see and describe your auto-categorization rules. '
-          '"What rules do I have?" now gives a real answer.'
-    ),
-    (
-      '✅',
-      'Multi-Item Logging More Reliable',
-      'Logging multiple expenses in one message is more robust — catches typos like "spen", '
-          'handles commas and "and" connectors, and uses a smarter model for complex multi-item messages.'
-    ),
-    (
-      '🔄',
-      'Recurring Auto-Add from Pattern Card',
-      'When SmartSpend detects a recurring pattern, tapping "Add Recurring" now saves '
-          'the entry directly — no more navigating to an empty screen.'
-    ),
-    (
       '📊',
-      'Financial Management Score on Home & Analytics',
-      'The Financial Management Score (FMS) now appears on the Home screen as a compact strip '
-          'and on the Analytics screen alongside the FHS breakdown. Tap the strip to see the full breakdown in Profile.'
+      'Analytics Fixed for Lightweight Mode',
+      'The 50/30/20 card, Tax & Savings card, and Allowance Overview no longer '
+          'appear when income tracking is OFF — they were showing meaningless '
+          'numbers based on stale old income data.'
     ),
     (
-      '⚠️',
-      'FHS Unmeasured Label',
-      'When income is not set, the Savings Rate component now shows "Unmeasured" with a grey '
-          'indicator instead of a silent partial score — more transparent and honest.'
+      '🎯',
+      'Logging Consistency Score is Now Honest',
+      'Fixed: logging just once on the 2nd of the month no longer gives 25/25 '
+          '"Logging every active day ✓". Now correctly reflects how many days '
+          'have passed vs. how many you actually logged. Affects both FHS and FMS.'
     ),
     (
-      '🛠️',
-      'Duplicate ScanReviewScreen Fixed',
-      'A latent code conflict (two classes with the same name) was resolved. '
-          'The camera import flow is now cleaner and more stable.'
+      '🔗',
+      '"See Breakdown" Actually Scrolls to It',
+      'Tapping "See breakdown →" on the home screen Management Score strip now '
+          'auto-scrolls directly to the FMS section in Profile — '
+          'no more landing at the top and wondering where it is.'
+    ),
+    (
+      '🌐',
+      'AI Replies in Your Language',
+      'The AI now detects whether you\'re writing in English, Filipino, or '
+          'Taglish and matches your language automatically. You can also say '
+          '"speak English" or "mag-Tagalog ka" to explicitly switch.'
+    ),
+    (
+      '📈',
+      'Score History Chart Explained',
+      'Added a clear placeholder when score history has fewer than 2 data '
+          'points — explains that the score is only saved on days you open '
+          'the app, and how to build a fuller chart over time.'
     ),
   ];
 
