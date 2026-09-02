@@ -41,7 +41,7 @@ Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, 
 | Bank / e-wallet sync | ❌ manual | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ Paid | ❌ | CSV import | ❌ | ✅ | ❌ |
 | CSV / text import | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ GCash/Maya | ❌ | ❌ | ❌ |
 | **AI & INTELLIGENCE** | | | | | | | | | | | | | | |
-| AI chat assistant | ✅ 29 actions | ❌ | ❌ | ✅ Basic | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Insights | ✅ Chat | ✅ AI | ❌ |
+| AI chat assistant | ✅ 31 actions | ❌ | ❌ | ✅ Basic | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Insights | ✅ Chat | ✅ AI | ❌ |
 | Natural language expense input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Auto-categorization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Proactive AI insights | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
@@ -101,7 +101,7 @@ Apps not in the main matrix above, included for completeness:
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Platform** | Android | iOS+Web | iOS+Web | Android+iOS | Android+iOS | Android+iOS+Web | Android | Android | Android | Android (inside GCash) |
 | **Cost** | Free | Freemium | Freemium | Free/$12.99mo | Free | Free (basic) | Free | Free | Free | Free (GCash verified users) |
-| **AI chat / assistant** | ✅ 29 actions | ✅ Snarky AI advisor | ✅ Q&A only | ❌ | ❌ | ⚠️ Insights only | ❌ | ❌ | ❌ | ✅ Q&A + financial literacy |
+| **AI chat / assistant** | ✅ 31 actions | ✅ Snarky AI advisor | ✅ Q&A only | ❌ | ❌ | ⚠️ Insights only | ❌ | ❌ | ❌ | ✅ Q&A + financial literacy |
 | **Natural language input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ (Taglish + Filipino) |
 | **Expense tracking** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ (education/advice only) |
 | **Financial Health Score** | ✅ 0–100 | ✅ Score | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -109,7 +109,7 @@ Apps not in the main matrix above, included for completeness:
 | **Bank sync** | ❌ manual | ✅ | ✅ | ✅ Paid | ✅ | ✅ | ❌ manual | ❌ manual | ❌ manual | ✅ (GCash balance) |
 | **Filipino context** | ✅ Full | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ✅ Full | ✅ Full | ✅ Full + PH languages |
 | **Gamification** | ✅ 23 badges | ✅ Challenges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Streaks/KBoy | ❌ | ❌ |
-| **Agentic actions** | ✅ 29 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Agentic actions** | ✅ 31 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **OCR / receipt scan** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Voice input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Free (no subscription)** | ✅ Always free | Freemium | Freemium | ✅ Basic free | ✅ | ✅ Basic | ✅ | ✅ | ✅ | ✅ (requires GCash) |
@@ -134,7 +134,7 @@ BudgetPH is the most direct Filipino-context competitor discovered during this r
 | | BudgetPH | SmartSpend |
 |--|----------|-----------|
 | Target | Filipino-first budgeting | Filipino-first tracking + AI advisory |
-| AI | Spending insights only | 29 agentic actions, full conversational AI |
+| AI | Spending insights only | 31 agentic actions, full conversational AI |
 | Voice input | ❌ | ✅ |
 | OCR / Barcode | ❌ | ✅ |
 | Paluwagan | ✅ Full tracker | ❌ Not implemented |
@@ -161,10 +161,10 @@ New Filipino apps targeting sweldo-cycle tracking, MP2 contributions, and debt m
 YNAB is the global gold standard for zero-based budgeting — every peso has a job. However, it requires bank connectivity, costs $14.99/month, has no AI chat, and doesn't work for Filipinos using cash, GCash, or informal credit. SmartSpend is entirely free and works offline.
 
 #### vs Monarch Money
-**Updated August 2026:** Monarch added an AI Assistant (plain-language financial Q&A from your actual data), receipt scanning (upload or email-forward receipts, AI matches to transactions), Goals 3.0 (investment-linked goals, debt paydown budgeting), and a new Plus tier with long-term planning and business finance tools. It is now the most AI-capable international app. Still requires bank API (US/Canada only), costs $9.99–$19.99/mo, iOS+web+Android, no offline, no Filipino context. SmartSpend still leads on agentic AI (29 autonomous actions vs Monarch's Q&A-only assistant), Filipino language, offline capability, and free pricing.
+**Updated August 2026:** Monarch added an AI Assistant (plain-language financial Q&A from your actual data), receipt scanning (upload or email-forward receipts, AI matches to transactions), Goals 3.0 (investment-linked goals, debt paydown budgeting), and a new Plus tier with long-term planning and business finance tools. It is now the most AI-capable international app. Still requires bank API (US/Canada only), costs $9.99–$19.99/mo, iOS+web+Android, no offline, no Filipino context. SmartSpend still leads on agentic AI (31 autonomous actions vs Monarch's Q&A-only assistant), Filipino language, offline capability, and free pricing.
 
 #### vs Copilot Money
-AI-categorization is strong but iOS-only, no offline, and no Filipino support. SmartSpend's AI goes much further — 29 actions vs Copilot's passive categorization.
+AI-categorization is strong but iOS-only, no offline, and no Filipino support. SmartSpend's AI goes much further — 31 actions vs Copilot's passive categorization.
 
 #### vs Quicken Simplifi
 PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutions, real-time cash flow projections. But US-centric (PH banks not supported), requires paid subscription, no offline, no Filipino language. SmartSpend wins entirely on accessibility and local relevance.
@@ -175,7 +175,7 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 
 | Advantage | Detail |
 |-----------|--------|
-| **Only app with 29 agentic AI actions** | Every competitor either has no AI or passive AI. SmartSpend's AI takes real actions on user data |
+| **Only app with 31 agentic AI actions** | Every competitor either has no AI or passive AI. SmartSpend's AI takes real actions on user data |
 | **Only free Filipino-English AI financial app on Android** | BudgetPH has AI insights but no conversational AI; Alkansya AI is iOS-only |
 | **Only app with batch screenshot import** | 40+ platform types auto-detected — unique globally |
 | **Only app with FHS dual-mode** | Full mode (income-based) + Lightweight mode (habit-based) — no equivalent exists |
@@ -190,7 +190,7 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 | 15th & 30th payday cycle | BudgetPH, SweldoWise, SweldoTrack | High — payday-aware budgeting reset |
 | Mascot / personality layer | Sentimo (KBoy carabao) | Low — fun UX differentiator |
 | Couple / family sharing | Monarch (Goals 3.0), Wally, Goodbudget | Medium |
-| AI Q&A from own data | Monarch (2026 AI Assistant) | ✅ Done — SmartSpend has 29 agentic actions |
+| AI Q&A from own data | Monarch (2026 AI Assistant) | ✅ Done — SmartSpend has 31 agentic actions |
 | Receipt email forwarding | Monarch (July 2026) | Low — SmartSpend has OCR + batch screenshots |
 | Investment tracking | Monarch, Copilot, Simplifi | Low (out of scope for capstone) |
 | iOS / web version | All competitors | Post-capstone |
@@ -404,7 +404,7 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 **EY Autonomous AI Report, March 2026:**
 - 84% of respondents used AI in the prior six months
 - **16% globally** report using AI systems that act autonomously without human intervention
-- SmartSpend's 29 agentic actions represent this frontier of AI-as-actor in personal finance
+- SmartSpend's 31 agentic actions represent this frontier of AI-as-actor in personal finance
 - Source: Ernst & Young (2026b) — https://www.ey.com/en_nl/newsroom/2026/03/ey-survey-autonomous-ai-is-no-longer-theoretical-as-adoption-grows-despite-ongoing-trust-concerns
 
 **Plaid State of Intelligent Finance, Spring 2026:**

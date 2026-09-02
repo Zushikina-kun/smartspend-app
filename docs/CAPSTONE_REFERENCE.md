@@ -93,7 +93,7 @@ Per-user data (20-50 expenses, 5-10 budgets, 3-5 goals) fits entirely in the con
 **Architecture justification (for paper):**
 > "SmartSpend implements a multi-provider agentic AI system using dynamic full-context injection from a local SQLite database, enabling autonomous financial data management without the infrastructure overhead of traditional RAG pipelines. The multi-provider routing architecture ensures continuous AI availability through automatic failover across five free-tier LLM providers, with task-based routing to match query complexity with model capability."
 
-### Agentic Actions (29 total)
+### Agentic Actions (31 total)
 The AI autonomously executes these actions — writing directly to the database:
 
 **Expense Management:** log_expense, update_expense, delete_expense, delete_by_date
@@ -104,9 +104,11 @@ The AI autonomously executes these actions — writing directly to the database:
 **Recurring:** add_recurring, delete_recurring
 **Payment Plans:** add_installment_plan
 **Analysis & Advisory:** plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense
+**Settings & Limits:** set_spending_limit
+**Insurance & Contributions:** add_insurance_policy
 **Account:** set_account_type
 
-**Total: 29 agentic actions** (was 0 in Capstone 1)
+**Total: 31 agentic actions** (was 0 in Capstone 1)
 
 ---
 
@@ -221,7 +223,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 ## 7. KEY FEATURES LIST (75+)
 
 ### AI & Smart Import
-- 29 agentic AI actions (autonomous data management)
+- 31 agentic AI actions (autonomous data management)
 - Multi-provider LLM with automatic failback (5 providers)
 - Task-based model routing (fast/smart/financial_advice tiers)
 - Smart Import: Live Camera, Single Photo, Batch Screenshots, Paste Text
@@ -377,7 +379,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 | Feature | SmartSpend | YNAB | Monarch | Copilot | Rocket Money | Tarsi (PH) | **BudgetPH** | **Alkansya AI** | **GCash Pera Coach** |
 |---------|-----------|------|---------|---------|--------------|------------|-------------|----------------|---------------------|
-| AI Chat (agentic) | ✅ 29 actions | ❌ | ❌ | ⚠️ Basic | ❌ | ❌ | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A |
+| AI Chat (agentic) | ✅ 31 actions | ❌ | ❌ | ⚠️ Basic | ❌ | ❌ | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A |
 | Filipino-English AI | ✅ Full Taglish | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ❌ | ✅ | ✅ Multiple PH languages |
 | Expense Tracking | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ (advisory only) |
 | Voice Input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -397,7 +399,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | Round-Up Savings | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 **SmartSpend unique advantages:**
-- Only app with 29 agentic AI actions — AI takes real autonomous actions on user data
+- Only app with 31 agentic AI actions — AI takes real autonomous actions on user data
 - Only app combining Taglish AI + offline + PH financial knowledge + free + multi-modal input
 - Only app with batch screenshot import (40+ platform types auto-detected)
 - Only app with dual-mode FHS (Full + Lightweight) + Logging Gap Detection
@@ -438,10 +440,10 @@ Poor Filipino-English understanding; no reliable hosted free API; mobile hardwar
 ## 11. PANEL Q&A PREPARATION
 
 **Q: "GCash already has Pera Coach — why does SmartSpend still matter?"**
-A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI financial literacy coach embedded inside the GCash payments app. It provides Q&A and financial education. SmartSpend is fundamentally different: it is a dedicated financial management system with 29 autonomous agentic actions, expense tracking, dual-mode Financial Health Score, offline SQLite storage, gamification, batch screenshot import, and SSS/PhilHealth/BIR integration. Pera Coach teaches concepts; SmartSpend manages actual financial behavior. They solve different problems for different user needs.
+A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI financial literacy coach embedded inside the GCash payments app. It provides Q&A and financial education. SmartSpend is fundamentally different: it is a dedicated financial management system with 31 autonomous agentic actions, expense tracking, dual-mode Financial Health Score, offline SQLite storage, gamification, batch screenshot import, and SSS/PhilHealth/BIR integration. Pera Coach teaches concepts; SmartSpend manages actual financial behavior. They solve different problems for different user needs.
 
 **Q: "Your LLM should do something important and heavy."**
-A: SmartSpend's AI executes 29 autonomous financial management actions — from splitting bills (auto-creating debt entries), to generating a 50/30/20 salary budget plan, explaining FHS drops in plain Filipino-English, detecting forgotten subscriptions, simulating "what if I save ₱500 more/month", and routing queries to the best model for the task. This is genuine agentic AI: perceive (full financial context from SQLite) → decide → act (writes to DB directly).
+A: SmartSpend's AI executes 31 autonomous financial management actions — from splitting bills (auto-creating debt entries), to generating a 50/30/20 salary budget plan, explaining FHS drops in plain Filipino-English, detecting forgotten subscriptions, simulating "what if I save ₱500 more/month", and routing queries to the best model for the task. This is genuine agentic AI: perceive (full financial context from SQLite) → decide → act (writes to DB directly).
 
 **Q: "Why not RAG?"**
 A: RAG is for large knowledge bases (thousands of documents). A typical user has 20-50 expenses, 5-10 budgets, 3-5 goals — small enough for full context injection. Our approach gives faster, always-current data access without vector search overhead.
@@ -535,7 +537,7 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.5 | Mar 2026 | Multi-modal input (voice, OCR, barcode), wallet system |
 | 2.6 | Apr 2026 | Release signing, Google Sign-In fix |
 | 2.7 | May 2026 | 10 quests, DTI, Emergency Fund, PCA Calculator |
-| 2.8 | Jun 2026 | 23 badges (up from 16), 29 AI actions, Insurance tracker, Bank comparison, split_expense |
+| 2.8 | Jun 2026 | 23 badges (up from 16), 31 AI actions, Insurance tracker, Bank comparison, split_expense |
 | 2.9 | Jul 2026 | Lightweight Mode, Multi-period limits, Logging Gap Detection, Batch Screenshot Import |
 | 2.9.1 | Jul 28, 2026 | Unified Smart Import, barcode-from-gallery, FHS dual-mode docs, security hardening, bug fixes |
 | 2.9.2 | Aug 2026 | Full docs cleanup, BENCHMARK.md (14 apps, 13 LLMs), SYSTEM_OVERVIEW.md, 19 manuscript fixes, credential-based validator certificates, AY2026-2027 sweep |

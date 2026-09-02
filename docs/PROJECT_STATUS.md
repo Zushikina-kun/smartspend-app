@@ -93,7 +93,7 @@
 - [x] **Bug fix:** Analytics FHS breakdown now shows the adjusted score (same as home screen, including decay/gap penalties)
 - [x] **Bug fix:** Legacy daily limit card no longer appears alongside the new spending limit card
 - [x] **Bug fix:** Lightweight FHS Spending Restraint now uses the correct period-specific spent amount (daily limit no longer compared to monthly expenses)
-- [x] **Stale content fixed:** about_screen, ai_screen — Groq LLaMA 3.1 → Gemini 3.1 Flash-Lite, 25 actions → 29 actions, Backup v8 → v9, 2025-2026 → 2026-2027
+- [x] **Stale content fixed:** about_screen, ai_screen — Groq LLaMA 3.1 → Gemini 3.1 Flash-Lite, 25 actions → 31 actions, Backup v8 → v9, 2025-2026 → 2026-2027
 - [x] **What's New updated:** v2.9.3/v2.9.4 features added to whats_new_screen
 - [x] GitHub release v2.9.4 published
 - [x] Per-section visibility toggles — 10 new toggles in App Settings under "Home Screen" and "Analytics" sections
@@ -121,7 +121,7 @@
 
 ### v2.9.1 — July–August 2026
 - [x] Multi-model LLM: Gemini 3.1 Flash-Lite primary + 4 fallbacks (Gemini 3.5, Groq 70B, Groq 8B, Cerebras)
-- [x] 29 agentic AI actions (added: suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense)
+- [x] 31 agentic AI actions (added: suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense)
 - [x] Lightweight Mode — FHS without income/wallet tracking
 - [x] Multi-period Spending Limits (daily/weekly/monthly/yearly independently)
 - [x] Logging Gap Detection + FHS gap penalty/bonus
@@ -147,7 +147,7 @@
 - [x] Backup v9 (includes insurance_policies)
 
 ### Core (Sessions 1–27, v1.0–v2.7.0)
-- [x] All 29 agentic AI actions
+- [x] All 31 agentic AI actions
 - [x] AI chat (voice, OCR, barcode, manual, screenshots)
 - [x] FHS 4-component formula + warning decay system
 - [x] Budgets, savings goals, debt tracker, recurring transactions
@@ -165,7 +165,7 @@
 
 | Panel Concern | Status | Evidence |
 |---|---|---|
-| "LLM should do something important and heavy" | ✅ Done | 29 agentic actions, salary split, FHS explanation, debt payoff, subscription detection |
+| "LLM should do something important and heavy" | ✅ Done | 31 agentic actions, salary split, FHS explanation, debt payoff, subscription detection |
 | "Users can't modify dates" | ✅ Fixed | Date/time picker in Edit Expense + AI date changes |
 | "LLM comparative analysis needed" | ✅ Done | BENCHMARK.md — 13 models, 6 criteria |
 | "Insurance is a gap" | ✅ Done | Full Insurance Tracker + AI Q&A |
@@ -270,5 +270,5 @@
 
 ---
 
-*SmartSpend v2.9.6 — Lucid Frame*
+*SmartSpend v2.9.7 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027 (1st Semester)*

@@ -1,7 +1,7 @@
 # Smart Spend
 
 **AI-Assisted Financial Tracking & Advisory**
-Version 2.9.6 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 2.9.7 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
 ---
 
@@ -20,7 +20,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
 - 📷 **Unified Smart Import** — one camera button opens: Live Camera (barcode/QR/receipt), Single Photo (auto-detects barcode/screenshot/receipt), Batch Screenshots (40+ platforms), Paste Text
-- 🤖 AI Chat Assistant — **29 agentic action types** via natural language (Gemini 3.1 Flash-Lite primary, multi-model auto-fallback with financial_advice routing tier)
+- 🤖 AI Chat Assistant — **31 agentic action types** via natural language (Gemini 3.1 Flash-Lite primary, multi-model auto-fallback with financial_advice routing tier)
 - ⚖️ **Lightweight Mode** — disable income/wallet tracking; FHS recalculates using spending habits (Spending Restraint, Consistency, Category Balance, Habit Streak)
 - 🎯 **Multi-Period Spending Limits** — set daily/weekly/monthly/yearly caps independently; progress bars + alerts
 - 📅 **Logging Gap Detection** — startup check for unlogged days; confirm spending (penalty) or clean days (bonus) for accurate FHS

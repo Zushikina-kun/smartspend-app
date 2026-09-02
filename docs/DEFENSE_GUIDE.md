@@ -47,7 +47,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 ## AI Architecture — Agentic AI with Context Injection
 
-**What makes it Agentic:** The AI doesn't just answer — it takes **29 autonomous actions** on user data. Say "I spent 150 pesos on jeepney" → AI parses intent → writes directly to SQLite. Genuine agentic loop: **perceive → decide → act**.
+**What makes it Agentic:** The AI doesn't just answer — it takes **31 autonomous actions** on user data. Say "I spent 150 pesos on jeepney" → AI parses intent → writes directly to SQLite. Genuine agentic loop: **perceive → decide → act**.
 
 **Multi-model routing:**
 - `fast` tier → expense logging, simple queries → LLaMA 3.1 8B
@@ -63,7 +63,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 ---
 
-## The 29 AI Action Types
+## The 31 AI Action Types
 
 | Category | Actions |
 |----------|---------|
@@ -75,6 +75,8 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Recurring | add_recurring, delete_recurring |
 | Payment Plans | add_installment_plan |
 | Analysis | plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense |
+| Settings & Limits | set_spending_limit |
+| Insurance & Contributions | add_insurance_policy |
 | Account | set_account_type |
 
 ---
@@ -137,7 +139,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | AI providers | 5 (auto-failover) |
 | Primary model | Gemini 3.1 Flash-Lite |
 | Daily AI limit | 60 messages/user |
-| AI agentic actions | 29 |
+| AI agentic actions | 31 |
 | Currencies supported | 57 |
 | Screens | 37 |
 | Services | 26 |
@@ -182,7 +184,7 @@ A: Four components, 25 points each, totaling 100. Full Mode: Savings Rate, Overs
 A: Not everyone has a fixed income — students, informal workers, freelancers. Lightweight Mode gives a meaningful FHS using only spending habits, without penalizing people for not entering income data.
 
 **Q: What is Agentic AI?**
-A: The AI doesn't just answer — it takes autonomous actions. "Spent 150 on lunch" → AI decides it's Food → writes to the database directly. Perceive → decide → act. SmartSpend has 29 such actions.
+A: The AI doesn't just answer — it takes autonomous actions. "Spent 150 on lunch" → AI decides it's Food → writes to the database directly. Perceive → decide → act. SmartSpend has 31 such actions.
 
 **Q: Why not RAG?**
 A: RAG is for large knowledge bases (thousands of documents). Our per-user data is tiny — 50 expenses, 8 budgets — fits in one prompt. Direct context injection is faster, simpler, and appropriate for our use case.
@@ -203,10 +205,10 @@ A: All core features work — manual expense logging, all analytics, budgets, go
 A: They handle actual money movement. SmartSpend is a tracker and advisor — doesn't touch your money. Tracks all payment methods (cash, GCash, card, etc.) in one place.
 
 **Q: How does SmartSpend compare to GCash Pera Coach?**
-A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI-powered financial literacy coach embedded inside GCash. It provides Q&A and financial education in English and Filipino — but it doesn't track expenses, has no Financial Health Score, no offline mode, and no agentic actions. SmartSpend is a dedicated financial management system: it tracks your actual spending, computes an FHS, runs 29 autonomous AI actions, and works fully offline. Pera Coach teaches you about money; SmartSpend manages your money. They're complementary tools, not substitutes.
+A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI-powered financial literacy coach embedded inside GCash. It provides Q&A and financial education in English and Filipino — but it doesn't track expenses, has no Financial Health Score, no offline mode, and no agentic actions. SmartSpend is a dedicated financial management system: it tracks your actual spending, computes an FHS, runs 31 autonomous AI actions, and works fully offline. Pera Coach teaches you about money; SmartSpend manages your money. They're complementary tools, not substitutes.
 
 **Q: How does SmartSpend compare to BudgetPH?**
-A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (29 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (23 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
+A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (31 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (23 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
 
 **Q: Why doesn't SmartSpend have a paluwagan tracker?**
 A: Paluwagan is on the post-capstone roadmap as the highest-priority Filipino-specific feature. The core system architecture supports it — it would use the existing debt/recurring infrastructure with a new rotating-round tracking layer. It was deprioritized during Capstone 2 to focus on the AI agentic system and Financial Health Score, which are the primary academic contributions. BudgetPH currently has this feature.
@@ -265,7 +267,7 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 ## Things to Know Cold
 
 1. **FHS formula** — 4 components × 25 pts, two modes (full + lightweight), two adjustments (decay + gap)
-2. **29 AI actions** — can list at least 5 examples from memory
+2. **31 AI actions** — can list at least 5 examples from memory
 3. **Multi-model routing** — fast/smart/financial_advice tiers, 5 providers
 4. **Smart Import** — 4 modes, 40+ platforms
 5. **Offline capability** — everything except AI chat and sync
@@ -504,8 +506,8 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 | FHS basis? | UNSGSA framework. 4×25 pts. Income-relative. Two modes: Full (income-based) and Lightweight (habit-based). |
 | How does FHS work? | 4 components × 25 pts = 100. Full Mode: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency. Lightweight: Spending Restraint, Consistency, Category Balance, Habit Streak. Plus Warning Decay and Gap Adjustment. |
 | vs GCash? | GCash shows what you spent. We tell you what it means. |
-| vs GCash Pera Coach? | GCash Pera Coach (March 2026, built with Microsoft) teaches financial concepts via Q&A inside the GCash app. SmartSpend tracks your actual spending, gives you an FHS, and has 29 autonomous AI actions. Different tools for different needs. |
-| vs BudgetPH? | BudgetPH is closest Filipino competitor — has paluwagan and 15th/30th payday cycle. SmartSpend leads on agentic AI (29 actions), multi-modal input, offline mode, and gamification. |
+| vs GCash Pera Coach? | GCash Pera Coach (March 2026, built with Microsoft) teaches financial concepts via Q&A inside the GCash app. SmartSpend tracks your actual spending, gives you an FHS, and has 31 autonomous AI actions. Different tools for different needs. |
+| vs BudgetPH? | BudgetPH is closest Filipino competitor — has paluwagan and 15th/30th payday cycle. SmartSpend leads on agentic AI (31 actions), multi-modal input, offline mode, and gamification. |
 | Backend? | No. Serverless. Zero hosting costs. |
 | Context injection vs RAG? | Small data fits in one prompt. RAG is overkill. |
 | 30 respondents? | Capstone study. Purposive. Nielsen: 5 finds 85% of issues. |

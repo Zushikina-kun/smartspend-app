@@ -93,7 +93,7 @@
 │             "category": "Transportation", "merchant": "Jeepney",       │
 │             "want_need": "Need", "confidence": 0.97 }                   │
 │                                                                         │
-│  The AI recognizes 29 action types — not just logging:                  │
+│  The AI recognizes 31 action types — not just logging:                  │
 │                                                                         │
 │  📝 Expenses    → log, update, delete, delete by date                   │
 │  💰 Income      → set income, log income entry                          │
@@ -366,7 +366,7 @@ End of month
 
 | What | How many |
 |------|---------|
-| AI agentic action types | 29 |
+| AI agentic action types | 31 |
 | App screens | 37 |
 | Backend services | 26 |
 | SQLite tables | 20 |
@@ -388,7 +388,7 @@ End of month
 |------------------------|-----------|
 | Fill out a form for every expense | Just say or type it naturally |
 | Shows a list of transactions | Shows a Financial Health Score + explanation |
-| No AI — passive recording only | 29 AI actions — actively manages your data |
+| No AI — passive recording only | 31 AI actions — actively manages your data |
 | Only works with internet + bank API | Works 100% offline, no bank login needed |
 | English only | Filipino-English (Taglish) understood natively |
 | Manual receipt entry | OCR + batch screenshot import (40+ platforms) |

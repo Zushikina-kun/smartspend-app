@@ -162,7 +162,7 @@ Before every AI message, the app queries SQLite for the user's live financial da
 #### AI Chat Capabilities
 The AI has access to: last 10 expenses detailed + older summarized by category, budget status, monthly income, total spent, health score (with component breakdown), savings goals, debts, recurring, installments, wallet balances, insurance policies, and FHS breakdown. Context is compressed to stay within the 8,192 token limit.
 
-The AI executes **29 action types** directly — data is written to the DB immediately with green snackbar confirmation:
+The AI executes **31 action types** directly — data is written to the DB immediately with green snackbar confirmation:
 
 | Action | Example Trigger |
 |--------|----------------|
@@ -1349,7 +1349,7 @@ lib/
 │   ├── backup_service.dart        # Google Drive backup & restore
 │   ├── event_bus.dart             # Global event bus for real-time UI refresh
 │   ├── llm_service.dart           # Groq API (expense parsing + insights + advice)
-│   ├── ai_chat_service.dart       # Groq/Gemini/Cerebras multi-model API (29 action types)
+│   ├── ai_chat_service.dart       # Groq/Gemini/Cerebras multi-model API (31 action types)
 │   ├── insight_service.dart       # Wrapper for LLM dashboard insights (passes actual total)
 │   ├── score_service.dart         # Financial health score (income-relative, this-month only)
 │   ├── predict_service.dart       # Monthly spending prediction (3+ days required)
@@ -1740,7 +1740,7 @@ All rights reserved by **Lucid Frame**, 2026.
 |---|------|--------|-------------|
 | 1 | **Wallet-First Full Migration** | Large | Remove income/role system, wallet = truth, new FHS formula |
 | 2 | **Multi-model LLM switching** | Medium | Groq → Gemini → Cerebras auto-fallback, UI model selector |
-| 3 | **New agentic AI actions** | ✅ Done | 29 total — suggest_cuts, simulate_what_if, create_debt_plan, split_expense, suggest_idle_money, etc. |
+| 3 | **New agentic AI actions** | ✅ Done | 31 total — suggest_cuts, simulate_what_if, create_debt_plan, split_expense, suggest_idle_money, etc. |
 | 4 | **Business Mode** | Large | Revenue, P&L, inventory, invoice, BIR VAT, AI business actions |
 | 5 | **Market Insights** | Medium | PSEi, inflation, fuel prices, AI global event interpretation |
 | 6 | **Philippine Financial Knowledge Base** | Medium | SSS tables, PhilHealth, BIR brackets injected into AI context |
@@ -1908,7 +1908,7 @@ All rights reserved by **Lucid Frame**, 2026.
 ### ✅ Fully Implemented (v2.9.1 Final)
 
 All features listed in sections 1–62 of this document are fully built and working in the current build. Key highlights:
-- **29 AI action types** (v2.9.1): log_expense, set_budget, set_income, add_income, add_goal, update_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, delete_goal, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, delete_by_date, split_expense
+- **31 AI action types** (v2.9.7): log_expense, set_budget, set_income, add_income, add_goal, update_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, add_installment_plan, delete_goal, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, delete_by_date, split_expense, set_spending_limit, add_insurance_policy
 - **62+ features** across all screens
 - **Wallet Balances** — Cash on Hand, GCash, Maya, 17 PH banks, remittance centers (section 61)
 - **Firebase App Check** — Play Integrity integrated, monitoring mode (section 62)
