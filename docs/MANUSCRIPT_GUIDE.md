@@ -60,7 +60,7 @@ Design, develop, and evaluate SmartSpend — an AI-assisted mobile personal fina
 - Android mobile application (Flutter/Dart)
 - Manual expense input (text, voice, OCR, barcode)
 - Local SQLite database with Firebase Firestore cloud sync
-- AI-powered expense parsing and financial advice (29 agentic actions)
+- AI-powered expense parsing and financial advice (31 agentic actions)
 - Financial Health Score (4-component formula)
 - Philippine-specific features (PH banks, SSS/PhilHealth/Pag-IBIG, BIR TRAIN Law)
 
@@ -99,9 +99,9 @@ See `docs/BENCHMARK.md` for the full comparison table (14 apps, including Budget
 | Tarsi (PH) | ❌ | ✅ | ✅ Partial | ✅ | ✅ Partial |
 | **BudgetPH** | ✅ Insights | ✅ | ✅ Full Filipino | ✅ | ✅ Full |
 | **Alkansya AI** | ✅ Chat | ❌ | ✅ Filipino | ⚠️ Limited | ✅ Partial |
-| **SmartSpend** | ✅ 29 actions | ✅ Full | ✅ Full Taglish+AI | ✅ Completely | ✅ Full |
+| **SmartSpend** | ✅ 31 actions | ✅ Full | ✅ Full Taglish+AI | ✅ Completely | ✅ Full |
 
-**Key gap:** No existing app combines all six: Taglish AI + 29 agentic actions + offline + PH financial knowledge + free + multi-modal input. BudgetPH is the closest Filipino-first competitor but lacks voice input, OCR, barcode, and agentic AI.
+**Key gap:** No existing app combines all six: Taglish AI + 31 agentic actions + offline + PH financial knowledge + free + multi-modal input. BudgetPH is the closest Filipino-first competitor but lacks voice input, OCR, barcode, and agentic AI.
 
 ### Related Studies
 - **Flores (2025)** — Financial freedom of Filipino workers: come-what-may attitude, informal savings, high debt without plan
@@ -135,7 +135,7 @@ Multi-Model LLM API (Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → Groq LLaMA 3
 
 **AI Architecture:** Agentic AI with dynamic context injection (NOT RAG)
 - Context injection = user's live financial data injected into system prompt before each message
-- 29 action types parsed from AI response JSON
+- 31 action types parsed from AI response JSON
 - Why not RAG: Per-user data is small enough to fit in prompt; vector search overhead unnecessary
 
 ### Financial Health Score (FHS) Formula
@@ -218,7 +218,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 5. **FHS Validation** — does the formula correlate with user-reported financial health?
 
 ### Key Numbers to Report (from v2.9.7 final build)
-- **29 AI agentic actions** implemented
+- **31 AI agentic actions** implemented
 - **5 LLM providers** with automatic failover + task-based routing (fast/smart/financial_advice)
 - **23 achievement badges** + 10 daily quests
 - **14 expense categories**, **9 payment methods**, **57 currencies**
@@ -235,7 +235,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 
 ### Conclusions Template
 1. **Objective 1 met:** Pre-survey revealed [X findings about financial habits] — SmartSpend addresses [specific pain points]
-2. **Objective 2 met:** SmartSpend was successfully developed with 29 AI actions, multi-model LLM routing, and Philippine-specific financial features
+2. **Objective 2 met:** SmartSpend was successfully developed with 31 AI actions, multi-model LLM routing, and Philippine-specific financial features
 3. **Objective 3 met:** SUS score of [X]/100 classified as [classification] — meets/exceeds target of 80+
 
 ### Recommendations
@@ -262,7 +262,7 @@ The System Usability Scale (Brooke, 1996; validated by Bangor et al., 2009):
 ## FREQUENTLY ASKED PANEL QUESTIONS
 
 **Q: "Your LLM should do something important and heavy — what does it do?"**
-A: SmartSpend's AI executes 29 autonomous financial management actions — from splitting bills with auto-debt creation, to generating a 50/30/20 salary budget plan, explaining why your Financial Health Score dropped, detecting forgotten subscriptions, simulating what-if savings scenarios, and routing to the best-quality model for each task type. The AI perceives the user's complete financial context (expenses, wallets, budgets, goals, debts, mood, insurance) from the SQLite database and autonomously writes changes back — this is genuine agentic AI behavior: perceive → decide → act.
+A: SmartSpend's AI executes 31 autonomous financial management actions — from splitting bills with auto-debt creation, to generating a 50/30/20 salary budget plan, explaining why your Financial Health Score dropped, detecting forgotten subscriptions, simulating what-if savings scenarios, and routing to the best-quality model for each task type. The AI perceives the user's complete financial context (expenses, wallets, budgets, goals, debts, mood, insurance) from the SQLite database and autonomously writes changes back — this is genuine agentic AI behavior: perceive → decide → act.
 
 **Q: "Why not use RAG?"**
 A: RAG (Retrieval-Augmented Generation) is designed for large knowledge bases (thousands of documents). A typical SmartSpend user has 20-50 expenses, 5-10 budgets, 3-5 goals — small enough to inject entirely into the system prompt. Our context injection approach gives the AI complete, always-current data without vector search overhead, making it faster and simpler for mobile deployment.
@@ -767,7 +767,7 @@ These things from the actual app should be in Chapter 3:
 
 4. **Why not RAG** — per-user data (20-50 expenses, 5-10 budgets, 3-5 goals) fits entirely in the model's context window. No vector search needed.
 
-5. **29 agentic actions** — list is in `docs/CAPSTONE_REFERENCE.md` Section 3.
+5. **31 agentic actions** — list is in `docs/CAPSTONE_REFERENCE.md` Section 3.
 
 ---
 

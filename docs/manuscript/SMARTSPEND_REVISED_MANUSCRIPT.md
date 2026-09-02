@@ -15,7 +15,7 @@ In Partial Fulfillment of the requirements for the degree of Bachelor of Science
 
 Financial mismanagement remains a critical and documented challenge among Filipino households, compounded by limited access to accessible, localized, and intelligent financial tools. This study designed, developed, and evaluated **SmartSpend** — an AI-assisted mobile financial tracking and advisory application for Android, built for parents aged 35–55 and young professionals aged 21–35 in La Union, Philippines.
 
-SmartSpend integrates a multi-provider agentic large language model (LLM) architecture — with Gemini 3.1 Flash-Lite as the primary model and four automatic fallback providers — enabling 29 autonomous financial management actions through natural language, voice, camera, batch screenshot import (40+ platform types), and manual entry. The system operates on an offline-first SQLite database with Firebase cloud synchronization, ensuring full functionality without internet connectivity.
+SmartSpend integrates a multi-provider agentic large language model (LLM) architecture — with Gemini 3.1 Flash-Lite as the primary model and four automatic fallback providers — enabling 31 autonomous financial management actions through natural language, voice, camera, batch screenshot import (40+ platform types), and manual entry. The system operates on an offline-first SQLite database with Firebase cloud synchronization, ensuring full functionality without internet connectivity.
 
 A core academic contribution is the **Financial Health Score (FHS)**: a 0–100 behavioral metric computed entirely from user-recorded transaction data in two modes — Full Mode (income-based: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency) and Lightweight Mode (habit-based: Spending Restraint, Consistency, Category Balance, Habit Streak) — with a Warning Decay consequence mechanism and a Logging Gap Detection system.
 
@@ -126,7 +126,7 @@ Several existing applications demonstrate how mobile tools can support personal 
 | Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | GCash Pera Coach | SmartSpend |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | Offline mode | Yes | No | No | No | Yes | No | No | **Yes** |
-| LLM chat assistant | No | No | No | No | Insights only | Yes (basic) | Yes (literacy Q&A) | **Yes — 29 agentic actions** |
+| LLM chat assistant | No | No | No | No | Insights only | Yes (basic) | Yes (literacy Q&A) | **Yes — 31 agentic actions** |
 | Financial Health Score | No | No | No | No | Yes (simpler) | No | No | **Yes (0–100, dual-mode)** |
 | OCR receipt scanning | Yes | No | No | No | No | No | No | **Yes** |
 | Voice input (en-PH) | No | No | No | No | No | No | No | **Yes** |
@@ -144,7 +144,7 @@ Several existing applications demonstrate how mobile tools can support personal 
 | Round-up savings | No | No | No | No | No | No | No | **Yes** |
 | Insurance tracker | No | No | No | No | No | No | No | **Yes** |
 
-Building on the gaps identified above, SmartSpend addresses this space by integrating a large language model API for natural language expense parsing, a conversational AI assistant capable of executing 29 autonomous financial management actions, and a Financial Health Score quantifying financial behavior on a scale of 0 to 100. The system operates offline using a local SQLite database with optional Firebase cloud synchronization, and supports voice, OCR, barcode scanning, batch screenshot import (40+ platform types), text paste, and manual form entry. It is designed primarily for parents aged 35 to 55 in La Union, Philippines, with young professionals aged 21 to 35 as a secondary target.
+Building on the gaps identified above, SmartSpend addresses this space by integrating a large language model API for natural language expense parsing, a conversational AI assistant capable of executing 31 autonomous financial management actions, and a Financial Health Score quantifying financial behavior on a scale of 0 to 100. The system operates offline using a local SQLite database with optional Firebase cloud synchronization, and supports voice, OCR, barcode scanning, batch screenshot import (40+ platform types), text paste, and manual form entry. It is designed primarily for parents aged 35 to 55 in La Union, Philippines, with young professionals aged 21 to 35 as a secondary target.
 
 ## Conceptual Framework
 
@@ -167,7 +167,7 @@ Specifically, this study aims to:
 
 ## Scope and Limitations
 
-The application supports both online and offline functionality using a local SQLite database (version 11 schema, 20 tables) to ensure accessibility without internet connectivity. The system integrates cloud storage and authentication through Firebase Firestore, Firebase Authentication, Firebase Remote Config, and Firebase App Check. An LLM API generates AI-powered insights, parses natural language inputs, and supports 29 autonomous financial management actions. The system is available on Android devices only.
+The application supports both online and offline functionality using a local SQLite database (version 11 schema, 20 tables) to ensure accessibility without internet connectivity. The system integrates cloud storage and authentication through Firebase Firestore, Firebase Authentication, Firebase Remote Config, and Firebase App Check. An LLM API generates AI-powered insights, parses natural language inputs, and supports 31 autonomous financial management actions. The system is available on Android devices only.
 
 The system has several limitations. OCR text recognition accuracy depends on image quality; handwritten or low-resolution images may produce inaccurate results. Voice recognition accuracy is affected by background noise and device support for the Filipino English (en-PH) locale; manual input options remain available as fallback. All AI-powered features require an active internet connection, as they rely on external LLM API services. The application does not support direct bank integration — bank synchronization is excluded due to the absence of accessible open-banking APIs in the Philippine setting (BSP Open Finance pilot launched July 2025 with limited participation) and the data privacy implications of transmitting banking credentials to third-party services. Investment features are outside scope. The application does not provide professional financial, legal, or tax advice.
 
@@ -195,7 +195,7 @@ SmartSpend additionally includes a **Customizable Settings system** — accessib
 
 **Budget-Conscious Individuals (Young Professionals, Ages 21–35).** This group includes working individuals who aim to manage finances more effectively using digital tools. SmartSpend enables expense control, budget planning, and improved financial behavior through AI-driven spending analysis. The wallet management feature tracks balances across GCash, Maya, bank accounts, and cash — offering a consolidated view of available funds alongside savings goals and debt management.
 
-**Technology Enthusiasts.** Individuals interested in AI advancements can explore the application's integration of a multi-provider agentic LLM architecture with 29 autonomous actions, dynamic context injection design, and multi-modal input processing.
+**Technology Enthusiasts.** Individuals interested in AI advancements can explore the application's integration of a multi-provider agentic LLM architecture with 31 autonomous actions, dynamic context injection design, and multi-modal input processing.
 
 **Demo and Evaluation Users.** Users who wish to explore the application without creating an account can use the built-in Demo Mode, accessible from the login screen. This mode provides realistic Filipino sample data and full feature access, making it suitable for demonstrations, evaluations, and usability testing.
 
@@ -221,9 +221,9 @@ The following section describes the key technologies, frameworks, and algorithms
 
 **LLM API Integration — Multi-Provider Agentic Architecture.** SmartSpend implements a multi-provider agentic AI system selected through comparative technical evaluation. The system uses **Gemini 3.1 Flash-Lite** (Google AI Studio) as the primary model — offering 1,000 free requests per day, a 1-million token context window, excellent Filipino-English multilingual performance, and native function calling support. Four fallback providers activate automatically when the primary limit is reached: Gemini 3.5 Flash (Google, 250 req/day free), Groq LLaMA 3.3 70B (~14,400 req/day free), Groq LLaMA 3.1 8B (~14,400 req/day free), and Cerebras LLaMA 3.1 70B (~1M tokens/day free). A task-based routing system directs simple queries (expense parsing) to faster lower-tier models and complex financial advisory (SSS, debt strategy) to higher-capability models. The full comparative benchmarking results and selection justification are presented in Chapter 3.
 
-The system architecture uses **dynamic full-context injection** rather than Retrieval-Augmented Generation (RAG). Before every AI call, the application queries SQLite and builds a context string containing the user's current expenses, budgets, income, goals, debts, wallet balances, recurring bills, and current Financial Health Score. This context is injected into every AI system prompt as the single source of truth. RAG is designed for large knowledge bases (thousands of documents); a typical SmartSpend user has 20–50 expenses, 5–10 budgets, and 3–5 goals — small enough to fit within the model's context window without vector search overhead (Davenport & Mittal, 2022; Li et al., 2024). As documented by the World Economic Forum (2024), IBM (2025), and Cambridge Judge Business School (2025), agentic AI systems that perceive context, decide on actions, and execute them autonomously represent the frontier of AI application in financial services — a design principle SmartSpend implements through its 29-action agentic loop: **perceive** (full financial context from SQLite) → **decide** (select the correct action from 29 types) → **act** (write directly to the database).
+The system architecture uses **dynamic full-context injection** rather than Retrieval-Augmented Generation (RAG). Before every AI call, the application queries SQLite and builds a context string containing the user's current expenses, budgets, income, goals, debts, wallet balances, recurring bills, and current Financial Health Score. This context is injected into every AI system prompt as the single source of truth. RAG is designed for large knowledge bases (thousands of documents); a typical SmartSpend user has 20–50 expenses, 5–10 budgets, and 3–5 goals — small enough to fit within the model's context window without vector search overhead (Davenport & Mittal, 2022; Li et al., 2024). As documented by the World Economic Forum (2024), IBM (2025), and Cambridge Judge Business School (2025), agentic AI systems that perceive context, decide on actions, and execute them autonomously represent the frontier of AI application in financial services — a design principle SmartSpend implements through its 31-action agentic loop: **perceive** (full financial context from SQLite) → **decide** (select the correct action from 31 types) → **act** (write directly to the database).
 
-**The 29 Agentic AI Action Types.** The AI does not merely answer questions — it takes autonomous actions directly on the user's SQLite database, producing immediate, verifiable results visible to the user:
+**The 31 Agentic AI Action Types.** The AI does not merely answer questions — it takes autonomous actions directly on the user's SQLite database, producing immediate, verifiable results visible to the user:
 
 | Category | Actions |
 |---|---|
@@ -388,7 +388,7 @@ The Kanban board is divided into seven columns representing workflow stages: Bac
 | Backlog | Define all features; conduct parent and young professional needs survey; review literature on PH financial gaps | Prioritized feature list; literature review |
 | Requirements | Translate survey findings into specifications; draft and validate survey questionnaire; conduct LLM API technical benchmarking (Objective 2) | Validated questionnaire; LLM benchmarking evaluation matrix (Table 2.2 in Chapter 3) |
 | Design | Design SQLite schema (20 tables); define FHS formula and weights; create UI wireframes and data flow diagrams | System architecture diagram; database schema; FHS formula documentation |
-| Development | Build expense tracking module; integrate Gemini 3.1 Flash-Lite API; add multi-modal import (OCR, voice, barcode, batch screenshots, paste text); implement FHS engine and Warning Decay; Firebase sync; gamification | Functional app build; all 29 agentic actions operational |
+| Development | Build expense tracking module; integrate Gemini 3.1 Flash-Lite API; add multi-modal import (OCR, voice, barcode, batch screenshots, paste text); implement FHS engine and Warning Decay; Firebase sync; gamification | Functional app build; all 31 agentic actions operational |
 | Testing | Unit testing for LLM parsing accuracy; SUS evaluation with 30 respondents; qualitative interviews; bug documentation | SUS scores; parsing accuracy observations; bug log |
 | Deployment | Build release APKs (split per ABI, obfuscated); prepare Demo Mode with realistic Filipino sample data; publish to GitHub Releases | Release APKs (v2.9.7); project documentation |
 | Done/Review | Analyze SUS scores; review user feedback; identify improvements; document recommendations for future development | Final evaluation report; post-capstone roadmap (paluwagan tracker, backend proxy, Play Store submission, iOS port) |
@@ -453,7 +453,7 @@ The selection of an appropriate LLM API is a critical design decision because it
 *Ratings are relative (1–5 stars) based on published 2026 benchmarks (AIMUltiple Finance LLM Benchmark; micro1.ai REALM Financial Benchmark; SurgeHQ Finance Eval; ArXiv 2507.22936). Content paraphrased for compliance with licensing restrictions.*
 
 **Why Gemini 3.1 Flash-Lite was selected as the primary model:**
-Gemini 3.1 Flash-Lite offers the highest free-tier request quota (1,000 req/day) among all evaluated models — sufficient for a 60-request-per-user-per-day cap across the academic deployment period. Its Filipino-English multilingual performance is rated highest among free-tier models, consistent with Google's training data coverage of Southeast Asian languages and Philippine government and financial content. The 1-million token context window comfortably accommodates the full user financial context injection (~2,000–5,000 tokens per request). Native function calling and structured JSON output support are essential for the 29 agentic action types. The model is multimodal, capable of processing receipt images alongside text (Li et al., 2024; Google, 2024f).
+Gemini 3.1 Flash-Lite offers the highest free-tier request quota (1,000 req/day) among all evaluated models — sufficient for a 60-request-per-user-per-day cap across the academic deployment period. Its Filipino-English multilingual performance is rated highest among free-tier models, consistent with Google's training data coverage of Southeast Asian languages and Philippine government and financial content. The 1-million token context window comfortably accommodates the full user financial context injection (~2,000–5,000 tokens per request). Native function calling and structured JSON output support are essential for the 31 agentic action types. The model is multimodal, capable of processing receipt images alongside text (Li et al., 2024; Google, 2024f).
 
 **Why not GPT-5.6 or Claude Fable 5:**
 Both are paid-only with no free tier sufficient for sustained academic deployment. For 30 respondents using the application at 60 messages per day each, the cost would be prohibitive. Gemini Flash-Lite at 1,000 free requests/day plus Groq's generous free tier covers this entirely at zero cost.
@@ -606,7 +606,7 @@ The SmartSpend mobile application was developed across seven Kanban phases, resu
 | APK size (arm64-v8a) | 44.7 MB (release, obfuscated, split) |
 | AI providers | 5 (auto-failover chain) |
 | Primary AI model | Gemini 3.1 Flash-Lite |
-| Agentic action types | 29 |
+| Agentic action types | 31 |
 | Expense categories (built-in) | 14 + unlimited custom |
 | Input modalities | 6 (text, voice, live camera, single photo, batch screenshots, paste text) |
 | Screenshot platform types detected | 40+ |
@@ -623,7 +623,7 @@ The SmartSpend mobile application was developed across seven Kanban phases, resu
 
 - *Requirements:* Validated survey questionnaire; LLM benchmarking evaluation (Table 2.2); FHS formula documentation
 - *Design:* SQLite v11 schema (20 tables); FHS dual-mode formula; UI wireframes and navigation flows
-- *Development:* All 29 agentic actions operational; 6-modality Smart Import system; Firebase Remote Config API key security; FHS engine with Warning Decay and Gap Adjustment; 23 badges and 10 daily quests; App Settings full-screen with Lite Mode and 10 visibility toggles
+- *Development:* All 31 agentic actions operational; 6-modality Smart Import system; Firebase Remote Config API key security; FHS engine with Warning Decay and Gap Adjustment; 23 badges and 10 daily quests; App Settings full-screen with Lite Mode and 10 visibility toggles
 - *Testing:* LLM parsing accuracy ~95–99%; all critical user flows tested on Poco X6 Pro (Android 16)
 - *Deployment:* Three split APK variants published to GitHub Releases (v2.9.7)
 
@@ -673,7 +673,7 @@ This study designed, developed, and evaluated **SmartSpend** — an AI-assisted 
 
 **Regarding Objective 1** — the assessment of financial management practices: The survey and interview data confirmed the presence of the financial management challenges identified in the literature — specifically the manual effort burden of traditional expense tracking, irregular budgeting behavior, and the absence of visible consequences for ignoring financial warnings. These findings directly validated the design rationale for SmartSpend's core features: multi-modal AI input to eliminate manual effort, the Financial Health Score to provide visible financial feedback, and the Warning Decay mechanism to make the consequences of ignoring budget warnings tangible and persistent.
 
-**Regarding Objective 2** — system design, development, and LLM benchmarking: SmartSpend v2.9.7 was successfully designed and developed as a fully functional Android application featuring 29 autonomous AI actions, a dual-mode Financial Health Score (Full Mode and Lightweight Mode), 6 input modalities, multi-modal Smart Import across 40+ platform types, offline-first SQLite architecture, Firebase cloud synchronization, and a gamification system with 23 achievement badges and 10 daily quests.
+**Regarding Objective 2** — system design, development, and LLM benchmarking: SmartSpend v2.9.7 was successfully designed and developed as a fully functional Android application featuring 31 autonomous AI actions, a dual-mode Financial Health Score (Full Mode and Lightweight Mode), 6 input modalities, multi-modal Smart Import across 40+ platform types, offline-first SQLite architecture, Firebase cloud synchronization, and a gamification system with 23 achievement badges and 10 daily quests.
 
 The comparative technical benchmarking of 15 LLM API providers confirmed that **Gemini 3.1 Flash-Lite** (Google AI Studio) is the most appropriate primary model for SmartSpend's academic deployment — offering the highest free-tier request quota (1,000/day), the best Filipino-English multilingual performance among free-tier models, a 1-million token context window, and native function calling support. The multi-provider failover architecture (Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras LLaMA 3.1) ensures continuous AI availability at zero cost.
 

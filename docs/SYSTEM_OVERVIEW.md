@@ -51,7 +51,7 @@ Most Filipinos do not track finances because:
 ║  • Understands Filipino-English natural language                 ║
 ║  • Extracts: amount, category, date, merchant, want/need         ║
 ║  • Routes to correct action (log, update, analyze, advise)       ║
-║  • 29 autonomous action types                                    ║
+║  • 31 autonomous action types                                    ║
 ║  • Falls back to 4 other providers if rate limit hit             ║
 ╚══════════════════════╦═══════════════════════════════════════════╝
                        ║
@@ -179,7 +179,7 @@ FHS = Spending Restraint + Logging Consistency + Category Balance + Habit Streak
 
 ---
 
-## THE 29 AI ACTIONS — WHAT THE AI CAN DO AUTONOMOUSLY
+## THE 31 AI ACTIONS — WHAT THE AI CAN DO AUTONOMOUSLY
 
 The AI doesn't just answer questions — it takes real actions directly on the user's data. Every action writes to the local SQLite database.
 
@@ -193,6 +193,8 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | **Recurring** | Add recurring bill/subscription, delete recurring |
 | **Payment Plans** | Add installment plan (ShopeePayLater, GCash GLoan, etc.) |
 | **Analysis** | Split salary (50/30/20), analyze goal feasibility, suggest debt payoff strategy, generate monthly plan, compare two time periods, explain FHS breakdown, project savings timeline, detect subscriptions, compute SSS/PhilHealth/Pag-IBIG contributions, suggest idle money usage, suggest expense cuts, simulate what-if scenario, create debt payment plan, split shared expense |
+| **Settings & Limits** | Set daily/weekly/monthly/yearly spending limit (or clear it) |
+| **Insurance & Contributions** | Add insurance policy or PH government contribution entry (SSS, PhilHealth, Pag-IBIG, etc.) |
 | **Account** | Change account type |
 
 ---
@@ -252,7 +254,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 | Feature | Description |
 |---------|-------------|
-| 29 AI actions | Full autonomous financial management via chat |
+| 31 AI actions | Full autonomous financial management via chat |
 | Financial Health Score | 0–100 score, dual mode (Full + Lightweight) |
 | Smart Import | 4-mode camera: Live, Single Photo, Batch (40+ platforms), Paste Text |
 | Wallet Balances | Track Cash, GCash, Maya, BDO, BPI, 30+ PH banks |
@@ -308,7 +310,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | GCash Pera Coach | **SmartSpend** |
 |---------|-------|------|---------|---------|----------|-------------|-----------------|---------------|
 | Offline mode | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
-| AI chat assistant | ❌ | ❌ | ❌ | ⚠️ Basic | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A | ✅ **29 actions** |
+| AI chat assistant | ❌ | ❌ | ❌ | ⚠️ Basic | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A | ✅ **31 actions** |
 | Financial Health Score | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ | ❌ | ✅ 0–100 dual-mode |
 | Filipino-English AI | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ PH languages | ✅ Full Taglish |
 | Expense Tracking | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
@@ -322,7 +324,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | Gamification | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ | ✅ 23 badges |
 | Works without bank API | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
 
-**SmartSpend leads:** Only app with 29 agentic AI actions + offline + Filipino-English + free + multi-modal input.
+**SmartSpend leads:** Only app with 31 agentic AI actions + offline + Filipino-English + free + multi-modal input.
 **Closest Filipino competitor:** BudgetPH — strong on paluwagan, 15th/30th cycle, and budget scoring, but no voice/OCR/barcode/agentic AI.
 **Notable 2026 entrant:** GCash Pera Coach (March 2026) — AI literacy tool inside GCash, not an expense tracker. Validates the PH AI finance market but solves a different problem.
 
