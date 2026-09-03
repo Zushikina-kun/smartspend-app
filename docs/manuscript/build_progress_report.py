@@ -119,6 +119,9 @@ def set_table_width(table, width_twips: int):
     if tblPr is None:
         tblPr = OxmlElement('w:tblPr')
         tbl.insert(0, tblPr)
+    # Remove any existing tblW elements first to avoid duplicates
+    for existing in tblPr.findall(qn('w:tblW')):
+        tblPr.remove(existing)
     tblW = OxmlElement('w:tblW')
     tblW.set(qn('w:w'), str(width_twips))
     tblW.set(qn('w:type'), 'dxa')
@@ -440,44 +443,54 @@ def build_report(data: dict, output_path: Path):
         r = p.add_run(txt)
         r.font.name = FONT; r.font.size = Pt(8.5); r.font.color.rgb = GREY_TEXT
 
-    # ── Footer (manual via paragraph at end) ──────────────────────────────────
-    # python-docx footer support — add a footer section
+    # ── Footer ───────────────────────────────────────────────────────────────
     footer = section.footer
     footer.paragraphs[0].clear()
     fp = footer.paragraphs[0]
     fp.paragraph_format.space_before = Pt(2)
     fp.paragraph_format.space_after  = Pt(0)
 
-    # Left text
+    # Left: institution text
     fr = fp.add_run(
         'Lorma Colleges \u2013 College of Computer Studies and Engineering '
         '| BS Information Technology Capstone Project')
     fr.font.name = FONT; fr.font.size = Pt(7); fr.font.color.rgb = GREY_TEXT
 
-    # Right tab + page number
-    fp.paragraph_format.tab_stops.add_tab_stop(Inches(7.1))  # right edge
+    # Tab to right side
     fp.add_run('\t')
-    fr2 = fp.add_run('Page ')
-    fr2.font.name = FONT; fr2.font.size = Pt(7); fr2.font.color.rgb = GREY_TEXT
-    # Insert PAGE field
-    fldChar1 = OxmlElement('w:fldChar')
-    fldChar1.set(qn('w:fldCharType'), 'begin')
-    instrText = OxmlElement('w:instrText')
-    instrText.text = ' PAGE '
-    fldChar2 = OxmlElement('w:fldChar')
-    fldChar2.set(qn('w:fldCharType'), 'end')
-    for el in [fldChar1, instrText, fldChar2]:
-        fp.runs[-1]._r.addnext(el)
-    fp.add_run(' of ')
-    fr3 = fp.add_run('')
-    fldChar3 = OxmlElement('w:fldChar')
-    fldChar3.set(qn('w:fldCharType'), 'begin')
-    instrText2 = OxmlElement('w:instrText')
-    instrText2.text = ' NUMPAGES '
-    fldChar4 = OxmlElement('w:fldChar')
-    fldChar4.set(qn('w:fldCharType'), 'end')
-    for el in [fldChar3, instrText2, fldChar4]:
-        fr3._r.addnext(el)
+
+    # "Page " text run
+    fr_pg = fp.add_run('Page ')
+    fr_pg.font.name = FONT; fr_pg.font.size = Pt(7); fr_pg.font.color.rgb = GREY_TEXT
+
+    # PAGE field — correct OOXML: fldChar(begin) + instrText + fldChar(end)
+    # each must be a child of its own <w:r>
+    def _add_field_run(para, instr: str, rpr_xml: str = None):
+        """Add a complete field (begin + instrText + end) as three <w:r> elements."""
+        p_xml = para._p
+        ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+        for fld_type, extra in [('begin', None), (None, instr), ('end', None)]:
+            r_el = OxmlElement('w:r')
+            if rpr_xml:
+                rpr = OxmlElement('w:rPr')
+                r_el.append(rpr)
+            if fld_type is not None:
+                fc = OxmlElement('w:fldChar')
+                fc.set(qn('w:fldCharType'), fld_type)
+                r_el.append(fc)
+            else:
+                it = OxmlElement('w:instrText')
+                it.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+                it.text = extra
+                r_el.append(it)
+            p_xml.append(r_el)
+
+    _add_field_run(fp, ' PAGE ')
+
+    fr_of = fp.add_run(' of ')
+    fr_of.font.name = FONT; fr_of.font.size = Pt(7); fr_of.font.color.rgb = GREY_TEXT
+
+    _add_field_run(fp, ' NUMPAGES ')
 
     doc.save(output_path)
     print(f"✓ Saved: {output_path}")
