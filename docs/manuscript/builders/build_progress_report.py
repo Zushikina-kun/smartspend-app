@@ -539,7 +539,7 @@ WEEK4 = {
     ),
     'report_no':        '04',
     'date_submitted':   'September 3, 2026',
-    'adviser_name':     'Janelli M. Mendez, DIT',
+    'adviser_name':     'Ellen F. Mangaoang, MIT',
     'members': [
         'Brix A. Directo — Lead Developer',
         'Cyrille John M. Rubis — UI/UX Designer & Documentation Lead',
@@ -629,7 +629,7 @@ WEEK5 = {
     ),
     'report_no':        '05',
     'date_submitted':   'September 4, 2026',
-    'adviser_name':     'Janelli M. Mendez, DIT',
+    'adviser_name':     'Ellen F. Mangaoang, MIT',
     'members': [
         'Brix A. Directo — Lead Developer',
         'Cyrille John M. Rubis — UI/UX Designer & Documentation Lead',
@@ -728,7 +728,7 @@ WEEK6 = {
     ),
     'report_no':        '06',
     'date_submitted':   'September 10, 2026',
-    'adviser_name':     'Janelli M. Mendez, DIT',
+    'adviser_name':     'Ellen F. Mangaoang, MIT',
     'members': [
         'Brix A. Directo — Lead Developer',
         'Cyrille John M. Rubis — UI/UX Designer & Documentation Lead',

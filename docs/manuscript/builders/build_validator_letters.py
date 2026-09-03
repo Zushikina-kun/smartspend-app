@@ -176,7 +176,7 @@ para('Respectfully yours,', size=11, before=8, after=4)
 para('Lucid Frame Research Group', bold=True, size=11, after=2)
 para('Brix A. Directo  |  Cyrille John M. Rubis  |  Djaunathan Albert S. Madayag', size=10, after=2)
 para('BSIT 4th Year — Lorma Colleges CCSE  |  AY 2026–2027, 1st Semester', size=10, italic=True, after=2)
-para('Noted by: Janelli M. Mendez, DIT  (Capstone Adviser)', size=10, after=12)
+para('Noted by: Ellen F. Mangaoang, MIT  (Capstone Adviser)', size=10, after=12)
 
 signature_block(
     name_line='________________________________',
@@ -282,7 +282,7 @@ para('Respectfully yours,', size=11, before=8, after=4)
 para('Lucid Frame Research Group', bold=True, size=11, after=2)
 para('Brix A. Directo  |  Cyrille John M. Rubis  |  Djaunathan Albert S. Madayag', size=10, after=2)
 para('BSIT 4th Year — Lorma Colleges CCSE  |  AY 2026–2027, 1st Semester', size=10, italic=True, after=2)
-para('Noted by: Janelli M. Mendez, DIT  (Capstone Adviser)', size=10, after=12)
+para('Noted by: Ellen F. Mangaoang, MIT  (Capstone Adviser)', size=10, after=12)
 
 signature_block(
     name_line='________________________________',

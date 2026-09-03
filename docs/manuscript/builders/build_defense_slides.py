@@ -151,7 +151,7 @@ txt(sl, 'Brix A. Directo  |  Cyrille John M. Rubis  |  Djaunathan Albert S. Mada
     0.8, 4.35, 11.5, 0.45, size=14, color=LGREY, align='center')
 txt(sl, 'Lucid Frame  |  BSIT 4th Year  |  Lorma Colleges CCSE  |  AY 2026–2027, 1st Semester',
     0.8, 4.82, 11.5, 0.4, size=12, color=LGREY, align='center')
-txt(sl, 'Adviser: Janelli M. Mendez, DIT', 0.8, 5.25, 11.5, 0.35,
+txt(sl, 'Adviser: Ellen F. Mangaoang, MIT', 0.8, 5.25, 11.5, 0.35,
     size=12, color=GOLD, align='center')
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -731,7 +731,7 @@ txt(sl, 'Brix A. Directo  ·  Cyrille John M. Rubis  ·  Djaunathan Albert S. Ma
     0.8, 4.0, 11.5, 0.45, size=15, color=WHITE, align='center')
 txt(sl, 'Lorma Colleges  —  CCSE, BSIT 4th Year  —  AY 2026–2027, 1st Semester',
     0.8, 4.5, 11.5, 0.4, size=13, color=LGREY, align='center')
-txt(sl, 'Adviser: Janelli M. Mendez, DIT', 0.8, 4.95, 11.5, 0.35,
+txt(sl, 'Adviser: Ellen F. Mangaoang, MIT', 0.8, 4.95, 11.5, 0.35,
     size=13, color=GOLD, align='center')
 txt(sl, 'github.com/Zushikina-kun/smartspend-app',
     0.8, 5.55, 11.5, 0.35, size=13, color=LGREY, align='center', italic=True)

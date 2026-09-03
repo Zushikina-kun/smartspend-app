@@ -399,4 +399,4 @@ End of month
 *SmartSpend v2.9.9 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
-*Teacher-in-Charge: Janelli M. Mendez, DIT | Capstone Adviser: Johnny Verzola, MTS (reassignment pending)*
+*Teacher-in-Charge: Shekiro R. Raposas | Capstone Adviser: Ellen F. Mangaoang, MIT*
