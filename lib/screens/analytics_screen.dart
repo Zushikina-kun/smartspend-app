@@ -14,6 +14,7 @@ import '../services/llm_service.dart';
 import '../services/event_bus.dart';
 import '../services/currency_service.dart';
 import '../services/score_service.dart';
+import '../services/behavioral_feedback_service.dart';
 import '../widgets/info_button.dart';
 import 'transactions_screen.dart';
 import 'savings_goals_screen.dart';
@@ -2350,6 +2351,162 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           },
                         ),
                       ],
+
+                      // BF-7: FMS next-step guidance card
+                      // Shows the single most impactful action the user can take
+                      // to improve their FMS score.
+                      Builder(builder: (ctx) {
+                        final cs = Theme.of(ctx).colorScheme;
+                        return FutureBuilder<Map<String, dynamic>>(
+                          future: () async {
+                            final goals = await DBService.getGoals();
+                            final budgets = await DBService.getBudgets();
+                            final wallets = await DBService.getWallets();
+                            final iwMode =
+                                await DBService.getIncomeWalletMode();
+                            final expMaps = _thisMonthExpenses
+                                .map((e) => {
+                                      'item_name': e.itemName,
+                                      'amount': e.amount,
+                                      'date': e.date,
+                                      'category': e.category,
+                                    })
+                                .toList();
+                            return FinancialManagement
+                                .getFinancialManagementScore(
+                              thisMonthExpenses: expMaps,
+                              budgets: budgets,
+                              goals: goals,
+                              monthlyIncome: _monthlyIncome,
+                              incomeWalletMode: iwMode,
+                              wallets: wallets,
+                            );
+                          }(),
+                          builder: (ctx2, snap) {
+                            if (!snap.hasData) return const SizedBox.shrink();
+                            final fmsBd = snap.data!['breakdown']
+                                as List<Map<String, dynamic>>;
+                            final nextStep =
+                                BehavioralFeedbackService.getFmsNextStep(fmsBd);
+                            if (nextStep.isEmpty)
+                              return const SizedBox.shrink();
+                            return Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color:
+                                    cs.primaryContainer.withValues(alpha: 0.35),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                    color: cs.primary.withValues(alpha: 0.2)),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(Icons.arrow_circle_right_outlined,
+                                      size: 18,
+                                      color: cs.primary.withValues(alpha: 0.8)),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Next Step',
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                                color: cs.primary)),
+                                        const SizedBox(height: 3),
+                                        Text(nextStep,
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.8),
+                                                height: 1.4)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }),
+
+                      // BF-4: FHS Coach Report — "What did I do right/wrong?"
+                      // Splits breakdown into strengths and improvement areas.
+                      if (_currentComponents.isNotEmpty)
+                        Builder(builder: (ctx) {
+                          final cs = Theme.of(ctx).colorScheme;
+                          final report =
+                              BehavioralFeedbackService.buildCoachReport(
+                                  _currentComponents);
+                          if (report.isEmpty) return const SizedBox.shrink();
+                          return Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(bottom: 16),
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: cs.surfaceContainerHighest
+                                  .withValues(alpha: 0.35),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                  color: cs.outline.withValues(alpha: 0.15)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('What you did right / what to fix',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: cs.onSurface
+                                            .withValues(alpha: 0.8))),
+                                const SizedBox(height: 10),
+                                if (report.strengths.isNotEmpty) ...[
+                                  Text('What\'s working',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.green[700])),
+                                  const SizedBox(height: 4),
+                                  ...report.strengths.map((s) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 4),
+                                        child: Text(s,
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.75),
+                                                height: 1.35)),
+                                      )),
+                                ],
+                                if (report.improvements.isNotEmpty) ...[
+                                  if (report.strengths.isNotEmpty)
+                                    const SizedBox(height: 10),
+                                  Text('What to improve',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.orange[700])),
+                                  const SizedBox(height: 4),
+                                  ...report.improvements.map((s) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 4),
+                                        child: Text(s,
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.75),
+                                                height: 1.35)),
+                                      )),
+                                ],
+                              ],
+                            ),
+                          );
+                        }),
 
                       // Score history placeholder — shown when too few data points
                       // (score only saved on days the app is opened)

@@ -13,6 +13,7 @@ import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../services/notification_service.dart';
 import '../services/ai_chat_service.dart';
+import '../services/behavioral_feedback_service.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
@@ -890,6 +891,12 @@ class _DashboardState extends State<Dashboard> {
   double _dailyLimit = 0;
   int _streak = 0; // consecutive days under budget
   List<String> _earnedBadges = [];
+  // BF-2: Plain-language score narrative
+  String _scoreNarrative = '';
+  // BF-1: Pending celebration event to show once after _loadData completes
+  CelebrationEvent? _pendingCelebration;
+  // BF-1: Logging streak (days with ≥1 expense) — needed for celebration check
+  int _logStreak = 0;
 
   // ── NEW: lightweight mode + multi-period spending limits ─────────────────
   bool _incomeWalletMode = true;
@@ -1152,6 +1159,56 @@ class _DashboardState extends State<Dashboard> {
     // Spending streak calculation (#13)
     _computeStreak();
 
+    // BF-2: Compute plain-language score narrative from breakdown
+    final breakdownForNarrative = ScoreService.getBreakdown(
+      expenseData,
+      budgets: budgets,
+      monthlyIncome: incomeWalletMode ? income : 0,
+      lightweightMode: !incomeWalletMode,
+      spendingLimit: spendingLimit,
+      spendingLimitPeriod: spendingLimitPeriod,
+    );
+    final narrative = BehavioralFeedbackService.scoreSummaryNarrative(
+      score,
+      breakdownForNarrative,
+      !incomeWalletMode,
+    );
+
+    // BF-1: Compute log streak for celebration check
+    int logStreak = 0;
+    final now2 = DateTime.now();
+    for (int d = 0; d < 60; d++) {
+      final checkDate = DateTime(now2.year, now2.month, now2.day - d)
+          .toIso8601String()
+          .substring(0, 10);
+      if (thisMonthExpenses.any((e) => e.date.startsWith(checkDate))) {
+        logStreak++;
+      } else {
+        break;
+      }
+    }
+
+    // BF-1: Check for celebration event (score up, streak milestone, all budgets)
+    final celebration = await BehavioralFeedbackService.checkForCelebration(
+      currentScore: score,
+      logStreak: logStreak,
+      breakdown: breakdownForNarrative,
+    );
+
+    if (mounted) {
+      setState(() {
+        _scoreNarrative = narrative;
+        _logStreak = logStreak;
+        _pendingCelebration = celebration;
+      });
+      // Show celebration banner if one was triggered
+      if (celebration != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _showCelebrationBanner(celebration);
+        });
+      }
+    }
+
     // Save daily score snapshot for history tracking
     DBService.saveScoreSnapshot(score);
     // GM-6: Check for level-up milestone
@@ -1248,6 +1305,43 @@ class _DashboardState extends State<Dashboard> {
   Future<void> _deleteExpense(int id) async {
     await DBService.deleteExpense(id);
     _loadData();
+  }
+
+  // BF-1: Show a celebration banner using a themed SnackBar
+  void _showCelebrationBanner(CelebrationEvent event) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Text(event.emoji, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(event.title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 13)),
+                  Text(event.message,
+                      style: const TextStyle(fontSize: 11, height: 1.3)),
+                ],
+              ),
+            ),
+          ],
+        ),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: event.type == CelebrationEventType.scoreImproved
+            ? Colors.green[700]
+            : event.type == CelebrationEventType.streakMilestone
+                ? Colors.orange[700]
+                : Colors.blue[700],
+        duration: const Duration(seconds: 5),
+        margin: const EdgeInsets.all(12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
   }
 
   Future<void> _computeStreak() async {
@@ -2754,38 +2848,66 @@ class _DashboardState extends State<Dashboard> {
                 );
               }),
 
-              // Budget warnings
+              // Budget warnings — supportive framing (BF-5)
+              // Each over-budget category gets its own encouraging message
+              // linked to the user's top savings goal when available.
               if (overBudget.isNotEmpty)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .error
-                            .withValues(alpha: 0.3)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.warning_amber,
-                          color: Theme.of(context).colorScheme.error, size: 18),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          "Budget alert: ${overBudget.join(', ')} is near or over limit",
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onErrorContainer,
-                              fontSize: 13),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ...overBudget.take(2).map((cat) {
+                  final budget =
+                      _budgets.where((b) => b.category == cat).firstOrNull;
+                  final spent = _expenses
+                      .where((e) =>
+                          e.date.startsWith(_currentMonth) && e.category == cat)
+                      .fold<double>(0, (s, e) => s + e.amount);
+                  final budgetAmt = budget?.amount ?? 0;
+                  final isOver = budgetAmt > 0 && spent > budgetAmt;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: FutureBuilder<String>(
+                      future:
+                          BehavioralFeedbackService.getSupportiveBudgetMessage(
+                              cat, spent, budgetAmt > 0 ? budgetAmt : spent),
+                      builder: (ctx, snap) {
+                        final msg = snap.data ??
+                            (isOver
+                                ? '⚠️ $cat budget exceeded'
+                                : '📊 $cat approaching limit');
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: isOver
+                                ? Colors.orange.withValues(alpha: 0.1)
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest
+                                    .withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                                color: isOver
+                                    ? Colors.orange.withValues(alpha: 0.35)
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .outline
+                                        .withValues(alpha: 0.2)),
+                          ),
+                          child: Text(
+                            msg,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: isOver
+                                    ? Colors.orange[800]
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.75),
+                                height: 1.35),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }).toList(),
 
               if (overBudget.isNotEmpty) const SizedBox(height: 12),
 
@@ -3516,6 +3638,23 @@ class _DashboardState extends State<Dashboard> {
                               },
                             ),
                             const SizedBox(height: 6),
+                            // BF-2: Plain-language score narrative
+                            if (_scoreNarrative.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: Text(
+                                  _scoreNarrative,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondaryContainer
+                                        .withValues(alpha: 0.75),
+                                    height: 1.35,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
                             // "Explain My Score" shortcut — navigates to AI tab
                             GestureDetector(
                               onTap: () => widget.onNavigate(2),
@@ -4577,6 +4716,18 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
                 const Text("Daily Quests",
                     style:
                         TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                const SizedBox(width: 4),
+                // BF-9: Contextual explanation for Daily Quests
+                const InfoButton(
+                  title: 'Daily Quests',
+                  body:
+                      'Daily Quests are small financial challenges that reset each day. '
+                      'Completing them builds good money habits over time.\n\n'
+                      'The counter shows how many you\'ve completed today (e.g. 2 / 4).\n\n'
+                      'Examples: "Log before noon", "Keep total under ₱200 today", '
+                      '"Spend only on Needs today". Quests rotate based on your spending patterns.',
+                  size: 13,
+                ),
                 const SizedBox(width: 6),
                 Container(
                   padding:
@@ -4597,19 +4748,39 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
                 ),
                 const Spacer(),
                 if (_streak > 0)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
+                  GestureDetector(
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('🔥 Score Streak'),
+                        content: Text(
+                          'Your score streak is the number of consecutive days your '
+                          'Financial Health Score was 60 or above (Fair or better).\n\n'
+                          'Current streak: $_streak day${_streak == 1 ? '' : 's'}.\n\n'
+                          'A streak breaks the moment your score drops below 60. '
+                          'Keep logging and staying on budget to maintain it.',
+                        ),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Got it'))
+                        ],
+                      ),
                     ),
-                    child: Text(
-                      "🔥 $_streak day streak",
-                      style: const TextStyle(
-                          fontSize: 10,
-                          color: Colors.orange,
-                          fontWeight: FontWeight.w600),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        "🔥 $_streak day streak",
+                        style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
               ],
