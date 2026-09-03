@@ -31,7 +31,7 @@
 - [ ] **Figure 2.2 Kanban board diagram** — create and insert in Google Docs *(Cyrille)*
 - [ ] **Validator signatures** — have both validators fill in credentials and sign the two Appendix A certificates *(Brix)*
 - [ ] **Curriculum Vitae** — add CV section (Brix, Cyrille, Djaunathan) to Google Docs manuscript *(All)*
-- [ ] **Confirm new Capstone adviser** — request reassignment from department *(All)*
+- [ ] **Confirm new Capstone adviser — ✅ Ellen F. Mangaoang, MIT (Adviser) / Shekiro R. Raposas (Instructor-in-Charge) *(All)*
 - [ ] **Apply Google Docs manuscript fixes** — copy revised text from `SMARTSPEND_REVISED_MANUSCRIPT.md` into the Google Docs version (all Fixes 1–19 are already incorporated in the .md file) *(Cyrille)*
 
 ### ✅ Already completed (all Fixes 1–19 applied in SMARTSPEND_REVISED_MANUSCRIPT.md):

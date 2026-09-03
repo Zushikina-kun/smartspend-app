@@ -5,8 +5,8 @@ presented to the faculty of the College of Computer Studies and Engineering, LOR
 In Partial Fulfillment of the requirements for the degree of Bachelor of Science in Information Technology
 
 **Researchers:** Directo, Brix A. · Rubis, Cyrille John M. · Madayag, Djaunathan Albert S.
-**Adviser:** Verzola, Johnny Flores, MTS
-**Teacher-in-Charge:** Mendez, Janelli M., DIT
+**Adviser:** Mangaoang, Ellen F., MIT
+**Teacher-in-Charge:** Raposas, Shekiro R.
 **Academic Year:** 2026–2027, 1st Semester | **Version:** 2.9.9
 
 ---
@@ -29,7 +29,7 @@ The system was evaluated using the System Usability Scale (SUS) with 30 purposiv
 
 The researchers would like to express their sincere gratitude and appreciation to all individuals who contributed to the successful completion of this study.
 
-First and foremost, the researchers thank the **Almighty God** for His guidance, strength, wisdom, and blessings throughout this research. The researchers extend their heartfelt appreciation to the Dean of the College of Computer Studies and Engineering, **Mr. Jeoffrey B. Layco**, for his leadership and support. Special thanks are given to their Capstone Adviser, **Mr. Johnny Verzola**, for invaluable guidance and patience. The researchers also thank their instructor in charge, **Dr. Janelli M. Mendez**, for direction, structure, and continuous support. To the **panelists**, the researchers are grateful for their time and constructive feedback. Finally, the researchers extend their deepest gratitude to their **families and friends** for their unwavering support throughout this journey.
+First and foremost, the researchers thank the **Almighty God** for His guidance, strength, wisdom, and blessings throughout this research. The researchers extend their heartfelt appreciation to the Dean of the College of Computer Studies and Engineering, **Mr. Jeoffrey B. Layco**, for his leadership and support. Special thanks are given to their Capstone Adviser, **Ms. Ellen F. Mangaoang**, for invaluable guidance and patience. The researchers also thank their instructor in charge, **Mr. Shekiro R. Raposas**, for direction, structure, and continuous support. To the **panelists**, the researchers are grateful for their time and constructive feedback. Finally, the researchers extend their deepest gratitude to their **families and friends** for their unwavering support throughout this journey.
 
 **The Researchers**
 
@@ -1063,7 +1063,7 @@ Date: _______________________________
 *San Fernando City, La Union, Philippines*
 
 *Researchers: Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
-*Adviser: Johnny Verzola, MTS | Teacher-in-Charge: Janelli M. Mendez, DIT*
+*Adviser: Ellen F. Mangaoang, MIT | Teacher-in-Charge: Shekiro R. Raposas*
 
 *Last Updated: August 2026*
 *Content was paraphrased and summarized for compliance with licensing restrictions where applicable.*
