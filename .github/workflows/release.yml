@@ -42,16 +42,18 @@ jobs:
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/smartspend-release.jks
 
       - name: Write key.properties
-        run: echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
+        run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 --decode > android/key.properties
 
       - name: Write google-services.json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
 
       # ── 5. Create app_config.dart (API keys) ────────────────────────────
-      # Store in GitHub Secrets:
-      #   APP_CONFIG_DART — full content of lib/services/app_config.dart
+      # APP_CONFIG_DART is stored as base64 to preserve quotes and special chars.
+      # To regenerate the secret value run:
+      #   $bytes = [IO.File]::ReadAllBytes("lib/services/app_config.dart")
+      #   [Convert]::ToBase64String($bytes, [Base64FormattingOptions]::None) | clip
       - name: Write app_config.dart
-        run: echo "${{ secrets.APP_CONFIG_DART }}" > lib/services/app_config.dart
+        run: echo "${{ secrets.APP_CONFIG_DART }}" | base64 --decode > lib/services/app_config.dart
 
       # ── 6. Get dependencies ──────────────────────────────────────────────
       - name: Flutter pub get
