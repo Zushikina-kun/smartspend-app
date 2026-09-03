@@ -18,6 +18,7 @@ import '../services/event_bus.dart';
 import '../services/currency_service.dart';
 import '../services/debug_service.dart';
 import '../services/undo_service.dart';
+import '../services/behavioral_feedback_service.dart';
 import '../services/app_config.dart';
 import '../models/expense.dart';
 import '../widgets/info_button.dart';
@@ -705,6 +706,49 @@ class _AIScreenState extends State<AIScreen> {
             // ── GUARDRAIL: register this action in the session fingerprint log ──
             // Prevents the model from re-firing the same item in subsequent turns.
             AIChatService.recordFiredAction(itemName, amount, expenseDate);
+
+            // BF-3: Purchase commentary — show contextual snackbar after logging
+            // Replaces the generic "Logged: X ₱Y" with context-aware feedback.
+            if (mounted && isCurrentDay) {
+              try {
+                final commentary =
+                    await BehavioralFeedbackService.getPurchaseCommentary(
+                  itemName: itemName,
+                  category: category,
+                  amount: amount,
+                  isWant:
+                      (action.params['want_need'] as String?)?.toLowerCase() ==
+                          'want',
+                  date: expenseDate,
+                );
+                if (commentary != null && mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Row(
+                      children: [
+                        Text(commentary.emoji,
+                            style: const TextStyle(fontSize: 18)),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(commentary.message,
+                              style: const TextStyle(fontSize: 12)),
+                        ),
+                      ],
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    backgroundColor: commentary.tone == CommentaryTone.nudge
+                        ? Colors.orange[700]
+                        : commentary.tone == CommentaryTone.praise
+                            ? Colors.green[700]
+                            : null,
+                    duration: const Duration(seconds: 4),
+                    margin: const EdgeInsets.all(12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ));
+                  return; // skip the default action snackbar
+                }
+              } catch (_) {}
+            }
           }
           break;
 

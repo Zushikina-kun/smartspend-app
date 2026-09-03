@@ -22,6 +22,7 @@ import '../services/app_lock_service.dart';
 import '../services/ai_chat_service.dart';
 import '../services/undo_service.dart';
 import '../services/category_service.dart';
+import '../services/behavioral_feedback_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'login_screen.dart';
 import 'about_screen.dart';
@@ -1869,6 +1870,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
+
+                            // BF-7: FMS next-step guidance card in Profile
+                            Builder(builder: (ctx2) {
+                              final nextStep =
+                                  BehavioralFeedbackService.getFmsNextStep(
+                                      fmsBd);
+                              if (nextStep.isEmpty)
+                                return const SizedBox.shrink();
+                              final cs = Theme.of(ctx2).colorScheme;
+                              return Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.only(bottom: 16),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: cs.primaryContainer
+                                      .withValues(alpha: 0.3),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color:
+                                          cs.primary.withValues(alpha: 0.18)),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.arrow_circle_right_outlined,
+                                        size: 16,
+                                        color:
+                                            cs.primary.withValues(alpha: 0.8)),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Next Step',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: cs.primary)),
+                                          const SizedBox(height: 2),
+                                          Text(nextStep,
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: cs.onSurface
+                                                      .withValues(alpha: 0.75),
+                                                  height: 1.35)),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
                           ],
                         );
                       },
