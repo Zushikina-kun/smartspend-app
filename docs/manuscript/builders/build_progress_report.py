@@ -721,14 +721,133 @@ WEEK5 = {
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
+WEEK6 = {
+    'project_title': (
+        'SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management '
+        'Application for Filipino Users Using Agentic Large Language Model Architecture'
+    ),
+    'report_no':        '06',
+    'date_submitted':   'September 10, 2026',
+    'adviser_name':     'Janelli M. Mendez, DIT',
+    'members': [
+        'Brix A. Directo — Lead Developer',
+        'Cyrille John M. Rubis — UI/UX Designer & Documentation Lead',
+        'Djaunathan Albert S. Madayag — Project Manager & QA Lead',
+    ],
+    'completed': (
+        'Released SmartSpend v2.9.10 — Behavioral Feedback Layer (8 UX items):\n\n'
+        '(1) Score Narrative Engine — AI-generated weekly summary cards replace the '
+        'plain "FHS: 64/100" label; context-aware messages like "You\'re spending '
+        'more than usual on Food — ₱2,340 this week" appear on the Home screen.\n\n'
+        '(2) Score Celebration Toasts — On-screen animated toast when FHS crosses '
+        'milestone thresholds (50, 65, 75, 90), reinforcing positive financial behavior '
+        'with Lorma maroon/gold visual styling.\n\n'
+        '(3) Purchase Commentary — AI appends a brief behavioral note to receipt-scan '
+        'and voice-logged entries above ₱500 (e.g., "This counts as a discretionary '
+        'purchase — consider tracking against your Food budget.").\n\n'
+        '(4) Supportive Budget Warning Alerts — Budget overspend warnings now include '
+        'a constructive follow-up suggestion instead of a plain red banner, applying '
+        'Thaler & Sunstein (2008) nudge theory.\n\n'
+        '(5) FMS Next-Step Guidance — The Financial Management Score card now shows '
+        'a prioritized single action tip (e.g., "Set a Food budget to unlock full '
+        'Budget Adherence scoring") when any FMS sub-component is below 20/25.\n\n'
+        '(6) Coach Report — Weekly AI-generated coach letter accessible from the '
+        'Profile screen summarizing the week\'s financial behavior, strongest category, '
+        'and one recommended habit change for the coming week.\n\n'
+        '(7) Goal Milestone Notifications — In-app notification when a savings goal '
+        'reaches 25%, 50%, 75%, and 100% of its target amount, with celebratory '
+        'color-coded progress card update.\n\n'
+        '(8) Score Explanation Tooltips — "Why is my FHS this score?" info button '
+        'added to the FHS card, opening a bottom sheet with per-component breakdown '
+        'and plain-language explanation.\n\n'
+        'Completed full documentation reorganization: renamed, sorted, and restructured '
+        'all docs folders (archive, capstone, debug, guides, manuscript, reference, '
+        'status, tools). Committed as v2.9.10 to GitHub master.\n\n'
+        'Built all 4 manuscript figures as compressed PNG files using Pillow and '
+        'matplotlib:\n'
+        '  • Figure 1.1 — Financial Literacy Rates by Demographic Group (74 KB)\n'
+        '  • Figure 1.2 — IPO Conceptual Framework (131 KB)\n'
+        '  • Figure 2.1 — SUS Score Interpretation (40 KB)\n'
+        '  • Figure 2.2 — Agile Kanban Workflow (111 KB)\n\n'
+        'Rebuilt SmartSpend_Manuscript_FINAL.docx with all 4 figures embedded: '
+        '17 sections verified, 12 media files, 63 APA references, ~12,685 words '
+        '(~50 pages). Figures 2.1 and 2.2 injected into Chapter III via _fig() helper.\n\n'
+        'Built SmartSpend_Compliance_Matrix_PreFinal.docx — pre-filled with project '
+        'title, proponents, adviser, and panelist placeholder fields. Ready for '
+        'printing and panel submission.'
+    ),
+    'ongoing': (
+        'Pre-Final Defense preparation: finalizing presentation slides and conducting '
+        'full 8–9 minute demo rehearsal using DEFENSE_GUIDE.md flow.\n\n'
+        'SUS survey administration: targeting 30 respondents (20 parents aged 35–55, '
+        '10 young professionals aged 21–35) for Week 7. Instruments finalized.\n\n'
+        'Google Docs manuscript: applying manuscript text from '
+        'SmartSpend_Manuscript_Source.md, inserting figures, and updating CV section '
+        'for all 3 members.\n\n'
+        'Validator coordination: obtaining validator signatures on Appendix A '
+        'validation certificates (survey content validator and technical/SUS validator).'
+    ),
+    'problems': (
+        'GitHub Actions automated release pipeline still pending — 4 repository '
+        'secrets (KEYSTORE_BASE64, KEY_PROPERTIES, GOOGLE_SERVICES_JSON, '
+        'APP_CONFIG_DART) require manual configuration in GitHub Settings → '
+        'Secrets and variables → Actions. These signing credentials and API keys '
+        'cannot be committed to the repository.\n\n'
+        'Figures 1.1 and 1.2 in the source DOCX (Working copy) were originally '
+        'embedded as large uncompressed PNGs (1.8 MB and 1.6 MB). The new compressed '
+        'versions are significantly smaller (74 KB and 131 KB) — the Working copy '
+        'needs to be updated manually in Google Docs / Word with the new figure files.'
+    ),
+    'solutions': (
+        'GitHub Actions: workflow file (release.yml) is already committed. Once the '
+        '4 secrets are configured in GitHub Settings, future releases only require:\n'
+        '  git tag v2.9.X && git push origin v2.9.X\n'
+        'Step-by-step setup instructions are documented in the workflow file comments.\n\n'
+        'Figures: new compressed PNG files are saved to docs/manuscript/figures/. '
+        'The build_figures.py script regenerates all 4 at any time with: '
+        'python build_figures.py. The FINAL.docx is rebuilt automatically by '
+        'build_final_docx.py, which embeds the compressed versions via python-docx '
+        'add_picture(). Manual replacement in the Working copy (Google Docs) is '
+        'tracked as a Cyrille task for Week 7.'
+    ),
+    'next_steps': (
+        'Week 7 — SUS survey administration with 30 respondents (20 parents, '
+        '10 young professionals). Tabulate results and compute SUS scores using '
+        'Brooke (1996) formula. Insert results into Chapter III.\n\n'
+        'Complete Pre-Final Defense presentation slides and conduct full rehearsal. '
+        'Print Compliance Matrix and obtain panel signatures.\n\n'
+        'Configure GitHub Actions secrets for automated APK release pipeline.\n\n'
+        'Obtain validator signatures on Appendix A validation certificates.\n\n'
+        'Cyrille: Insert all 4 figures into Google Docs Working copy. '
+        'Complete CV section for all 3 members. Apply remaining manuscript fixes.'
+    ),
+    'photos': [
+        (_SS + 'Screenshot_2026-09-03-09-25-37-741_com.lucidframe.smartspend_app.jpg',
+         'Home screen — FHS Score Narrative Engine (v2.9.10): AI-generated weekly summary card with context-aware behavioral feedback'),
+        (_SS + 'Screenshot_2026-09-03-09-25-51-336_com.lucidframe.smartspend_app.jpg',
+         'Analytics — FHS Components + FMS breakdown showing Score Explanation Tooltips (v2.9.10 UX item 8)'),
+        (_SS + 'Screenshot_2026-09-03-09-26-26-277_com.lucidframe.smartspend_app.jpg',
+         'Profile screen — Coach Report section (v2.9.10 UX item 6): weekly AI coach letter with habit recommendation'),
+        (_SS + 'Screenshot_2026-09-03-09-25-32-851_com.lucidframe.smartspend_app.jpg',
+         'Home screen — Goal Milestone Notifications (v2.9.10 UX item 7): color-coded progress cards at 25/50/75/100% milestones'),
+        (_SS + 'Screenshot_2026-09-03-09-28-06-286_com.github.android.jpg',
+         'GitHub v2.9.10 release — 3 signed APK variants with full behavioral feedback layer and documentation reorganization'),
+        (_SS + 'Screenshot_2026-09-03-09-25-47-423_com.lucidframe.smartspend_app.jpg',
+         'Analytics screen — spending breakdown used as reference for FMS Next-Step Guidance (v2.9.10 UX item 5)'),
+    ],
+}
+
+
 def main():
     out_dir = Path(__file__).parent
     target = sys.argv[1].lower() if len(sys.argv) > 1 else 'all'
 
     if target in ('week4', 'all'):
-        build_report(WEEK4, out_dir / 'SmartSpend_Progress_Report_Week4.docx')
+        build_report(WEEK4, out_dir / '..' / 'progress_reports' / 'SmartSpend_Progress_Report_Week4.docx')
     if target in ('week5', 'all'):
-        build_report(WEEK5, out_dir / 'SmartSpend_Progress_Report_Week5.docx')
+        build_report(WEEK5, out_dir / '..' / 'progress_reports' / 'SmartSpend_Progress_Report_Week5.docx')
+    if target in ('week6', 'all'):
+        build_report(WEEK6, out_dir / '..' / 'progress_reports' / 'SmartSpend_Progress_Report_Week6.docx')
 
 
 if __name__ == '__main__':
