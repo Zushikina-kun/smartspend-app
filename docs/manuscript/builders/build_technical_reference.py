@@ -786,32 +786,143 @@ add_body(
     'accurate, and works offline.'
 )
 
-add_heading('3.6  Why SmartSpend Does Not Use Finance-Specialized LLMs', 2)
+add_heading('3.6  General LLMs vs Finance-Specialized LLMs — Comparative Study', 2)
 add_body(
-    'Finance-specialized LLMs (FinGPT, Fin-R1, BloombergGPT) are trained on financial '
-    'market data: earnings reports, SEC filings, stock news, trading signals. The '
-    'FrontierFinance benchmark (Arcila et al., 2026) found that specialized models '
-    'perform better on market analysis and financial NLP classification, but are '
-    'significantly weaker on:'
+    'A key design question in SmartSpend\'s development was: should a finance-specialized '
+    'LLM (trained specifically on financial data) be used instead of a general-purpose '
+    'multilingual LLM? This section documents the structured comparative analysis and '
+    'the research basis for the final selection.'
 )
-add_bullet('Filipino-English conversational parsing ("nagbayad ako ng 150 sa Jollibee")')
-add_bullet('Philippine-specific financial knowledge (SSS, PhilHealth, Pag-IBIG, TRAIN Law BIR)')
-add_bullet('Agentic action JSON reliability (instruction following)')
-add_bullet('Consumer personal finance context (budget tracking, savings goals, expense categorization)')
+
+add_heading('Background: Categories of Financial AI Models', 3)
+add_table([
+    ['Category', 'Models', 'Training Data', 'Strengths', 'Weaknesses'],
+    ['Financial NLP Models\n(not conversational)',
+     'FinBERT, FLANG',
+     'Financial news, SEC filings, earnings call transcripts',
+     'Classification, sentiment analysis, named entity recognition in financial text',
+     'Not conversational; cannot parse natural language expense input; no function calling; no Filipino'],
+    ['Finance Instruction-Tuned LLMs',
+     'FinGPT (Liu et al., 2023)\nFinMA / PIXIU\nInvestLM\nFinTral',
+     'General LLM fine-tuned on 34+ financial data sources using LoRA/QLoRA; Bloomberg, Reuters, Yahoo Finance, SEC EDGAR',
+     'Strong on financial classification, sentiment, and NER tasks; outperforms general models on FinBench classification sub-tasks',
+     'Significantly weaker than frontier general models on reasoning, QA, and summarization (arXiv:2507.08015). Weak on multilingual (Filipino-English). No hosted free API. Self-hosting requires GPU.'],
+    ['Financial Reasoning LLMs',
+     'Fin-R1 (Liu et al., 2025)\n7B parameters, RL-trained',
+     'General LLM with reinforcement learning on financial reasoning datasets (FinQA, ConvFinQA)',
+     'SOTA on FinQA (avg 75.2) and ConvFinQA benchmarks; strong quantitative financial reasoning',
+     'Self-host only; no API service; poor Filipino-English; trained on formal financial Q&A (not conversational expense logging); no function calling'],
+    ['Domain-Specific Closed LLMs',
+     'BloombergGPT (Wu et al., 2023)\n50B parameters',
+     'Bloomberg\'s proprietary financial data corpus + general text',
+     'Established that domain-specific training improves financial NLP tasks vs same-size general LLMs',
+     'Closed-source; no API access; trained on Bloomberg market data (institutional, not consumer finance); no Filipino-English'],
+    ['General-Purpose Frontier LLMs',
+     'Gemini 3.1 Flash-Lite, GPT-5.6, Claude Fable 5, Groq LLaMA 3.3 70B',
+     'Broad multilingual training including Southeast Asian languages, consumer apps, government documents, conversational text',
+     'Best multilingual accuracy (Filipino-English); best instruction following and JSON reliability; fastest inference on free tiers; strong conversational financial reasoning',
+     'Not specifically trained on financial markets; may have lower accuracy on complex institutional financial analysis (equity valuation, options pricing)'],
+], col_widths=[Inches(1.3), Inches(1.3), Inches(1.4), Inches(1.5), Inches(1.5)], font_size=8.5)
+add_caption('Table 3.5. Categories of Financial AI Models — Architecture and Capability Overview')
+
+add_heading('Head-to-Head: General LLMs vs Finance-Specialized LLMs on SmartSpend\'s 5 Task Types', 3)
 add_body(
-    'The research conclusion: a finance LLM trained on Bloomberg data is worse than '
-    'Gemini 3.1 Flash-Lite at understanding a Filipino user\'s grocery receipt. '
-    'General multilingual frontier models are the correct choice for SmartSpend\'s '
-    'specific workload.'
+    'The following table directly compares how each model category performs on '
+    'SmartSpend\'s actual use cases — not on institutional financial benchmarks.'
+)
+
+add_table([
+    ['SmartSpend Task', 'Finance-Specialized LLMs\n(FinGPT, Fin-R1, BloombergGPT)', 'General Multilingual LLMs\n(Gemini 3.1 Flash-Lite, LLaMA 3.3 70B)', 'Winner\nfor SmartSpend'],
+    ['Filipino-English expense parsing\ne.g. "Nagbayad ako ng 150 sa Jollibee kaninang lunch"',
+     '❌ WEAK\nNot trained on Filipino/Tagalog text. No coverage of local merchant names (Jollibee, SM Hypermarket, Palengke). Self-hosted models have no multilingual fine-tuning.',
+     '✅ STRONG\nGoogle\'s training data covers Southeast Asian languages. Gemini correctly identifies Filipino food terms, merchant types, and Taglish constructions.',
+     'General LLM\n(Gemini 3.1 Flash-Lite)'],
+    ['Agentic action execution\n(parse intent → valid JSON for 1 of 31 action types)',
+     '❌ WEAK\nFinGPT and Fin-R1 are not instruction-tuned for function calling or structured JSON output. BloombergGPT has no function calling capability.',
+     '✅ STRONG\nGemini and GPT-5.6 have native function calling. LLaMA 3.3 70B reliably follows JSON schema instructions. SmartSpend\'s fallback parser brings success rate to ~99%.',
+     'General LLM\n(Gemini / Groq)'],
+    ['Philippine-specific financial advisory\ne.g. "How much SSS should I pay at ₱30K salary?"',
+     '❌ WEAK\nFinGPT and BloombergGPT are trained on US/international financial markets (SEC filings, Bloomberg data). No Philippine government financial data (SSS, PhilHealth, Pag-IBIG, BIR TRAIN Law).',
+     '✅ STRONG\nGemini models include Philippine government sources in training. Correctly computes SSS contributions, PhilHealth rates, BIR TRAIN Law tax brackets.',
+     'General LLM\n(Gemini 3.5 Flash)'],
+    ['Consumer personal finance reasoning\ne.g. "I spent ₱7,000 on food but my budget is ₱3,000. What should I do?"',
+     '⚠️ MODERATE\nFin-R1 achieves SOTA on formal FinQA datasets. But FinQA tests structured financial Q&A, not conversational personal budgeting advice.',
+     '✅ STRONG\nGeneral frontier LLMs excel at conversational advisory. Claude Fable 5 scored highest on the Hebbia Finance Benchmark for reading and synthesizing financial context (90.34% accuracy).',
+     'General LLM\n(paid tier);\nGemini Flash-Lite\nfor free tier'],
+    ['Financial calculations\n(FHS score, savings rate, budget utilization %)',
+     'N/A — Financial calculations\nshould NEVER be done by any LLM\n(see note below)',
+     'N/A — Financial calculations\nshould NEVER be done by any LLM\n(see note below)',
+     '🔴 Neither —\nAlways application code\n(score_service.dart)'],
+], col_widths=[Inches(1.5), Inches(2.2), Inches(2.2), Inches(0.8)], font_size=8.5)
+add_caption(
+    'Table 3.6. General LLMs vs Finance-Specialized LLMs on SmartSpend\'s 5 Task Types\n'
+    'Sources: FrontierFinance Benchmark (Arcila et al., 2026; arXiv:2608.11683); '
+    'Li et al. (2024); Liu et al. (2023, 2025); Wu et al. (2023); '
+    'FinRCA-Bench (Xiao et al., 2026; arXiv:2608.18534); '
+    'arXiv:2507.08015 (FinGPT evaluation); Hebbia Finance Benchmark (Claude Fable 5 result)'
+)
+
+add_body(
+    '🔴 Important note on financial calculations: The FinDeepIndicator study (2026) and '
+    'InvestLogicBench (arXiv:2608.06108, 2026) both found that LLMs — including frontier '
+    'models — exhibit significant numerical degradation on financial arithmetic. '
+    'SmartSpend\'s hybrid architecture addresses this directly: the LLM never computes '
+    'the FHS, savings rate, or budget utilization. These are always computed '
+    'deterministically by score_service.dart, then injected into the AI context as '
+    'pre-calculated values. The LLM\'s role is exclusively to explain and advise — '
+    'not to calculate.'
+)
+
+add_heading('Why Finance-Specialized LLMs Are Not the Right Choice for SmartSpend', 3)
+add_table([
+    ['Criterion', 'Finance-Specialized LLMs\n(FinGPT, Fin-R1, BloombergGPT)', 'General Multilingual LLMs\n(Gemini 3.1 Flash-Lite + Groq)'],
+    ['Filipino-English support',
+     '❌ None — trained on English financial corpora only',
+     '✅ Native — Gemini trained on SEA languages including Tagalog/Filipino'],
+    ['Philippine financial knowledge\n(SSS, PhilHealth, BIR TRAIN Law)',
+     '❌ None — trained on US/international institutional data',
+     '✅ Good — Gemini includes PH government sources; adequate for capstone scope'],
+    ['Function calling / JSON output',
+     '❌ None (FinGPT, Fin-R1, BloombergGPT do not support function calling)',
+     '✅ Native function calling in Gemini and GPT-5.6; JSON reliable in LLaMA 3.3 70B'],
+    ['Free API access for academic use',
+     '✅ Self-hosted (requires GPU server)\n❌ No hosted free API for any finance LLM',
+     '✅ Gemini Flash-Lite: 1,000/day free\n✅ Groq LLaMA 3.3 70B: ~14,400/day free'],
+    ['Conversational personal finance\n(budgeting, goals, Filipino lifestyle)',
+     '⚠️ Moderate on structured FinQA\n❌ Poor on conversational consumer queries',
+     '✅ Excellent on conversational advisory — Claude Fable 5, Gemini Pro lead'],
+    ['Financial market analysis\n(stock valuation, institutional finance)',
+     '✅ Strong — specifically trained for this',
+     '⚠️ Adequate for general queries; weaker on specialized institutional tasks'],
+    ['Suitable for SmartSpend?',
+     '❌ Not suitable — wrong domain (market data vs consumer finance), no Filipino support, no hosted API',
+     '✅ Best choice — multilingual, free tier, reliable JSON, conversational strength'],
+], col_widths=[Inches(1.7), Inches(2.4), Inches(2.4)], font_size=9)
+add_caption('Table 3.7. Finance-Specialized vs General LLMs — SmartSpend Suitability Comparison')
+
+add_body(
+    'Core research conclusion (Part 11 of RESEARCH_BASIS.md): A financial application '
+    'does not require a finance-specialized LLM as its primary language model. '
+    'Finance-specialized models are optimized for institutional financial NLP tasks '
+    '(market analysis, sentiment classification, earnings QA) — not for consumer personal '
+    'finance in Filipino-English. For SmartSpend\'s workload, modern general-purpose '
+    'multilingual frontier LLMs are both more capable and more accessible. '
+    'Source: FrontierFinance Benchmark (Arcila et al., 2026); Li et al. (2024); '
+    'FinRCA-Bench (Xiao et al., 2026).'
 )
 
 add_defense_box(
-    'Why not use GPT-5.6 or Claude Fable 5? They have the best benchmarks.',
-    'Both are paid-only with no free tier sufficient for sustained academic use. For 30 respondents at 60 messages/day each (~1,800 daily requests), GPT-5.6 Terra would cost approximately $43.20/day ($1,296/month) at $2/$12 per 1M tokens. Gemini Flash-Lite + Groq\'s generous free tier covers this at zero cost. The selection rationale prioritizes free-tier availability (15% weight) precisely because this is an academic capstone deployment, not a commercial product.'
+    'Have you considered using Fin-R1 or FinGPT since they\'re specifically for finance?',
+    'Yes — both were evaluated. Fin-R1 (Liu et al., 2025) achieves SOTA on FinQA and ConvFinQA benchmarks (avg 75.2), which test formal structured financial Q&A. However, it (1) has no hosted API — self-hosting requires a GPU server; (2) has no Filipino-English training; (3) has no function calling support for SmartSpend\'s 31 agentic actions; and (4) is optimized for institutional financial reasoning, not conversational consumer budgeting. FinGPT is strong on financial classification and sentiment, but the arXiv:2507.08015 evaluation found it significantly weaker than frontier general models on reasoning, QA, and summarization. For SmartSpend\'s Filipino-English expense parsing and agentic action execution, Gemini 3.1 Flash-Lite outperforms both at zero cost with a hosted API.'
 )
 add_defense_box(
-    'Why use 5 providers instead of just the best one?',
-    'The multi-provider architecture was validated by the FrontierFinance benchmark (2026) finding that tool harness architecture affects performance more than base model choice. Using 5 providers provides: (1) near-zero downtime — if Gemini hits rate limits, Groq takes over automatically; (2) cost optimization — simple queries route to fast/cheap models, complex queries to quality models; (3) Filipino-English backup — Groq LLaMA handles queries when Gemini\'s daily quota is exhausted; (4) academic completeness — the 5-provider system is a valid contribution to LLM deployment research in itself.'
+    'Does using a general LLM mean the AI gives less accurate financial advice?',
+    'No — and this is an important distinction. "Financial accuracy" means different things for different tasks. For institutional tasks (stock valuation, options pricing, SEC filing analysis), finance-specialized LLMs have advantages. For consumer personal finance advisory (budgeting, savings plans, SSS contributions, debt payoff strategy) in Filipino-English, general frontier LLMs are superior because they have broader multilingual training and stronger conversational reasoning. The FrontierFinance Benchmark (2026) confirmed that tool harness architecture — how the LLM receives financial context — affects performance more than whether the model is finance-specialized. SmartSpend\'s full-context injection architecture (injecting all user financial data before each query) is the key design choice, not the specific model used.'
+)
+
+add_defense_box(
+    'Why not use a hybrid — finance-specialized for calculations, general LLM for conversation?',
+    'SmartSpend already implements this hybrid — but the "specialized" layer is application code (score_service.dart), not a finance LLM. Financial calculations (FHS score, savings rate, budget utilization) are always computed deterministically by the Dart financial engine, then handed to the general LLM as pre-calculated context. This is more reliable than any LLM for numerical computation — FinDeepIndicator (2026) and InvestLogicBench (2026) both found that even frontier LLMs exhibit significant numerical degradation on financial arithmetic. Application code is always more accurate for math than any LLM.'
 )
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1010,6 +1121,7 @@ refs = [
     'Warren, E., & Tyagi, A. W. (2005). All your worth: The ultimate lifetime money plan. Free Press.',
     'World Economic Forum. (2024). How agentic AI will transform financial services. https://www.weforum.org/stories/2024/12/agentic-ai-financial-services-autonomy-efficiency-and-inclusion/',
     'Wu, S., et al. (2023). BloombergGPT: A large language model for finance. arXiv:2303.17564. https://arxiv.org/abs/2303.17564',
+    'Xiao, Z., et al. (2026). FinRCA-Bench: Benchmarking evidence retrieval and reasoning for financial AI systems. arXiv:2608.18534. https://arxiv.org/abs/2608.18534',
     'Yang, H., et al. (2023). FinGPT: Democratizing internet-scale data for financial large language models. arXiv:2307.10485. https://arxiv.org/abs/2307.10485',
     'Yomio. (2026). YNAB alternatives: Which budget app actually works in 2026? https://yomio.app/en/blog/ynab-alternatives',
 ]
