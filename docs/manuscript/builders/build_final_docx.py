@@ -25,8 +25,8 @@ from docx.oxml import OxmlElement
 from docx.shared import Pt, Inches
 
 BASE = os.path.dirname(__file__)
-SRC  = os.path.join(BASE, "SMARTSPEND_CAPSTONE_WORKING.docx")
-OUT  = os.path.join(BASE, "SMARTSPEND_FINAL_V5.docx")
+SRC  = os.path.join(BASE, '..', 'output', 'SmartSpend_Manuscript_Working.docx')
+OUT  = os.path.join(BASE, '..', 'output', 'SmartSpend_Manuscript_FINAL.docx')
 NS   = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 
 # ── Load source ────────────────────────────────────────────────────────────────
@@ -264,6 +264,40 @@ def _table(rows_data, style_id="TableGrid", col_pcts=None):
 def append_many(elements):
     for el in elements:
         body.append(el if el.getparent() is None else copy.deepcopy(el))
+
+# ── Figure embedding helper ────────────────────────────────────────────────────
+FIGURES_DIR = os.path.join(BASE, '..', 'figures')
+
+def _fig(filename, caption, width_inches=5.8):
+    """
+    Embed a PNG figure as a centered image paragraph followed by a bold
+    centered caption paragraph.  Uses out.add_picture() so the relationship
+    is correctly registered in the docx zip, then detaches the resulting <w:p>
+    element so it can be appended via append_many().
+    Returns a list of lxml elements: [image_para, caption_para].
+    """
+    img_path = os.path.join(FIGURES_DIR, filename)
+    if not os.path.exists(img_path):
+        # Return a placeholder if the file is missing
+        return [_p(f'[Figure missing: {filename}]', italic=True, align='center',
+                   before=240, after=0, line=276, fi=0)]
+
+    # Add a temporary paragraph to the document so python-docx wires the rId
+    tmp_para = out.add_paragraph()
+    run = tmp_para.add_run()
+    run.add_picture(img_path, width=Inches(width_inches))
+
+    # Center-align the paragraph
+    tmp_para.alignment = 1  # WD_ALIGN_PARAGRAPH.CENTER
+
+    # Detach from body — we'll re-attach via append_many in the right order
+    img_el = tmp_para._element
+    img_el.getparent().remove(img_el)
+
+    cap_el = _p(caption, bold=True, italic=False,
+                align='center', before=60, after=240, line=276, fi=0)
+
+    return [img_el, cap_el]
 
 # ── Patch source elements ──────────────────────────────────────────────────────
 def patch(el, old, new):
@@ -534,6 +568,10 @@ def chapter_three():
         ["Deployment","Build release APKs; prepare Demo Mode; publish GitHub Releases","Release APKs v2.9.9; project documentation"],
         ["Done/Review","Analyze SUS scores; review feedback; document recommendations","Final evaluation report; post-capstone roadmap"],
     ], col_pcts=[14, 52, 34]))
+    # Figure 2.2 — Agile Kanban Workflow diagram (follows Table 2.3)
+    els += _fig('Figure_2_2_Agile_Kanban_Workflow.png',
+                'Figure 2.2. Agile Kanban Workflow for SmartSpend Development',
+                width_inches=6.0)
     els += [
         _sbhdr("System Development Results — SmartSpend v2.9.9"),
         _body("SmartSpend v2.9.9 was developed across seven Kanban phases. Platform: Android (Flutter/Dart); Version: 2.9.9; SQLite schema: v11, 20 tables; APK size: 45 MB (arm64-v8a); AI providers: 5 (auto-failover); Primary model: Gemini 3.1 Flash-Lite; Agentic actions: 31; Input modalities: 6; Screenshot platforms: 40+; Achievement badges: 23; Daily quests: 10; Currencies: 57. GitHub: https://github.com/Zushikina-kun/smartspend-app"),
@@ -543,6 +581,9 @@ def chapter_three():
         _body("SUS scores were computed using the standard formula: odd-numbered items minus 1; 5 minus even-numbered items; sum multiplied by 2.5 (Brooke, 1996)."),
         _p("Overall SUS Score:  [INSERT SCORE]     Grade: [A/B/C]     Adjective: [per Bangor et al., 2009]     Target: ≥80 (Good)", bold=True, italic=True, align="center", before=240, after=0, line=480, fi=0),
         _p("[Insert SUS computation table and per-respondent scores here after Week 7 data collection.]", italic=True, align="center", before=240, after=0, line=480, fi=0),
+    ] + _fig('Figure_2_1_SUS_Score_Interpretation.png',
+             'Figure 2.1. System Usability Scale (SUS) Score Interpretation (Bangor et al., 2009)',
+             width_inches=5.2) + [
         _body("[Insert qualitative feedback summary here — expected themes: ease of AI chat, FHS utility, Lite Mode toggle, suggestions for future features.]"),
     ]
     return els
@@ -712,7 +753,9 @@ print("  [8] List of Tables")
 append_many(list_of_tables())
 
 # 9. CHAPTER I (source: ch1_start to ch2_start-1, images + tables included)
-print(f"  [9] Chapter I (src[{ch1_start}..{ch2_start-1}])")
+# Note: Figure 1.1 (index 107) and Figure 1.2 (index 128) are already embedded
+# as actual images in the source DOCX — they are carried over automatically.
+print(f"  [9] Chapter I (src[{ch1_start}..{ch2_start-1}]) — includes Figure 1.1 & 1.2 from source")
 append_many(src_els(ch1_start, ch2_start - 1))
 
 # 10. CHAPTER II (source: ch2_start to refs_start-1)

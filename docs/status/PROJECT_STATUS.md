@@ -1,6 +1,6 @@
 # SmartSpend — Project Status
-**Version:** 2.9.9 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** August 27, 2026
+**Version:** 2.9.10 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** September 3, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/CAPSTONE_REFERENCE.md`
@@ -56,6 +56,13 @@
 ---
 
 ## WHAT IS DONE ✅
+
+### v2.9.10 — September 3, 2026
+- [x] **Behavioral Feedback Layer** — new `lib/services/behavioral_feedback_service.dart` (all 8 UX backlog items): plain-language FHS score narrative, proactive celebration SnackBars, contextual purchase commentary after AI logging, supportive budget alerts with goal-linked loss-aversion framing, FMS next-step guidance card, FHS/FMS coach report (strengths + improvements), streak milestone celebrations, tappable streak badge + Daily Quests InfoButton
+- [x] **Docs full reorganization** — renamed all folders (Debug→debug, Screenshots→debug/screenshots, Image Converter→tools/image_converter), structured into reference/, guides/, status/, capstone/, manuscript/{output,progress_reports,builders,templates,archive}/, tools/, debug/
+- [x] **Manuscript fixes** — primary/secondary population framing in abstract + Ch.III, validator scope expanded, 29→31 agentic actions (4 locations in builder), v2.9.7→v2.9.9 (3 locations)
+- [x] **Progress reports Week 4 & 5** rebuilt with real app screenshots (6 + 8 images, accurate captions from visual inspection)
+- [x] GitHub release v2.9.10 published (tag pushed, CI/CD triggered)
 
 ### v2.9.9 — August 27, 2026
 - [x] **App Settings converted to dedicated full screen** (`settings_screen.dart`) — fully scrollable on all devices, no more bottom sheet cutoff
@@ -195,11 +202,11 @@
 
 ## PENDING CODE ISSUES (Low priority — pre-defense if time allows)
 
-| # | Issue | File | Fix |
-|---|-------|------|-----|
-| 1 | Google profile picture as default avatar | `login_screen.dart` `_syncAfterLogin()` | Check `user.photoURL` and save to profile if no photo set |
-| 2 | `insurance_screen.dart` line 476 | `insurance_screen.dart` | Change `value:` → `initialValue:` in DropdownButtonFormField |
-| 3 | `insurance_screen.dart` line 489 | `insurance_screen.dart` | Same fix — second DropdownButtonFormField |
+| # | Issue | File | Status |
+|---|-------|------|--------|
+| 1 | Google profile picture as default avatar | `login_screen.dart` `_syncAfterLogin()` | ✅ Already implemented — saves `user.photoURL` if no local photo set |
+| 2 | `insurance_screen.dart` line 476 | `insurance_screen.dart` | ✅ Already fixed — `initialValue` in place |
+| 3 | `insurance_screen.dart` line 489 | `insurance_screen.dart` | ✅ Already fixed — `initialValue` in place |
 
 ---
 
@@ -223,18 +230,18 @@
 | Market Insights (PSEi, fuel, CPI) | Needs external APIs | Medium |
 
 ### UX/Behavioral — Future Enhancement Backlog
-*(Added Sep 2026 — research-backed, not yet implemented)*
+*(Added Sep 2026 — **all 8 items implemented in v2.9.10** — `lib/services/behavioral_feedback_service.dart`)*
 
-| # | Feature | Description | Research Basis | Effort |
-|---|---------|-------------|----------------|--------|
-| 1 | **Proactive praise & celebration** | When FHS improves 5+ pts, streak hits milestone, or budget is maintained for 7 days — show a celebration card/animation with specific praise: "Your score went up 8 points! You've been under budget for 5 days in a row 🎉" | Bitrián et al. (2021) — positive reinforcement in gamified finance apps; self-determination theory | Low |
-| 2 | **Plain-language score narrative** | A 1–2 sentence plain-English summary on the home screen below the FHS score: "You're doing well on budgets but missed 3 days of logging — that's what's pulling your score down." Auto-generated from FHS components without requiring an AI call | Foresight score system (2026) — qualitative labels more actionable than raw numbers | Medium |
-| 3 | **Purchase commentary / real-time feedback** | After logging an expense, show contextual feedback based on context: "That's your 3rd Gaming purchase this week — you're at ₱2,800 vs usual ₱1,200 🎮" or "Good call logging this right away — keeps your streak going 🔥" | Meyll et al. (2025) Spendception — digital purchases feel less real; commentary recreates psychological awareness | Medium |
-| 4 | **FHS/FMS "What did I do wrong/right?" breakdown** | Expandable "Why is my score X?" section that reads like a personal coach report — separate "What's working" and "What to fix" sections, not just component bars | Financial Health Network (2026) — score explainability essential for behavior change | Medium |
-| 5 | **Smart encouragement on negative decisions** | When a budget is exceeded or FHS drops, show a supportive (not scolding) message: "Your Food budget went over — happens to everyone. Try the ₱X/day limit to stay on track 💪" | Thaler & Sunstein (2008) nudge theory — positive framing outperforms guilt-based messaging | Low |
-| 6 | **Goal milestone celebrations** | When a savings goal reaches 25%, 50%, 75%, 100% — show a celebration moment with specific praise about the behavior that got them there | Wajid et al. (2025) gamification — milestone rewards maintain momentum | Low |
-| 7 | **"Here's what to do next" FMS guidance** | Instead of only showing FMS component scores, add a single actionable next-step card: "Your weakest point is Data Completeness — set your income amount to unlock full scoring 👉" | AccountaPal, Khazneh (2026) — management score useful only if it drives action | Low |
-| 8 | **Contextual score explanations on every screen** | Every screen that shows a number (FHS, FMS, DTI, streak, quest progress) should have an accessible plain-language explanation of how it's computed and what the user did to get that specific value — not just a generic InfoButton | Davis (1989) TAM — perceived usefulness drives adoption | Medium |
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | **Proactive praise & celebration** | ✅ Done — celebration SnackBar on score +5pts, streak milestones, all-budgets-on-track |
+| 2 | **Plain-language score narrative** | ✅ Done — italic 1-2 sentence summary below FHS score on home screen |
+| 3 | **Purchase commentary / real-time feedback** | ✅ Done — contextual SnackBar after AI expense logging (tone-coded) |
+| 4 | **FHS/FMS "What did I do wrong/right?" breakdown** | ✅ Done — coach report in Analytics with strengths + improvements |
+| 5 | **Smart encouragement on negative decisions** | ✅ Done — supportive per-category budget card with goal-linked framing |
+| 6 | **Goal milestone celebrations** | ✅ Done (was already in savings_goals_screen.dart at 25/50/75/100%) |
+| 7 | **"Here's what to do next" FMS guidance** | ✅ Done — next-step card below FMS in Analytics + Profile |
+| 8 | **Contextual score explanations on every screen** | ✅ Done — InfoButton on Daily Quests; streak badge tappable with dialog |
 
 ### Blocked (external dependency)
 | Feature | Reason |
