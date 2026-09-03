@@ -14,6 +14,7 @@ Output:
 """
 
 import sys
+import os
 from pathlib import Path
 from docx import Document
 from docx.shared import Pt, Inches, RGBColor, Cm, Twips
@@ -373,36 +374,58 @@ def build_report(data: dict, output_path: Path):
     p_photo_inst.paragraph_format.space_after  = Pt(4)
     r = p_photo_inst.add_run(
         'Attach clear photos showing actual progress of the project. '
-        'Each photo should have a short caption describing what is shown. '
-        'Add more rows if needed.')
+        'Each photo should have a short caption describing what is shown.')
     r.font.name = FONT; r.font.size = Pt(9); r.font.color.rgb = GREY_TEXT
 
-    photos = doc.add_table(rows=6, cols=2)
-    set_table_width(photos, 10224)
-    set_table_borders(photos, "AAAAAA", 4)
-    col_w = 5112
-    photo_labels = [
-        ('[ Insert Photo 1 Here ]', '[ Insert Photo 2 Here ]'),
-        ('Caption: ',               'Caption: '),
-        ('[ Insert Photo 3 Here ]', '[ Insert Photo 4 Here ]'),
-        ('Caption: ',               'Caption: '),
-        ('[ Insert Photo 5 Here ]', '[ Insert Photo 6 Here ]'),
-        ('Caption: ',               'Caption: '),
-    ]
-    for row_i, (left_txt, right_txt) in enumerate(photo_labels):
-        for col_i, txt in [(0, left_txt), (1, right_txt)]:
-            c = photos.cell(row_i, col_i)
-            set_col_width(c, col_w)
-            is_placeholder = 'Insert' in txt
-            min_h = 36 if is_placeholder else 12
-            p = c.paragraphs[0]
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER if is_placeholder else WD_ALIGN_PARAGRAPH.LEFT
-            p.paragraph_format.space_before = Pt(min_h)
-            p.paragraph_format.space_after  = Pt(min_h)
-            r = p.add_run(txt)
-            r.font.name = FONT
-            r.font.size = Pt(8.5 if is_placeholder else 9)
-            r.font.color.rgb = GREY_TEXT if is_placeholder else DARK_TEXT
+    photo_pairs = data.get('photos', [])  # list of (path, caption) tuples
+    # Pad to even number
+    if len(photo_pairs) % 2 != 0:
+        photo_pairs = list(photo_pairs) + [('', '')]
+
+    col_w = 5112  # half of 10224
+
+    for pair_idx in range(0, len(photo_pairs), 2):
+        left_img,  left_cap  = photo_pairs[pair_idx]
+        right_img, right_cap = photo_pairs[pair_idx + 1]
+
+        # One table per pair: row 0 = images, row 1 = captions
+        tbl = doc.add_table(rows=2, cols=2)
+        set_table_width(tbl, 10224)
+        set_table_borders(tbl, "AAAAAA", 4)
+
+        for col_i, (img_path, caption) in enumerate([(left_img, left_cap), (right_img, right_cap)]):
+            img_cell  = tbl.cell(0, col_i)
+            cap_cell  = tbl.cell(1, col_i)
+            set_col_width(img_cell, col_w)
+            set_col_width(cap_cell, col_w)
+
+            # Image row
+            ip = img_cell.paragraphs[0]
+            ip.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            ip.paragraph_format.space_before = Pt(4)
+            ip.paragraph_format.space_after  = Pt(4)
+            if img_path and os.path.isfile(img_path):
+                run = ip.add_run()
+                # Portrait screenshot: fit width ~2.3" so two fit side-by-side
+                run.add_picture(img_path, width=Inches(2.3))
+            else:
+                r2 = ip.add_run('[ Insert Photo Here ]')
+                r2.font.name = FONT; r2.font.size = Pt(8.5)
+                r2.font.color.rgb = GREY_TEXT
+                ip.paragraph_format.space_before = Pt(36)
+                ip.paragraph_format.space_after  = Pt(36)
+
+            # Caption row
+            cp = cap_cell.paragraphs[0]
+            cp.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            cp.paragraph_format.space_before = Pt(3)
+            cp.paragraph_format.space_after  = Pt(3)
+            cap_text = caption if caption else 'Caption: '
+            r3 = cp.add_run(cap_text)
+            r3.font.name = FONT; r3.font.size = Pt(9)
+            r3.font.color.rgb = DARK_TEXT if caption else GREY_TEXT
+
+        doc.add_paragraph()
 
     doc.add_paragraph()
 
@@ -507,6 +530,8 @@ def _section_label(doc, text: str):
 
 # ── Report data ───────────────────────────────────────────────────────────────
 
+_SS = 'c:/xampp/htdocs/smartspend_app/docs/Screenshots/'
+
 WEEK4 = {
     'project_title': (
         'SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management '
@@ -581,6 +606,20 @@ WEEK4 = {
         'Obtain validator signatures on Appendix A validation certificates.\n\n'
         'Complete Pre-Final Defense presentation slides and conduct full rehearsal.'
     ),
+    'photos': [
+        (_SS + 'Screenshot_2026-09-03-09-25-32-851_com.lucidframe.smartspend_app.jpg',
+         'Home screen — spending summary (₱185), multi-period spending limits, Quick Log chips, and achievement badges'),
+        (_SS + 'Screenshot_2026-09-03-09-25-37-741_com.lucidframe.smartspend_app.jpg',
+         'Home screen — Financial Health Score (64/100 Fair), Financial Management Score (88/100 Expert Tracker), daily quests, and weekly challenge'),
+        (_SS + 'Screenshot_2026-09-03-09-25-47-423_com.lucidframe.smartspend_app.jpg',
+         'Analytics — spending by category pie chart (12 categories) and This Month vs Last Month comparison table'),
+        (_SS + 'Screenshot_2026-09-03-09-25-51-336_com.lucidframe.smartspend_app.jpg',
+         'Analytics — FHS Score Components breakdown (55/100) and Financial Management Score (FMS) full breakdown (88/100)'),
+        (_SS + 'Screenshot_2026-09-03-09-26-42-898_com.lucidframe.smartspend_app.jpg',
+         'App Settings — AI model selector showing Gemini 3.1 Flash-Lite as primary (1,000/day free), with 4 fallback providers listed'),
+        (_SS + 'Screenshot_2026-09-03-09-26-28-711_com.lucidframe.smartspend_app.jpg',
+         'Profile screen — FMS breakdown (88/100: Logging 13/25, Budget Setup 25/25, Goal Tracking 25/25, Data Completeness 25/25)'),
+    ],
 }
 
 WEEK5 = {
@@ -659,6 +698,24 @@ WEEK5 = {
         'Prepare SUS survey instruments and begin respondent recruitment '
         '(target: 30 respondents — 20 parents 35–55, 10 young professionals 21–35).'
     ),
+    'photos': [
+        (_SS + 'Screenshot_2026-09-03-09-26-17-229_com.lucidframe.smartspend_app.jpg',
+         'AI chat — language fix (Week 5 Bug #4): AI now replies in English when user writes in English, Taglish when Filipino'),
+        (_SS + 'Screenshot_2026-09-03-09-25-53-905_com.lucidframe.smartspend_app.jpg',
+         'Analytics — FMS breakdown showing Logging Consistency fix (Bug #2): 13/25 reflects honest score, not inflated 25/25'),
+        (_SS + 'Screenshot_2026-09-03-09-26-26-277_com.lucidframe.smartspend_app.jpg',
+         'Profile screen — FHS Score Breakdown with "See breakdown" scroll fix (Bug #3): tapping auto-scrolls to FMS section'),
+        (_SS + 'Screenshot_2026-09-03-09-25-49-402_com.lucidframe.smartspend_app.jpg',
+         'Analytics — spending by day-of-week heatmap and FHS 30-day score history chart with score history placeholder fix (Bug #5)'),
+        (_SS + 'Screenshot_2026-09-03-09-27-45-644_com.github.android.jpg',
+         'GitHub repository — smartspend-app showing v2.9.9 as Latest release (9 total releases published)'),
+        (_SS + 'Screenshot_2026-09-03-09-28-02-361_com.github.android.jpg',
+         'GitHub v2.9.9 release notes showing all 5 bug fixes and CI/CD pipeline addition (release.yml)'),
+        (_SS + 'Screenshot_2026-09-03-09-28-06-286_com.github.android.jpg',
+         'GitHub v2.9.9 release assets — 3 signed APK variants: arm64-v8a (45 MB), armeabi-v7a (37 MB), x86_64 (48 MB)'),
+        (_SS + 'Screenshot_2026-09-03-09-30-44-957_com.github.android.jpg',
+         'GitHub Actions — release.yml CI/CD workflow: triggers on version tag push (v*.*.*), sets up Java 17 and Flutter 3.41.6'),
+    ],
 }
 
 
