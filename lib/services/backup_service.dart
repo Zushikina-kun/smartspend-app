@@ -55,7 +55,7 @@ class BackupService {
     return {
       'version': 9,
       'exported_at': DateTime.now().toIso8601String(),
-      'app_version': '2.9.9',
+      'app_version': '2.9.11',
       'expenses': expenses.map((e) => e.toMap()).toList(),
       'budgets': budgets.map((b) => b.toMap()).toList(),
       'goals': goals,

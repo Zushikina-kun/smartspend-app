@@ -1,5 +1,5 @@
 # SmartSpend — Defense Guide
-**Version:** 2.9.9 | **August 2026** | **Lucid Frame**
+**Version:** 2.9.11 | **August 2026** | **Lucid Frame**
 
 > This is your single reference for both the DEMO and the DEFENSE.
 > Read it fully before your pre-final and final defenses.
@@ -275,7 +275,7 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
+*SmartSpend v2.9.11 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*
 
 
@@ -549,10 +549,10 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
+*SmartSpend v2.9.11 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
 
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*
+*SmartSpend v2.9.11 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*
 *You built something genuinely impressive. Know the logic, not the memorization.*

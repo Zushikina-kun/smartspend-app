@@ -11,7 +11,7 @@
 | **Institution** | Lorma Colleges, College of Computer Studies and Engineering (CCSE) |
 | **Academic Year** | 2026–2027, 1st Semester |
 | **Date Submitted** | September 3, 2026 — Week 4 |
-| **Teacher-in-Charge** | Janelli M. Mendez, DIT |
+| **Teacher-in-Charge** | Shekiro R. Raposas |
 | **Reference** | Capstone Project 2 Syllabus — 1st Sem AY2026-2027 |
 
 ---
@@ -340,7 +340,7 @@ All changes validated with `dart analyze` — zero errors before building.
 ## 10. ADVISER CONSULTATION NOTES
 
 **Consultation date:** _______________
-**Teacher-in-Charge:** Janelli M. Mendez, DIT
+**Teacher-in-Charge:** Shekiro R. Raposas
 **Topics to raise:**
 - v2.9.9 release — 31 agentic actions, Taglish AI coverage, FMS on Home/Analytics
 - Pre-Final Defense scheduling (Week 6 target)
@@ -372,4 +372,4 @@ We, the members of Lucid Frame, hereby certify that the information in this prog
 
 *SmartSpend v2.9.9 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2026–2027 (1st Semester)*
-*Teacher-in-Charge: Janelli M. Mendez, DIT*
+*Teacher-in-Charge: Shekiro R. Raposas*

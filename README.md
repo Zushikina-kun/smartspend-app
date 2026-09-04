@@ -1,7 +1,7 @@
 # Smart Spend
 
 **AI-Assisted Financial Tracking & Advisory**
-Version 2.9.8 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 2.9.11 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
 ---
 
@@ -95,12 +95,18 @@ flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-i
 **Release APKs:**
 ```
 build/app/outputs/flutter-apk/
-├── app-armeabi-v7a-release.apk  (~36 MB)  ← older/32-bit phones (Android 5+)
-├── app-arm64-v8a-release.apk    (~44 MB)  ← modern 64-bit phones ← primary
-└── app-x86_64-release.apk       (~47 MB)  ← emulators
+├── app-armeabi-v7a-release.apk  (~37 MB)  ← older/32-bit phones (Android 5+)
+├── app-arm64-v8a-release.apk    (~45 MB)  ← modern 64-bit phones ← primary
+└── app-x86_64-release.apk       (~48 MB)  ← emulators
 ```
 
-Distribute both `arm64-v8a` and `armeabi-v7a` to cover all Android phones.
+**CI/CD — Automated Release Pipeline:**
+Pushing a version tag automatically builds and publishes all 3 signed APKs to GitHub Releases via GitHub Actions:
+```bash
+git tag v2.9.X
+git push origin v2.9.X
+```
+Workflow: `.github/workflows/release.yml` — uses stored secrets for keystore signing.
 
 ---
 
@@ -119,21 +125,21 @@ Distribute both `arm64-v8a` and `armeabi-v7a` to cover all Android phones.
 
 | File | Contents |
 |------|---------|
-| `DOCUMENTATION.md` | Full technical documentation |
 | `HOWTORUN.md` | Setup, run, and build instructions |
 | `SECURITY.md` | Security policy and credential management |
-| `docs/SYSTEM_OVERVIEW.md` | System architecture and overview — for adviser/panel |
-| `docs/DEFENSE_REVIEWER.md` | Pre-defense quick reference — key numbers, FHS formula, Q&A |
-| `docs/DEMO_SCRIPT.md` | Demo script for video recording or live Zoom |
-| `docs/CAPSTONE_REFERENCE.md` | Single source of truth for capstone paper documentation |
-| `docs/PAPER_GUIDE.md` | Chapter-by-chapter guide for writing Chapters 1–5 |
-| `docs/MANUSCRIPT_FIXES.md` | 19 step-by-step Google Docs fixes (CTRL+F locations included) |
-| `docs/BENCHMARK.md` | 14-app comparison + 13-model LLM benchmark + behavioral finance |
-| `docs/RESEARCH_BASIS.md` | Academic citations for every feature — FHS, LLM, gamification, behavioral finance |
-| `docs/APPLICATION_PIPELINE.md` | How the app works step by step, for anyone to understand |
-| `docs/PROJECT_STATUS.md` | What's done, what's left, roadmap, timeline, coding conventions |
-| `docs/PLAYSTORE_GUIDE.md` | Play Store deployment and API security guide |
-| `docs/PROGRESS_REPORT_WEEK1.md` | Week 1 Capstone 2 progress report |
+| `docs/reference/SYSTEM_OVERVIEW.md` | System architecture and overview — for adviser/panel |
+| `docs/guides/DEFENSE_GUIDE.md` | Pre-defense quick reference — key numbers, FHS formula, demo script, Q&A |
+| `docs/reference/CAPSTONE_REFERENCE.md` | Single source of truth for capstone paper documentation |
+| `docs/guides/MANUSCRIPT_GUIDE.md` | Chapter-by-chapter manuscript guide + 19 Google Docs fixes |
+| `docs/reference/BENCHMARK.md` | 22-app comparison + 19-model LLM benchmark + behavioral finance |
+| `docs/reference/RESEARCH_BASIS.md` | Academic citations for every feature — FHS, LLM, gamification, behavioral finance |
+| `docs/reference/APPLICATION_PIPELINE.md` | How the app works step by step, for anyone to understand |
+| `docs/reference/FEATURE_DOCS.md` | Full feature documentation |
+| `docs/status/PROJECT_STATUS.md` | What's done, what's left, roadmap, timeline |
+| `docs/guides/PLAYSTORE_GUIDE.md` | Play Store deployment and API security guide |
+| `docs/manuscript/archive/PROGRESS_REPORT_WEEK1.md` | Week 1 Capstone 2 progress report |
+| `docs/manuscript/builders/` | Python scripts that auto-generate all DOCX/PPTX deliverables |
+| `docs/manuscript/output/` | Built deliverables — FINAL.docx, defense slides, SUS sheet, etc. |
 
 ---
 

@@ -250,7 +250,7 @@ const _sections = [
       _HelpItem(
         title: "What else can the AI do?",
         body:
-            "The AI can manage almost everything in the app via chat. It supports 29+ action types:\n\n"
+            "The AI can manage almost everything in the app via chat. It supports 31 action types:\n\n"
             "📝 Expenses: log, update (fix category/amount/name/date), delete (requires typing DELETE)\n"
             "💰 Income: set monthly income, log income entries\n"
             "📊 Budgets: set or update category budgets\n"

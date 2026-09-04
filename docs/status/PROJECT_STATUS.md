@@ -1,5 +1,5 @@
 # SmartSpend — Project Status
-**Version:** 2.9.10 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.11 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** September 3, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
@@ -322,5 +322,5 @@ When ready: research items 1–3 first (highest leverage), then design a unified
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame*
+*SmartSpend v2.9.11 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027 (1st Semester)*

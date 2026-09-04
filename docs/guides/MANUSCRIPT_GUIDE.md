@@ -1,5 +1,5 @@
 # SmartSpend — Manuscript Guide
-**Version:** 2.9.9 | **August 2026** | **Lucid Frame**
+**Version:** 2.9.11 | **August 2026** | **Lucid Frame**
 
 > One document for all manuscript-related work.
 > PART 1 = Paper revision guide (how to write each chapter, what to say).
@@ -777,4 +777,4 @@ These things from the actual app should be in Chapter 3:
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*
+*SmartSpend v2.9.11 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*

@@ -1,6 +1,6 @@
 # SmartSpend — System Overview
 ## How the Application Works
-**Version:** 2.9.9 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.11 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 **Prepared for:** Adviser Introduction & Panel Defense Reference
 
 ---
@@ -330,7 +330,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame*
+*SmartSpend v2.9.11 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Capstone Adviser: Ellen F. Mangaoang, MIT*

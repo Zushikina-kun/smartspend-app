@@ -11,7 +11,7 @@
 | **Institution** | Lorma Colleges, College of Computer Studies and Engineering (CCSE) |
 | **Academic Year** | 2026–2027, 1st Semester |
 | **Date Submitted** | September 4, 2026 — Week 5 |
-| **Teacher-in-Charge** | Janelli M. Mendez, DIT |
+| **Teacher-in-Charge** | Shekiro R. Raposas |
 | **Reference** | Capstone Project 2 Syllabus — 1st Sem AY2026-2027 |
 
 ---
@@ -189,7 +189,7 @@ git tag v2.9.10 && git push origin v2.9.10
 ## 7. ADVISER CONSULTATION NOTES
 
 **Consultation date:** _______________
-**Teacher-in-Charge:** Janelli M. Mendez, DIT
+**Teacher-in-Charge:** Shekiro R. Raposas
 
 **Topics to raise:**
 - v2.9.9 — real-device debug-driven fixes demonstrating rigorous QA process
@@ -222,4 +222,4 @@ We, the members of Lucid Frame, hereby certify that the information in this prog
 
 *SmartSpend v2.9.9 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2026–2027 (1st Semester)*
-*Teacher-in-Charge: Janelli M. Mendez, DIT*
+*Teacher-in-Charge: Shekiro R. Raposas*

@@ -1,6 +1,6 @@
 # SmartSpend — Comprehensive App & LLM Benchmark
 ## Competitor Analysis + AI Model Comparison
-**Last Updated:** August 27, 2026 | **Version:** 2.9.9 | **Group:** Lucid Frame
+**Last Updated:** August 27, 2026 | **Version:** 2.9.11 | **Group:** Lucid Frame
 **Sources:** PCMag 2026, NerdWallet 2026, CNBC 2026, AIMUltiple 2026, Artificial Analysis 2026, Gemini API Docs, Groq/Cerebras benchmarks, micro1.ai REALM benchmark, juaninvestor.com, BudgetPH, Alkansya AI, Sentimo, Monarch Money What's New 2026, Google DeepMind Gemini 3.7 Flash (Aug 2026)
 
 > Content was paraphrased and summarized for compliance with licensing restrictions.
@@ -458,7 +458,7 @@ Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://pl
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame*
+*SmartSpend v2.9.11 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 
 ---
@@ -556,7 +556,7 @@ Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://pl
 ### Why Context Injection (Not RAG)
 A typical SmartSpend user has 20–50 expenses, 5–10 budgets, 3–5 goals — all fitting in ~1,000 tokens. RAG's vector search overhead is unnecessary when the full dataset can be injected directly into each AI message.
 
-### Actual Performance Metrics (SmartSpend v2.9.9)
+### Actual Performance Metrics (SmartSpend v2.9.11)
 
 | Metric | Value |
 |--------|-------|
