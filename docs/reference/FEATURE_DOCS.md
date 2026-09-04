@@ -1,6 +1,6 @@
 # Smart Spend — Application Documentation
 
-**Version:** 2.9.9
+**Version:** 2.9.11
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
@@ -1978,6 +1978,6 @@ These are intentional design decisions or platform constraints — not bugs.
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame*
+*SmartSpend v2.9.11 — Lucid Frame*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2026–2027 (1st Semester)*

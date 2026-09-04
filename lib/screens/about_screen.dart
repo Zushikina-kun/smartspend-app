@@ -29,7 +29,7 @@ class AboutScreen extends StatelessWidget {
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
             const Text(
-              "Version 2.9.6",
+              "Version 2.9.11",
               style: TextStyle(color: Colors.grey, fontSize: 13),
             ),
             const SizedBox(height: 6),
@@ -98,7 +98,7 @@ class AboutScreen extends StatelessWidget {
               ),
               (
                 "🏆 Achievements & Badges",
-                "29 earnable badges + 10 daily quests with streak tracking",
+                "23 earnable badges + 10 daily quests with streak tracking",
               ),
               (
                 "🎮 Daily Challenges",
@@ -384,7 +384,7 @@ class AboutScreen extends StatelessWidget {
 
             _infoCard(context, [
               "Framework: Flutter (Dart)",
-              "AI Engine: Multi-model LLM — Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras (29 agentic actions, auto-failover)",
+              "AI Engine: Multi-model LLM — Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras (31 agentic actions, auto-failover)",
               "Local Database: SQLite (sqflite) v11",
               "Cloud Auth & Sync: Firebase Auth + Firestore",
               "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules, insurance_policies",

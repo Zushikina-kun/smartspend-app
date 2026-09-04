@@ -52,7 +52,7 @@ class _FeatureTourState extends State<FeatureTour>
           "🎙️ Speak — just say what you spent\n"
           "📷 Camera — scan receipts or barcodes\n"
           "✏️ Type — describe it in plain language\n\n"
-          "The AI logs expenses, updates wallets, sets budgets, tracks debts, and more — 29 action types, all automatic.",
+          "The AI logs expenses, updates wallets, sets budgets, tracks debts, and more — 31 action types, all automatic.",
     ),
     _TourStep(
       icon: Icons.home_outlined,
@@ -100,7 +100,7 @@ class _FeatureTourState extends State<FeatureTour>
           "• Tag expenses with #hashtags for filtering\n"
           "• Shake phone to undo last AI action (60 sec window)\n"
           "• Profile → App Settings for Balance Mode & toggles\n"
-          "• 29 action types + daily quests — check Hub → Achievements",
+          "• 31 action types + daily quests — check Hub → Achievements",
     ),
   ];
 

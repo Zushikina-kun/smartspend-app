@@ -1,6 +1,6 @@
 # SmartSpend — Research Basis & Academic References
 ## Theoretical Foundations for All Features and Functions
-**Version:** 2.9.9 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.11 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **Purpose:** This document answers the question "where did you get the basis for this?" for every major feature. Use this when writing Chapter 2 (Review of Related Literature) and defending before the panel.
 
 > **For Ma'am:** Every feature in SmartSpend is grounded in an existing framework, research, book, or validated standard — not made up. This document traces each one.
@@ -410,7 +410,7 @@ Yang, H., et al. (2023). *FinGPT: Democratizing internet-scale data for financia
 ## PART 9 — CUSTOMIZABLE MINIMAL MODE (v2.9.3)
 
 ### Feature Description
-SmartSpend v2.9.3 adds per-section visibility toggles in App Settings. Users can individually hide 10 optional sections across the home screen and analytics, keeping only the core sections they need.
+SmartSpend v2.9.11 adds per-section visibility toggles in App Settings. Users can individually hide 10 optional sections across the home screen and analytics, keeping only the core sections they need.
 
 **Core sections always visible (cannot be hidden):**
 - Home: Spending summary, FHS score card, wallet balances, budgets/limits, bill calendar, feature portals
@@ -451,7 +451,7 @@ Davis (1989) established that perceived ease of use is a primary driver of techn
 The research below responds to an important architectural question raised during adviser consultation:
 > *"Should logging consistency be part of the Financial Health Score, or is financial health something different from financial management behavior?"*
 
-After reviewing 12+ existing financial health scoring systems, the research confirms: **financial health and financial management behavior are distinct concepts that should ideally be measured separately.** SmartSpend v2.9.5 implements both a Financial Health Score and a separate Financial Management Score as a result.
+After reviewing 12+ existing financial health scoring systems, the research confirms: **financial health and financial management behavior are distinct concepts that should ideally be measured separately.** SmartSpend v2.9.11 implements both a Financial Health Score and a separate Financial Management Score as a result.
 
 ---
 
@@ -908,7 +908,7 @@ Wajid, F., et al. (2025). Gamification: Revolutionizing financial planning syste
 
 ### 14.1 What It Is (in plain terms)
 
-SmartSpend v2.9.5 introduced the **Financial Management Score (FMS)** as a companion metric to the Financial Health Score (FHS). While the FHS measures *financial outcomes* (savings rate, overspend, budget adherence), the FMS measures *financial management behavior* — specifically, how consistently and diligently the user manages their financial data inside the app.
+SmartSpend v2.9.11 introduced the **Financial Management Score (FMS)** as a companion metric to the Financial Health Score (FHS). While the FHS measures *financial outcomes* (savings rate, overspend, budget adherence), the FMS measures *financial management behavior* — specifically, how consistently and diligently the user manages their financial data inside the app.
 
 The FMS is displayed separately from the FHS to avoid mixing behavioral inputs with outcome measurements, in line with research recommendations from Financial Health Network (2026) and Elenvo AI (2026).
 
@@ -1018,7 +1018,7 @@ Thaler, R. H., & Sunstein, C. R. (2008). *Nudge: Improving decisions about healt
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame*
+*SmartSpend v2.9.11 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Prepared for: Chapter 2 (Review of Related Literature), Chapter 3 (Methodology) defense preparation, and adviser consultation*
 *Last updated: August 2026*

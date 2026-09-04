@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.9';
-  static const _prefKey = 'whats_new_seen_2_9_9';
+  static const _version = '2.9.11';
+  static const _prefKey = 'whats_new_seen_2_9_11';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,7 +20,43 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
+      '🧠',
+      'Score Narrative & Coach Report (v2.9.10)',
+      'The AI now generates a weekly summary card on your Home screen with '
+          'context-aware feedback like "You\'re spending more than usual on Food." '
+          'A full Coach Report is also available in Profile — your weekly financial '
+          'letter with one habit recommendation.'
+    ),
+    (
+      '🎉',
+      'Score Celebrations & Milestone Toasts (v2.9.10)',
+      'Get an animated celebration when your Financial Health Score crosses '
+          'key milestones (50, 65, 75, 90). Goal progress also notifies you '
+          'at 25%, 50%, 75%, and 100% of your savings target.'
+    ),
+    (
+      '💬',
+      'Purchase Commentary & Supportive Alerts (v2.9.10)',
+      'The AI now adds a brief behavioral note to large Want purchases logged '
+          'via receipt scan or voice. Budget overspend warnings now include a '
+          'constructive follow-up suggestion instead of a plain red banner.'
+    ),
+    (
       '📊',
+      'FMS Next-Step Guidance (v2.9.10)',
+      'The Financial Management Score card now shows a single prioritized '
+          'action tip when any sub-component is below 20/25 — so you always '
+          'know exactly what to do next to improve your score.'
+    ),
+    (
+      '❓',
+      'Score Explanation Tooltips (v2.9.10)',
+      'Tap the info button on your FHS card to open a plain-language '
+          'explanation of why your score is what it is — one sentence '
+          'per component.'
+    ),
+    (
+      '✅',
       'Analytics Fixed for Lightweight Mode',
       'The 50/30/20 card, Tax & Savings card, and Allowance Overview no longer '
           'appear when income tracking is OFF — they were showing meaningless '
@@ -31,14 +67,7 @@ class WhatsNewScreen extends StatelessWidget {
       'Logging Consistency Score is Now Honest',
       'Fixed: logging just once on the 2nd of the month no longer gives 25/25 '
           '"Logging every active day ✓". Now correctly reflects how many days '
-          'have passed vs. how many you actually logged. Affects both FHS and FMS.'
-    ),
-    (
-      '🔗',
-      '"See Breakdown" Actually Scrolls to It',
-      'Tapping "See breakdown →" on the home screen Management Score strip now '
-          'auto-scrolls directly to the FMS section in Profile — '
-          'no more landing at the top and wondering where it is.'
+          'have passed vs. how many you actually logged.'
     ),
     (
       '🌐',
@@ -46,13 +75,6 @@ class WhatsNewScreen extends StatelessWidget {
       'The AI now detects whether you\'re writing in English, Filipino, or '
           'Taglish and matches your language automatically. You can also say '
           '"speak English" or "mag-Tagalog ka" to explicitly switch.'
-    ),
-    (
-      '📈',
-      'Score History Chart Explained',
-      'Added a clear placeholder when score history has fewer than 2 data '
-          'points — explains that the score is only saved on days you open '
-          'the app, and how to build a fuller chart over time.'
     ),
   ];
 

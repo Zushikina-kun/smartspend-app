@@ -11,7 +11,7 @@
 | **Institution** | Lorma Colleges, College of Computer Studies and Engineering (CCSE) |
 | **Academic Year** | 2026–2027, 1st Semester |
 | **Date Submitted** | August 11, 2026 — Week 1 |
-| **Teacher-in-Charge** | Janelli M. Mendez, DIT |
+| **Teacher-in-Charge** | Shekiro R. Raposas |
 | **Reference** | Capstone Project 2 Syllabus — 1st Sem AY2026-2027 (see docs/Capstone_Project_2_Syllabus_1st_Sem_AY2026-2027.docx) |
 
 ---
@@ -290,8 +290,8 @@ Key screens to show:)*
 *(To be filled in during/after Week 1 consultation)*
 
 **Consultation date:** _______________
-**Teacher-in-Charge:** Janelli M. Mendez, DIT
-**Capstone Adviser:** Johnny Verzola, MTS *(note: adviser status pending — Verzola advised the group to seek a new adviser for Capstone 2 due to his expected resignation; reassignment to be confirmed with department)*
+**Teacher-in-Charge:** Shekiro R. Raposas
+**Capstone Adviser:** Ellen F. Mangaoang, MIT*
 **Issues raised:**
 - _______________
 **Recommendations:**
@@ -385,5 +385,5 @@ We, the members of Lucid Frame, hereby certify that the information in this prog
 
 *SmartSpend v2.9.2 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT — Capstone Project 2, 2026–2027 (1st Semester)*
-*Teacher-in-Charge: Janelli M. Mendez, DIT*
-*Capstone Adviser: Johnny Verzola, MTS (reassignment pending)*
+*Teacher-in-Charge: Shekiro R. Raposas*
+*Capstone Adviser: Ellen F. Mangaoang, MIT*
