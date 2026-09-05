@@ -516,9 +516,9 @@ def chapter_three():
         _chdr("RESULTS AND DISCUSSION"),
         _body("This chapter presents the results of the study based on the three stated objectives. It discusses the outcomes of each objective in relation to the development and evaluation of the SmartSpend mobile application."),
         _sbhdr("Objective 1 — Assessment of Financial Management Practices"),
-        _p("[NOTE: Complete after survey data collection (Week 7). Insert frequency tables, percentage distributions, and interview themes here.]", italic=True, align="both", before=240, after=0, line=480, fi=720),
-        _body("The first objective was to assess the existing financial management practices, common budgeting challenges, and expense tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 in San Fernando City, La Union. Data was gathered through a validated structured survey questionnaire and supplementary interviews."),
-        _body("A total of thirty (30) respondents participated — 20 parents aged 35 to 55 (primary target population) and 10 young professionals aged 21 to 35 (secondary demographic), purposively selected from La Union based on the defined inclusion criteria. [Insert Table 3.1 Respondent Profile here after data collection.] Survey results revealed that [insert findings on expense tracking methods, budgeting frequency, and financial challenges]. These findings are consistent with BSP (2021) data indicating that a large proportion of Filipino adults do not maintain formal written budgets."),
+        _p("[NOTE: Complete after data collection (Week 7). Insert frequency tables, percentage distributions, and themes here.]", italic=True, align="both", before=240, after=0, line=480, fi=720),
+        _body("The first objective was to assess the existing financial management practices, common budgeting challenges, and expense tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 in San Fernando City, La Union. Data was gathered through a structured questionnaire administered to the respondents prior to the SmartSpend system demonstration."),
+        _body("A total of thirty (30) respondents participated — 20 parents aged 35 to 55 (primary target population) and 10 young professionals aged 21 to 35 (secondary demographic), purposively selected from La Union based on the defined inclusion criteria. [Insert Table 3.1 Respondent Profile here after data collection.] Results revealed that [insert findings on expense tracking methods, budgeting frequency, and financial challenges]. These findings are consistent with BSP (2021) data indicating that a large proportion of Filipino adults do not maintain formal written budgets."),
         _body("The assessment findings confirmed the presence of financial management challenges identified in the literature — manual effort burden, irregular tracking behavior, and lack of proactive feedback — and validated the need for an AI-assisted tool tailored to the Filipino context."),
         _sbhdr("Objective 2 — System Development and LLM Benchmarking"),
         _body("The second objective was to design and develop the SmartSpend mobile application, including the selection of an appropriate Large Language Model API through comparative technical evaluation."),
@@ -788,7 +788,6 @@ print(f"  [15] Appendix B Survey (src[{app_a_start}..{end_survey}])")
 append_many([pb(), _chdr("APPENDIX B"), _chdr("SURVEY QUESTIONNAIRE")])
 for i in range(app_a_start, end_survey + 1):
     el = src_body[i]; txt = get_text(el).strip().upper()
-    # Skip old appendix headers — we already added our own
     skip_texts = {"APPENDIX A", "SURVEY QUESTIONNAIRE",
                   "APPENDIX A – SURVEY QUESTIONNAIRE",
                   "APPENDIX A - SURVEY QUESTIONNAIRE"}
@@ -817,7 +816,8 @@ if app_c_src >= 0:
         el = src_body[i]; txt = get_text(el).strip().upper()
         skip = {"APPENDIX C", "SYSTEM USABILITY SCALE (SUS) QUESTIONNAIRE",
                 "SUS QUESTIONNAIRE", "APPENDIX C – SUS QUESTIONNAIRE",
-                "APPENDIX C - SUS QUESTIONNAIRE"}
+                "APPENDIX C - SUS QUESTIONNAIRE",
+                "APPENDIX D", "APPENDIX D – SYSTEM USABILITY SCALE (SUS) QUESTIONNAIRE"}
         if any(txt == s or txt.startswith(s) for s in skip): continue
         append_many([copy.deepcopy(el)])
 
