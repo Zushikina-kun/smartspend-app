@@ -325,7 +325,7 @@ $expenseSummary
 Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$fhsSummary$gapSummary$insuranceSummary
 
 Philippine Financial Reference (use when relevant):
-SSS contributions (2024): 14% of MSC — Employee 4.5%, Employer 9.5%. Brackets: ₱4K-₱30K MSC range. Min: ₱560/mo employee. Max: ₱1,350/mo employee.
+SSS contributions (2025): 15% of MSC — Employee 5%, Employer 10%. Brackets: ₱4K-₱35K MSC range. Min: ~₱200/mo employee (at ₱4K floor). Max: ₱1,750/mo employee (at ₱35K ceiling).
 PhilHealth: 5% of basic salary (50/50 employer/employee). Min ₱500/mo total. Max ₱5,000/mo total.
 Pag-IBIG: Employee 2%, Employer 2% of monthly salary. Max employee contribution ₱200/mo. MP2: 6-9% annual dividend, tax-free.
 BIR TRAIN Law tax brackets (annual): ₱250K exempt; ₱250K-400K: 15%; ₱400K-800K: 20%; ₱800K-2M: 25%; ₱2M-8M: 30%; above ₱8M: 35%.
@@ -899,6 +899,35 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "is_want: true=discretionary (snacks/drinks/junk food, entertainment, gaming, shopping, gifts, travel, dining out at restaurants). false=essential (meals/breakfast/lunch/dinner/brunch, transport, groceries, medicine, tuition, bills, health).\n"
         "IMPORTANT is_want rules: Breakfast/Lunch/Dinner/Brunch/Meal → is_want:false (essential food). Snacks/drinks/energy drinks/junk food → is_want:true. Jeepney/tricycle/bus/commute → is_want:false. Games/steam → is_want:true.\n"
         "BULK RENAME: 'fix capitalization' → fire update_expense with new_item_name for EACH expense. ACTION lines required.\n"
+        "APP GUIDE (use this when user asks how to navigate, find a feature, or use the app):\n"
+        "• AI Chat (center bottom nav): log expenses, set budgets/goals/debts, update wallets, ask PH finance questions, shake to undo within 60s\n"
+        "• Home screen: spending card, FHS score card (tap for breakdown), wallet card (green), Log Allowance button (blue, for students), spending personality, AI insights, quick access 6-card grid, daily quests, mood check-in, subscription summary card, spending forecast card\n"
+        "• Analytics tab: pie chart, 50/30/20 tracker, wants vs needs bar, this month vs last month table, FHS component breakdown, period comparison, day-of-week heatmap, long-range forecast, market insights (PHP exchange rates), AI financial advice, monthly summary\n"
+        "• Hub (grid icon, bottom nav): Budgets, Savings Goals, Debts & Lending (I Owe / Owed to Me / Plans tabs), Recurring Transactions, Bill Calendar, Import from Bank/GCash, Insurance & Contributions, Achievements, Custom Categories, Auto-Categorization Rules\n"
+        "• Profile tab: account type, FHS/FMS score cards, net worth card (tap → wallet sheet), backup/restore, App Settings (auto-deduct, mood check-in, impulse pause, budget alerts, balance mode, tracking mode/lightweight toggle, spending limit), App Lock, Manage Categories, Reset All Data, Debug Log\n"
+        "• Smart Import (📷 camera icon in AI chat): Live Camera (barcode/QR/receipts), Single Photo (auto-detects content), Batch Screenshots (up to 10 images, 40+ platforms auto-detected), Paste Text (GCash/BPI/Maya bank history)\n"
+        "• Settings location: Profile → App Settings\n"
+        "• Spending Limit: Profile → Spending Limits (separate tile, NOT inside App Settings — pick period: daily/weekly/monthly/yearly + amount)\n"
+        "• Daily Spending Limit: Profile → Spending Limits → select 'Day' period\n"
+        "• Lightweight Mode toggle: Profile → App Settings → Tracking Mode → turn off 'Track income & wallets'\n"
+        "• Balance Mode toggle: Profile → App Settings → Balance mode\n"
+        "• AI daily limit reset: AI screen → ⋮ menu (top right) → Reset Daily Limit\n"
+        "• Demo Mode: login screen → 'Try Demo'; or Profile → Load Demo Data\n"
+        "• Financial Health Certificate: Hub → shareable FHS certificate card\n"
+        "• FHS score appears: Home screen card, Profile screen, Analytics, AI chat context, Achievements, Financial Health Certificate\n"
+        "• 14 built-in categories: Food, Transportation, Bills, Shopping, Entertainment, Gaming, Health, Education, Personal Care, Clothing, Gifts, Travel, Pets, Others\n"
+        "• Want/Need tag: toggle in Add/Edit Expense screen below Category dropdown; Wants=discretionary, Needs=essential\n"
+        "• Transaction tags: Add/Edit Expense → Tags field (up to 5 per expense, e.g. #capstone #shared)\n"
+        "• Filter transactions by tag: Transactions screen → tag filter chips\n"
+        "• Shake to undo: shake phone within 60 seconds after any AI action (only works on AI screen)\n"
+        "• DELETE confirmation: when deleting an expense via AI, user must type the word DELETE in their message\n"
+        "• Payday cycle filter in Analytics: Analytics → tap 'Payday Cycle' chip → set payday date\n"
+        "• Bill Calendar colors: 🟠 Recurring bills, 🟢 Income, 🔴 Debt payments, 🩵 Goal deadlines, 🟣 Installment days\n"
+        "• Score dots on Bill Calendar: 🟢 80+ (Good), 🟡 60–79 (Fair), 🔴 <60 (Needs Attention)\n"
+        "• Gamification: Daily Quests (4 per day, pool of 10) + Weekly Challenge (rotates every Monday) + 23 Achievement badges (Hub → Achievements)\n"
+        "• Subscription auto-detection: runs in background daily; teal card on home screen when recurring pattern found\n"
+        "• Conversation history: long-press any AI message to copy it\n"
+        "If the user asks how to do something in the app and it's NOT covered above, say: 'I'm not sure about that specific step — check the Help & Guide in Profile for detailed instructions on every feature.'\n\n"
         "${_fullContext.isNotEmpty ? "\nUser's financial context:\n$_fullContext" : ""}";
 
     // Load conversation summary if available — prepend to history for context
@@ -1348,6 +1377,33 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       case 'add_insurance_policy':
         return p['name'] != null &&
             (p['premium_amount'] as num?)?.toDouble() != null;
+      // ── Additional explicit validators for riskier actions ──────────────────
+      case 'delete_by_date':
+        // Must have date range AND confirmed flag — same safety bar as delete_expense
+        return p['confirmed'] == true &&
+            p['start_date'] != null &&
+            p['end_date'] != null;
+      case 'split_expense':
+        // Multi-write action: logs expense + creates debt — require all critical fields
+        return p['split_with'] != null &&
+            (p['your_share'] as num?)?.toDouble() != null &&
+            ((p['your_share'] as num?)?.toDouble() ?? 0) > 0;
+      case 'update_expense':
+        // Must provide at least one identifier (id or item_name) to find the record
+        return p['id'] != null ||
+            (p['item_name'] != null &&
+                (p['item_name'] as String).trim().isNotEmpty);
+      case 'delete_goal':
+        return p['name'] != null && (p['name'] as String).trim().isNotEmpty;
+      case 'delete_recurring':
+        return p['title'] != null && (p['title'] as String).trim().isNotEmpty;
+      case 'add_recurring':
+        return p['title'] != null &&
+            (p['amount'] as num?)?.toDouble() != null &&
+            ((p['amount'] as num?)?.toDouble() ?? 0) > 0;
+      case 'plan_salary_split':
+        final income = (p['income'] as num?)?.toDouble() ?? 0;
+        return income > 0;
       default:
         // Unknown action type — allow through (forward-compatible with new actions)
         return true;

@@ -250,7 +250,7 @@ const _sections = [
       _HelpItem(
         title: "What else can the AI do?",
         body:
-            "The AI can manage almost everything in the app via chat. It supports 31 action types:\n\n"
+            "The AI can manage almost everything in the app via chat. It supports 34 action types:\n\n"
             "📝 Expenses: log, update (fix category/amount/name/date), delete (requires typing DELETE)\n"
             "💰 Income: set monthly income, log income entries\n"
             "📊 Budgets: set or update category budgets\n"
@@ -344,7 +344,7 @@ const _sections = [
         title: "What is the Spending Limit?",
         body:
             "The Spending Limit lets you set a single total cap for your spending over a chosen period — without needing to set per-category budgets.\n\n"
-            "To set: Profile → ⚙️ App Settings → Spending Limit → pick a period (Day/Week/Month/Year) → enter an amount → tap ✓\n\n"
+            "To set: Profile → Spending Limits → pick a period (Day/Week/Month/Year) → enter an amount → tap ✓\n\n"
             "A progress bar appears on the home screen showing how much of your limit you've used.\n\n"
             "Warnings:\n"
             "• At 80%: orange warning — 'X% of limit used'\n"
@@ -713,7 +713,7 @@ const _sections = [
       _HelpItem(
         title: "Daily spending limit bar",
         body:
-            "If you've set a daily spending limit (Profile → Daily Spending Limit), a progress bar appears on the home screen showing today's spending vs your cap. Turns orange at 80%, red when exceeded.",
+            "If you've set a daily spending limit (Profile → Spending Limits → Day), a progress bar appears on the home screen showing today's spending vs your cap. Turns orange at 80%, red when exceeded.",
         example:
             'Limit ₱300 → spent ₱240 today → bar shows 80% with orange warning.',
       ),
@@ -1058,7 +1058,7 @@ const _sections = [
         title: "Daily Quests",
         body:
             "4 rotating quests appear on the home screen every day — inspired by gacha game dailies.\n\n"
-            "Possible quests (4 shown per day from a pool of 6):\n"
+            "Possible quests (4 shown per day from a pool of 10):\n"
             "• Log an expense today\n"
             "• Stay under your daily budget\n"
             "• Log a Need expense\n"
@@ -1188,21 +1188,25 @@ const _sections = [
     ],
   ),
   _HelpSection(
-    title: "Daily Spending Limit",
+    title: "Spending Limits",
     icon: Icons.today_outlined,
     color: Colors.deepOrange,
     items: [
       _HelpItem(
-        title: "Setting a daily limit",
+        title: "Setting a spending limit",
         body:
-            "Go to Profile → Daily Spending Limit. Enter your daily cap (e.g. ₱300). The home screen shows a progress bar for today's spending. You get a notification at 80% and when you exceed it.",
+            "Go to Profile → Spending Limits. Pick a period (Day, Week, Month, or Year) and enter your cap amount, then tap ✓. The home screen shows a progress bar for the current period's spending vs your cap.\n\n"
+            "Warnings:\n"
+            "• At 80%: orange warning\n"
+            "• At 100%+: red alert — 'Limit exceeded by ₱X'\n\n"
+            "You can have multiple limits active at once (e.g. a daily limit AND a monthly limit).",
         example:
-            "Daily limit ₱300 → spent ₱240 today → progress bar shows 80% with orange warning.",
+            "Daily limit ₱300 → spent ₱240 today → bar shows 80% with orange warning.",
       ),
       _HelpItem(
-        title: "Disabling the daily limit",
+        title: "Disabling a spending limit",
         body:
-            "Set the limit to 0 or leave it blank to disable. The progress bar disappears from the home screen.",
+            "Go to Profile → Spending Limits → tap the period you want to remove → set the amount to 0 or clear it. The progress bar for that period disappears from the home screen.",
       ),
     ],
   ),

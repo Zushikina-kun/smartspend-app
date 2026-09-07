@@ -8,12 +8,12 @@ class LLMService {
   static String get _groqUrl => AppConfig.groqBaseUrl;
   static String get _groqModel => AppConfig.groqModel;
 
-  // Fallback: Gemini free tier (student edu account)
-  // Set this if you have a working Gemini key
+  // Fallback: Gemini free tier — uses OpenAI-compatible endpoint matching AppConfig
+  // Only active if _geminiKey is set (currently empty — uses Groq as primary)
   static const _geminiKey = "";
   static const _geminiUrl =
-      "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent";
-
+      "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+  static const _geminiModel = "gemini-3.1-flash-lite";
   static Future<String> _callGroq(String systemPrompt, String userPrompt,
       {int maxTokens = 512}) async {
     try {
@@ -60,16 +60,18 @@ class LLMService {
   static Future<String> _callGeminiFallback(String system, String user) async {
     final response = await http
         .post(
-          Uri.parse("$_geminiUrl?key=$_geminiKey"),
-          headers: {"Content-Type": "application/json"},
+          Uri.parse(_geminiUrl),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $_geminiKey",
+          },
           body: jsonEncode({
-            "contents": [
-              {
-                "parts": [
-                  {"text": "$system\n\n$user"}
-                ]
-              }
-            ]
+            "model": _geminiModel,
+            "messages": [
+              {"role": "system", "content": system},
+              {"role": "user", "content": user},
+            ],
+            "temperature": 0.1,
           }),
         )
         .timeout(const Duration(seconds: 20));
@@ -78,7 +80,7 @@ class LLMService {
       throw Exception("Fallback AI failed (${response.statusCode})");
     }
     final data = jsonDecode(response.body);
-    return data['candidates'][0]['content']['parts'][0]['text'] as String;
+    return data['choices'][0]['message']['content'] as String;
   }
 
   /// Parse any user input into structured expense data.

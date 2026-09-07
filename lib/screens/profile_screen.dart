@@ -595,8 +595,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _showBIRBreakdown() async {
     if (_monthlyIncome <= 0) return;
     final tax = TaxService.estimateTax(_monthlyIncome);
-    // PH government contributions (approximate)
-    final sss = (_monthlyIncome * 0.045).clamp(560.0, 1350.0); // employee share
+    // PH government contributions — 2025 rates
+    // SSS: 5% employee share, MSC range ₱4K–₱35K → employee max ₱1,750/mo
+    final sss = (_monthlyIncome * 0.05).clamp(200.0, 1750.0);
+    // PhilHealth: 5% total, 2.5% employee share, ₱500 floor / ₱5,000 ceiling total → ₱250/₱2,500 employee
     final philhealth =
         (_monthlyIncome * 0.025).clamp(250.0, 2500.0); // employee 2.5%
     const pagibig = 200.0; // max employee contribution

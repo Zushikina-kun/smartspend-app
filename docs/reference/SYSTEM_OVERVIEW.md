@@ -269,7 +269,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | Offline-first | 100% works with no internet — syncs when back online |
 | Demo Mode | Full app with pre-loaded Filipino sample data — no sign-up needed |
 | App Lock | PIN + biometric, cold-start only (like GCash/Maya) |
-| 5 AI providers | Auto-failover: Gemini 3.1 → Gemini 3.5 → Groq LLaMA 3.3 → LLaMA 3.1 → Cerebras |
+| 6 AI providers | Auto-failover: Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → LLaMA 4 Scout (Groq) → LLaMA 3.3 70B (Groq) → LLaMA 3.1 8B (Groq) → GPT-OSS 120B (Cerebras) |
 | Filipino-first | Understands jeepney, GCash, Jollibee, SSS, siomai, 11.11 sales |
 | Multi-currency | 57 currencies, live exchange rates |
 
@@ -310,7 +310,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | Feature | Tarsi | YNAB | Monarch | Copilot | BudgetPH | Alkansya AI | GCash Pera Coach | **SmartSpend** |
 |---------|-------|------|---------|---------|----------|-------------|-----------------|---------------|
 | Offline mode | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
-| AI chat assistant | ❌ | ❌ | ❌ | ⚠️ Basic | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A | ✅ **31 actions** |
+| AI chat assistant | ❌ | ❌ | ❌ | ⚠️ Basic | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A | ✅ **34 actions** |
 | Financial Health Score | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ | ❌ | ✅ 0–100 dual-mode |
 | Filipino-English AI | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ PH languages | ✅ Full Taglish |
 | Expense Tracking | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
@@ -324,7 +324,7 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | Gamification | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ | ✅ 23 badges |
 | Works without bank API | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
 
-**SmartSpend leads:** Only app with 31 agentic AI actions + offline + Filipino-English + free + multi-modal input.
+**SmartSpend leads:** Only app with 34 agentic AI actions + offline + Filipino-English + free + multi-modal input.
 **Closest Filipino competitor:** BudgetPH — strong on paluwagan, 15th/30th cycle, and budget scoring, but no voice/OCR/barcode/agentic AI.
 **Notable 2026 entrant:** GCash Pera Coach (March 2026) — AI literacy tool inside GCash, not an expense tracker. Validates the PH AI finance market but solves a different problem.
 

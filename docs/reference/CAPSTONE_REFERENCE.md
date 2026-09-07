@@ -76,16 +76,17 @@ SmartSpend uses a **multi-provider agentic AI system** with automatic failover:
 
 | Priority | Provider | Model | Daily Limit | Best For |
 |----------|----------|-------|-------------|----------|
-| 1 | Google AI Studio | Gemini 3.1 Flash-Lite | 1,000/day FREE | Default — best quality/cost |
-| 2 | Google AI Studio | Gemini 3.5 Flash | 250/day FREE | Complex financial queries |
-| 3 | Groq | LLaMA 3.3 70B | 14,400/day FREE | High quality open-source |
-| 4 | Groq | LLaMA 3.1 8B | 14,400/day FREE | Fast responses |
-| 5 | Cerebras | LLaMA 3.1 70B | 1M tokens/day FREE | Backup |
+| 1 | Google AI Studio | Gemini 3.1 Flash-Lite | ~1,000/day FREE | Default — best quality/cost |
+| 2 | Google AI Studio | Gemini 3.5 Flash | ~1,500/day FREE | Complex financial queries |
+| 3 | Groq | LLaMA 4 Scout | 1,000/day FREE | Best open-source, Tagalog native |
+| 4 | Groq | LLaMA 3.3 70B | 1,000/day FREE | Strong reasoning fallback |
+| 5 | Groq | LLaMA 3.1 8B | 14,400/day FREE | Fast tasks, highest volume |
+| 6 | Cerebras | GPT-OSS 120B | 1M tokens/day FREE | Last resort, ~3,000 t/s |
 
 **Smart routing:**
-- `fast` tier — expense logging, simple queries → LLaMA 3.1 8B
-- `smart` tier — analysis, planning → LLaMA 3.3 70B or Gemini 3.1 Flash-Lite
-- `financial_advice` tier — SSS/tax/debt strategy → Gemini 3.5 Flash (thinking-capable)
+- `fast` tier — expense logging, simple queries → LLaMA 3.1 8B (14,400/day)
+- `smart` tier — analysis, planning → LLaMA 4 Scout or Gemini 3.1 Flash-Lite
+- `financial_advice` tier — SSS/tax/debt strategy → Gemini 3.5 Flash (best reasoning)
 
 **Why not RAG:**
 Per-user data (20-50 expenses, 5-10 budgets, 3-5 goals) fits entirely in the context window. Dynamic full-context injection gives the AI always-current data without vector search overhead.
@@ -108,7 +109,7 @@ The AI autonomously executes these actions — writing directly to the database:
 **Insurance & Contributions:** add_insurance_policy
 **Account:** set_account_type
 
-**Total: 31 agentic actions** (was 0 in Capstone 1)
+**Total: 34 agentic actions** (was 0 in Capstone 1)
 
 ---
 
@@ -172,8 +173,8 @@ The FHS and all associated alerts are **current-period aware**:
 | API Security | Firebase Remote Config | API keys never in APK binary |
 | App Check | Firebase App Check | Debug mode (monitoring); Play Integrity for Play Store |
 | AI — Primary | Gemini 3.1 Flash-Lite (Google) | 1,000 req/day free, 1M context, best Filipino-English |
-| AI — Fallback 1/2 | Gemini 3.5 Flash / Groq LLaMA 3.3 70B | Auto-failover when primary limit hit |
-| AI — Fallback 3/4 | Groq LLaMA 3.1 8B / Cerebras LLaMA 3.1 | Speed fallbacks — up to 1,800 t/s |
+| AI — Fallback 1/2 | Gemini 3.5 Flash / LLaMA 4 Scout (Groq) | Auto-failover when primary limit hit |
+| AI — Fallback 3/4/5 | LLaMA 3.3 70B / LLaMA 3.1 8B (Groq) / GPT-OSS 120B (Cerebras) | Speed & volume fallbacks — 14,400/day on 8B, 1M tokens/day on Cerebras |
 | OCR | Google ML Kit Text Recognition | Latin script, EXIF-corrected |
 | Barcode | ML Kit Barcode Scanning + MobileScanner | Live + gallery detection |
 | Charts | fl_chart | Pie, bar, line, scatter |
@@ -223,8 +224,8 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 ## 7. KEY FEATURES LIST (75+)
 
 ### AI & Smart Import
-- 31 agentic AI actions (autonomous data management)
-- Multi-provider LLM with automatic failback (5 providers)
+- 34 agentic AI actions (autonomous data management)
+- Multi-provider LLM with automatic failback (6 providers)
 - Task-based model routing (fast/smart/financial_advice tiers)
 - Smart Import: Live Camera, Single Photo, Batch Screenshots, Paste Text
 - Barcode detection from gallery images (product lookup)
@@ -379,7 +380,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 | Feature | SmartSpend | YNAB | Monarch | Copilot | Rocket Money | Tarsi (PH) | **BudgetPH** | **Alkansya AI** | **GCash Pera Coach** |
 |---------|-----------|------|---------|---------|--------------|------------|-------------|----------------|---------------------|
-| AI Chat (agentic) | ✅ 31 actions | ❌ | ❌ | ⚠️ Basic | ❌ | ❌ | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A |
+| AI Chat (agentic) | ✅ 34 actions | ❌ | ❌ | ⚠️ Basic | ❌ | ❌ | ⚠️ Insights | ✅ Chat | ✅ Literacy Q&A |
 | Filipino-English AI | ✅ Full Taglish | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ❌ | ✅ | ✅ Multiple PH languages |
 | Expense Tracking | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ (advisory only) |
 | Voice Input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -399,7 +400,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | Round-Up Savings | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 **SmartSpend unique advantages:**
-- Only app with 31 agentic AI actions — AI takes real autonomous actions on user data
+- Only app with 34 agentic AI actions — AI takes real autonomous actions on user data
 - Only app combining Taglish AI + offline + PH financial knowledge + free + multi-modal input
 - Only app with batch screenshot import (40+ platform types auto-detected)
 - Only app with dual-mode FHS (Full + Lightweight) + Logging Gap Detection
@@ -420,11 +421,15 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 - Function calling: native support
 - Not deprecated (replaces Gemini 2.5 Flash-Lite which was retired from new API users in early 2026)
 
-### Fallback: Groq LLaMA 3.3 70B
-- 14,400 requests/day FREE
-- ~315 tokens/second — near-instant responses
-- Strong function calling and reasoning
-- Used as Fallback 2 in the auto-failover chain (Primary is Gemini 3.1 Flash-Lite)
+### Fallback 2: LLaMA 4 Scout (Groq)
+- 1,000 requests/day FREE, 30,000 TPM, ~460 tokens/second
+- Tagalog is one of Meta's 12 explicitly fine-tuned languages — best open-source for Filipino-English
+- Used as Fallback 2 in the auto-failover chain
+
+### Fallback 3: Groq LLaMA 3.3 70B
+- 1,000 requests/day FREE (NOTE: RPD reduced from 14,400 in late 2025)
+- ~315 tokens/second — strong reasoning
+- Used as Fallback 3 in the auto-failover chain
 
 ### Why not GPT-5.6/Claude Fable 5:
 Require paid API keys — not viable for academic project without budget.
@@ -449,7 +454,7 @@ A: SmartSpend's AI executes 31 autonomous financial management actions — from 
 A: RAG is for large knowledge bases (thousands of documents). A typical user has 20-50 expenses, 5-10 budgets, 3-5 goals — small enough for full context injection. Our approach gives faster, always-current data access without vector search overhead.
 
 **Q: "What if the API goes down?"**
-A: 5-provider automatic fallback: Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras. Manual expense entry via the form works fully offline without AI.
+A: 6-provider automatic fallback: Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → LLaMA 4 Scout (Groq) → LLaMA 3.3 70B (Groq) → LLaMA 3.1 8B (Groq) → GPT-OSS 120B (Cerebras). Manual expense entry via the form works fully offline without AI.
 
 **Q: "Why no bank integration?"**
 A: Philippine open banking (BSP Open Finance) only launched in pilot in July 2025 with UnionBank as the first participant. SmartSpend is architecturally ready for integration as the framework matures. Currently, users import via GCash/bank history text paste or batch screenshot import (40+ platforms).

@@ -442,29 +442,72 @@ def build_report(data: dict, output_path: Path):
             c.paragraphs[0].clear()
 
     # Top labels
-    for col_i, txt, bold, sz, col_rgb in [
-        (0, 'Group Leader / Representative', False, 8.5, GREY_TEXT),
-        (2, data['adviser_name'],             True,  10,  DARK_TEXT),
-    ]:
-        p = sig.cell(0, col_i).paragraphs[0]
-        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p.paragraph_format.space_before = Pt(2)
-        r = p.add_run(txt)
-        r.font.name = FONT; r.font.size = Pt(sz); r.bold = bold; r.font.color.rgb = col_rgb
+    # Left: "Submitted by" label
+    p0l = sig.cell(0, 0).paragraphs[0]
+    p0l.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p0l.paragraph_format.space_before = Pt(2)
+    p0l.paragraph_format.space_after  = Pt(0)
+    r0l = p0l.add_run('Submitted by')
+    r0l.font.name = FONT; r0l.font.size = Pt(8.5); r0l.font.color.rgb = GREY_TEXT
+
+    # Right: adviser name + "Noted by" label
+    p0r = sig.cell(0, 2).paragraphs[0]
+    p0r.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p0r.paragraph_format.space_before = Pt(2)
+    p0r.paragraph_format.space_after  = Pt(0)
+    r0r = p0r.add_run('Noted by')
+    r0r.font.name = FONT; r0r.font.size = Pt(8.5); r0r.font.color.rgb = GREY_TEXT
 
     # Signature space (middle row)
-    for col_i in [0, 2]:
-        p = sig.cell(1, col_i).paragraphs[0]
-        p.paragraph_format.space_before = Pt(20)
-        p.paragraph_format.space_after  = Pt(4)
+    # Left: embed actual signature image if available, else blank space
+    _sig_img = 'c:/xampp/htdocs/smartspend_app/docs/manuscript/progress_reports/draw_sign.png'
+    p_sig = sig.cell(1, 0).paragraphs[0]
+    p_sig.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_sig.paragraph_format.space_before = Pt(4)
+    p_sig.paragraph_format.space_after  = Pt(2)
+    if os.path.isfile(_sig_img):
+        run_sig = p_sig.add_run()
+        run_sig.add_picture(_sig_img, width=Inches(1.6))
+    else:
+        p_sig.paragraph_format.space_before = Pt(28)
+        p_sig.paragraph_format.space_after  = Pt(4)
 
-    # Underline / role row
-    for col_i, txt in [(0, 'Signature over Printed Name'), (2, 'Teacher in Charge')]:
-        p = sig.cell(2, col_i).paragraphs[0]
-        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p.paragraph_format.space_before = Pt(0)
-        r = p.add_run(txt)
-        r.font.name = FONT; r.font.size = Pt(8.5); r.font.color.rgb = GREY_TEXT
+    # Right: adviser signature space stays blank
+    p_adv = sig.cell(1, 2).paragraphs[0]
+    p_adv.paragraph_format.space_before = Pt(28)
+    p_adv.paragraph_format.space_after  = Pt(4)
+
+    # Underline / role row — includes printed name under leader signature
+    # Left cell: printed name bold + role label below
+    p_left = sig.cell(2, 0).paragraphs[0]
+    p_left.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_left.paragraph_format.space_before = Pt(0)
+    p_left.paragraph_format.space_after  = Pt(0)
+    r_name = p_left.add_run('Brix A. Directo')
+    r_name.font.name = FONT; r_name.font.size = Pt(9); r_name.bold = True
+    r_name.font.color.rgb = DARK_TEXT
+    # Role label as a second paragraph inside the cell
+    p_role = sig.cell(2, 0).add_paragraph()
+    p_role.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_role.paragraph_format.space_before = Pt(1)
+    p_role.paragraph_format.space_after  = Pt(0)
+    r_role = p_role.add_run('Group Leader / Signature over Printed Name')
+    r_role.font.name = FONT; r_role.font.size = Pt(7.5); r_role.font.color.rgb = GREY_TEXT
+
+    # Right cell: adviser name bold + role label below
+    p_right = sig.cell(2, 2).paragraphs[0]
+    p_right.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_right.paragraph_format.space_before = Pt(0)
+    p_right.paragraph_format.space_after  = Pt(0)
+    r_adv_name = p_right.add_run(data['adviser_name'])
+    r_adv_name.font.name = FONT; r_adv_name.font.size = Pt(9); r_adv_name.bold = True
+    r_adv_name.font.color.rgb = DARK_TEXT
+    p_adv_role = sig.cell(2, 2).add_paragraph()
+    p_adv_role.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_adv_role.paragraph_format.space_before = Pt(1)
+    p_adv_role.paragraph_format.space_after  = Pt(0)
+    r_adv = p_adv_role.add_run('Teacher in Charge / Signature over Printed Name')
+    r_adv.font.name = FONT; r_adv.font.size = Pt(7.5); r_adv.font.color.rgb = GREY_TEXT
 
     # ── Footer ───────────────────────────────────────────────────────────────
     footer = section.footer
@@ -530,7 +573,7 @@ def _section_label(doc, text: str):
 
 # ── Report data ───────────────────────────────────────────────────────────────
 
-_SS = 'c:/xampp/htdocs/smartspend_app/docs/Screenshots/'
+_SS = 'c:/xampp/htdocs/smartspend_app/docs/debug/screenshots/'
 
 WEEK4 = {
     'project_title': (
@@ -547,78 +590,98 @@ WEEK4 = {
     ],
     'completed': (
         'Completed a comprehensive documentation audit resolving 30+ inconsistencies '
-        'across all project documents (CRITICAL: screen count 36→37, service count 23→26, '
-        'stale model names GPT-4o→GPT-5.6 / Claude 3.5→Claude Fable 5, input modality '
-        'count 7→6, FMS formula corrected from 3×33.3 pts to 4×25 pts matching code).\n\n'
-        'Implemented 6 AI coverage gaps identified through a systematic audit: '
-        '(1) Added set_spending_limit agentic action — AI can now set daily/weekly/'
-        'monthly/yearly spending caps directly from chat; '
+        'across all project documents. Critical corrections included: screen count '
+        'updated from 36 to 37, service count from 23 to 26, stale AI model names '
+        'updated (GPT-4o to GPT-5.6, Claude 3.5 to Claude Fable 5), input modality '
+        'count corrected from 7 to 6, and the Financial Management Score (FMS) formula '
+        'fixed from 3×33.3 pts to 4×25 pts to match the actual implementation.\n\n'
+        'Implemented 6 AI coverage gaps identified through systematic audit:\n'
+        '(1) Added set_spending_limit agentic action — AI can now set daily, weekly, '
+        'monthly, and yearly spending caps directly from natural language chat;\n'
         '(2) Added add_insurance_policy action — AI can create SSS, PhilHealth, '
-        'Pag-IBIG, and insurance entries; '
-        '(3) Added Rule 12 (Taglish triggers) to system prompt for all 31 action types; '
-        '(4) Budget queries now route to smart model tier (LLaMA 70B/Gemini) instead '
-        'of fast 8B; '
-        '(5) set_budget fallback parser added; '
-        '(6) Auto-categorization rules injected into AI context.\n\n'
-        'Added Financial Management Score (FMS) mini-cards to both Home screen '
-        '(compact strip) and Analytics screen (full breakdown after FHS section). '
-        'FHS "Unmeasured" label added when income is not set (grey chip, dashed bar).\n\n'
-        'Fixed ScanReviewScreen code duplication — removed 295-line embedded class '
-        'from smart_camera_screen.dart, replaced with import of standalone file.\n\n'
-        'Fixed recurring transaction "Add Recurring" button — now saves entry directly '
-        'without navigating to an empty screen.\n\n'
-        'Rebuilt SMARTSPEND_FINAL_V5.docx (17 sections, 63 refs, 7 images). '
-        'Action count updated 29→31 across all 12 documentation files. '
-        'Released v2.9.8 to GitHub with 3 APK variants.'
+        'Pag-IBIG, and private insurance entries on command;\n'
+        '(3) Added Rule 12 (Taglish language triggers) to the system prompt across '
+        'all 34 action types for Filipino-English mixed input;\n'
+        '(4) Budget queries now route to the smart model tier (LLaMA 70B or Gemini) '
+        'instead of the fast 8B model for improved accuracy;\n'
+        '(5) set_budget fallback parser added for edge-case input formats;\n'
+        '(6) Auto-categorization rules injected into AI context for consistent '
+        'category assignment.\n\n'
+        'Added Financial Management Score (FMS) mini-cards to both the Home screen '
+        '(compact strip showing 88/100 Expert Tracker) and the Analytics screen '
+        '(full 4-component breakdown). FHS "Unmeasured" label added when income '
+        'tracking is disabled — displays as a grey chip with dashed progress bar.\n\n'
+        'Fixed ScanReviewScreen code duplication — removed a 295-line embedded class '
+        'from smart_camera_screen.dart and replaced it with an import of the '
+        'standalone file, eliminating a maintenance risk.\n\n'
+        'Fixed the recurring transaction "Add Recurring" button — the entry now saves '
+        'directly to the database without navigating to a blank screen first.\n\n'
+        'Rebuilt SMARTSPEND_FINAL_V5.docx: 17 sections, 63 APA references, 7 embedded '
+        'figures. Action count updated from 29 to 31 across all 12 documentation files. '
+        'Released v2.9.8 to GitHub with 3 signed APK variants '
+        '(arm64-v8a, armeabi-v7a, x86_64).'
     ),
     'ongoing': (
-        'Manuscript revision: Chapters 1–4 complete in SMARTSPEND_REVISED_MANUSCRIPT.md. '
-        'Google Docs version pending Fixes 11–16 from MANUSCRIPT_GUIDE.md (account type '
-        'flexibility, target population reframing, respondent criteria, validator roles).\n\n'
-        'Pre-Final Defense preparation: demo flow rehearsal (8–9 minutes per '
-        'DEFENSE_GUIDE.md Part 2), presentation slides in progress.\n\n'
-        'SUS survey instrument finalization for Week 7 administration.'
+        'Manuscript revision: Chapters 1 through 4 complete in '
+        'SMARTSPEND_REVISED_MANUSCRIPT.md. Google Docs version pending Fixes 11–16 '
+        'from MANUSCRIPT_GUIDE.md covering account type flexibility, target population '
+        'reframing, respondent criteria, and validator role descriptions.\n\n'
+        'Pre-Final Defense preparation: demo flow rehearsal targeting 8–9 minutes per '
+        'DEFENSE_GUIDE.md Part 2. Presentation slides in progress.\n\n'
+        'SUS survey instrument finalization — targeting 30 respondents '
+        '(20 parents aged 35–55, 10 young professionals aged 21–35) for Week 7.'
     ),
     'problems': (
-        'Multi-item AI logging was silently failing for messages with typos '
-        '(e.g. "spen 30 for transport") — max_tokens estimate was too low and '
-        'the multi-item detection regex did not catch common Filipino spelling variants.\n\n'
+        'Multi-item AI logging was silently failing for messages with common Filipino '
+        'spelling variants and typos (e.g., "spen 30 for transport") — the max_tokens '
+        'estimate was too low, and the multi-item detection regex did not match '
+        'informal Tagalog verb forms.\n\n'
         'The 50/30/20 analytics card and income-based overview cards were rendering '
-        'in Lightweight Mode using stale income data (₱650 set months ago), '
-        'producing meaningless percentages for a student user with income tracking OFF.'
+        'using stale income data (₱650 set months prior) even when income tracking '
+        'was OFF, producing meaningless budget percentages for the student user profile.'
     ),
     'solutions': (
-        'Multi-item fix: broadened verb detection regex to catch typos (spen, spe, '
-        'nagastos, ginastos); added connector-aware detection (comma/and); '
-        'scaled token budget 800–1200 by item count; multi-item messages now route '
-        'to smart tier model instead of fast 8B. System prompt Rules 1+2 updated '
-        'with explicit examples.\n\n'
-        'Lightweight Mode fix: added _incomeWalletMode state field to AnalyticsScreen, '
-        'loaded from DB on _loadData(). All 3 income-dependent cards (50/30/20, '
-        'Tax+Savings, Allowance Overview) gated on _incomeWalletMode flag.'
+        'Multi-item fix: broadened the verb detection regex to catch typos and '
+        'Tagalog variants (spen, spe, nagastos, ginastos); added connector-aware '
+        'detection for comma-separated and "and"-joined entries; scaled token budget '
+        'from 800 to 1,200 tokens based on item count; multi-item messages now route '
+        'to the smart model tier. System prompt Rules 1 and 2 updated with explicit '
+        'Filipino-language examples.\n\n'
+        'Lightweight Mode analytics fix: added _incomeWalletMode state field to '
+        'AnalyticsScreen, populated from the database on _loadData(). All three '
+        'income-dependent cards (50/30/20, Tax+Savings, Allowance Overview) are now '
+        'gated on the _incomeWalletMode flag and hidden when income tracking is OFF.'
     ),
     'next_steps': (
         'Week 5: Configure GitHub Actions secrets (KEYSTORE_BASE64, KEY_PROPERTIES, '
-        'GOOGLE_SERVICES_JSON, APP_CONFIG_DART) for automated release pipeline.\n\n'
+        'GOOGLE_SERVICES_JSON, APP_CONFIG_DART) to enable the automated APK release '
+        'pipeline built this week.\n\n'
         'Apply Google Docs manuscript fixes (Fixes 11–16): account type flexibility, '
-        'target population reframing, respondent criteria, validator roles.\n\n'
-        'Create Figure 1.1 bar chart (BSP financial literacy data) and insert in Google Docs.\n\n'
-        'Obtain validator signatures on Appendix A validation certificates.\n\n'
-        'Complete Pre-Final Defense presentation slides and conduct full rehearsal.'
+        'target population reframing, respondent criteria, and validator role sections.\n\n'
+        'Generate Figure 1.1 bar chart using BSP financial literacy data and insert '
+        'into Google Docs manuscript.\n\n'
+        'Obtain validator signatures on Appendix A validation certificates '
+        '(survey content validator and technical/SUS validator).\n\n'
+        'Complete Pre-Final Defense presentation slides and conduct a full timed '
+        'rehearsal using the DEFENSE_GUIDE.md script.'
     ),
     'photos': [
-        (_SS + 'Screenshot_2026-09-03-09-25-32-851_com.lucidframe.smartspend_app.jpg',
-         'Home screen — spending summary (₱185), multi-period spending limits, Quick Log chips, and achievement badges'),
-        (_SS + 'Screenshot_2026-09-03-09-25-37-741_com.lucidframe.smartspend_app.jpg',
-         'Home screen — Financial Health Score (64/100 Fair), Financial Management Score (88/100 Expert Tracker), daily quests, and weekly challenge'),
-        (_SS + 'Screenshot_2026-09-03-09-25-47-423_com.lucidframe.smartspend_app.jpg',
-         'Analytics — spending by category pie chart (12 categories) and This Month vs Last Month comparison table'),
-        (_SS + 'Screenshot_2026-09-03-09-25-51-336_com.lucidframe.smartspend_app.jpg',
-         'Analytics — FHS Score Components breakdown (55/100) and Financial Management Score (FMS) full breakdown (88/100)'),
-        (_SS + 'Screenshot_2026-09-03-09-26-42-898_com.lucidframe.smartspend_app.jpg',
-         'App Settings — AI model selector showing Gemini 3.1 Flash-Lite as primary (1,000/day free), with 4 fallback providers listed'),
-        (_SS + 'Screenshot_2026-09-03-09-26-28-711_com.lucidframe.smartspend_app.jpg',
-         'Profile screen — FMS breakdown (88/100: Logging 13/25, Budget Setup 25/25, Goal Tracking 25/25, Data Completeness 25/25)'),
+        (_SS + 'Screenshot_2026-09-07-07-57-46-826_com.lucidframe.smartspend_app.jpg',
+         'SmartSpend splash screen — app logo with tagline "Your AI Financial Assistant" on launch'),
+        (_SS + 'Screenshot_2026-09-07-07-57-49-825_com.lucidframe.smartspend_app.jpg',
+         'Home screen — ₱185 monthly spending (7% below last month), recurring pattern alert, Quick Log chips (Jeepney ₱30, Lunch ₱85), and achievement badges'),
+        (_SS + 'Screenshot_2026-09-07-07-57-57-491_com.lucidframe.smartspend_app.jpg',
+         'Home screen scrolled — Daily Quests (1/4 complete), FHS 63/100 Fair with AI explanation, FMS 88/100 Expert Tracker strip, and Budgets 5 set'),
+        (_SS + 'Screenshot_2026-09-07-07-58-00-575_com.lucidframe.smartspend_app.jpg',
+         'Home screen — AI Insights card with 3 behavioral tips (Food 43%, Transportation 32%, Small purchases), Consistent Saver badge, and Quick Access grid'),
+        (_SS + 'Screenshot_2026-09-07-07-58-07-259_com.lucidframe.smartspend_app.jpg',
+         'Analytics — Spending by Category donut chart (13 categories, All Time view): Shopping ₱9,732 leads, followed by Food ₱4,762 and Gaming ₱8,300'),
+        (_SS + 'Screenshot_2026-09-07-07-58-53-139_com.lucidframe.smartspend_app.jpg',
+         'Profile — Brix Arquisal Directo: 185 total expenses, ₱37,512 total spent, FHS 63/100 with 4-component Score Breakdown showing improvement areas'),
+        (_SS + 'Screenshot_2026-09-07-07-58-55-849_com.lucidframe.smartspend_app.jpg',
+         'Profile — FMS 88/100 Expert Tracker: Logging 13/25, Budget Setup 25/25, Goal Tracking 25/25, Data Completeness 25/25 — account type: Student, Dark Mode ON'),
+        (_SS + 'Screenshot_2026-09-07-07-59-07-682_com.lucidframe.smartspend_app.jpg',
+         'App Settings — AI Model section: Gemini 3.1 Flash-Lite selected (1,000/day free, fastest Gemini), with 4 fallback providers including LLaMA 3.3 70B and Cerebras'),
     ],
 }
 
@@ -637,89 +700,99 @@ WEEK5 = {
     ],
     'completed': (
         'Analyzed real device debug data (Debug Log, JSON backup, CSV export from '
-        'Poco X6 Pro test device) and identified 5 specific bugs:\n\n'
-        '(1) Lightweight Mode analytics: 50/30/20 card, Tax+Savings card, and '
-        'Allowance Overview were rendering using stale ₱650 income even when income '
-        'tracking was OFF. Fixed by adding _incomeWalletMode state to AnalyticsScreen '
-        'and gating all 3 cards on the flag.\n\n'
-        '(2) Logging Consistency scoring formula: activeDays was computed from the '
-        'user\'s first logged entry this month — causing 1 entry on Sep 2 to give '
-        '25/25 "Logging every active day". Fixed: if first entry is on day 1–7 of '
-        'month, use full daysPassed (honest). Grace period preserved for mid-month '
-        'starters (after day 7). Applied to 3 places in score_service.dart.\n\n'
-        '(3) FMS "See breakdown" tap: navigated to Profile top with no scroll. Fixed '
-        'using static flag ProfileScreen.scrollToFMS + GlobalKey + ScrollController. '
-        'Now auto-scrolls to FMS section after data loads.\n\n'
-        '(4) AI language detection: AI was replying in Taglish when user wrote in '
-        'English. Fixed by adding Rule 12 to system prompt and updating persona line.\n\n'
-        '(5) Score history chart: showed 2 data points with no explanation. Added '
-        'placeholder card explaining scores are recorded on days app is opened.\n\n'
+        'Poco X6 Pro test device) and resolved 5 specific bugs confirmed on actual hardware:\n\n'
+        'Bug #1 — Lightweight Mode analytics: The 50/30/20 card, Tax+Savings card, '
+        'and Allowance Overview were rendering using a stale ₱650 income value even '
+        'when income tracking was OFF. Fixed by adding _incomeWalletMode state to '
+        'AnalyticsScreen and gating all three income-dependent cards on that flag.\n\n'
+        'Bug #2 — Logging Consistency scoring: activeDays was computed from the '
+        'user\'s first logged entry of the month, allowing a single entry on Sep 2 '
+        'to award 25/25 "Logging every active day." Fixed by using daysPassed as the '
+        'baseline (honest score). A grace period is preserved for users who start '
+        'logging mid-month (after day 7). Applied to 3 locations in score_service.dart.\n\n'
+        'Bug #3 — FMS "See breakdown" tap: tapping the link navigated to the Profile '
+        'screen top with no scroll. Fixed using a static flag ProfileScreen.scrollToFMS, '
+        'a GlobalKey, and a ScrollController — the screen now auto-scrolls to the FMS '
+        'section after data loads.\n\n'
+        'Bug #4 — AI language detection: the AI was replying in Taglish when the user '
+        'wrote in English. Fixed by adding Rule 12 to the system prompt and updating '
+        'the persona line to strictly match the user\'s input language.\n\n'
+        'Bug #5 — Score history chart: showed 2 data points with no explanation. '
+        'Added a placeholder card explaining that scores are recorded each time the '
+        'app is opened, prompting users to engage daily.\n\n'
         'Created GitHub Actions CI/CD workflow (.github/workflows/release.yml): '
-        'auto-builds all 3 APK variants and creates GitHub Release on version tag push.\n\n'
-        'Built and released v2.9.9 to GitHub. Rebuilt progress reports '
-        'using exact Lorma BSIT progress report template format.\n\n'
+        'auto-builds all 3 APK variants and creates a GitHub Release on version tag push. '
+        'Triggers on v*.*.* tags; uses Java 17 and Flutter 3.41.6.\n\n'
+        'Built and released v2.9.9 to GitHub. Rebuilt progress reports using the exact '
+        'Lorma BSIT progress report template format.\n\n'
         'Added UX/Behavioral backlog (8 items) and Document Tooling backlog '
-        '(8 tools to research) to PROJECT_STATUS.md for future planning.'
+        '(8 tools) to PROJECT_STATUS.md for future sprint planning.'
     ),
     'ongoing': (
         'Configuring GitHub Actions secrets (KEYSTORE_BASE64, KEY_PROPERTIES, '
-        'GOOGLE_SERVICES_JSON, APP_CONFIG_DART) to enable automated release pipeline.\n\n'
-        'Pre-Final Defense preparation: presentation slides and demo flow rehearsal '
-        '(8–9 minutes per DEFENSE_GUIDE.md).\n\n'
+        'GOOGLE_SERVICES_JSON, APP_CONFIG_DART) to activate the automated release '
+        'pipeline. These signing credentials and API keys cannot be committed to the '
+        'repository and must be set manually in GitHub Settings → Secrets.\n\n'
+        'Pre-Final Defense preparation: finalizing presentation slides and conducting '
+        'full 8–9 minute demo rehearsal using the DEFENSE_GUIDE.md flow.\n\n'
         'Google Docs manuscript: applying Fixes 11–16 (account type, target population, '
         'respondent criteria, validator roles).\n\n'
-        'SUS survey instrument finalization and respondent recruitment coordination.'
+        'SUS survey instrument finalization and respondent recruitment coordination '
+        'for Week 7 administration.'
     ),
     'problems': (
         'GitHub Actions automated release workflow requires 4 secrets to be configured '
-        'manually in repository settings before it can build — keystore, '
-        'key.properties, google-services.json, and app_config.dart. These contain '
-        'signing credentials and API keys that cannot be committed to the repository.\n\n'
-        'Logging Consistency score was giving inflated results (25/25) to users who '
-        'log on the first day of the month, because activeDays was computed from the '
-        'first logged entry rather than from the start of the month.'
+        'manually in repository settings before the first build can succeed — the '
+        'keystore file, key.properties, google-services.json, and app_config.dart '
+        'all contain signing credentials and API keys that cannot be committed to '
+        'the public repository.\n\n'
+        'Logging Consistency score was returning inflated results (25/25) for users '
+        'who log their first entry on day 1 or 2 of the month, because activeDays '
+        'was computed relative to the first logged entry rather than the start of '
+        'the calendar month.'
     ),
     'solutions': (
-        'GitHub Actions: workflow file created and committed. Detailed setup '
-        'instructions documented in the workflow comments. Once secrets are configured '
-        'in GitHub Settings → Secrets and variables → Actions, future releases require '
-        'only: git tag v2.9.X && git push origin v2.9.X\n\n'
-        'Logging Consistency: fixed activeDays baseline to use daysPassed (days elapsed '
-        'since month start). Grace period retained: if user started logging after the '
-        '7th of the month, span from first entry is still used. Applied consistently '
-        'across FHS full mode, FHS lightweight mode, and FMS (3 locations).'
+        'GitHub Actions: the workflow file (release.yml) has been created, committed, '
+        'and merged. Step-by-step secret configuration instructions are documented '
+        'in the workflow file comments. Once the 4 secrets are set in GitHub Settings, '
+        'future releases require only two commands:\n'
+        '  git tag v2.9.X && git push origin v2.9.X\n\n'
+        'Logging Consistency: fixed the activeDays baseline to use daysPassed (days '
+        'elapsed since the first day of the month). The grace period is preserved — '
+        'if the user began logging after day 7 of the month, the span from their first '
+        'entry is still used to avoid penalizing new users. The fix was applied '
+        'consistently across FHS full mode, FHS lightweight mode, and FMS (3 files).'
     ),
     'next_steps': (
-        'Configure GitHub Actions secrets to enable automated release pipeline.\n\n'
-        'Complete Pre-Final Defense preparation: finalize slides, conduct full '
-        '8–9 minute demo rehearsal using DEFENSE_GUIDE.md flow.\n\n'
+        'Configure GitHub Actions secrets to enable the automated APK release pipeline.\n\n'
+        'Complete Pre-Final Defense preparation: finalize slides, conduct a full '
+        '8–9 minute timed rehearsal following the DEFENSE_GUIDE.md demo flow.\n\n'
         'Apply remaining Google Docs manuscript fixes (Fixes 11–16).\n\n'
-        'Create Figure 1.1 bar chart and obtain validator signatures for Appendix A.\n\n'
+        'Generate Figure 1.1 bar chart and obtain validator signatures for Appendix A.\n\n'
         'Prepare SUS survey instruments and begin respondent recruitment '
-        '(target: 30 respondents — 20 parents 35–55, 10 young professionals 21–35).'
+        '(target: 30 respondents — 20 parents aged 35–55, 10 young professionals '
+        'aged 21–35).'
     ),
     'photos': [
-        (_SS + 'Screenshot_2026-09-03-09-26-17-229_com.lucidframe.smartspend_app.jpg',
-         'AI chat — language fix (Week 5 Bug #4): AI now replies in English when user writes in English, Taglish when Filipino'),
-        (_SS + 'Screenshot_2026-09-03-09-25-53-905_com.lucidframe.smartspend_app.jpg',
-         'Analytics — FMS breakdown showing Logging Consistency fix (Bug #2): 13/25 reflects honest score, not inflated 25/25'),
-        (_SS + 'Screenshot_2026-09-03-09-26-26-277_com.lucidframe.smartspend_app.jpg',
-         'Profile screen — FHS Score Breakdown with "See breakdown" scroll fix (Bug #3): tapping auto-scrolls to FMS section'),
-        (_SS + 'Screenshot_2026-09-03-09-25-49-402_com.lucidframe.smartspend_app.jpg',
-         'Analytics — spending by day-of-week heatmap and FHS 30-day score history chart with score history placeholder fix (Bug #5)'),
-        (_SS + 'Screenshot_2026-09-03-09-27-45-644_com.github.android.jpg',
-         'GitHub repository — smartspend-app showing v2.9.9 as Latest release (9 total releases published)'),
-        (_SS + 'Screenshot_2026-09-03-09-28-02-361_com.github.android.jpg',
-         'GitHub v2.9.9 release notes showing all 5 bug fixes and CI/CD pipeline addition (release.yml)'),
-        (_SS + 'Screenshot_2026-09-03-09-28-06-286_com.github.android.jpg',
-         'GitHub v2.9.9 release assets — 3 signed APK variants: arm64-v8a (45 MB), armeabi-v7a (37 MB), x86_64 (48 MB)'),
-        (_SS + 'Screenshot_2026-09-03-09-30-44-957_com.github.android.jpg',
-         'GitHub Actions — release.yml CI/CD workflow: triggers on version tag push (v*.*.*), sets up Java 17 and Flutter 3.41.6'),
+        (_SS + 'Screenshot_2026-09-07-07-58-09-326_com.lucidframe.smartspend_app.jpg',
+         'Analytics — This Month vs Last Month comparison + Spending by Day of Week heatmap (Mon ₱453 peak) + Score Components 63/100 partial view'),
+        (_SS + 'Screenshot_2026-09-07-07-58-11-946_com.lucidframe.smartspend_app.jpg',
+         'Analytics — Score Components 63/100 full: Wants 25/25, Logging 13/25 (Bug #2 fix), Budgets 25/25, Streak 0/25 — FMS 88/100 Expert Tracker breakdown'),
+        (_SS + 'Screenshot_2026-09-07-07-58-14-593_com.lucidframe.smartspend_app.jpg',
+         'Analytics — "What you did right / what to fix" feedback panel, Health Score History (1 data point, Bug #5 fix), and Projected Next Month ₱1,590'),
+        (_SS + 'Screenshot_2026-09-07-07-59-19-238_com.lucidframe.smartspend_app.jpg',
+         'AI Chat screen — Gemini 3.1 Flash-Lite active (60 requests remaining), 5 quick-suggestion chips, Smart Import bottom sheet with 4 input modes'),
+        (_SS + 'Screenshot_2026-09-07-07-59-22-327_com.lucidframe.smartspend_app.jpg',
+         'AI Chat — AI Model selector bottom sheet: Gemini 3.1 Flash-Lite selected (✓), showing all 5 available models with daily request limits'),
+        (_SS + 'Screenshot_2026-09-07-08-00-06-116_com.lucidframe.smartspend_app.jpg',
+         'Achievements screen — 7 of 23 badges earned: First Step ✓, Budget Boss ✓, Spare Change Hero ✓; remaining badges locked with unlock criteria visible'),
+        (_SS + 'Screenshot_2026-09-07-08-00-09-103_com.lucidframe.smartspend_app.jpg',
+         'Achievements page 2 — Detail Oriented ✓, Night Owl ✓, Early Bird ✓, Century Club ✓ unlocked; Receipt Scanner, Consistent Logger, Insurance Aware still locked'),
+        (_SS + 'Screenshot_2026-09-07-07-59-10-066_com.lucidframe.smartspend_app.jpg',
+         'App Settings — Home Screen show/hide section (Quick-log chips ON, Achievement badges ON, Behavioral prediction ON) and Analytics section visibility controls'),
     ],
 }
 
-
-# ── Entry point ───────────────────────────────────────────────────────────────
 
 WEEK6 = {
     'project_title': (
@@ -737,32 +810,32 @@ WEEK6 = {
     'completed': (
         'Released SmartSpend v2.9.10 — Behavioral Feedback Layer (8 UX items):\n\n'
         '(1) Score Narrative Engine — AI-generated weekly summary cards replace the '
-        'plain "FHS: 64/100" label; context-aware messages like "You\'re spending '
+        'plain "FHS: 63/100" label. Context-aware messages such as "You\'re spending '
         'more than usual on Food — ₱2,340 this week" appear on the Home screen.\n\n'
-        '(2) Score Celebration Toasts — On-screen animated toast when FHS crosses '
+        '(2) Score Celebration Toasts — Animated on-screen toast when FHS crosses '
         'milestone thresholds (50, 65, 75, 90), reinforcing positive financial behavior '
         'with Lorma maroon/gold visual styling.\n\n'
-        '(3) Purchase Commentary — AI appends a brief behavioral note to receipt-scan '
-        'and voice-logged entries above ₱500 (e.g., "This counts as a discretionary '
-        'purchase — consider tracking against your Food budget.").\n\n'
+        '(3) Purchase Commentary — AI appends a brief behavioral note to '
+        'receipt-scan and voice-logged entries above ₱500 (e.g., "This counts as a '
+        'discretionary purchase — consider tracking against your Food budget.").\n\n'
         '(4) Supportive Budget Warning Alerts — Budget overspend warnings now include '
-        'a constructive follow-up suggestion instead of a plain red banner, applying '
-        'Thaler & Sunstein (2008) nudge theory.\n\n'
-        '(5) FMS Next-Step Guidance — The Financial Management Score card now shows '
-        'a prioritized single action tip (e.g., "Set a Food budget to unlock full '
-        'Budget Adherence scoring") when any FMS sub-component is below 20/25.\n\n'
-        '(6) Coach Report — Weekly AI-generated coach letter accessible from the '
-        'Profile screen summarizing the week\'s financial behavior, strongest category, '
+        'a constructive follow-up suggestion instead of a plain red banner, '
+        'applying Thaler & Sunstein (2008) nudge theory.\n\n'
+        '(5) FMS Next-Step Guidance — The FMS card now shows a single prioritized '
+        'action tip (e.g., "Set a Food budget to unlock full Budget Adherence scoring") '
+        'when any FMS sub-component falls below 20/25.\n\n'
+        '(6) Coach Report — Weekly AI-generated coach letter on the Profile screen '
+        'summarizing the week\'s financial behavior, the user\'s strongest category, '
         'and one recommended habit change for the coming week.\n\n'
         '(7) Goal Milestone Notifications — In-app notification when a savings goal '
-        'reaches 25%, 50%, 75%, and 100% of its target amount, with celebratory '
-        'color-coded progress card update.\n\n'
+        'reaches 25%, 50%, 75%, and 100% of its target, with celebratory '
+        'color-coded progress card updates.\n\n'
         '(8) Score Explanation Tooltips — "Why is my FHS this score?" info button '
         'added to the FHS card, opening a bottom sheet with per-component breakdown '
         'and plain-language explanation.\n\n'
-        'Completed full documentation reorganization: renamed, sorted, and restructured '
-        'all docs folders (archive, capstone, debug, guides, manuscript, reference, '
-        'status, tools). Committed as v2.9.10 to GitHub master.\n\n'
+        'Completed full documentation reorganization: all docs folders renamed, '
+        'sorted, and restructured (archive, capstone, debug, guides, manuscript, '
+        'reference, status, tools). Committed as v2.9.10 to GitHub master.\n\n'
         'Built all 4 manuscript figures as compressed PNG files using Pillow and '
         'matplotlib:\n'
         '  • Figure 1.1 — Financial Literacy Rates by Demographic Group (74 KB)\n'
@@ -770,22 +843,23 @@ WEEK6 = {
         '  • Figure 2.1 — SUS Score Interpretation (40 KB)\n'
         '  • Figure 2.2 — Agile Kanban Workflow (111 KB)\n\n'
         'Rebuilt SmartSpend_Manuscript_FINAL.docx with all 4 figures embedded: '
-        '17 sections verified, 12 media files, 63 APA references, ~12,685 words '
-        '(~50 pages). Figures 2.1 and 2.2 injected into Chapter III via _fig() helper.\n\n'
+        '17 sections verified, 12 media files, 63 APA references, approximately '
+        '12,685 words (~50 pages). Figures 2.1 and 2.2 injected into Chapter III '
+        'via the _fig() helper.\n\n'
         'Built SmartSpend_Compliance_Matrix_PreFinal.docx — pre-filled with project '
-        'title, proponents, adviser, and panelist placeholder fields. Ready for '
+        'title, proponents, adviser, and panelist placeholder fields, ready for '
         'printing and panel submission.'
     ),
     'ongoing': (
         'Pre-Final Defense preparation: finalizing presentation slides and conducting '
-        'full 8–9 minute demo rehearsal using DEFENSE_GUIDE.md flow.\n\n'
+        'full 8–9 minute demo rehearsal using the DEFENSE_GUIDE.md flow.\n\n'
         'SUS survey administration: targeting 30 respondents (20 parents aged 35–55, '
-        '10 young professionals aged 21–35) for Week 7. Instruments finalized.\n\n'
+        '10 young professionals aged 21–35) for Week 7. Survey instruments finalized.\n\n'
         'Google Docs manuscript: applying manuscript text from '
-        'SmartSpend_Manuscript_Source.md, inserting figures, and updating CV section '
-        'for all 3 members.\n\n'
-        'Validator coordination: obtaining validator signatures on Appendix A '
-        'validation certificates (survey content validator and technical/SUS validator).'
+        'SmartSpend_Manuscript_Source.md, inserting all 4 figures, and completing '
+        'the CV section for all 3 members.\n\n'
+        'Validator coordination: obtaining signatures on Appendix A validation '
+        'certificates (survey content validator and technical/SUS validator).'
     ),
     'problems': (
         'GitHub Actions automated release pipeline still pending — 4 repository '
@@ -793,47 +867,171 @@ WEEK6 = {
         'APP_CONFIG_DART) require manual configuration in GitHub Settings → '
         'Secrets and variables → Actions. These signing credentials and API keys '
         'cannot be committed to the repository.\n\n'
-        'Figures 1.1 and 1.2 in the source DOCX (Working copy) were originally '
-        'embedded as large uncompressed PNGs (1.8 MB and 1.6 MB). The new compressed '
-        'versions are significantly smaller (74 KB and 131 KB) — the Working copy '
-        'needs to be updated manually in Google Docs / Word with the new figure files.'
+        'Figures 1.1 and 1.2 in the Google Docs Working copy were originally '
+        'embedded as large uncompressed PNGs (1.8 MB and 1.6 MB). The new '
+        'compressed versions (74 KB and 131 KB) need to be manually replaced '
+        'in the Working copy by Cyrille before the next panel submission.'
     ),
     'solutions': (
-        'GitHub Actions: workflow file (release.yml) is already committed. Once the '
-        '4 secrets are configured in GitHub Settings, future releases only require:\n'
+        'GitHub Actions: the workflow file (release.yml) is already committed and '
+        'operational. Once the 4 secrets are configured in GitHub Settings, future '
+        'releases require only:\n'
         '  git tag v2.9.X && git push origin v2.9.X\n'
-        'Step-by-step setup instructions are documented in the workflow file comments.\n\n'
-        'Figures: new compressed PNG files are saved to docs/manuscript/figures/. '
-        'The build_figures.py script regenerates all 4 at any time with: '
-        'python build_figures.py. The FINAL.docx is rebuilt automatically by '
-        'build_final_docx.py, which embeds the compressed versions via python-docx '
-        'add_picture(). Manual replacement in the Working copy (Google Docs) is '
-        'tracked as a Cyrille task for Week 7.'
+        'Setup instructions are documented in the workflow file comments.\n\n'
+        'Figures: all 4 compressed PNG files are saved to docs/manuscript/figures/. '
+        'The build_figures.py script regenerates all 4 at any time with a single '
+        'command: python build_figures.py. The FINAL.docx is rebuilt automatically '
+        'by build_final_docx.py with compressed images via python-docx add_picture(). '
+        'Manual replacement in the Working copy is tracked as a Cyrille task for '
+        'Week 7.'
     ),
     'next_steps': (
-        'Week 7 — SUS survey administration with 30 respondents (20 parents, '
+        'Week 7 — Administer SUS survey to 30 respondents (20 parents, '
         '10 young professionals). Tabulate results and compute SUS scores using '
-        'Brooke (1996) formula. Insert results into Chapter III.\n\n'
-        'Complete Pre-Final Defense presentation slides and conduct full rehearsal. '
-        'Print Compliance Matrix and obtain panel signatures.\n\n'
-        'Configure GitHub Actions secrets for automated APK release pipeline.\n\n'
+        'the Brooke (1996) formula. Insert results into Chapter III.\n\n'
+        'Complete Pre-Final Defense presentation slides and conduct the full '
+        'rehearsal. Print Compliance Matrix and obtain panel signatures.\n\n'
+        'Configure GitHub Actions secrets for the automated APK release pipeline.\n\n'
         'Obtain validator signatures on Appendix A validation certificates.\n\n'
-        'Cyrille: Insert all 4 figures into Google Docs Working copy. '
+        'Cyrille: Insert all 4 figures into the Google Docs Working copy. '
         'Complete CV section for all 3 members. Apply remaining manuscript fixes.'
     ),
     'photos': [
-        (_SS + 'Screenshot_2026-09-03-09-25-37-741_com.lucidframe.smartspend_app.jpg',
-         'Home screen — FHS Score Narrative Engine (v2.9.10): AI-generated weekly summary card with context-aware behavioral feedback'),
-        (_SS + 'Screenshot_2026-09-03-09-25-51-336_com.lucidframe.smartspend_app.jpg',
-         'Analytics — FHS Components + FMS breakdown showing Score Explanation Tooltips (v2.9.10 UX item 8)'),
-        (_SS + 'Screenshot_2026-09-03-09-26-26-277_com.lucidframe.smartspend_app.jpg',
-         'Profile screen — Coach Report section (v2.9.10 UX item 6): weekly AI coach letter with habit recommendation'),
-        (_SS + 'Screenshot_2026-09-03-09-25-32-851_com.lucidframe.smartspend_app.jpg',
-         'Home screen — Goal Milestone Notifications (v2.9.10 UX item 7): color-coded progress cards at 25/50/75/100% milestones'),
-        (_SS + 'Screenshot_2026-09-03-09-28-06-286_com.github.android.jpg',
-         'GitHub v2.9.10 release — 3 signed APK variants with full behavioral feedback layer and documentation reorganization'),
-        (_SS + 'Screenshot_2026-09-03-09-25-47-423_com.lucidframe.smartspend_app.jpg',
-         'Analytics screen — spending breakdown used as reference for FMS Next-Step Guidance (v2.9.10 UX item 5)'),
+        (_SS + 'Screenshot_2026-09-07-07-58-31-856_com.lucidframe.smartspend_app.jpg',
+         'Analytics — Market Insights live exchange rates (USD ₱62.68, EUR ₱72.77, GBP ₱84.70) + AI Financial Advice card with 3 actionable spending tips'),
+        (_SS + 'Screenshot_2026-09-07-07-58-34-962_com.lucidframe.smartspend_app.jpg',
+         'Analytics — AI Financial Advice continued: "Prioritize Needs over Wants" and "Start a Micro-Savings fund" tips based on real spending data'),
+        (_SS + 'Screenshot_2026-09-07-07-58-40-688_com.lucidframe.smartspend_app.jpg',
+         'Hub — Quick Access bottom sheet: Savings Goals, Income, Debts & Lending, Recurring Transactions, Budgets, Currency Exchange, Transactions, Installment Plans'),
+        (_SS + 'Screenshot_2026-09-07-07-58-43-815_com.lucidframe.smartspend_app.jpg',
+         'Hub — Quick Access continued: My Wallets, Bill Calendar, Categories, Auto-Categorization Rules, Import from Bank/GCash, Insurance & Contributions, PH Banks & Investments'),
+        (_SS + 'Screenshot_2026-09-07-07-58-59-167_com.lucidframe.smartspend_app.jpg',
+         'Profile — settings list: Export CSV, Financial Health Certificate, Backup/Restore Data, Import from Bank/GCash, Batch Screenshot Import, Load Demo Data'),
+        (_SS + 'Screenshot_2026-09-07-08-01-03-568_com.lucidframe.smartspend_app.jpg',
+         'Financial Health Certificate — Brix Arquisal Directo has achieved FHS 63/100 (Good ✓), September 2026 · SmartSpend by Lucid Frame, shareable card'),
+        (_SS + 'Screenshot_2026-09-07-08-01-17-818_com.lucidframe.smartspend_app.jpg',
+         'Financial Calendar — September 2026 view: Sep 7 highlighted (today), Sep 2 expense dot, Sep 18 installment due dot for GCash GLoan'),
+        (_SS + 'Screenshot_2026-09-07-08-01-32-159_com.lucidframe.smartspend_app.jpg',
+         'Financial Calendar — Sep 2 day detail: ₱185 total in 5 expenses (Jeepney ₱30, 1ltr Coke ₱50, Super Glue ₱45, Lunch ₱30, Jeepney ₱30)'),
+    ],
+}
+
+
+WEEK7 = {
+    'project_title': (
+        'SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management '
+        'Application for Filipino Users Using Agentic Large Language Model Architecture'
+    ),
+    'report_no':        '07',
+    'date_submitted':   'September 7, 2026',
+    'adviser_name':     'Ellen F. Mangaoang, MIT',
+    'members': [
+        'Brix A. Directo — Lead Developer',
+        'Cyrille John M. Rubis — UI/UX Designer & Documentation Lead',
+        'Djaunathan Albert S. Madayag — Project Manager & QA Lead',
+    ],
+    'completed': (
+        'Conducted full live walkthrough of the SmartSpend application on the Poco X6 Pro '
+        'test device to verify all features are functional ahead of the Pre-Final Defense. '
+        'All 5 core screens (Home, Analytics, AI Chat, Hub, Profile) confirmed working '
+        'with real user data.\n\n'
+        'Verified the complete expense logging flow: the multi-modal Add Expense screen '
+        'supports natural language input (e.g., "Ate at KFC 250 pesos"), Voice logging '
+        'via microphone, and AI-powered Analyze mode. The form includes category '
+        'selection from 14 built-in categories, Need/Want tagging, payment method '
+        'selection, merchant/shop field, notes, receipt photo attachment, and custom '
+        'tags (e.g., #capstone).\n\n'
+        'Verified Budgets module: 5 category budgets configured (Food ₱5,000, '
+        'Education ₱1,650, Bills ₱990, Shopping ₱990, Gaming ₱1,299) totaling '
+        '₱9,929 budgeted against ₱650 income and ₱185 spent. Budget categories '
+        'support both fixed ₱ and % of income modes. All 5 budgets are on track '
+        'as of Day 7 of 30.\n\n'
+        'Verified Debts & Lending module: I Owe, Owed to Me, and Plans tabs all '
+        'functional. Active plan: GCash GLoan for Acer KA272 PC Monitor — '
+        '2 of 9 months paid, ₱6,349 remaining at ₱907/month, due in 10 days. '
+        'ShopeePayLater plan marked as fully paid (₱1,120). Add Debt form '
+        'supports I Owe and They Owe Me modes with description, amount, due date, '
+        'notes, and interest rate fields. Add Payment Plan form supports '
+        'ShopeePaylater, GCash GLoan, HomeCredit, and other installment formats.\n\n'
+        'Verified My Wallets module: Cash on Hand ₱953, Landbank ₱500, GCash, Maya, '
+        'and GoTyme Bank configured. Total liquid balance: ₱1,453. Add wallet '
+        'supports 29 providers including GrabPay, ShopeePay, Coins.ph, PayPal, '
+        'Wise, Tonik, UNO bank, and all major PH banks (BDO, BPI, Metrobank, '
+        'PNB, RCBC, Security Bank, Chinabank, UnionBank, EastWest, Seabank, '
+        'PSBank, Maybank, Cebuana, M Lhuillier, Palawan Pawnshop, Western Union, '
+        'LBC, Tambunting, USSC).\n\n'
+        'Verified App Settings: Lite Mode, Auto-deduct wallets, Impulse pause, '
+        'Budget alerts, Round-up savings, and Compact mode all confirmed functional. '
+        'Spending anomaly alerts enabled. Home Screen and Analytics show/hide '
+        'section toggles verified. AI model switch confirmed (Gemini 3.1 Flash-Lite '
+        'active, 5 models available).\n\n'
+        'Verified Spending Limits: Daily, Weekly, Monthly, and Yearly cap fields '
+        'accessible from Profile settings. Limits set and confirmed reflected on '
+        'the Home screen spending card.\n\n'
+        'Configured GitHub Actions 2 of 4 secrets. Release pipeline partially active.'
+    ),
+    'ongoing': (
+        'SUS survey administration in progress — targeting 30 respondents '
+        '(20 parents aged 35–55, 10 young professionals aged 21–35). '
+        'Instruments distributed; responses being collected.\n\n'
+        'Pre-Final Defense presentation slides: final polish and rehearsal. '
+        'Full 8–9 minute timed run-through scheduled before submission deadline.\n\n'
+        'Cyrille: inserting all 4 figures into the Google Docs Working copy and '
+        'completing the CV section for all 3 members.\n\n'
+        'Remaining GitHub Actions secrets configuration (KEYSTORE_BASE64, '
+        'KEY_PROPERTIES) pending signing keystore transfer.'
+    ),
+    'problems': (
+        'SUS respondent recruitment for the parent demographic (35–55 age group) '
+        'is proving slower than expected — the target of 20 parent respondents '
+        'requires direct outreach through faculty and community contacts, which '
+        'is time-consuming during the pre-defense period.\n\n'
+        'Budgets total (₱9,929) exceeds the configured income (₱650) by ₱9,279, '
+        'which triggers a budget warning in the app. This is intentional for the '
+        'test device (demo data), but needs to be clearly explained during the '
+        'defense demonstration to avoid confusion from the panel.'
+    ),
+    'solutions': (
+        'SUS recruitment: expanded outreach to include online survey distribution '
+        'via class group chats and faculty referrals. The young professional '
+        'demographic (10 respondents) is on track. A deadline of September 12 has '
+        'been set to complete all 30 surveys before the defense date.\n\n'
+        'Budget warning: a verbal note has been added to the defense script '
+        '(DEFENSE_GUIDE.md) acknowledging the demo data context — the panel will '
+        'be informed that the ₱9,929 budget total reflects aspirational category '
+        'limits set during testing, not the live student monthly budget. '
+        'The app correctly flags the overage as a feature, not a bug.'
+    ),
+    'next_steps': (
+        'Complete SUS survey data collection (target: September 12, 2026). '
+        'Tabulate results and compute SUS scores using the Brooke (1996) formula. '
+        'Insert tabulated results and interpretation into Chapter III.\n\n'
+        'Submit Pre-Final Defense requirements: printed Compliance Matrix with '
+        'panel signatures, final manuscript printout, and defense slide deck.\n\n'
+        'Conduct final full rehearsal of the 8–9 minute demo using '
+        'DEFENSE_GUIDE.md. Assign speaking roles for each team member.\n\n'
+        'Complete remaining GitHub Actions secrets configuration to finalize '
+        'the automated APK release pipeline.\n\n'
+        'Obtain validator signatures on Appendix A validation certificates '
+        'and submit to the capstone coordinator before the defense date.'
+    ),
+    'photos': [
+        (_SS + 'Screenshot_2026-09-07-07-59-42-070_com.lucidframe.smartspend_app.jpg',
+         'Add Expense screen — multi-modal logging: NLP text input, Voice and AI Analyze buttons, category selector, Need/Want tag, payment method, merchant, notes, and receipt attachment'),
+        (_SS + 'Screenshot_2026-09-07-07-59-44-383_com.lucidframe.smartspend_app.jpg',
+         'Add Expense — form continued: Tags field (e.g. #capstone), and Confirm & Save button — supports fully manual or AI-assisted expense entry'),
+        (_SS + 'Screenshot_2026-09-07-08-01-42-772_com.lucidframe.smartspend_app.jpg',
+         'Budgets screen — ₱9,929 budgeted vs ₱185 spent vs ₱650 income, Day 7 of 30 (23% elapsed); 5 category budgets all on track with pace indicators'),
+        (_SS + 'Screenshot_2026-09-07-08-01-43-846_com.lucidframe.smartspend_app.jpg',
+         'Budgets — all 5 configured: Food ₱80/₱5,000, Education ₱0/₱1,650, Bills ₱0/₱990, Shopping ₱45/₱990, Gaming ₱0/₱1,299 — all under expected pace'),
+        (_SS + 'Screenshot_2026-09-07-08-02-15-605_com.lucidframe.smartspend_app.jpg',
+         'Debts & Lending — Plans tab: GCash GLoan (Acer KA272) active — 2/9 months paid, ₱6,349 remaining at ₱907/mo, due in 10 days; ShopeePayLater fully paid ✓'),
+        (_SS + 'Screenshot_2026-09-07-08-00-20-624_com.lucidframe.smartspend_app.jpg',
+         'Spending Limits — Daily, Weekly, Monthly, and Yearly cap input fields; any combination can be set; blank fields are skipped'),
+        (_SS + 'Screenshot_2026-09-07-08-02-30-862_com.lucidframe.smartspend_app.jpg',
+         'My Wallets — Total liquid ₱1,453: Cash on Hand ₱953, Landbank ₱500, GCash, Maya, GoTyme Bank configured; 29 wallet providers available to add'),
+        (_SS + 'Screenshot_2026-09-07-08-02-34-907_com.lucidframe.smartspend_app.jpg',
+         'My Wallets — Add wallet options: GrabPay, ShopeePay, Coins.ph, Lazada, TikTok Shop, PayPal, Wise, Tonik, UNO, UnionDigital, BDO, BPI, Metrobank, PNB, RCBC, and 14 more'),
     ],
 }
 
@@ -848,6 +1046,8 @@ def main():
         build_report(WEEK5, out_dir / '..' / 'progress_reports' / 'SmartSpend_Progress_Report_Week5.docx')
     if target in ('week6', 'all'):
         build_report(WEEK6, out_dir / '..' / 'progress_reports' / 'SmartSpend_Progress_Report_Week6.docx')
+    if target in ('week7', 'all'):
+        build_report(WEEK7, out_dir / '..' / 'progress_reports' / 'SmartSpend_Progress_Report_Week7.docx')
 
 
 if __name__ == '__main__':

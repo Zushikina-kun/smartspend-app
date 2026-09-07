@@ -200,78 +200,119 @@ cert_p.paragraph_format.space_before = Pt(6)
 cert_p.paragraph_format.space_after  = Pt(10)
 cr = cert_p.runs[0]; cr.font.name=FONT; cr.font.size=Pt(9); cr.font.color.rgb=DARK
 
-# Signature table
-sig = doc.add_table(rows=3, cols=3)
-_set_tbl_width(sig, TW)
-sig.alignment = WD_TABLE_ALIGNMENT.LEFT
-# Remove borders
-tbl2 = sig._tbl
-tblPr2 = tbl2.tblPr
-b2 = OxmlElement('w:tblBorders')
+_SIG_IMG = 'c:/xampp/htdocs/smartspend_app/docs/manuscript/progress_reports/draw_sign.png'
+
+# ── LEFT BLOCK: Proponents ────────────────────────────────────────────────────
+# Each proponent gets their own signature line
+proponents = [
+    ('Brix A. Directo',              'Group Leader',    _SIG_IMG),
+    ('Cyrille John M. Rubis',        'Member',          None),
+    ('Djaunathan Albert S. Madayag', 'Member',          None),
+]
+
+prop_tbl = doc.add_table(rows=1, cols=3)
+_set_tbl_width(prop_tbl, TW)
+tblPr_p = prop_tbl._tbl.tblPr
+bp = OxmlElement('w:tblBorders')
 for side in ('top','left','bottom','right','insideH','insideV'):
     el = OxmlElement(f'w:{side}'); el.set(qn('w:val'),'none'); el.set(qn('w:sz'),'0')
-    el.set(qn('w:space'),'0'); el.set(qn('w:color'),'auto'); b2.append(el)
-tblPr2.append(b2)
+    el.set(qn('w:space'),'0'); el.set(qn('w:color'),'auto'); bp.append(el)
+tblPr_p.append(bp)
 
-col_w = [3408, 400, 6416]
-signatories = [
-    ('SHEKIRO R. RAPOSAS, MIS', 'Teacher In-charge'),
-    ('JOHNNY F. VERZOLA, MTS', 'Adviser'),  # updated to actual adviser
-]
-panelists = [
-    ('ELLEN F. MANGAOANG, MIT', 'Chairperson'),
-    ('JOPHER F. REYES, MIT', 'Member'),
-    ('GELO RYANN M. CARBONELL', 'Member'),
-]
+pcol_w = 3408  # each col
+for ci in range(3):
+    c = prop_tbl.cell(0, ci)
+    tcPr = c._tc.get_or_add_tcPr()
+    tw = OxmlElement('w:tcW'); tw.set(qn('w:w'), str(pcol_w)); tw.set(qn('w:type'),'dxa'); tcPr.append(tw)
+    c.paragraphs[0].clear()
 
-# Left column: teacher-in-charge + adviser stacked
-# Right column: panel members
-def _sig_block(para, name, role, size=9):
-    para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    para.paragraph_format.space_before = Pt(2)
-    para.paragraph_format.space_after  = Pt(0)
-    r1 = para.add_run(name)
-    r1.font.name=FONT; r1.font.size=Pt(size); r1.bold=True; r1.font.color.rgb=DARK
-    return para
+    name, role, sig_path = proponents[ci]
 
-for row_i in range(3):
-    for ci in range(3):
-        c = sig.cell(row_i, ci)
-        tcPr = c._tc.get_or_add_tcPr()
-        tw = OxmlElement('w:tcW'); tw.set(qn('w:w'), str(col_w[ci])); tw.set(qn('w:type'),'dxa'); tcPr.append(tw)
-        c.paragraphs[0].clear()
+    # Signature image (leader only) or blank space
+    p_img = c.paragraphs[0]
+    p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img.paragraph_format.space_before = Pt(4)
+    p_img.paragraph_format.space_after  = Pt(2)
+    if sig_path and os.path.isfile(sig_path):
+        run_img = p_img.add_run()
+        run_img.add_picture(sig_path, width=Inches(1.3))
+    else:
+        p_img.paragraph_format.space_before = Pt(36)
+        p_img.paragraph_format.space_after  = Pt(4)
 
-# Row 0: labels
-left_top = sig.cell(0,0); right_top = sig.cell(0,2)
-for name, role in signatories:
-    p = left_top.add_paragraph() if left_top.paragraphs[0].text else left_top.paragraphs[0]
-    _sig_block(p, name, role)
-    rp = left_top.add_paragraph()
-    rp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    rr = rp.add_run(role)
-    rr.font.name=FONT; rr.font.size=Pt(8); rr.font.color.rgb=GREY
-    left_top.add_paragraph()  # spacing
+    # Name bold
+    p_name = c.add_paragraph()
+    p_name.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_name.paragraph_format.space_before = Pt(0)
+    p_name.paragraph_format.space_after  = Pt(0)
+    r_name = p_name.add_run(name)
+    r_name.font.name=FONT; r_name.font.size=Pt(9); r_name.bold=True; r_name.font.color.rgb=DARK
 
-for name, role in panelists:
-    p = right_top.add_paragraph() if right_top.paragraphs[0].text else right_top.paragraphs[0]
-    _sig_block(p, name, role)
-    rp = right_top.add_paragraph()
-    rp.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    rr = rp.add_run(role)
-    rr.font.name=FONT; rr.font.size=Pt(8); rr.font.color.rgb=GREY
-    right_top.add_paragraph()
+    # Underline rule
+    p_line = c.add_paragraph('_' * 28)
+    p_line.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_line.paragraph_format.space_before = Pt(0)
+    p_line.paragraph_format.space_after  = Pt(1)
+    p_line.runs[0].font.name=FONT; p_line.runs[0].font.size=Pt(8)
 
-# Signature line row
-for ci, label in ((0,'Signature over Printed Name — Researcher(s)'),(2,'Oral Examination Committee')):
-    c = sig.cell(2, ci)
-    p = c.paragraphs[0]
+    # Role label
+    p_role = c.add_paragraph()
+    p_role.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_role.paragraph_format.space_before = Pt(0)
+    p_role.paragraph_format.space_after  = Pt(0)
+    r_role = p_role.add_run(role)
+    r_role.font.name=FONT; r_role.font.size=Pt(8); r_role.font.color.rgb=GREY
+
+doc.add_paragraph()
+
+# ── RIGHT BLOCK: Adviser + Panel ─────────────────────────────────────────────
+# 2-col table: left=Adviser, right=Panel (Chairperson + 2 Members)
+orec_tbl = doc.add_table(rows=1, cols=2)
+_set_tbl_width(orec_tbl, TW)
+tblPr_o = orec_tbl._tbl.tblPr
+bo = OxmlElement('w:tblBorders')
+for side in ('top','left','bottom','right','insideH','insideV'):
+    el = OxmlElement(f'w:{side}'); el.set(qn('w:val'),'none'); el.set(qn('w:sz'),'0')
+    el.set(qn('w:space'),'0'); el.set(qn('w:color'),'auto'); bo.append(el)
+tblPr_o.append(bo)
+
+adviser_col = orec_tbl.cell(0, 0)
+panel_col   = orec_tbl.cell(0, 1)
+for c, w in ((adviser_col, 4512), (panel_col, 5712)):
+    tcPr = c._tc.get_or_add_tcPr()
+    tw = OxmlElement('w:tcW'); tw.set(qn('w:w'), str(w)); tw.set(qn('w:type'),'dxa'); tcPr.append(tw)
+    c.paragraphs[0].clear()
+
+# Adviser block
+def _sig_entry(cell, name, role, first=False):
+    p = cell.paragraphs[0] if first and not cell.paragraphs[0].text else cell.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(16)
-    r = p.add_run('_' * 40)
-    r.font.name=FONT; r.font.size=Pt(9)
-    p2 = c.add_paragraph(label)
+    p.paragraph_format.space_before = Pt(24)
+    p.paragraph_format.space_after  = Pt(0)
+    rn = p.add_run(name)
+    rn.font.name=FONT; rn.font.size=Pt(9); rn.bold=True; rn.font.color.rgb=DARK
+
+    p2 = cell.add_paragraph('_' * 30)
     p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r2 = p2.runs[0]; r2.font.name=FONT; r2.font.size=Pt(8); r2.font.color.rgb=GREY
+    p2.paragraph_format.space_before = Pt(0); p2.paragraph_format.space_after = Pt(1)
+    p2.runs[0].font.name=FONT; p2.runs[0].font.size=Pt(8)
+
+    p3 = cell.add_paragraph()
+    p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p3.paragraph_format.space_before = Pt(0); p3.paragraph_format.space_after = Pt(8)
+    r3 = p3.add_run(role)
+    r3.font.name=FONT; r3.font.size=Pt(8); r3.font.color.rgb=GREY
+
+_sig_entry(adviser_col, 'ELLEN F. MANGAOANG, MIT', 'Adviser', first=True)
+
+# Panel block — Chairperson (TBA) + 2 Members
+panel_entries = [
+    ('___________________________', 'Chairperson'),
+    ('SHEKIRO R. RAPOSAS, MIS',    'Member'),
+    ('MARY-ANN MZANA',             'Member'),
+]
+for i, (name, role) in enumerate(panel_entries):
+    _sig_entry(panel_col, name, role, first=(i == 0))
 
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 doc.save(OUT)
