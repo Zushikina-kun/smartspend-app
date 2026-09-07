@@ -20,7 +20,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
 - 📷 **Unified Smart Import** — one camera button opens: Live Camera (barcode/QR/receipt), Single Photo (auto-detects barcode/screenshot/receipt), Batch Screenshots (40+ platforms), Paste Text
-- 🤖 AI Chat Assistant — **31 agentic action types** via natural language (Gemini 3.1 Flash-Lite primary, multi-model auto-fallback with financial_advice routing tier)
+- 🤖 AI Chat Assistant — **34 agentic action types** via natural language (Gemini 3.1 Flash-Lite primary, 6-provider auto-fallback chain with task-based routing: fast/smart/financial_advice tiers)
 - ⚖️ **Lightweight Mode** — disable income/wallet tracking; FHS recalculates using spending habits (Spending Restraint, Consistency, Category Balance, Habit Streak)
 - 🎯 **Multi-Period Spending Limits** — set daily/weekly/monthly/yearly caps independently; progress bars + alerts
 - 📅 **Logging Gap Detection** — startup check for unlogged days; confirm spending (penalty) or clean days (bonus) for accurate FHS
@@ -57,7 +57,7 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 | Component | Technology |
 |-----------|-----------|
 | Framework | Flutter (Dart) |
-| AI Engine | Multi-Model LLM: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras LLaMA 3.1 (auto-fallback on rate limit) |
+| AI Engine | Multi-Model LLM: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, LLaMA 4 Scout (Groq), LLaMA 3.3 70B (Groq), LLaMA 3.1 8B (Groq), GPT-OSS 120B (Cerebras) — 6-provider auto-fallback, task-based routing |
 | Local DB | SQLite (sqflite v11) |
 | Cloud | Firebase Auth + Firestore |
 | OCR | Google ML Kit Text Recognition |

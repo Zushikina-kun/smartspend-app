@@ -384,7 +384,7 @@ class AboutScreen extends StatelessWidget {
 
             _infoCard(context, [
               "Framework: Flutter (Dart)",
-              "AI Engine: Multi-model LLM — Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, Groq LLaMA 3.1 8B, Cerebras (31 agentic actions, auto-failover)",
+              "AI Engine: Multi-model LLM — Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, LLaMA 4 Scout (Groq), LLaMA 3.3 70B (Groq), LLaMA 3.1 8B (Groq), GPT-OSS 120B (Cerebras) — 34 agentic actions, auto-failover",
               "Local Database: SQLite (sqflite) v11",
               "Cloud Auth & Sync: Firebase Auth + Firestore",
               "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules, insurance_policies",

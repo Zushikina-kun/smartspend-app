@@ -57,6 +57,16 @@
 
 ## WHAT IS DONE ✅
 
+### v2.9.19 — September 7, 2026
+- [x] **Comprehensive app audit + full doc sweep** — 34 action types confirmed (was 31 in docs), 6 AI providers (added LLaMA 4 Scout), Cerebras model updated (llama3.1-70b → gpt-oss-120b)
+- [x] **SSS rates corrected to 2025** — 5% employee / 10% employer / ₱35K MSC ceiling / ₱1,750 max; updated in ai_chat_service.dart system prompt + profile_screen.dart calculation
+- [x] **7 new validators in `_isActionValid()`** — explicit field checks for delete_by_date, split_expense, update_expense, delete_goal, delete_recurring, add_recurring, plan_salary_split
+- [x] **Help screen fixes** — Spending Limit navigation corrected (App Settings → standalone Spending Limits), phantom "Daily Spending Limit" section replaced, Daily Quests pool 6→10
+- [x] **AI system prompt** — App Guide added (all screen locations, nav paths for every feature), Spending Limit path fixed, SSS rates updated, LLaMA 4 Scout routing added
+- [x] **All builders updated** — defense slides (6-provider chain, 34 actions), defense prep (numbers card, Q&A updated), compliance matrix rebuilt with correct names
+- [x] **Progress reports Week 4–7 rebuilt** with signatures (draw_sign.png, Brix A. Directo)
+- [x] **GitHub release v2.9.19 published** (tag pushed, CI/CD triggered)
+
 ### v2.9.10 — September 3, 2026
 - [x] **Behavioral Feedback Layer** — new `lib/services/behavioral_feedback_service.dart` (all 8 UX backlog items): plain-language FHS score narrative, proactive celebration SnackBars, contextual purchase commentary after AI logging, supportive budget alerts with goal-linked loss-aversion framing, FMS next-step guidance card, FHS/FMS coach report (strengths + improvements), streak milestone celebrations, tappable streak badge + Daily Quests InfoButton
 - [x] **Docs full reorganization** — renamed all folders (Debug→debug, Screenshots→debug/screenshots, Image Converter→tools/image_converter), structured into reference/, guides/, status/, capstone/, manuscript/{output,progress_reports,builders,templates,archive}/, tools/, debug/

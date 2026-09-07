@@ -122,7 +122,7 @@ def card(slide, left, top, width, height, fill='F5F5F5', border_color=None):
     return shape
 
 
-def slide_number(slide, n, total=16):
+def slide_number(slide, n, total=17):
     txt(slide, f'{n} / {total}', 12.5, 7.1, 0.8, 0.35,
         size=11, color=DGREY, align='right')
 
@@ -231,7 +231,7 @@ txt(sl, 'User Input  →  AI Parsing  →  Autonomous Action  →  SQLite  →  
     0.5, 1.1, 12.3, 0.5, size=16, bold=True, color=MAROON, align='center')
 
 features = [
-    ('🤖', '31 Agentic AI\nActions', 'AI takes real actions\non your financial data'),
+    ('🤖', '34 Agentic AI\nActions', 'AI takes real actions\non your financial data'),
     ('📊', 'Financial Health\nScore 0–100', 'Behavioral metric,\ndual-mode formula'),
     ('🎤', 'Multi-Modal Input', 'Voice, OCR, Barcode,\nBatch Screenshots (40+)'),
     ('📴', 'Offline-First', 'SQLite + optional\nFirebase sync'),
@@ -285,7 +285,7 @@ slide_number(sl, 6)
 flow_items = [
     ('User Input\n(Voice / Text / Camera / Screenshot)', '2A4A7F'),
     ('AI Parsing\n(Gemini / Groq / Cerebras)', '5C0E24'),
-    ('31 Action Types\n(Intent Classification)', 'C97000'),
+    ('34 Action Types\n(Intent Classification)', 'C97000'),
     ('SQLite Write\n(Autonomous Action)', '1A6B3A'),
     ('FHS Update\n(score_service.dart)', '8B1A6B'),
 ]
@@ -299,21 +299,22 @@ for i, (label, color) in enumerate(flow_items):
 txt(sl, 'Perceive  →  Decide  →  Act  (genuine agentic loop)',
     0.5, 2.75, 12.3, 0.45, size=16, bold=True, color=MAROON, align='center')
 
-# 5-provider chain
-txt(sl, '5-Provider Auto-Failover (all free tier):', 0.5, 3.3, 12.0, 0.4,
+# 6-provider chain
+txt(sl, '6-Provider Auto-Failover (all free tier):', 0.5, 3.3, 12.0, 0.4,
     size=15, bold=True, color=BLUE)
 providers = [
-    ('1. Gemini 3.1\nFlash-Lite', '1,000/day\n(primary)', 'F3E5F5'),
-    ('2. Gemini 3.5\nFlash', '250/day\n(fallback 1)', 'EDE7F6'),
-    ('3. Groq LLaMA\n3.3 70B', '14,400/day\n(fallback 2)', 'E3F2FD'),
-    ('4. Groq LLaMA\n3.1 8B', '14,400/day\n(fallback 3)', 'E8F5E9'),
-    ('5. Cerebras\nLLaMA 3.1', '1M tokens/day\n(fallback 4)', 'FFF8E1'),
+    ('1. Gemini 3.5\nFlash', '~1,500/day\n(primary best)', 'F3E5F5'),
+    ('2. Gemini 3.1\nFlash-Lite', '~1,000/day\n(fast Gemini)', 'EDE7F6'),
+    ('3. LLaMA 4\nScout (Groq)', '1,000/day\n(Tagalog native)', 'E3F2FD'),
+    ('4. LLaMA 3.3\n70B (Groq)', '1,000/day\n(fallback 3)', 'E8F5E9'),
+    ('5. LLaMA 3.1\n8B (Groq)', '14,400/day\n(fast/volume)', 'FFF8E1'),
+    ('6. GPT-OSS\n120B (Cerebras)', '1M tokens/day\n(last resort)', 'FFE8D0'),
 ]
 for i, (name, quota, color) in enumerate(providers):
-    x = 0.5 + i * 2.55
-    card(sl, x, 3.8, 2.3, 1.35, fill=color, border_color='CCCCCC')
-    txt(sl, name, x, 3.82, 2.3, 0.72, size=13, bold=True, color=MAROON, align='center')
-    txt(sl, quota, x, 4.55, 2.3, 0.55, size=11, color=BLUE, align='center')
+    x = 0.22 + i * 2.18
+    card(sl, x, 3.8, 2.07, 1.35, fill=color, border_color='CCCCCC')
+    txt(sl, name, x, 3.82, 2.07, 0.72, size=12, bold=True, color=MAROON, align='center')
+    txt(sl, quota, x, 4.55, 2.07, 0.55, size=10, color=BLUE, align='center')
 
 card(sl, 0.5, 5.3, 12.3, 0.9, fill='FFF3F5', border_color='CC9999')
 txt(sl, '💡  Why Context Injection (not RAG)?  Per-user data (~5K tokens) fits in one prompt. '
@@ -391,7 +392,7 @@ comparisons = [
     ('Filipino-English\nExpense Parsing',
      '❌  Not trained on Tagalog/Filipino.\nPoor on local merchant names.',
      '✅  Google training covers SEA languages.\nHandles Taglish correctly.'),
-    ('Agentic JSON\nOutput (31 actions)',
+    ('Agentic JSON\nOutput (34 actions)',
      '❌  No function calling support.\nBloombergGPT has no API.',
      '✅  Native function calling.\nReliable JSON output.'),
     ('PH Financial\nAdvisory (SSS, BIR)',
@@ -490,7 +491,7 @@ txt(sl, '22 apps reviewed (14 international, 8 Philippine-context)  |  August 20
 
 headers = ['Feature', 'SmartSpend', 'YNAB', 'Monarch', 'BudgetPH', 'Alkansya AI', 'Pera Coach']
 rows_data = [
-    ['31 Agentic AI Actions',   '✅ 31',     '❌',    '❌',    '❌ Insights','❌',       '❌'],
+    ['34 Agentic AI Actions',   '✅ 34',     '❌',    '❌',    '❌ Insights','❌',       '❌'],
     ['Filipino-English AI',     '✅ Full',   '❌',    '❌',    '❌',         '✅ iOS',   '✅'],
     ['Financial Health Score',  '✅ 0–100',  '❌',    '❌',    '✅ Simpler', '✅ Web',   '❌'],
     ['Offline Mode',            '✅ Full',   '❌',    '❌',    '✅',         '❌',       '❌'],
@@ -693,8 +694,8 @@ concl = [
     ('Objective 1\n(Assessment)', 'Confirmed: Filipinos face manual effort burden, '
      'irregular budgeting, and lack of proactive financial feedback — '
      'validating SmartSpend\'s core design rationale.', 'EAD9E0', MAROON),
-    ('Objective 2\n(Development)', 'SmartSpend v2.9.10 fully developed: 31 agentic actions, '
-     'dual-mode FHS, 5-provider failover, 40+ screenshot platforms, all free-tier stack. '
+    ('Objective 2\n(Development)', 'SmartSpend v2.9.19 fully developed: 34 agentic actions, '
+     'dual-mode FHS, 6-provider failover (incl. LLaMA 4 Scout), 40+ screenshot platforms, all free-tier stack. '
      'Gemini 3.1 Flash-Lite confirmed as optimal primary model.', 'DAE8F5', BLUE),
     ('Objective 3\n(SUS Evaluation)', 'To be completed after Week 7. '
      'Target: SUS ≥ 80 (Good, Acceptable per Bangor et al., 2009). '
@@ -725,7 +726,7 @@ rect(sl, 0, 0, 13.33, 7.5, MAROON)
 rect(sl, 0, 6.6, 13.33, 0.9, GOLD)
 
 txt(sl, 'Thank You', 0.8, 1.5, 11.5, 1.8, size=72, bold=True, color=WHITE, align='center')
-txt(sl, 'SmartSpend — v2.9.10  |  Lucid Frame', 0.8, 3.4, 11.5, 0.55,
+txt(sl, 'SmartSpend — v2.9.11  |  Lucid Frame', 0.8, 3.4, 11.5, 0.55,
     size=20, color=GOLD, align='center', bold=True)
 txt(sl, 'Brix A. Directo  ·  Cyrille John M. Rubis  ·  Djaunathan Albert S. Madayag',
     0.8, 4.0, 11.5, 0.45, size=15, color=WHITE, align='center')
@@ -738,11 +739,71 @@ txt(sl, 'github.com/Zushikina-kun/smartspend-app',
 txt(sl, 'Open for Questions', 0.8, 6.65, 11.5, 0.4,
     size=18, bold=True, color=MAROON, align='center')
 
+# ════════════════════════════════════════════════════════════════════════════
+# SLIDE 17 — Q&A HOT TOPICS (Panel Cheat Sheet)
+# ════════════════════════════════════════════════════════════════════════════
+sl = add_slide()
+rect(sl, 0, 0, 13.33, 1.0, MAROON)
+accent_bar(sl, top=0.95, height=0.06)
+txt(sl, 'Anticipated Q&A — Hot Topics', 0.4, 0.12, 12.5, 0.75,
+    size=32, bold=True, color=WHITE)
+slide_number(sl, 17)
+
+qa_items = [
+    ('How does the FHS work?',
+     '4 components × 25 pts = 100. Full Mode (income ON): Savings Rate, Overspend Control, '
+     'Budget Adherence, Logging Consistency. Lightweight (income OFF): Restraint, Consistency, '
+     'Category Balance, Habit Streak. + Warning Decay (−5/day) & Gap Adjustment.',
+     'EAD9E0'),
+    ('Why Context Injection, not RAG?',
+     "Per-user data (~5K tokens) fits entirely in one prompt — 50 expenses, 8 budgets, 5 goals. "
+     "RAG is built for thousands of documents requiring vector search. Our approach is simpler, "
+     "faster, and appropriate for a mobile single-user workload.",
+     'DAE8F5'),
+    ('What if all 5 AI providers go down?',
+     'App shows a friendly message and stays fully functional — manual expense logging, '
+     'all analytics, budgets, goals, and FHS work 100% offline. Rate limits reset within '
+     'minutes (Groq/Cerebras) or at midnight (daily limits). Simultaneous failure across '
+     '6 providers is statistically negligible for a 30-respondent study.',
+     'D9F0DA'),
+    ('vs GCash Pera Coach? vs BudgetPH?',
+     'Pera Coach (March 2026, built with Microsoft): teaches financial literacy via Q&A — '
+     'no expense tracking, no FHS, no offline, no agentic actions. '
+     'BudgetPH: closest Filipino competitor — has paluwagan & payday cycles. '
+     'SmartSpend leads on 34 agentic actions, voice/OCR/barcode, offline-first, gamification.',
+     'FFF8DC'),
+    ('Why only 30 respondents?',
+     'Purposive sampling — academically valid for exploratory capstone studies. '
+     "Nielsen's Law: 5 users find 85% of usability issues. SUS is validated for small "
+     'samples (Bangor et al., 2009). Respondents are purposively selected to match the '
+     'target population: parents 35–55 and young professionals 21–35.',
+     'F3E5F5'),
+    ('Is your data secure?',
+     'SQLite on-device + Firebase Firestore with UID-scoped security rules. '
+     'API key fetched via Firebase Remote Config — never hardcoded in the APK binary. '
+     'App Lock with PIN + biometrics. No PII sent to AI providers — only expense text '
+     'and anonymized financial summaries.',
+     'FFE8D0'),
+]
+
+for i, (q, a, color) in enumerate(qa_items):
+    col = i % 2
+    row = i // 2
+    x = 0.35 + col * 6.5
+    y = 1.15 + row * 2.08
+    card(sl, x, y, 6.25, 1.98, fill=color, border_color='BBBBBB')
+    rect(sl, x, y, 6.25, 0.42, MAROON)
+    txt(sl, f'Q:  {q}', x + 0.12, y + 0.04, 6.0, 0.36,
+        size=12, bold=True, color=WHITE)
+    txt(sl, a, x + 0.12, y + 0.5, 6.0, 1.42,
+        size=11, color=DARK)
+
 # ── SAVE ───────────────────────────────────────────────────────────────────────
 prs.save(str(OUT))
 print(f'  Defense slides saved: {OUT.name}  ({OUT.stat().st_size//1024} KB)')
-print(f'  16 slides total:')
+print(f'  17 slides total:')
 print(f'    1. Title  2. Problem  3. Objectives  4. What is SmartSpend')
 print(f'    5. Tech Stack  6. Agentic AI  7. LLM Benchmarking  8. General vs Finance LLMs')
 print(f'    9. FHS Formula  10. App Comparison  11. Smart Import  12. Methodology')
 print(f'    13. SUS Results [placeholder]  14. Demo Flow  15. Conclusions  16. Thank You')
+print(f'    17. Q&A Hot Topics')

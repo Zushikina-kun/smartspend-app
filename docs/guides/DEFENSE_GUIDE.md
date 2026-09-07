@@ -34,7 +34,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | What | Technology | Why |
 |------|-----------|-----|
 | App framework | Flutter (Dart) | Cross-platform, single codebase, near-native performance |
-| AI/LLM | Multi-provider: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, Groq LLaMA 3.3 70B, 8B, Cerebras | Auto-failover, always available, all free tier |
+| AI/LLM | Multi-provider: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, LLaMA 4 Scout (Groq), LLaMA 3.3 70B (Groq), LLaMA 3.1 8B (Groq), GPT-OSS 120B (Cerebras) | Auto-failover, always available, all free tier |
 | Local database | SQLite via sqflite (v11, 20 tables) | Works offline, fast, no cost |
 | Cloud sync | Firebase Firestore | Free tier, bidirectional sync, UID-scoped security rules |
 | Authentication | Firebase Auth | Google Sign-In + email/password |
@@ -47,12 +47,12 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 ## AI Architecture — Agentic AI with Context Injection
 
-**What makes it Agentic:** The AI doesn't just answer — it takes **31 autonomous actions** on user data. Say "I spent 150 pesos on jeepney" → AI parses intent → writes directly to SQLite. Genuine agentic loop: **perceive → decide → act**.
+**What makes it Agentic:** The AI doesn't just answer — it takes **34 autonomous actions** on user data. Say "I spent 150 pesos on jeepney" → AI parses intent → writes directly to SQLite. Genuine agentic loop: **perceive → decide → act**.
 
 **Multi-model routing:**
-- `fast` tier → expense logging, simple queries → LLaMA 3.1 8B
-- `smart` tier → analysis, planning → LLaMA 3.3 70B or Gemini 3.1 Flash-Lite
-- `financial_advice` tier → SSS/tax/debt strategy → Gemini 3.5 Flash
+- `fast` tier → expense logging, simple queries → LLaMA 3.1 8B (14,400 req/day, fastest)
+- `smart` tier → analysis, planning → LLaMA 4 Scout (Groq) or Gemini 3.1 Flash-Lite
+- `financial_advice` tier → SSS/tax/debt strategy → Gemini 3.5 Flash (best reasoning) or LLaMA 4 Scout
 
 **How context injection works:** Before every AI message, app queries SQLite and builds a context string with expenses, budgets, income, goals, debts, wallets, and recurring bills. Injected into the AI system prompt as the single source of truth.
 
@@ -63,7 +63,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 ---
 
-## The 31 AI Action Types
+## The 34 AI Action Types
 
 | Category | Actions |
 |----------|---------|
@@ -139,7 +139,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | AI providers | 5 (auto-failover) |
 | Primary model | Gemini 3.1 Flash-Lite |
 | Daily AI limit | 60 messages/user |
-| AI agentic actions | 31 |
+| AI agentic actions | 34 |
 | Currencies supported | 57 |
 | Screens | 37 |
 | Services | 26 |
@@ -190,7 +190,7 @@ A: The AI doesn't just answer — it takes autonomous actions. "Spent 150 on lun
 A: RAG is for large knowledge bases (thousands of documents). Our per-user data is tiny — 50 expenses, 8 budgets — fits in one prompt. Direct context injection is faster, simpler, and appropriate for our use case.
 
 **Q: What if the API goes down?**
-A: Five-provider automatic failover — Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → LLaMA 3.1 8B → Cerebras. Manual entry via form works fully offline with zero AI.
+A: Six-provider automatic failover — Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → LLaMA 4 Scout (Groq) → LLaMA 3.3 70B (Groq) → LLaMA 3.1 8B (Groq) → GPT-OSS 120B (Cerebras). Manual entry via form works fully offline with zero AI.
 
 **Q: Why Flutter?**
 A: Single codebase for Android and iOS, near-native performance (compiles to ARM), efficient for a 3-person team.
@@ -225,14 +225,15 @@ A: SmartSpend provides general financial information for educational purposes on
 **Q: Why is Gemini 3.7 Flash not in your fallback chain?**
 A: Gemini 3.7 Flash was released August 13, 2026 — after SmartSpend's core architecture was finalized. It is also a paid-only model ($0.75 per 1M input tokens) with no free tier at the time of writing. Our fallback chain is built entirely on free-tier providers to ensure zero operating cost for an academic deployment. Gemini 3.7 Flash is the most capable option for a post-capstone production upgrade of the `financial_advice` routing tier.
 
-**Q: What about Groq LLaMA 4 Scout? Why isn't it in your fallback chain?**
-A: LLaMA 4 Scout is available on Groq's free tier and was evaluated during development. It is a strong model — multimodal, 109K context, strong tool use. However, at the time our failover chain was finalized, LLaMA 3.3 70B had more extensive real-world reliability data for Taglish expense parsing. LLaMA 4 Scout is listed in our benchmarking table (BENCHMARK.md Part 5) as a "Potential Fallback" and is a viable candidate to replace LLaMA 3.1 8B in a post-capstone architecture update.
+**Q: What about Groq LLaMA 4 Scout? Is it in your fallback chain?**
+A: Yes — LLaMA 4 Scout (`meta-llama/llama-4-scout-17b-16e-instruct`) is now the third tier in the failover chain, after the two Gemini models and before LLaMA 3.3 70B. It runs at ~460 tokens/second on Groq's LPU hardware, has a 30,000 TPM limit, and — critically — **Tagalog is one of Meta's 12 explicitly fine-tuned languages** for LLaMA 4 Scout, making it better suited than LLaMA 3.3 70B for Filipino-English parsing. It also handles the `smart` routing tier (analysis and planning tasks) when Gemini is unavailable.
 
 **Q: Financial Management Score — how is it different from FHS? Isn't it redundant?**
 A: They measure completely different things. The FHS measures financial *outcomes* — are you saving 20%, are you staying within budget, are your spending levels controlled? The FMS measures financial *management behavior* — are you logging consistently, are your entries complete, are you engaging with the app regularly? A user can have a high FHS (great financial outcomes) and a low FMS (rarely opens the app — all data was entered in one session). The two scores together give a complete picture: financial health AND financial discipline. This separation is grounded in Financial Health Network (2026) and Elenvo AI (2026) research recommendations, which explicitly distinguish health outcomes from management behaviors.
 
 **Q: What happens when ALL 5 API providers are simultaneously rate-limited?**
-A: If all 5 providers return 429 (rate limit) errors simultaneously, the AI chat screen shows a friendly error: "All AI providers are currently busy. Please try again in a few minutes or use manual entry." The app remains fully functional — all core features (manual expense logging, budgets, goals, analytics, FHS, wallets, debts) work entirely without AI. The rate limit resets within minutes for Groq and Cerebras (per-minute limits) or at midnight for daily limits. In practice, with 5 providers offering a combined ~30,000+ requests/day, simultaneous exhaustion is highly unlikely for a 30-respondent academic study.
+**Q: What happens when ALL 6 API providers are simultaneously rate-limited?**
+A: If all 6 providers return 429 (rate limit) errors simultaneously, the AI chat screen shows a friendly error: "All AI providers are currently busy. Please try again in a few minutes or use manual entry." The app remains fully functional — all core features (manual expense logging, budgets, goals, analytics, FHS, wallets, debts) work entirely without AI. The rate limit resets within minutes for Groq and Cerebras (per-minute limits) or at midnight for daily limits. In practice, with 6 providers offering a combined ~50,000+ requests/day across all tiers, simultaneous exhaustion is statistically negligible for a 30-respondent academic study.
 
 **Q: What is the Weekly Category Card?**
 A: The Weekly Category Card compares each spending category's current-week total against the 4-week rolling average and labels it High, Normal, or Low. High means current week is 20%+ above your usual — orange warning. Normal means within ±20% of your usual — green. Low means 20%+ below — blue positive signal. It is grounded in behavioral finance research showing that relative personal comparisons (vs your own past) are more motivating than absolute budget limits (vs an external target). Seeing "Food: HIGH — ₱2,400 vs your usual ₱1,800" is more actionable than "₱2,400 spent of ₱3,000 budget."
@@ -267,8 +268,8 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 ## Things to Know Cold
 
 1. **FHS formula** — 4 components × 25 pts, two modes (full + lightweight), two adjustments (decay + gap)
-2. **31 AI actions** — can list at least 5 examples from memory
-3. **Multi-model routing** — fast/smart/financial_advice tiers, 5 providers
+2. **34 AI actions** — can list at least 5 examples from memory
+3. **Multi-model routing** — fast/smart/financial_advice tiers, 6 providers
 4. **Smart Import** — 4 modes, 40+ platforms
 5. **Offline capability** — everything except AI chat and sync
 6. **Team roles** — Brix: Lead Developer | Cyrille: UI/UX & Documentation | Djaunathan: PM & QA
@@ -506,8 +507,8 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 | FHS basis? | UNSGSA framework. 4×25 pts. Income-relative. Two modes: Full (income-based) and Lightweight (habit-based). |
 | How does FHS work? | 4 components × 25 pts = 100. Full Mode: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency. Lightweight: Spending Restraint, Consistency, Category Balance, Habit Streak. Plus Warning Decay and Gap Adjustment. |
 | vs GCash? | GCash shows what you spent. We tell you what it means. |
-| vs GCash Pera Coach? | GCash Pera Coach (March 2026, built with Microsoft) teaches financial concepts via Q&A inside the GCash app. SmartSpend tracks your actual spending, gives you an FHS, and has 31 autonomous AI actions. Different tools for different needs. |
-| vs BudgetPH? | BudgetPH is closest Filipino competitor — has paluwagan and 15th/30th payday cycle. SmartSpend leads on agentic AI (31 actions), multi-modal input, offline mode, and gamification. |
+| vs GCash Pera Coach? | GCash Pera Coach (March 2026, built with Microsoft) teaches financial concepts via Q&A inside the GCash app. SmartSpend tracks your actual spending, gives you an FHS, and has 34 autonomous AI actions. Different tools for different needs. |
+| vs BudgetPH? | BudgetPH is closest Filipino competitor — has paluwagan and 15th/30th payday cycle. SmartSpend leads on agentic AI (34 actions), multi-modal input, offline mode, and gamification. |
 | Backend? | No. Serverless. Zero hosting costs. |
 | Context injection vs RAG? | Small data fits in one prompt. RAG is overkill. |
 | 30 respondents? | Capstone study. Purposive. Nielsen: 5 finds 85% of issues. |

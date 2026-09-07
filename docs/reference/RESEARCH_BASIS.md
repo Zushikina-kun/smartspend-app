@@ -323,7 +323,7 @@ Davis (1989) established that technology adoption is driven by **perceived usefu
 | Warning Decay | Loss aversion — consequences make warnings real | Kahneman & Tversky (1979) |
 | 50/30/20 tracker in Analytics | Warren's budgeting rule | Warren & Tyagi (2005) |
 | AI chat — LLM for finance | LLMs reduce manual effort and improve financial behavior | Hean et al. (2025), Li et al. (2024), Liu et al. (2023) |
-| Agentic AI (31 actions) | Agentic AI in financial services | WEF (2024), IBM (2025), Davenport & Mittal (2022) |
+| Agentic AI (34 actions) | Agentic AI in financial services | WEF (2024), IBM (2025), Davenport & Mittal (2022) |
 | Multi-modal input (voice, OCR, barcode) | Multi-modal reduces adoption friction | Stefanov et al. (2024), IJERT (2026) |
 | Gamification (badges, quests, streaks) | Gamification boosts saving habits by 22% | Bitrián et al. (2021), Juniper Research (2026) |
 | Impulse Pause mechanic | Loss aversion + nudge theory | Kahneman & Tversky (1979), Thaler & Sunstein (2008) |
@@ -639,7 +639,7 @@ Layer 3 — Generative AI (LLM explains results, answers questions)
 - Cheaper — LLM only generates text, never computes numbers
 - Safer — LLM cannot override the finance engine
 
-**Aligned with SmartSpend's existing design:** `ScoreService.calculateScore()` is deterministic; AI receives pre-calculated context and generates explanations. The 31 agentic actions write to the database but do not compute the FHS.
+**Aligned with SmartSpend's existing design:** `ScoreService.calculateScore()` is deterministic; AI receives pre-calculated context and generates explanations. The 34 agentic actions write to the database but do not compute the FHS.
 
 ---
 
@@ -762,7 +762,7 @@ These figures confirm the persistent gap between digital commerce adoption (high
 | | GCash Pera Coach | SmartSpend |
 |--|-----------------|-----------|
 | Platform | Embedded in GCash e-wallet app | Standalone Android app |
-| AI capability | Q&A and financial guidance only | 31 agentic actions (takes real actions on user data) |
+| AI capability | Q&A and financial guidance only | 34 agentic actions (takes real actions on user data) |
 | Expense tracking | ❌ No expense logging | ✅ Full expense tracking + analytics |
 | Financial Health Score | ❌ No | ✅ Dual-mode FHS (0–100) |
 | Offline mode | ❌ Requires internet | ✅ Full offline SQLite |
@@ -772,7 +772,7 @@ These figures confirm the persistent gap between digital commerce adoption (high
 | Available to | GCash Fully Verified users | All Android users |
 
 **Significance for the capstone:**
-GCash Pera Coach is the most prominent Filipino-market AI financial tool as of 2026. Its launch validates the academic and commercial relevance of AI-assisted financial guidance for Filipino users — directly supporting the research premise of SmartSpend. However, Pera Coach is limited to advisory/educational AI within an e-wallet. SmartSpend's agentic AI (31 actions), full expense tracking, FHS, and offline-first architecture make it a distinct and more comprehensive financial management system.
+GCash Pera Coach is the most prominent Filipino-market AI financial tool as of 2026. Its launch validates the academic and commercial relevance of AI-assisted financial guidance for Filipino users — directly supporting the research premise of SmartSpend. However, Pera Coach is limited to advisory/educational AI within an e-wallet. SmartSpend's agentic AI (34 actions), full expense tracking, FHS, and offline-first architecture make it a distinct and more comprehensive financial management system.
 
 **For the panel:** If asked "GCash already has AI — why does SmartSpend still matter?", the answer is: GCash Pera Coach is a literacy/advisory feature embedded in a payments app. SmartSpend is a dedicated financial management system with autonomous AI actions, behavioral scoring, and full offline capability. They address different user needs and are not direct substitutes.
 
@@ -854,7 +854,7 @@ Key finding: Agentic AI capabilities could help firms lower cost-to-serve, enhan
 | 18% used AI specifically for budgeting and household finance | EY (2026) | Direct validation of SmartSpend's primary use case |
 | 60% expect AI to save them time; 58% to reduce financial stress | Plaid (2026) | SmartSpend's multi-modal input reduces manual effort; FHS reduces anxiety |
 | AI personal finance market → $3.7B by 2033 | Plaid (2026) | Confirms long-term commercial and academic relevance |
-| 16% globally using autonomous/agentic AI | EY (2026) | SmartSpend's 31 agentic actions are at the forefront of this adoption trend |
+| 16% globally using autonomous/agentic AI | EY (2026) | SmartSpend's 34 agentic actions are at the forefront of this adoption trend |
 | Agentic AI lowers cost-to-serve and enhances advice quality | Deloitte (2026) | SmartSpend provides wealth-management-grade AI guidance at zero cost |
 | Digital payments reduce psychological pain of spending (Spendception) | Meyll et al. (2025) | Justifies Impulse Pause, Warning Decay, FHS visibility mechanics |
 | Gamified nudges boost engagement esp. for younger users | Springer (2026) | Validates SmartSpend's badge + quest + streak system |

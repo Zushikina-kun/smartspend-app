@@ -61,13 +61,15 @@ Smart Spend is **not** a banking app. It does not process payments or transfer m
                               │  1. Gemini 3.1 Flash-Lite       │
                               │     (primary, 1,000/day free)   │
                               │  2. Gemini 3.5 Flash            │
-                              │     (fallback 1, 250/day free)  │
-                              │  3. Groq LLaMA 3.3 70B          │
-                              │     (fallback 2, 14,400/day)    │
-                              │  4. Groq LLaMA 3.1 8B           │
-                              │     (fallback 3, fastest)       │
-                              │  5. Cerebras LLaMA 3.1          │
-                              │     (fallback 4, 1M tokens/day) │
+                              │     (fallback 1, ~1,500/day)    │
+                              │  3. LLaMA 4 Scout (Groq)        │
+                              │     (fallback 2, 1,000/day)     │
+                              │  4. LLaMA 3.3 70B (Groq)        │
+                              │     (fallback 3, 1,000/day)     │
+                              │  5. LLaMA 3.1 8B (Groq)         │
+                              │     (fallback 4, 14,400/day)    │
+                              │  6. GPT-OSS 120B (Cerebras)     │
+                              │     (fallback 5, 1M tokens/day) │
                               └──────────────────────────────────┘
                                          │
                               ┌──────────▼──────────┐
@@ -141,7 +143,7 @@ Low-confidence entries (< 0.7) are flagged with an orange dot on the expense til
 - **Spending Insights** — analyzes patterns and generates bullet-point insights on the dashboard
 - **Financial Advice** — personalized tips based on income, spending, and predictions
 - **AI Chat** — conversational assistant with full financial context injection
-- **Multi-Model Routing** — Gemini 3.1 Flash-Lite (primary) → Gemini 3.5 Flash → Groq LLaMA 3.3 70B → Groq LLaMA 3.1 8B → Cerebras. Auto-fallback on 429. User can switch manually via model chip in AI appbar.
+- **Multi-Model Routing** — Gemini 3.1 Flash-Lite (primary) → Gemini 3.5 Flash → LLaMA 4 Scout (Groq) → LLaMA 3.3 70B (Groq) → LLaMA 3.1 8B (Groq) → GPT-OSS 120B (Cerebras). Auto-fallback on 429. User can switch manually via model chip in AI appbar.
 
 #### AI Architecture — Agentic AI with Context Injection
 
@@ -162,7 +164,7 @@ Before every AI message, the app queries SQLite for the user's live financial da
 #### AI Chat Capabilities
 The AI has access to: last 10 expenses detailed + older summarized by category, budget status, monthly income, total spent, health score (with component breakdown), savings goals, debts, recurring, installments, wallet balances, insurance policies, and FHS breakdown. Context is compressed to stay within the 8,192 token limit.
 
-The AI executes **31 action types** directly — data is written to the DB immediately with green snackbar confirmation:
+The AI executes **34 action types** directly — data is written to the DB immediately with green snackbar confirmation:
 
 | Action | Example Trigger |
 |--------|----------------|
@@ -1349,7 +1351,7 @@ lib/
 │   ├── backup_service.dart        # Google Drive backup & restore
 │   ├── event_bus.dart             # Global event bus for real-time UI refresh
 │   ├── llm_service.dart           # Groq API (expense parsing + insights + advice)
-│   ├── ai_chat_service.dart       # Groq/Gemini/Cerebras multi-model API (31 action types)
+│   ├── ai_chat_service.dart       # Groq/Gemini/Cerebras multi-model API (34 action types)
 │   ├── insight_service.dart       # Wrapper for LLM dashboard insights (passes actual total)
 │   ├── score_service.dart         # Financial health score (income-relative, this-month only)
 │   ├── predict_service.dart       # Monthly spending prediction (3+ days required)
