@@ -228,11 +228,16 @@ def build_fhs_brief():
         'component-by-component breakdown with plain-language explanations.')
 
     info_box(doc,
-        '💡  KEY DIFFERENTIATOR\n'
-        'Unlike the CFPB Financial Well-Being Scale (survey-based, 10 questions) '
-        'or Cleo\'s proprietary score, SmartSpend\'s FHS is a behavioral computation — '
-        'it derives the score entirely from actual transaction records in the '
-        'local SQLite database, making it objective, real-time, and verifiable.',
+        '💡  KEY DIFFERENTIATOR — Prototype Observed FHI\n'
+        'SmartSpend\'s FHS is formally positioned as a Prototype Observed Financial '
+        'Health Indicator (FHI) per the Commonwealth Bank of Australia & Melbourne '
+        'Institute (CBA-MI, 2018) dual-scale model, which distinguishes:\n\n'
+        '  • Reported Scale — subjective psychometric surveys (like the CFPB 10-item scale)\n'
+        '  • Observed Scale — objective, transaction-derived behavioral indicators\n\n'
+        'SmartSpend\'s FHS belongs to the Observed category: it is computed entirely '
+        'from actual transaction records in SQLite — objective, real-time, and '
+        'verifiable. The CFPB scale provides the definitional grounding (0–100 range, '
+        'definition of financial well-being) but does NOT validate the formula.',
         bg=LIGHT_BLUE, border='1A3A6B', color=BLUE)
 
     # ── SECTION 2: EXISTING FRAMEWORKS ──────────────────────────────────────
@@ -436,11 +441,14 @@ def build_fhs_brief():
 
     info_box(doc,
         '🎓  ACADEMIC ADVANTAGE\n'
-        'SmartSpend\'s FHS is the only mobile-first, offline-capable, Filipino-English '
-        'financial health scoring system with a fully documented, academically-traceable '
-        'formula. Unlike Cleo or BudgetPH whose formulas are proprietary, every '
-        'component and threshold in SmartSpend\'s FHS can be directly cited to a '
-        'published academic framework.',
+        'SmartSpend\'s FHS is formally classified as a Prototype Observed Financial '
+        'Health Indicator (FHI) per CBA-MI (2018) and UNSGSA (2021) dual-scale '
+        'guidelines — the same institutional frameworks used by central banks and '
+        'financial inclusion bodies globally. Unlike Cleo or BudgetPH whose formulas '
+        'are proprietary, every component of SmartSpend\'s FHS is directly traceable '
+        'to a published academic framework, and its Observed FHI classification '
+        'correctly distinguishes it from subjective psychometric survey instruments '
+        'like the CFPB scale.',
         bg=LIGHT_GRN, border='1A6B3A', color=GREEN)
 
     # ── SECTION 7: APA CITATIONS ─────────────────────────────────────────────
