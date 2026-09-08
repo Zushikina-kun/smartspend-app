@@ -1,5 +1,5 @@
 # SmartSpend — Defense Guide
-**Version:** 2.9.11 | **August 2026** | **Lucid Frame**
+**Version:** 2.9.19 | **September 2026** | **Lucid Frame**
 
 > This is your single reference for both the DEMO and the DEFENSE.
 > Read it fully before your pre-final and final defenses.
@@ -133,10 +133,10 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | 2.9.9 |
+| Version | 2.9.19 |
 | Platform | Android (Flutter) |
 | Database | SQLite version 11, 20 tables |
-| AI providers | 5 (auto-failover) |
+| AI providers | 6 (auto-failover, all free tier) |
 | Primary model | Gemini 3.1 Flash-Lite |
 | Daily AI limit | 60 messages/user |
 | AI agentic actions | 34 |
@@ -184,7 +184,7 @@ A: Four components, 25 points each, totaling 100. Full Mode: Savings Rate, Overs
 A: Not everyone has a fixed income — students, informal workers, freelancers. Lightweight Mode gives a meaningful FHS using only spending habits, without penalizing people for not entering income data.
 
 **Q: What is Agentic AI?**
-A: The AI doesn't just answer — it takes autonomous actions. "Spent 150 on lunch" → AI decides it's Food → writes to the database directly. Perceive → decide → act. SmartSpend has 31 such actions.
+A: The AI doesn't just answer — it takes autonomous actions. "Spent 150 on lunch" → AI decides it's Food → writes to the database directly. Perceive → decide → act. SmartSpend has 34 such actions.
 
 **Q: Why not RAG?**
 A: RAG is for large knowledge bases (thousands of documents). Our per-user data is tiny — 50 expenses, 8 budgets — fits in one prompt. Direct context injection is faster, simpler, and appropriate for our use case.
@@ -205,10 +205,10 @@ A: All core features work — manual expense logging, all analytics, budgets, go
 A: They handle actual money movement. SmartSpend is a tracker and advisor — doesn't touch your money. Tracks all payment methods (cash, GCash, card, etc.) in one place.
 
 **Q: How does SmartSpend compare to GCash Pera Coach?**
-A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI-powered financial literacy coach embedded inside GCash. It provides Q&A and financial education in English and Filipino — but it doesn't track expenses, has no Financial Health Score, no offline mode, and no agentic actions. SmartSpend is a dedicated financial management system: it tracks your actual spending, computes an FHS, runs 31 autonomous AI actions, and works fully offline. Pera Coach teaches you about money; SmartSpend manages your money. They're complementary tools, not substitutes.
+A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI-powered financial literacy coach embedded inside GCash. It provides Q&A and financial education in English and Filipino — but it doesn't track expenses, has no Financial Health Score, no offline mode, and no agentic actions. SmartSpend is a dedicated financial management system: it tracks your actual spending, computes an FHS, runs 34 autonomous AI actions, and works fully offline. Pera Coach teaches you about money; SmartSpend manages your money. They're complementary tools, not substitutes.
 
 **Q: How does SmartSpend compare to BudgetPH?**
-A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (31 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (23 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
+A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (34 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (23 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
 
 **Q: Why doesn't SmartSpend have a paluwagan tracker?**
 A: Paluwagan is on the post-capstone roadmap as the highest-priority Filipino-specific feature. The core system architecture supports it — it would use the existing debt/recurring infrastructure with a new rotating-round tracking layer. It was deprioritized during Capstone 2 to focus on the AI agentic system and Financial Health Score, which are the primary academic contributions. BudgetPH currently has this feature.
@@ -231,7 +231,6 @@ A: Yes — LLaMA 4 Scout (`meta-llama/llama-4-scout-17b-16e-instruct`) is now th
 **Q: Financial Management Score — how is it different from FHS? Isn't it redundant?**
 A: They measure completely different things. The FHS measures financial *outcomes* — are you saving 20%, are you staying within budget, are your spending levels controlled? The FMS measures financial *management behavior* — are you logging consistently, are your entries complete, are you engaging with the app regularly? A user can have a high FHS (great financial outcomes) and a low FMS (rarely opens the app — all data was entered in one session). The two scores together give a complete picture: financial health AND financial discipline. This separation is grounded in Financial Health Network (2026) and Elenvo AI (2026) research recommendations, which explicitly distinguish health outcomes from management behaviors.
 
-**Q: What happens when ALL 5 API providers are simultaneously rate-limited?**
 **Q: What happens when ALL 6 API providers are simultaneously rate-limited?**
 A: If all 6 providers return 429 (rate limit) errors simultaneously, the AI chat screen shows a friendly error: "All AI providers are currently busy. Please try again in a few minutes or use manual entry." The app remains fully functional — all core features (manual expense logging, budgets, goals, analytics, FHS, wallets, debts) work entirely without AI. The rate limit resets within minutes for Groq and Cerebras (per-minute limits) or at midnight for daily limits. In practice, with 6 providers offering a combined ~50,000+ requests/day across all tiers, simultaneous exhaustion is statistically negligible for a 30-respondent academic study.
 
@@ -276,7 +275,7 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 
 ---
 
-*SmartSpend v2.9.11 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
+*SmartSpend v2.9.19 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*
 
 
@@ -550,10 +549,10 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 
 ---
 
-*SmartSpend v2.9.11 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
+*SmartSpend v2.9.19 — Lucid Frame — Lorma Colleges CCSE BSIT 2026–2027 (1st Semester)*
 
 
 ---
 
-*SmartSpend v2.9.11 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*
+*SmartSpend v2.9.19 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027*
 *You built something genuinely impressive. Know the logic, not the memorization.*
