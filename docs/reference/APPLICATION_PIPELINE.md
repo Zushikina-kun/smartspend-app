@@ -93,7 +93,7 @@
 │             "category": "Transportation", "merchant": "Jeepney",       │
 │             "want_need": "Need", "confidence": 0.97 }                   │
 │                                                                         │
-│  The AI recognizes 31 action types — not just logging:                  │
+│  The AI recognizes 34 action types — not just logging:                  │
 │                                                                         │
 │  📝 Expenses    → log, update, delete, delete by date                   │
 │  💰 Income      → set income, log income entry                          │
@@ -362,15 +362,15 @@ End of month
 
 ---
 
-## KEY NUMBERS (v2.9.9)
+## KEY NUMBERS (v2.9.19)
 
 | What | How many |
 |------|---------|
-| AI agentic action types | 31 |
+| AI agentic action types | 34 |
 | App screens | 37 |
 | Backend services | 26 |
 | SQLite tables | 20 |
-| LLM providers (auto-failover) | 5 |
+| LLM providers (auto-failover) | 6 |
 | Achievement badges | 23 |
 | Daily quests (rotating) | 10 |
 | Expense categories | 14 built-in + unlimited custom |
@@ -388,7 +388,7 @@ End of month
 |------------------------|-----------|
 | Fill out a form for every expense | Just say or type it naturally |
 | Shows a list of transactions | Shows a Financial Health Score + explanation |
-| No AI — passive recording only | 31 AI actions — actively manages your data |
+| No AI — passive recording only | 34 AI actions — actively manages your data |
 | Only works with internet + bank API | Works 100% offline, no bank login needed |
 | English only | Filipino-English (Taglish) understood natively |
 | Manual receipt entry | OCR + batch screenshot import (40+ platforms) |
@@ -396,7 +396,7 @@ End of month
 
 ---
 
-*SmartSpend v2.9.11 — Lucid Frame*
+*SmartSpend v2.9.19 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Teacher-in-Charge: Shekiro R. Raposas | Capstone Adviser: Ellen F. Mangaoang, MIT*

@@ -41,7 +41,7 @@ Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, 
 | Bank / e-wallet sync | ❌ manual | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ Paid | ❌ | CSV import | ❌ | ✅ | ❌ |
 | CSV / text import | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ✅ GCash/Maya | ❌ | ❌ | ❌ |
 | **AI & INTELLIGENCE** | | | | | | | | | | | | | | |
-| AI chat assistant | ✅ 31 actions | ❌ | ❌ | ✅ Basic | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Insights | ✅ Chat | ✅ AI | ❌ |
+| AI chat assistant | ✅ 34 actions | ❌ | ❌ | ✅ Basic | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Insights | ✅ Chat | ✅ AI | ❌ |
 | Natural language expense input | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Auto-categorization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Proactive AI insights | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
@@ -101,7 +101,7 @@ Apps not in the main matrix above, included for completeness:
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Platform** | Android | iOS+Web | iOS+Web | Android+iOS | Android+iOS | Android+iOS+Web | Android | Android | Android | Android (inside GCash) |
 | **Cost** | Free | Freemium | Freemium | Free/$12.99mo | Free | Free (basic) | Free | Free | Free | Free (GCash verified users) |
-| **AI chat / assistant** | ✅ 31 actions | ✅ Snarky AI advisor | ✅ Q&A only | ❌ | ❌ | ⚠️ Insights only | ❌ | ❌ | ❌ | ✅ Q&A + financial literacy |
+| **AI chat / assistant** | ✅ 34 actions | ✅ Snarky AI advisor | ✅ Q&A only | ❌ | ❌ | ⚠️ Insights only | ❌ | ❌ | ❌ | ✅ Q&A + financial literacy |
 | **Natural language input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ (Taglish + Filipino) |
 | **Expense tracking** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ (education/advice only) |
 | **Financial Health Score** | ✅ 0–100 | ✅ Score | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -134,7 +134,7 @@ BudgetPH is the most direct Filipino-context competitor discovered during this r
 | | BudgetPH | SmartSpend |
 |--|----------|-----------|
 | Target | Filipino-first budgeting | Filipino-first tracking + AI advisory |
-| AI | Spending insights only | 31 agentic actions, full conversational AI |
+| AI | Spending insights only | 34 agentic actions, full conversational AI |
 | Voice input | ❌ | ✅ |
 | OCR / Barcode | ❌ | ✅ |
 | Paluwagan | ✅ Full tracker | ❌ Not implemented |
@@ -164,7 +164,7 @@ YNAB is the global gold standard for zero-based budgeting — every peso has a j
 **Updated August 2026:** Monarch added an AI Assistant (plain-language financial Q&A from your actual data), receipt scanning (upload or email-forward receipts, AI matches to transactions), Goals 3.0 (investment-linked goals, debt paydown budgeting), and a new Plus tier with long-term planning and business finance tools. It is now the most AI-capable international app. Still requires bank API (US/Canada only), costs $9.99–$19.99/mo, iOS+web+Android, no offline, no Filipino context. SmartSpend still leads on agentic AI (31 autonomous actions vs Monarch's Q&A-only assistant), Filipino language, offline capability, and free pricing.
 
 #### vs Copilot Money
-AI-categorization is strong but iOS-only, no offline, and no Filipino support. SmartSpend's AI goes much further — 31 actions vs Copilot's passive categorization.
+AI-categorization is strong but iOS-only, no offline, and no Filipino support. SmartSpend's AI goes much further — 34 actions vs Copilot's passive categorization.
 
 #### vs Quicken Simplifi
 PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutions, real-time cash flow projections. But US-centric (PH banks not supported), requires paid subscription, no offline, no Filipino language. SmartSpend wins entirely on accessibility and local relevance.
@@ -175,7 +175,7 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 
 | Advantage | Detail |
 |-----------|--------|
-| **Only app with 31 agentic AI actions** | Every competitor either has no AI or passive AI. SmartSpend's AI takes real actions on user data |
+| **Only app with 34 agentic AI actions** | Every competitor either has no AI or passive AI. SmartSpend's AI takes real actions on user data |
 | **Only free Filipino-English AI financial app on Android** | BudgetPH has AI insights but no conversational AI; Alkansya AI is iOS-only |
 | **Only app with batch screenshot import** | 40+ platform types auto-detected — unique globally |
 | **Only app with FHS dual-mode** | Full mode (income-based) + Lightweight mode (habit-based) — no equivalent exists |
@@ -190,7 +190,7 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 | 15th & 30th payday cycle | BudgetPH, SweldoWise, SweldoTrack | High — payday-aware budgeting reset |
 | Mascot / personality layer | Sentimo (KBoy carabao) | Low — fun UX differentiator |
 | Couple / family sharing | Monarch (Goals 3.0), Wally, Goodbudget | Medium |
-| AI Q&A from own data | Monarch (2026 AI Assistant) | ✅ Done — SmartSpend has 31 agentic actions |
+| AI Q&A from own data | Monarch (2026 AI Assistant) | ✅ Done — SmartSpend has 34 agentic actions |
 | Receipt email forwarding | Monarch (July 2026) | Low — SmartSpend has OCR + batch screenshots |
 | Investment tracking | Monarch, Copilot, Simplifi | Low (out of scope for capstone) |
 | iOS / web version | All competitors | Post-capstone |
@@ -361,7 +361,7 @@ Both are paid-only with no free tier sufficient for sustained daily use. For aca
 
 | Phase | Change | Reason |
 |-------|--------|--------|
-| **Current (v2.9.9)** | Flash-Lite primary, 5-provider fallback | Free, sufficient for 30 respondents |
+| **Current (v2.9.19)** | Gemini 3.1 Flash-Lite primary, 6-provider failover (incl. LLaMA 4 Scout) | Free, sufficient for 30 respondents |
 | **Post-capstone** | Upgrade `financial_advice` tier to Gemini 3.5 Flash | Better PH financial knowledge, still affordable |
 | **Play Store launch** | Add backend proxy (Cloud Function or Vercel) | Move API key off device entirely |
 | **Scale (1,000+ users)** | Evaluate GPT-5.6 Terra or Claude Sonnet 5 for premium tier | Better reasoning at scale, can charge subscription |
@@ -404,7 +404,7 @@ These are features competitors have that SmartSpend currently lacks, ranked by r
 **EY Autonomous AI Report, March 2026:**
 - 84% of respondents used AI in the prior six months
 - **16% globally** report using AI systems that act autonomously without human intervention
-- SmartSpend's 31 agentic actions represent this frontier of AI-as-actor in personal finance
+- SmartSpend's 34 agentic actions represent this frontier of AI-as-actor in personal finance
 - Source: Ernst & Young (2026b) — https://www.ey.com/en_nl/newsroom/2026/03/ey-survey-autonomous-ai-is-no-longer-theoretical-as-adoption-grows-despite-ongoing-trust-concerns
 
 **Plaid State of Intelligent Finance, Spring 2026:**
@@ -458,7 +458,7 @@ Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://pl
 
 ---
 
-*SmartSpend v2.9.11 — Lucid Frame*
+*SmartSpend v2.9.19 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 
 ---
@@ -543,20 +543,21 @@ Plaid. (2026). *State of intelligent finance report — Spring 2026*. https://pl
 | Mixtral 8x7B | Mistral/Groq | 32,000 | ~400 | ★★★☆☆ | ★★★★☆ | ✅ Groq | ❌ Poor Filipino |
 | DeepSeek V3 weights *(self-host)* | DeepSeek/MIT | 64,000 | ~60–100 | ★★★★☆ | ★★★☆☆ | ✅ MIT open weights | ❌ Poor Filipino, needs GPU |
 
-### Current 5-Provider Failover Chain (v2.9.9)
+### Current 6-Provider Failover Chain (v2.9.19)
 
 | Priority | Provider | Model | Free Limit | Role |
 |----------|----------|-------|------------|------|
-| 1 (Primary) | Google | Gemini 3.1 Flash-Lite | 1,000 req/day | Best Filipino-English, 1M context |
-| 2 | Google | Gemini 3.5 Flash | 250 req/day | Higher reasoning quality |
-| 3 | Groq LPU | LLaMA 3.3 70B | 14,400 req/day | Best open-source reasoning, ~315 t/s |
-| 4 | Groq LPU | LLaMA 3.1 8B | 14,400 req/day | Fastest simple queries, ~800 t/s |
-| 5 | Cerebras WSE | LLaMA 3.1 70B | 1M tokens/day | Highest raw throughput (~1,800 t/s) |
+| 1 (Primary) | Google | Gemini 3.1 Flash-Lite | ~1,000 req/day | Best Filipino-English, 1M context |
+| 2 | Google | Gemini 3.5 Flash | ~1,500 req/day | Higher reasoning quality |
+| 3 | Groq LPU | LLaMA 4 Scout | 1,000 req/day, 30K TPM | Tagalog native, newest architecture, ~460 t/s |
+| 4 | Groq LPU | LLaMA 3.3 70B | 1,000 req/day | Strong reasoning fallback |
+| 5 | Groq LPU | LLaMA 3.1 8B | 14,400 req/day | Fastest/highest volume, ~800 t/s |
+| 6 | Cerebras WSE | GPT-OSS 120B | 1M tokens/day | ~3,000 t/s (llama3.1-70b deprecated Feb 2026) |
 
 ### Why Context Injection (Not RAG)
 A typical SmartSpend user has 20–50 expenses, 5–10 budgets, 3–5 goals — all fitting in ~1,000 tokens. RAG's vector search overhead is unnecessary when the full dataset can be injected directly into each AI message.
 
-### Actual Performance Metrics (SmartSpend v2.9.11)
+### Actual Performance Metrics (SmartSpend v2.9.19)
 
 | Metric | Value |
 |--------|-------|
