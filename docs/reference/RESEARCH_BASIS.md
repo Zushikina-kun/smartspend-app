@@ -65,7 +65,7 @@ It identifies key measurable behaviors: spending control, saving regularly, mana
 - Be on track to meet financial goals
 - Have freedom of choice
 
-**Important distinction:** The CFPB Scale is survey-based (10 questions answered by the user about their feelings and behaviors). SmartSpend's FHS is computed from behavioral data — this is an important differentiator. When a panelist asks "what is your basis?", you say SmartSpend's FHS is a **behavioral computation** inspired by the CFPB's validated definition of financial well-being, but computed from transaction data rather than self-reported surveys.
+**Important distinction:** The CFPB Scale is survey-based (10 questions answered by the user about their feelings and behaviors). SmartSpend's FHS is an **Observed Financial Health Indicator (FHI)** — computed from transaction data rather than self-reported surveys. This is the same distinction established by the **Commonwealth Bank of Australia and Melbourne Institute (CBA-MI, 2018)** dual-scale model, which separates *Reported* (subjective psychometric) scales from *Observed* (administrative/transaction-derived) scales. SmartSpend's FHS is a Prototype Observed FHI per CBA-MI and UNSGSA (2021) guidelines. When a panelist asks "what is your basis?", say: "Our FHS is a Prototype Observed Financial Health Indicator grounded in the CBA-MI (2018) observed-scale model and UNSGSA (2021) framework — it tracks transactional behaviors, not psychological states, so the CFPB psychometric scale does not validate our formula directly."
 
 **APA Citation:**
 > Consumer Financial Protection Bureau. (2017). *Financial well-being scale: Scale development technical report*. CFPB. https://files.consumerfinance.gov/f/documents/201705_cfpb_financial-well-being-scale-technical-report.pdf
@@ -94,13 +94,13 @@ overDays = number of days this month where daily spending > (income ÷ daysInMon
 ```
 Score = 25 × (onBudgetCategories / totalBudgetCategories)
 ```
-**Basis:** Category-level budget tracking is a core feature of zero-based budgeting theory (Ramsey, 2003) and is validated by YNAB's research showing that users who set specific category budgets overspend 32% less.
+**Basis:** Category-level budget tracking is grounded in zero-based budgeting theory (Ramsey, 2003). Empirical studies suggest category budgeting is associated with reduced overspending; this is treated as a testable behavioral hypothesis for our local respondent sample rather than a universal causal figure.
 
 **Component 4 — Logging Consistency (25 pts)**
 ```
 Score = 25 × (loggedDays / activeDays)   [scoped to current month only]
 ```
-**Basis:** Consistent financial tracking reduces discretionary spending by 10–20% (Mindfulsuite, 2026; behavioral finance research). The consistency component rewards the habit of tracking, which itself improves financial behavior (Thaler & Sunstein, 2008).
+**Basis:** Consistent financial tracking increases transaction salience and is associated with reduced discretionary spending (Mindfulsuite, 2026; behavioral finance research). The consistency component rewards the habit of tracking, which itself is hypothesized to improve financial behavior (Thaler & Sunstein, 2008). The exact effect size (often cited as 10–20%) originates from commercial blog sources and is treated as a directional hypothesis for our local sample rather than a peer-reviewed causal claim.
 
 #### Lightweight Mode (Income Tracking OFF — for students, freelancers, informal workers)
 
@@ -185,7 +185,7 @@ FinGPT is trained on financial market data (stock prices, news, trading signals)
 
 > Davenport, T. H., & Mittal, N. (2022). *All-in on AI: How smart companies win big with artificial intelligence*. Harvard Business Review Press.
 
-**What agentic AI means:** Unlike traditional AI that only answers questions, agentic AI systems can perceive context, make decisions, and take autonomous actions (WEF, 2024; IBM, 2025). SmartSpend's AI perceives the user's full financial context from SQLite, decides the correct action type (from 31 options), and writes directly to the database — a genuine perceive → decide → act loop.
+**What agentic AI means:** Unlike traditional AI that only answers questions, agentic AI systems can perceive context, make decisions, and take autonomous actions (WEF, 2024; IBM, 2025). SmartSpend's AI perceives the user's full financial context from SQLite, decides the correct action type (from 34 options), and writes directly to the database — a genuine perceive → decide → act loop.
 
 **Why Context Injection (not RAG):**
 Per-user financial data in SmartSpend (~20–50 expenses, 5–10 budgets, 3–5 goals) fits entirely within the LLM's context window. Retrieval-Augmented Generation (RAG) is designed for large knowledge bases (thousands of documents) and adds vector search overhead unnecessary for small per-user datasets (Davenport & Mittal, 2022; Li et al., 2024).
@@ -231,9 +231,16 @@ Per-user financial data in SmartSpend (~20–50 expenses, 5–10 budgets, 3–5 
 > Strivecloud. (2026). *Fintech app gamification: Data shows 22% boost in saving habits*. https://strivecloud.io/blog/mobile-app-gamification-fintech
 
 **Key findings:**
-- Gamification in personal finance apps boosts saving habits by **22%** and increases average user savings by **20%** (Juniper Research, 2026; Strivecloud, 2026)
+- Gamification in personal finance apps is empirically associated with increased user engagement and savings intention (Bitrián et al., 2021; Juniper Research, 2026). The "22% boost" figure (Strivecloud, 2026) originates from a commercial fintech marketing study and is treated as a directional reference rather than a causal peer-reviewed result.
+- A PLS-SEM structural study (Sharma, Gaba & Sharma, 2026; N=656) found that gamified rewards have a statistically significant positive effect on Sustainable Financial Intention (β=0.25, t=5.89, p<0.001), and that personalized budget feedback nudges have an even stronger effect (β=0.28, t=6.21, p<0.001). The model explains 38% of variance in financial intention (R²=0.38).
+- Perceived Algorithm Transparency (PAT) — explaining *why* the app makes recommendations — acts as a significant moderator (β=0.14, t=2.95, p<0.001), amplifying well-being outcomes. The full model explains 56% of variance in Digital Financial Well-being (R²=0.56) (Sharma et al., 2026).
 - Achievement badges and streak mechanics reward consistent logging behavior, creating positive habit loops (Bitrián et al., 2021)
 - Gamified elements are most effective when tied to real financial behaviors (deposits, bill payments, logging) rather than balances alone (Trophy.so, 2026)
+
+**Additional theoretical grounding — Self-Determination Theory (SDT):**
+Deci & Ryan (2000) established that intrinsic motivation is sustained by three psychological needs: Autonomy, Competence, and Relatedness. SmartSpend's gamification layer directly supports *Competence* (badges and streaks reward skill growth), *Autonomy* (customizable budgets, non-prescriptive advice), and *Relatedness* (Filipino-first framing and local financial context).
+
+> Deci, E. L., & Ryan, R. M. (2000). The "what" and "why" of goal pursuits: Human needs and the self-determination of behavior. *Psychological Inquiry, 11*(4), 227–268.
 
 **How SmartSpend uses it:**
 - **23 achievement badges** — reward specific financial milestones (first savings goal, 7-day streak, first debt payment, etc.)
@@ -313,33 +320,36 @@ Davis (1989) established that technology adoption is driven by **perceived usefu
 
 ## SUMMARY TABLE — FEATURE → RESEARCH BASIS
 
-| Feature | Research Basis | Key Citation |
-|---------|---------------|-------------|
-| Financial Health Score | FinHealth Score® Framework, UNSGSA, CFPB Scale | Financial Health Network (2021), UNSGSA (2021), CFPB (2017) |
+| Financial Health Score | FinHealth Score® Framework, UNSGSA, CBA-MI (2018) dual-scale (Observed FHI), CFPB Scale (definition only) | Financial Health Network (2021), UNSGSA (2021), CFPB (2017), CBA-MI (2018) |
 | Savings Rate (20% target) | 50/30/20 Budgeting Rule | Warren & Tyagi (2005) |
 | Overspend Control component | FinHealth Spend pillar | Financial Health Network (2021) |
-| Logging Consistency component | Behavioral tracking reduces spending 10–20% | Mindfulsuite (2026), Thaler & Sunstein (2008) |
+| Logging Consistency component | Transaction salience + self-monitoring behavior (directional, not causal) | Mindfulsuite (2026), Thaler & Sunstein (2008) |
 | Lightweight Mode (no income tracking) | Financial health metrics must adapt to diverse income structures | Financial Health Network (2021) |
 | Warning Decay | Loss aversion — consequences make warnings real | Kahneman & Tversky (1979) |
 | 50/30/20 tracker in Analytics | Warren's budgeting rule | Warren & Tyagi (2005) |
 | AI chat — LLM for finance | LLMs reduce manual effort and improve financial behavior | Hean et al. (2025), Li et al. (2024), Liu et al. (2023) |
 | Agentic AI (34 actions) | Agentic AI in financial services | WEF (2024), IBM (2025), Davenport & Mittal (2022) |
 | Multi-modal input (voice, OCR, barcode) | Multi-modal reduces adoption friction | Stefanov et al. (2024), IJERT (2026) |
-| Gamification (badges, quests, streaks) | Gamification boosts saving habits by 22% | Bitrián et al. (2021), Juniper Research (2026) |
-| Impulse Pause mechanic | Loss aversion + nudge theory | Kahneman & Tversky (1979), Thaler & Sunstein (2008) |
+| Gamification (badges, quests, streaks) | Empirically linked to financial intention (β=0.25, t=5.89) and sustained by SDT intrinsic motivation needs | Sharma et al. (2026) Atlantis Press PLS-SEM, Bitrián et al. (2021), Deci & Ryan (2000) |
+| FHS explainability (AI breakdown) | Perceived Algorithm Transparency moderates well-being outcomes (β=0.14, p<0.001, R²=0.56) | Sharma et al. (2026) Atlantis Press |
+| Impulse Pause mechanic | Loss aversion + nudge theory + SDT autonomy | Kahneman & Tversky (1979), Thaler & Sunstein (2008), Deci & Ryan (2000) |
 | Demo Mode | Technology Acceptance Model — reduce adoption friction | Davis (1989) |
 | Target population: parents 35–55 | Primary financial decision-makers with lowest literacy | BSP (2021), PSA FIES (2021) |
 | Target population: young professionals 21–35 | "Come-what-may" attitude, informal savings | Flores (2025) |
 | Offline-first architecture | Intermittent internet in provincial Philippines | BSP (2021) |
 | Filipino context (GCash, SSS, etc.) | Dominant PH financial services; no open banking yet | BSP (2021, 2025), Insurance Commission (2025) |
-| Budget Adherence component | Zero-based budgeting research | Ramsey (2003), YNAB usability studies |
-| Subscription auto-detection | Awareness reduces unwanted recurring expenses | Perrig et al. (2024), Rocket Money, Monarch Money product research |
+| Budget Adherence component | Zero-based budgeting (directional association with restraint, not a fixed causal percentage) | Ramsey (2003) |
+| Subscription auto-detection | Subscription blindness awareness | Perrig et al. (2024) |
+| Transaction normalization pipeline | WealthNX 5-step enrichment model (Ingestion → Normalization → Category Alignment → Metadata Shaping → Prompt Generation) | WealthNX (2026) |
+| LLM cost optimization | ZenML ANNA (2025) LLMOps: prompt caching + batch processing → 75% API cost reduction; batch cap of 120 transactions prevents long-context hallucinations | ZenML/ANNA (2025) |
 
 ---
 
 ## FULL APA REFERENCE LIST (for manuscript bibliography)
 
 Ariely, D. (2008). *Predictably irrational: The hidden forces that shape our decisions*. HarperCollins.
+
+ANNA & ZenML. (2025). *ANNA: Cost-effective LLM transaction categorization for business banking*. ZenML Case Studies. https://www.zenml.io/case-studies/anna-cost-effective-llm
 
 Bangko Sentral ng Pilipinas. (2021). *2021 Financial Inclusion Survey*. BSP. https://www.bsp.gov.ph/Inclusive-Finance/Financial-Inclusion-Surveys/2021-FIS-Report.pdf
 
@@ -355,7 +365,11 @@ Consumer Financial Protection Bureau. (2017). *Financial well-being scale: Scale
 
 Creswell, J. W., & Plano Clark, V. L. (2011). *Designing and conducting mixed methods research*. Sage Publications.
 
+Commonwealth Bank of Australia & Melbourne Institute. (2018). *Measuring financial resilience*. CBA-MI Financial Resilience in Australia Study. https://www.melbourneinstitute.unimelb.edu.au/
+
 Davenport, T. H., & Mittal, N. (2022). *All-in on AI: How smart companies win big with artificial intelligence*. Harvard Business Review Press.
+
+Deci, E. L., & Ryan, R. M. (2000). The "what" and "why" of goal pursuits: Human needs and the self-determination of behavior. *Psychological Inquiry, 11*(4), 227–268.
 
 Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. *MIS Quarterly, 13*(3), 319–340.
 
@@ -393,11 +407,15 @@ Perrig, S., et al. (2024). Forgotten subscriptions: How subscription blindness c
 
 Stefanov, T., Stefanova, M., & Varbanova, S. (2024). Personal finance management application. *TEM Journal, 13*(3), 2066–2075. https://doi.org/10.18421/TEM133-34
 
+Sharma, P., Gaba, P., & Sharma, B. (2026). Can cognitive nudges in gamified digital payments foster digital financial well-being? In *Proceedings of the 13th International Youth Conference (IYC 2026): AI Disruption and Opportunities* (pp. 262–281). Atlantis Press. https://doi.org/10.2991/978-94-6463-IYC-2026_28
+
 Thaler, R. H., & Sunstein, C. R. (2008). *Nudge: Improving decisions about health, wealth, and happiness*. Yale University Press.
 
 UNSGSA. (2021). *Measuring financial health: A framework for practitioners*. https://www.unsgsa.org
 
 Warren, E., & Tyagi, A. W. (2005). *All your worth: The ultimate lifetime money plan*. Free Press.
+
+WealthNX. (2026, March 13). How financial apps use large language models for transaction explanations. *WealthNX Blog*. https://www.wealthnx.ai/blog/how-financial-apps-use-large-language-models-for-transaction-explanations
 
 World Economic Forum. (2024). *How agentic AI will transform financial services*. https://www.weforum.org/stories/2024/12/agentic-ai-financial-services-autonomy-efficiency-and-inclusion/
 
@@ -822,7 +840,7 @@ Key findings:
 Key findings:
 - 84% of respondents used AI in the past six months
 - **16% globally** report using AI systems that act without human intervention (autonomous/agentic AI)
-- SmartSpend's agentic architecture (31 autonomous actions) is at the frontier of this trend
+- SmartSpend's agentic architecture (34 autonomous actions) is at the frontier of this trend
 
 **Plaid State of Intelligent Finance Report, Spring 2026:**
 > Plaid. (2026, Spring). *State of intelligent finance report*. https://plaid.com/blog/state-of-intelligent-finance-report-spring-2026/
@@ -837,7 +855,7 @@ Key findings:
 **Cambridge Judge Business School — Agentic AI Era (2025):**
 > Cambridge Judge Business School. (2025). *From automation to autonomy: The agentic AI era of financial services*. https://www.jbs.cam.ac.uk/2025/from-automation-to-autonomy-the-agentic-ai-era-of-financial-services/
 
-Documents the evolution from rule-based AI automation to agentic AI systems that can make decisions and act autonomously in financial contexts — the same architectural principle underlying SmartSpend's 31-action agentic system.
+Documents the evolution from rule-based AI automation to agentic AI systems that can make decisions and act autonomously in financial contexts — the same architectural principle underlying SmartSpend's 34-action agentic system.
 
 **Deloitte 2026 — Agentic AI in Wealth Management:**
 > Deloitte. (2026). *Agentic AI boosts wealth management: How AI agents enhance productivity*. https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html

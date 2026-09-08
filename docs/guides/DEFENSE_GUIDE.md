@@ -195,6 +195,16 @@ A: Six-provider automatic failover — Gemini 3.1 Flash-Lite → Gemini 3.5 Flas
 **Q: Why Flutter?**
 A: Single codebase for Android and iOS, near-native performance (compiles to ARM), efficient for a 3-person team.
 
+**Q: What is the theoretical basis for SmartSpend's gamification and behavioral design?**
+A: Four frameworks ground the behavioral layer:
+1. **Nudge Theory (Thaler & Sunstein, 2008)** — Startup alerts, Warning Decay, and budget framing are choice-architecture nudges that guide behavior without restricting freedom.
+2. **Prospect Theory / Loss Aversion (Kahneman & Tversky, 1979)** — The Warning Decay (−5 pts/day) makes the consequence of ignoring budget overruns tangible. Losses motivate more than equivalent gains.
+3. **Self-Determination Theory (Deci & Ryan, 2000)** — The 23 achievement badges and streak system support *Competence* (rewarding skill growth), non-prescriptive goals support *Autonomy*, and Filipino-first language and context support *Relatedness*.
+4. **Empirical PLS-SEM validation (Sharma, Gaba & Sharma, 2026; N=656)** — This structural equation model found that: Personalized Budget Feedback Nudges → Sustainable Financial Intention (β=0.28, t=6.21, p<0.001); Gamified Rewards → SFI (β=0.25, t=5.89, p<0.001); and Perceived Algorithm Transparency (explaining *why* the app scores you) acts as a significant moderator (β=0.14, t=2.95, p<0.001) that amplifies well-being outcomes. The model explains 56% of variance in Digital Financial Well-being (R²=0.56). This directly validates why SmartSpend explains its FHS breakdown in plain language.
+
+**Q: What is the academic basis for the FHS as a custom scoring system?**
+A: The FHS is formally positioned as a **Prototype Observed Financial Health Indicator (FHI)** — not a psychometric survey. This distinction is grounded in the **Commonwealth Bank of Australia and Melbourne Institute (CBA-MI, 2018)** dual-scale model, which separates *Reported* scales (subjective, survey-based — like the CFPB 10-item scale) from *Observed* scales (computed from administrative/transaction data). The CFPB scale measures psychological states like financial anxiety and perceived freedom — SmartSpend's FHS measures behavioral transaction outcomes. Claiming "our FHS is validated by the CFPB scale" would be a construct mismatch. The correct framing: "Our FHS is a Prototype Observed FHI per CBA-MI (2018) and UNSGSA (2021) dual-scale guidelines."
+
 **Q: Is the data secure?**
 A: SQLite on device + Firebase Firestore with UID-scoped security rules. API key fetched via Firebase Remote Config — never in the APK binary. App Lock with PIN + biometric. 60-message daily rate limit per user.
 
@@ -266,12 +276,13 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 
 ## Things to Know Cold
 
-1. **FHS formula** — 4 components × 25 pts, two modes (full + lightweight), two adjustments (decay + gap)
+1. **FHS formula** — 4 components × 25 pts, two modes (full + lightweight), two adjustments (decay + gap). FHS = Prototype Observed FHI per CBA-MI (2018) + UNSGSA (2021), NOT the same as the CFPB psychometric survey scale.
 2. **34 AI actions** — can list at least 5 examples from memory
 3. **Multi-model routing** — fast/smart/financial_advice tiers, 6 providers
 4. **Smart Import** — 4 modes, 40+ platforms
 5. **Offline capability** — everything except AI chat and sync
 6. **Team roles** — Brix: Lead Developer | Cyrille: UI/UX & Documentation | Djaunathan: PM & QA
+7. **4 theoretical frameworks** — Nudge Theory, Prospect Theory/Loss Aversion, Self-Determination Theory (Deci & Ryan, 2000), TAM — plus Atlantis Press PLS-SEM empirical validation (N=656, β_nudge=0.28, β_gamification=0.25, R²=0.56)
 
 ---
 
