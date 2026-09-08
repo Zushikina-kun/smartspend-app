@@ -6,7 +6,7 @@ Sections:
   A. Overview & Team Roles
   B. Day-of-Defense Checklist
   C. Demo Script (timing cues)
-  D. Q&A Drill — 20 Questions (with model answers)
+  D. Q&A Drill — 22 Questions (with model answers)
   E. Weak Spots Briefing
   F. Quick-Reference Numbers Card
 
@@ -509,10 +509,10 @@ for time_range, duration, title, color_hex, instruction, narration, detail in de
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
 
 # ═════════════════════════════════════════════════════════════════════════════
-# SECTION D — Q&A DRILL (20 QUESTIONS)
+# SECTION D — Q&A DRILL (22 QUESTIONS)
 # ═════════════════════════════════════════════════════════════════════════════
 doc.add_page_break()
-section_banner('D.  Q&A DRILL — 20 HARDEST QUESTIONS',
+section_banner('D.  Q&A DRILL — 22 HARDEST QUESTIONS',
                'Read the question, cover the answer, say it aloud, then check. Repeat until automatic.',
                MAROON_HEX)
 
@@ -640,19 +640,54 @@ qa_data = [
      'React Native would have required bridging for SQLite and OCR. '
      'Native Android would have doubled the codebase for any future iOS port.'),
 
-    (9, 'Cyrille', 'HIGH',
+    (9, 'Brix', 'HIGH',
+     'What is the theoretical basis for SmartSpend\'s behavioral design and gamification?',
+     'Four frameworks — each grounded in published research:\n\n'
+     '1. Nudge Theory (Thaler & Sunstein, 2008): Startup alerts, Warning Decay, and '
+     'budget alert framing are choice-architecture nudges — they guide behavior '
+     'without restricting the user\'s freedom.\n\n'
+     '2. Prospect Theory / Loss Aversion (Kahneman & Tversky, 1979): The Warning '
+     'Decay (−5 pts/day) makes ignoring budget overruns concretely painful. '
+     'Losses motivate more than equivalent gains.\n\n'
+     '3. Self-Determination Theory — SDT (Deci & Ryan, 2000): The 23 achievement '
+     'badges and streak system support Competence (rewarding skill growth). '
+     'Non-prescriptive, customizable goals support Autonomy. Filipino-first '
+     'framing supports Relatedness.\n\n'
+     '4. Empirical validation — Atlantis Press PLS-SEM (Sharma, Gaba & Sharma, 2026; '
+     'N=656): Personalized Budget Feedback Nudges → Sustainable Financial Intention '
+     '(β=0.28, t=6.21, p<0.001). Gamified Rewards → SFI (β=0.25, t=5.89, p<0.001). '
+     'Perceived Algorithm Transparency moderates the path to Digital Financial '
+     'Well-being (β=0.14, t=2.95, p<0.001) — the model explains 56% of variance '
+     'in well-being (R²=0.56). This directly validates why SmartSpend explains '
+     'its FHS breakdown in plain language.'),
+
+    (10, 'Brix', 'HIGH',
+     'What is the academic basis for the FHS? How is it different from the CFPB scale?',
+     'The FHS is formally positioned as a Prototype Observed Financial Health '
+     'Indicator (FHI) — NOT a psychometric survey instrument.\n\n'
+     'The distinction is grounded in the Commonwealth Bank of Australia & Melbourne '
+     'Institute (CBA-MI, 2018) dual-scale model:\n'
+     '  • Reported Scale — subjective, self-reported psychological states '
+     '(like the CFPB 10-item survey — asks about financial anxiety, perceived '
+     'security, freedom of choice)\n'
+     '  • Observed Scale — objective, computed from administrative/transaction data\n\n'
+     'SmartSpend\'s FHS belongs to the Observed category: it is computed from '
+     'actual SQLite transaction records — savings rate, overspend days, budget '
+     'adherence, logging consistency — not from how the user feels about money.\n\n'
+     'Claiming "our FHS is validated by the CFPB scale" would be a construct mismatch '
+     '— subjective psychological states cannot be programmatically calculated from '
+     'transaction logs. The correct academic framing:\n'
+     '"Our FHS is a Prototype Observed FHI per CBA-MI (2018) and UNSGSA (2021) '
+     'dual-scale guidelines. The CFPB scale provides the definitional grounding '
+     '(0–100 range, financial well-being definition) but does not validate our formula."'),
+
+    (11, 'Cyrille', 'HIGH',
      'What is your research design? Why mixed methods?',
-     'Mixed methods developmental-descriptive design.\n\n'
-     'Developmental: We built SmartSpend using Agile Kanban — 7 phases from backlog '
-     'to deployment. The system itself is the primary research output.\n\n'
-     'Descriptive: We describe the existing financial management practices of our target '
-     'population through survey (Objective 1) and evaluate the built system through '
-     'SUS usability testing (Objective 3).\n\n'
      'Mixed: Quantitative surveys + SUS scores are triangulated with qualitative '
      'interview data and think-aloud observations. Neither method alone would give '
      'a complete picture of usability and user needs.'),
 
-    (10, 'Cyrille', 'HIGH',
+    (12, 'Cyrille', 'HIGH',
      'Why only 30 respondents? Is that statistically valid?',
      'Purposive sampling is appropriate for exploratory capstone research.\n\n'
      'Three supporting arguments:\n\n'
@@ -665,7 +700,7 @@ qa_data = [
      'parents 35–55 (n=20) and young professionals 21–35 (n=10) in La Union.\n\n'
      'This is consistent with similar capstone and thesis studies in the BSIT curriculum.'),
 
-    (11, 'Cyrille', 'MED',
+    (13, 'Cyrille', 'MED',
      'Explain the SUS scoring method. What score are you targeting?',
      'System Usability Scale (Brooke, 1996) — 10 items, 5-point Likert scale.\n\n'
      'Scoring: Odd items (positive): score − 1. Even items (negative): 5 − score. '
@@ -680,21 +715,27 @@ qa_data = [
      'for a system to be considered usable. Administered after a guided live demo '
      'using Demo Mode to 30 purposively selected respondents.'),
 
-    (12, 'Cyrille', 'MED',
+    (14, 'Cyrille', 'MED',
      'What theoretical frameworks ground your study?',
-     'Four frameworks:\n\n'
+     'Five frameworks — each explicitly grounded in published research:\n\n'
      '1. Behavioral Finance Theory (Kahneman & Tversky, 1979; Thaler & Sunstein, 2008): '
      'Loss aversion and nudge theory underpin the Impulse Pause mechanic, budget alerts, '
      'and Warning Decay in the FHS.\n\n'
      '2. Financial Capability Framework (BSP, 2021): Four components — knowledge, attitude, '
      'behavior, access. SmartSpend addresses all four through AI advice, gamification, '
      'agentic tracking, and offline access.\n\n'
-     '3. Technology Acceptance Model (Davis, 1989): Perceived usefulness + ease of use → '
+     '3. Self-Determination Theory — SDT (Deci & Ryan, 2000): Intrinsic motivation sustained '
+     'by Autonomy (non-prescriptive goals), Competence (23 badges reward skill growth), '
+     'and Relatedness (Filipino-first framing and local financial context).\n\n'
+     '4. Technology Acceptance Model (Davis, 1989): Perceived usefulness + ease of use → '
      'adoption. The SUS evaluation directly measures this.\n\n'
-     '4. 50/30/20 Budgeting Rule (Warren & Tyagi, 2005): Built into SmartSpend\'s Analytics '
-     'tab as a live Needs/Wants/Savings tracker.'),
+     '5. 50/30/20 Budgeting Rule (Warren & Tyagi, 2005): Built into SmartSpend\'s Analytics '
+     'tab as a live Needs/Wants/Savings tracker.\n\n'
+     'Empirical support: Sharma, Gaba & Sharma (2026) PLS-SEM (N=656) validates the '
+     'SDT-gamification-nudge design with exact path coefficients (Budget Nudge β=0.28, '
+     'Gamification β=0.25, Algorithm Transparency R²=0.56).'),
 
-    (13, 'Cyrille', 'MED',
+    (15, 'Cyrille', 'MED',
      'Who are your expert validators and what did they validate?',
      'SmartSpend\'s validation used a credential-based approach — validators are identified '
      'by qualifications (educational background, occupation, years of experience) rather '
@@ -709,7 +750,7 @@ qa_data = [
      'If asked why name is optional: "Ethical research standards protect validator '
      'privacy. What matters is their qualifications, which are documented."'),
 
-    (14, 'Djaunathan', 'HIGH',
+    (16, 'Djaunathan', 'HIGH',
      'How does SmartSpend compare to GCash Pera Coach?',
      'GCash Pera Coach (launched March 2026, built with Microsoft) is a financial '
      'literacy chatbot embedded inside GCash. It teaches financial concepts via Q&A '
@@ -727,7 +768,7 @@ qa_data = [
      'They are complementary, not competing: Pera Coach teaches you about money; '
      'SmartSpend manages your money.'),
 
-    (15, 'Djaunathan', 'HIGH',
+    (17, 'Djaunathan', 'HIGH',
      'How does SmartSpend compare to BudgetPH?',
      'BudgetPH is the closest Filipino-first competitor.\n\n'
      'Where BudgetPH leads:\n'
@@ -744,7 +785,7 @@ qa_data = [
      'roadmap — deprioritized during Capstone 2 to focus on the AI agentic system '
      'and FHS, which are the primary academic contributions.'),
 
-    (16, 'Djaunathan', 'MED',
+    (18, 'Djaunathan', 'MED',
      'What are the limitations of SmartSpend?',
      'Honest, scoped limitations:\n\n'
      '1. Android-only: iOS version is out of scope for Capstone 2. Flutter supports '
@@ -758,7 +799,7 @@ qa_data = [
      '6. Not professional financial advice: SmartSpend provides general financial '
      'information for educational purposes only — consistent with Mint, YNAB, Cleo globally.'),
 
-    (17, 'Djaunathan', 'MED',
+    (19, 'Djaunathan', 'MED',
      'Why did you scope out iOS? Why not build for both platforms?',
      'Practical decision for a 3-person capstone team:\n\n'
      '1. Team capacity: 3 developers with a one-semester timeline. iOS requires a Mac '
@@ -770,7 +811,7 @@ qa_data = [
      'the post-capstone roadmap.\n\n'
      'Scoping decisions are part of good project management, not a weakness.'),
 
-    (18, 'Any', 'MED',
+    (20, 'Any', 'MED',
      'What makes SmartSpend uniquely Filipino?',
      'Seven specifically Filipino design decisions:\n\n'
      '1. Taglish AI: Understands "nag-gastos ako ng 85 sa Jollibee" — Filipino-English '
@@ -785,7 +826,7 @@ qa_data = [
      '7. Financial inclusion design: Works fully offline — no bank account needed, '
      'supporting BSP\'s goal of reaching unbanked Filipinos.'),
 
-    (19, 'Any', 'LOW',
+    (21, 'Any', 'LOW',
      'What is the FMS (Financial Management Score)? How is it different from FHS?',
      'They measure different things — they are complementary, not redundant.\n\n'
      'FHS (Financial Health Score) measures financial OUTCOMES:\n'
@@ -800,7 +841,7 @@ qa_data = [
      'Grounded in Financial Health Network (2026) and Elenvo AI (2026) research, '
      'which explicitly distinguish health outcomes from management behaviors.'),
 
-    (20, 'Any', 'LOW',
+    (22, 'Any', 'LOW',
      'What are your post-capstone plans for SmartSpend?',
      'Four priority items after the Final Defense:\n\n'
      '1. Paluwagan tracker — highest priority. Uses existing debt + recurring '
@@ -1007,7 +1048,7 @@ numbers = [
     ('Adviser', 'Ellen F. Mangaoang, MIT'),
     ('Key Stat — BSP 2025', '50% Filipino adults have formal bank accounts'),
     ('Key Stat — EY 2026', '18% of consumers use AI specifically for budgeting'),
-    ('Key Stat — Juniper Research 2026', 'Gamification boosts saving habits by 22%'),
+    ('Key Stat — Juniper Research 2026', 'Gamification is empirically linked to increased savings intention in fintech apps (exact % from commercial sources, used as directional reference)'),
 ]
 
 num_tbl = doc.add_table(rows=len(numbers), cols=2)
@@ -1044,6 +1085,6 @@ print('  Sections:')
 print('    A. Overview & Team Roles')
 print('    B. Day-of-Defense Checklist')
 print('    C. Demo Script (8-9 min with timing cues)')
-print('    D. Q&A Drill — 20 Questions (Brix 8, Cyrille 5, Djaunathan 5, Any 2)')
+print('    D. Q&A Drill — 22 Questions (Brix 10, Cyrille 5, Djaunathan 5, Any 2)')
 print('    E. Weak Spots Briefing (6 panel attack scenarios)')
 print('    F. Quick-Reference Numbers Card (30 key figures)')
