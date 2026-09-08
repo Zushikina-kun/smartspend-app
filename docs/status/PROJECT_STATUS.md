@@ -332,5 +332,5 @@ When ready: research items 1–3 first (highest leverage), then design a unified
 
 ---
 
-*SmartSpend v2.9.11 — Lucid Frame*
+*SmartSpend v2.9.19 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027 (1st Semester)*

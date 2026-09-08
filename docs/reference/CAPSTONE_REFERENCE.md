@@ -6,7 +6,7 @@
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.9).
+> All figures are accurate to the final build (v2.9.19).
 
 ---
 
@@ -592,6 +592,6 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-*SmartSpend v2.9.9 — Lucid Frame*
+*SmartSpend v2.9.19 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
 *Last updated: September 2, 2026*
