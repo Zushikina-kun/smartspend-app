@@ -767,17 +767,12 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         .hasMatch(lower)) {
       return 'financial_advice';
     }
-    // Fast tasks: single-item logging, balance updates, simple queries
-    // Multi-item logs (comma/and + multiple amounts) route to smart tier instead
-    final lowerD = lower;
-    final amtCountD = RegExp(r'\d+').allMatches(lowerD).length;
-    final isMultiItem = amtCountD >= 2 &&
-        (lowerD.contains(',') || RegExp(r'\band\b').hasMatch(lowerD)) &&
-        RegExp(r'\b(spent|spen|spe|spend|bought|paid|ate|drank|rode|took|nabili|nagbayad|nagbili|gastos|bayad)\b')
-            .hasMatch(lowerD);
-    if (!isMultiItem &&
-        RegExp(r'\b(spent|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya)\b')
-            .hasMatch(lowerD)) {
+    // Fast tasks: single-item AND multi-item expense logging, balance updates
+    // Route to fast when the message is about spending/paying — no advisory terms.
+    if (RegExp(r'\b(spent|spen|spe|spend|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya|nabili|nagbayad|nagbili|nagastos|ginastos|gastos|bayad|bumili|uminom|sumakay)\b')
+            .hasMatch(lower) &&
+        !RegExp(r'\b(analyze|plan|advice|suggest|explain|compare|what if|simulate|debt|goal|invest|sss|philhealth|bir|budget|limit|insurance|recurring|saving|ipon|utang|layunin|sweldo|kita|buwanang)\b')
+            .hasMatch(lower)) {
       return 'fast';
     }
     // Smart tasks: analysis, planning, advice, complex questions
@@ -1018,17 +1013,28 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     if (needsSwitch) AppConfig.setModel(originalModelId);
 
     if (response.statusCode != 200) {
-      // Handle rate limit — try auto-fallback to next model
+      // 429 = rate limit — try next model in chain
       if (response.statusCode == 429) {
         final switched = AppConfig.autoFallback();
         if (switched) {
-          // Retry with the new model
           return sendMessage(message);
         }
         throw Exception(
             "Daily AI limit reached on all models. Try again tomorrow, or add a Gemini/Cerebras API key in Settings.");
       }
-      // Show actual status code for easier debugging
+      // 401 / 403 = auth failure (key expired, invalid, or quota exhausted)
+      // Try next model instead of failing immediately — the next provider's
+      // key may still work (e.g. Groq key is valid even if Gemini key expired)
+      if (response.statusCode == 401 || response.statusCode == 403) {
+        final switched = AppConfig.autoFallback();
+        if (switched) {
+          return sendMessage(message);
+        }
+        throw Exception(
+            "AI error (${response.statusCode}): authentication failed on all providers. "
+            "Please check your API keys or use manual entry.");
+      }
+      // All other errors — fatal
       throw Exception(
           "AI error (${response.statusCode}). If this keeps happening, try the ⋮ menu → Reset Daily Limit.");
     }

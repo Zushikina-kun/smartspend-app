@@ -420,18 +420,47 @@ class _AIScreenState extends State<AIScreen> {
           errMsg.contains('timeout') ||
           errMsg.contains('SocketException') ||
           errMsg.contains('connection');
-      final errorText = isTimeout
-          ? "⏱️ Request timed out. Tap **Retry** to try again."
-          : "Sorry, I couldn't respond right now. Error: $errMsg";
-      // Save error response to DB so it persists when user leaves and returns
+      final isAuthError = errMsg.contains('401') || errMsg.contains('403');
+      final isLimitError = errMsg.contains('Daily AI limit') ||
+          errMsg.contains('429') ||
+          errMsg.contains('rate limit') ||
+          errMsg.contains('all models');
+
+      // Determine failure type for appropriate messaging
+      String errorText;
+      String errorType;
+      if (isTimeout) {
+        errorText =
+            "⏱️ Connection timed out — the AI took too long to respond.";
+        errorType = 'timeout';
+      } else if (isAuthError) {
+        errorText =
+            "🔑 AI provider authentication failed (key may be expired or invalid). "
+            "The app will try switching to a different AI model.";
+        errorType = 'auth';
+        // Auto-attempt fallback silently on auth errors too
+        AppConfig.autoFallback();
+      } else if (isLimitError) {
+        errorText =
+            "📊 Daily AI limit reached across all models. The AI can't respond right now.";
+        errorType = 'limit';
+      } else {
+        errorText = "⚠️ The AI couldn't respond right now. ($errMsg)";
+        errorType = 'other';
+      }
+
+      // Save error to DB so it persists
       try {
         await DBService.saveChatMessage(role: 'ai', message: errorText);
       } catch (_) {}
+
       if (mounted) {
         setState(() => _messages.add({
               "role": "ai",
               "text": errorText,
               "is_error": "true",
+              "error_type": errorType,
+              "original_user_msg": text,
             }));
       }
     } finally {
@@ -492,11 +521,18 @@ class _AIScreenState extends State<AIScreen> {
             // Reject if identical (name + amount + date) was already saved
             // within the last 90 seconds — catches AI double-fire on retry.
             // Does NOT block legitimate repeat purchases (different day / hour).
+            //
+            // ALSO: cross-session duplicate guard — if the exact same item +
+            // amount + date already exists (logged via screenshot import, a
+            // previous chat session, or manual entry), skip silently.
+            // This catches cases like Steam games logged twice via chat + batch
+            // import without relying on a time window.
             try {
               final db = await DBService.getDB();
+              // 1. 90-second window guard (same session rapid-fire)
               final cutoff =
                   now.subtract(const Duration(seconds: 90)).toIso8601String();
-              final existing = await db.rawQuery(
+              final recentDup = await db.rawQuery(
                 '''SELECT id FROM expenses
                    WHERE LOWER(item_name) = LOWER(?)
                      AND ABS(amount - ?) < 0.01
@@ -505,8 +541,35 @@ class _AIScreenState extends State<AIScreen> {
                    LIMIT 1''',
                 [itemName, amount, expenseDate, cutoff],
               );
-              if (existing.isNotEmpty) {
+              if (recentDup.isNotEmpty) {
                 // Silently skip — duplicate within 90-second window
+                break;
+              }
+              // 2. Cross-session guard — same item + amount + date from any
+              // source (screenshot import, manual entry, prior session).
+              final crossSessionDup = await db.rawQuery(
+                '''SELECT id FROM expenses
+                   WHERE LOWER(item_name) = LOWER(?)
+                     AND ABS(amount - ?) < 0.01
+                     AND date = ?
+                   LIMIT 1''',
+                [itemName, amount, expenseDate],
+              );
+              if (crossSessionDup.isNotEmpty) {
+                // Show a brief toast so the user knows we skipped it, not
+                // an error — this is expected when re-importing the same data.
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '⚠️ "$itemName" on $expenseDate already logged — skipped duplicate.',
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                      duration: const Duration(seconds: 3),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
                 break;
               }
             } catch (_) {
@@ -1568,6 +1631,36 @@ class _AIScreenState extends State<AIScreen> {
     }
   }
 
+  /// Compact action button used inside AI error bubbles
+  Widget _errorActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.12),
+          border: Border.all(color: color.withValues(alpha: 0.4)),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 13, color: color),
+            const SizedBox(width: 4),
+            Text(label,
+                style: TextStyle(
+                    fontSize: 11.5, color: color, fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showActionSnackbar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -2453,30 +2546,112 @@ class _AIScreenState extends State<AIScreen> {
                                                   const TextStyle(height: 1.4),
                                             ),
                                           ),
-                                    // Retry button on error messages
-                                    if (isError &&
-                                        _lastUserMessage != null &&
-                                        !_sending) ...[
-                                      const SizedBox(height: 8),
-                                      ElevatedButton.icon(
-                                        icon:
-                                            const Icon(Icons.refresh, size: 14),
-                                        label: const Text("Retry",
-                                            style: TextStyle(fontSize: 12)),
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 6),
-                                          minimumSize: Size.zero,
-                                          tapTargetSize:
-                                              MaterialTapTargetSize.shrinkWrap,
-                                        ),
-                                        onPressed: () {
-                                          // Remove the error message and retry
-                                          setState(
-                                              () => _messages.removeLast());
-                                          _send(retryText: _lastUserMessage);
-                                        },
-                                      ),
+                                    // Action buttons on error messages
+                                    if (isError && !_sending) ...[
+                                      const SizedBox(height: 10),
+                                      // Determine which buttons to show based on error type
+                                      Builder(builder: (context) {
+                                        final errorType =
+                                            msg["error_type"] ?? 'other';
+                                        final originalMsg =
+                                            msg["original_user_msg"]
+                                                ?.toString();
+                                        final canRetry =
+                                            _lastUserMessage != null;
+                                        final canSwitchModel =
+                                            errorType == 'auth' ||
+                                                errorType == 'timeout' ||
+                                                errorType == 'other';
+                                        final canLogManually =
+                                            originalMsg != null &&
+                                                originalMsg.isNotEmpty;
+
+                                        return Wrap(
+                                          spacing: 6,
+                                          runSpacing: 6,
+                                          children: [
+                                            // Retry
+                                            if (canRetry)
+                                              _errorActionButton(
+                                                icon: Icons.refresh,
+                                                label: "Retry",
+                                                color: Colors.blue,
+                                                onTap: () {
+                                                  setState(() =>
+                                                      _messages.removeLast());
+                                                  _send(
+                                                      retryText:
+                                                          _lastUserMessage);
+                                                },
+                                              ),
+                                            // Try different model
+                                            if (canSwitchModel)
+                                              _errorActionButton(
+                                                icon: Icons.swap_horiz,
+                                                label: "Try Different Model",
+                                                color: Colors.orange,
+                                                onTap: () {
+                                                  final switched =
+                                                      AppConfig.autoFallback();
+                                                  if (switched) {
+                                                    setState(() =>
+                                                        _messages.removeLast());
+                                                    _send(
+                                                        retryText:
+                                                            _lastUserMessage);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Switched to ${AppConfig.activeModelLabel} — retrying..."),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      duration: const Duration(
+                                                          seconds: 3),
+                                                    ));
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            const SnackBar(
+                                                      content: Text(
+                                                          "No more fallback models available. Try manual entry."),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                    ));
+                                                  }
+                                                },
+                                              ),
+                                            // Log manually — pre-fills AddExpenseScreen
+                                            if (canLogManually)
+                                              _errorActionButton(
+                                                icon: Icons.edit_note,
+                                                label: "Log Manually",
+                                                color: Colors.green,
+                                                onTap: () async {
+                                                  final result =
+                                                      await Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (_) =>
+                                                                  AddExpenseScreen(
+                                                                    initialText:
+                                                                        originalMsg,
+                                                                  )));
+                                                  if (result == true &&
+                                                      mounted) {
+                                                    await _loadContext(
+                                                        silent: true);
+                                                    // Clear the error bubble and the user message above it
+                                                    setState(() {
+                                                      _lastUserMessage = null;
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                          ],
+                                        );
+                                      }),
                                     ],
                                     const SizedBox(height: 4),
                                     Align(
