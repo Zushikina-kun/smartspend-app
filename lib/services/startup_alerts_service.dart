@@ -116,6 +116,29 @@ class StartupAlertsService {
         ));
       }
 
+      // 0b. Overspend alert — spending already exceeds monthly income this month.
+      // Re-fires every session (not gated per-month) so the user always sees it
+      // when they open the app while in deficit. Different from the income sanity
+      // check above (which fires once/month for a low income setting).
+      if (incomeWalletModeOn && income > 0) {
+        final thisMonthExpenses = await DBService.getExpenses(month: thisMonth);
+        final thisMonthSpent =
+            thisMonthExpenses.fold<double>(0, (s, e) => s + e.amount);
+        if (thisMonthSpent > income) {
+          final overage = thisMonthSpent - income;
+          alerts.add(StartupAlert(
+            title: '⚠️ Spending Exceeds Income',
+            message:
+                'This month you\'ve spent ₱${thisMonthSpent.toStringAsFixed(0)} '
+                'but your income is only ₱${income.toStringAsFixed(0)}. '
+                'You\'re ₱${overage.toStringAsFixed(0)} over budget. '
+                'Tap Analytics → 50/30/20 to review where the money is going.',
+            icon: Icons.trending_down_rounded,
+            color: Colors.red,
+          ));
+        }
+      }
+
       // 1. Check for exceeded budgets
       final budgets = await DBService.getBudgets();
       final expenses = await DBService.getExpenses(month: currentMonth);
