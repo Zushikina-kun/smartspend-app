@@ -150,17 +150,23 @@ class StartupAlertsService {
     try {
       // 0. Income sanity check — alert if monthly income looks wrong (< ₱1,000)
       // Only fires when income/wallet tracking is actually ON.
+      // Skipped for student accounts — ₱650 allowance is normal and expected.
       final income = await DBService.getMonthlyIncome();
       final incomeWalletModeOn = await DBService.getIncomeWalletMode();
+      final accountType = await DBService.getSetting('account_type') ?? 'adult';
       final tightest = await DBService.getTightestLimit();
       final spendLimit = tightest['limit'] as double;
       final spendPeriod = tightest['period'] as String;
       final incomeCheckKey = 'income_sanity_check';
       final lastIncomeCheck = await DBService.getSetting(incomeCheckKey);
       final thisMonth = DateFormat('yyyy-MM').format(DateTime.now());
+      // Threshold: ₱500 for students (allowance), ₱1,000 for everyone else.
+      // Student account type is a legitimate low-income user — don't alarm them.
+      final incomeThreshold = accountType == 'student' ? 500.0 : 1000.0;
       if (incomeWalletModeOn &&
           income > 0 &&
-          income < 1000 &&
+          income < incomeThreshold &&
+          accountType != 'student' && // students always skip this alert
           lastIncomeCheck != thisMonth) {
         await DBService.setSetting(incomeCheckKey, thisMonth);
         alerts.add(StartupAlert(

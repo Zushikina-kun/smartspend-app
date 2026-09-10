@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.11';
-  static const _prefKey = 'whats_new_seen_2_9_11';
+  static const _version = '2.9.22';
+  static const _prefKey = 'whats_new_seen_2_9_22';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,61 +20,59 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🧠',
-      'Score Narrative & Coach Report (v2.9.10)',
-      'The AI now generates a weekly summary card on your Home screen with '
-          'context-aware feedback like "You\'re spending more than usual on Food." '
-          'A full Coach Report is also available in Profile — your weekly financial '
-          'letter with one habit recommendation.'
+      '🔄',
+      'AI Fallback Persists Across Restarts (v2.9.21)',
+      'When the app switches to a backup AI model due to an expired key, '
+          'it now remembers that choice after you close and reopen the app. '
+          'No more retrying a failed Gemini key on every cold start.'
     ),
     (
-      '🎉',
-      'Score Celebrations & Milestone Toasts (v2.9.10)',
-      'Get an animated celebration when your Financial Health Score crosses '
-          'key milestones (50, 65, 75, 90). Goal progress also notifies you '
-          'at 25%, 50%, 75%, and 100% of your savings target.'
-    ),
-    (
-      '💬',
-      'Purchase Commentary & Supportive Alerts (v2.9.10)',
-      'The AI now adds a brief behavioral note to large Want purchases logged '
-          'via receipt scan or voice. Budget overspend warnings now include a '
-          'constructive follow-up suggestion instead of a plain red banner.'
+      '🛡️',
+      'Graceful AI Failure UX (v2.9.20)',
+      'When all AI providers fail, the error bubble now shows three options: '
+          'Retry, Try Different Model (auto-switches), and Log Manually '
+          '(opens the form pre-filled with your message).'
     ),
     (
       '📊',
-      'FMS Next-Step Guidance (v2.9.10)',
-      'The Financial Management Score card now shows a single prioritized '
-          'action tip when any sub-component is below 20/25 — so you always '
-          'know exactly what to do next to improve your score.'
+      'FHS Lightweight Mode Fixed (v2.9.21)',
+      'The Financial Health Score in Lightweight mode now shows the correct '
+          'four components: Spending Restraint, Logging Consistency, '
+          'Category Balance, and Habit Streak. Budget Adherence no longer '
+          'appears when income tracking is off.'
     ),
     (
-      '❓',
-      'Score Explanation Tooltips (v2.9.10)',
-      'Tap the info button on your FHS card to open a plain-language '
-          'explanation of why your score is what it is — one sentence '
-          'per component.'
+      '📅',
+      'Smarter Spending Comparisons (v2.9.21)',
+      'The "329% vs last month" alert is now suppressed when last month had '
+          'fewer than 5 expenses — no more false spike warnings from a month '
+          'where you barely logged anything.'
+    ),
+    (
+      '💡',
+      'Exchange Rates Always Fresh (v2.9.21)',
+      'PHP exchange rates now refresh silently every time you open the app, '
+          'even if the Market Insights card is hidden in App Settings.'
     ),
     (
       '✅',
-      'Analytics Fixed for Lightweight Mode',
-      'The 50/30/20 card, Tax & Savings card, and Allowance Overview no longer '
-          'appear when income tracking is OFF — they were showing meaningless '
-          'numbers based on stale old income data.'
+      'Payment Plan Archive on Completion (v2.9.21)',
+      'When you log the final payment on an installment plan, a one-tap '
+          '"Archive" button now appears in the confirmation so you can '
+          'clear it from your list immediately.'
     ),
     (
       '🎯',
-      'Logging Consistency Score is Now Honest',
-      'Fixed: logging just once on the 2nd of the month no longer gives 25/25 '
-          '"Logging every active day ✓". Now correctly reflects how many days '
-          'have passed vs. how many you actually logged.'
+      'Daily Quests Respect Your Mode (v2.9.21)',
+      'Wallet and income-related quests are now hidden when income tracking '
+          'is turned off — replaced with habit-based quests you can '
+          'actually complete.'
     ),
     (
-      '🌐',
-      'AI Replies in Your Language',
-      'The AI now detects whether you\'re writing in English, Filipino, or '
-          'Taglish and matches your language automatically. You can also say '
-          '"speak English" or "mag-Tagalog ka" to explicitly switch.'
+      '🔔',
+      'Mode Switch Now Explains Score Change (v2.9.21)',
+      'Toggling income tracking in App Settings now shows a brief notice '
+          'explaining why your FHS score may look different after switching.'
     ),
   ];
 
