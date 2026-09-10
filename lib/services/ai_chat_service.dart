@@ -15,8 +15,10 @@ class AIChatService {
   static String get _groqKey => AppConfig.groqApiKey;
   static String get _groqUrl => AppConfig.groqBaseUrl;
 
-  // D2 mitigation: daily request cap to protect the shared API key
-  static const _dailyLimit = 60;
+  // D2 mitigation: daily request cap to protect the shared API key.
+  // 150 is safe: 6 providers × 1,000 RPD each = 6,000 capacity.
+  // At 150 messages/day spread across providers that's ~25 per provider max.
+  static const _dailyLimit = 150;
   static const _prefKeyCount = 'ai_chat_count';
   static const _prefKeyDate = 'ai_chat_date';
 

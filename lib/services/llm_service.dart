@@ -8,50 +8,73 @@ class LLMService {
   static String get _groqUrl => AppConfig.groqBaseUrl;
   static String get _groqModel => AppConfig.groqModel;
 
-  // Fallback: Gemini free tier — uses OpenAI-compatible endpoint matching AppConfig
-  // Only active if _geminiKey is set (currently empty — uses Groq as primary)
+  // NOTE: _geminiKey / _geminiUrl / _geminiModel below are legacy dead code.
+  // LLMService now routes through AppConfig (same as AIChatService) and gets
+  // the full 6-provider autoFallback() chain on 401/429 errors.
+  // Kept for reference only — _callGeminiFallback is never reached since _geminiKey = "".
   static const _geminiKey = "";
   static const _geminiUrl =
       "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
   static const _geminiModel = "gemini-3.5-flash-lite";
+
+  /// Core LLM call — routes through AppConfig so OCR/receipt parsing benefits
+  /// from the same 6-provider fallback chain as the AI chat.
+  /// On 401/403/429, calls AppConfig.autoFallback() and retries once.
   static Future<String> _callGroq(String systemPrompt, String userPrompt,
       {int maxTokens = 512}) async {
+    Future<http.Response> _doRequest() => http
+        .post(
+          Uri.parse(_groqUrl),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer $_groqKey",
+          },
+          body: jsonEncode({
+            "model": _groqModel,
+            "messages": [
+              {"role": "system", "content": systemPrompt},
+              {"role": "user", "content": userPrompt},
+            ],
+            "temperature": 0.1,
+            "max_tokens": maxTokens,
+          }),
+        )
+        .timeout(const Duration(seconds: 20),
+            onTimeout: () => throw Exception("Request timed out."));
+
     try {
-      final response = await http
-          .post(
-            Uri.parse(_groqUrl),
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer $_groqKey",
-            },
-            body: jsonEncode({
-              "model": _groqModel,
-              "messages": [
-                {"role": "system", "content": systemPrompt},
-                {"role": "user", "content": userPrompt},
-              ],
-              "temperature": 0.1,
-              "max_tokens": maxTokens,
-            }),
-          )
-          .timeout(const Duration(seconds: 20),
-              onTimeout: () => throw Exception("Request timed out."));
+      var response = await _doRequest();
+
+      // 401/403 = auth failure, 429 = rate limit — try next provider
+      if (response.statusCode == 401 ||
+          response.statusCode == 403 ||
+          response.statusCode == 429) {
+        final switched = AppConfig.autoFallback();
+        if (switched) {
+          // _groqKey / _groqUrl / _groqModel are lazy getters — they read the
+          // new model from AppConfig on every access, so the retry uses the
+          // new provider automatically.
+          response = await _doRequest();
+        }
+      }
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['choices'][0]['message']['content'] as String;
       }
 
-      // If Groq fails and Gemini key is set, try fallback
-      if (_geminiKey.isNotEmpty) {
-        return await _callGeminiFallback(systemPrompt, userPrompt);
-      }
-
       throw Exception("AI failed (${response.statusCode}): ${response.body}");
     } catch (e) {
-      // Try Gemini fallback on any error if key is set
-      if (_geminiKey.isNotEmpty) {
-        return await _callGeminiFallback(systemPrompt, userPrompt);
+      if (e is Exception && e.toString().contains('timed out')) {
+        // Timeout — try fallback provider once
+        final switched = AppConfig.autoFallback();
+        if (switched) {
+          final response = await _doRequest();
+          if (response.statusCode == 200) {
+            final data = jsonDecode(response.body);
+            return data['choices'][0]['message']['content'] as String;
+          }
+        }
       }
       rethrow;
     }
