@@ -803,6 +803,64 @@ class DBService {
     return (result.first['c'] as int? ?? 0);
   }
 
+  /// Returns up to [limit] autocomplete suggestions matching the given prefix.
+  ///
+  /// Each result contains the most-recent values for that item:
+  ///   { 'item_name', 'amount', 'category', 'payment_method', 'shop_name', 'is_want', 'count' }
+  ///
+  /// Sorted by frequency (most-logged first), then alphabetically.
+  /// Used by the manual entry form to suggest past items as the user types.
+  static Future<List<Map<String, dynamic>>> getSuggestionsForItem(
+    String prefix, {
+    int limit = 5,
+  }) async {
+    if (prefix.trim().isEmpty) return [];
+    final db = await getDB();
+    // Group by item_name (case-insensitive), pick the most recent row's details,
+    // and sort by how often it's been logged (frequency = most useful first).
+    final results = await db.rawQuery('''
+      SELECT
+        item_name,
+        amount,
+        category,
+        payment_method,
+        shop_name,
+        is_want,
+        COUNT(*) as freq
+      FROM expenses
+      WHERE LOWER(item_name) LIKE LOWER(?)
+        AND item_name IS NOT NULL
+        AND item_name != ''
+      GROUP BY LOWER(item_name)
+      ORDER BY freq DESC, item_name ASC
+      LIMIT ?
+    ''', ['${prefix.trim()}%', limit]);
+    // Also do a contains-match for items that don't start with the prefix
+    // but contain it (e.g. typing "pork" suggests "Sinigang sa Pork")
+    if (results.length < limit) {
+      final contains = await db.rawQuery('''
+        SELECT
+          item_name,
+          amount,
+          category,
+          payment_method,
+          shop_name,
+          is_want,
+          COUNT(*) as freq
+        FROM expenses
+        WHERE LOWER(item_name) LIKE LOWER(?)
+          AND LOWER(item_name) NOT LIKE LOWER(?)
+          AND item_name IS NOT NULL
+          AND item_name != ''
+        GROUP BY LOWER(item_name)
+        ORDER BY freq DESC, item_name ASC
+        LIMIT ?
+      ''', ['%${prefix.trim()}%', '${prefix.trim()}%', limit - results.length]);
+      return [...results, ...contains];
+    }
+    return results;
+  }
+
   static Future<int> getExpenseCount() async {
     final db = await getDB();
     final result = await db.rawQuery('SELECT COUNT(*) as count FROM expenses');
