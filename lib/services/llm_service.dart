@@ -13,7 +13,7 @@ class LLMService {
   static const _geminiKey = "";
   static const _geminiUrl =
       "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-  static const _geminiModel = "gemini-3.1-flash-lite";
+  static const _geminiModel = "gemini-3.5-flash-lite";
   static Future<String> _callGroq(String systemPrompt, String userPrompt,
       {int maxTokens = 512}) async {
     try {
