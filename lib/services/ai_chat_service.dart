@@ -1024,10 +1024,11 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         throw Exception(
             "Daily AI limit reached on all models. Try again tomorrow, or add a Gemini/Cerebras API key in Settings.");
       }
-      // 401 / 403 = auth failure (key expired, invalid, or quota exhausted)
-      // Try next model instead of failing immediately — the next provider's
-      // key may still work (e.g. Groq key is valid even if Gemini key expired)
-      if (response.statusCode == 401 || response.statusCode == 403) {
+      // 401 / 403 / 404 = auth failure or model not found — try next provider
+      // 404 means the model doesn't exist on this account's tier — same logic as auth failure
+      if (response.statusCode == 401 ||
+          response.statusCode == 403 ||
+          response.statusCode == 404) {
         final switched = AppConfig.autoFallback();
         if (switched) {
           return sendMessage(message);

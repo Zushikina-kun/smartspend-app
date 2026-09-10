@@ -331,13 +331,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   _checkTour();
                 }),
                 _navItem(Icons.bar_chart, "Analytics", 1),
-                // Centre: prominent + FAB replaces the AI icon in the middle slot
-                _buildCenterFAB(context),
                 _navItem(Icons.smart_toy, "AI", 2),
+                _navItem(Icons.grid_view_rounded, "Hub", -1,
+                    onTap: () => _showQuickAccessHub(context)),
                 _navItem(Icons.person, "Profile", 3),
               ],
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+            heroTag: 'fab_log_expense',
+            onPressed: () => _showLogExpenseSheet(context),
+            tooltip: 'Log Expense',
+            child: const Icon(Icons.add),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
         ),
         if (_showTour)
           FeatureTour(onDone: () => setState(() => _showTour = false)),
@@ -4055,7 +4063,7 @@ class _DashboardState extends State<Dashboard> {
                     onTap: () {
                       // Signal ProfileScreen to scroll to FMS section
                       ProfileScreen.scrollToFMS = true;
-                      widget.onNavigate(4); // 4 = Profile tab
+                      widget.onNavigate(3); // 3 = Profile tab
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(

@@ -45,9 +45,10 @@ class LLMService {
     try {
       var response = await _doRequest();
 
-      // 401/403 = auth failure, 429 = rate limit — try next provider
+      // 401/403/404 = auth failure or model not found, 429 = rate limit — try next provider
       if (response.statusCode == 401 ||
           response.statusCode == 403 ||
+          response.statusCode == 404 ||
           response.statusCode == 429) {
         final switched = AppConfig.autoFallback();
         if (switched) {
