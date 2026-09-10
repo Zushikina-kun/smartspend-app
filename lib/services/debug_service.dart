@@ -16,7 +16,7 @@ class DebugService {
 
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln('  SMART SPEND — DEBUG LOG');
-    buffer.writeln('  Version: 2.9.22');
+    buffer.writeln('  Version: 2.9.23');
     buffer.writeln('  Generated: ${fmt.format(now)}');
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln();
