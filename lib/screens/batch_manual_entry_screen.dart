@@ -54,8 +54,39 @@ class _BatchManualEntryScreenState extends State<BatchManualEntryScreen> {
     setState(() => _rows.removeAt(i));
   }
 
+  Future<void> _loadSuggestionsForRow(int i, String value) async {
+    if (value.trim().length < 2) {
+      if (_rows[i].suggestions.isNotEmpty) {
+        setState(() => _rows[i].suggestions = []);
+      }
+      return;
+    }
+    final results =
+        await DBService.getSuggestionsForItem(value.trim(), limit: 4);
+    if (mounted &&
+        i < _rows.length &&
+        _rows[i].nameCtrl.text.trim() == value.trim()) {
+      setState(() => _rows[i].suggestions = results);
+    }
+  }
+
+  void _applySuggestionToRow(int i, Map<String, dynamic> s) {
+    final name = s['item_name'] as String;
+    final amount = (s['amount'] as num).toDouble();
+    final category = s['category'] as String? ?? 'Others';
+    final isWant = (s['is_want'] as int? ?? 0) == 1;
+    _rows[i].nameCtrl.text = name;
+    _rows[i].amountCtrl.text = amount == amount.truncateToDouble()
+        ? amount.toStringAsFixed(0)
+        : amount.toStringAsFixed(2);
+    setState(() {
+      _rows[i].category = _categories.contains(category) ? category : 'Others';
+      _rows[i].isWant = isWant;
+      _rows[i].suggestions = [];
+    });
+  }
+
   Future<void> _saveAll() async {
-    // Validate — at least one complete row
     final valid = _rows.where((r) {
       final amt = double.tryParse(r.amountCtrl.text.trim()) ?? 0;
       return amt > 0 && r.nameCtrl.text.trim().isNotEmpty;
@@ -328,25 +359,68 @@ class _BatchManualEntryScreenState extends State<BatchManualEntryScreen> {
           // Item name
           Expanded(
             flex: 5,
-            child: TextField(
-              controller: row.nameCtrl,
-              style: const TextStyle(fontSize: 13),
-              decoration: InputDecoration(
-                hintText: "e.g. Lunch",
-                hintStyle: const TextStyle(fontSize: 12, color: Colors.grey),
-                isDense: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: cs.outline.withValues(alpha: 0.3))),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide:
-                        BorderSide(color: cs.outline.withValues(alpha: 0.3))),
-              ),
-              onChanged: (_) => setState(() {}),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: row.nameCtrl,
+                  style: const TextStyle(fontSize: 13),
+                  decoration: InputDecoration(
+                    hintText: "e.g. Lunch",
+                    hintStyle:
+                        const TextStyle(fontSize: 12, color: Colors.grey),
+                    isDense: true,
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: cs.outline.withValues(alpha: 0.3))),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                            color: cs.outline.withValues(alpha: 0.3))),
+                  ),
+                  onChanged: (v) {
+                    setState(() {});
+                    _loadSuggestionsForRow(i, v);
+                  },
+                ),
+                // Inline suggestion chips for this row
+                if (row.suggestions.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3),
+                    child: Wrap(
+                      spacing: 4,
+                      runSpacing: 2,
+                      children: row.suggestions.map((s) {
+                        final name = s['item_name'] as String;
+                        final amt = (s['amount'] as num).toDouble();
+                        return GestureDetector(
+                          onTap: () => _applySuggestionToRow(i, s),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: cs.primary.withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                  color: cs.primary.withValues(alpha: 0.2)),
+                            ),
+                            child: Text(
+                              "$name ₱${amt == amt.truncateToDouble() ? amt.toStringAsFixed(0) : amt.toStringAsFixed(2)}",
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: cs.primary,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+              ],
             ),
           ),
           const SizedBox(width: 6),
@@ -440,4 +514,6 @@ class _EntryRow {
   final amountCtrl = TextEditingController();
   String category = 'Others';
   bool isWant = false;
+  // Per-row suggestion state
+  List<Map<String, dynamic>> suggestions = [];
 }

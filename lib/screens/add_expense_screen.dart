@@ -60,6 +60,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   List<String> _tags = []; // user-defined tags e.g. ['#capstone', '#school']
   final _tagInputCtrl = TextEditingController();
 
+  // ── AUTOCOMPLETE STATE ────────────────────────────────────────────────────
+  List<Map<String, dynamic>> _itemSuggestions = [];
+  bool _showSuggestions = false;
+
   @override
   void initState() {
     super.initState();
@@ -72,8 +76,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     };
     _selectedDate = DateTime.now().toIso8601String().substring(0, 10);
     _loadCategories();
-    // Auto-suggest category when item name is typed manually
-    _itemNameCtrl.addListener(_autoSuggestCategory);
+    // Auto-suggest category + load item suggestions when item name is typed
+    _itemNameCtrl.addListener(() => _onItemNameChanged(_itemNameCtrl.text));
     if (widget.initialText != null &&
         widget.initialText!.isNotEmpty &&
         !widget.skipAiAnalysis) {
@@ -99,6 +103,47 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     if (suggested != 'Others' && suggested != _selectedCategory) {
       setState(() => _selectedCategory = suggested);
     }
+  }
+
+  /// Load past-item suggestions as user types the item name.
+  void _onItemNameChanged(String value) {
+    _autoSuggestCategory();
+    if (value.trim().length < 2) {
+      if (_showSuggestions)
+        setState(() {
+          _itemSuggestions = [];
+          _showSuggestions = false;
+        });
+      return;
+    }
+    DBService.getSuggestionsForItem(value.trim()).then((results) {
+      if (mounted && _itemNameCtrl.text.trim() == value.trim()) {
+        setState(() {
+          _itemSuggestions = results;
+          _showSuggestions = results.isNotEmpty;
+        });
+      }
+    });
+  }
+
+  /// Apply a past-item suggestion — fills all fields from the last known values.
+  void _applySuggestion(Map<String, dynamic> s) {
+    final name = s['item_name'] as String;
+    final amount = (s['amount'] as num).toDouble();
+    final category = s['category'] as String? ?? 'Others';
+    final payment = s['payment_method'] as String? ?? 'Cash';
+    final isWant = (s['is_want'] as int? ?? 0) == 1;
+    _itemNameCtrl.text = name;
+    _amountCtrl.text = amount == amount.truncateToDouble()
+        ? amount.toStringAsFixed(0)
+        : amount.toStringAsFixed(2);
+    setState(() {
+      _selectedCategory = _categories.contains(category) ? category : 'Others';
+      _selectedPayment = payment;
+      _isWant = isWant;
+      _itemSuggestions = [];
+      _showSuggestions = false;
+    });
   }
 
   @override
@@ -272,6 +317,35 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         if (_photoPath != null) 'photo_path': _photoPath,
         if (_tags.isNotEmpty) 'tags': _tags.join(','),
       });
+
+      // ── PRICE MEMORY — manual entry version ──────────────────────────────
+      // Same logic as AI chat: alert when the same item costs ≥15% more than
+      // the last recorded price. Only fires for today's entries.
+      try {
+        final todayForPM = DateTime.now().toIso8601String().substring(0, 10);
+        if (_selectedDate.substring(0, 10) == todayForPM) {
+          final allExp = await DBService.getExpenses();
+          final sameItems = allExp
+              .where((e) =>
+                  e.itemName.toLowerCase() == itemName.toLowerCase() &&
+                  e.amount > 0 &&
+                  e.amount != amount)
+              .toList();
+          if (sameItems.isNotEmpty && mounted) {
+            final lastPrice = sameItems.first.amount;
+            if (amount > lastPrice * 1.15) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    "📈 Price up: $itemName was ₱${lastPrice.toStringAsFixed(0)} last time "
+                    "(+${((amount / lastPrice - 1) * 100).toStringAsFixed(0)}%)"),
+                backgroundColor: Colors.blue,
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 3),
+              ));
+            }
+          }
+        }
+      } catch (_) {}
 
       // NI-6: Warn if user committed to "done spending today"
       // Only warn if the expense date is actually today — not for historical entries
@@ -672,8 +746,97 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 prefixIcon: const Icon(Icons.label_outline),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                suffixIcon: _itemNameCtrl.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, size: 18),
+                        onPressed: () {
+                          _itemNameCtrl.clear();
+                          setState(() {
+                            _itemSuggestions = [];
+                            _showSuggestions = false;
+                          });
+                        },
+                      )
+                    : null,
               ),
             ),
+            // ── ITEM SUGGESTIONS ─────────────────────────────────────────
+            if (_showSuggestions && _itemSuggestions.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4, bottom: 4),
+                      child: Text(
+                        "Past entries — tap to fill",
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[500],
+                            fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children: _itemSuggestions.map((s) {
+                        final name = s['item_name'] as String;
+                        final amt = (s['amount'] as num).toDouble();
+                        final cat = s['category'] as String? ?? '';
+                        return InkWell(
+                          onTap: () => _applySuggestion(s),
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.25),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.history, size: 12),
+                                const SizedBox(width: 4),
+                                Text(
+                                  name,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  "₱${amt == amt.truncateToDouble() ? amt.toStringAsFixed(0) : amt.toStringAsFixed(2)}",
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.grey[600]),
+                                ),
+                                if (cat.isNotEmpty) ...[
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "· $cat",
+                                    style: TextStyle(
+                                        fontSize: 10, color: Colors.grey[500]),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 12),
 
             TextField(
