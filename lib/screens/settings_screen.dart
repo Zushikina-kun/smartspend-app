@@ -345,6 +345,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     setState(() => incomeWalletMode = v);
                     DBService.setIncomeWalletMode(v);
                     fireEvent(AppEvent.incomeChanged);
+                    // Notify user that the FHS mode changed and what it means.
+                    // The score will look different — show why so they aren't confused.
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          v
+                              ? '✅ Full Mode ON — FHS now includes Savings Rate vs income. Score may drop if spending > income.'
+                              : '💡 Lightweight Mode ON — FHS now uses spending habits only. Score reflects your tracking consistency.',
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                        duration: const Duration(seconds: 4),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
                   },
                 ),
 

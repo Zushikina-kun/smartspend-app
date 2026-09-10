@@ -621,6 +621,12 @@ class NotificationService {
 
       if (lastCats.isEmpty) return;
 
+      // Guard: require at least 5 last-month expenses so a near-empty month
+      // (e.g. user barely logged) doesn't produce a misleading 300%+ spike.
+      final lastMonthCount =
+          await DBService.getExpenseCountForMonth(lastMonthKey);
+      if (lastMonthCount < 5) return;
+
       // Find categories growing >25% month-over-month
       for (final entry in thisCats.entries) {
         final cat = entry.key;
@@ -735,8 +741,14 @@ class NotificationService {
     final lastKey = await DBService.getSetting('last_daily_briefing');
     if (lastKey == todayKey) return; // already shown today
 
+    // Mark as shown NOW — before any async work — so even if income = 0 or
+    // notification fails, the key is written and we don't retry every open.
+    await DBService.setSetting('last_daily_briefing', todayKey);
+
     try {
       final income = await DBService.getMonthlyIncome();
+      // Skip the notification if no income is set, but the key is already
+      // written above so we won't re-attempt today.
       if (income <= 0) return;
 
       final currentMonth = DateFormat('yyyy-MM').format(now);
@@ -776,8 +788,6 @@ class NotificationService {
         '$remainingStr$billsStr',
         const NotificationDetails(android: android),
       );
-
-      await DBService.setSetting('last_daily_briefing', todayKey);
     } catch (_) {}
   }
 }

@@ -1,6 +1,6 @@
 # SmartSpend — Project Status
-**Version:** 2.9.11 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** September 3, 2026
+**Version:** 2.9.21 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** September 10, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/CAPSTONE_REFERENCE.md`

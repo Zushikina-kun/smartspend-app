@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.9 | **Date:** August 27, 2026
+**Version:** 2.9.21 | **Date:** September 10, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.19).
+> All figures are accurate to the final build (v2.9.21).
 
 ---
 
@@ -15,8 +15,8 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.9
-**Build date:** August 11, 2026
+**Version:** 2.9.21
+**Build date:** September 10, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
 **Target SDK:** Android 16 (API 36)
@@ -589,9 +589,12 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.7 | Aug 2026 | Comprehensive audit fixes (30+ issues); FMS + Weekly Category Card on Home+Analytics; FHS unmeasured label; recurring auto-add; ScanReviewScreen dedup fix; 30+ docs fixes across 9 files |
 | 2.9.8 | Sep 2026 | AI coverage expansion: 31 agentic actions (added set_spending_limit + add_insurance_policy); Taglish triggers for all action types; budget routing to smart tier; set_budget fallback parser; auto-rules in context; multi-item logging typo resilience |
 | 2.9.9 | Sep 2026 | Debug-identified fixes: Lightweight Mode analytics (50/30/20 hidden); Logging Consistency formula corrected (day 1 baseline); FMS scroll-to on Profile; AI language detection (Rule 12); score history placeholder |
+| 2.9.10–2.9.19 | Sep 2026 | Behavioral Feedback Layer (8 UX items); docs reorganization; 34 agentic actions confirmed; SSS 2025 rates; 7 new action validators; Help screen fixes; AI system prompt App Guide; builders updated; GitHub releases |
+| 2.9.20 | Sep 7, 2026 | Graceful AI failure UX (Retry/Try Different Model/Log Manually buttons); 401/403 auto-fallback; fast model routing fix (Taglish verbs); cross-session duplicate guard; overspend startup alert; new Gemini API key baked in |
+| **2.9.21** | **Sep 10, 2026** | **9 bug fixes from debug log: AI fallback model persisted across restarts (no more Gemini retry loop); FHS Lightweight mode component mismatch fixed (Budget Adherence removed from Lightweight); mode-switch score notice; velocity alert suppressed when last month < 5 expenses; recurring card casing restored; wallet quests filtered in Lightweight; daily briefing date-write fixed; exchange rates refresh on every app open independently of Market Insights card; payment plan completion Archive action** |
 
 ---
 
-*SmartSpend v2.9.19 — Lucid Frame*
+*SmartSpend v2.9.21 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
-*Last updated: September 2, 2026*
+*Last updated: September 10, 2026*

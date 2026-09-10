@@ -873,6 +873,7 @@ class _DashboardState extends State<Dashboard> {
   List<Budget> _budgets = [];
   double _totalSpent = 0;
   double _lastMonthTotal = 0;
+  int _lastMonthExpenseCount = 0; // guard for velocity comparisons
   double _monthlyIncome = 0;
   String _insight = "Analyzing your expenses...";
   int _score = 0;
@@ -960,6 +961,7 @@ class _DashboardState extends State<Dashboard> {
     final expensesFuture = DBService.getExpenses();
     final thisMonthFuture = DBService.getExpenses(month: _currentMonth);
     final lastMonthTotalFuture = DBService.getTotalSpent(month: _lastMonth);
+    final lastMonthCountFuture = DBService.getExpenseCountForMonth(_lastMonth);
     final totalFuture = DBService.getTotalSpent(month: _currentMonth);
     final budgetsFuture = DBService.getBudgets();
     final incomeFuture = DBService.getMonthlyIncome();
@@ -969,6 +971,7 @@ class _DashboardState extends State<Dashboard> {
     final expenses = await expensesFuture;
     final thisMonthExpenses = await thisMonthFuture;
     final lastMonthTotal = await lastMonthTotalFuture;
+    final lastMonthCount = await lastMonthCountFuture;
     final total = await totalFuture;
     final budgets = await budgetsFuture;
     final income = await incomeFuture;
@@ -1021,6 +1024,7 @@ class _DashboardState extends State<Dashboard> {
       _expenses = expenses;
       _totalSpent = total;
       _lastMonthTotal = lastMonthTotal;
+      _lastMonthExpenseCount = lastMonthCount;
       _budgets = budgets;
       _score = score;
       _monthlyIncome = income;
@@ -1380,8 +1384,10 @@ class _DashboardState extends State<Dashboard> {
       final hasToday = _expenses.any((e) => e.date == today);
       if (hasToday && history.length >= 7) badges.add('📅 Active tracker');
 
-      // GM-9: "Better than last month" comparison badge
-      if (_lastMonthTotal > 0 && _totalSpent < _lastMonthTotal) {
+      // GM-9: "Better than last month" comparison badge — only when last month has enough data
+      if (_lastMonthTotal > 0 &&
+          _lastMonthExpenseCount >= 5 &&
+          _totalSpent < _lastMonthTotal) {
         final saved = _lastMonthTotal - _totalSpent;
         badges.add('📉 ₱${saved.toStringAsFixed(0)} less than last month');
       }
@@ -2737,7 +2743,7 @@ class _DashboardState extends State<Dashboard> {
                             fontSize: 30,
                             fontWeight: FontWeight.bold)),
                     const SizedBox(height: 6),
-                    if (_lastMonthTotal > 0)
+                    if (_lastMonthTotal > 0 && _lastMonthExpenseCount >= 5)
                       Row(
                         children: [
                           Icon(
@@ -3186,6 +3192,7 @@ class _DashboardState extends State<Dashboard> {
                 budgets: _budgets,
                 score: _score,
                 monthlyIncome: _monthlyIncome,
+                incomeWalletMode: _incomeWalletMode,
               ),
 
               // GM-7: Weekly Challenge card
@@ -3255,7 +3262,9 @@ class _DashboardState extends State<Dashboard> {
                   );
                 },
               ),
-              if (_lastMonthTotal > 0 && _totalSpent > 0)
+              if (_lastMonthTotal > 0 &&
+                  _totalSpent > 0 &&
+                  _lastMonthExpenseCount >= 5)
                 Builder(builder: (ctx) {
                   final diff = _totalSpent - _lastMonthTotal;
                   final pct =
@@ -4552,12 +4561,14 @@ class _DailyChallengesWidget extends StatefulWidget {
   final List<Budget> budgets;
   final int score;
   final double monthlyIncome;
+  final bool incomeWalletMode;
 
   const _DailyChallengesWidget({
     required this.expenses,
     required this.budgets,
     required this.score,
     required this.monthlyIncome,
+    this.incomeWalletMode = true,
   });
 
   @override
@@ -4622,7 +4633,8 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
             : 'Set income to unlock',
         'done': underBudgetToday && dailyBudget > 0,
         'icon': Icons.savings_outlined,
-        'color': Colors.green
+        'color': Colors.green,
+        'requiresIncome': true, // hidden in Lightweight mode
       },
       {
         'title': 'Log a Need expense',
@@ -4652,7 +4664,8 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
         'title': 'Update your wallet balance',
         'done': false, // can't easily check this without DB call
         'icon': Icons.account_balance_wallet,
-        'color': Colors.green
+        'color': Colors.green,
+        'requiresIncome': true, // hidden in Lightweight mode
       },
       {
         'title': 'Spend only on Needs today',
@@ -4681,13 +4694,19 @@ class _DailyChallengesWidgetState extends State<_DailyChallengesWidget> {
       },
     ];
 
+    // Filter out income/wallet quests when user is in Lightweight mode
+    // (income_wallet_mode = false) — they can't be completed without income tracking.
+    final availableChallenges = widget.incomeWalletMode
+        ? allChallenges
+        : allChallenges.where((c) => c['requiresIncome'] != true).toList();
+
     // Pick 4 challenges based on day rotation (deterministic per day)
     final seed = dayOfWeek + DateTime.now().day;
     final indices = <int>[];
-    for (int i = 0; i < allChallenges.length && indices.length < 4; i++) {
-      indices.add((seed + i) % allChallenges.length);
+    for (int i = 0; i < availableChallenges.length && indices.length < 4; i++) {
+      indices.add((seed + i) % availableChallenges.length);
     }
-    final challenges = indices.map((i) => allChallenges[i]).toList();
+    final challenges = indices.map((i) => availableChallenges[i]).toList();
 
     final doneCount = challenges.where((c) => c['done'] == true).length;
     final allDone = doneCount == challenges.length;

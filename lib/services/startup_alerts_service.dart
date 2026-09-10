@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'db_service.dart';
 import 'currency_service.dart';
 import 'score_service.dart';
@@ -78,9 +80,65 @@ class StartupAlertsService {
   static const prefKeyGapBonus = kGapCleanKey;
   static const _prefKeyLastGapCheck = 'last_gap_check_date';
 
+  /// Refreshes PHP exchange rates in the background if the cache is stale (> 1 hour).
+  /// Fire-and-forget — called on every app open via checkAlerts().
+  /// This ensures rates stay current even when the Market Insights card is hidden.
+  static Future<void> _refreshExchangeRatesInBackground() async {
+    try {
+      final updatedTs = await DBService.getSetting('exchange_rate_updated');
+      if (updatedTs != null) {
+        final dt = DateTime.tryParse(updatedTs);
+        if (dt != null && DateTime.now().difference(dt).inHours < 1)
+          return; // fresh
+      }
+      final currencies = [
+        'USD',
+        'EUR',
+        'GBP',
+        'JPY',
+        'SGD',
+        'AUD',
+        'KRW',
+        'CNY',
+        'HKD',
+        'TWD',
+        'CAD',
+        'CHF',
+        'MYR',
+        'IDR',
+        'THB',
+        'VND',
+        'INR',
+        'AED',
+        'SAR',
+        'NZD',
+      ];
+      final response = await http
+          .get(Uri.parse('https://open.er-api.com/v6/latest/PHP'))
+          .timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final allRates = data['rates'] as Map<String, dynamic>;
+        for (final code in currencies) {
+          final rate = (allRates[code] as num?)?.toDouble();
+          if (rate != null && rate > 0) {
+            await DBService.setSetting('exchange_rate_$code', rate.toString());
+          }
+        }
+        await DBService.setSetting(
+            'exchange_rate_updated', DateTime.now().toIso8601String());
+      }
+    } catch (_) {
+      // Silent — this is best-effort background refresh; cached rates still work
+    }
+  }
+
   /// Check all alert conditions and return any that should be shown.
   /// Returns empty list if no alerts or already shown today.
   static Future<List<StartupAlert>> checkAlerts() async {
+    // Refresh exchange rates silently in background on every app open.
+    // This runs independently of the Market Insights card visibility.
+    _refreshExchangeRatesInBackground(); // intentionally not awaited
     // Don't repeat alerts on the same day
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final lastShown = await DBService.getSetting(_prefKeyLastAlert);
