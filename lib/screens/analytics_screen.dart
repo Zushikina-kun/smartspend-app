@@ -580,12 +580,21 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           _loadingAdvice = false;
         });
     } catch (e) {
-      if (mounted)
+      if (mounted) {
+        final msg = e.toString().replaceAll('Exception: ', '');
+        final isKeyIssue = msg.contains('401') ||
+            msg.contains('402') ||
+            msg.contains('403') ||
+            msg.contains('404') ||
+            msg.contains('payment_required') ||
+            msg.contains('Payment required');
         setState(() {
-          _aiAdvice =
-              "Could not get advice: ${e.toString().replaceAll('Exception: ', '')}";
+          _aiAdvice = isKeyIssue
+              ? "AI advice unavailable right now — daily quota may have been reached. Try again after midnight, or check a different AI model in Settings."
+              : "Could not get advice. Tap Refresh to try again.";
           _loadingAdvice = false;
         });
+      }
     }
   }
 
@@ -4558,8 +4567,16 @@ class _MonthlySummaryCardState extends State<_MonthlySummaryCard> {
       if (mounted) setState(() => _summary = result);
     } catch (e) {
       if (mounted) {
-        setState(() => _summary =
-            "Could not generate summary: ${e.toString().replaceAll('Exception: ', '')}");
+        final msg = e.toString().replaceAll('Exception: ', '');
+        final isKeyIssue = msg.contains('401') ||
+            msg.contains('402') ||
+            msg.contains('403') ||
+            msg.contains('404') ||
+            msg.contains('payment_required') ||
+            msg.contains('Payment required');
+        setState(() => _summary = isKeyIssue
+            ? "AI summary unavailable right now — daily quota may have been reached. Try again after midnight."
+            : "Could not generate summary. Tap Refresh to try again.");
       }
     } finally {
       if (mounted) setState(() => _loading = false);

@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.22';
-  static const _prefKey = 'whats_new_seen_2_9_22';
+  static const _version = '2.9.30';
+  static const _prefKey = 'whats_new_seen_2_9_30';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,59 +20,54 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🔄',
-      'AI Fallback Persists Across Restarts (v2.9.21)',
-      'When the app switches to a backup AI model due to an expired key, '
-          'it now remembers that choice after you close and reopen the app. '
-          'No more retrying a failed Gemini key on every cold start.'
+      '✏️',
+      'Manual Mode Overhaul (v2.9.26)',
+      '"Log Expense" now opens a choice sheet: AI Chat, Manual Form, '
+          'Batch Add (up to 8 expenses at once), or Voice → Form. '
+          'Manual entry is now a first-class feature — works 100% offline.'
     ),
     (
-      '🛡️',
-      'Graceful AI Failure UX (v2.9.20)',
-      'When all AI providers fail, the error bubble now shows three options: '
-          'Retry, Try Different Model (auto-switches), and Log Manually '
-          '(opens the form pre-filled with your message).'
+      '🤖',
+      'AI Works Again — New Models & Keys (v2.9.29)',
+      'Fixed: Gemini 3.5 Flash-Lite is now the primary model (the old '
+          'gemini-3.1-flash-lite was shut down by Google). Groq fallback '
+          'now uses models verified on your account tier.'
+    ),
+    (
+      '🔄',
+      'AI Fallback Persists Across Restarts (v2.9.21)',
+      'When the app switches to a backup AI model, it remembers that choice '
+          'after you close and reopen. No more retrying a failed key on every cold start.'
     ),
     (
       '📊',
       'FHS Lightweight Mode Fixed (v2.9.21)',
-      'The Financial Health Score in Lightweight mode now shows the correct '
-          'four components: Spending Restraint, Logging Consistency, '
-          'Category Balance, and Habit Streak. Budget Adherence no longer '
-          'appears when income tracking is off.'
+      'Lightweight mode now shows the correct four components: Spending '
+          'Restraint, Logging Consistency, Category Balance, and Habit Streak.'
     ),
     (
-      '📅',
-      'Smarter Spending Comparisons (v2.9.21)',
-      'The "329% vs last month" alert is now suppressed when last month had '
-          'fewer than 5 expenses — no more false spike warnings from a month '
-          'where you barely logged anything.'
+      '⚠️',
+      'Smarter Alerts (v2.9.21–2.9.22)',
+      '330%+ velocity alerts suppressed when last month had fewer than 5 '
+          'expenses. Student accounts no longer get an "income too low" warning.'
     ),
     (
       '💡',
       'Exchange Rates Always Fresh (v2.9.21)',
-      'PHP exchange rates now refresh silently every time you open the app, '
-          'even if the Market Insights card is hidden in App Settings.'
+      'PHP exchange rates now refresh silently on every app open, even if '
+          'the Market Insights card is hidden in App Settings.'
     ),
     (
       '✅',
       'Payment Plan Archive on Completion (v2.9.21)',
-      'When you log the final payment on an installment plan, a one-tap '
-          '"Archive" button now appears in the confirmation so you can '
-          'clear it from your list immediately.'
+      'When you log the final payment on an installment plan, an "Archive" '
+          'button lets you clear it from the list immediately.'
     ),
     (
       '🎯',
-      'Daily Quests Respect Your Mode (v2.9.21)',
-      'Wallet and income-related quests are now hidden when income tracking '
-          'is turned off — replaced with habit-based quests you can '
-          'actually complete.'
-    ),
-    (
-      '🔔',
-      'Mode Switch Now Explains Score Change (v2.9.21)',
-      'Toggling income tracking in App Settings now shows a brief notice '
-          'explaining why your FHS score may look different after switching.'
+      'Daily Quests Respect Lightweight Mode (v2.9.21)',
+      'Wallet and income quests are now hidden when income tracking is off '
+          '— replaced with habit-based quests you can actually complete.'
     ),
   ];
 

@@ -47,6 +47,10 @@ class _BatchManualEntryScreenState extends State<BatchManualEntryScreen> {
 
   void _removeRow(int i) {
     if (_rows.length <= 1) return;
+    // Dispose controllers of the removed row immediately to avoid memory leak
+    final removed = _rows[i];
+    removed.nameCtrl.dispose();
+    removed.amountCtrl.dispose();
     setState(() => _rows.removeAt(i));
   }
 
@@ -102,6 +106,7 @@ class _BatchManualEntryScreenState extends State<BatchManualEntryScreen> {
 
   @override
   void dispose() {
+    // Only dispose rows still in the list — removed rows were disposed in _removeRow
     for (final r in _rows) {
       r.nameCtrl.dispose();
       r.amountCtrl.dispose();

@@ -1988,9 +1988,11 @@ class DBService {
           ]);
       if (existing.isNotEmpty) continue;
 
-      // Check if already a candidate
-      final alreadyCandidate = await db.query('recurring_candidates',
-          where: 'description = ?', whereArgs: [entry.key]);
+      // Check if already a candidate — use LOWER() for case-insensitive match
+      // because entry.key is lowercase-normalized but description stores original casing
+      final alreadyCandidate = await db.rawQuery(
+          'SELECT id FROM recurring_candidates WHERE LOWER(description) = LOWER(?)',
+          [entry.key]);
       if (alreadyCandidate.isNotEmpty) continue;
 
       final amounts =
@@ -2117,15 +2119,19 @@ class DBService {
     if (fromBalance < amount) return false; // insufficient balance
 
     final now = DateTime.now().toIso8601String();
-    await db.update(
-        'wallets', {'balance': fromBalance - amount, 'updated_at': now},
-        where: 'id = ?', whereArgs: [fromId]);
-    final toBalance = (toRows.first['balance'] as num).toDouble();
-    await db.update(
-        'wallets', {'balance': toBalance + amount, 'updated_at': now},
-        where: 'id = ?', whereArgs: [toId]);
+    // Wrap both updates in a transaction — if the app is killed or an error
+    // occurs between them, SQLite rolls back both so no balance disappears.
+    await db.transaction((txn) async {
+      await txn.update(
+          'wallets', {'balance': fromBalance - amount, 'updated_at': now},
+          where: 'id = ?', whereArgs: [fromId]);
+      final toBalance = (toRows.first['balance'] as num).toDouble();
+      await txn.update(
+          'wallets', {'balance': toBalance + amount, 'updated_at': now},
+          where: 'id = ?', whereArgs: [toId]);
+    });
 
-    // Sync both to Firestore
+    // Sync both to Firestore (best-effort, outside the transaction)
     try {
       final updatedFrom = await db.query('wallets',
           where: 'id = ?', whereArgs: [fromId], limit: 1);
