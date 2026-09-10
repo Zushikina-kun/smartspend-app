@@ -23,8 +23,15 @@ const _paymentMethods = [
 class AddExpenseScreen extends StatefulWidget {
   final String? initialText;
   final bool startWithVoice;
+
+  /// When true, skips the automatic AI analysis on open even if initialText is set.
+  /// Used when opening from an AI error bubble — the AI just failed, don't retry it immediately.
+  final bool skipAiAnalysis;
   const AddExpenseScreen(
-      {super.key, this.initialText, this.startWithVoice = false});
+      {super.key,
+      this.initialText,
+      this.startWithVoice = false,
+      this.skipAiAnalysis = false});
 
   @override
   State<AddExpenseScreen> createState() => _AddExpenseScreenState();
@@ -67,7 +74,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     _loadCategories();
     // Auto-suggest category when item name is typed manually
     _itemNameCtrl.addListener(_autoSuggestCategory);
-    if (widget.initialText != null && widget.initialText!.isNotEmpty) {
+    if (widget.initialText != null &&
+        widget.initialText!.isNotEmpty &&
+        !widget.skipAiAnalysis) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _analyzeAndPreview());
     } else if (widget.startWithVoice) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startVoice());
