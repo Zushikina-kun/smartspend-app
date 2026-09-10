@@ -39,6 +39,8 @@ import 'insurance_screen.dart';
 import 'bank_comparison_screen.dart';
 import 'pca_calculator_screen.dart';
 import 'glossary_screen.dart';
+import 'add_expense_screen.dart';
+import 'batch_manual_entry_screen.dart';
 import '../services/startup_alerts_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -329,9 +331,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   _checkTour();
                 }),
                 _navItem(Icons.bar_chart, "Analytics", 1),
+                // Centre: prominent + FAB replaces the AI icon in the middle slot
+                _buildCenterFAB(context),
                 _navItem(Icons.smart_toy, "AI", 2),
-                _navItem(Icons.grid_view_rounded, "Hub", -1,
-                    onTap: () => _showQuickAccessHub(context)),
                 _navItem(Icons.person, "Profile", 3),
               ],
             ),
@@ -340,6 +342,158 @@ class _HomeScreenState extends State<HomeScreen> {
         if (_showTour)
           FeatureTour(onDone: () => setState(() => _showTour = false)),
       ],
+    );
+  }
+
+  /// Centre FAB — always-visible + button in the nav bar for fast expense entry
+  Widget _buildCenterFAB(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showLogExpenseSheet(context),
+      onLongPress: () {
+        // Long press goes straight to manual form — for power users
+        Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const AddExpenseScreen()));
+      },
+      child: Container(
+        width: 52,
+        height: 52,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Theme.of(context).colorScheme.primary,
+          boxShadow: [
+            BoxShadow(
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.35),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Icon(Icons.add,
+            color: Theme.of(context).colorScheme.onPrimary, size: 26),
+      ),
+    );
+  }
+
+  /// Bottom sheet shown when tapping Log Expense — lets user pick how to log
+  void _showLogExpenseSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text("How would you like to log?",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              const SizedBox(height: 12),
+              // ① AI Chat — most powerful
+              _logSheetTile(
+                context,
+                icon: Icons.smart_toy_outlined,
+                color: Theme.of(context).colorScheme.primary,
+                title: "AI Chat",
+                subtitle: "Type or speak — AI logs it instantly",
+                onTap: () {
+                  Navigator.pop(context);
+                  setState(() => _index = 2);
+                },
+              ),
+              // ② Manual Form — works 100% offline, no AI needed
+              _logSheetTile(
+                context,
+                icon: Icons.edit_note,
+                color: Colors.green,
+                title: "Manual Form",
+                subtitle:
+                    "Fill in the details yourself — no AI needed, always works",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const AddExpenseScreen()));
+                },
+              ),
+              // ③ Batch Add — multiple expenses at once
+              _logSheetTile(
+                context,
+                icon: Icons.playlist_add,
+                color: Colors.deepOrange,
+                title: "Batch Add",
+                subtitle:
+                    "Log several expenses at once — great when AI is unavailable",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const BatchManualEntryScreen()));
+                },
+              ),
+              // ④ Voice → Manual Form
+              _logSheetTile(
+                context,
+                icon: Icons.mic_outlined,
+                color: Colors.red,
+                title: "Voice → Manual Form",
+                subtitle:
+                    "Speak, app listens — you review and confirm the details",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) =>
+                              const AddExpenseScreen(startWithVoice: true)));
+                },
+              ),
+              const SizedBox(height: 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _logSheetTile(
+    BuildContext context, {
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(icon, color: color, size: 20),
+      ),
+      title: Text(title,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+      subtitle: Text(subtitle,
+          style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      onTap: onTap,
     );
   }
 
@@ -1566,6 +1720,138 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Shows the "How would you like to log?" bottom sheet from Dashboard context.
+  /// This version passes widget.onNavigate for the AI Chat option.
+  void _showLogExpenseSheetLocal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text("How would you like to log?",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              const SizedBox(height: 12),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Icon(Icons.smart_toy_outlined,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20)),
+                title: const Text("AI Chat",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                subtitle: const Text("Type or speak — AI logs it instantly",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                onTap: () {
+                  Navigator.pop(context);
+                  widget.onNavigate(2);
+                },
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.green.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(Icons.edit_note,
+                        color: Colors.green, size: 20)),
+                title: const Text("Manual Form",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                subtitle: const Text(
+                    "Fill in the details yourself — no AI needed, always works",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const AddExpenseScreen()));
+                },
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.deepOrange.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(Icons.playlist_add,
+                        color: Colors.deepOrange, size: 20)),
+                title: const Text("Batch Add",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                subtitle: const Text(
+                    "Log several expenses at once — great when AI is unavailable",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const BatchManualEntryScreen()));
+                },
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.10),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(Icons.mic_outlined,
+                        color: Colors.red, size: 20)),
+                title: const Text("Voice → Manual Form",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                subtitle: const Text(
+                    "Speak, app listens — you review and confirm the details",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) =>
+                              const AddExpenseScreen(startWithVoice: true)));
+                },
+              ),
+              const SizedBox(height: 4),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildQuickLogChips(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Padding(
@@ -2690,7 +2976,7 @@ class _DashboardState extends State<Dashboard> {
                   Text("$greeting 👋",
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.w500)),
-                  // Quick log button — most common action
+                  // Quick log button — shows options: AI chat, manual form, batch, voice
                   ElevatedButton.icon(
                     icon: const Icon(Icons.add, size: 18),
                     label: const Text("Log Expense",
@@ -2704,10 +2990,7 @@ class _DashboardState extends State<Dashboard> {
                           borderRadius: BorderRadius.circular(20)),
                       elevation: 0,
                     ),
-                    onPressed: () {
-                      // Navigate to AI tab — user can type/speak expense
-                      widget.onNavigate(2);
-                    },
+                    onPressed: () => _showLogExpenseSheetLocal(context),
                   ),
                 ],
               ),

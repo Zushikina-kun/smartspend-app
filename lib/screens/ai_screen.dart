@@ -26,6 +26,7 @@ import 'chat_history_screen.dart';
 import 'smart_camera_screen.dart';
 import 'scan_review_screen.dart';
 import 'add_expense_screen.dart';
+import 'batch_manual_entry_screen.dart';
 import 'bank_import_screen.dart';
 import 'batch_image_import_screen.dart';
 
@@ -2385,6 +2386,88 @@ class _AIScreenState extends State<AIScreen> {
       body: Column(
         children: [
           if (!_contextLoaded) const LinearProgressIndicator(),
+          // ── AI UNAVAILABLE BANNER ─────────────────────────────────────────
+          // Shows when the last few messages all failed (auth + limit errors).
+          // Gives the user a clear path to manual entry without digging around.
+          FutureBuilder<int>(
+            future: AIChatService.getRemainingMessages(),
+            builder: (_, snap) {
+              final remaining = snap.data ?? 999;
+              final allFailed = _messages.isNotEmpty &&
+                  _messages.last['is_error'] == 'true' &&
+                  _messages.length >= 2 &&
+                  _messages[_messages.length - 2]['is_error'] == 'true';
+              final limitHit = remaining <= 0;
+              if (!allFailed && !limitHit) return const SizedBox.shrink();
+              final isLimit = limitHit;
+              return Container(
+                width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(12, 6, 12, 0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isLimit
+                      ? Colors.orange.withValues(alpha: 0.12)
+                      : Colors.red.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: (isLimit ? Colors.orange : Colors.red)
+                          .withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(isLimit ? Icons.hourglass_empty : Icons.wifi_off,
+                        size: 18, color: isLimit ? Colors.orange : Colors.red),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        isLimit
+                            ? "AI daily limit reached — resets at midnight UTC."
+                            : "AI is unavailable right now. Log expenses manually instead.",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                isLimit ? Colors.orange[800] : Colors.red[700]),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const BatchManualEntryScreen())),
+                      style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                          backgroundColor:
+                              Colors.green.withValues(alpha: 0.12)),
+                      child: const Text("Batch Add",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                    const SizedBox(width: 4),
+                    TextButton(
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const AddExpenseScreen())),
+                      style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 6),
+                          backgroundColor: Colors.blue.withValues(alpha: 0.10)),
+                      child: const Text("1 Expense",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
           Expanded(
             child: _messages.isEmpty && !_contextLoaded
                 ? const Center(child: CircularProgressIndicator())
@@ -2637,6 +2720,9 @@ class _AIScreenState extends State<AIScreen> {
                                                                   AddExpenseScreen(
                                                                     initialText:
                                                                         originalMsg,
+                                                                    // AI just failed — skip auto-analysis
+                                                                    skipAiAnalysis:
+                                                                        true,
                                                                   )));
                                                   if (result == true &&
                                                       mounted) {
