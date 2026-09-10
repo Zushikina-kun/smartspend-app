@@ -1024,9 +1024,11 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         throw Exception(
             "Daily AI limit reached on all models. Try again tomorrow, or add a Gemini/Cerebras API key in Settings.");
       }
-      // 401 / 403 / 404 = auth failure or model not found — try next provider
-      // 404 means the model doesn't exist on this account's tier — same logic as auth failure
+      // 401 / 403 / 404 / 402 = auth/billing/quota failure — try next provider
+      // 402 = payment required (Gemini free quota exhausted or billing needed)
+      // 404 = model not found on this account tier
       if (response.statusCode == 401 ||
+          response.statusCode == 402 ||
           response.statusCode == 403 ||
           response.statusCode == 404) {
         final switched = AppConfig.autoFallback();

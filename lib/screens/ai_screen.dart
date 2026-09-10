@@ -421,7 +421,11 @@ class _AIScreenState extends State<AIScreen> {
           errMsg.contains('timeout') ||
           errMsg.contains('SocketException') ||
           errMsg.contains('connection');
-      final isAuthError = errMsg.contains('401') || errMsg.contains('403');
+      final isAuthError = errMsg.contains('401') ||
+          errMsg.contains('402') ||
+          errMsg.contains('403') ||
+          errMsg.contains('payment_required') ||
+          errMsg.contains('Payment required');
       final isLimitError = errMsg.contains('Daily AI limit') ||
           errMsg.contains('429') ||
           errMsg.contains('rate limit') ||

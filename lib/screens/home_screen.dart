@@ -338,14 +338,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            heroTag: 'fab_log_expense',
-            onPressed: () => _showLogExpenseSheet(context),
-            tooltip: 'Log Expense',
-            child: const Icon(Icons.add),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
         ),
         if (_showTour)
           FeatureTour(onDone: () => setState(() => _showTour = false)),
