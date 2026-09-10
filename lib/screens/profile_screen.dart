@@ -73,22 +73,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadStats();
-    // Scroll to FMS section if flagged (e.g. tapped 'See breakdown' on home)
-    if (ProfileScreen.scrollToFMS) {
-      ProfileScreen.scrollToFMS = false;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Future.delayed(const Duration(milliseconds: 400), () {
-          if (_fmsKey.currentContext != null) {
-            Scrollable.ensureVisible(
-              _fmsKey.currentContext!,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
-              alignment: 0.1, // scroll so FMS card is near the top
-            );
-          }
-        });
-      });
-    }
+    // Scroll to FMS is handled inside _loadStats() after data has loaded —
+    // do NOT clear the flag here, as data isn't ready yet.
   }
 
   @override

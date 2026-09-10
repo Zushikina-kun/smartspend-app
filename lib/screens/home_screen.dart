@@ -345,36 +345,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Centre FAB — always-visible + button in the nav bar for fast expense entry
-  Widget _buildCenterFAB(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _showLogExpenseSheet(context),
-      onLongPress: () {
-        // Long press goes straight to manual form — for power users
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const AddExpenseScreen()));
-      },
-      child: Container(
-        width: 52,
-        height: 52,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Theme.of(context).colorScheme.primary,
-          boxShadow: [
-            BoxShadow(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.35),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Icon(Icons.add,
-            color: Theme.of(context).colorScheme.onPrimary, size: 26),
-      ),
-    );
-  }
-
   /// Bottom sheet shown when tapping Log Expense — lets user pick how to log
   void _showLogExpenseSheet(BuildContext context) {
     showModalBottomSheet(
