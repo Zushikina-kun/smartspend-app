@@ -287,35 +287,11 @@ class ScoreService {
       'component': 'habit_streak',
     });
 
-    // ── BUDGET ADHERENCE BONUS ────────────────────────────────────────────────
-    // Even in lightweight mode, category budgets still add value.
-    // If the user has set budgets, replace Category Balance with Budget Adherence
-    // for a more precise score (same formula as full mode).
-    if (budgets.isNotEmpty) {
-      int onBudget = 0, overBudget = 0;
-      for (final b in budgets) {
-        final spent = catTotals[b.category] ?? 0;
-        final limit = b.isPercentage ? 0.0 : b.amount;
-        if (limit <= 0) continue;
-        if (spent <= limit)
-          onBudget++;
-        else
-          overBudget++;
-      }
-      final valid = onBudget + overBudget;
-      if (valid > 0) {
-        final adherence = onBudget / valid;
-        // Blend with category balance (budgets = more authoritative)
-        comp3 = adherence * 25;
-        breakdown[2] = {
-          'reason': overBudget == 0
-              ? 'All $onBudget budget${onBudget == 1 ? '' : 's'} on track ✓'
-              : '$overBudget of $valid budgets exceeded',
-          'points': comp3.round(),
-          'component': 'budget_adherence',
-        };
-      }
-    }
+    // NOTE: Budget Adherence is a Full Mode component only.
+    // In Lightweight mode the user has opted out of income/wallet tracking,
+    // so Category Balance (comp3 above) remains the authoritative component.
+    // Do NOT replace it with Budget Adherence here — that caused component
+    // mismatch where "All 5 budgets on track ✓" appeared in Lightweight mode.
 
     final rawScore = (comp1 + comp2 + comp3 + comp4).round().clamp(0, 100);
     return {'score': rawScore, 'breakdown': breakdown};

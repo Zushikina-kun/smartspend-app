@@ -793,6 +793,16 @@ class DBService {
     return expenses.fold<double>(0.0, (sum, e) => sum + e.amount);
   }
 
+  /// Returns the number of distinct expense records for a given YYYY-MM month.
+  /// Used to guard velocity/comparison alerts so a near-empty month (< 5 expenses)
+  /// doesn't produce a misleading spike percentage.
+  static Future<int> getExpenseCountForMonth(String month) async {
+    final db = await getDB();
+    final result = await db.rawQuery(
+        'SELECT COUNT(*) as c FROM expenses WHERE date LIKE ?', ['$month%']);
+    return (result.first['c'] as int? ?? 0);
+  }
+
   static Future<int> getExpenseCount() async {
     final db = await getDB();
     final result = await db.rawQuery('SELECT COUNT(*) as count FROM expenses');
@@ -1990,7 +2000,9 @@ class DBService {
       final lastSeen = (items.last['date'] as String).substring(0, 10);
 
       candidates.add({
-        'description': entry.key,
+        // Use the original item_name from the most recent occurrence to preserve
+        // proper casing — entry.key is lowercase-normalized for grouping only.
+        'description': items.last['item_name'] as String? ?? entry.key,
         'category': category,
         'avg_amount': avgAmount,
         'frequency': frequency,
