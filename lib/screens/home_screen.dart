@@ -2703,6 +2703,14 @@ class _DashboardState extends State<Dashboard> {
             MaterialPageRoute(builder: (_) => const BankImportScreen())),
       ),
       (
+        Icons.content_paste_go_outlined,
+        "Paste & Log",
+        "Paste bank/GCash SMS",
+        Colors.indigo,
+        () => Navigator.push(context,
+            MaterialPageRoute(builder: (_) => const AddExpenseScreen())),
+      ),
+      (
         Icons.repeat,
         "Recurring",
         "Bills & subs",
