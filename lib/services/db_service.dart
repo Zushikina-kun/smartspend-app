@@ -925,6 +925,64 @@ class DBService {
     return maps.map((m) => Budget.fromMap(m)).toList();
   }
 
+  // ── BUDGET ROLLOVER ────────────────────────────────────────────────────────
+
+  /// Returns the rollover setting for a category (true = carry underspend forward).
+  static Future<bool> getBudgetRollover(String category) async {
+    final val = await getSetting('budget_rollover_${category.toLowerCase()}');
+    return val == 'true';
+  }
+
+  static Future<void> setBudgetRollover(String category, bool enabled) async {
+    await setSetting('budget_rollover_${category.toLowerCase()}',
+        enabled ? 'true' : 'false');
+  }
+
+  /// Returns the rollover credit for a category (underspent from last month).
+  static Future<double> getBudgetRolloverCredit(String category) async {
+    final val =
+        await getSetting('budget_rollover_credit_${category.toLowerCase()}');
+    return double.tryParse(val ?? '') ?? 0.0;
+  }
+
+  static Future<void> setBudgetRolloverCredit(
+      String category, double credit) async {
+    await setSetting('budget_rollover_credit_${category.toLowerCase()}',
+        credit.toStringAsFixed(2));
+  }
+
+  /// Called at the start of a new month — applies rollover credits for categories
+  /// where rollover is enabled. Adds underspent amount to effective budget for
+  /// the new month by storing it as a credit in settings.
+  static Future<void> applyMonthlyRollover(String previousMonth) async {
+    try {
+      final budgets = await getBudgets();
+      final db = await getDB();
+      for (final b in budgets) {
+        final enabled = await getBudgetRollover(b.category);
+        if (!enabled || b.amount <= 0) continue;
+        // Sum expenses in previous month for this category
+        final result = await db.rawQuery(
+          '''SELECT COALESCE(SUM(amount),0) as total FROM expenses
+             WHERE category = ? AND date LIKE ?''',
+          [b.category, '$previousMonth%'],
+        );
+        final spent = (result.first['total'] as num?)?.toDouble() ?? 0.0;
+        final underspent = b.amount - spent;
+        if (underspent > 0) {
+          // Add to existing rollover credit (can accumulate over months)
+          final existing = await getBudgetRolloverCredit(b.category);
+          await setBudgetRolloverCredit(b.category, existing + underspent);
+        } else {
+          // Overspent — clear any accumulated credit
+          await setBudgetRolloverCredit(b.category, 0);
+        }
+      }
+      // Record that rollover was applied for this month
+      await setSetting('rollover_applied_month', previousMonth);
+    } catch (_) {}
+  }
+
   static Future<void> deleteBudget(String category) async {
     final db = await getDB();
     final rows =
@@ -1999,9 +2057,9 @@ class DBService {
     }
     await setSetting('last_recurring_check', today);
 
-    // Get all expenses from last 90 days
+    // Get all expenses from last 400 days (extended from 90 to catch quarterly/yearly patterns)
     final since = DateTime.now()
-        .subtract(const Duration(days: 90))
+        .subtract(const Duration(days: 400))
         .toIso8601String()
         .substring(0, 10);
     final expenses = await db.query('expenses',
@@ -2052,6 +2110,12 @@ class DBService {
         frequency = 'weekly';
       } else if (avgInterval >= 13 && avgInterval <= 16) {
         frequency = 'biweekly';
+      } else if (avgInterval >= 85 && avgInterval <= 95) {
+        frequency = 'quarterly'; // every ~3 months
+      } else if (avgInterval >= 175 && avgInterval <= 195) {
+        frequency = 'semi-annual'; // every ~6 months
+      } else if (avgInterval >= 350 && avgInterval <= 380) {
+        frequency = 'yearly'; // annual e.g. insurance renewal
       }
       if (frequency == null) continue;
 
@@ -2076,11 +2140,25 @@ class DBService {
       final category = items.last['category'] as String? ?? 'Others';
       final lastSeen = (items.last['date'] as String).substring(0, 10);
 
+      // Auto-detect insurance/contribution keywords → override category to Bills
+      // and flag for insurance tracker suggestion
+      final descLower =
+          (items.last['item_name'] as String? ?? '').toLowerCase();
+      final isInsurance = descLower.contains('sss') ||
+          descLower.contains('philhealth') ||
+          descLower.contains('pagibig') ||
+          descLower.contains('pag-ibig') ||
+          descLower.contains('insurance') ||
+          descLower.contains('premium') ||
+          descLower.contains('contribution') ||
+          descLower.contains('hmo');
+      final effectiveCategory = isInsurance ? 'Bills' : category;
+
       candidates.add({
         // Use the original item_name from the most recent occurrence to preserve
         // proper casing — entry.key is lowercase-normalized for grouping only.
         'description': items.last['item_name'] as String? ?? entry.key,
-        'category': category,
+        'category': effectiveCategory,
         'avg_amount': avgAmount,
         'frequency': frequency,
         'last_seen': lastSeen,

@@ -2517,6 +2517,134 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           );
                         }),
 
+                      // ── SPENDING STREAK HEATMAP ─────────────────────────
+                      Builder(builder: (context) {
+                        final cs = Theme.of(context).colorScheme;
+                        final now = DateTime.now();
+                        // Build a 5-week × 7-day grid (35 days back + today)
+                        final days = List.generate(35, (i) {
+                          final d = now.subtract(Duration(days: 34 - i));
+                          return d;
+                        });
+                        // Compute daily totals
+                        final dailyTotals = <String, double>{};
+                        for (final e in _expenses) {
+                          dailyTotals[e.date] =
+                              (dailyTotals[e.date] ?? 0) + e.amount;
+                        }
+                        final allValues = dailyTotals.values;
+                        final maxVal = allValues.isEmpty
+                            ? 1.0
+                            : allValues.reduce((a, b) => a > b ? a : b);
+
+                        Color _heatColor(double? val) {
+                          if (val == null || val == 0)
+                            return cs.surfaceContainerHighest
+                                .withValues(alpha: 0.4); // no-spend day
+                          final ratio = (val / maxVal).clamp(0.0, 1.0);
+                          if (ratio < 0.25)
+                            return Colors.green.withValues(alpha: 0.4);
+                          if (ratio < 0.5)
+                            return Colors.green.withValues(alpha: 0.7);
+                          if (ratio < 0.75)
+                            return Colors.orange.withValues(alpha: 0.7);
+                          return Colors.red.withValues(alpha: 0.8);
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(children: [
+                                const Text("Spending Heatmap",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                                const SizedBox(width: 6),
+                                Text("last 5 weeks",
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color: cs.onSurface
+                                            .withValues(alpha: 0.5))),
+                                const Spacer(),
+                                _heatLegend(
+                                    Colors.grey.withValues(alpha: 0.3), "₱0"),
+                                const SizedBox(width: 4),
+                                _heatLegend(
+                                    Colors.green.withValues(alpha: 0.5), "Low"),
+                                const SizedBox(width: 4),
+                                _heatLegend(
+                                    Colors.orange.withValues(alpha: 0.7),
+                                    "Med"),
+                                const SizedBox(width: 4),
+                                _heatLegend(
+                                    Colors.red.withValues(alpha: 0.8), "High"),
+                              ]),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: List.generate(7, (col) {
+                                  // col 0 = Monday row, col 6 = Sunday row
+                                  final dayLabel =
+                                      ['M', 'T', 'W', 'T', 'F', 'S', 'S'][col];
+                                  return Expanded(
+                                    child: Column(children: [
+                                      Text(dayLabel,
+                                          style: TextStyle(
+                                              fontSize: 9,
+                                              color: cs.onSurface
+                                                  .withValues(alpha: 0.4)),
+                                          textAlign: TextAlign.center),
+                                      const SizedBox(height: 3),
+                                      ...List.generate(5, (row) {
+                                        final idx = row * 7 + col;
+                                        if (idx >= days.length)
+                                          return const SizedBox(
+                                              height: 11,
+                                              width: double.infinity);
+                                        final d = days[idx];
+                                        final key = d
+                                            .toIso8601String()
+                                            .substring(0, 10);
+                                        final val = dailyTotals[key];
+                                        final isToday = key ==
+                                            now
+                                                .toIso8601String()
+                                                .substring(0, 10);
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 3),
+                                          child: Tooltip(
+                                            message: val != null
+                                                ? "${DateFormat('MMM d').format(d)}: ₱${val.toStringAsFixed(0)}"
+                                                : "${DateFormat('MMM d').format(d)}: No spending",
+                                            child: Container(
+                                              height: 11,
+                                              decoration: BoxDecoration(
+                                                color: _heatColor(val),
+                                                borderRadius:
+                                                    BorderRadius.circular(2),
+                                                border: isToday
+                                                    ? Border.all(
+                                                        color: cs.primary,
+                                                        width: 1.5)
+                                                    : null,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ]),
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+
                       // Score history placeholder — shown when too few data points
                       // (score only saved on days the app is opened)
                       if (_scoreHistory.length < 2) ...[
@@ -3127,6 +3255,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     _buildWantNeedCard(context),
                     const SizedBox(height: 16),
 
+                    // ── BY TAG SECTION ─────────────────────────────────────
+                    _buildByTagCard(context),
+
                     // Debt-to-Income Ratio
                     if (_showDTI) ...[
                       _buildDebtToIncomeCard(context),
@@ -3638,6 +3769,104 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     fontSize: 10, overflow: TextOverflow.ellipsis),
                 maxLines: 1)),
       ]),
+    );
+  }
+
+  Widget _heatLegend(Color color, String label) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+                color: color, borderRadius: BorderRadius.circular(2)),
+          ),
+          const SizedBox(width: 3),
+          Text(label, style: const TextStyle(fontSize: 9)),
+        ],
+      );
+
+  Widget _buildByTagCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final tagTotals = <String, double>{};
+    for (final e in _expenses) {
+      final raw = e.tags ?? '';
+      if (raw.isEmpty) continue;
+      for (final tag in raw
+          .split(',')
+          .map((t) => t.trim())
+          .where((t) => t.startsWith('#') && t.length > 1)) {
+        tagTotals[tag] = (tagTotals[tag] ?? 0) + e.amount;
+      }
+    }
+    if (tagTotals.isEmpty) return const SizedBox.shrink();
+    final sorted = tagTotals.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final maxVal = sorted.first.value;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest.withValues(alpha: 0.35),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              const Icon(Icons.label_outline, size: 16),
+              const SizedBox(width: 6),
+              const Text("Spending by Tag",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              const SizedBox(width: 6),
+              Text("${sorted.length} tag${sorted.length == 1 ? '' : 's'}",
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: cs.onSurface.withValues(alpha: 0.5))),
+            ]),
+            const SizedBox(height: 4),
+            Text("Tag expenses with #hashtags when logging.",
+                style: TextStyle(
+                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.5))),
+            const SizedBox(height: 12),
+            ...sorted.take(10).map((entry) {
+              final ratio = (entry.value / maxVal).clamp(0.0, 1.0);
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(children: [
+                        Expanded(
+                            child: Text(entry.key,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500))),
+                        Text(CurrencyService.format(entry.value),
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: cs.primary,
+                                fontWeight: FontWeight.bold)),
+                      ]),
+                      const SizedBox(height: 4),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: LinearProgressIndicator(
+                          value: ratio,
+                          minHeight: 6,
+                          backgroundColor: cs.primary.withValues(alpha: 0.08),
+                          valueColor: AlwaysStoppedAnimation(
+                              cs.primary.withValues(alpha: 0.65)),
+                        ),
+                      ),
+                    ]),
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
 

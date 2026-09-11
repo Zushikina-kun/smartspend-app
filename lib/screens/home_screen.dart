@@ -461,6 +461,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   _showSplitterDialog(context);
                 },
               ),
+              // ⑦ Afford This?
+              _logSheetTile(
+                context,
+                icon: Icons.calculate_outlined,
+                color: Colors.teal,
+                title: "Afford This?",
+                subtitle:
+                    "Check if a price fits within your budget and wallet balance",
+                onTap: () {
+                  Navigator.pop(context);
+                  _showAffordCalculator(context);
+                },
+              ),
               const SizedBox(height: 4),
             ],
           ),
@@ -658,6 +671,146 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  /// "Afford This?" calculator — checks if a price fits budget + wallet
+  void _showAffordCalculator(BuildContext context) {
+    final priceCtrl = TextEditingController();
+    final categoryCtrl = TextEditingController(text: 'Food');
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+          builder: (ctx, setS) => AlertDialog(
+                title: const Row(children: [
+                  Text("🤔", style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 8),
+                  Text("Afford This?"),
+                ]),
+                content: Column(mainAxisSize: MainAxisSize.min, children: [
+                  TextField(
+                    controller: priceCtrl,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      labelText: "Price (₱)",
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    onChanged: (_) => setS(() {}),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: categoryCtrl,
+                    decoration: const InputDecoration(
+                      labelText: "Category (optional)",
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                  ),
+                ]),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text("Close")),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final price = double.tryParse(priceCtrl.text.trim());
+                      if (price == null || price <= 0) return;
+                      Navigator.pop(ctx);
+                      // Fetch data needed
+                      final wallets = await DBService.getWallets();
+                      final budgets = await DBService.getBudgets();
+                      final income = await DBService.getMonthlyIncome();
+                      final currentMonth =
+                          DateTime.now().toIso8601String().substring(0, 7);
+                      final expenses =
+                          await DBService.getExpenses(month: currentMonth);
+                      final totalWallet = wallets.fold(
+                          0.0, (s, w) => s + (w['balance'] as num));
+                      final monthSpent =
+                          expenses.fold(0.0, (s, e) => s + e.amount);
+                      final catSpent = expenses
+                          .where((e) =>
+                              e.category.toLowerCase() ==
+                              categoryCtrl.text.trim().toLowerCase())
+                          .fold(0.0, (s, e) => s + e.amount);
+                      final catBudget = budgets
+                          .where((b) =>
+                              b.category.toLowerCase() ==
+                                  categoryCtrl.text.trim().toLowerCase() &&
+                              b.amount > 0)
+                          .firstOrNull;
+
+                      if (!context.mounted) return;
+                      // Build result message
+                      final lines = <String>[];
+                      // 1. Wallet check
+                      if (totalWallet > 0) {
+                        if (price <= totalWallet) {
+                          lines.add(
+                              "💵 Wallet balance: ₱${totalWallet.toStringAsFixed(0)} — you have enough.");
+                        } else {
+                          lines.add(
+                              "⚠️ Wallet balance: ₱${totalWallet.toStringAsFixed(0)} — ₱${(price - totalWallet).toStringAsFixed(0)} short.");
+                        }
+                      }
+                      // 2. Monthly income check
+                      if (income > 0) {
+                        final remaining = income - monthSpent;
+                        if (price <= remaining) {
+                          lines.add(
+                              "📅 Monthly budget: ₱${remaining.toStringAsFixed(0)} left — still on track.");
+                        } else {
+                          lines.add(
+                              "🚨 Monthly income used up. This would put you ₱${(price - remaining).toStringAsFixed(0)} over.");
+                        }
+                      }
+                      // 3. Category budget check
+                      if (catBudget != null) {
+                        final catRemaining = catBudget.amount - catSpent;
+                        if (price <= catRemaining) {
+                          lines.add(
+                              "✅ ${catBudget.category} budget: ₱${catRemaining.toStringAsFixed(0)} remaining — fits.");
+                        } else {
+                          lines.add(
+                              "⚠️ ${catBudget.category} budget: only ₱${catRemaining.toStringAsFixed(0)} left — would exceed by ₱${(price - catRemaining).toStringAsFixed(0)}.");
+                        }
+                      }
+                      if (lines.isEmpty)
+                        lines.add(
+                            "Set your income and wallets for a full analysis.");
+
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: Text(
+                              "₱${price.toStringAsFixed(0)} — Can you afford it?"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: lines
+                                .map((l) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 6),
+                                      child: Text(l,
+                                          style: const TextStyle(
+                                              fontSize: 13, height: 1.4)),
+                                    ))
+                                .toList(),
+                          ),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text("Got it")),
+                          ],
+                        ),
+                      );
+                    },
+                    child: const Text("Check"),
+                  ),
+                ],
+              )),
     );
   }
 
@@ -1784,15 +1937,33 @@ class _DashboardState extends State<Dashboard> {
         insightData,
         actualTotal: total, // pass real DB total to prevent AI hallucination
       );
+      // Cache the successful insight so it shows when AI is unavailable
+      DBService.setSetting('cached_ai_insight', insight).catchError((_) {});
+      DBService.setSetting('cached_ai_insight_date',
+              DateTime.now().toIso8601String().substring(0, 10))
+          .catchError((_) {});
       if (mounted)
         setState(() {
           _insight = insight;
           _loadingInsight = false;
         });
     } catch (_) {
+      // Try to load cached insight before showing error
+      String fallback = "Could not load insights.";
+      try {
+        final cached = await DBService.getSetting('cached_ai_insight');
+        final cachedDate = await DBService.getSetting('cached_ai_insight_date');
+        if (cached != null && cached.isNotEmpty) {
+          final dateLabel = cachedDate != null && cachedDate.isNotEmpty
+              ? " (from $cachedDate)"
+              : "";
+          fallback =
+              "⏳ AI quota reached — showing last insight$dateLabel:\n\n$cached";
+        }
+      } catch (_) {}
       if (mounted)
         setState(() {
-          _insight = "Could not load insights.";
+          _insight = fallback;
           _loadingInsight = false;
         });
     }
@@ -2301,6 +2472,90 @@ class _DashboardState extends State<Dashboard> {
               const SizedBox(height: 4),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDayInReviewCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final todayExp = _expenses.where((e) => e.date == today).toList();
+    if (todayExp.isEmpty) return const SizedBox.shrink();
+    final total = todayExp.fold(0.0, (s, e) => s + e.amount);
+    final byCategory = <String, double>{};
+    for (final e in todayExp) {
+      byCategory[e.category] = (byCategory[e.category] ?? 0) + e.amount;
+    }
+    final topCat = byCategory.entries.isEmpty
+        ? null
+        : (byCategory.entries.toList()
+              ..sort((a, b) => b.value.compareTo(a.value)))
+            .first;
+    // Yesterday total for comparison
+    final yesterday = DateTime.now()
+        .subtract(const Duration(days: 1))
+        .toIso8601String()
+        .substring(0, 10);
+    final yTotal = _expenses
+        .where((e) => e.date == yesterday)
+        .fold(0.0, (s, e) => s + e.amount);
+    final diff = total - yTotal;
+    final isLess = diff < 0;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest.withValues(alpha: 0.35),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              const Text("🌙", style: TextStyle(fontSize: 16)),
+              const SizedBox(width: 6),
+              const Text("Day in Review",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+            ]),
+            const SizedBox(height: 8),
+            Row(children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Today: ${CurrencyService.format(total)}",
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    if (yTotal > 0)
+                      Text(
+                        isLess
+                            ? "₱${(-diff).toStringAsFixed(0)} less than yesterday 👍"
+                            : "₱${diff.toStringAsFixed(0)} more than yesterday",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: isLess ? Colors.green : Colors.orange),
+                      ),
+                  ],
+                ),
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                Text(
+                    "${todayExp.length} expense${todayExp.length == 1 ? '' : 's'}",
+                    style: const TextStyle(fontSize: 12)),
+                if (topCat != null)
+                  Text("Top: ${topCat.key}",
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: cs.onSurface.withValues(alpha: 0.55))),
+              ]),
+            ]),
+          ],
         ),
       ),
     );
@@ -4641,6 +4896,9 @@ class _DashboardState extends State<Dashboard> {
               _WeeklyCategoryCard(expenses: _expenses),
 
               const SizedBox(height: 12),
+
+              // Day-in-Review card — only after 6pm
+              if (DateTime.now().hour >= 18) _buildDayInReviewCard(context),
 
               // AI Insights
               Container(
