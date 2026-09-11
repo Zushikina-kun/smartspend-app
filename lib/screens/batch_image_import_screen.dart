@@ -5,6 +5,7 @@ import '../services/llm_service.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
+import '../services/merchant_normalization_service.dart';
 
 // ── BATCH IMAGE IMPORT SCREEN ─────────────────────────────────────────────────
 /// Pick up to 10 screenshots from the gallery (Shopee, Lazada, Steam, GCash, etc.)
@@ -183,7 +184,8 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                     isWant: (r['is_want'] as int? ?? 1) == 1,
                     date: r['date'] as String? ??
                         DateTime.now().toIso8601String().substring(0, 10),
-                    shopName: r['shop_name'] as String? ?? '',
+                    shopName: MerchantNormalizationService.normalize(
+                        r['shop_name'] as String? ?? ''),
                     paymentMethod: r['payment_method'] as String? ?? 'Cash',
                     notes: r['notes'] as String? ?? '',
                   ))

@@ -37,6 +37,7 @@ import 'achievements_screen.dart';
 import 'bank_import_screen.dart';
 import 'insurance_screen.dart';
 import 'bank_comparison_screen.dart';
+import 'merchant_merge_screen.dart';
 import 'pca_calculator_screen.dart';
 import 'glossary_screen.dart';
 import 'add_expense_screen.dart';
@@ -432,10 +433,103 @@ class _HomeScreenState extends State<HomeScreen> {
                               const AddExpenseScreen(startWithVoice: true)));
                 },
               ),
+              // ⑤ Round-Trip Transport
+              _logSheetTile(
+                context,
+                icon: Icons.sync_alt,
+                color: Colors.indigo,
+                title: "Round-Trip Fare",
+                subtitle:
+                    "Log 2 identical transport fares (go + return) at once",
+                onTap: () {
+                  Navigator.pop(context);
+                  _showRoundTripDialog(context);
+                },
+              ),
               const SizedBox(height: 4),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Round-trip fare dialog — logs 2 identical transport entries at once
+  void _showRoundTripDialog(BuildContext context) {
+    final amountCtrl = TextEditingController();
+    final itemCtrl = TextEditingController(text: 'Jeepney fare');
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Round-Trip Fare"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+                "Logs 2 identical transport entries — one for each direction.",
+                style: TextStyle(fontSize: 12, color: Colors.grey)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: itemCtrl,
+              decoration: const InputDecoration(
+                labelText: "Transport type",
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: amountCtrl,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
+                labelText: "One-way fare (₱)",
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              autofocus: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () async {
+              final amt = double.tryParse(amountCtrl.text.trim());
+              final name = itemCtrl.text.trim();
+              if (amt == null || amt <= 0 || name.isEmpty) return;
+              Navigator.pop(context);
+              final now = DateTime.now();
+              final date = now.toIso8601String().substring(0, 10);
+              final time = now.toIso8601String().substring(11, 16);
+              for (int i = 0; i < 2; i++) {
+                await DBService.insertExpense({
+                  'item_name': name,
+                  'category': 'Transportation',
+                  'amount': amt,
+                  'date': date,
+                  'time': time,
+                  'payment_method': 'Cash',
+                  'notes': i == 0 ? 'Going' : 'Return',
+                  'ai_generated': 0,
+                  'confidence_score': 1.0,
+                  'is_want': 0,
+                });
+              }
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                      "Round-trip logged: $name ₱${(amt * 2).toStringAsFixed(0)} (2×₱${amt.toStringAsFixed(0)})"),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                ));
+              }
+            },
+            child: const Text("Log Round Trip"),
+          ),
+        ],
       ),
     );
   }
@@ -920,6 +1014,18 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     Colors.deepPurple,
                     () => _go(const ManageRulesScreen())),
                 _tile(
+                    Icons.merge_type_outlined,
+                    "Merchant Cleanup",
+                    "Fix duplicate shop names (Steam vs STEAM vs Steam Support)",
+                    Colors.teal,
+                    () => _go(const MerchantMergeScreen())),
+                _tile(
+                    Icons.storefront_outlined,
+                    "Spending by Merchant",
+                    "See total spent per shop/restaurant across all time",
+                    Colors.deepOrange,
+                    () => _showMerchantSummary(context)),
+                _tile(
                     Icons.account_balance_outlined,
                     "Import from Bank / GCash",
                     "Paste GCash, BPI, BDO, Maya, or any bank history",
@@ -959,6 +1065,121 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showMerchantSummary(BuildContext context) async {
+    // Fetch all expenses with a shop_name, group and sum
+    final db = await DBService.getDB();
+    final rows = await db.rawQuery('''
+      SELECT shop_name, SUM(amount) as total, COUNT(*) as cnt
+      FROM expenses
+      WHERE shop_name IS NOT NULL AND shop_name != ''
+      GROUP BY shop_name
+      ORDER BY total DESC
+    ''');
+
+    if (!context.mounted) return;
+    final searchCtrl = TextEditingController();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setS) {
+          final q = searchCtrl.text.trim().toLowerCase();
+          final filtered = q.isEmpty
+              ? rows
+              : rows
+                  .where((r) =>
+                      (r['shop_name'] as String).toLowerCase().contains(q))
+                  .toList();
+          return DraggableScrollableSheet(
+            initialChildSize: 0.75,
+            minChildSize: 0.4,
+            maxChildSize: 0.95,
+            expand: false,
+            builder: (_, sc) => Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
+                  child: Row(children: [
+                    const Expanded(
+                        child: Text("Spending by Merchant",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold))),
+                    TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: const Text("Close")),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: TextField(
+                    controller: searchCtrl,
+                    onChanged: (_) => setS(() {}),
+                    decoration: InputDecoration(
+                      hintText: "Search merchant...",
+                      prefixIcon: const Icon(Icons.search, size: 18),
+                      isDense: true,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: filtered.isEmpty
+                      ? const Center(
+                          child: Text("No merchants found",
+                              style: TextStyle(color: Colors.grey)))
+                      : ListView.builder(
+                          controller: sc,
+                          itemCount: filtered.length,
+                          itemBuilder: (_, i) {
+                            final r = filtered[i];
+                            final name = r['shop_name'] as String;
+                            final total = (r['total'] as num).toDouble();
+                            final cnt = (r['cnt'] as int?) ?? 0;
+                            return ListTile(
+                              dense: true,
+                              leading: CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Theme.of(ctx)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.1),
+                                child: Text(
+                                  name.isNotEmpty ? name[0].toUpperCase() : '?',
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Theme.of(ctx).colorScheme.primary),
+                                ),
+                              ),
+                              title: Text(name,
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500)),
+                              subtitle: Text(
+                                  "$cnt transaction${cnt == 1 ? '' : 's'} · avg ₱${(total / cnt).toStringAsFixed(0)}",
+                                  style: const TextStyle(fontSize: 11)),
+                              trailing: Text(
+                                "₱${total.toStringAsFixed(0)}",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(ctx).colorScheme.primary),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -1690,6 +1911,83 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Round-trip fare dialog — logs 2 identical transport entries at once
+  void _showRoundTripDialog(BuildContext context) {
+    final amountCtrl = TextEditingController();
+    final itemCtrl = TextEditingController(text: 'Jeepney fare');
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Round-Trip Fare"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Logs 2 identical transport entries (go + return).",
+                style: TextStyle(fontSize: 12, color: Colors.grey)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: itemCtrl,
+              decoration: const InputDecoration(
+                  labelText: "Transport type",
+                  border: OutlineInputBorder(),
+                  isDense: true),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: amountCtrl,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
+                  labelText: "One-way fare (₱)",
+                  border: OutlineInputBorder(),
+                  isDense: true),
+              autofocus: true,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () async {
+              final amt = double.tryParse(amountCtrl.text.trim());
+              final name = itemCtrl.text.trim();
+              if (amt == null || amt <= 0 || name.isEmpty) return;
+              Navigator.pop(context);
+              final now = DateTime.now();
+              final date = now.toIso8601String().substring(0, 10);
+              final time = now.toIso8601String().substring(11, 16);
+              for (int i = 0; i < 2; i++) {
+                await DBService.insertExpense({
+                  'item_name': name,
+                  'category': 'Transportation',
+                  'amount': amt,
+                  'date': date,
+                  'time': time,
+                  'payment_method': 'Cash',
+                  'notes': i == 0 ? 'Going' : 'Return',
+                  'ai_generated': 0,
+                  'confidence_score': 1.0,
+                  'is_want': 0,
+                });
+              }
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                      "Round-trip: $name ₱${(amt * 2).toStringAsFixed(0)} (2×₱${amt.toStringAsFixed(0)})"),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                ));
+              }
+            },
+            child: const Text("Log Round Trip"),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Shows the "How would you like to log?" bottom sheet from Dashboard context.
   /// This version passes widget.onNavigate for the AI Chat option.
   void _showLogExpenseSheetLocal(BuildContext context) {
@@ -1812,6 +2110,27 @@ class _DashboardState extends State<Dashboard> {
                       MaterialPageRoute(
                           builder: (_) =>
                               const AddExpenseScreen(startWithVoice: true)));
+                },
+              ),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.indigo.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(Icons.sync_alt,
+                        color: Colors.indigo, size: 20)),
+                title: const Text("Round-Trip Fare",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                subtitle: const Text(
+                    "Log 2 identical transport fares (go + return) at once",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showRoundTripDialog(context);
                 },
               ),
               const SizedBox(height: 4),

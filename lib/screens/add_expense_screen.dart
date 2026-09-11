@@ -6,6 +6,7 @@ import '../services/voice_service.dart';
 import '../services/category_service.dart';
 import '../services/ai_chat_service.dart';
 import '../services/item_catalog_service.dart';
+import '../services/merchant_normalization_service.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -456,7 +457,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         'payment_method': _selectedPayment,
         'shop_name': _shopNameCtrl.text.trim().isEmpty
             ? null
-            : _shopNameCtrl.text.trim(),
+            : MerchantNormalizationService.normalize(_shopNameCtrl.text.trim()),
         'notes': _notesCtrl.text.trim().isEmpty ? null : _notesCtrl.text.trim(),
         'ai_generated': (_parsed?['confidence_score'] != null &&
                 _parsed!['confidence_score'] != 1.0)
