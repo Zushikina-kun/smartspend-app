@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
+import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
 import 'budget_screen.dart';
 
@@ -18,11 +20,22 @@ class _RecurringScreenState extends State<RecurringScreen> {
   List<Map<String, dynamic>> _items = [];
   bool _loading = true;
   List<String> _categories = CategoryService.builtIn;
+  StreamSubscription<AppEvent>? _eventSub;
 
   @override
   void initState() {
     super.initState();
     _load();
+    // Auto-refresh when AI actions add/remove recurring transactions
+    _eventSub = AppEventBus.instance.stream.listen((event) {
+      if (event == AppEvent.expenseChanged) _load();
+    });
+  }
+
+  @override
+  void dispose() {
+    _eventSub?.cancel();
+    super.dispose();
   }
 
   Future<void> _load() async {

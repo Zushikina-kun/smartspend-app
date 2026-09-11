@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
+import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
 
 class SavingsGoalsScreen extends StatefulWidget {
@@ -13,11 +15,22 @@ class SavingsGoalsScreen extends StatefulWidget {
 class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
   List<Map<String, dynamic>> _goals = [];
   bool _loading = true;
+  StreamSubscription<AppEvent>? _eventSub;
 
   @override
   void initState() {
     super.initState();
     _load();
+    // Auto-refresh when AI actions add/update/delete goals
+    _eventSub = AppEventBus.instance.stream.listen((event) {
+      if (event == AppEvent.goalChanged) _load();
+    });
+  }
+
+  @override
+  void dispose() {
+    _eventSub?.cancel();
+    super.dispose();
   }
 
   Future<void> _load() async {

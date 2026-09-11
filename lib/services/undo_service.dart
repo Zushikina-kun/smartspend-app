@@ -15,8 +15,7 @@ class UndoableAction {
   }) : timestamp = DateTime.now();
 
   /// Whether this action is still within the 60-second undo window.
-  bool get isUndoable =>
-      DateTime.now().difference(timestamp).inSeconds <= 60;
+  bool get isUndoable => DateTime.now().difference(timestamp).inSeconds <= 60;
 }
 
 /// In-memory undo service for AI actions.
@@ -113,7 +112,9 @@ class UndoService {
             await db.update('expenses', prev,
                 where: 'id = ?', whereArgs: [prev['id']]);
             // Sync the restored state to Firestore
-            try { CloudService.pushDoc('expenses', prev); } catch (_) {}
+            try {
+              CloudService.pushDoc('expenses', prev);
+            } catch (_) {}
             fireEvent(AppEvent.expenseChanged);
           }
           return true;
@@ -125,8 +126,27 @@ class UndoService {
             final goals = await DBService.getGoals();
             final goal = goals.where((g) => g['id'] == id).firstOrNull;
             if (goal != null) {
-              await DBService.updateGoal({...goal, 'current_amount': prevAmount});
+              await DBService.updateGoal(
+                  {...goal, 'current_amount': prevAmount});
               fireEvent(AppEvent.goalChanged);
+            }
+          }
+          return true;
+
+        case 'update_debt':
+          // Restore prev paid_amount and due_date for a debt payment that was undone
+          final debtId = action.snapshot['id'] as int?;
+          final prevPaid = action.snapshot['prev_paid_amount'] as double?;
+          final prevDue = action.snapshot['prev_due_date'] as String?;
+          if (debtId != null) {
+            final debts = await DBService.getDebts();
+            final debt = debts.where((d) => d['id'] == debtId).firstOrNull;
+            if (debt != null) {
+              final updated = {...debt};
+              if (prevPaid != null) updated['paid_amount'] = prevPaid;
+              if (prevDue != null) updated['due_date'] = prevDue;
+              await DBService.updateDebt(updated);
+              fireEvent(AppEvent.expenseChanged);
             }
           }
           return true;

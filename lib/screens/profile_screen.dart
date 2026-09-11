@@ -1,5 +1,6 @@
 import 'home_screen.dart' show SpendingLimitsSheet;
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:share_plus/share_plus.dart';
@@ -68,17 +69,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final _scrollCtrl = ScrollController();
   final _fmsKey = GlobalKey();
+  StreamSubscription<AppEvent>? _eventSub;
 
   @override
   void initState() {
     super.initState();
     _loadStats();
+    // Auto-refresh FHS score when AI actions change expenses, budgets, or income.
+    // Debounced so rapid multi-action sequences (plan_salary_split etc.) only
+    // trigger one reload rather than one per fired event.
+    _eventSub = AppEventBus.instance.stream.listen((event) {
+      if (event == AppEvent.expenseChanged ||
+          event == AppEvent.budgetChanged ||
+          event == AppEvent.incomeChanged ||
+          event == AppEvent.goalChanged) {
+        // Small delay so the DB write fully commits before we re-query
+        Future.delayed(const Duration(milliseconds: 600), () {
+          if (mounted) _loadStats();
+        });
+      }
+    });
     // Scroll to FMS is handled inside _loadStats() after data has loaded —
     // do NOT clear the flag here, as data isn't ready yet.
   }
 
   @override
   void dispose() {
+    _eventSub?.cancel();
     _scrollCtrl.dispose();
     super.dispose();
   }
