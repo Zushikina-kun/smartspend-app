@@ -74,13 +74,10 @@ class AIChatService {
     if (_messagesSinceLastSummary > 0) return; // already initialized
     try {
       final history = await DBService.getChatHistory(limit: 200);
-      final latestSummary = await DBService.getLatestConversationSummary();
-      if (latestSummary != null) {
-        // Count messages since last summary
-        _messagesSinceLastSummary = history.length % 10;
-      } else {
-        _messagesSinceLastSummary = history.length % 10;
-      }
+      // Compute how many messages have accumulated since the last summarization
+      // cycle. Uses modulo so the counter starts at the right offset whether or
+      // not a summary exists yet.
+      _messagesSinceLastSummary = history.length % 10;
     } catch (_) {}
   }
 
@@ -717,20 +714,33 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       return 900;
     }
     // ── MULTI-ITEM DETECTION ─────────────────────────────────────────────────
-    // Broad verb list catches typos: "spen", "spe", "nabayad", "nag-", etc.
-    // A message with 2+ amounts separated by comma/and/then is multi-item.
-    final amountCount = RegExp(r'\d+').allMatches(lower).length;
+    // Count amounts that look like prices (numbers preceded by ₱ or followed by
+    // "for/on/pesos" or standalone after a comma/and). This avoids inflating the
+    // count with date numbers like "september 9" or "july 31".
+    // Primary: amounts with explicit currency context
+    final currencyAmounts =
+        RegExp(r'₱\s*\d+|\b\d+\s*(?:pesos|php)\b').allMatches(lower).length;
+    // Secondary: bare numbers that follow spend-context words (comma, "and X", "for X")
+    final bareAmounts =
+        RegExp(r'(?:,|and|then)\s*\d+').allMatches(lower).length;
+    // Fallback: total digit matches (less precise — used only if above both = 0)
+    final totalDigits = RegExp(r'\d+').allMatches(lower).length;
+    final amountCount = currencyAmounts > 0
+        ? currencyAmounts
+        : (bareAmounts > 0 ? bareAmounts + 1 : totalDigits);
+
     final hasSpendVerb = RegExp(
-            r'\b(spent|spen|spe|spend|bought|buy|paid|pay|purchased|ate|drank|rode|took|nabili|nagbayad|nagbili|nagbayad|nabayaran|nagastos|ginastos|gastos|bayad)\b')
+            r'\b(spent|spen|spe|spend|bought|buy|paid|pay|purchased|ate|drank|rode|took|nabili|nagbayad|nagbili|nabayaran|nagastos|ginastos|gastos|bayad)\b')
         .hasMatch(lower);
     final hasMultiItemConnector = lower.contains(',') ||
         RegExp(r'\band\b').hasMatch(lower) ||
         RegExp(r'\bthen\b').hasMatch(lower) ||
         RegExp(r'\bfor\b.*\bfor\b').hasMatch(lower); // "30 for X, 45 for Y"
     if (amountCount >= 2 && hasSpendVerb && hasMultiItemConnector) {
-      // Each item needs ~200 tokens (reply + ACTION). Scale up with item count.
-      final extraItems = (amountCount - 1).clamp(1, 6);
-      return (600 + extraItems * 100).clamp(800, 1200);
+      // Each item needs ~220 tokens (reply + ACTION line). Scale with item count,
+      // uncapped at 1400 so large batches (6+ items) don't get cut off.
+      final itemCount = amountCount.clamp(2, 8);
+      return (500 + itemCount * 150).clamp(800, 1400);
     }
     if (amountCount >= 3 && hasSpendVerb) {
       // Multiple amounts even without connector words — still multi-item
@@ -769,9 +779,27 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         .hasMatch(lower)) {
       return 'financial_advice';
     }
-    // Fast tasks: single-item AND multi-item expense logging, balance updates
-    // Route to fast when the message is about spending/paying — no advisory terms.
-    if (RegExp(r'\b(spent|spen|spe|spend|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya|nabili|nagbayad|nagbili|nagastos|ginastos|gastos|bayad|bumili|uminom|sumakay)\b')
+    // Fast tasks: single-item expense logging, balance updates only
+    // IMPORTANT: multi-item messages (multiple amounts) are NOT fast — they need
+    // a more capable model and more tokens. Only route single-item to fast.
+    //
+    // Use the same currency-aware amount counting as _estimateMaxTokens so the
+    // two detectors stay consistent: prefer ₱-prefixed numbers, fall back to
+    // numbers after connectors (comma/and/then), last resort raw digit count.
+    final taskCurrencyAmounts =
+        RegExp(r'₱\s*\d+|\b\d+\s*(?:pesos|php)\b').allMatches(lower).length;
+    final taskBareAmounts =
+        RegExp(r'(?:,|and|then)\s*\d+').allMatches(lower).length;
+    final taskTotalDigits = RegExp(r'\d+').allMatches(lower).length;
+    final taskAmountCount = taskCurrencyAmounts > 0
+        ? taskCurrencyAmounts
+        : (taskBareAmounts > 0 ? taskBareAmounts + 1 : taskTotalDigits);
+    final hasMultiItemConnector = lower.contains(',') ||
+        RegExp(r'\band\b').hasMatch(lower) ||
+        RegExp(r'\bthen\b').hasMatch(lower);
+    final isMultiItem = taskAmountCount >= 2 && hasMultiItemConnector;
+    if (!isMultiItem &&
+        RegExp(r'\b(spent|spen|spe|spend|bought|paid|ate|drank|rode|cash|balance|wallet|gcash|maya|nabili|nagbayad|nagbili|nagastos|ginastos|gastos|bayad|bumili|uminom|sumakay)\b')
             .hasMatch(lower) &&
         !RegExp(r'\b(analyze|plan|advice|suggest|explain|compare|what if|simulate|debt|goal|invest|sss|philhealth|bir|budget|limit|insurance|recurring|saving|ipon|utang|layunin|sweldo|kita|buwanang)\b')
             .hasMatch(lower)) {
@@ -827,7 +855,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     }
 
     final systemContent =
-        "You are SmartSpend AI — a warm, financially-savvy Filipino-English companion. Be conversational and practical. Use **bold** and bullets only when helpful. ALWAYS reply in the same language the user is using — if they write in English, reply in English; if in Filipino/Tagalog, reply in Filipino; if Taglish, match their mix.\n\n"
+        "You are SmartSpend AI — a warm, financially-savvy personal finance assistant. Be conversational and practical. Use **bold** and bullets only when helpful. DEFAULT LANGUAGE IS ENGLISH — always respond in English unless the user has clearly and explicitly written in Filipino or Tagalog (not just said 'hello', 'ok', 'yes', 'thanks', or other words that are the same in both languages). If they write multiple full sentences in Filipino, reply in Filipino. If Taglish (mixed), match their mix. If the user explicitly asks you to switch language ('speak English', 'mag-Tagalog ka'), honor that immediately and for the rest of the conversation.\n\n"
         "SCOPE: Personal finance, PH banking (BDO/BPI/Metrobank/Landbank/UnionBank/RCBC/Security/EastWest/PSBank), digital banks (Maya Bank 3.5%/GoTyme 5%/Tonik 4%/Seabank 3%/UNObank), e-wallets (GCash/Maya/GrabPay/ShopeePay/Coins.ph), SSS/PhilHealth/Pag-IBIG, investments (MP2 6-7%/T-bills 5-6%/time deposits 4-6%), insurance, prices, deals. Steer non-finance questions back gently.\n\n"
         "RULES:\n"
         "1. ALWAYS LOG: When user mentions spending/buying with an amount → fire log_expense ACTION. No exceptions. Multiple items = multiple ACTION lines. Also catch typos like 'spen', 'spe', 'nagastos', 'ginastos'.\n"
@@ -849,7 +877,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "   ADD RECURRING: 'buwanang bayad sa Netflix 299', 'lingguhang gastos sa pamasahe 150', 'monthly bill sa Meralco 1200' → add_recurring\n"
         "   SET LIMIT: 'limitahan ang gastos ko ng 500 kada araw', 'daily limit ko 200 pesos', 'monthly spending limit 8000' → set_spending_limit\n"
         "   ADD INSURANCE/CONTRIBUTION: 'SSS ko 560 monthly', 'PhilHealth contribution 250 a month', 'dagdagan ang insurance ko' → add_insurance_policy\n"
-        "12. LANGUAGE: Detect the language the user is writing in and ALWAYS reply in that same language. English message → English reply. Filipino/Tagalog message → Filipino reply. Taglish (mixed) → match their mix. If the user explicitly asks you to switch language ('speak English', 'mag-Tagalog ka'), honor that for the rest of the conversation.\n\n"
+        "12. LANGUAGE: Default language is ENGLISH. Reply in English unless the user has clearly written multiple sentences in Filipino/Tagalog. Single ambiguous words like 'hello', 'ok', 'yes', 'thanks', 'sige', 'oo' do NOT count as Filipino — stay in English. If the user explicitly asks to switch ('speak English', 'mag-Tagalog ka'), honor that for the rest of the conversation.\n\n"
         "$guardRailNote"
         "ACTIONS (append after reply text, one per line, format: ACTION:{json}):\n"
         "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\",\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"
@@ -1066,22 +1094,30 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     final actions = <AIAction>[];
     final seen = <String>{};
 
+    // Pre-process: strip triple-backtick code fences the model occasionally wraps
+    // around its output (e.g. ```json\nACTION:{...}\n```).  Remove only the fence
+    // markers — keep the inner content so the ACTION tag regex can still match.
+    String replyForParsing = fullReply
+        .replaceAll(
+            RegExp(r'```(?:json|dart|text)?\s*', caseSensitive: false), '')
+        .replaceAll('```', '');
+
     // Find every ACTION: occurrence and extract the JSON object that follows it
     // Handles: ACTION:{...}, **ACTION**{...}, **ACTION** {...}, →ACTION:{...}
     // ACTION tag regex — handles: ACTION:{...}, ACTION: type_name: {...}, →ACTION:{...}, **ACTION**{...}
     final actionTagRegex =
         RegExp(r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*(?:\w+:\s*)?', dotAll: true);
-    for (final tagMatch in actionTagRegex.allMatches(fullReply)) {
+    for (final tagMatch in actionTagRegex.allMatches(replyForParsing)) {
       final jsonStart = tagMatch.end;
-      if (jsonStart >= fullReply.length) continue;
-      if (fullReply[jsonStart] != '{') continue;
+      if (jsonStart >= replyForParsing.length) continue;
+      if (replyForParsing[jsonStart] != '{') continue;
 
       // Walk forward counting braces to find the matching closing brace
       int depth = 0;
       int jsonEnd = jsonStart;
-      for (int i = jsonStart; i < fullReply.length; i++) {
-        if (fullReply[i] == '{') depth++;
-        if (fullReply[i] == '}') {
+      for (int i = jsonStart; i < replyForParsing.length; i++) {
+        if (replyForParsing[i] == '{') depth++;
+        if (replyForParsing[i] == '}') {
           depth--;
           if (depth == 0) {
             jsonEnd = i + 1;
@@ -1089,17 +1125,37 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
           }
         }
       }
-      if (depth != 0) {
-        // Unclosed brace — try appending a closing brace
-        jsonEnd = fullReply.length;
+
+      // Unclosed braces — append exactly `depth` closing braces to balance them.
+      // A single `}` only works for depth == 1; deeper nesting (e.g. add_debt with
+      // a nested object cut off mid-key) needs one `}` per unclosed level.
+      int closingDepth = depth; // captured before we overwrite depth below
+      if (closingDepth != 0) {
+        jsonEnd = replyForParsing.length;
       }
 
       try {
-        var jsonStr = fullReply
+        var jsonStr = replyForParsing
             .substring(jsonStart, jsonEnd)
             .replaceAll(RegExp(r'\s+'), ' ')
             .trim();
-        if (!jsonStr.endsWith('}')) jsonStr = '$jsonStr}';
+        // Append the right number of closing braces for any unclosed levels
+        if (closingDepth > 0) {
+          jsonStr = '$jsonStr${'}' * closingDepth}';
+        }
+        // Normalize single-quoted JSON that some models emit.
+        // Replace property-key single-quotes and value single-quotes with double-quotes
+        // only when they are used as JSON delimiters (preceded by { , or : ).
+        if (jsonStr.contains("'")) {
+          jsonStr = jsonStr.replaceAllMapped(
+            RegExp(
+                r"(?<=[\{,:\[]\s*)'((?:[^'\\]|\\.)*)'"
+                r"|(?<=^\s*)'((?:[^'\\]|\\.)*)'",
+                dotAll: true),
+            (m) =>
+                '"${(m.group(1) ?? m.group(2) ?? '').replaceAll('"', r'\"')}"',
+          );
+        }
         if (seen.contains(jsonStr)) continue;
         seen.add(jsonStr);
         final parsed = jsonDecode(jsonStr) as Map<String, dynamic>;
@@ -1180,7 +1236,10 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     // If AI confirmed a budget set (e.g. "Budget set: Food ₱3,000" or
     // "Food budget updated to ₱3000") but the ACTION JSON failed to parse,
     // reconstruct the action from the confirmation text.
-    if (actions.where((a) => a.type == 'set_budget').isEmpty) {
+    // NOTE: The guard is per-category, NOT a blanket skip when any set_budget
+    // action already parsed.  Multi-budget messages like "Food ₱3000, Transport
+    // ₱1500" may partially parse — we fill in whichever categories are missing.
+    {
       // Pattern: "Budget set: <category> → ₱<amount>" (our snackbar format)
       // Pattern: "<category> budget.*₱<amount>" (natural AI confirmation)
       final budgetFallbackMatches = RegExp(
@@ -1191,7 +1250,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         final rawCat = m.group(1)?.trim() ?? '';
         final rawAmt = m.group(2)?.replaceAll(',', '') ?? '';
         final amount = double.tryParse(rawAmt) ?? 0;
-        // Only add if no proper set_budget action for this category already exists
+        // Only add if no set_budget action for THIS specific category already exists
         final catNorm = _normalizeCategory(rawCat).isEmpty
             ? rawCat
             : _normalizeCategory(rawCat);
@@ -1253,8 +1312,10 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         .replaceAll(RegExp(r'\nHere are the ACTION lines[^\n]*\n?'), '')
         .trim();
 
-    // If response was cut off, append a note so user knows some items may be missing
-    if (wasCutOff && actions.isNotEmpty) {
+    // If response was cut off, append a note so user knows some items may be missing.
+    // Show this even when no actions were parsed — the response may have been cut
+    // off before the model could emit any ACTION lines at all.
+    if (wasCutOff) {
       fullReply +=
           '\n\n_(Response was trimmed — some items may not have been logged. Send them again if needed.)_';
     }
@@ -1267,7 +1328,8 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     // Cheatsheet §25: "You cannot improve what you cannot measure."
     try {
       final latencyMs = DateTime.now().difference(traceStart).inMilliseconds;
-      final taskType = _detectTaskType(message);
+      // Reuse taskType computed above for model routing — no need to call
+      // _detectTaskType(message) a second time here.
       final traceEntry = '${DateTime.now().toIso8601String().substring(0, 16)} '
           'latency=${latencyMs}ms '
           'tokens=${totalTokens}(p=$promptTokens/c=$completionTokens) '
@@ -1481,9 +1543,16 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     _history.clear();
     for (final msg in saved) {
       final role = msg['role'] as String;
+      String content = msg['message'] as String;
+      // Strip persisted error metadata prefix before feeding into LLM context.
+      // Format: "||ERR:{...json...}||<display text>"
+      if (content.startsWith('||ERR:')) {
+        final sepIdx = content.indexOf('||', 6);
+        if (sepIdx != -1) content = content.substring(sepIdx + 2);
+      }
       _history.add({
         "role": role == 'ai' ? 'assistant' : 'user',
-        "content": msg['message'] as String,
+        "content": content,
       });
     }
   }

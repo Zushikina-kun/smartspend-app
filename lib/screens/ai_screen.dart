@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shake/shake.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:async';
+import 'dart:convert';
 import '../services/ai_chat_service.dart';
 import '../services/db_service.dart';
 import '../services/llm_service.dart';
@@ -66,7 +67,8 @@ class _AIScreenState extends State<AIScreen> {
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
           event == AppEvent.budgetChanged ||
-          event == AppEvent.incomeChanged) {
+          event == AppEvent.incomeChanged ||
+          event == AppEvent.goalChanged) {
         // Debounce: cancel previous timer, wait 500ms before refreshing
         // Prevents 12 rapid reloads during plan_salary_split
         _debounceTimer?.cancel();
@@ -322,9 +324,33 @@ class _AIScreenState extends State<AIScreen> {
         if (mounted) {
           setState(() {
             for (final msg in savedHistory) {
+              final rawText = msg['message'] as String;
+              // Decode persisted error metadata prefix:
+              // "||ERR:{...json...}||<display text>"
+              if (rawText.startsWith('||ERR:')) {
+                try {
+                  final sepIdx = rawText.indexOf('||', 6);
+                  if (sepIdx != -1) {
+                    final metaJson = rawText.substring(6, sepIdx);
+                    final displayText = rawText.substring(sepIdx + 2);
+                    final meta = jsonDecode(metaJson) as Map<String, dynamic>;
+                    _messages.add({
+                      "role": msg['role'] as String,
+                      "text": displayText,
+                      "is_error": meta['is_error'] as String? ?? 'true',
+                      "error_type": meta['error_type'] as String? ?? 'other',
+                      "original_user_msg":
+                          meta['original_user_msg'] as String? ?? '',
+                    });
+                    continue;
+                  }
+                } catch (_) {
+                  // Malformed prefix — fall through to plain text
+                }
+              }
               _messages.add({
                 "role": msg['role'] as String,
-                "text": msg['message'] as String,
+                "text": rawText,
               });
             }
           });
@@ -495,10 +521,26 @@ class _AIScreenState extends State<AIScreen> {
         errorType = 'other';
       }
 
-      // Save error to DB so it persists
+      // Save error to DB so it persists, including metadata needed to
+      // restore the Retry / Switch Model / Log Manually action buttons.
+      // We encode the metadata as a compact JSON prefix on the message string:
+      // "||ERR:{"is_error":"true","error_type":"auth","original_user_msg":"..."}||<display text>"
+      // The restore logic in _loadContext strips the prefix for display but
+      // injects the metadata keys back into the message map.
       try {
-        await DBService.saveChatMessage(role: 'ai', message: errorText);
-      } catch (_) {}
+        final meta = {
+          'is_error': 'true',
+          'error_type': errorType,
+          'original_user_msg': text,
+        };
+        final encoded = '||ERR:${jsonEncode(meta)}||$errorText';
+        await DBService.saveChatMessage(role: 'ai', message: encoded);
+      } catch (_) {
+        // Fallback: save plain text if encoding fails
+        try {
+          await DBService.saveChatMessage(role: 'ai', message: errorText);
+        } catch (_) {}
+      }
 
       if (mounted) {
         setState(() => _messages.add({
@@ -583,7 +625,7 @@ class _AIScreenState extends State<AIScreen> {
                    WHERE LOWER(item_name) = LOWER(?)
                      AND ABS(amount - ?) < 0.01
                      AND date = ?
-                     AND updated_at >= ?
+                     AND COALESCE(updated_at, '1970-01-01') >= ?
                    LIMIT 1''',
                 [itemName, amount, expenseDate, cutoff],
               );
@@ -591,15 +633,27 @@ class _AIScreenState extends State<AIScreen> {
                 // Silently skip — duplicate within 90-second window
                 break;
               }
-              // 2. Cross-session guard — same item + amount + date from any
-              // source (screenshot import, manual entry, prior session).
+              // 2. Cross-session guard — blocks re-importing the same item from
+              // screenshots, GCash history, or batch imports. Also prevents the
+              // same AI-logged entry from a prior session being double-fired.
+              //
+              // IMPORTANT: this guard must NOT block legitimate same-day repeats
+              // (e.g. two jeepney fares at ₱30 each, two coffees, etc.).
+              // Strategy: only block if the existing record is NOT a very-recent
+              // AI-logged entry (i.e. it was imported, manually entered, or logged
+              // in a previous session that ended > 5 minutes ago).
+              // Recent AI entries from this session are already caught by the 90s
+              // window guard above — so here we only block older duplicates.
+              final fiveMinAgo =
+                  now.subtract(const Duration(minutes: 5)).toIso8601String();
               final crossSessionDup = await db.rawQuery(
                 '''SELECT id FROM expenses
                    WHERE LOWER(item_name) = LOWER(?)
                      AND ABS(amount - ?) < 0.01
                      AND date = ?
+                     AND NOT (ai_generated = 1 AND COALESCE(updated_at, '1970-01-01') >= ?)
                    LIMIT 1''',
-                [itemName, amount, expenseDate],
+                [itemName, amount, expenseDate, fiveMinAgo],
               );
               if (crossSessionDup.isNotEmpty) {
                 // Show a brief toast so the user knows we skipped it, not
@@ -1215,6 +1269,16 @@ class _AIScreenState extends State<AIScreen> {
                     .contains(debtPerson.toLowerCase()))
                 .firstOrNull;
             if (match != null) {
+              // Record undo snapshot BEFORE any writes so the previous state
+              // can be restored by shake-to-undo within the 60-second window.
+              UndoService.record(UndoableAction(
+                type: 'update_debt',
+                snapshot: {
+                  'id': match['id'] as int,
+                  'prev_paid_amount': (match['paid_amount'] as num).toDouble(),
+                  'prev_due_date': match['due_date'] as String?,
+                },
+              ));
               // Update due date if provided
               if (newDueDate != null && newDueDate.isNotEmpty) {
                 await DBService.updateDebt({...match, 'due_date': newDueDate});

@@ -96,7 +96,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
           event == AppEvent.budgetChanged ||
-          event == AppEvent.incomeChanged) {
+          event == AppEvent.incomeChanged ||
+          event == AppEvent.goalChanged) {
         _loadData();
       }
     });

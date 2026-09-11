@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
+import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
 
 class DebtScreen extends StatefulWidget {
@@ -18,16 +20,22 @@ class _DebtScreenState extends State<DebtScreen>
   List<Map<String, dynamic>> _lent = [];
   List<Map<String, dynamic>> _plans = [];
   bool _loading = true;
+  StreamSubscription<AppEvent>? _eventSub;
 
   @override
   void initState() {
     super.initState();
     _tabs = TabController(length: 3, vsync: this);
     _load();
+    // Auto-refresh when AI actions modify debts or related data
+    _eventSub = AppEventBus.instance.stream.listen((event) {
+      if (event == AppEvent.expenseChanged) _load();
+    });
   }
 
   @override
   void dispose() {
+    _eventSub?.cancel();
     _tabs.dispose();
     super.dispose();
   }
