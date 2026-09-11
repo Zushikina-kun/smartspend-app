@@ -38,6 +38,8 @@ import 'bank_import_screen.dart';
 import 'insurance_screen.dart';
 import 'bank_comparison_screen.dart';
 import 'merchant_merge_screen.dart';
+import 'log_due_bills_screen.dart';
+import 'paluwagan_screen.dart';
 import 'pca_calculator_screen.dart';
 import 'glossary_screen.dart';
 import 'add_expense_screen.dart';
@@ -446,6 +448,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   _showRoundTripDialog(context);
                 },
               ),
+              // ⑥ Split Bill
+              _logSheetTile(
+                context,
+                icon: Icons.call_split,
+                color: Colors.purple,
+                title: "Split Bill",
+                subtitle:
+                    "Divide a total among people — logs your share + creates debts",
+                onTap: () {
+                  Navigator.pop(context);
+                  _showSplitterDialog(context);
+                },
+              ),
               const SizedBox(height: 4),
             ],
           ),
@@ -528,6 +543,118 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
             child: const Text("Log Round Trip"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Bill splitter dialog — divides total among N people, logs user's share + debts
+  void _showSplitterDialog(BuildContext context) {
+    final totalCtrl = TextEditingController();
+    final itemCtrl = TextEditingController(text: 'Shared meal');
+    final peopleCtrl = TextEditingController(text: '2');
+    final namesCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Split Bill"),
+        content: SingleChildScrollView(
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Text("Logs your share and creates debt entries for others.",
+              style: TextStyle(fontSize: 12, color: Colors.grey)),
+          const SizedBox(height: 10),
+          TextField(
+              controller: itemCtrl,
+              decoration: const InputDecoration(
+                  labelText: "What was it?",
+                  border: OutlineInputBorder(),
+                  isDense: true)),
+          const SizedBox(height: 8),
+          TextField(
+              controller: totalCtrl,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(
+                  labelText: "Total amount (₱)",
+                  border: OutlineInputBorder(),
+                  isDense: true),
+              autofocus: true),
+          const SizedBox(height: 8),
+          TextField(
+              controller: peopleCtrl,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                  labelText: "Number of people (including you)",
+                  border: OutlineInputBorder(),
+                  isDense: true)),
+          const SizedBox(height: 8),
+          TextField(
+              controller: namesCtrl,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                  labelText: "Other people's names (one per line, optional)",
+                  hintText: "Cyrille\nDjaunathan",
+                  border: OutlineInputBorder(),
+                  isDense: true)),
+        ])),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () async {
+              final total = double.tryParse(totalCtrl.text.trim());
+              final people = int.tryParse(peopleCtrl.text.trim()) ?? 2;
+              final item = itemCtrl.text.trim();
+              if (total == null || total <= 0 || people < 2 || item.isEmpty)
+                return;
+              final share = total / people;
+              final names = namesCtrl.text
+                  .trim()
+                  .split('\n')
+                  .where((s) => s.trim().isNotEmpty)
+                  .toList();
+              Navigator.pop(context);
+              final now = DateTime.now();
+              // Log user's share as expense
+              await DBService.insertExpense({
+                'item_name': item,
+                'category': 'Food',
+                'amount': share,
+                'date': now.toIso8601String().substring(0, 10),
+                'time': now.toIso8601String().substring(11, 16),
+                'payment_method': 'Cash',
+                'notes': 'Split ${people}way — your share',
+                'ai_generated': 0,
+                'confidence_score': 1.0,
+                'is_want': 1,
+              });
+              // Create debt entry for each other person
+              for (int i = 0; i < people - 1; i++) {
+                final person = i < names.length ? names[i] : 'Person ${i + 1}';
+                await DBService.insertDebt({
+                  'title': 'Split: $item',
+                  'person': person,
+                  'amount': share,
+                  'paid_amount': 0.0,
+                  'type': 'lent',
+                  'due_date': '',
+                  'notes': 'Split bill — owes you ₱${share.toStringAsFixed(0)}',
+                  'created_at': now.toIso8601String(),
+                });
+              }
+              fireEvent(AppEvent.expenseChanged);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                      "Your share ₱${share.toStringAsFixed(0)} logged + ${people - 1} debt${people - 1 == 1 ? '' : 's'} created"),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                ));
+              }
+            },
+            child: const Text("Split & Log"),
           ),
         ],
       ),
@@ -653,7 +780,33 @@ class _GapCheckDialogState extends State<_GapCheckDialog> {
     await StartupAlertsService.recordGapResponse(
       GapResponse(gap: widget.gap, hadTransactions: _answer!),
     );
-    if (mounted) Navigator.of(context).pop();
+    if (mounted) {
+      Navigator.of(context).pop();
+      // If user said "yes I had transactions", offer to log them now
+      if (_answer == true) {
+        // Small delay so the dialog closes cleanly first
+        Future.delayed(const Duration(milliseconds: 300), () {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text("Log those missed expenses now?"),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 5),
+              action: SnackBarAction(
+                label: "Log Now",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BatchManualEntryScreen(),
+                    ),
+                  );
+                },
+              ),
+            ));
+          }
+        });
+      }
+    }
   }
 
   @override
@@ -1025,6 +1178,18 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     "See total spent per shop/restaurant across all time",
                     Colors.deepOrange,
                     () => _showMerchantSummary(context)),
+                _tile(
+                    Icons.receipt_long_outlined,
+                    "Log Due Bills",
+                    "Checklist of overdue recurring bills — tick and save all at once",
+                    Colors.orange,
+                    () => _go(const LogDueBillsScreen())),
+                _tile(
+                    Icons.groups_2_outlined,
+                    "Paluwagan Tracker",
+                    "Track your rotating savings group — members, rounds, contributions",
+                    Colors.green,
+                    () => _go(const PalawaganScreen())),
                 _tile(
                     Icons.account_balance_outlined,
                     "Import from Bank / GCash",

@@ -2905,6 +2905,129 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       );
                     }),
 
+                    // ── BUDGET ENVELOPE VIEW ────────────────────────────────
+                    if (_glanceBudgets.isNotEmpty)
+                      Builder(builder: (context) {
+                        final cs = Theme.of(context).colorScheme;
+                        final currentMonth =
+                            DateFormat('yyyy-MM').format(DateTime.now());
+                        final now = DateTime.now();
+                        final daysInMonth =
+                            DateUtils.getDaysInMonth(now.year, now.month);
+                        final daysLeft = daysInMonth - now.day + 1;
+                        // Compute spent per category this month
+                        final spent = <String, double>{};
+                        for (final e in _expenses) {
+                          if (e.date.startsWith(currentMonth)) {
+                            spent[e.category] =
+                                (spent[e.category] ?? 0) + e.amount;
+                          }
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: cs.surfaceContainerHighest
+                                  .withValues(alpha: 0.35),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                  color: cs.outline.withValues(alpha: 0.15)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(children: [
+                                  const Icon(
+                                      Icons.account_balance_wallet_outlined,
+                                      size: 16),
+                                  const SizedBox(width: 6),
+                                  const Expanded(
+                                      child: Text("Budget Envelopes",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold))),
+                                  Text("$daysLeft days left",
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: cs.onSurface
+                                              .withValues(alpha: 0.5))),
+                                ]),
+                                const SizedBox(height: 12),
+                                ..._glanceBudgets.cast<dynamic>().map((b) {
+                                  final cat = (b as dynamic).category as String;
+                                  final budgetAmt =
+                                      (b as dynamic).amount as double;
+                                  if (budgetAmt <= 0)
+                                    return const SizedBox.shrink();
+                                  final spentAmt = spent[cat] ?? 0;
+                                  final ratio =
+                                      (spentAmt / budgetAmt).clamp(0.0, 1.0);
+                                  final remaining = budgetAmt - spentAmt;
+                                  final dailyPace =
+                                      daysLeft > 0 ? remaining / daysLeft : 0.0;
+                                  final isOver = spentAmt > budgetAmt;
+                                  final color = isOver
+                                      ? Colors.red
+                                      : ratio >= 0.8
+                                          ? Colors.orange
+                                          : Colors.green;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(children: [
+                                            Expanded(
+                                                child: Text(cat,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w600))),
+                                            Text(
+                                              isOver
+                                                  ? "Over ₱${(-remaining).toStringAsFixed(0)}"
+                                                  : "₱${remaining.toStringAsFixed(0)} left · ₱${dailyPace.toStringAsFixed(0)}/day",
+                                              style: TextStyle(
+                                                  fontSize: 10, color: color),
+                                            ),
+                                          ]),
+                                          const SizedBox(height: 4),
+                                          Row(children: [
+                                            Expanded(
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                child: LinearProgressIndicator(
+                                                  value: ratio,
+                                                  minHeight: 7,
+                                                  backgroundColor: color
+                                                      .withValues(alpha: 0.12),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation(
+                                                          color),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "₱${spentAmt.toStringAsFixed(0)} / ₱${budgetAmt.toStringAsFixed(0)}",
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: cs.onSurface
+                                                      .withValues(alpha: 0.5)),
+                                            ),
+                                          ]),
+                                        ]),
+                                  );
+                                }),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+
                     // Long-range forecast (3 / 6 / 12 months)
                     Builder(builder: (context) {
                       final longRange =

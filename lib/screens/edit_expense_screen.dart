@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:fl_chart/fl_chart.dart';
 import '../models/expense.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
@@ -192,6 +193,116 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // ── PRICE TREND CHART ─────────────────────────────────────────
+            FutureBuilder<List<Expense>>(
+              future: DBService.getExpenses(),
+              builder: (_, snap) {
+                if (!snap.hasData) return const SizedBox.shrink();
+                final name = widget.expense.itemName.toLowerCase().trim();
+                final history = snap.data!
+                    .where((e) =>
+                        e.itemName.toLowerCase().trim() == name && e.amount > 0)
+                    .toList()
+                  ..sort((a, b) => a.date.compareTo(b.date));
+                if (history.length < 2) return const SizedBox.shrink();
+                final spots = history
+                    .asMap()
+                    .entries
+                    .map((e) => FlSpot(e.key.toDouble(), e.value.amount))
+                    .toList();
+                final minY = history
+                    .map((e) => e.amount)
+                    .reduce((a, b) => a < b ? a : b);
+                final maxY = history
+                    .map((e) => e.amount)
+                    .reduce((a, b) => a > b ? a : b);
+                final cs = Theme.of(context).colorScheme;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
+                    decoration: BoxDecoration(
+                      color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(12),
+                      border:
+                          Border.all(color: cs.outline.withValues(alpha: 0.15)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Price history for \"${widget.expense.itemName}\" (${history.length} entries)",
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          height: 80,
+                          child: LineChart(LineChartData(
+                            gridData: const FlGridData(show: false),
+                            borderData: FlBorderData(show: false),
+                            titlesData: FlTitlesData(
+                              leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 40,
+                                getTitlesWidget: (v, _) => Text(
+                                  '₱${v.toStringAsFixed(0)}',
+                                  style: const TextStyle(fontSize: 9),
+                                ),
+                              )),
+                              rightTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false)),
+                              topTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false)),
+                              bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 18,
+                                getTitlesWidget: (v, _) {
+                                  final idx = v.toInt();
+                                  if (idx < 0 || idx >= history.length)
+                                    return const SizedBox.shrink();
+                                  return Text(
+                                    history[idx].date.substring(5),
+                                    style: const TextStyle(fontSize: 8),
+                                  );
+                                },
+                                interval: history.length > 6
+                                    ? (history.length / 4).ceilToDouble()
+                                    : 1,
+                              )),
+                            ),
+                            minY: (minY * 0.9).floorToDouble(),
+                            maxY: (maxY * 1.1).ceilToDouble(),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: spots,
+                                isCurved: true,
+                                color: cs.primary,
+                                barWidth: 2,
+                                dotData: FlDotData(
+                                  show: true,
+                                  getDotPainter: (_, __, ___, ____) =>
+                                      FlDotCirclePainter(
+                                          radius: 3,
+                                          color: cs.primary,
+                                          strokeWidth: 0),
+                                ),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  color: cs.primary.withValues(alpha: 0.08),
+                                ),
+                              ),
+                            ],
+                          )),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
             _field(_itemNameCtrl, "Item Name", Icons.label_outline),
             const SizedBox(height: 14),
             _field(_amountCtrl, "Amount (${CurrencyService.symbol})",

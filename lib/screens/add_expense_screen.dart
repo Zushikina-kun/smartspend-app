@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../services/db_service.dart';
 import '../services/llm_service.dart';
 import '../services/voice_service.dart';
@@ -7,6 +8,7 @@ import '../services/category_service.dart';
 import '../services/ai_chat_service.dart';
 import '../services/item_catalog_service.dart';
 import '../services/merchant_normalization_service.dart';
+import '../models/budget.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -70,6 +72,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   List<String> _shopSuggestions = [];
   bool _showShopSuggestions = false;
 
+  // ── BUDGET PROGRESS ───────────────────────────────────────────────────────
+  List<Budget> _budgets = [];
+  Map<String, double> _catSpentThisMonth = {};
+
   @override
   void initState() {
     super.initState();
@@ -96,6 +102,21 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Future<void> _loadCategories() async {
     final cats = await CategoryService.getAll();
     if (mounted) setState(() => _categories = cats);
+    // Also load budgets for the category progress bar
+    try {
+      final budgets = await DBService.getBudgets();
+      final currentMonth = DateTime.now().toIso8601String().substring(0, 7);
+      final expenses = await DBService.getExpenses(month: currentMonth);
+      final spent = <String, double>{};
+      for (final e in expenses) {
+        spent[e.category] = (spent[e.category] ?? 0) + e.amount;
+      }
+      if (mounted)
+        setState(() {
+          _budgets = budgets;
+          _catSpentThisMonth = spent;
+        });
+    } catch (_) {}
   }
 
   /// Auto-suggest category based on item name keywords (only when user hasn't
@@ -258,6 +279,69 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         }
       }
     } catch (_) {}
+  }
+
+  // ── PASTE-TO-PARSE ────────────────────────────────────────────────────────
+  /// Paste clipboard text into the description field and try to auto-extract
+  /// amount and date from common GCash/bank SMS formats.
+  Future<void> _pasteAndParse() async {
+    try {
+      final data = await Clipboard.getData(Clipboard.kTextPlain);
+      final text = data?.text?.trim() ?? '';
+      if (text.isEmpty) {
+        if (mounted)
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Clipboard is empty."),
+              behavior: SnackBarBehavior.floating));
+        return;
+      }
+      _inputController.text = text;
+
+      // Try to extract amount from common patterns: ₱1,234.56 or PHP 1234 or 1,234.56
+      final amtMatch =
+          RegExp(r'[₱Pp][Hh][Pp]?\s*([\d,]+\.?\d*)').firstMatch(text) ??
+              RegExp(r'([\d,]+\.?\d{2})\s*(?:PHP|₱)').firstMatch(text) ??
+              RegExp(r'Amount[:\s]+([\d,]+\.?\d*)').firstMatch(text);
+      if (amtMatch != null) {
+        final amtStr = amtMatch.group(1)!.replaceAll(',', '');
+        final amt = double.tryParse(amtStr);
+        if (amt != null && amt > 0) {
+          _amountCtrl.text = amt == amt.truncateToDouble()
+              ? amt.toStringAsFixed(0)
+              : amt.toStringAsFixed(2);
+        }
+      }
+
+      // Try to extract date
+      final dateMatch =
+          RegExp(r'(\d{2}/\d{2}/\d{4}|\d{4}-\d{2}-\d{2})').firstMatch(text);
+      if (dateMatch != null) {
+        final raw = dateMatch.group(1)!;
+        DateTime? d;
+        if (raw.contains('/')) {
+          final parts = raw.split('/');
+          d = DateTime.tryParse('${parts[2]}-${parts[1]}-${parts[0]}');
+        } else {
+          d = DateTime.tryParse(raw);
+        }
+        if (d != null) {
+          setState(() => _selectedDate = d!.toIso8601String().substring(0, 10));
+        }
+      }
+
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+              "Pasted! Review the fields below and tap Analyze or Save."),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 3),
+        ));
+    } catch (e) {
+      if (mounted)
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Paste failed: ${e.toString()}"),
+            behavior: SnackBarBehavior.floating));
+    }
   }
 
   @override
@@ -814,6 +898,21 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         : _analyzeAndPreview,
                   ),
                 ),
+                const SizedBox(width: 8),
+                // Paste & parse from clipboard (GCash/bank SMS)
+                Tooltip(
+                  message: "Paste GCash/bank SMS to auto-fill",
+                  child: OutlinedButton(
+                    onPressed: _isAnalyzing ? null : _pasteAndParse,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: const Icon(Icons.content_paste, size: 18),
+                  ),
+                ),
               ],
             ),
             if (_isAnalyzing || _isListening) ...[
@@ -1072,8 +1171,62 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   .toList(),
               onChanged: (v) => setState(() => _selectedCategory = v!),
             ),
+            // ── CATEGORY BUDGET PROGRESS ─────────────────────────────────
+            Builder(builder: (context) {
+              final budget = _budgets
+                  .where((b) => b.category == _selectedCategory)
+                  .firstOrNull;
+              if (budget == null || budget.amount <= 0)
+                return const SizedBox.shrink();
+              final spent = _catSpentThisMonth[_selectedCategory] ?? 0;
+              final ratio = (spent / budget.amount).clamp(0.0, 1.0);
+              final remaining = budget.amount - spent;
+              final isOver = spent > budget.amount;
+              final color = isOver
+                  ? Colors.red
+                  : ratio >= 0.8
+                      ? Colors.orange
+                      : Colors.green;
+              return Padding(
+                padding: const EdgeInsets.only(top: 6, bottom: 2),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          isOver
+                              ? "⚠️ ${_selectedCategory} budget exceeded by ₱${(-remaining).toStringAsFixed(0)}"
+                              : "${_selectedCategory}: ₱${spent.toStringAsFixed(0)} / ₱${budget.amount.toStringAsFixed(0)}",
+                          style: TextStyle(fontSize: 11, color: color),
+                        ),
+                        Text(
+                          isOver
+                              ? "Over!"
+                              : "₱${remaining.toStringAsFixed(0)} left",
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: color),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: ratio,
+                        minHeight: 5,
+                        backgroundColor: color.withValues(alpha: 0.12),
+                        valueColor: AlwaysStoppedAnimation(color),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
             const SizedBox(height: 12),
-
             // Want vs Need toggle — highlighted card so it's easy to find
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
