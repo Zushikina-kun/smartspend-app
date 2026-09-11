@@ -5,6 +5,7 @@ import '../services/llm_service.dart';
 import '../services/voice_service.dart';
 import '../services/category_service.dart';
 import '../services/ai_chat_service.dart';
+import '../services/item_catalog_service.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -63,6 +64,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   // ── AUTOCOMPLETE STATE ────────────────────────────────────────────────────
   List<Map<String, dynamic>> _itemSuggestions = [];
   bool _showSuggestions = false;
+
+  // ── SHOP AUTOCOMPLETE ─────────────────────────────────────────────────────
+  List<String> _shopSuggestions = [];
+  bool _showShopSuggestions = false;
 
   @override
   void initState() {
@@ -146,6 +151,114 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     });
   }
 
+  // ── SHOP AUTOCOMPLETE ─────────────────────────────────────────────────────
+  void _onShopNameChanged(String value) {
+    if (value.trim().length < 2) {
+      if (_showShopSuggestions) {
+        setState(() {
+          _shopSuggestions = [];
+          _showShopSuggestions = false;
+        });
+      }
+      return;
+    }
+    DBService.getDistinctShopNames(value.trim()).then((results) {
+      if (mounted && _shopNameCtrl.text.trim() == value.trim()) {
+        setState(() {
+          _shopSuggestions = results;
+          _showShopSuggestions = results.isNotEmpty;
+        });
+      }
+    });
+  }
+
+  // ── CATALOG BROWSE ────────────────────────────────────────────────────────
+  void _openCatalog() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => _CatalogSheet(
+        categories: _categories,
+        onSelected: (item) {
+          _itemNameCtrl.text = item.name;
+          _amountCtrl.text =
+              item.suggestedPrice == item.suggestedPrice.truncateToDouble()
+                  ? item.suggestedPrice.toStringAsFixed(0)
+                  : item.suggestedPrice.toStringAsFixed(2);
+          if (item.shopHint != null) _shopNameCtrl.text = item.shopHint!;
+          setState(() {
+            _selectedCategory =
+                _categories.contains(item.category) ? item.category : 'Others';
+            _isWant = item.isWant;
+            _itemSuggestions = [];
+            _showSuggestions = false;
+          });
+        },
+      ),
+    );
+  }
+
+  // ── SMART AMOUNT CALCULATOR ───────────────────────────────────────────────
+  /// Evaluates simple expressions in the amount field.
+  /// Supports: 3x85 → 255, 2*85 → 170, 100+50 → 150, 200-30 → 170
+  void _evalAmountExpression() {
+    final raw = _amountCtrl.text.trim();
+    if (raw.isEmpty) return;
+    // Already a plain number — nothing to do
+    if (double.tryParse(raw) != null) return;
+
+    try {
+      // Normalize: replace × and x with *
+      var expr =
+          raw.replaceAll('×', '*').replaceAll('x', '*').replaceAll('X', '*');
+      double? result;
+      // Multiplication: e.g. 3*85
+      if (expr.contains('*')) {
+        final parts = expr.split('*');
+        if (parts.length == 2) {
+          final a = double.tryParse(parts[0].trim());
+          final b = double.tryParse(parts[1].trim());
+          if (a != null && b != null) result = a * b;
+        }
+      }
+      // Addition: e.g. 85+30
+      else if (expr.contains('+')) {
+        final parts = expr.split('+');
+        if (parts.length == 2) {
+          final a = double.tryParse(parts[0].trim());
+          final b = double.tryParse(parts[1].trim());
+          if (a != null && b != null) result = a + b;
+        }
+      }
+      // Subtraction: e.g. 200-30 (only if not a negative number)
+      else if (expr.contains('-') && !expr.startsWith('-')) {
+        final idx = expr.lastIndexOf('-');
+        final a = double.tryParse(expr.substring(0, idx).trim());
+        final b = double.tryParse(expr.substring(idx + 1).trim());
+        if (a != null && b != null) result = a - b;
+      }
+
+      if (result != null && result > 0) {
+        final formatted = result == result.truncateToDouble()
+            ? result.toStringAsFixed(0)
+            : result.toStringAsFixed(2);
+        _amountCtrl.text = formatted;
+        // Move cursor to end
+        _amountCtrl.selection =
+            TextSelection.collapsed(offset: _amountCtrl.text.length);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("$raw = ₱$formatted"),
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
+      }
+    } catch (_) {}
+  }
+
   @override
   void dispose() {
     _inputController.dispose();
@@ -227,6 +340,43 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       _showError("Please enter an item name.");
       return;
     }
+
+    // ── DUPLICATE WARNING ─────────────────────────────────────────────────────
+    // Warn if the same item + amount was already logged today — soft block,
+    // user can still proceed. Only fires for today's entries.
+    try {
+      final todayForDup = DateTime.now().toIso8601String().substring(0, 10);
+      if (_selectedDate.substring(0, 10) == todayForDup) {
+        final db = await DBService.getDB();
+        final existing = await db.rawQuery('''
+          SELECT id FROM expenses
+          WHERE LOWER(item_name) = LOWER(?)
+            AND ABS(amount - ?) < 0.01
+            AND date = ?
+          LIMIT 1
+        ''', [itemName, amount, todayForDup]);
+        if (existing.isNotEmpty && mounted) {
+          final proceed = await showDialog<bool>(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text("Already logged today?"),
+              content: Text(
+                  "You already logged \"$itemName\" for ₱${amount.toStringAsFixed(0)} today. "
+                  "Save it again as a separate entry?"),
+              actions: [
+                TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text("Cancel")),
+                ElevatedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: const Text("Save again")),
+              ],
+            ),
+          );
+          if (proceed != true || !mounted) return;
+        }
+      }
+    } catch (_) {} // non-fatal — if check fails, proceed with save
 
     // Impulse pause mechanic — for Want-tagged expenses above 2× category average
     // Only fires for today's entries — skip for historical/backdated expenses
@@ -712,31 +862,68 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
 
-            // Date picker
-            OutlinedButton.icon(
-              icon: const Icon(Icons.calendar_today, size: 16),
-              label: Text("Date: $_selectedDate"),
-              style: OutlinedButton.styleFrom(
-                alignment: Alignment.centerLeft,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-              ),
-              onPressed: () async {
-                final picked = await showDatePicker(
-                  context: context,
-                  initialDate:
-                      DateTime.tryParse(_selectedDate) ?? DateTime.now(),
-                  firstDate: DateTime(2020),
-                  lastDate: DateTime.now(),
-                );
-                if (picked != null) {
-                  setState(() => _selectedDate =
-                      picked.toIso8601String().substring(0, 10));
-                }
-              },
-            ),
+            // Date quick-pick chips + full calendar
+            // Chips: Today / Yesterday / 2 days ago — covers 99% of logging
+            Builder(builder: (context) {
+              final now = DateTime.now();
+              final chips = [
+                ('Today', now.toIso8601String().substring(0, 10)),
+                (
+                  'Yesterday',
+                  now
+                      .subtract(const Duration(days: 1))
+                      .toIso8601String()
+                      .substring(0, 10)
+                ),
+                (
+                  '2 days ago',
+                  now
+                      .subtract(const Duration(days: 2))
+                      .toIso8601String()
+                      .substring(0, 10)
+                ),
+              ];
+              return Wrap(
+                spacing: 8,
+                children: [
+                  ...chips.map((c) {
+                    final selected = _selectedDate == c.$2;
+                    return ChoiceChip(
+                      label: Text(c.$1, style: const TextStyle(fontSize: 12)),
+                      selected: selected,
+                      onSelected: (_) => setState(() => _selectedDate = c.$2),
+                      selectedColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.15),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    );
+                  }),
+                  ActionChip(
+                    avatar: const Icon(Icons.calendar_today, size: 14),
+                    label: Text(
+                      chips.any((c) => c.$2 == _selectedDate)
+                          ? 'Pick date'
+                          : _selectedDate,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate:
+                            DateTime.tryParse(_selectedDate) ?? DateTime.now(),
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime.now(),
+                      );
+                      if (picked != null) {
+                        setState(() => _selectedDate =
+                            picked.toIso8601String().substring(0, 10));
+                      }
+                    },
+                  ),
+                ],
+              );
+            }),
             const SizedBox(height: 12),
 
             TextField(
@@ -746,8 +933,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 prefixIcon: const Icon(Icons.label_outline),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                suffixIcon: _itemNameCtrl.text.isNotEmpty
-                    ? IconButton(
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_itemNameCtrl.text.isNotEmpty)
+                      IconButton(
                         icon: const Icon(Icons.clear, size: 18),
                         onPressed: () {
                           _itemNameCtrl.clear();
@@ -756,8 +946,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                             _showSuggestions = false;
                           });
                         },
-                      )
-                    : null,
+                      ),
+                    IconButton(
+                      icon: const Icon(Icons.menu_book_outlined, size: 20),
+                      tooltip: "Browse item catalog",
+                      onPressed: _openCatalog,
+                    ),
+                  ],
+                ),
               ),
             ),
             // ── ITEM SUGGESTIONS ─────────────────────────────────────────
@@ -846,9 +1042,17 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               decoration: InputDecoration(
                 labelText: "Amount (₱)",
                 prefixIcon: const Icon(Icons.attach_money),
+                hintText: "e.g. 85 or 3x85",
+                hintStyle: const TextStyle(fontSize: 12),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.calculate_outlined, size: 20),
+                  tooltip: "Calculate (e.g. 3x85)",
+                  onPressed: _evalAmountExpression,
+                ),
               ),
+              onSubmitted: (_) => _evalAmountExpression(),
             ),
             const SizedBox(height: 12),
 
@@ -962,6 +1166,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
             TextField(
               controller: _shopNameCtrl,
+              onChanged: _onShopNameChanged,
               decoration: InputDecoration(
                 labelText: "Shop / Restaurant (optional)",
                 prefixIcon: const Icon(Icons.store_outlined),
@@ -969,6 +1174,49 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
+            if (_showShopSuggestions && _shopSuggestions.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 4),
+                child: Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: _shopSuggestions
+                      .map((shop) => InkWell(
+                            onTap: () {
+                              _shopNameCtrl.text = shop;
+                              setState(() {
+                                _shopSuggestions = [];
+                                _showShopSuggestions = false;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(16),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: Colors.teal.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                    color: Colors.teal.withValues(alpha: 0.25)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.store_outlined,
+                                      size: 12, color: Colors.teal),
+                                  const SizedBox(width: 4),
+                                  Text(shop,
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.teal,
+                                          fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
             const SizedBox(height: 12),
 
             TextField(
@@ -1005,6 +1253,177 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             const SizedBox(height: 8),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── CATALOG BROWSE SHEET ──────────────────────────────────────────────────────
+/// Full-screen searchable bottom sheet for the Filipino item catalog.
+class _CatalogSheet extends StatefulWidget {
+  final List<String> categories;
+  final void Function(CatalogItem) onSelected;
+  const _CatalogSheet({required this.categories, required this.onSelected});
+
+  @override
+  State<_CatalogSheet> createState() => _CatalogSheetState();
+}
+
+class _CatalogSheetState extends State<_CatalogSheet> {
+  final _searchCtrl = TextEditingController();
+  String _query = '';
+  String _filterCategory = 'All';
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final results = _query.length >= 1
+        ? ItemCatalogService.search(_query)
+        : _filterCategory == 'All'
+            ? ItemCatalogService.search('')
+            : ItemCatalogService.forCategory(_filterCategory);
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.85,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      expand: false,
+      builder: (_, scrollCtrl) => Column(
+        children: [
+          // Handle
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 6),
+            child: Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text("Item Catalog",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel")),
+              ],
+            ),
+          ),
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: TextField(
+              controller: _searchCtrl,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: "Search items (e.g. jeep, lunch, Jollibee...)",
+                prefixIcon: const Icon(Icons.search, size: 20),
+                suffixIcon: _query.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear, size: 18),
+                        onPressed: () {
+                          _searchCtrl.clear();
+                          setState(() => _query = '');
+                        })
+                    : null,
+                isDense: true,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              ),
+              onChanged: (v) => setState(() => _query = v),
+            ),
+          ),
+          // Category filter chips (only when not searching)
+          if (_query.isEmpty)
+            SizedBox(
+              height: 36,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                children: [
+                  'All',
+                  ...ItemCatalogService.categories,
+                ].map((cat) {
+                  final selected = _filterCategory == cat;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: ChoiceChip(
+                      label: Text(cat, style: const TextStyle(fontSize: 12)),
+                      selected: selected,
+                      onSelected: (_) => setState(() => _filterCategory = cat),
+                      selectedColor: cs.primary.withValues(alpha: 0.15),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          const SizedBox(height: 4),
+          // Results list
+          Expanded(
+            child: results.isEmpty
+                ? Center(
+                    child: Text("No items found for \"$_query\"",
+                        style: const TextStyle(color: Colors.grey)))
+                : ListView.builder(
+                    controller: scrollCtrl,
+                    itemCount: results.length,
+                    itemBuilder: (_, i) {
+                      final item = results[i];
+                      return ListTile(
+                        dense: true,
+                        title: Text(item.name,
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w500)),
+                        subtitle: Text(
+                          "${item.category}${item.shopHint != null ? ' · ${item.shopHint}' : ''}",
+                          style: const TextStyle(fontSize: 11),
+                        ),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "₱${item.suggestedPrice == item.suggestedPrice.truncateToDouble() ? item.suggestedPrice.toStringAsFixed(0) : item.suggestedPrice.toStringAsFixed(2)}",
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: cs.primary),
+                            ),
+                            Text(
+                              item.isWant ? "Want" : "Need",
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: item.isWant
+                                      ? Colors.orange[700]
+                                      : Colors.teal[700]),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          widget.onSelected(item);
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }

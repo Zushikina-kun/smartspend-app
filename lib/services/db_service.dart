@@ -805,8 +805,7 @@ class DBService {
 
   /// Returns up to [limit] autocomplete suggestions matching the given prefix.
   ///
-  /// Each result contains the most-recent values for that item:
-  ///   { 'item_name', 'amount', 'category', 'payment_method', 'shop_name', 'is_want', 'count' }
+  /// Each result contains the most-recent values for that item:  ///   { 'item_name', 'amount', 'category', 'payment_method', 'shop_name', 'is_want', 'count' }
   ///
   /// Sorted by frequency (most-logged first), then alphabetically.
   /// Used by the manual entry form to suggest past items as the user types.
@@ -859,6 +858,24 @@ class DBService {
       return [...results, ...contains];
     }
     return results;
+  }
+
+  /// Returns up to [limit] distinct shop names matching [prefix] — used for
+  /// shop name autocomplete in the manual expense entry form.
+  static Future<List<String>> getDistinctShopNames(String prefix,
+      {int limit = 5}) async {
+    if (prefix.trim().isEmpty) return [];
+    final db = await getDB();
+    final results = await db.rawQuery('''
+      SELECT DISTINCT shop_name
+      FROM expenses
+      WHERE LOWER(shop_name) LIKE LOWER(?)
+        AND shop_name IS NOT NULL
+        AND shop_name != ''
+      ORDER BY shop_name ASC
+      LIMIT ?
+    ''', ['${prefix.trim()}%', limit]);
+    return results.map((r) => r['shop_name'] as String).toList();
   }
 
   static Future<int> getExpenseCount() async {
