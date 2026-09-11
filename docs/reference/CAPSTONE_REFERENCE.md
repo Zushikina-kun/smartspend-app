@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.35 | **Date:** September 10, 2026
+**Version:** 2.9.37 | **Date:** September 10, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.35).
+> All figures are accurate to the final build (v2.9.37).
 
 ---
 
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.35
+**Version:** 2.9.37
 **Build date:** September 10, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -85,7 +85,9 @@ SmartSpend uses a **multi-provider agentic AI system** with automatic failover:
 | 7 | Groq | Compound Mini | 250/day FREE | Last Groq resort |
 | 8 | Cerebras | GPT-OSS 120B | 1M tokens/day FREE | Last resort, ~3,000 t/s |
 
-> ⚠️ **Model update (v2.9.24, Sep 10, 2026):** `gemini-3.1-flash-lite` was **shut down by Google** and returns 404. The app now uses `gemini-3.5-flash-lite` (GA stable). The Groq account only has `openai/gpt-oss-*`, `qwen/qwen3.*`, and `groq/compound*` — LLaMA models are not on this account tier.
+> ⚠️ **Model update (v2.9.24, Sep 10, 2026):** The app was migrated from `gemini-3.1-flash-lite` to `gemini-3.5-flash-lite` (GA stable, Google's recommended upgrade path). The migration was triggered by persistent HTTP 404 errors in production — root cause was likely endpoint routing instability or a key/quota issue with the 3.1 endpoint, not a formal Google shutdown (Google's deprecation page lists 3.1 Flash-Lite EOL as May 2027). Regardless of root cause, `gemini-3.5-flash-lite` is the correct and currently stable endpoint.
+>
+> The Groq account associated with this project only has access to: `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `qwen/qwen3.6-27b`, `qwen/qwen3.8-27b`, `groq/compound`, `groq/compound-mini`. LLaMA models (`llama-4-scout`, `llama-3.3-70b`, `llama-3.1-8b`) were **retired from the Groq free/dev tier in Feb–Aug 2026 waves** (per Groq's own deprecation docs and GitHub issue trackers) — this is why they return 404 on this account.
 
 **Smart routing:**
 - `fast` tier — expense logging, simple queries → GPT-OSS 20B
@@ -425,7 +427,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | Offline Mode | ✅ Full | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
 | Financial Health Score | ✅ Dual-mode | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Simpler | ❌ | ❌ |
 | PH Gov (SSS/PhilHealth/Pag-IBIG) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Records | ❌ | ❌ |
-| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ |
+| Paluwagan tracker | ✅ Basic | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ |
 | 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Gamification (badges/quests) | ✅ 23 badges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ |
 | Free (no subscription) | ✅ Always | ❌ $14.99/mo | ❌ $9.99/mo | ❌ $10.99/mo | ⚠️ Limited | ✅ | ✅ | ⚠️ Limited | ✅ (GCash required) |
@@ -440,16 +442,16 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 - Only app with batch screenshot import (40+ platform types auto-detected)
 - Only app with dual-mode FHS (Full + Lightweight) + Logging Gap Detection
 
-**BudgetPH gap SmartSpend should address (future):**
-- Paluwagan tracker — uniquely Filipino rotating savings group feature
-- 15th & 30th payday cycle — payday-aware budgeting reset
+**BudgetPH gap SmartSpend now addresses (implemented v2.9.35):**
+- ✅ **Paluwagan tracker** — basic implementation added: group management, member payout order, contribution logging, round tracking (Hub → Paluwagan Tracker)
+- ❌ 15th & 30th payday cycle — payday-aware budgeting reset (still not implemented)
 
 ---
 
 ## 10. LLM SELECTION JUSTIFICATION (for Chapter 3)
 
 ### Primary choice: Gemini 3.5 Flash-Lite (Google AI Studio)
-- **NOTE:** `gemini-3.1-flash-lite` was shut down by Google on Sep 9, 2026 and replaced with `gemini-3.5-flash-lite` (GA stable)
+- **Migration note:** The app originally used `gemini-3.1-flash-lite` which began returning 404 errors in production on Sep 9, 2026. Root cause was likely endpoint routing instability or key quota — not a confirmed Google shutdown (official EOL is May 2027). The app was updated to `gemini-3.5-flash-lite`, Google's own recommended upgrade path, which is GA stable.
 - ~500 requests/day FREE — sufficient for normal use
 - 1 million token context window
 - Best reasoning quality among free models
@@ -598,19 +600,21 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.20 | Sep 7, 2026 | Graceful AI failure UX (Retry/Try Different Model/Log Manually buttons); 401/403 auto-fallback; fast model routing fix (Taglish verbs); cross-session duplicate guard; overspend startup alert; new Gemini API key baked in |
 | 2.9.21 | Sep 10, 2026 | 9 debug-log bugs fixed: AI fallback persists across restarts; FHS Lightweight mode component mismatch; mode-switch score notice; velocity alert guard; recurring card casing; wallet quests filter; daily briefing date-write; exchange rates background refresh; payment plan Archive action |
 | 2.9.22 | Sep 10, 2026 | Pre-defense polish: version strings, What's New screen, student account income alert suppression |
-| 2.9.23–2.9.24 | Sep 10, 2026 | **Critical AI fix**: `gemini-3.1-flash-lite` shut down by Google — replaced with `gemini-3.5-flash-lite` (GA stable). Fresh Groq + Gemini keys. 404 now triggers autoFallback(). Key fingerprint detection resets model on new build. |
+| 2.9.23–2.9.24 | Sep 10, 2026 | **AI model migration**: `gemini-3.1-flash-lite` began returning HTTP 404 in production (likely endpoint routing instability or key/quota issue — not confirmed Google shutdown, official EOL is May 2027). Migrated to `gemini-3.5-flash-lite` (GA stable, Google's recommended upgrade path). Fresh Groq + Gemini keys. 404 now triggers autoFallback(). Key fingerprint detection resets model on new build. |
 | 2.9.25 | Sep 10, 2026 | 8-provider Groq fallback chain; daily limit 60→150; LLMService OCR also uses autoFallback(); FAB removed from nav (was covering AI chat keyboard) |
 | 2.9.26 | Sep 10, 2026 | Manual mode overhaul: Log choice sheet (AI/Manual/Batch/Voice), BatchManualEntryScreen (8 expenses at once), AI-limit banner with shortcuts, skipAiAnalysis param |
-| 2.9.27–2.9.29 | Sep 10, 2026 | Groq account API key issue: account tier only has openai/gpt-oss-120b, qwen/qwen3.6-27b, qwen/qwen3.8-27b, groq/compound, groq/compound-mini (llama-* NOT available on this account). Model IDs updated to match verified available models. |
+| 2.9.27–2.9.29 | Sep 10, 2026 | Groq account API key issue: LLaMA models (`llama-4-scout`, `llama-3.3-70b`, `llama-3.1-8b`) retired from Groq free/dev tier in Feb–Aug 2026 waves (per Groq deprecation docs + GitHub trackers). Account now only has `openai/gpt-oss-120b`, `qwen/qwen3.6-27b`, `qwen/qwen3.8-27b`, `groq/compound`, `groq/compound-mini`. Model IDs updated accordingly. |
 | 2.9.30 | Sep 10, 2026 | 402 payment_required now triggers autoFallback(); FAB overlay fix; FMS nav index corrected (4→3) |
 | 2.9.31 | Sep 10, 2026 | Audit fixes: wallet transfer SQLite transaction; recurring candidate case-insensitive lookup; What's New v2.9.30; scrollToFMS timing fix; analytics AI errors clean messages; dead code removal; batch entry controller dispose |
 | 2.9.32 | Sep 10, 2026 | Smart autocomplete: item name typeahead from past entries, price autofill, price memory in manual form, shop name autocomplete, `getSuggestionsForItem()` + `getDistinctShopNames()` in DBService |
 | 2.9.33 | Sep 10, 2026 | Filipino item catalog (150+ items), catalog browse sheet, smart amount calculator (3×85=255), date quick-pick chips, duplicate warning before save |
 | 2.9.34 | Sep 10, 2026 | Merchant normalization: MerchantNormalizationService (80+ aliases, Steam→Steam fix), Merchant Merge screen, auto-normalize on save+import, round-trip fare, Spending by Merchant analytics |
 | **2.9.35** | **Sep 10, 2026** | **10 new features: Bill splitter, Log Due Bills checklist, paste-to-parse, category budget progress bar, gap recovery → BatchEntry, no-spend day badges, budget envelope view on analytics, price trend chart on edit screen, Paluwagan tracker, recurring_helper nextDate() public** |
+| 2.9.36 | Sep 10, 2026 | 7 high-value features: recurring detector extended (quarterly/yearly/180d); Day-in-Review card (after 6pm); spending heatmap (5-week GitHub-style); budget rollover (per-category carry-forward); tags analytics (By Tag spending view); Afford This? calculator; offline AI insight cache |
+| **2.9.37** | **Sep 10, 2026** | **Feature #8: Clipboard SMS/bank nudge — AI screen detects GCash/bank text in clipboard and shows paste prompt. Quick Access portal "Paste & Log" added to home screen.** |
 
 ---
 
-*SmartSpend v2.9.35 — Lucid Frame*
+*SmartSpend v2.9.37 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
 *Last updated: September 10, 2026*
