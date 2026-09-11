@@ -133,12 +133,32 @@ class StartupAlertsService {
     }
   }
 
+  /// Apply budget rollover at the start of a new month (fire-and-forget).
+  /// Carries underspent budget amounts forward for categories with rollover enabled.
+  static Future<void> _applyRolloverIfNewMonth() async {
+    try {
+      final now = DateTime.now();
+      final thisMonth = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+      final lastApplied = await DBService.getSetting('rollover_applied_month');
+      if (lastApplied == thisMonth) return; // already done this month
+      // Apply rollover from last month
+      final lastMonthDate = DateTime(now.year, now.month - 1);
+      final lastMonth =
+          '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
+      await DBService.applyMonthlyRollover(lastMonth);
+    } catch (_) {} // silent
+  }
+
   /// Check all alert conditions and return any that should be shown.
   /// Returns empty list if no alerts or already shown today.
   static Future<List<StartupAlert>> checkAlerts() async {
     // Refresh exchange rates silently in background on every app open.
     // This runs independently of the Market Insights card visibility.
     _refreshExchangeRatesInBackground(); // intentionally not awaited
+
+    // Apply budget rollover at the start of a new month (fire-and-forget)
+    _applyRolloverIfNewMonth(); // intentionally not awaited
+
     // Don't repeat alerts on the same day
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final lastShown = await DBService.getSetting(_prefKeyLastAlert);

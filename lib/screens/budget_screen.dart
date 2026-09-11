@@ -468,6 +468,58 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                       tooltip: "Edit budget",
                                     ),
                                     const SizedBox(width: 8),
+                                    // Rollover toggle
+                                    FutureBuilder<bool>(
+                                      future: DBService.getBudgetRollover(
+                                          b.category),
+                                      builder: (_, snap) {
+                                        final enabled = snap.data ?? false;
+                                        return Tooltip(
+                                          message: enabled
+                                              ? "Rollover ON — underspend carries to next month"
+                                              : "Rollover OFF — tap to enable",
+                                          child: GestureDetector(
+                                            onTap: () async {
+                                              await DBService.setBudgetRollover(
+                                                  b.category, !enabled);
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 6,
+                                                      vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: enabled
+                                                    ? Colors.green
+                                                        .withValues(alpha: 0.12)
+                                                    : Colors.grey
+                                                        .withValues(alpha: 0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                border: Border.all(
+                                                    color: enabled
+                                                        ? Colors.green
+                                                            .withValues(
+                                                                alpha: 0.4)
+                                                        : Colors.grey
+                                                            .withValues(
+                                                                alpha: 0.3)),
+                                              ),
+                                              child: Text(
+                                                "↪",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: enabled
+                                                        ? Colors.green
+                                                        : Colors.grey),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8),
                                     IconButton(
                                       icon: const Icon(Icons.delete_outline,
                                           size: 18, color: Colors.grey),
