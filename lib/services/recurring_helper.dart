@@ -51,6 +51,18 @@ class RecurringHelper {
     return true;
   }
 
+  /// Calculate the next date based on frequency (public version)
+  static DateTime? nextDate(Map<String, dynamic> item) {
+    try {
+      final currentStr = item['next_date'] as String?;
+      if (currentStr == null || currentStr.isEmpty) return null;
+      return _advanceDate(DateTime.parse(currentStr),
+          item['frequency'] as String? ?? 'monthly');
+    } catch (_) {
+      return null;
+    }
+  }
+
   /// Calculate the next date based on frequency
   static DateTime _advanceDate(DateTime current, String frequency) {
     switch (frequency) {

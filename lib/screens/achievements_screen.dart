@@ -44,6 +44,10 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     _Badge('🔍', 'Detail Oriented', 'Add notes to 10 expenses', 'notes_10'),
     _Badge('🛡️', 'Insurance Aware', 'Track at least 1 insurance policy',
         'insurance_1'),
+    _Badge('⭕', 'No-Spend Day', 'Complete a full day with zero spending',
+        'no_spend_day'),
+    _Badge('🔟', 'No-Spend Streak', 'Have 5 no-spend days in a month',
+        'no_spend_5'),
     // Fun
     _Badge('🌙', 'Night Owl', 'Log an expense after 10 PM', 'night_owl'),
     _Badge('☀️', 'Early Bird', 'Log an expense before 8 AM', 'early_bird'),
@@ -192,6 +196,27 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         int.tryParse(await DBService.getSetting('impulse_declines') ?? '0') ??
             0;
     if (impulseDeclines >= 5) earned.add('impulse_5');
+
+    // No-Spend Day — detect days with zero expenses in history
+    try {
+      final allDates = expenses.map((e) => e.date.substring(0, 10)).toSet();
+      // Check last 30 days for a day with no expenses
+      final now = DateTime.now();
+      bool foundNoSpend = false;
+      int noSpendCount = 0;
+      final thisMonthKey =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}';
+      for (int d = 1; d < now.day; d++) {
+        final dateKey =
+            '${now.year}-${now.month.toString().padLeft(2, '0')}-${d.toString().padLeft(2, '0')}';
+        if (!allDates.contains(dateKey)) {
+          foundNoSpend = true;
+          if (dateKey.startsWith(thisMonthKey)) noSpendCount++;
+        }
+      }
+      if (foundNoSpend) earned.add('no_spend_day');
+      if (noSpendCount >= 5) earned.add('no_spend_5');
+    } catch (_) {}
 
     // NEW BADGES — v2.9.1
 

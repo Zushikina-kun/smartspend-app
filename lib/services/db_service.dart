@@ -2295,4 +2295,52 @@ class DBService {
       CloudService.deleteDoc('insurance_policies', id);
     } catch (_) {}
   }
+
+  // ── PALUWAGAN ─────────────────────────────────────────────────────────────
+
+  static Future<List<Map<String, dynamic>>> getPalawaganGroups() async {
+    final db = await getDB();
+    try {
+      return db.query('paluwagan', orderBy: 'created_at DESC');
+    } catch (_) {
+      // Table may not exist on older installs — create it and return empty
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS paluwagan(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          contribution_amount REAL NOT NULL,
+          members TEXT DEFAULT '',
+          current_round INTEGER DEFAULT 1,
+          created_at TEXT NOT NULL
+        )
+      ''');
+      return [];
+    }
+  }
+
+  static Future<void> insertPalawagan(Map<String, dynamic> data) async {
+    final db = await getDB();
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS paluwagan(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        contribution_amount REAL NOT NULL,
+        members TEXT DEFAULT '',
+        current_round INTEGER DEFAULT 1,
+        created_at TEXT NOT NULL
+      )
+    ''');
+    await db.insert('paluwagan', data);
+  }
+
+  static Future<void> updatePalawagan(Map<String, dynamic> data) async {
+    final db = await getDB();
+    await db
+        .update('paluwagan', data, where: 'id = ?', whereArgs: [data['id']]);
+  }
+
+  static Future<void> deletePalawagan(int id) async {
+    final db = await getDB();
+    await db.delete('paluwagan', where: 'id = ?', whereArgs: [id]);
+  }
 }
