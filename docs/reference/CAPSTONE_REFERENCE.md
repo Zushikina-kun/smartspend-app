@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.22 | **Date:** September 10, 2026
+**Version:** 2.9.35 | **Date:** September 10, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.22).
+> All figures are accurate to the final build (v2.9.35).
 
 ---
 
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.22
+**Version:** 2.9.35
 **Build date:** September 10, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -76,17 +76,21 @@ SmartSpend uses a **multi-provider agentic AI system** with automatic failover:
 
 | Priority | Provider | Model | Daily Limit | Best For |
 |----------|----------|-------|-------------|----------|
-| 1 | Google AI Studio | Gemini 3.1 Flash-Lite | ~1,000/day FREE | Default — best quality/cost |
-| 2 | Google AI Studio | Gemini 3.5 Flash | ~1,500/day FREE | Complex financial queries |
-| 3 | Groq | LLaMA 4 Scout | 1,000/day FREE | Best open-source, Tagalog native |
-| 4 | Groq | LLaMA 3.3 70B | 1,000/day FREE | Strong reasoning fallback |
-| 5 | Groq | LLaMA 3.1 8B | 14,400/day FREE | Fast tasks, highest volume |
-| 6 | Cerebras | GPT-OSS 120B | 1M tokens/day FREE | Last resort, ~3,000 t/s |
+| 1 | Google AI Studio | **Gemini 3.5 Flash-Lite** | ~500/day FREE | Default — GA stable (replaced shut-down 3.1) |
+| 2 | Google AI Studio | Gemini 3.5 Flash | ~500/day FREE | Complex financial queries |
+| 3 | Groq | GPT-OSS 120B | 1,000/day FREE | Best on this account tier |
+| 4 | Groq | Qwen3.6 27B | 1,000/day FREE | Multimodal reasoning fallback |
+| 5 | Groq | Qwen3.8 27B | 1,000/day FREE | Newer Qwen fallback |
+| 6 | Groq | GPT-OSS 20B | 1,000/day FREE | Lighter fallback |
+| 7 | Groq | Compound Mini | 250/day FREE | Last Groq resort |
+| 8 | Cerebras | GPT-OSS 120B | 1M tokens/day FREE | Last resort, ~3,000 t/s |
+
+> ⚠️ **Model update (v2.9.24, Sep 10, 2026):** `gemini-3.1-flash-lite` was **shut down by Google** and returns 404. The app now uses `gemini-3.5-flash-lite` (GA stable). The Groq account only has `openai/gpt-oss-*`, `qwen/qwen3.*`, and `groq/compound*` — LLaMA models are not on this account tier.
 
 **Smart routing:**
-- `fast` tier — expense logging, simple queries → LLaMA 3.1 8B (14,400/day)
-- `smart` tier — analysis, planning → LLaMA 4 Scout or Gemini 3.1 Flash-Lite
-- `financial_advice` tier — SSS/tax/debt strategy → Gemini 3.5 Flash (best reasoning)
+- `fast` tier — expense logging, simple queries → GPT-OSS 20B
+- `smart` tier — analysis, planning → GPT-OSS 120B or Gemini 3.5 Flash-Lite
+- `financial_advice` tier — SSS/tax/debt strategy → Gemini 3.5 Flash
 
 **Why not RAG:**
 Per-user data (20-50 expenses, 5-10 budgets, 3-5 goals) fits entirely in the context window. Dynamic full-context injection gives the AI always-current data without vector search overhead.
@@ -193,9 +197,9 @@ The FHS and all associated alerts are **current-period aware**:
 | Crash Reporting | Firebase Crashlytics | Automatic crash collection |
 | API Security | Firebase Remote Config | API keys never in APK binary |
 | App Check | Firebase App Check | Debug mode (monitoring); Play Integrity for Play Store |
-| AI — Primary | Gemini 3.1 Flash-Lite (Google) | 1,000 req/day free, 1M context, best Filipino-English |
-| AI — Fallback 1/2 | Gemini 3.5 Flash / LLaMA 4 Scout (Groq) | Auto-failover when primary limit hit |
-| AI — Fallback 3/4/5 | LLaMA 3.3 70B / LLaMA 3.1 8B (Groq) / GPT-OSS 120B (Cerebras) | Speed & volume fallbacks — 14,400/day on 8B, 1M tokens/day on Cerebras |
+| AI — Primary | **Gemini 3.5 Flash-Lite** (Google) | ~500 req/day free, 1M context — GA stable, replaced shut-down gemini-3.1-flash-lite |
+| AI — Fallback 1 | Gemini 3.5 Flash / GPT-OSS 120B (Groq) | Auto-failover when primary limit hit |
+| AI — Fallback 2–7 | Qwen3.6 27B / Qwen3.8 27B / GPT-OSS 20B / Compound Mini (Groq) / GPT-OSS 120B (Cerebras) | 8-provider chain, total ~6,750/day capacity |
 | OCR | Google ML Kit Text Recognition | Latin script, EXIF-corrected |
 | Barcode | ML Kit Barcode Scanning + MobileScanner | Live + gallery detection |
 | Charts | fl_chart | Pie, bar, line, scatter |
@@ -444,8 +448,9 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 ## 10. LLM SELECTION JUSTIFICATION (for Chapter 3)
 
-### Primary choice: Gemini 3.1 Flash-Lite (Google AI Studio)
-- 1,000 requests/day FREE — sufficient for 60 req/user/day cap
+### Primary choice: Gemini 3.5 Flash-Lite (Google AI Studio)
+- **NOTE:** `gemini-3.1-flash-lite` was shut down by Google on Sep 9, 2026 and replaced with `gemini-3.5-flash-lite` (GA stable)
+- ~500 requests/day FREE — sufficient for normal use
 - 1 million token context window
 - Best reasoning quality among free models
 - Filipino-English: excellent (multilingual training)
@@ -485,7 +490,7 @@ A: SmartSpend's AI executes 34 autonomous financial management actions — from 
 A: RAG is for large knowledge bases (thousands of documents). A typical user has 20-50 expenses, 5-10 budgets, 3-5 goals — small enough for full context injection. Our approach gives faster, always-current data access without vector search overhead.
 
 **Q: "What if the API goes down?"**
-A: 6-provider automatic fallback: Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → LLaMA 4 Scout (Groq) → LLaMA 3.3 70B (Groq) → LLaMA 3.1 8B (Groq) → GPT-OSS 120B (Cerebras). Manual expense entry via the form works fully offline without AI.
+A: 8-provider automatic fallback: Gemini 3.5 Flash-Lite → Gemini 3.5 Flash → GPT-OSS 120B (Groq) → Qwen3.6 27B (Groq) → Qwen3.8 27B (Groq) → GPT-OSS 20B (Groq) → Compound Mini (Groq) → GPT-OSS 120B (Cerebras). Manual expense entry, Batch Add, and all catalog/autocomplete features work fully offline without AI.
 
 **Q: "Why no bank integration?"**
 A: Philippine open banking (BSP Open Finance) only launched in pilot in July 2025 with UnionBank as the first participant. SmartSpend is architecturally ready for integration as the framework matures. Currently, users import via GCash/bank history text paste or batch screenshot import (40+ platforms).
@@ -591,11 +596,21 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.9 | Sep 2026 | Debug-identified fixes: Lightweight Mode analytics (50/30/20 hidden); Logging Consistency formula corrected (day 1 baseline); FMS scroll-to on Profile; AI language detection (Rule 12); score history placeholder |
 | 2.9.10–2.9.19 | Sep 2026 | Behavioral Feedback Layer (8 UX items); docs reorganization; 34 agentic actions confirmed; SSS 2025 rates; 7 new action validators; Help screen fixes; AI system prompt App Guide; builders updated; GitHub releases |
 | 2.9.20 | Sep 7, 2026 | Graceful AI failure UX (Retry/Try Different Model/Log Manually buttons); 401/403 auto-fallback; fast model routing fix (Taglish verbs); cross-session duplicate guard; overspend startup alert; new Gemini API key baked in |
-| **2.9.21** | **Sep 10, 2026** | **9 bug fixes from debug log: AI fallback model persisted across restarts; FHS Lightweight mode component mismatch fixed; mode-switch score notice; velocity alert suppressed when last month < 5 expenses; recurring card casing restored; wallet quests filtered in Lightweight; daily briefing date-write fixed; exchange rates refresh on every app open; payment plan completion Archive action** |
-| **2.9.22** | **Sep 10, 2026** | **Pre-defense polish: all hardcoded 2.9.11 version strings updated to 2.9.22; What's New screen updated; income-too-low alert suppressed for student accounts; about screen version corrected** |
+| 2.9.21 | Sep 10, 2026 | 9 debug-log bugs fixed: AI fallback persists across restarts; FHS Lightweight mode component mismatch; mode-switch score notice; velocity alert guard; recurring card casing; wallet quests filter; daily briefing date-write; exchange rates background refresh; payment plan Archive action |
+| 2.9.22 | Sep 10, 2026 | Pre-defense polish: version strings, What's New screen, student account income alert suppression |
+| 2.9.23–2.9.24 | Sep 10, 2026 | **Critical AI fix**: `gemini-3.1-flash-lite` shut down by Google — replaced with `gemini-3.5-flash-lite` (GA stable). Fresh Groq + Gemini keys. 404 now triggers autoFallback(). Key fingerprint detection resets model on new build. |
+| 2.9.25 | Sep 10, 2026 | 8-provider Groq fallback chain; daily limit 60→150; LLMService OCR also uses autoFallback(); FAB removed from nav (was covering AI chat keyboard) |
+| 2.9.26 | Sep 10, 2026 | Manual mode overhaul: Log choice sheet (AI/Manual/Batch/Voice), BatchManualEntryScreen (8 expenses at once), AI-limit banner with shortcuts, skipAiAnalysis param |
+| 2.9.27–2.9.29 | Sep 10, 2026 | Groq account API key issue: account tier only has openai/gpt-oss-120b, qwen/qwen3.6-27b, qwen/qwen3.8-27b, groq/compound, groq/compound-mini (llama-* NOT available on this account). Model IDs updated to match verified available models. |
+| 2.9.30 | Sep 10, 2026 | 402 payment_required now triggers autoFallback(); FAB overlay fix; FMS nav index corrected (4→3) |
+| 2.9.31 | Sep 10, 2026 | Audit fixes: wallet transfer SQLite transaction; recurring candidate case-insensitive lookup; What's New v2.9.30; scrollToFMS timing fix; analytics AI errors clean messages; dead code removal; batch entry controller dispose |
+| 2.9.32 | Sep 10, 2026 | Smart autocomplete: item name typeahead from past entries, price autofill, price memory in manual form, shop name autocomplete, `getSuggestionsForItem()` + `getDistinctShopNames()` in DBService |
+| 2.9.33 | Sep 10, 2026 | Filipino item catalog (150+ items), catalog browse sheet, smart amount calculator (3×85=255), date quick-pick chips, duplicate warning before save |
+| 2.9.34 | Sep 10, 2026 | Merchant normalization: MerchantNormalizationService (80+ aliases, Steam→Steam fix), Merchant Merge screen, auto-normalize on save+import, round-trip fare, Spending by Merchant analytics |
+| **2.9.35** | **Sep 10, 2026** | **10 new features: Bill splitter, Log Due Bills checklist, paste-to-parse, category budget progress bar, gap recovery → BatchEntry, no-spend day badges, budget envelope view on analytics, price trend chart on edit screen, Paluwagan tracker, recurring_helper nextDate() public** |
 
 ---
 
-*SmartSpend v2.9.22 — Lucid Frame*
+*SmartSpend v2.9.35 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
 *Last updated: September 10, 2026*
