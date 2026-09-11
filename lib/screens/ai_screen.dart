@@ -44,6 +44,10 @@ class _AIScreenState extends State<AIScreen> {
   final List<Map<String, String>> _messages = [];
   bool _sending = false;
   bool _contextLoaded = false;
+  // ── CLIPBOARD NUDGE ──────────────────────────────────────────────────────
+  // Detects GCash/bank transaction text in clipboard on screen open
+  String? _clipboardNudgeText; // null = no nudge shown
+  bool _clipboardNudgeDismissed = false;
   bool _historyRestored =
       false; // prevents double-restoration on silent refreshes
   bool _isListening = false;
@@ -57,6 +61,7 @@ class _AIScreenState extends State<AIScreen> {
   void initState() {
     super.initState();
     _loadContext();
+    _checkClipboardForTransaction(); // nudge if GCash/bank text detected
     // Silently refresh AI context when data changes elsewhere (debounced)
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
@@ -95,6 +100,42 @@ class _AIScreenState extends State<AIScreen> {
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  /// Checks clipboard for GCash/bank transaction text on screen open.
+  /// If detected, shows a non-intrusive banner offering to paste it into chat.
+  Future<void> _checkClipboardForTransaction() async {
+    try {
+      final data = await Clipboard.getData(Clipboard.kTextPlain);
+      final text = data?.text?.trim() ?? '';
+      if (text.isEmpty || text.length > 500) return;
+      // Detect common GCash/bank SMS/notification patterns
+      final lower = text.toLowerCase();
+      final isFinancial = (lower.contains('gcash') ||
+              lower.contains('bpi') ||
+              lower.contains('bdo') ||
+              lower.contains('maya') ||
+              lower.contains('metrobank') ||
+              lower.contains('unionbank') ||
+              lower.contains('seabank') ||
+              lower.contains('gotyme') ||
+              lower.contains('tonik') ||
+              lower.contains('paid') ||
+              lower.contains('sent') ||
+              lower.contains('received') ||
+              lower.contains('transferred') ||
+              lower.contains('transaction') ||
+              lower.contains('deducted')) &&
+          RegExp(r'\d{2,}').hasMatch(text); // has a number (likely amount)
+
+      if (isFinancial && mounted) {
+        setState(() {
+          _clipboardNudgeText =
+              text.length > 80 ? '${text.substring(0, 77)}...' : text;
+          _clipboardNudgeDismissed = false;
+        });
+      }
+    } catch (_) {} // clipboard access is best-effort
   }
 
   Future<void> _loadContext({bool silent = false}) async {
@@ -2472,6 +2513,53 @@ class _AIScreenState extends State<AIScreen> {
               );
             },
           ),
+          // ── CLIPBOARD NUDGE BANNER ────────────────────────────────────────
+          if (_clipboardNudgeText != null && !_clipboardNudgeDismissed)
+            Container(
+              margin: const EdgeInsets.fromLTRB(12, 4, 12, 0),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.teal.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.teal.withValues(alpha: 0.3)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.sms_outlined, size: 16, color: Colors.teal),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "📋 GCash/bank text detected — paste it to log?",
+                      style: TextStyle(fontSize: 12, color: Colors.teal[800]),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  TextButton(
+                    onPressed: () {
+                      _controller.text = _clipboardNudgeText ?? '';
+                      setState(() => _clipboardNudgeDismissed = true);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      backgroundColor: Colors.teal.withValues(alpha: 0.12),
+                    ),
+                    child: const Text("Paste",
+                        style: TextStyle(
+                            color: Colors.teal,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 14, color: Colors.teal),
+                    onPressed: () =>
+                        setState(() => _clipboardNudgeDismissed = true),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            ),
           Expanded(
             child: _messages.isEmpty && !_contextLoaded
                 ? const Center(child: CircularProgressIndicator())
