@@ -108,10 +108,25 @@ class LLMService {
     return data['choices'][0]['message']['content'] as String;
   }
 
+  /// Redact Philippine PII from text before sending to cloud LLM (RA 10173).
+  /// Removes mobile numbers, reference numbers, OTPs, and bank account fragments.
+  static String _redactPii(String text) {
+    text = text.replaceAll(RegExp(r'\+?63[-\s]?9\d{2}[-\s]?\d{3}[-\s]?\d{4}'),
+        '[REDACTED_MOBILE]');
+    text = text.replaceAll(
+        RegExp(r'\b09\d{2}[-\s]?\d{3}[-\s]?\d{4}\b'), '[REDACTED_MOBILE]');
+    text = text.replaceAll(RegExp(r'\b\d{12,18}\b'), '[REDACTED_REF]');
+    text = text.replaceAll(
+        RegExp(r'\b\d{2,4}-\d{5,9}-\d{1,2}\b'), '[REDACTED_ACCOUNT]');
+    return text;
+  }
+
   /// Parse any user input into structured expense data.
   static Future<Map<String, dynamic>> parseExpense(String input) async {
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final now = DateFormat('HH:mm').format(DateTime.now());
+    // Redact PII from OCR/paste text before sending to cloud LLM (RA 10173)
+    final sanitized = _redactPii(input);
 
     const system =
         '''You are a financial data parser for a Filipino expense tracking app.
@@ -152,7 +167,7 @@ Want vs Need rules (is_want field):
 - is_want: false (Need) for essentials: groceries, medicine, transport fare, bills, tuition, rent, utilities, basic meals
 - When in doubt, lean toward false (Need)''';
 
-    final user = '''Extract expense from: "$input"
+    final user = '''Extract expense from: "$sanitized"
 Today's date: $today, current time: $now
 
 Return ONLY this JSON:
@@ -182,7 +197,7 @@ Return ONLY this JSON:
       final parsed = jsonDecode(jsonMatch.group(0)!) as Map<String, dynamic>;
 
       return {
-        "item_name": parsed["item_name"] ?? input,
+        "item_name": parsed["item_name"] ?? sanitized,
         "category": _normalizeCategory(parsed["category"] ?? "Others"),
         "amount": (parsed["amount"] as num?)?.toDouble() ?? 0.0,
         "date": parsed["date"] ?? today,
