@@ -2521,10 +2521,123 @@ class _DashboardState extends State<Dashboard> {
                   _showRoundTripDialog(context);
                 },
               ),
+              const Divider(height: 16),
+              _DoneSpendingToggle(),
               const SizedBox(height: 4),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Slim bottom sheet with the 6 home-section toggles — accessible via the
+  /// tune icon in the home header so users don't need to navigate to Settings.
+  void _showHomeCustomizeSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheet) {
+          void toggle(String key, bool current) async {
+            final next = !current;
+            await DBService.setSetting(key, next ? 'true' : 'false');
+            fireEvent(AppEvent.incomeChanged);
+            if (ctx.mounted) setSheet(() {});
+            // Also refresh the dashboard
+            _loadData();
+          }
+
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 36,
+                      height: 4,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Customize Home",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15)),
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: const Text("Done"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  ...[
+                    (
+                      'show_subscriptions',
+                      Icons.autorenew_outlined,
+                      'Subscription summary'
+                    ),
+                    (
+                      'show_quick_log',
+                      Icons.flash_on_outlined,
+                      'Quick-log chips'
+                    ),
+                    (
+                      'show_badges',
+                      Icons.emoji_events_outlined,
+                      'Achievement badges'
+                    ),
+                    (
+                      'show_mood_home',
+                      Icons.emoji_emotions_outlined,
+                      'Daily mood check-in'
+                    ),
+                    (
+                      'show_forecast',
+                      Icons.waterfall_chart_outlined,
+                      'Cash flow forecast'
+                    ),
+                    (
+                      'show_prediction',
+                      Icons.psychology_outlined,
+                      'Behavioral prediction'
+                    ),
+                  ].map((item) {
+                    final key = item.$1;
+                    final icon = item.$2;
+                    final label = item.$3;
+                    return FutureBuilder<String?>(
+                      future: DBService.getSetting(key),
+                      builder: (_, snap) {
+                        final isOn = snap.data != 'false';
+                        return SwitchListTile(
+                          secondary:
+                              Icon(icon, size: 20, color: Colors.grey[600]),
+                          title:
+                              Text(label, style: const TextStyle(fontSize: 13)),
+                          value: isOn,
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 0),
+                          dense: true,
+                          onChanged: (_) => toggle(key, isOn),
+                        );
+                      },
+                    );
+                  }),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -3745,21 +3858,41 @@ class _DashboardState extends State<Dashboard> {
                   Text("$greeting 👋",
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.w500)),
-                  // Quick log button — shows options: AI chat, manual form, batch, voice
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.add, size: 18),
-                    label: const Text("Log Expense",
-                        style: TextStyle(fontSize: 12)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 8),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      elevation: 0,
-                    ),
-                    onPressed: () => _showLogExpenseSheetLocal(context),
+                  Row(
+                    children: [
+                      // Customize home sections shortcut
+                      IconButton(
+                        icon: Icon(Icons.tune_outlined,
+                            size: 20,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.5)),
+                        tooltip: "Customize home",
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () => _showHomeCustomizeSheet(context),
+                      ),
+                      const SizedBox(width: 8),
+                      // Quick log button
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text("Log Expense",
+                            style: TextStyle(fontSize: 12)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          elevation: 0,
+                        ),
+                        onPressed: () => _showLogExpenseSheetLocal(context),
+                      ),
+                    ],
                   ),
                 ],
               ),

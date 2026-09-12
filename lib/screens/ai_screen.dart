@@ -21,6 +21,7 @@ import '../services/debug_service.dart';
 import '../services/undo_service.dart';
 import '../services/behavioral_feedback_service.dart';
 import '../services/app_config.dart';
+import '../main.dart' show themeService;
 import '../models/expense.dart';
 import '../widgets/info_button.dart';
 import 'chat_history_screen.dart';
@@ -2744,9 +2745,13 @@ class _AIScreenState extends State<AIScreen> {
                               onLongPress: () =>
                                   _showMessageMenu(context, text, isUser),
                               child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 10),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: themeService.compactMode ? 2 : 4),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        themeService.compactMode ? 10 : 14,
+                                    vertical:
+                                        themeService.compactMode ? 7 : 10),
                                 constraints: BoxConstraints(
                                     maxWidth:
                                         MediaQuery.of(context).size.width *

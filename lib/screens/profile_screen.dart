@@ -1020,87 +1020,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return labels[type] ?? type;
   }
 
-  void _showThemePicker() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("App Theme"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: AppTheme.values.map((theme) {
-            final isSelected = themeService.appTheme == theme;
-            return ListTile(
-              dense: true,
-              leading: CircleAvatar(
-                radius: 14,
-                backgroundColor: theme.primaryColor,
-                child: isSelected
-                    ? const Icon(Icons.check, color: Colors.white, size: 16)
-                    : null,
-              ),
-              title: Text(theme.label),
-              onTap: () async {
-                await themeService.setTheme(theme);
-                if (mounted) {
-                  Navigator.pop(context);
-                  setState(() {});
-                }
-              },
-            );
-          }).toList(),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")),
-        ],
-      ),
-    );
-  }
-
-  void _showTextSizePicker() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Text Size"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            (1.0, 'Normal', 'Default text size'),
-            (1.15, 'Large', 'Easier to read'),
-            (1.3, 'Extra Large', 'Best for accessibility'),
-          ].map((option) {
-            final isSelected = themeService.textScale == option.$1;
-            return ListTile(
-              dense: true,
-              leading: Icon(
-                isSelected
-                    ? Icons.radio_button_checked
-                    : Icons.radio_button_unchecked,
-                color:
-                    isSelected ? Theme.of(context).colorScheme.primary : null,
-              ),
-              title: Text(option.$2),
-              subtitle: Text(option.$3, style: const TextStyle(fontSize: 11)),
-              onTap: () async {
-                await themeService.setTextScale(option.$1);
-                if (mounted) {
-                  Navigator.pop(context);
-                  setState(() {});
-                }
-              },
-            );
-          }).toList(),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")),
-        ],
-      ),
-    );
-  }
-
   void _showAccountTypeDialog() {
     final types = [
       ('employed', Icons.work_outline, 'Employed', 'Regular salary or wages'),
@@ -1992,46 +1911,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const Divider(height: 1),
                           ListTile(
-                            leading: const Icon(Icons.dark_mode_outlined),
-                            title: const Text("Dark Mode"),
-                            trailing: Switch(
-                              value: themeService.isDark,
-                              onChanged: (_) => themeService.toggle(),
-                            ),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
                             leading: Icon(Icons.palette_outlined,
                                 color: themeService.primaryColor),
-                            title: const Text("App Theme"),
-                            subtitle: Text(themeService.appTheme.label,
+                            title: const Text("Appearance"),
+                            subtitle: Text(
+                                "${themeService.isDark ? 'Dark' : 'Light'} · ${themeService.appTheme.label} · ${themeService.textScaleLabel}",
                                 style: const TextStyle(fontSize: 12)),
                             trailing: const Icon(Icons.chevron_right),
-                            onTap: () => _showThemePicker(),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.text_fields_outlined),
-                            title: const Text("Text Size"),
-                            subtitle: Text(themeService.textScaleLabel,
-                                style: const TextStyle(fontSize: 12)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => _showTextSizePicker(),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.contrast),
-                            title: const Text("High Contrast"),
-                            subtitle: const Text(
-                                "Black & white for maximum readability",
-                                style: TextStyle(fontSize: 12)),
-                            trailing: Switch(
-                              value: themeService.highContrast,
-                              onChanged: (v) async {
-                                await themeService.setHighContrast(v);
-                                if (mounted) setState(() {});
-                              },
-                            ),
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const SettingsScreen())),
                           ),
                           const Divider(height: 1),
                           ListTile(

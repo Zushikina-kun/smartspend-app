@@ -8,6 +8,11 @@ enum AppTheme {
   green,
   purple,
   orange,
+  crimson,
+  navy,
+  teal,
+  rose,
+  charcoal,
 }
 
 extension AppThemeExtension on AppTheme {
@@ -23,6 +28,16 @@ extension AppThemeExtension on AppTheme {
         return 'Royal Purple';
       case AppTheme.orange:
         return 'Sunset Orange';
+      case AppTheme.crimson:
+        return 'Crimson Red';
+      case AppTheme.navy:
+        return 'Deep Navy';
+      case AppTheme.teal:
+        return 'Midnight Teal';
+      case AppTheme.rose:
+        return 'Rose Pink';
+      case AppTheme.charcoal:
+        return 'Charcoal';
     }
   }
 
@@ -38,6 +53,16 @@ extension AppThemeExtension on AppTheme {
         return const Color(0xFF6B21A8);
       case AppTheme.orange:
         return const Color(0xFFE65100);
+      case AppTheme.crimson:
+        return const Color(0xFFBE0000);
+      case AppTheme.navy:
+        return const Color(0xFF1A237E);
+      case AppTheme.teal:
+        return const Color(0xFF004D40);
+      case AppTheme.rose:
+        return const Color(0xFFE91E8C);
+      case AppTheme.charcoal:
+        return const Color(0xFF37474F);
     }
   }
 
@@ -53,6 +78,16 @@ extension AppThemeExtension on AppTheme {
         return const Color(0xFF6B21A8);
       case AppTheme.orange:
         return const Color(0xFFE65100);
+      case AppTheme.crimson:
+        return const Color(0xFFBE0000);
+      case AppTheme.navy:
+        return const Color(0xFF1A237E);
+      case AppTheme.teal:
+        return const Color(0xFF00695C);
+      case AppTheme.rose:
+        return const Color(0xFFE91E8C);
+      case AppTheme.charcoal:
+        return const Color(0xFF546E7A);
     }
   }
 
@@ -68,6 +103,16 @@ extension AppThemeExtension on AppTheme {
         return 'purple';
       case AppTheme.orange:
         return 'orange';
+      case AppTheme.crimson:
+        return 'crimson';
+      case AppTheme.navy:
+        return 'navy';
+      case AppTheme.teal:
+        return 'teal';
+      case AppTheme.rose:
+        return 'rose';
+      case AppTheme.charcoal:
+        return 'charcoal';
     }
   }
 
@@ -81,6 +126,16 @@ extension AppThemeExtension on AppTheme {
         return AppTheme.purple;
       case 'orange':
         return AppTheme.orange;
+      case 'crimson':
+        return AppTheme.crimson;
+      case 'navy':
+        return AppTheme.navy;
+      case 'teal':
+        return AppTheme.teal;
+      case 'rose':
+        return AppTheme.rose;
+      case 'charcoal':
+        return AppTheme.charcoal;
       default:
         return AppTheme.blue;
     }
