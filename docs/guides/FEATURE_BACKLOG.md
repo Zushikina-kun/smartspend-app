@@ -1,5 +1,5 @@
 # SmartSpend — Master Feature Backlog & Planning
-**Version:** 2.9.41 | **Updated:** September 12, 2026
+**Version:** 2.9.47 | **Updated:** September 12, 2026
 **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 
 > **Single consolidated planning document.** Fuses inputs from:
@@ -22,7 +22,7 @@ Use these everywhere. Many docs are stale.
 
 | Metric | v2.9.41 value |
 |--------|--------------|
-| Version string | 2.9.41 |
+$12.9.47 |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
@@ -40,7 +40,7 @@ Use these everywhere. Many docs are stale.
 | Filipino item catalog | 150+ items |
 | Log choice sheet options | 7 |
 | Currencies | 57 |
-| Hub tiles | 22 |
+$126 |
 | PH banks in DB | 20 banks + 5 e-wallets |
 | Daily AI message limit | **150** (raised from 60) |
 | Paluwagan | ✅ **Implemented** v2.9.35 (update manuscript) |
@@ -81,9 +81,9 @@ Use these everywhere. Many docs are stale.
 
 | # | Feature | Priority | Est. effort |
 |---|---------|----------|-------------|
-| 2 | "Day in Review" end-of-day card | 🔥 High | ~2h |
-| 10 | Savings rate trend chart (6-month line) | 🔥 High | ~2h |
-| 11 | Quick budget slider (long-press) | 🔥 High | ~1h |
+| 2 | "Day in Review" end-of-day card | ✅ **Implemented v2.9.36, verified v2.9.45** | — |
+| 10 | Savings rate trend chart (6-month line) | ✅ **Implemented v2.9.45** | — |
+| 11 | Quick budget slider (long-press) | ✅ **Implemented v2.9.45** | — |
 | 13 | Income prediction / Payday countdown card | 🟡 | ~3h |
 | 14 | AI chat history export | 🟡 | ~3h |
 
@@ -481,10 +481,10 @@ Based on research and internal audit, these items from the previous backlog need
 
 | Feature | Effort | Notes |
 |---------|--------|-------|
-| Verify Day-in-Review card works after 6pm | 30 min | PROJECT_STATUS says added v2.9.36; demo script references it; confirm in actual runtime |
-| Savings rate trend chart (#10) | ~2h | 6-month % line chart; fl_chart in use; data in DB |
-| Quick budget slider (#11) | ~1h | Long-press → Slider; fixed ₱ mode only |
-| Analytics AI cache fallback (#8 partial) | ~1h | Mirror what Home screen already does |
+| Verify Day-in-Review card works after 6pm | ✅ Done | PROJECT_STATUS says added v2.9.36; demo script references it; confirm in actual runtime |
+| Savings rate trend chart (#10) | ✅ Done — v2.9.45 | 6-month % line chart; fl_chart in use; data in DB |
+| Quick budget slider (#11) | ✅ Done — v2.9.45 | Long-press → Slider; fixed ₱ mode only |
+| Analytics AI cache fallback (#8 partial) | ✅ Done — v2.9.45 | Mirror what Home screen already does |
 
 ### 🟠 Post-Defense Priority 1 (before final defense)
 
@@ -1068,3 +1068,97 @@ Once iOS is live, the competitive position improves significantly:
 | BunnyWise | ✅ (launching) | ❌ (TBD) | |
 
 An iOS version directly outcompetes Alkansya AI on their own platform.
+
+---
+
+## Part 13 — UI / Customization / Settings Remaining Items
+
+*Found during v2.9.44 settings audit — September 12, 2026.*
+
+### ✅ Already done in v2.9.44
+- APPEARANCE section in Settings: Dark Mode, App Theme (5 colors), Text Size, High Contrast, Compact Mode, Display Currency nav
+- SECURITY section in Settings: App Lock tile with live state
+- Spending Limits nav tile in Settings BEHAVIOR
+- Notification permission hint banner in Settings NOTIFICATIONS
+- compact_mode dual-store fixed (ThemeService = single source)
+- Hub tile renamed "Currency Exchange" → "Display Currency"
+
+---
+
+### 13A — Remove duplicate appearance settings from Profile screen (Priority: 🔥 Quick win)
+**Problem:** Dark Mode toggle, App Theme picker, Text Size picker, High Contrast toggle all exist in **both** the Profile screen settings card AND the new Settings APPEARANCE section. Users will find them in Settings now and not realize Profile also has them, or vice versa.
+
+**Fix:** Remove the four duplicated items from the Profile settings card (Dark Mode, App Theme, Text Size, High Contrast). Replace with a single "Appearance →" nav tile that opens Settings screen scrolled to APPEARANCE. This makes Profile the place for account/financial data and Settings the place for all app customization.
+
+**Effort:** ~1h | **Risk:** Low — just removing/replacing UI tiles, no logic change
+
+---
+
+### 13B — Home screen "Customize" shortcut (Priority: 🟡 Medium)
+**Problem:** To hide/show home screen sections (subscriptions, forecast, badges, etc.), users must navigate: Profile → App Settings → scroll to HOME SCREEN section. That's 3 taps + a scroll on a long page. Most users won't find it.
+
+**Fix:** Add a small customize icon (⚙ or 🎛) in the home screen's AppBar actions. Tapping it scrolls/navigates directly to the "HOME SCREEN — SHOW/HIDE SECTIONS" part of Settings. Can be done as a direct `Navigator.push` to `SettingsScreen` — or even better, open a slim bottom sheet with just the 6 home-section toggles inline.
+
+**Effort:** ~2h | **Risk:** Low
+
+---
+
+### 13C — Profile settings card cleanup (Priority: 🟡 Medium)
+**Problem:** The Profile screen acts as a "super settings" dumping ground. It currently contains: financial data (avatar, scores, net worth, income) at the top AND a long card list with account type, theme, app lock, spending limits, app settings nav, export, backup, etc. all mixed together. The split is confusing — profile data and app settings share one screen.
+
+**Fix:** Re-organize the Profile card list into clear sections with dividers or headers:
+- **Account** — Account Type, Income settings
+- **Security** — App Lock (can stay here for discoverability), App Settings nav tile
+- **Data** — Export CSV, Backup/Restore, Reset All Data
+- **About** — Financial Health Certificate, Debug Log, Help, About, What's New
+
+Remove duplicate: Dark Mode / App Theme / Text Size / High Contrast → handled by 13A above.
+
+**Effort:** ~2h | **Risk:** Low
+
+---
+
+### 13D — Home screen card reordering (Priority: 🟢 Low)
+**Problem:** Home screen card order is hardcoded. Users can't move the FHS card before the spending card, or put Quick Log chips at the top, etc.
+
+**Fix:** Add a "Reorder cards" mode — long-press the home screen or a dedicated drag handle to enter reorder mode, drag cards up/down, tap Done. Store order in DB as a JSON array of card IDs.
+
+**Effort:** ~2 days | **Risk:** Medium (needs drag-reorder widget + order persistence)
+
+---
+
+### 13E — Additional color themes (Priority: 🟢 Low)
+**Problem:** Only 5 seed colors. Material 3 supports any seed color. Users with strong color preferences (e.g. pink, red, navy) have no option.
+
+**Fix options:**
+- (A) Add 3–5 more preset themes: Crimson Red, Deep Navy, Midnight Teal, Rose Pink
+- (B) Add a custom color picker using a `ColorPicker` package
+
+**Effort:** (A) ~30 min | (B) ~2h | **Risk:** Very low
+
+---
+
+### 13F — Font family option (Priority: 🟢 Low)
+**Problem:** `ThemeService` hardcodes `fontFamily: 'Roboto'`. Some users prefer a rounded or serif font.
+
+**Fix:** Add 2–3 bundled font options to `ThemeService` and a font picker in the APPEARANCE section. Options: Roboto (default), Nunito (rounded, friendlier), DM Sans (modern clean).
+
+**Effort:** ~1h (add font assets + picker UI) | **Risk:** Low
+
+---
+
+### 13G — AI chat compact density option (Priority: 🟢 Low)
+**Problem:** The global Compact Mode reduces list density across all screens but the AI chat message bubbles don't have their own density option. On long conversations, messages can feel spaced out.
+
+**Fix:** Apply `compactMode` from `themeService` to reduce message bubble padding and avatar size in the AI chat list. No new settings needed — just honor the existing compact mode flag in the chat UI.
+
+**Effort:** ~30 min | **Risk:** Very low
+
+---
+
+### 13H — "Done spending today" and spending commitment UX (Priority: 🟢 Low)
+**Problem:** `done_spending_today` is a setting key that exists in the code (checked in add_expense_screen) but there's no visible UI to set/clear it. Users can't consciously commit to "no more spending today".
+
+**Fix:** Add a "Done spending today" toggle to the Daily Summary card or as a quick action in the log choice sheet. When toggled ON, logging an expense shows the "⚠️ You said you were done spending today" nudge. Clear automatically at midnight.
+
+**Effort:** ~1h | **Risk:** Low

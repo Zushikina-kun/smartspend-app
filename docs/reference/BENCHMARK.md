@@ -1,6 +1,6 @@
 # SmartSpend — Comprehensive App & LLM Benchmark
 ## Competitor Analysis + AI Model Comparison
-**Last Updated:** September 12, 2026 | **Version:** 2.9.41 | **Group:** Lucid Frame
+**Last Updated:** September 12, 2026 | **Version:** 2.9.47 | **Group:** Lucid Frame
 **Sources:** PCMag 2026, NerdWallet 2026, CNBC 2026, AIMUltiple 2026, Artificial Analysis 2026, Gemini API Docs, Groq/Cerebras benchmarks, micro1.ai REALM benchmark, juaninvestor.com, BudgetPH, Alkansya AI, Agila, Sentimo, PISO Budget Tracker, BunnyWise, Lista, Kibo, Monarch Money What's New 2026, Rocket Money Rowan (July 2026)
 
 > Content was paraphrased and summarized for compliance with licensing restrictions.
@@ -70,7 +70,7 @@ Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, 
 | GCash / Maya tracking | ✅ Wallet balance | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Import | ❌ | ❌ | ❌ |
 | SSS / PhilHealth / Pag-IBIG | ✅ Tracker + AI | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Records | ❌ | ❌ | ❌ |
 | PH banks database | ✅ 20 banks | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Paluwagan tracker | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ | ❌ |
+| Paluwagan tracker | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ | ❌ |
 | BIR / tax calculator | ✅ TRAIN Law | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
 | **CONNECTIVITY & SECURITY** | | | | | | | | | | | | | | |

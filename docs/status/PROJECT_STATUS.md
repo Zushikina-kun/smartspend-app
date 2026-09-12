@@ -1,11 +1,11 @@
 # SmartSpend — Project Status
-**Version:** 2.9.42 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.47 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** September 12, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
 > For feature backlog and planning see `docs/guides/FEATURE_BACKLOG.md`
-> For Claude AI handoff see `docs/manuscript/reseaches/kiro-to-claude-handoff-2026-09-12.md`
+> For Claude AI handoff see `docs/manuscript/reseaches/kiro-to-claude-handoff-2026-09-12-v2.md`
 
 ---
 
@@ -15,23 +15,28 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v2.9.42** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.42-arm64-v8a.apk` from GitHub releases |
-| Verify About screen shows **"Version 2.9.42"** | Brix | ❌ | Should be automatic now — kAppVersion constant |
+| Install **v2.9.47** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.47-arm64-v8a.apk` from GitHub releases |
+| Verify About screen shows **"Version 2.9.47"** | Brix | ❌ | Should be automatic now — kAppVersion constant |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
 | Create **Figure 1.1** — PH financial literacy bar chart (BSP CFIS 2025 data) | Cyrille | ❌ | Key stats: 50% adults have formal accounts; 74% literacy rate |
 | Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output; use the table in CAPSTONE_REFERENCE.md §3 |
 | Create **Figure 2.1** — SUS score interpretation chart | Cyrille | ❌ | Bangor et al. (2009) adjective scale; target ≥80 = Good |
 | Create **Figure 2.2** — Kanban board / development methodology diagram | Cyrille | ❌ | Agile Kanban sprints; show Backlog → In Progress → Done |
 | Fill in **Compliance Matrix** | All | ❌ | `docs/capstone/SmartSpend_Master_Bug_Tracker.docx` |
-| Move **Paluwagan** from "Future Work" to "Implemented" in manuscript | Cyrille | ❌ | Implemented v2.9.35 — update Ch.4 Recommendations section |
-| Update manuscript **model list** (remove LLaMA, add GPT-OSS/Qwen) | Cyrille | ❌ | See kiro-to-claude-handoff for correct chain |
+| Move **Paluwagan** from "Future Work" to "Implemented" in manuscript | Cyrille | ✅ | Implemented v2.9.35 |
+| Update manuscript **model list** (remove LLaMA, add GPT-OSS/Qwen) | Cyrille | ❌ | See kiro-to-claude-handoff-v2 for correct chain |
 | Update manuscript **FHS equations** with v2.9.42 changes | Cyrille | ❌ | Overspend nuance + Category Balance exemptions + Decay exemptions |
 | Update manuscript **agentic action count** to 34 | Cyrille | ❌ | Was 31 in some manuscript sections |
 | Update manuscript **badge count** to 25 | Cyrille | ❌ | Was 23 in some sections |
 | Update manuscript **daily limit** to 150 | Cyrille | ❌ | Was 60 in some sections |
+| Update manuscript **color theme count** to 10 | Cyrille | ❌ | 5 new themes added v2.9.45 |
+| Update manuscript **hub tile count** to 26 | Cyrille | ❌ | Expanded from 22 in v2.9.44 |
+| Add **savings rate trend chart** to Implemented | Cyrille | ❌ | Added v2.9.45 — Analytics section |
+| Add **quick budget slider** to Implemented | Cyrille | ❌ | Added v2.9.45 — Budget screen long-press |
+| Add **analytics AI cache fallback** to Implemented | Cyrille | ❌ | Added v2.9.45 — both Advice + Monthly Summary |
 | Add **RA 10173 PII redaction** section to manuscript (Ch.2 or Ch.3) | Cyrille | ❌ | Implemented v2.9.42 — mobile numbers stripped before LLM |
-| Add **Agila, PISO, BunnyWise** to competitor table in manuscript | Cyrille | ❌ | See kiro-to-claude-handoff §13 for details |
-| Rehearse demo flow with v2.9.42 | All | ❌ | See demo script below |
+| Add **Agila, PISO, BunnyWise** to competitor table in manuscript | Cyrille | ❌ | See kiro-to-claude-handoff-v2 §13 for details |
+| Rehearse demo flow with v2.9.47 | All | ❌ | See demo script below |
 | Charge demo phone to 100% the night before — do NOT open the app | Brix | ❌ | Cold start required for demo |
 
 ### 🟡 After pre-final defense (before final)
@@ -50,11 +55,11 @@
 
 ---
 
-## DEMO SCRIPT — Pre-Final Defense (v2.9.42)
+## DEMO SCRIPT — Pre-Final Defense (v2.9.47)
 
 ### Setup (night before)
-1. Download `SmartSpend-v2.9.42-arm64-v8a.apk` from GitHub releases
-2. Install on demo phone; verify About screen shows **"Version 2.9.42"**
+1. Download `SmartSpend-v2.9.47-arm64-v8a.apk` from GitHub releases
+2. Install on demo phone; verify About screen shows **"Version 2.9.47"**
 3. Charge phone to 100%, do NOT open the app again until demo
 4. Have WiFi ready (AI needs internet for first message)
 
@@ -72,7 +77,7 @@
 6. **Hub** — scroll through: Goals, Debts, Recurring, **Paluwagan** (highlight as Filipino-specific), **Log Due Bills**, **Merchant Cleanup**
 7. **Profile** — show FMS score, FHS breakdown with tips, achievement badges (25), Insurance Tracker
 
-### Panel Q&A — Updated Answers (v2.9.42)
+### Panel Q&A — Updated Answers (v2.9.47)
 
 | Question | Answer |
 |---|---|
@@ -98,7 +103,7 @@
 | Week 1 | Project Reorientation | ✅ Done |
 | Week 2 | Chapter 3 | ⚠️ Draft exists — needs figures + model/FHS corrections |
 | Week 3 | Chapter 4 | ⚠️ Draft exists — needs survey data |
-| Week 4 | Final software check | ✅ Done (v2.9.42 is stable) |
+| Week 4 | Final software check | ✅ Done (v2.9.47 is stable) |
 | **Week 5–6** | **Pre-Final Defense** | 🔴 **Next week** |
 | Week 7 | SUS survey (30 respondents) + Play Store closed testing start | ❌ Pending |
 | Week 8–10 | Complete manuscript + Play Store submission | ❌ Pending |
@@ -107,7 +112,7 @@
 
 ---
 
-## APP STATUS — v2.9.42 (Current — Defense Build)
+## APP STATUS — v2.9.47 (Current — Defense Build)
 
 ### AI System
 - **Primary model**: Gemini 3.5 Flash-Lite (GA stable — migrated from 3.1 on Sep 10, 2026 due to 404 errors in production)
@@ -116,34 +121,37 @@
 - **Daily limit**: 150 messages
 - **Language**: English-default; switches to Filipino only when user writes multiple full Filipino sentences
 
-### Feature Count (v2.9.42)
+### Feature Count (v2.9.47)
 | Metric | Count |
 |--------|-------|
 | Agentic AI actions | **34** |
 | Input modalities | 7 |
-| Hub tiles | 22 |
+| Hub tiles | **26** |
 | Achievement badges | **25** |
+| Color themes | **10** |
 | Daily quests pool | 10 |
 | Batch screenshot platforms | 40+ |
 | Filipino item catalog | 150+ |
 | Log choice sheet options | 7 |
 | Currencies | 57 |
 | SQLite tables | 20 |
+| Quick Access grid shortcuts | 9 |
 
-### Key Features Added Since v2.9.37 (defense-relevant)
+### Key Features Added Since v2.9.42 (defense-relevant)
 | Feature | Version | Where |
 |---|---|---|
-| AI language fix — English default | 2.9.38 | AI chat |
-| Multi-item expense logging fixed | 2.9.38 | AI chat |
-| Cross-screen auto-refresh after AI actions | 2.9.38 | All screens |
-| Chat error metadata persists after restart | 2.9.38 | AI chat |
-| Duplicate guard fixed (same-day repeats allowed) | 2.9.38 | AI chat |
-| Debug log — comprehensive new sections | 2.9.40 | Profile → Debug Log |
-| About screen version from constant | 2.9.41 | About screen |
-| FHS Overspend Control — one-off purchase nuance | 2.9.39 | Score engine |
-| FHS Category Balance — exempts Bills/Health/Education | 2.9.42 | Score engine |
-| FHS Warning Decay — skips essential category overspend | 2.9.42 | Score engine |
-| RA 10173 PII redaction before LLM | 2.9.42 | AI pipeline |
+| Savings rate trend chart (6-month line) | 2.9.45 | Analytics → before Daily Spending Trend |
+| Quick budget slider (long-press) | 2.9.45 | Budget screen |
+| Analytics AI cache fallback | 2.9.45 | Analytics → Advice + Monthly Summary cards |
+| Day-in-Review card (verified) | 2.9.45 | Home screen → appears after 18:00 |
+| 5 new color themes | 2.9.45 | Settings → Appearance → App theme |
+| Done Spending toggle in log sheet | 2.9.45 | Home → Log Expense → bottom |
+| Home section customize shortcut | 2.9.45 | Home header → tune icon |
+| Profile gradient header card | 2.9.46 | Profile screen |
+| Quick Access grid redesign (9 tiles, soft shadow) | 2.9.46 | Home screen |
+| Settings grouped section cards | 2.9.46 | Settings screen |
+| Hub search bar + 4 category groups | 2.9.46 | Quick Access hub |
+| Full-app soft-UI card polish (30 files) | 2.9.47 | All screens |
 
 ---
 
@@ -176,23 +184,27 @@ The following corrections are NOT yet applied in the manuscript Google Doc. Appl
 
 | # | What to fix | Where in manuscript | Detail |
 |---|-------------|---------------------|--------|
-| 1 | Version → 2.9.42 | All headers | |
+| 1 | Version → 2.9.47 | All headers | |
 | 2 | Primary model → Gemini 3.5 Flash-Lite | Ch.2/3 AI section | Not 3.1, not LLaMA |
 | 3 | Remove LLaMA from fallback chain | Ch.2/3 LLM table | Retired on Groq Feb–Aug 2026 |
 | 4 | 34 agentic actions (not 31) | All mentions | |
 | 5 | 25 badges (not 23) | All mentions | |
 | 6 | 150 messages/day (not 60) | All mentions | |
 | 7 | 8 providers (not 5 or 6) | All mentions | |
-| 8 | Paluwagan → Implemented | Ch.4 Recommendations | Remove from Future Work |
-| 9 | FHS = Prototype Observed FHI (not CFPB-validated) | Ch.1/3 FHS section | Grounded in CBA-MI + UNSGSA |
-| 10 | Remove "32% overspending" claim | Ch.1 | Commercial stat, not peer-reviewed |
-| 11 | Remove "22% gamification boost" claim | Ch.1 | Same |
-| 12 | Remove "$133/month subscription" claim | Ch.1 | US market, not PH |
-| 13 | Soften "first/only" exclusivity claims | Ch.1 | "novel integrated bundle" |
-| 14 | FHS Overspend Control formula updated | Ch.3 | Add soft/hard penalty explanation |
-| 15 | FHS Category Balance exempts Bills/Health/Education | Ch.3 | New in v2.9.42 |
-| 16 | FHS Warning Decay: only discretionary categories | Ch.3 | New in v2.9.42 |
-| 17 | Add RA 10173 PII redaction | Ch.2 Security section | Mobile numbers redacted before LLM |
-| 18 | Add Agila as competitor | Ch.2 competitor table | Android + iOS; business profile strength |
-| 19 | Add PISO Budget Tracker as competitor | Ch.2 competitor table | Offline-first, Filipino-made |
-| 20 | Adviser = Ellen F. Mangaoang MIT | Title page | Verzola = Capstone 1 only |
+| 8 | 10 color themes (not 5) | All mentions | 5 new themes added v2.9.45 |
+| 9 | 26 Hub tiles (not 22) | All mentions | Expanded v2.9.44 |
+| 10 | Paluwagan → Implemented | Ch.4 Recommendations | Remove from Future Work |
+| 11 | Savings rate chart → Implemented | Ch.4 Recommendations | Added v2.9.45 |
+| 12 | Quick budget slider → Implemented | Ch.4 Recommendations | Added v2.9.45 |
+| 13 | FHS = Prototype Observed FHI (not CFPB-validated) | Ch.1/3 FHS section | Grounded in CBA-MI + UNSGSA |
+| 14 | Remove "32% overspending" claim | Ch.1 | Commercial stat, not peer-reviewed |
+| 15 | Remove "22% gamification boost" claim | Ch.1 | Same |
+| 16 | Remove "$133/month subscription" claim | Ch.1 | US market, not PH |
+| 17 | Soften "first/only" exclusivity claims | Ch.1 | "novel integrated bundle" |
+| 18 | FHS Overspend Control formula updated | Ch.3 | Add soft/hard penalty explanation |
+| 19 | FHS Category Balance exempts Bills/Health/Education | Ch.3 | New in v2.9.42 |
+| 20 | FHS Warning Decay: only discretionary categories | Ch.3 | New in v2.9.42 |
+| 21 | Add RA 10173 PII redaction | Ch.2 Security section | Mobile numbers redacted before LLM |
+| 22 | Add Agila as competitor | Ch.2 competitor table | Android + iOS; business profile strength |
+| 23 | Add PISO Budget Tracker as competitor | Ch.2 competitor table | Offline-first, Filipino-made |
+| 24 | Adviser = Ellen F. Mangaoang MIT | Title page | Verzola = Capstone 1 only |
