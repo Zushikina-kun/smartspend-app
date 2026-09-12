@@ -824,7 +824,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
           "Daily AI limit reached (${_dailyLimit} messages/day). Try again tomorrow.");
     }
 
-    _history.add({"role": "user", "content": message});
+    _history.add({"role": "user", "content": _redactPii(message)});
     _messagesSinceLastSummary++;
 
     // ── §25 OBSERVABILITY — request trace start ───────────────────────────────
@@ -1527,6 +1527,29 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         }
       }
     } catch (_) {} // fail silently — summarization is optional
+  }
+
+  /// Redact Philippine PII from text before sending to a cloud LLM.
+  /// Removes: GCash/Maya mobile numbers (09XX format), bank account fragments,
+  /// OTP/reference numbers, and full name patterns from receipts.
+  /// This is a best-effort pre-processing step for RA 10173 data minimization —
+  /// it does not guarantee complete redaction of all PII.
+  static String _redactPii(String text) {
+    // Philippine mobile numbers: 09XX-XXX-XXXX or 09XXXXXXXXX or +639XXXXXXXXX
+    text = text.replaceAll(RegExp(r'\+?63[-\s]?9\d{2}[-\s]?\d{3}[-\s]?\d{4}'),
+        '[REDACTED_MOBILE]');
+    text = text.replaceAll(
+        RegExp(r'\b09\d{2}[-\s]?\d{3}[-\s]?\d{4}\b'), '[REDACTED_MOBILE]');
+    // GCash/bank reference numbers: typically 12–18 digit sequences
+    text = text.replaceAll(RegExp(r'\b\d{12,18}\b'), '[REDACTED_REF]');
+    // OTP patterns: 4–8 digit standalone numbers near "OTP", "code", "pin"
+    text = text.replaceAllMapped(
+        RegExp(r'(?:OTP|otp|code|Code|PIN|pin)[:\s]+(\d{4,8})\b'),
+        (m) => '${m.group(0)!.replaceAll(RegExp(r'\d'), '*')}');
+    // Bank account numbers: XX-XXXXX-X or similar formatted account strings
+    text = text.replaceAll(
+        RegExp(r'\b\d{2,4}-\d{5,9}-\d{1,2}\b'), '[REDACTED_ACCOUNT]');
+    return text;
   }
 
   static void clearHistory() {

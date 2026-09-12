@@ -216,27 +216,51 @@ class ScoreService {
     // ── COMPONENT 3: CATEGORY BALANCE (25 pts) ───────────────────────────────
     double comp3 = 25.0;
     String comp3Reason;
+    // Essential fixed-cost categories are excluded from the concentration check.
+    // Rent, tuition, bills, health, and education dominating spend doesn't mean
+    // the user is financially unbalanced — those are legitimate necessities.
+    // Only discretionary categories are checked for over-concentration.
+    const balanceExemptCategories = {
+      'Bills',
+      'Health',
+      'Education',
+    };
     final catTotals = <String, double>{};
     final totalAll = expenses.fold(0.0, (s, e) => s + (e['amount'] as num));
+    // Build totals excluding exempt categories for the balance check
+    double discretionaryTotal = 0;
     for (final e in expenses) {
       final cat = e['category'] as String? ?? 'Others';
       catTotals[cat] = (catTotals[cat] ?? 0) + (e['amount'] as num);
+      if (!balanceExemptCategories.contains(cat)) {
+        discretionaryTotal += (e['amount'] as num).toDouble();
+      }
     }
     if (totalAll > 0 && catTotals.isNotEmpty) {
-      final topEntry =
-          catTotals.entries.reduce((a, b) => a.value > b.value ? a : b);
-      final topRatio = topEntry.value / totalAll;
-      // Full 25 pts at ≤40% concentration; scales to 0 at 100%
-      comp3 = ((1.0 - ((topRatio - 0.4) / 0.6).clamp(0.0, 1.0)) * 25)
-          .clamp(0.0, 25.0);
-      if (topRatio <= 0.4) {
+      // Find the top non-exempt category by its share of discretionary spend
+      final discretionaryCats = catTotals.entries
+          .where((e) => !balanceExemptCategories.contains(e.key))
+          .toList();
+      if (discretionaryCats.isEmpty || discretionaryTotal <= 0) {
+        // All spending is in essential categories — full score, nothing to balance
+        comp3 = 25.0;
         comp3Reason = 'Spending well balanced across categories ✓';
-      } else if (topRatio <= 0.6) {
-        comp3Reason =
-            '${topEntry.key} is ${(topRatio * 100).toStringAsFixed(0)}% of spending — consider diversifying';
       } else {
-        comp3Reason =
-            '${topEntry.key} dominates at ${(topRatio * 100).toStringAsFixed(0)}% — very concentrated';
+        final topEntry =
+            discretionaryCats.reduce((a, b) => a.value > b.value ? a : b);
+        final topRatio = topEntry.value / discretionaryTotal;
+        // Full 25 pts at ≤40% concentration of discretionary spend; scales to 0 at 100%
+        comp3 = ((1.0 - ((topRatio - 0.4) / 0.6).clamp(0.0, 1.0)) * 25)
+            .clamp(0.0, 25.0);
+        if (topRatio <= 0.4) {
+          comp3Reason = 'Spending well balanced across categories ✓';
+        } else if (topRatio <= 0.6) {
+          comp3Reason =
+              '${topEntry.key} is ${(topRatio * 100).toStringAsFixed(0)}% of discretionary spend — consider diversifying';
+        } else {
+          comp3Reason =
+              '${topEntry.key} dominates at ${(topRatio * 100).toStringAsFixed(0)}% of discretionary spend — very concentrated';
+        }
       }
     } else {
       comp3Reason = 'Not enough data yet';
@@ -752,7 +776,13 @@ class ScoreService {
     }
 
     bool anyExceeded = false;
+    // Only trigger decay when a discretionary category (not Bills/Health/Education)
+    // is over budget AND the user kept spending in it. Essential cost overruns
+    // (medical emergency, tuition payment, utility spike) should not be punished
+    // with a score decay — the user had no choice.
+    const decayExemptCategories = {'Bills', 'Health', 'Education'};
     for (final b in budgets) {
+      if (decayExemptCategories.contains(b.category)) continue;
       final spent = catTotals[b.category] ?? 0;
       // Handle percentage-based budgets — use actual calculated amount
       final budgetAmount =
