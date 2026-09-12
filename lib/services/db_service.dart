@@ -520,6 +520,53 @@ class DBService {
         )
       ''');
     } catch (_) {}
+
+    // One-time cleanup: remove pre-fix duplicate expense entries.
+    //
+    // Before v2.9.38 the cross-session duplicate guard was too strict and
+    // allowed the same item to be logged twice — once via AI chat and once
+    // via screenshot import.  The strategy is: for each (item_name, amount,
+    // date) group with exactly 2 rows where one is ai_generated=1 (chat) and
+    // one is ai_generated=1 with notes LIKE 'Imported from%' (screenshot), keep
+    // the imported one and delete the chat-logged duplicate.
+    //
+    // Also rounds any fractional recurring amounts (e.g. ₱68.538...) to 2dp
+    // in the recurring table.
+    try {
+      final dupCleaned = await db.query('settings',
+          where: 'key = ?', whereArgs: ['dup_cleanup_v2938']);
+      if (dupCleaned.isEmpty) {
+        // Find duplicate pairs: same item_name + amount + date, both ai_generated
+        final dups = await db.rawQuery('''
+          SELECT a.id AS chat_id
+          FROM expenses a
+          JOIN expenses b
+            ON LOWER(a.item_name) = LOWER(b.item_name)
+           AND ABS(a.amount - b.amount) < 0.01
+           AND a.date = b.date
+           AND a.id != b.id
+          WHERE a.ai_generated = 1
+            AND (a.notes = 'Logged via AI chat' OR a.notes IS NULL)
+            AND b.ai_generated = 1
+            AND b.notes LIKE 'Imported from%'
+        ''');
+        for (final row in dups) {
+          final chatId = row['chat_id'] as int?;
+          if (chatId != null) {
+            await db.delete('expenses', where: 'id = ?', whereArgs: [chatId]);
+          }
+        }
+        // Round fractional amounts in recurring table (e.g. 68.538461...)
+        await db.execute('''
+          UPDATE recurring
+          SET amount = ROUND(amount, 2)
+          WHERE amount != ROUND(amount, 2)
+        ''');
+        await db.insert(
+            'settings', {'key': 'dup_cleanup_v2938', 'value': 'true'},
+            conflictAlgorithm: ConflictAlgorithm.ignore);
+      }
+    } catch (_) {}
   }
 
   static Future<void> _createTables(Database db) async {
@@ -2136,7 +2183,10 @@ class DBService {
 
       final amounts =
           items.map((e) => (e['amount'] as num).toDouble()).toList();
-      final avgAmount = amounts.reduce((a, b) => a + b) / amounts.length;
+      // Round to 2 decimal places so ₱68.538... doesn't display in the UI
+      final avgAmount = double.parse(
+          (amounts.reduce((a, b) => a + b) / amounts.length)
+              .toStringAsFixed(2));
       final category = items.last['category'] as String? ?? 'Others';
       final lastSeen = (items.last['date'] as String).substring(0, 10);
 

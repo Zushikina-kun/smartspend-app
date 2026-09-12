@@ -196,7 +196,8 @@ class BehavioralFeedbackService {
         final milestoneKey = 'praised_streak_$m';
         final already = await DBService.getSetting(milestoneKey);
         // Check if we've crossed this specific milestone before
-        final prevMilestone = await DBService.getSetting('${milestoneKey}_date');
+        final prevMilestone =
+            await DBService.getSetting('${milestoneKey}_date');
         final today = DateTime.now().toIso8601String().substring(0, 10);
         if (prevMilestone != today) {
           await DBService.setSetting('${milestoneKey}_date', today);
@@ -239,8 +240,8 @@ class BehavioralFeedbackService {
 
       // Check 1: Is this a repeated category today?
       final todayInCategory = allExpenses
-          .where((e) =>
-              e.date.substring(0, 10) == today && e.category == category)
+          .where(
+              (e) => e.date.substring(0, 10) == today && e.category == category)
           .toList();
       final todayCount = todayInCategory.length;
 
@@ -311,8 +312,7 @@ class BehavioralFeedbackService {
       } else if (previousPrice != null && amount > previousPrice * 1.15) {
         emoji = '📈';
         tone = CommentaryTone.observe;
-        final pctUp =
-            ((amount / previousPrice - 1) * 100).toStringAsFixed(0);
+        final pctUp = ((amount / previousPrice - 1) * 100).toStringAsFixed(0);
         message =
             "$itemName was ${CurrencyService.format(previousPrice)} last time — up $pctUp% today. Worth noting for your budget.";
       } else if (budgetContext != null && remaining != null && remaining >= 0) {
@@ -324,7 +324,8 @@ class BehavioralFeedbackService {
         // Default: encouraging log confirmation
         emoji = '✅';
         tone = CommentaryTone.praise;
-        message = "Logged! Every expense recorded keeps your Financial Health Score accurate.";
+        message =
+            "Logged! Every expense recorded keeps your Financial Health Score accurate.";
       }
 
       return PurchaseCommentary(
@@ -350,8 +351,8 @@ class BehavioralFeedbackService {
     final over = spent - budget;
     final goals = await DBService.getGoals();
     final topGoal = goals
-        .where((g) =>
-            (g['current_amount'] as num) < (g['target_amount'] as num))
+        .where(
+            (g) => (g['current_amount'] as num) < (g['target_amount'] as num))
         .firstOrNull;
 
     if (over > 0) {
@@ -457,7 +458,7 @@ class BehavioralFeedbackService {
             break;
           case 'overspend_control':
             tip =
-                'Check which specific days exceeded your daily budget and what was bought. Reducing just 1–2 overspend days lifts this significantly.';
+                'Check which specific days exceeded your daily budget and what was bought. Reducing just 1–2 habitual overspend days lifts this significantly. Single large planned purchases (gadgets, events) count at half-penalty.';
             break;
           case 'budget_adherence':
             tip = pts == 0

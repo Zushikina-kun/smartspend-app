@@ -6313,7 +6313,7 @@ class _RecurringCandidateCardState extends State<_RecurringCandidateCard> {
           ),
           const SizedBox(height: 8),
           Text(
-            "\"$desc\" appears $freq (~${CurrencyService.format(amt)}/time). "
+            "\"$desc\" appears $freq (~${CurrencyService.format(amt.roundToDouble())}/time). "
             "Want to track it as a recurring transaction?",
             style: TextStyle(
                 fontSize: 12,
