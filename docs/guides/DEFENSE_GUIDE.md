@@ -1,5 +1,5 @@
 # SmartSpend — Defense Guide
-**Version:** 2.9.41 | **September 2026** | **Lucid Frame**
+**Version:** 2.9.47 | **September 2026** | **Lucid Frame**
 
 > This is your single reference for both the DEMO and the DEFENSE.
 > Read it fully before your pre-final and final defenses.
@@ -133,7 +133,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | **2.9.41** |
+| Version | **2.9.47** |
 | Platform | Android (Flutter) |
 | Database | SQLite version 11, 20 tables |
 | AI providers | **8** (auto-failover, all free tier) |
@@ -143,7 +143,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Currencies supported | 57 |
 | Screens | 37 |
 | Services | 26 |
-| Achievement badges | 23 |
+$125 |
 | Daily quests | 10 rotating |
 | Expense categories | 14 built-in + unlimited custom |
 | Screenshot platforms detected | 40+ |
@@ -286,7 +286,7 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 
 ---
 
-*SmartSpend v2.9.41 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
+*SmartSpend v2.9.47 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*
 
 

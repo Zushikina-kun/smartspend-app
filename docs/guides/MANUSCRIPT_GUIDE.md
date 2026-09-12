@@ -1,5 +1,5 @@
 # SmartSpend — Manuscript Guide
-**Version:** 2.9.19 | **September 2026** | **Lucid Frame**
+**Version:** 2.9.47 | **September 2026** | **Lucid Frame**
 
 > One document for all manuscript-related work.
 > PART 1 = Paper revision guide (how to write each chapter, what to say).
@@ -10,7 +10,7 @@
 # PART 1 — PAPER GUIDE (How to Write Each Section)
 
 **For:** Lucid Frame — Cyrille John M. Rubis (Documentation Lead)
-**Date:** September 8, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.19
+**Date:** September 8, 2026 | **Academic Year:** 2026–2027, 1st Semester | **Version:** v2.9.47
 **Purpose:** Source of truth for revising Chapters 1–5 of the capstone thesis paper
 
 > ⚠️ Also see **`docs/CAPSTONE_REFERENCE.md`** — the most comprehensive single-file reference for capstone documentation, with all current numbers, quotes, and comparison tables.
