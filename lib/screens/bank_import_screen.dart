@@ -713,8 +713,10 @@ class _TransactionTile extends StatelessWidget {
     } catch (_) {}
 
     return Card(
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
       margin: const EdgeInsets.only(bottom: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       color: row.selected
           ? cs.primaryContainer.withValues(alpha: 0.15)
           : cs.surfaceContainerHighest.withValues(alpha: 0.3),

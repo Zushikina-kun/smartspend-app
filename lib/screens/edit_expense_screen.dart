@@ -222,10 +222,15 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
                     decoration: BoxDecoration(
-                      color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(color: cs.outline.withValues(alpha: 0.15)),
+                      color: cs.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

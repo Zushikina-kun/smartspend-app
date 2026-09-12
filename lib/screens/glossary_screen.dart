@@ -168,9 +168,11 @@ class _GlossaryScreenState extends State<GlossaryScreen> {
               itemBuilder: (_, i) {
                 final t = filtered[i];
                 return Card(
+                  elevation: 2,
+                  shadowColor: Colors.black.withValues(alpha: 0.08),
                   margin: const EdgeInsets.only(bottom: 8),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(14)),
                   child: ExpansionTile(
                     leading:
                         Text(t.emoji, style: const TextStyle(fontSize: 22)),

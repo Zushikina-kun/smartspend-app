@@ -121,10 +121,12 @@ class _HelpCardState extends State<_HelpCard> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Card(
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
       margin: const EdgeInsets.only(bottom: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         onTap: () => setState(() => _expanded = !_expanded),
         child: Padding(
           padding: const EdgeInsets.all(14),

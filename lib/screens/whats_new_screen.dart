@@ -92,7 +92,16 @@ class WhatsNewScreen extends StatelessWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
-            color: cs.primaryContainer,
+            decoration: BoxDecoration(
+              color: cs.primaryContainer,
+              boxShadow: [
+                BoxShadow(
+                  color: cs.primary.withValues(alpha: 0.12),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
             child: Column(
               children: [
                 Icon(Icons.new_releases_outlined, size: 40, color: cs.primary),
@@ -115,8 +124,21 @@ class WhatsNewScreen extends StatelessWidget {
               itemCount: _features.length,
               itemBuilder: (_, i) {
                 final f = _features[i];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    color: cs.surface,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
