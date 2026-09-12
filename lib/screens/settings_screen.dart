@@ -219,13 +219,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _sectionLabel(String text) => Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 8),
+        padding: const EdgeInsets.only(top: 22, bottom: 10),
         child: Text(text,
             style: TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: Colors.grey[500],
-                letterSpacing: 0.6)),
+                letterSpacing: 0.8)),
       );
 
   Widget _sectionHint(String text) => Padding(
@@ -233,6 +233,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child:
             Text(text, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
       );
+
+  /// Wraps a list of setting rows in a soft-shadow rounded card.
+  Widget _sectionCard(List<Widget> children) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          children: [
+            for (int i = 0; i < children.length; i++) ...[
+              children[i],
+              if (i < children.length - 1)
+                Divider(
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.12)),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _tile({
     required IconData icon,
@@ -242,11 +279,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required void Function(bool) onChanged,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
           Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,11 +291,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(title,
                     style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 2),
                 Text(subtitle,
                     style: TextStyle(fontSize: 11, color: Colors.grey[500])),
               ],
             ),
           ),
+          const SizedBox(width: 8),
           Switch(
             value: value,
             onChanged: onChanged,
@@ -286,26 +325,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 // ── LITE MODE ───────────────────────────────────────────────
                 _sectionLabel('QUICK PRESETS'),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  margin: const EdgeInsets.only(bottom: 4),
                   decoration: BoxDecoration(
                     color: liteMode
                         ? theme.colorScheme.primary.withValues(alpha: 0.08)
-                        : Colors.grey.withValues(alpha: 0.06),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: liteMode
-                          ? theme.colorScheme.primary.withValues(alpha: 0.3)
-                          : Colors.grey.withValues(alpha: 0.2),
-                    ),
+                        : theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: liteMode
+                        ? Border.all(
+                            color: theme.colorScheme.primary
+                                .withValues(alpha: 0.3))
+                        : null,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 12,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   child: Row(children: [
                     Icon(Icons.view_compact_outlined,
                         size: 22,
                         color: liteMode
                             ? theme.colorScheme.primary
                             : Colors.grey[600]),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 14),
                     Expanded(
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,58 +385,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 // ── BEHAVIOR ────────────────────────────────────────────────
                 _sectionLabel('BEHAVIOR'),
-                _tile(
-                  icon: Icons.account_balance_wallet_outlined,
-                  title: 'Auto-deduct wallets',
-                  subtitle: 'Deduct from Cash/GCash/Maya when logging expenses',
-                  value: autoDeduct,
-                  onChanged: (v) {
-                    setState(() => autoDeduct = v);
-                    _save('wallet_auto_deduct', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.emoji_emotions_outlined,
-                  title: 'Daily mood check-in',
-                  subtitle: 'Show mood prompt each day',
-                  value: moodEnabled,
-                  onChanged: (v) {
-                    setState(() => moodEnabled = v);
-                    _save('mood_checkin_enabled', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.pause_circle_outline,
-                  title: 'Impulse pause',
-                  subtitle: 'Confirm before logging large Want expenses',
-                  value: impulseEnabled,
-                  onChanged: (v) {
-                    setState(() => impulseEnabled = v);
-                    _save('impulse_pause_enabled', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.notifications_outlined,
-                  title: 'Budget alerts',
-                  subtitle: 'Notify when a category hits 80% or 100%',
-                  value: budgetAlerts,
-                  onChanged: (v) {
-                    setState(() => budgetAlerts = v);
-                    _save('budget_alerts_enabled', v);
-                  },
-                ),
-                // Spending limits nav tile
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: InkWell(
+                _sectionCard([
+                  _tile(
+                    icon: Icons.account_balance_wallet_outlined,
+                    title: 'Auto-deduct wallets',
+                    subtitle:
+                        'Deduct from Cash/GCash/Maya when logging expenses',
+                    value: autoDeduct,
+                    onChanged: (v) {
+                      setState(() => autoDeduct = v);
+                      _save('wallet_auto_deduct', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.emoji_emotions_outlined,
+                    title: 'Daily mood check-in',
+                    subtitle: 'Show mood prompt each day',
+                    value: moodEnabled,
+                    onChanged: (v) {
+                      setState(() => moodEnabled = v);
+                      _save('mood_checkin_enabled', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.pause_circle_outline,
+                    title: 'Impulse pause',
+                    subtitle: 'Confirm before logging large Want expenses',
+                    value: impulseEnabled,
+                    onChanged: (v) {
+                      setState(() => impulseEnabled = v);
+                      _save('impulse_pause_enabled', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.notifications_outlined,
+                    title: 'Budget alerts',
+                    subtitle: 'Notify when a category hits 80% or 100%',
+                    value: budgetAlerts,
+                    onChanged: (v) {
+                      setState(() => budgetAlerts = v);
+                      _save('budget_alerts_enabled', v);
+                    },
+                  ),
+                  // Spending limits nav row
+                  InkWell(
                     onTap: () => SpendingLimitsSheet.show(context),
-                    borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       child: Row(children: [
                         Icon(Icons.speed_outlined,
                             size: 20, color: Colors.grey[600]),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,80 +455,79 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ]),
                     ),
                   ),
-                ),
+                ]),
 
                 // ── DISPLAY ─────────────────────────────────────────────────
                 _sectionLabel('DISPLAY'),
-                _tile(
-                  icon: Icons.account_balance_wallet,
-                  title: 'Balance mode',
-                  subtitle:
-                      'Show total wallet balance instead of income-based remaining',
-                  value: balanceMode,
-                  onChanged: (v) {
-                    setState(() => balanceMode = v);
-                    _saveAndRefresh('balance_mode', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.savings_outlined,
-                  title: 'Round-up savings',
-                  subtitle:
-                      'Auto-save spare change to your first goal (rounds to ₱10)',
-                  value: roundUpSavings,
-                  onChanged: (v) {
-                    setState(() => roundUpSavings = v);
-                    _save('round_up_savings', v);
-                  },
-                ),
+                _sectionCard([
+                  _tile(
+                    icon: Icons.account_balance_wallet,
+                    title: 'Balance mode',
+                    subtitle:
+                        'Show total wallet balance instead of income-based remaining',
+                    value: balanceMode,
+                    onChanged: (v) {
+                      setState(() => balanceMode = v);
+                      _saveAndRefresh('balance_mode', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.savings_outlined,
+                    title: 'Round-up savings',
+                    subtitle:
+                        'Auto-save spare change to your first goal (rounds to ₱10)',
+                    value: roundUpSavings,
+                    onChanged: (v) {
+                      setState(() => roundUpSavings = v);
+                      _save('round_up_savings', v);
+                    },
+                  ),
+                ]),
 
                 // ── APPEARANCE ───────────────────────────────────────────────
                 _sectionLabel('APPEARANCE'),
-                _tile(
-                  icon: Icons.dark_mode_outlined,
-                  title: 'Dark mode',
-                  subtitle: 'Switch between light and dark theme',
-                  value: themeService.isDark,
-                  onChanged: (_) {
-                    themeService.toggle();
-                    setState(() {});
-                  },
-                ),
-                _tile(
-                  icon: Icons.density_medium_outlined,
-                  title: 'Compact mode',
-                  subtitle: 'Reduce spacing and list density',
-                  value: compactMode,
-                  onChanged: (v) {
-                    setState(() => compactMode = v);
-                    // Single source of truth: ThemeService (SharedPreferences).
-                    // DB compact_mode key kept in sync for debug log visibility only.
-                    themeService.setCompactMode(v);
-                    _save('compact_mode', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.contrast_outlined,
-                  title: 'High contrast',
-                  subtitle: 'Pure black/white theme for maximum readability',
-                  value: themeService.highContrast,
-                  onChanged: (v) {
-                    themeService.setHighContrast(v);
-                    setState(() {});
-                  },
-                ),
-                // App Theme picker
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: InkWell(
+                _sectionCard([
+                  _tile(
+                    icon: Icons.dark_mode_outlined,
+                    title: 'Dark mode',
+                    subtitle: 'Switch between light and dark theme',
+                    value: themeService.isDark,
+                    onChanged: (_) {
+                      themeService.toggle();
+                      setState(() {});
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.density_medium_outlined,
+                    title: 'Compact mode',
+                    subtitle: 'Reduce spacing and list density',
+                    value: compactMode,
+                    onChanged: (v) {
+                      setState(() => compactMode = v);
+                      themeService.setCompactMode(v);
+                      _save('compact_mode', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.contrast_outlined,
+                    title: 'High contrast',
+                    subtitle: 'Pure black/white theme for maximum readability',
+                    value: themeService.highContrast,
+                    onChanged: (v) {
+                      themeService.setHighContrast(v);
+                      setState(() {});
+                    },
+                  ),
+                  // App Theme picker
+                  InkWell(
                     onTap: _showThemePicker,
-                    borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       child: Row(children: [
                         Icon(Icons.palette_outlined,
                             size: 20, color: Colors.grey[600]),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -497,8 +543,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         Row(children: [
                           Container(
-                            width: 16,
-                            height: 16,
+                            width: 14,
+                            height: 14,
                             decoration: BoxDecoration(
                               color: themeService.appTheme.primaryColor,
                               shape: BoxShape.circle,
@@ -510,19 +556,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ]),
                     ),
                   ),
-                ),
-                // Text size picker
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: InkWell(
+                  // Text size picker
+                  InkWell(
                     onTap: _showTextSizePicker,
-                    borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       child: Row(children: [
                         Icon(Icons.text_fields_outlined,
                             size: 20, color: Colors.grey[600]),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -540,22 +583,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ]),
                     ),
                   ),
-                ),
-                // Display currency
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: InkWell(
+                  // Display currency
+                  InkWell(
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (_) => const CurrencyScreen())),
-                    borderRadius: BorderRadius.circular(8),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       child: Row(children: [
                         Icon(Icons.language_outlined,
                             size: 20, color: Colors.grey[600]),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -574,17 +614,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ]),
                     ),
                   ),
-                ),
+                ]),
 
                 // ── SECURITY ─────────────────────────────────────────────────
                 _sectionLabel('SECURITY'),
-                FutureBuilder<bool>(
-                  future: AppLockService.isEnabled(),
-                  builder: (ctx, snap) {
-                    final enabled = snap.data ?? false;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3),
-                      child: InkWell(
+                _sectionCard([
+                  FutureBuilder<bool>(
+                    future: AppLockService.isEnabled(),
+                    builder: (ctx, snap) {
+                      final enabled = snap.data ?? false;
+                      return InkWell(
                         onTap: () async {
                           final hasPin = await AppLockService.hasPin();
                           if (!hasPin || !enabled) {
@@ -619,9 +658,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             }
                           }
                         },
-                        borderRadius: BorderRadius.circular(8),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
                           child: Row(children: [
                             Icon(
                               enabled
@@ -632,7 +671,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ? Colors.green[700]
                                   : Colors.grey[600],
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 14),
                             Expanded(
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -659,52 +698,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Icon(Icons.chevron_right, color: Colors.grey[400]),
                           ]),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+                ]),
 
                 // ── TRACKING MODE ────────────────────────────────────────────
                 _sectionLabel('TRACKING MODE'),
                 _sectionHint(
                     'Controls how your Financial Health Score is calculated.'),
-                _tile(
-                  icon: Icons.account_balance_wallet_outlined,
-                  title: 'Track income & wallets',
-                  subtitle: incomeWalletMode
-                      ? 'ON — full FHS with savings rate & wallet tracking'
-                      : 'OFF — FHS uses spending habits only (no income needed)',
-                  value: incomeWalletMode,
-                  onChanged: (v) {
-                    setState(() => incomeWalletMode = v);
-                    DBService.setIncomeWalletMode(v);
-                    fireEvent(AppEvent.incomeChanged);
-                    // Notify user that the FHS mode changed and what it means.
-                    // The score will look different — show why so they aren't confused.
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          v
-                              ? '✅ Full Mode ON — FHS now includes Savings Rate vs income. Score may drop if spending > income.'
-                              : '💡 Lightweight Mode ON — FHS now uses spending habits only. Score reflects your tracking consistency.',
-                          style: const TextStyle(fontSize: 13),
+                _sectionCard([
+                  _tile(
+                    icon: Icons.account_balance_wallet_outlined,
+                    title: 'Track income & wallets',
+                    subtitle: incomeWalletMode
+                        ? 'ON — full FHS with savings rate & wallet tracking'
+                        : 'OFF — FHS uses spending habits only (no income needed)',
+                    value: incomeWalletMode,
+                    onChanged: (v) {
+                      setState(() => incomeWalletMode = v);
+                      DBService.setIncomeWalletMode(v);
+                      fireEvent(AppEvent.incomeChanged);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            v
+                                ? '✅ Full Mode ON — FHS now includes Savings Rate vs income. Score may drop if spending > income.'
+                                : '💡 Lightweight Mode ON — FHS now uses spending habits only. Score reflects your tracking consistency.',
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          duration: const Duration(seconds: 4),
+                          behavior: SnackBarBehavior.floating,
                         ),
-                        duration: const Duration(seconds: 4),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+                ]),
 
                 // ── NOTIFICATIONS ────────────────────────────────────────────
                 _sectionLabel('NOTIFICATIONS'),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.amber.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                           color: Colors.amber.withValues(alpha: 0.3)),
                     ),
@@ -723,17 +762,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ]),
                   ),
                 ),
-                _tile(
-                  icon: Icons.search_outlined,
-                  title: 'Spending anomaly alerts',
-                  subtitle:
-                      'Weekly alert when a category spikes 2.5× above usual',
-                  value: anomalyEnabled,
-                  onChanged: (v) {
-                    setState(() => anomalyEnabled = v);
-                    _save('anomaly_detection_enabled', v);
-                  },
-                ),
+                _sectionCard([
+                  _tile(
+                    icon: Icons.search_outlined,
+                    title: 'Spending anomaly alerts',
+                    subtitle:
+                        'Weekly alert when a category spikes 2.5× above usual',
+                    value: anomalyEnabled,
+                    onChanged: (v) {
+                      setState(() => anomalyEnabled = v);
+                      _save('anomaly_detection_enabled', v);
+                    },
+                  ),
+                ]),
 
                 // ── AI MODEL ─────────────────────────────────────────────────
                 _sectionLabel('AI MODEL'),
@@ -742,29 +783,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ...AppConfig.availableModels.map((m) {
                   final isActive = AppConfig.activeModelId == m.$1;
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: InkWell(
                       onTap: () {
                         setState(() {});
                         AppConfig.setModel(m.$1);
                         DBService.setSetting('preferred_model', m.$1);
                       },
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(14),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
+                            horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
                           color: isActive
-                              ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                              : Colors.grey.withValues(alpha: 0.06),
-                          borderRadius: BorderRadius.circular(10),
+                              ? theme.colorScheme.primary
+                                  .withValues(alpha: 0.08)
+                              : theme.colorScheme.surface,
+                          borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: isActive
                                 ? theme.colorScheme.primary
                                     .withValues(alpha: 0.4)
-                                : Colors.grey.withValues(alpha: 0.2),
+                                : theme.colorScheme.outline
+                                    .withValues(alpha: 0.15),
                             width: isActive ? 1.5 : 1,
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.04),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Row(children: [
                           Icon(
@@ -775,7 +825,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: isActive
                                   ? theme.colorScheme.primary
                                   : Colors.grey),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 12),
                           Expanded(
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -804,111 +854,115 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _sectionLabel('HOME SCREEN — SHOW / HIDE SECTIONS'),
                 _sectionHint(
                     'Toggle optional cards. Core cards (spending summary, FHS score, wallets, budgets) are always visible.'),
-                _tile(
-                  icon: Icons.autorenew_outlined,
-                  title: 'Subscription summary',
-                  subtitle: 'Card showing detected recurring subscriptions',
-                  value: showSubscriptions,
-                  onChanged: (v) {
-                    setState(() => showSubscriptions = v);
-                    _saveAndRefresh('show_subscriptions', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.flash_on_outlined,
-                  title: 'Quick-log chips',
-                  subtitle: 'One-tap chips for your most frequent expenses',
-                  value: showQuickLog,
-                  onChanged: (v) {
-                    setState(() => showQuickLog = v);
-                    _saveAndRefresh('show_quick_log', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.emoji_events_outlined,
-                  title: 'Achievement badges row',
-                  subtitle: 'Your earned badges on the home screen',
-                  value: showBadges,
-                  onChanged: (v) {
-                    setState(() => showBadges = v);
-                    _saveAndRefresh('show_badges', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.emoji_emotions_outlined,
-                  title: 'Mood check-in (home)',
-                  subtitle: 'Daily mood prompt on the home screen',
-                  value: showMoodHome,
-                  onChanged: (v) {
-                    setState(() => showMoodHome = v);
-                    _saveAndRefresh('show_mood_home', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.waterfall_chart_outlined,
-                  title: 'Cash flow forecast',
-                  subtitle: 'Projected income vs spending card',
-                  value: showForecast,
-                  onChanged: (v) {
-                    setState(() => showForecast = v);
-                    _saveAndRefresh('show_forecast', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.psychology_outlined,
-                  title: 'Behavioral prediction card',
-                  subtitle: 'AI prediction of end-of-month spending',
-                  value: showPrediction,
-                  onChanged: (v) {
-                    setState(() => showPrediction = v);
-                    _saveAndRefresh('show_prediction', v);
-                  },
-                ),
+                _sectionCard([
+                  _tile(
+                    icon: Icons.autorenew_outlined,
+                    title: 'Subscription summary',
+                    subtitle: 'Card showing detected recurring subscriptions',
+                    value: showSubscriptions,
+                    onChanged: (v) {
+                      setState(() => showSubscriptions = v);
+                      _saveAndRefresh('show_subscriptions', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.flash_on_outlined,
+                    title: 'Quick-log chips',
+                    subtitle: 'One-tap chips for your most frequent expenses',
+                    value: showQuickLog,
+                    onChanged: (v) {
+                      setState(() => showQuickLog = v);
+                      _saveAndRefresh('show_quick_log', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.emoji_events_outlined,
+                    title: 'Achievement badges row',
+                    subtitle: 'Your earned badges on the home screen',
+                    value: showBadges,
+                    onChanged: (v) {
+                      setState(() => showBadges = v);
+                      _saveAndRefresh('show_badges', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.emoji_emotions_outlined,
+                    title: 'Mood check-in (home)',
+                    subtitle: 'Daily mood prompt on the home screen',
+                    value: showMoodHome,
+                    onChanged: (v) {
+                      setState(() => showMoodHome = v);
+                      _saveAndRefresh('show_mood_home', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.waterfall_chart_outlined,
+                    title: 'Cash flow forecast',
+                    subtitle: 'Projected income vs spending card',
+                    value: showForecast,
+                    onChanged: (v) {
+                      setState(() => showForecast = v);
+                      _saveAndRefresh('show_forecast', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.psychology_outlined,
+                    title: 'Behavioral prediction card',
+                    subtitle: 'AI prediction of end-of-month spending',
+                    value: showPrediction,
+                    onChanged: (v) {
+                      setState(() => showPrediction = v);
+                      _saveAndRefresh('show_prediction', v);
+                    },
+                  ),
+                ]),
 
                 // ── ANALYTICS SECTIONS ────────────────────────────────────────
                 _sectionLabel('ANALYTICS — SHOW / HIDE SECTIONS'),
                 _sectionHint(
                     'Pie chart, 50/30/20 tracker, and Want/Need breakdown are always shown.'),
-                _tile(
-                  icon: Icons.account_balance_outlined,
-                  title: 'Debt-to-Income (DTI) ratio',
-                  subtitle: 'DTI card in Analytics',
-                  value: showDTI,
-                  onChanged: (v) {
-                    setState(() => showDTI = v);
-                    _saveAndRefresh('show_dti', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.health_and_safety_outlined,
-                  title: 'Emergency fund calculator',
-                  subtitle: 'How many months of expenses you have saved',
-                  value: showEmergencyFund,
-                  onChanged: (v) {
-                    setState(() => showEmergencyFund = v);
-                    _saveAndRefresh('show_emergency_fund', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.flag_outlined,
-                  title: 'Financial milestones',
-                  subtitle: 'Timeline of your financial achievements',
-                  value: showMilestones,
-                  onChanged: (v) {
-                    setState(() => showMilestones = v);
-                    _saveAndRefresh('show_milestones', v);
-                  },
-                ),
-                _tile(
-                  icon: Icons.currency_exchange_outlined,
-                  title: 'Market insights (exchange rates)',
-                  subtitle: 'Live PHP exchange rates card in Analytics',
-                  value: showMarketInsights,
-                  onChanged: (v) {
-                    setState(() => showMarketInsights = v);
-                    _saveAndRefresh('show_market_insights', v);
-                  },
-                ),
+                _sectionCard([
+                  _tile(
+                    icon: Icons.account_balance_outlined,
+                    title: 'Debt-to-Income (DTI) ratio',
+                    subtitle: 'DTI card in Analytics',
+                    value: showDTI,
+                    onChanged: (v) {
+                      setState(() => showDTI = v);
+                      _saveAndRefresh('show_dti', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.health_and_safety_outlined,
+                    title: 'Emergency fund calculator',
+                    subtitle: 'How many months of expenses you have saved',
+                    value: showEmergencyFund,
+                    onChanged: (v) {
+                      setState(() => showEmergencyFund = v);
+                      _saveAndRefresh('show_emergency_fund', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.flag_outlined,
+                    title: 'Financial milestones',
+                    subtitle: 'Timeline of your financial achievements',
+                    value: showMilestones,
+                    onChanged: (v) {
+                      setState(() => showMilestones = v);
+                      _saveAndRefresh('show_milestones', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.currency_exchange_outlined,
+                    title: 'Market insights (exchange rates)',
+                    subtitle: 'Live PHP exchange rates card in Analytics',
+                    value: showMarketInsights,
+                    onChanged: (v) {
+                      setState(() => showMarketInsights = v);
+                      _saveAndRefresh('show_market_insights', v);
+                    },
+                  ),
+                ]),
 
                 const SizedBox(height: 20),
               ],

@@ -1220,51 +1220,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    // Avatar
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 48,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          backgroundImage: _getProfileImage(),
-                          child: _getProfileImage() == null
-                              ? Text(initials,
-                                  style: TextStyle(
-                                      fontSize: 32,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      fontWeight: FontWeight.bold))
-                              : null,
+                    // ── PROFILE HEADER CARD ──────────────────────────────────
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            cs.primaryContainer,
+                            cs.primaryContainer.withValues(alpha: 0.55),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
-                      ],
+                        borderRadius: BorderRadius.circular(22),
+                        boxShadow: [
+                          BoxShadow(
+                            color: cs.primary.withValues(alpha: 0.12),
+                            blurRadius: 16,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.fromLTRB(20, 28, 20, 22),
+                      child: Column(
+                        children: [
+                          // Avatar with edit button
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 48,
+                                backgroundColor: cs.primary,
+                                backgroundImage: _getProfileImage(),
+                                child: _getProfileImage() == null
+                                    ? Text(initials,
+                                        style: TextStyle(
+                                            fontSize: 32,
+                                            color: cs.onPrimary,
+                                            fontWeight: FontWeight.bold))
+                                    : null,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: _openEditProfile,
+                                  child: Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: BoxDecoration(
+                                      color: cs.primary,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: cs.surface, width: 2),
+                                    ),
+                                    child: Icon(Icons.edit,
+                                        size: 14, color: cs.onPrimary),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          if (displayName.isNotEmpty)
+                            Text(displayName,
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: cs.onPrimaryContainer)),
+                          const SizedBox(height: 3),
+                          Text(
+                              _profile?.email ??
+                                  FirebaseAuth.instance.currentUser?.email ??
+                                  '',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: cs.onPrimaryContainer
+                                      .withValues(alpha: 0.65))),
+                          const SizedBox(height: 20),
+                          // Stats row inside header card
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _statCard(context, "Expenses", "$_expenseCount"),
+                              Container(
+                                  width: 1,
+                                  height: 36,
+                                  color: cs.onPrimaryContainer
+                                      .withValues(alpha: 0.15)),
+                              _statCard(context, "Total Spent",
+                                  CurrencyService.format(_totalSpent)),
+                              Container(
+                                  width: 1,
+                                  height: 36,
+                                  color: cs.onPrimaryContainer
+                                      .withValues(alpha: 0.15)),
+                              _statCard(context, "Health Score", "$_score/100",
+                                  color: _scoreColor(_score)),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    if (displayName.isNotEmpty)
-                      Text(displayName,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                    Text(
-                        _profile?.email ??
-                            FirebaseAuth.instance.currentUser?.email ??
-                            '',
-                        style: TextStyle(
-                            color: cs.onSurface.withValues(alpha: 0.6))),
-                    const SizedBox(height: 20),
-
-                    // Stats row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _statCard(context, "Expenses", "$_expenseCount"),
-                        _statCard(context, "Total Spent",
-                            CurrencyService.format(_totalSpent)),
-                        _statCard(context, "Health Score", "$_score/100",
-                            color: _scoreColor(_score)),
-                      ],
-                    ),
-
                     const SizedBox(height: 16),
 
                     // Net Worth card — only shown in income/wallet mode
@@ -1853,374 +1909,380 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     // Settings
-                    Card(
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: const Icon(Icons.badge_outlined),
-                            title: const Text("Account Type"),
-                            subtitle: Text(_accountTypeLabel(_accountType)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: _showAccountTypeDialog,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(18),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.07),
+                            blurRadius: 14,
+                            offset: const Offset(0, 4),
                           ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.g_mobiledata,
-                                color: Color(0xFFDB4437), size: 28),
-                            title: const Text("Google Account"),
-                            subtitle: Text(
-                              AuthService.isGoogleLinked
-                                  ? "Linked — sign in with Google enabled"
-                                  : "Not linked — tap to connect",
-                              style: const TextStyle(fontSize: 12),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(18),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: const Icon(Icons.badge_outlined),
+                              title: const Text("Account Type"),
+                              subtitle: Text(_accountTypeLabel(_accountType)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: _showAccountTypeDialog,
                             ),
-                            trailing: AuthService.isGoogleLinked
-                                ? const Icon(Icons.check_circle,
-                                    color: Colors.green)
-                                : const Icon(Icons.chevron_right),
-                            onTap: AuthService.isGoogleLinked
-                                ? null
-                                : () async {
-                                    try {
-                                      final user = await AuthService
-                                          .linkGoogleToCurrentUser();
-                                      if (mounted) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: Text(user != null
-                                              ? "Google account linked!"
-                                              : "Linking cancelled."),
-                                          behavior: SnackBarBehavior.floating,
-                                          backgroundColor: user != null
-                                              ? Colors.green
-                                              : null,
-                                        ));
-                                        if (user != null) setState(() {});
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.g_mobiledata,
+                                  color: Color(0xFFDB4437), size: 28),
+                              title: const Text("Google Account"),
+                              subtitle: Text(
+                                AuthService.isGoogleLinked
+                                    ? "Linked — sign in with Google enabled"
+                                    : "Not linked — tap to connect",
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              trailing: AuthService.isGoogleLinked
+                                  ? const Icon(Icons.check_circle,
+                                      color: Colors.green)
+                                  : const Icon(Icons.chevron_right),
+                              onTap: AuthService.isGoogleLinked
+                                  ? null
+                                  : () async {
+                                      try {
+                                        final user = await AuthService
+                                            .linkGoogleToCurrentUser();
+                                        if (mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(user != null
+                                                ? "Google account linked!"
+                                                : "Linking cancelled."),
+                                            behavior: SnackBarBehavior.floating,
+                                            backgroundColor: user != null
+                                                ? Colors.green
+                                                : null,
+                                          ));
+                                          if (user != null) setState(() {});
+                                        }
+                                      } catch (e) {
+                                        if (mounted) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(
+                                                "Could not link Google: ${e.toString().replaceAll('Exception: ', '')}"),
+                                            behavior: SnackBarBehavior.floating,
+                                          ));
+                                        }
                                       }
-                                    } catch (e) {
-                                      if (mounted) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          content: Text(
-                                              "Could not link Google: ${e.toString().replaceAll('Exception: ', '')}"),
-                                          behavior: SnackBarBehavior.floating,
-                                        ));
+                                    },
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.download_outlined),
+                              title: const Text("Export to CSV"),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: _export,
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: Icon(Icons.workspace_premium_outlined,
+                                  color: cs.primary),
+                              title: const Text("Financial Health Certificate"),
+                              subtitle: const Text(
+                                  "Share your FHS score as an image",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: _showHealthCertificate,
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: Icon(Icons.backup_outlined,
+                                  color: Theme.of(context).colorScheme.primary),
+                              title: const Text("Backup Data"),
+                              subtitle: const Text(
+                                  "Export backup file — save to phone, Drive, email, etc.",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: _backupToDrive,
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.restore_outlined,
+                                  color: Colors.green),
+                              title: const Text("Restore from Backup"),
+                              subtitle: const Text(
+                                  "Pick a backup .json file to restore from",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: _restoreFromDrive,
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(
+                                  Icons.account_balance_outlined,
+                                  color: Colors.teal),
+                              title: const Text("Import from Bank / GCash"),
+                              subtitle: const Text(
+                                  "Paste GCash, BPI, BDO, Maya, or any bank history",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const BankImportScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.photo_library_outlined,
+                                  color: Colors.indigo),
+                              title: const Text("Batch Screenshot Import"),
+                              subtitle: const Text(
+                                  "Import from Steam, Shopee, Lazada, GCash screenshots — up to 10 at once",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const BatchImageImportScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.science_outlined),
+                              title: const Text("Load Demo Data"),
+                              subtitle: const Text(
+                                  "Fill app with sample data for demo",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: _loadDemo,
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.delete_forever_outlined,
+                                  color: Colors.red),
+                              title: const Text("Reset All Data",
+                                  style: TextStyle(color: Colors.red)),
+                              subtitle: const Text(
+                                  "Delete all expenses, budgets, goals & income",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right,
+                                  color: Colors.red),
+                              onTap: _resetAllData,
+                            ),
+                            const Divider(height: 1),
+                            // App Lock settings
+                            FutureBuilder<bool>(
+                              future: AppLockService.isEnabled(),
+                              builder: (ctx, snap) {
+                                final enabled = snap.data ?? false;
+                                return ListTile(
+                                  leading: Icon(
+                                    enabled
+                                        ? Icons.lock_outline
+                                        : Icons.lock_open_outlined,
+                                    color: enabled ? cs.primary : null,
+                                  ),
+                                  title: const Text("App Lock"),
+                                  subtitle: Text(
+                                    enabled
+                                        ? "PIN + biometric lock active"
+                                        : "Require PIN when reopening app",
+                                    style: const TextStyle(fontSize: 11),
+                                  ),
+                                  trailing: const Icon(Icons.chevron_right),
+                                  onTap: () async {
+                                    final hasPin =
+                                        await AppLockService.hasPin();
+                                    if (!hasPin || !enabled) {
+                                      // Set up PIN
+                                      final result = await Navigator.push<bool>(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                const PinSetupScreen()),
+                                      );
+                                      if (result == true && mounted) {
+                                        setState(() {});
+                                      }
+                                    } else {
+                                      // Toggle off — confirm first
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                          title: const Text("Disable App Lock"),
+                                          content: const Text(
+                                              "Remove PIN and disable app lock?"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () => Navigator.pop(
+                                                    context, false),
+                                                child: const Text("Cancel")),
+                                            ElevatedButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, true),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.red,
+                                                  foregroundColor:
+                                                      Colors.white),
+                                              child: const Text("Disable"),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirm == true) {
+                                        await AppLockService.removePin();
+                                        if (mounted) setState(() {});
                                       }
                                     }
                                   },
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: Icon(Icons.palette_outlined,
-                                color: themeService.primaryColor),
-                            title: const Text("Appearance"),
-                            subtitle: Text(
-                                "${themeService.isDark ? 'Dark' : 'Light'} · ${themeService.appTheme.label} · ${themeService.textScaleLabel}",
-                                style: const TextStyle(fontSize: 12)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const SettingsScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.download_outlined),
-                            title: const Text("Export to CSV"),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: _export,
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: Icon(Icons.workspace_premium_outlined,
-                                color: cs.primary),
-                            title: const Text("Financial Health Certificate"),
-                            subtitle: const Text(
-                                "Share your FHS score as an image",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: _showHealthCertificate,
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: Icon(Icons.backup_outlined,
-                                color: Theme.of(context).colorScheme.primary),
-                            title: const Text("Backup Data"),
-                            subtitle: const Text(
-                                "Export backup file — save to phone, Drive, email, etc.",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: _backupToDrive,
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.restore_outlined,
-                                color: Colors.green),
-                            title: const Text("Restore from Backup"),
-                            subtitle: const Text(
-                                "Pick a backup .json file to restore from",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: _restoreFromDrive,
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.account_balance_outlined,
-                                color: Colors.teal),
-                            title: const Text("Import from Bank / GCash"),
-                            subtitle: const Text(
-                                "Paste GCash, BPI, BDO, Maya, or any bank history",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const BankImportScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.photo_library_outlined,
-                                color: Colors.indigo),
-                            title: const Text("Batch Screenshot Import"),
-                            subtitle: const Text(
-                                "Import from Steam, Shopee, Lazada, GCash screenshots — up to 10 at once",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const BatchImageImportScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.science_outlined),
-                            title: const Text("Load Demo Data"),
-                            subtitle: const Text(
-                                "Fill app with sample data for demo",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: _loadDemo,
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.delete_forever_outlined,
-                                color: Colors.red),
-                            title: const Text("Reset All Data",
-                                style: TextStyle(color: Colors.red)),
-                            subtitle: const Text(
-                                "Delete all expenses, budgets, goals & income",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right,
-                                color: Colors.red),
-                            onTap: _resetAllData,
-                          ),
-                          const Divider(height: 1),
-                          // App Lock settings
-                          FutureBuilder<bool>(
-                            future: AppLockService.isEnabled(),
-                            builder: (ctx, snap) {
-                              final enabled = snap.data ?? false;
-                              return ListTile(
-                                leading: Icon(
-                                  enabled
-                                      ? Icons.lock_outline
-                                      : Icons.lock_open_outlined,
-                                  color: enabled ? cs.primary : null,
-                                ),
-                                title: const Text("App Lock"),
-                                subtitle: Text(
-                                  enabled
-                                      ? "PIN + biometric lock active"
-                                      : "Require PIN when reopening app",
-                                  style: const TextStyle(fontSize: 11),
-                                ),
-                                trailing: const Icon(Icons.chevron_right),
-                                onTap: () async {
-                                  final hasPin = await AppLockService.hasPin();
-                                  if (!hasPin || !enabled) {
-                                    // Set up PIN
-                                    final result = await Navigator.push<bool>(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (_) =>
-                                              const PinSetupScreen()),
-                                    );
-                                    if (result == true && mounted) {
-                                      setState(() {});
-                                    }
-                                  } else {
-                                    // Toggle off — confirm first
-                                    final confirm = await showDialog<bool>(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: const Text("Disable App Lock"),
-                                        content: const Text(
-                                            "Remove PIN and disable app lock?"),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context, false),
-                                              child: const Text("Cancel")),
-                                          ElevatedButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, true),
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red,
-                                                foregroundColor: Colors.white),
-                                            child: const Text("Disable"),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                    if (confirm == true) {
-                                      await AppLockService.removePin();
-                                      if (mounted) setState(() {});
-                                    }
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.emoji_events_outlined,
-                                color: Colors.amber),
-                            title: const Text("Achievements"),
-                            subtitle: const Text(
-                                "View your badges and progress",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const AchievementsScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.help_outline),
-                            title: const Text("Replay Tutorial"),
-                            subtitle: const Text("Show the feature tour again",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () async {
-                              await FeatureTour.reset();
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        "Tutorial reset — go to Home to see it"),
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
                                 );
-                              }
-                            },
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.bug_report_outlined,
-                                color: Colors.grey),
-                            title: const Text("Export Debug Log"),
-                            subtitle: const Text(
-                                "Share full data + chat log as .txt for QA",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () async {
-                              try {
-                                await DebugService.exportDebugLog();
-                              } catch (e) {
+                              },
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.emoji_events_outlined,
+                                  color: Colors.amber),
+                              title: const Text("Achievements"),
+                              subtitle: const Text(
+                                  "View your badges and progress",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const AchievementsScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.help_outline),
+                              title: const Text("Replay Tutorial"),
+                              subtitle: const Text(
+                                  "Show the feature tour again",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () async {
+                                await FeatureTour.reset();
                                 if (mounted) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content: Text(
-                                          "Export failed: ${e.toString().replaceAll('Exception: ', '')}"),
+                                          "Tutorial reset — go to Home to see it"),
                                       behavior: SnackBarBehavior.floating,
                                     ),
                                   );
                                 }
-                              }
-                            },
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.category_outlined),
-                            title: const Text("Manage Categories"),
-                            subtitle: const Text(
-                                "Add custom expense categories",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ManageCategoriesScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.rule_outlined,
-                                color: Colors.deepPurple),
-                            title: const Text("Auto-Categorization Rules"),
-                            subtitle: const Text(
-                                "Keyword → category rules for faster logging",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const ManageRulesScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.speed_outlined,
-                                color: Colors.teal),
-                            title: const Text("Spending Limits"),
-                            subtitle: const Text(
-                                "Set daily, weekly, monthly & yearly caps",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => SpendingLimitsSheet.show(context,
-                                onChanged: () => setState(() {})),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.settings_outlined,
-                                color: Colors.blueGrey),
-                            title: const Text("App Settings"),
-                            subtitle: const Text(
-                                "Lite Mode, visibility toggles, wallet, display",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const SettingsScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.help_outline),
-                            title: const Text("Help & Guide"),
-                            subtitle: const Text("How to use each feature",
-                                style: TextStyle(fontSize: 11)),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const HelpScreen())),
-                          ),
-                          const Divider(height: 1),
-                          ListTile(
-                            leading: const Icon(Icons.info_outline),
-                            title: const Text("About Smart Spend"),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const AboutScreen())),
-                          ),
-                        ],
-                      ),
-                    ),
+                              },
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.bug_report_outlined,
+                                  color: Colors.grey),
+                              title: const Text("Export Debug Log"),
+                              subtitle: const Text(
+                                  "Share full data + chat log as .txt for QA",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () async {
+                                try {
+                                  await DebugService.exportDebugLog();
+                                } catch (e) {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            "Export failed: ${e.toString().replaceAll('Exception: ', '')}"),
+                                        behavior: SnackBarBehavior.floating,
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.category_outlined),
+                              title: const Text("Manage Categories"),
+                              subtitle: const Text(
+                                  "Add custom expense categories",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const ManageCategoriesScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.rule_outlined,
+                                  color: Colors.deepPurple),
+                              title: const Text("Auto-Categorization Rules"),
+                              subtitle: const Text(
+                                  "Keyword → category rules for faster logging",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const ManageRulesScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.speed_outlined,
+                                  color: Colors.teal),
+                              title: const Text("Spending Limits"),
+                              subtitle: const Text(
+                                  "Set daily, weekly, monthly & yearly caps",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => SpendingLimitsSheet.show(context,
+                                  onChanged: () => setState(() {})),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.settings_outlined,
+                                  color: Colors.blueGrey),
+                              title: const Text("App Settings"),
+                              subtitle: Text(
+                                  "${themeService.isDark ? 'Dark' : 'Light'} · ${themeService.appTheme.label} · ${themeService.textScaleLabel} · Lite Mode, behavior & more",
+                                  style: const TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const SettingsScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.help_outline),
+                              title: const Text("Help & Guide"),
+                              subtitle: const Text("How to use each feature",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const HelpScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.info_outline),
+                              title: const Text("About Smart Spend"),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const AboutScreen())),
+                            ),
+                          ],
+                        ), // Column
+                      ), // ClipRRect
+                    ), // Container
 
                     const SizedBox(height: 20),
 

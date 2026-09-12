@@ -1194,6 +1194,15 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
     }
   }
 
+  String _searchQuery = '';
+  final _searchCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
   void _go(Widget screen) {
     Navigator.pop(context);
     Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
@@ -1201,243 +1210,435 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final q = _searchQuery.toLowerCase();
+
+    // All items grouped by category
+    // (icon, title, subtitle, color, onTap)
+    final allItems =
+        <(String, List<(IconData, String, String, Color, VoidCallback)>)>[
+      (
+        'FINANCES',
+        [
+          (
+            Icons.savings_outlined,
+            "Savings Goals",
+            _loaded
+                ? "$_goalCount goal${_goalCount == 1 ? '' : 's'}"
+                : "Track your targets",
+            Colors.green,
+            () => _go(const SavingsGoalsScreen())
+          ),
+          (
+            Icons.account_balance_wallet_outlined,
+            "Income",
+            "Log and view income sources",
+            Colors.blue,
+            () => _go(const IncomeScreen())
+          ),
+          (
+            Icons.credit_card_outlined,
+            "Debts & Lending",
+            _loaded && _debtCount > 0
+                ? "${_debtTotal > 0 ? '${CurrencyService.format(_debtTotal)} owed' : ''}${_planCount > 0 ? '${_debtTotal > 0 ? ' · ' : ''}$_planCount plan${_planCount == 1 ? '' : 's'}' : ''}"
+                : "Track money owed and lent",
+            Colors.red,
+            () => _go(const DebtScreen())
+          ),
+          (
+            Icons.credit_score_outlined,
+            "Installment & Plans",
+            "Phones, gadgets, ShopeePayLater, GLoan & more",
+            Colors.purple,
+            () => _go(const DebtScreen())
+          ),
+          (
+            Icons.pie_chart_outline,
+            "Budgets",
+            "Set and manage category budgets",
+            Colors.purple,
+            () => _go(const BudgetScreen())
+          ),
+          (
+            Icons.repeat,
+            "Recurring Transactions",
+            _loaded
+                ? "$_recurringCount bill${_recurringCount == 1 ? '' : 's'} & subscriptions"
+                : "Bills, subscriptions & more",
+            Colors.orange,
+            () => _go(const RecurringScreen())
+          ),
+          (
+            Icons.savings_outlined,
+            "My Wallets",
+            "Cash on Hand, GCash, Maya, BDO, BPI & more",
+            const Color(0xFF1E88E5),
+            () async {
+              Navigator.pop(context);
+              final wallets = await DBService.getWallets();
+              if (context.mounted) {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(20))),
+                  builder: (_) =>
+                      WalletsSheet(wallets: wallets, onChanged: () {}),
+                );
+              }
+            }
+          ),
+          (
+            Icons.shield_outlined,
+            "Insurance & Contributions",
+            "SSS, PhilHealth, Pag-IBIG, insurance premiums & due dates",
+            Colors.indigo,
+            () => _go(const InsuranceScreen())
+          ),
+          (
+            Icons.groups_2_outlined,
+            "Paluwagan Tracker",
+            "Track your rotating savings group",
+            Colors.green,
+            () => _go(const PalawaganScreen())
+          ),
+          (
+            Icons.calculate_outlined,
+            "Peso Cost Averaging",
+            "Plan your regular investments — MP2, UITFs, stocks",
+            Colors.teal,
+            () => _go(const PCACalculatorScreen())
+          ),
+          (
+            Icons.account_balance,
+            "PH Banks & Investments",
+            "Compare 20 banks, digital banks, e-wallets & investments",
+            Colors.blue,
+            () => _go(const BankComparisonScreen())
+          ),
+        ]
+      ),
+      (
+        'TRANSACTIONS & DATA',
+        [
+          (
+            Icons.receipt_long_outlined,
+            "Transactions",
+            "Full searchable expense history",
+            Colors.indigo,
+            () => _go(const TransactionsScreen())
+          ),
+          (
+            Icons.calendar_month_outlined,
+            "Bill Calendar",
+            "See all upcoming bills by date",
+            Colors.orange,
+            () => _go(const BillCalendarScreen())
+          ),
+          (
+            Icons.receipt_long_outlined,
+            "Log Due Bills",
+            "Checklist of overdue recurring bills — tick and save",
+            Colors.orange,
+            () => _go(const LogDueBillsScreen())
+          ),
+          (
+            Icons.account_balance_outlined,
+            "Import from Bank / GCash",
+            "Paste GCash, BPI, BDO, Maya, or any bank history",
+            Colors.green,
+            () async {
+              Navigator.pop(context);
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const BankImportScreen()));
+            }
+          ),
+          (
+            Icons.photo_library_outlined,
+            "Batch Screenshot Import",
+            "Import up to 10 receipts or screenshots at once",
+            Colors.blueGrey,
+            () async {
+              Navigator.pop(context);
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const BatchImageImportScreen()));
+            }
+          ),
+          (
+            Icons.camera_enhance_outlined,
+            "Scan Receipt / Barcode",
+            "Live camera for barcodes, QR codes, and receipt OCR",
+            Colors.blueGrey,
+            () async {
+              Navigator.pop(context);
+              await Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const SmartCameraScreen()));
+            }
+          ),
+          (
+            Icons.edit_note_outlined,
+            "Batch Manual Entry",
+            "Log up to 8 expenses at once — fill a quick table",
+            Colors.brown,
+            () async {
+              Navigator.pop(context);
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const BatchManualEntryScreen()));
+            }
+          ),
+          (
+            Icons.currency_exchange,
+            "Display Currency",
+            "Change how amounts are shown — 34+ currencies",
+            Colors.teal,
+            () => _go(const CurrencyScreen())
+          ),
+        ]
+      ),
+      (
+        'TOOLS',
+        [
+          (
+            Icons.category_outlined,
+            "Categories",
+            "Manage custom expense categories",
+            Colors.teal,
+            () => _go(const ManageCategoriesScreen())
+          ),
+          (
+            Icons.rule_outlined,
+            "Auto-Categorization Rules",
+            "Keyword → category rules for faster logging",
+            Colors.deepPurple,
+            () => _go(const ManageRulesScreen())
+          ),
+          (
+            Icons.merge_type_outlined,
+            "Merchant Cleanup",
+            "Fix duplicate shop names (Steam vs STEAM vs Steam Support)",
+            Colors.teal,
+            () => _go(const MerchantMergeScreen())
+          ),
+          (
+            Icons.storefront_outlined,
+            "Spending by Merchant",
+            "Total spent per shop/restaurant across all time",
+            Colors.deepOrange,
+            () => _showMerchantSummary(context)
+          ),
+          (
+            Icons.military_tech_outlined,
+            "Achievements",
+            "Badges, streaks, and milestones",
+            Colors.amber,
+            () => _go(const AchievementsScreen())
+          ),
+          (
+            Icons.menu_book_outlined,
+            "Financial Glossary",
+            "23 key terms — FHS, MP2, DTI, UITF and more",
+            Colors.deepPurple,
+            () => _go(const GlossaryScreen())
+          ),
+          (
+            Icons.chat_outlined,
+            "AI Chat History",
+            "Review your past conversations with SmartSpend AI",
+            Colors.teal,
+            () => _go(const ChatHistoryScreen())
+          ),
+        ]
+      ),
+      (
+        'HELP',
+        [
+          (
+            Icons.help_outline,
+            "Help & Guide",
+            "Full feature guide, FAQ, and how-to for every feature",
+            Colors.blue,
+            () => _go(const HelpScreen())
+          ),
+        ]
+      ),
+    ];
+
+    // Flatten + filter for search
+    final filtered = q.isEmpty
+        ? allItems
+        : allItems
+            .map((group) => (
+                  group.$1,
+                  group.$2
+                      .where((item) =>
+                          item.$2.toLowerCase().contains(q) ||
+                          item.$3.toLowerCase().contains(q))
+                      .toList()
+                ))
+            .where((group) => group.$2.isNotEmpty)
+            .toList();
+
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.6,
       minChildSize: 0.4,
-      maxChildSize: 0.88,
+      maxChildSize: 0.92,
       builder: (_, scrollCtrl) => Column(
         children: [
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
+          // Handle
           Container(
-            width: 40,
+            width: 36,
             height: 4,
             decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
+          // Title
           const Text("Quick Access",
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text("All your features in one place",
-              style: TextStyle(fontSize: 12, color: Colors.grey[500])),
           const SizedBox(height: 12),
-          Expanded(
-            child: ListView(
-              controller: scrollCtrl,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                _tile(
-                    Icons.savings_outlined,
-                    "Savings Goals",
-                    _loaded
-                        ? "$_goalCount goal${_goalCount == 1 ? '' : 's'}"
-                        : "Track your targets",
-                    Colors.green,
-                    () => _go(const SavingsGoalsScreen())),
-                _tile(
-                    Icons.account_balance_wallet_outlined,
-                    "Income",
-                    "Log and view income sources",
-                    Colors.blue,
-                    () => _go(const IncomeScreen())),
-                _tile(
-                    Icons.credit_card_outlined,
-                    "Debts & Lending",
-                    _loaded && _debtCount > 0
-                        ? "${_debtTotal > 0 ? '${CurrencyService.format(_debtTotal)} owed' : ''}${_planCount > 0 ? '${_debtTotal > 0 ? ' · ' : ''}$_planCount plan${_planCount == 1 ? '' : 's'}' : ''}"
-                        : "Track money owed and lent",
-                    Colors.red,
-                    () => _go(const DebtScreen())),
-                _tile(
-                    Icons.repeat,
-                    "Recurring Transactions",
-                    _loaded
-                        ? "$_recurringCount bill${_recurringCount == 1 ? '' : 's'} & subscriptions"
-                        : "Bills, subscriptions & more",
-                    Colors.orange,
-                    () => _go(const RecurringScreen())),
-                _tile(
-                    Icons.pie_chart_outline,
-                    "Budgets",
-                    "Set and manage category budgets",
-                    Colors.purple,
-                    () => _go(const BudgetScreen())),
-                _tile(
-                    Icons.currency_exchange,
-                    "Display Currency",
-                    "Change how amounts are shown — 34+ currencies",
-                    Colors.teal,
-                    () => _go(const CurrencyScreen())),
-                _tile(
-                    Icons.receipt_long_outlined,
-                    "Transactions",
-                    "Full searchable expense history",
-                    Colors.indigo,
-                    () => _go(const TransactionsScreen())),
-                _tile(
-                    Icons.credit_score_outlined,
-                    "Installment & Payment Plans",
-                    "Track phones, gadgets, ShopeePayLater, GCash GLoan & more",
-                    Colors.purple,
-                    () => _go(const DebtScreen())),
-                _tile(
-                    Icons.account_balance_wallet_outlined,
-                    "My Wallets",
-                    "Cash on Hand, GCash, Maya, BDO, BPI & more — track liquid money",
-                    Colors.green, () async {
-                  Navigator.pop(context);
-                  // Load wallets then show sheet
-                  final wallets = await DBService.getWallets();
-                  if (context.mounted) {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20))),
-                      builder: (_) => WalletsSheet(
-                        wallets: wallets,
-                        onChanged: () {},
-                      ),
-                    );
-                  }
-                }),
-                _tile(
-                    Icons.calendar_month_outlined,
-                    "Bill Calendar",
-                    "See all upcoming bills by date",
-                    Colors.orange,
-                    () => _go(const BillCalendarScreen())),
-                _tile(
-                    Icons.category_outlined,
-                    "Categories",
-                    "Manage custom expense categories",
-                    Colors.teal,
-                    () => _go(const ManageCategoriesScreen())),
-                _tile(
-                    Icons.rule_outlined,
-                    "Auto-Categorization Rules",
-                    "Keyword → category rules for faster logging",
-                    Colors.deepPurple,
-                    () => _go(const ManageRulesScreen())),
-                _tile(
-                    Icons.merge_type_outlined,
-                    "Merchant Cleanup",
-                    "Fix duplicate shop names (Steam vs STEAM vs Steam Support)",
-                    Colors.teal,
-                    () => _go(const MerchantMergeScreen())),
-                _tile(
-                    Icons.storefront_outlined,
-                    "Spending by Merchant",
-                    "See total spent per shop/restaurant across all time",
-                    Colors.deepOrange,
-                    () => _showMerchantSummary(context)),
-                _tile(
-                    Icons.receipt_long_outlined,
-                    "Log Due Bills",
-                    "Checklist of overdue recurring bills — tick and save all at once",
-                    Colors.orange,
-                    () => _go(const LogDueBillsScreen())),
-                _tile(
-                    Icons.groups_2_outlined,
-                    "Paluwagan Tracker",
-                    "Track your rotating savings group — members, rounds, contributions",
-                    Colors.green,
-                    () => _go(const PalawaganScreen())),
-                _tile(
-                    Icons.account_balance_outlined,
-                    "Import from Bank / GCash",
-                    "Paste GCash, BPI, BDO, Maya, or any bank history",
-                    Colors.green, () async {
-                  Navigator.pop(context);
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const BankImportScreen()));
-                }),
-                _tile(
-                    Icons.shield_outlined,
-                    "Insurance & Contributions",
-                    "SSS, PhilHealth, Pag-IBIG, insurance premiums & due dates",
-                    Colors.indigo,
-                    () => _go(const InsuranceScreen())),
-                _tile(
-                    Icons.account_balance,
-                    "PH Banks & Investments",
-                    "Compare 20 banks, digital banks, e-wallets, and investment options",
-                    Colors.blue,
-                    () => _go(const BankComparisonScreen())),
-                _tile(
-                    Icons.calculate_outlined,
-                    "Peso Cost Averaging",
-                    "Plan your regular investments — MP2, UITFs, stocks",
-                    Colors.teal,
-                    () => _go(const PCACalculatorScreen())),
-                _tile(
-                    Icons.menu_book_outlined,
-                    "Financial Glossary",
-                    "23 key terms explained in plain Filipino-English — FHS, MP2, DTI, UITF and more",
-                    Colors.deepPurple,
-                    () => _go(const GlossaryScreen())),
-                _tile(
-                    Icons.military_tech_outlined,
-                    "Achievements",
-                    "Badges, streaks, and milestones — see what you've earned",
-                    Colors.amber,
-                    () => _go(const AchievementsScreen())),
-                _tile(
-                    Icons.photo_library_outlined,
-                    "Batch Screenshot Import",
-                    "Import up to 10 receipts or transaction screenshots at once",
-                    Colors.blueGrey, () async {
-                  Navigator.pop(context);
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const BatchImageImportScreen()));
-                }),
-                _tile(
-                    Icons.camera_enhance_outlined,
-                    "Scan Receipt / Barcode",
-                    "Live camera for barcodes, QR codes, and receipt OCR",
-                    Colors.blueGrey, () async {
-                  Navigator.pop(context);
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const SmartCameraScreen()));
-                }),
-                _tile(
-                    Icons.edit_note_outlined,
-                    "Batch Manual Entry",
-                    "Log up to 8 expenses at once without AI — fill a quick table",
-                    Colors.brown, () async {
-                  Navigator.pop(context);
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const BatchManualEntryScreen()));
-                }),
-                _tile(
-                    Icons.chat_outlined,
-                    "AI Chat History",
-                    "Review your past conversations with SmartSpend AI",
-                    Colors.teal,
-                    () => _go(const ChatHistoryScreen())),
-                _tile(
-                    Icons.help_outline,
-                    "Help & Guide",
-                    "Full feature guide, FAQ, and how-to for every feature",
-                    Colors.blue,
-                    () => _go(const HelpScreen())),
-                const SizedBox(height: 8),
-              ],
+          // Search bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              controller: _searchCtrl,
+              onChanged: (v) => setState(() => _searchQuery = v),
+              decoration: InputDecoration(
+                hintText: "Search features…",
+                hintStyle: TextStyle(fontSize: 13, color: Colors.grey[400]),
+                prefixIcon:
+                    Icon(Icons.search, size: 20, color: Colors.grey[400]),
+                suffixIcon: _searchQuery.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(Icons.close,
+                            size: 18, color: Colors.grey[400]),
+                        onPressed: () {
+                          _searchCtrl.clear();
+                          setState(() => _searchQuery = '');
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: cs.surfaceContainerLow,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              ),
             ),
           ),
+          const SizedBox(height: 10),
+          // List
+          Expanded(
+            child: filtered.isEmpty
+                ? Center(
+                    child: Text('No results for "$_searchQuery"',
+                        style:
+                            TextStyle(color: Colors.grey[400], fontSize: 13)))
+                : ListView(
+                    controller: scrollCtrl,
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+                    children: [
+                      for (final group in filtered) ...[
+                        // Category header
+                        Padding(
+                          padding: const EdgeInsets.only(top: 14, bottom: 8),
+                          child: Text(group.$1,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey[500],
+                                  letterSpacing: 0.8)),
+                        ),
+                        // Items
+                        Container(
+                          decoration: BoxDecoration(
+                            color: cs.surface,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Column(
+                              children: [
+                                for (int i = 0; i < group.$2.length; i++) ...[
+                                  _tile(group.$2[i], cs),
+                                  if (i < group.$2.length - 1)
+                                    Divider(
+                                        height: 1,
+                                        indent: 56,
+                                        endIndent: 0,
+                                        color:
+                                            cs.outline.withValues(alpha: 0.10)),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _tile(
+      (IconData, String, String, Color, VoidCallback) item, ColorScheme cs) {
+    return InkWell(
+      onTap: item.$5,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: item.$4.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(item.$1, color: item.$4, size: 18),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.$2,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 13)),
+                  const SizedBox(height: 1),
+                  Text(item.$3,
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: cs.onSurface.withValues(alpha: 0.5)),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right,
+                size: 18, color: cs.onSurface.withValues(alpha: 0.25)),
+          ],
+        ),
       ),
     );
   }
@@ -1553,26 +1754,6 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _tile(IconData icon, String title, String subtitle, Color color,
-      VoidCallback onTap) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: CircleAvatar(
-          backgroundColor: color.withValues(alpha: 0.12),
-          child: Icon(icon, color: color, size: 22),
-        ),
-        title: Text(title,
-            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
-        trailing: Icon(Icons.chevron_right, color: Colors.grey[400]),
-        onTap: onTap,
       ),
     );
   }
@@ -2673,9 +2854,15 @@ class _DashboardState extends State<Dashboard> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: cs.surfaceContainerHighest.withValues(alpha: 0.35),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
+          color: cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2832,7 +3019,7 @@ class _DashboardState extends State<Dashboard> {
         Icons.account_balance_wallet_outlined,
         "My Wallets",
         "Cash, GCash, banks",
-        Colors.green,
+        const Color(0xFF1E88E5),
         () async {
           final wallets = await DBService.getWallets();
           if (!context.mounted) return;
@@ -2866,14 +3053,6 @@ class _DashboardState extends State<Dashboard> {
         Colors.teal,
         () => Navigator.push(context,
             MaterialPageRoute(builder: (_) => const BankImportScreen())),
-      ),
-      (
-        Icons.content_paste_go_outlined,
-        "Paste & Log",
-        "Paste bank/GCash SMS",
-        Colors.indigo,
-        () => Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const AddExpenseScreen())),
       ),
       (
         Icons.repeat,
@@ -2923,29 +3102,48 @@ class _DashboardState extends State<Dashboard> {
           crossAxisCount: 3,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-          childAspectRatio: 1.15,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 1.1,
           children: portals.map((p) {
             return GestureDetector(
               onTap: p.$5,
               child: Container(
                 decoration: BoxDecoration(
-                  color: p.$4.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: p.$4.withValues(alpha: 0.2)),
+                  color: cs.surface,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: p.$4.withValues(alpha: 0.18),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
                 ),
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(p.$1, color: p.$4, size: 24),
-                    const SizedBox(height: 6),
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: p.$4.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(11),
+                      ),
+                      child: Icon(p.$1, color: p.$4, size: 20),
+                    ),
+                    const SizedBox(height: 7),
                     Text(
                       p.$2,
                       style: TextStyle(
                           fontSize: 11,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           color: cs.onSurface),
                       textAlign: TextAlign.center,
                       maxLines: 1,
@@ -2956,9 +3154,9 @@ class _DashboardState extends State<Dashboard> {
                       p.$3,
                       style: TextStyle(
                           fontSize: 9,
-                          color: cs.onSurface.withValues(alpha: 0.5)),
+                          color: cs.onSurface.withValues(alpha: 0.45)),
                       textAlign: TextAlign.center,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -3742,8 +3940,15 @@ class _DashboardState extends State<Dashboard> {
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: cs.surfaceContainerHighest.withValues(alpha: 0.4),
-          borderRadius: BorderRadius.circular(14),
+          color: cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -3914,7 +4119,17 @@ class _DashboardState extends State<Dashboard> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(22),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.30),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -5098,11 +5313,15 @@ class _DashboardState extends State<Dashboard> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(15),
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(18),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 12,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -5627,9 +5846,15 @@ class _WeeklyCategoryCard extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: cs.surfaceContainerHighest.withValues(alpha: 0.35),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
+          color: cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6117,9 +6342,15 @@ class _WhereDidMoneyGoCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: cs.primaryContainer.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: cs.primary.withValues(alpha: 0.15)),
+          color: cs.primaryContainer.withValues(alpha: 0.28),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: cs.primary.withValues(alpha: 0.10),
+              blurRadius: 12,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6193,14 +6424,18 @@ class _DoneSpendingToggleState extends State<_DoneSpendingToggle> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             color: _isDone
-                ? Colors.green.withValues(alpha: 0.08)
-                : cs.surfaceContainerHighest.withValues(alpha: 0.4),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: _isDone
-                  ? Colors.green.withValues(alpha: 0.3)
-                  : cs.outline.withValues(alpha: 0.15),
-            ),
+                ? Colors.green.withValues(alpha: 0.10)
+                : cs.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: _isDone
+                    ? Colors.green.withValues(alpha: 0.12)
+                    : Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Row(
             children: [
