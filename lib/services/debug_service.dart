@@ -4,6 +4,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'db_service.dart';
 import 'score_service.dart';
+import 'app_config.dart';
+
+/// Current app version — keep in sync with pubspec.yaml.
+const kAppVersion = '2.9.40';
 
 /// Exports a full debug log — chat history, expenses, budgets, settings —
 /// as a plain text file for easy debugging and QA reporting.
@@ -16,7 +20,7 @@ class DebugService {
 
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln('  SMART SPEND — DEBUG LOG');
-    buffer.writeln('  Version: 2.9.37');
+    buffer.writeln('  Version: $kAppVersion');
     buffer.writeln('  Generated: ${fmt.format(now)}');
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln();
@@ -35,6 +39,46 @@ class DebugService {
     }
     buffer.writeln();
 
+    // ── AI MODEL STATE ─────────────────────────────────────
+    buffer.writeln('── AI MODEL STATE ──────────────────────────────');
+    buffer.writeln('  active_model_id = ${AppConfig.activeModelId}');
+    buffer.writeln('  active_model_label = ${AppConfig.activeModelLabel}');
+    buffer.writeln('  groq_limit_reached = ${AppConfig.groqLimitReached}');
+    // Dump the rolling request trace with one entry per line for readability
+    final traceRaw = await DBService.getSetting('ai_request_trace') ?? '';
+    if (traceRaw.isNotEmpty) {
+      buffer.writeln('  ai_request_trace:');
+      for (final line in traceRaw.split('\n').where((l) => l.isNotEmpty)) {
+        buffer.writeln('    $line');
+      }
+    }
+    final lastFail = await DBService.getSetting('last_silent_action_fail');
+    if (lastFail != null) {
+      buffer.writeln('  last_silent_action_fail = $lastFail');
+    }
+    final lastUngrounded = await DBService.getSetting('last_ungrounded_advice');
+    if (lastUngrounded != null) {
+      buffer.writeln('  last_ungrounded_advice = $lastUngrounded');
+    }
+    buffer.writeln();
+
+    // ── USER PROFILE ──────────────────────────────────────
+    buffer.writeln('── USER PROFILE ────────────────────────────────');
+    try {
+      final profiles = await db.query('user_profile', limit: 1);
+      if (profiles.isNotEmpty) {
+        final p = profiles.first;
+        buffer.writeln('  uid = ${(p['uid'] as String?)?.substring(0, 8) ?? '?'}...');
+        buffer.writeln('  name = ${p['first_name'] ?? ''} ${p['last_name'] ?? ''}'.trim());
+        buffer.writeln('  email = ${p['email'] ?? '(none)'}');
+      } else {
+        buffer.writeln('  (no profile — not signed in)');
+      }
+    } catch (_) {
+      buffer.writeln('  (unavailable)');
+    }
+    buffer.writeln();
+
     // ── EXPENSES ──────────────────────────────────────────
     final expenses = await DBService.getExpenses();
     buffer.writeln('── EXPENSES (${expenses.length} total) ────────');
@@ -45,7 +89,7 @@ class DebugService {
           '${e.shopName != null ? ' @ ${e.shopName}' : ''}'
           '${e.aiGenerated ? ' [AI]' : ''}'
           '${e.notes != null ? ' — ${e.notes}' : ''}'
-          '${e.tags != null && e.tags!.isNotEmpty ? ' [${e.tags}]' : ''}');
+          '${e.tags != null && e.tags!.isNotEmpty ? ' [tags:${e.tags}]' : ''}');
     }
     buffer.writeln();
 
@@ -66,12 +110,29 @@ class DebugService {
     }
     buffer.writeln();
 
+    // ── WALLETS ───────────────────────────────────────────
+    final wallets = await DBService.getWallets();
+    final walletTotal = wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
+    buffer.writeln('── WALLETS (${wallets.length}) ──────────────────');
+    for (final w in wallets) {
+      buffer.writeln(
+          '  ${w['icon'] ?? '💵'} ${w['name']} | ₱${(w['balance'] as num).toStringAsFixed(2)}');
+    }
+    if (wallets.isNotEmpty) {
+      buffer.writeln('  TOTAL LIQUID: ₱${walletTotal.toStringAsFixed(2)}');
+    }
+    buffer.writeln();
+
     // ── SAVINGS GOALS ─────────────────────────────────────
     final goals = await DBService.getGoals();
     buffer.writeln('── SAVINGS GOALS (${goals.length}) ─────────────');
     for (final g in goals) {
+      final pct = (g['target_amount'] as num) > 0
+          ? ((g['current_amount'] as num) / (g['target_amount'] as num) * 100)
+              .toStringAsFixed(1)
+          : '0.0';
       buffer.writeln(
-          '  ${g['name']}: ₱${g['current_amount']}/${g['target_amount']}'
+          '  ${g['name']}: ₱${g['current_amount']}/${g['target_amount']} ($pct%)'
           '${g['deadline'] != null ? ' (due ${g['deadline']})' : ''}');
     }
     buffer.writeln();
@@ -98,6 +159,48 @@ class DebugService {
     }
     buffer.writeln();
 
+    // ── RECURRING CANDIDATES (auto-detected patterns) ─────
+    try {
+      final candidates = await db.query('recurring_candidates',
+          orderBy: 'avg_amount DESC');
+      buffer.writeln('── RECURRING CANDIDATES (${candidates.length}) ──');
+      for (final c in candidates) {
+        final dismissed = (c['dismissed'] as int? ?? 0) == 1;
+        buffer.writeln(
+            '  ${dismissed ? '[dismissed] ' : ''}${c['description']} | ${c['category']}'
+            ' | ~₱${(c['avg_amount'] as num).toStringAsFixed(0)} ${c['frequency']}'
+            ' | last: ${c['last_seen']}');
+      }
+    } catch (_) {
+      buffer.writeln('── RECURRING CANDIDATES ── (unavailable)');
+    }
+    buffer.writeln();
+
+    // ── INSURANCE & CONTRIBUTIONS ─────────────────────────
+    final policies = await DBService.getInsurancePolicies();
+    buffer.writeln('── INSURANCE & CONTRIBUTIONS (${policies.length}) ──');
+    for (final p in policies) {
+      buffer.writeln(
+          '  ${p['name']} | ${p['type']} | ₱${p['premium_amount']}/${p['frequency']}'
+          '${p['next_due_date'] != null ? ' | next: ${p['next_due_date']}' : ''}');
+    }
+    buffer.writeln();
+
+    // ── PALUWAGAN ─────────────────────────────────────────
+    try {
+      final paluwagan = await db.query('paluwagan');
+      if (paluwagan.isNotEmpty) {
+        buffer.writeln('── PALUWAGAN (${paluwagan.length}) ──────────────');
+        for (final pal in paluwagan) {
+          buffer.writeln(
+              '  ${pal['name']} | ₱${pal['contribution_amount']}/${pal['frequency']}'
+              ' | members: ${pal['member_count']}'
+              ' | status: ${pal['status'] ?? 'active'}');
+        }
+        buffer.writeln();
+      }
+    } catch (_) {}
+
     // ── CUSTOM CATEGORIES ─────────────────────────────────
     final customCats = await DBService.getCustomCategories();
     buffer.writeln('── CUSTOM CATEGORIES (${customCats.length}) ────────');
@@ -122,7 +225,9 @@ class DebugService {
       final emojis = ['😞', '😕', '😐', '🙂', '😄'];
       final score = m['mood_score'] as int;
       final emoji = score >= 1 && score <= 5 ? emojis[score - 1] : '?';
-      buffer.writeln('  ${m['date']}: $emoji ($score/5)');
+      final note = m['note'] as String?;
+      buffer.writeln(
+          '  ${m['date']}: $emoji ($score/5)${note != null && note.isNotEmpty ? ' — "$note"' : ''}');
     }
     buffer.writeln();
 
@@ -137,28 +242,36 @@ class DebugService {
     // ── CHAT HISTORY ──────────────────────────────────────
     final chat = await DBService.getChatHistory(limit: 200);
     buffer.writeln('── AI CHAT HISTORY (${chat.length} messages) ───');
-    // Count errors from message content (actions are stripped before save,
-    // so we read the action count from the ai_request_trace setting instead)
     int errorCount = 0;
     for (final msg in chat) {
       final role = (msg['role'] as String).toUpperCase().padRight(5);
       final ts = (msg['timestamp'] as String).substring(0, 19);
       final rawText = msg['message'] as String;
-      // Show full message — truncate only very long ones (>500 chars)
-      final text = rawText.length > 500
-          ? '${rawText.replaceAll('\n', ' ').substring(0, 500)}... [truncated]'
-          : rawText.replaceAll('\n', ' ');
-      // Mark error/failed messages clearly for easier debugging
-      final isError = rawText.contains('⏱️') ||
-          rawText.contains("couldn't respond") ||
-          rawText.contains('timed out') ||
-          rawText.contains('Daily AI limit');
+      // Decode persisted error metadata prefix for display
+      String displayText = rawText;
+      String metaSuffix = '';
+      if (rawText.startsWith('||ERR:')) {
+        try {
+          final sepIdx = rawText.indexOf('||', 6);
+          if (sepIdx != -1) {
+            displayText = rawText.substring(sepIdx + 2);
+            metaSuffix = ' [error metadata persisted]';
+          }
+        } catch (_) {}
+      }
+      final text = displayText.length > 500
+          ? '${displayText.replaceAll('\n', ' ').substring(0, 500)}... [truncated]'
+          : displayText.replaceAll('\n', ' ');
+      final isError = displayText.contains('⏱️') ||
+          displayText.contains("couldn't respond") ||
+          displayText.contains('timed out') ||
+          displayText.contains('Daily AI limit') ||
+          displayText.contains('authentication failed');
       if (isError) errorCount++;
       final prefix = isError ? '[ERROR] ' : '';
-      buffer.writeln('  [$ts] $role: $prefix$text');
+      buffer.writeln('  [$ts] $role: $prefix$text$metaSuffix');
     }
-    // Read total action count from the rolling ai_request_trace (authoritative —
-    // ACTION lines are stripped from saved messages so counting them there gives 0)
+    // Action count from ai_request_trace (authoritative — actions stripped before save)
     int actionCount = 0;
     try {
       final trace = await DBService.getSetting('ai_request_trace') ?? '';
@@ -171,7 +284,25 @@ class DebugService {
         '  SUMMARY: $errorCount errors, $actionCount actions executed');
     buffer.writeln();
 
-    // ── INSTALLMENT PLANS ─────────────────────────────────
+    // ── CONVERSATION SUMMARIES ────────────────────────────
+    try {
+      final summaries = await db.query('conversation_summaries',
+          orderBy: 'id DESC', limit: 3);
+      if (summaries.isNotEmpty) {
+        buffer.writeln('── AI CONVERSATION SUMMARIES (${summaries.length} stored) ──');
+        for (final s in summaries) {
+          final ts = (s['created_at'] as String? ?? '').substring(0, 16);
+          final msgCount = s['message_count_at_summary'] ?? '?';
+          final text = (s['summary'] as String)
+              .replaceAll('\n', ' ')
+              .substring(0, ((s['summary'] as String).length).clamp(0, 300));
+          buffer.writeln('  [$ts | at msg #$msgCount] $text');
+        }
+        buffer.writeln();
+      }
+    } catch (_) {}
+
+    // ── PAYMENT PLANS ─────────────────────────────────────
     List<Map<String, dynamic>> plans = [];
     try {
       plans = await db.query('installment_plans', orderBy: 'created_at DESC');
@@ -204,33 +335,56 @@ class DebugService {
       buffer.writeln();
     }
 
-    // ── NOTIFICATION STATE ────────────────────────────────
-    buffer.writeln('── NOTIFICATION STATE ──────────────────────────');
-    final notifKeys = [
+    // ── NOTIFICATION & SYSTEM STATE ───────────────────────
+    // Shows all diagnostic/operational settings not already in the main SETTINGS
+    // block above, organized for easier reading.
+    buffer.writeln('── NOTIFICATION & SYSTEM STATE ─────────────────');
+    final systemKeys = [
+      // Notification gates
       'last_weekly_notif',
       'last_anomaly_check',
       'last_velocity_check',
       'last_want_alert',
       'last_daily_briefing',
+      // FHS / decay
       'warning_decay_days',
       'last_decay_check',
-      'level_up_60',
-      'level_up_70',
-      'level_up_80',
-      'level_up_90',
-      'last_silent_action_fail', // AI said "Logged:" but fired no valid action
-      'income_sanity_check', // month when low-income alert last shown
-      kGapPenaltyKey, // accumulated unlogged-but-spent days this month
-      kGapCleanKey, // accumulated confirmed clean days this month
-      'last_gap_check_date', // date gap detection last ran
-      'ai_request_trace', // §25 rolling last-5 request traces (latency/tokens/retries)
-      'last_ungrounded_advice', // §16 last advice reply flagged with no figures
-      'limit_daily', // unified spending limit — daily
-      'limit_weekly', // unified spending limit — weekly
-      'limit_monthly', // unified spending limit — monthly
-      'limit_yearly', // unified spending limit — yearly
+      'prev_fhs_score',
+      // Level-up badges
+      'level_up_60', 'level_up_70', 'level_up_80', 'level_up_90',
+      // Gap awareness
+      'gap_penalty_days',
+      'gap_clean_days',
+      'last_gap_check_date',
+      // Startup alerts
+      'last_startup_alert_date',
+      'income_sanity_check',
+      'balance_discrepancy_check',
+      // Spending limits
+      'limit_daily', 'limit_weekly', 'limit_monthly', 'limit_yearly',
+      // App features
+      'wallet_auto_deduct',
+      'round_up_savings',
+      'impulse_pause_enabled',
+      'compact_mode',
+      'balance_mode',
+      'mood_checkin_enabled',
+      'income_wallet_mode',
+      'app_lock_enabled',
+      // AI insight cache
+      'cached_ai_insight_date',
+      // Rollover
+      'rollover_applied_month',
+      // Recurring detection
+      'last_recurring_check',
+      // Migration flags
+      'is_want_migrated',
+      'item_name_sanitized',
+      'education_need_fixed',
+      'installments_migrated',
+      'dup_cleanup_v2938',
     ];
-    for (final key in notifKeys) {
+    for (final key in systemKeys) {
       final val = await DBService.getSetting(key);
       if (val != null) buffer.writeln('  $key = $val');
     }
@@ -244,7 +398,7 @@ class DebugService {
           .map((e) =>
               {'amount': e.amount, 'category': e.category, 'date': e.date})
           .toList();
-      final income = await DBService.getMonthlyIncome();
+      final monthlyIncome0 = await DBService.getMonthlyIncome();
       final iwMode = await DBService.getIncomeWalletMode();
       final tightest = await DBService.getTightestLimit();
       final spendLimit = tightest['limit'] as double;
@@ -252,7 +406,7 @@ class DebugService {
       final breakdown = ScoreService.getBreakdown(
         thisMonthExp,
         budgets: budgets,
-        monthlyIncome: iwMode ? income : 0,
+        monthlyIncome: iwMode ? monthlyIncome0 : 0,
         lightweightMode: !iwMode,
         spendingLimit: spendLimit,
         spendingLimitPeriod: spendPeriod,
@@ -306,7 +460,6 @@ class DebugService {
       thisMonthByCategory[e.category] =
           (thisMonthByCategory[e.category] ?? 0) + e.amount;
     }
-    // All-time total and per-month breakdown (authoritative — same as what AI sees)
     final allTimeTotal = expenses.fold<double>(0, (s, e) => s + e.amount);
     final allMonthlyTotals = <String, double>{};
     for (final e in expenses) {
@@ -324,7 +477,7 @@ class DebugService {
       buffer.writeln('    ${entry.key}: ₱${entry.value.toStringAsFixed(2)}');
     }
     buffer.writeln(
-        '  This month (${currentMonth3}): ${thisMonthExpenses.length} expenses, ₱${thisMonthTotal.toStringAsFixed(0)} total');
+        '  This month ($currentMonth3): ${thisMonthExpenses.length} expenses, ₱${thisMonthTotal.toStringAsFixed(0)} total');
     buffer.writeln(
         '  Last month ($lastMonthKey): ${lastMonthExpenses.length} expenses, ₱${lastMonthExpenses.fold<double>(0, (s, e) => s + e.amount).toStringAsFixed(0)} total');
     buffer.writeln('  This month by category:');
@@ -332,7 +485,6 @@ class DebugService {
       ..sort((a, b) => b.value.compareTo(a.value)))) {
       buffer.writeln('    ${entry.key}: ₱${entry.value.toStringAsFixed(0)}');
     }
-    // 50/30/20 breakdown
     const needsCategories = {
       'Food',
       'Transportation',
