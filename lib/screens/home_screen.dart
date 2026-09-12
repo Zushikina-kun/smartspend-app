@@ -44,6 +44,10 @@ import 'pca_calculator_screen.dart';
 import 'glossary_screen.dart';
 import 'add_expense_screen.dart';
 import 'batch_manual_entry_screen.dart';
+import 'batch_image_import_screen.dart';
+import 'smart_camera_screen.dart';
+import 'chat_history_screen.dart';
+import 'help_screen.dart';
 import '../services/startup_alerts_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -1378,6 +1382,57 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     "23 key terms explained in plain Filipino-English — FHS, MP2, DTI, UITF and more",
                     Colors.deepPurple,
                     () => _go(const GlossaryScreen())),
+                _tile(
+                    Icons.military_tech_outlined,
+                    "Achievements",
+                    "Badges, streaks, and milestones — see what you've earned",
+                    Colors.amber,
+                    () => _go(const AchievementsScreen())),
+                _tile(
+                    Icons.photo_library_outlined,
+                    "Batch Screenshot Import",
+                    "Import up to 10 receipts or transaction screenshots at once",
+                    Colors.blueGrey, () async {
+                  Navigator.pop(context);
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const BatchImageImportScreen()));
+                }),
+                _tile(
+                    Icons.camera_enhance_outlined,
+                    "Scan Receipt / Barcode",
+                    "Live camera for barcodes, QR codes, and receipt OCR",
+                    Colors.blueGrey, () async {
+                  Navigator.pop(context);
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const SmartCameraScreen()));
+                }),
+                _tile(
+                    Icons.edit_note_outlined,
+                    "Batch Manual Entry",
+                    "Log up to 8 expenses at once without AI — fill a quick table",
+                    Colors.brown, () async {
+                  Navigator.pop(context);
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const BatchManualEntryScreen()));
+                }),
+                _tile(
+                    Icons.chat_outlined,
+                    "AI Chat History",
+                    "Review your past conversations with SmartSpend AI",
+                    Colors.teal,
+                    () => _go(const ChatHistoryScreen())),
+                _tile(
+                    Icons.help_outline,
+                    "Help & Guide",
+                    "Full feature guide, FAQ, and how-to for every feature",
+                    Colors.blue,
+                    () => _go(const HelpScreen())),
                 const SizedBox(height: 8),
               ],
             ),
