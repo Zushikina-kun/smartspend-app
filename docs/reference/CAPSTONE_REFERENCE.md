@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.37 | **Date:** September 10, 2026
+**Version:** 2.9.41 | **Date:** September 12, 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.37).
+> All figures are accurate to the final build (v2.9.41).
 
 ---
 
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.37
+**Version:** 2.9.41
 **Build date:** September 10, 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -103,19 +103,20 @@ Per-user data (20-50 expenses, 5-10 budgets, 3-5 goals) fits entirely in the con
 ### LLM Comparative Benchmarking (Objective 2 Evidence)
 Selection of the primary model was based on a structured technical benchmarking study across 15 candidate API models. Each model was evaluated using a standardized corpus of 100 localized expense-parsing prompts in English, Tagalog, and colloquial Taglish (e.g., *"nagbayad ako ng 120 pesos para sa pansit at coke sa Jollibee kanina"*):
 
-| Model | Provider | Free Tier | Avg Latency | Taglish Accuracy | JSON Reliability | Role |
-|-------|----------|-----------|-------------|-----------------|-----------------|------|
-| **Gemini 3.1 Flash-Lite** | Google | 1,000/day | 0.42s | **98.2%** | 99.1% | ✅ PRIMARY |
-| Gemini 3.5 Flash | Google | ~1,500/day | 0.58s | 98.5% | 99.4% | ✅ Fallback 1 |
-| LLaMA 4 Scout | Groq LPU | 1,000/day | 0.28s | 96.8% | 98.1% | ✅ Fallback 2 (Tagalog native) |
-| LLaMA 3.3 70B | Groq LPU | 1,000/day | 0.31s | 91.2% | 97.5% | ✅ Fallback 3 |
-| LLaMA 3.1 8B | Groq LPU | 14,400/day | 0.12s | 88.4% | 92.1% | ✅ Fallback 4 (fast/volume) |
-| GPT-OSS 120B | Cerebras | 1M tokens/day | 0.08s | 90.1% | 94.2% | ✅ Fallback 5 |
-| GPT-4o Mini | OpenAI | Paid only | 0.82s | 94.6% | 98.8% | ❌ Cost |
-| Claude Fable 5 | Anthropic | Paid only | 1.82s | 98.1% | 99.6% | ❌ Cost |
-| DeepSeek V4 | DeepSeek | 5M trial | 1.12s | 74.2% | 82.1% | ❌ Accuracy |
+| **Gemini 3.5 Flash-Lite** | Google AI Studio | ~500/day FREE | TBD | **TBD** | TBD | ✅ PRIMARY (GA stable Jul 21, 2026) |
+| Gemini 3.5 Flash | Google AI Studio | ~500/day FREE | TBD | TBD | TBD | ✅ Fallback 1 |
+| GPT-OSS 120B | Groq LPU | 1,000/day FREE | TBD | TBD | TBD | ✅ Fallback 2 |
+| Qwen3.6 27B | Groq LPU | 1,000/day FREE | TBD | TBD | TBD | ✅ Fallback 3 |
+| Qwen3.8 27B | Groq LPU | 1,000/day FREE | TBD | TBD | TBD | ✅ Fallback 4 |
+| GPT-OSS 20B | Groq LPU | 1,000/day FREE | TBD | TBD | TBD | ✅ Fallback 5 |
+| Compound Mini | Groq LPU | 250/day FREE | TBD | TBD | TBD | ✅ Fallback 6 |
+| GPT-OSS 120B | Cerebras | 1M tokens/day FREE | TBD | TBD | TBD | ✅ Fallback 7 (last resort) |
+| GPT-4o Mini | OpenAI | Paid only | — | — | — | ❌ Cost |
+| DeepSeek V4 | DeepSeek | 5M trial | — | — | — | ❌ Accuracy/terms |
 
-**Key finding:** Gemini 3.1 Flash-Lite was selected as primary — highest free quota (1,000/day), 98.2% Taglish accuracy, sub-second latency, and native function calling for all 34 agentic actions.
+> ⚠️ **TBD cells** = require actual benchmarking against a standardized Taglish corpus. Do NOT fill with estimates. Run the benchmark or leave as TBD.
+
+**Key finding:** Gemini 3.5 Flash-Lite selected as primary — GA stable, fastest Gemini 3.5 model, sub-second latency, native function calling. LLaMA models retired from Groq free/dev tier Feb–Aug 2026 (confirmed per Groq deprecation docs). Current Groq lineup: `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `qwen/qwen3.6-27b`, `qwen/qwen3.8-27b`, `groq/compound`, `groq/compound-mini`.
 
 **Why context injection over RAG:** A typical user's active dataset (~50 expenses, 10 budgets, 5 goals) averages 1,000–5,000 tokens — fits entirely in one prompt. RAG adds vector-search latency and fails on multi-hop queries (e.g., "Can I afford a ₱1,500 purchase given my GCash balance, clothing budget, and savings goal?"). Direct injection gives 100% accurate, always-current context.
 
@@ -337,14 +338,14 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | **Atlantis Press PLS-SEM** (Sharma, Gaba & Sharma, 2026; N=656) | Empirical structural model: nudges + gamification → financial intention → well-being, moderated by algorithm transparency | Validates SmartSpend's nudge + gamification design with exact path coefficients: Budget Feedback Nudge β=0.28 (t=6.21), Gamified Rewards β=0.25 (t=5.89). Perceived Algorithm Transparency moderates the well-being path (β=0.14, t=2.95, p<0.001, R²DFWB=0.56) |
 - Spending Streaks & Challenges
 - Daily Quests (10 rotating, 4 shown per day)
-- 23 Achievement Badges (7 categories)
+- **25** Achievement Badges
 - Daily Mood Check-In with spending correlation
 - Weekly Behavioral Summary notification
 
 ### Security & Privacy
 - Firebase Remote Config for API keys (never in APK)
 - Firebase App Check (monitoring mode; Play Integrity for Play Store)
-- Per-user AI rate limiting (60 messages/day)
+- Per-user AI rate limiting (**150 messages/day**)
 - App Lock (PIN + biometric, per-account)
 - Full data encryption via Firebase Auth + Firestore security rules
 - Per-account data isolation (logout clears local DB)
@@ -459,14 +460,17 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 - Function calling: native support
 - Not deprecated (replaces Gemini 2.5 Flash-Lite which was retired from new API users in early 2026)
 
-### Fallback 2: LLaMA 4 Scout (Groq)
-- 1,000 requests/day FREE, 30,000 TPM, ~460 tokens/second
-- Tagalog is one of Meta's 12 explicitly fine-tuned languages — best open-source for Filipino-English
+### Fallback 2: GPT-OSS 120B (Groq)
+- 1,000 requests/day FREE (account-tier confirmed)
+- High reasoning quality on this Groq account tier
 - Used as Fallback 2 in the auto-failover chain
 
-### Fallback 3: Groq LLaMA 3.3 70B
-- 1,000 requests/day FREE (NOTE: RPD reduced from 14,400 in late 2025)
-- ~315 tokens/second — strong reasoning
+### Fallback 3: Qwen3.6 27B (Groq)
+- 1,000 requests/day FREE
+- Multimodal + reasoning support
+- Used as Fallback 3
+
+> ⚠️ **LLaMA models retired:** `llama-4-scout`, `llama-3.3-70b`, and `llama-3.1-8b` were retired from the Groq free/dev tier in Feb–Aug 2026 waves (per Groq deprecation docs). They are NOT available on this project's Groq account and should not appear in any documentation.
 - Used as Fallback 3 in the auto-failover chain
 
 ### Why not GPT-5.6/Claude Fable 5:

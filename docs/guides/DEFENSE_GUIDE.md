@@ -1,5 +1,5 @@
 # SmartSpend — Defense Guide
-**Version:** 2.9.19 | **September 2026** | **Lucid Frame**
+**Version:** 2.9.41 | **September 2026** | **Lucid Frame**
 
 > This is your single reference for both the DEMO and the DEFENSE.
 > Read it fully before your pre-final and final defenses.
@@ -34,7 +34,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | What | Technology | Why |
 |------|-----------|-----|
 | App framework | Flutter (Dart) | Cross-platform, single codebase, near-native performance |
-| AI/LLM | Multi-provider: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, LLaMA 4 Scout (Groq), LLaMA 3.3 70B (Groq), LLaMA 3.1 8B (Groq), GPT-OSS 120B (Cerebras) | Auto-failover, always available, all free tier |
+| AI/LLM | Multi-provider: **Gemini 3.5 Flash-Lite** (primary), Gemini 3.5 Flash, GPT-OSS 120B (Groq), Qwen3.6 27B (Groq), Qwen3.8 27B (Groq), GPT-OSS 20B (Groq), Compound Mini (Groq), GPT-OSS 120B (Cerebras) | Auto-failover, 8 providers, all free tier |
 | Local database | SQLite via sqflite (v11, 20 tables) | Works offline, fast, no cost |
 | Cloud sync | Firebase Firestore | Free tier, bidirectional sync, UID-scoped security rules |
 | Authentication | Firebase Auth | Google Sign-In + email/password |
@@ -50,9 +50,9 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 **What makes it Agentic:** The AI doesn't just answer — it takes **34 autonomous actions** on user data. Say "I spent 150 pesos on jeepney" → AI parses intent → writes directly to SQLite. Genuine agentic loop: **perceive → decide → act**.
 
 **Multi-model routing:**
-- `fast` tier → expense logging, simple queries → LLaMA 3.1 8B (14,400 req/day, fastest)
-- `smart` tier → analysis, planning → LLaMA 4 Scout (Groq) or Gemini 3.1 Flash-Lite
-- `financial_advice` tier → SSS/tax/debt strategy → Gemini 3.5 Flash (best reasoning) or LLaMA 4 Scout
+- `fast` tier → expense logging, simple queries → active model (stays on Gemini 3.5 Flash-Lite unless quota hit)
+- `smart` tier → analysis, planning → Gemini 3.5 Flash-Lite or GPT-OSS 120B (Groq)
+- `financial_advice` tier → SSS/tax/debt strategy → Gemini 3.5 Flash (best reasoning)
 
 **How context injection works:** Before every AI message, app queries SQLite and builds a context string with expenses, budgets, income, goals, debts, wallets, and recurring bills. Injected into the AI system prompt as the single source of truth.
 
@@ -133,12 +133,12 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | 2.9.19 |
+| Version | **2.9.41** |
 | Platform | Android (Flutter) |
 | Database | SQLite version 11, 20 tables |
-| AI providers | 6 (auto-failover, all free tier) |
-| Primary model | Gemini 3.1 Flash-Lite |
-| Daily AI limit | 60 messages/user |
+| AI providers | **8** (auto-failover, all free tier) |
+| Primary model | **Gemini 3.5 Flash-Lite** |
+| Daily AI limit | **150 messages/user** |
 | AI agentic actions | 34 |
 | Currencies supported | 57 |
 | Screens | 37 |
@@ -190,7 +190,7 @@ A: The AI doesn't just answer — it takes autonomous actions. "Spent 150 on lun
 A: RAG is for large knowledge bases (thousands of documents). Our per-user data is tiny — 50 expenses, 8 budgets — fits in one prompt. Direct context injection is faster, simpler, and appropriate for our use case.
 
 **Q: What if the API goes down?**
-A: Six-provider automatic failover — Gemini 3.1 Flash-Lite → Gemini 3.5 Flash → LLaMA 4 Scout (Groq) → LLaMA 3.3 70B (Groq) → LLaMA 3.1 8B (Groq) → GPT-OSS 120B (Cerebras). Manual entry via form works fully offline with zero AI.
+A: **Eight**-provider automatic failover — Gemini 3.5 Flash-Lite → Gemini 3.5 Flash → GPT-OSS 120B (Groq) → Qwen3.6 27B → Qwen3.8 27B → GPT-OSS 20B → Compound Mini → GPT-OSS 120B (Cerebras). Manual entry via form works fully offline with zero AI. LLaMA models were retired from Groq free/dev tier Feb–Aug 2026.
 
 **Q: Why Flutter?**
 A: Single codebase for Android and iOS, near-native performance (compiles to ARM), efficient for a 3-person team.
@@ -199,7 +199,7 @@ A: Single codebase for Android and iOS, near-native performance (compiles to ARM
 A: Four frameworks ground the behavioral layer:
 1. **Nudge Theory (Thaler & Sunstein, 2008)** — Startup alerts, Warning Decay, and budget framing are choice-architecture nudges that guide behavior without restricting freedom.
 2. **Prospect Theory / Loss Aversion (Kahneman & Tversky, 1979)** — The Warning Decay (−5 pts/day) makes the consequence of ignoring budget overruns tangible. Losses motivate more than equivalent gains.
-3. **Self-Determination Theory (Deci & Ryan, 2000)** — The 23 achievement badges and streak system support *Competence* (rewarding skill growth), non-prescriptive goals support *Autonomy*, and Filipino-first language and context support *Relatedness*.
+3. **Self-Determination Theory (Deci & Ryan, 2000)** — The **25 achievement badges** and streak system support *Competence* (rewarding skill growth), non-prescriptive goals support *Autonomy*, and Filipino-first language and context support *Relatedness*.
 4. **Empirical PLS-SEM validation (Sharma, Gaba & Sharma, 2026; N=656)** — This structural equation model found that: Personalized Budget Feedback Nudges → Sustainable Financial Intention (β=0.28, t=6.21, p<0.001); Gamified Rewards → SFI (β=0.25, t=5.89, p<0.001); and Perceived Algorithm Transparency (explaining *why* the app scores you) acts as a significant moderator (β=0.14, t=2.95, p<0.001) that amplifies well-being outcomes. The model explains 56% of variance in Digital Financial Well-being (R²=0.56). This directly validates why SmartSpend explains its FHS breakdown in plain language.
 
 **Q: What is the academic basis for the FHS as a custom scoring system?**
@@ -236,7 +236,7 @@ A: SmartSpend provides general financial information for educational purposes on
 A: Gemini 3.7 Flash was released August 13, 2026 — after SmartSpend's core architecture was finalized. It is also a paid-only model ($0.75 per 1M input tokens) with no free tier at the time of writing. Our fallback chain is built entirely on free-tier providers to ensure zero operating cost for an academic deployment. Gemini 3.7 Flash is the most capable option for a post-capstone production upgrade of the `financial_advice` routing tier.
 
 **Q: What about Groq LLaMA 4 Scout? Is it in your fallback chain?**
-A: Yes — LLaMA 4 Scout (`meta-llama/llama-4-scout-17b-16e-instruct`) is now the third tier in the failover chain, after the two Gemini models and before LLaMA 3.3 70B. It runs at ~460 tokens/second on Groq's LPU hardware, has a 30,000 TPM limit, and — critically — **Tagalog is one of Meta's 12 explicitly fine-tuned languages** for LLaMA 4 Scout, making it better suited than LLaMA 3.3 70B for Filipino-English parsing. It also handles the `smart` routing tier (analysis and planning tasks) when Gemini is unavailable.
+A: No — LLaMA 4 Scout (`meta-llama/llama-4-scout-17b-16e-instruct`) and all LLaMA models were **retired from the Groq free/dev tier** in waves from February to August 2026 (confirmed via Groq's own deprecation docs and GitHub trackers). They return 404 on this project's Groq account. The current Groq lineup is: `openai/gpt-oss-120b`, `openai/gpt-oss-20b`, `qwen/qwen3.6-27b`, `qwen/qwen3.8-27b`, `groq/compound`, `groq/compound-mini`. The fallback chain uses these instead.
 
 **Q: Financial Management Score — how is it different from FHS? Isn't it redundant?**
 A: They measure completely different things. The FHS measures financial *outcomes* — are you saving 20%, are you staying within budget, are your spending levels controlled? The FMS measures financial *management behavior* — are you logging consistently, are your entries complete, are you engaging with the app regularly? A user can have a high FHS (great financial outcomes) and a low FMS (rarely opens the app — all data was entered in one session). The two scores together give a complete picture: financial health AND financial discipline. This separation is grounded in Financial Health Network (2026) and Elenvo AI (2026) research recommendations, which explicitly distinguish health outcomes from management behaviors.
@@ -286,7 +286,7 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 
 ---
 
-*SmartSpend v2.9.19 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
+*SmartSpend v2.9.41 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*
 
 
@@ -481,7 +481,7 @@ A: ScanReviewScreen serves two distinct purposes that require different UI layou
 📱 **SCROLL** to badges row (if visible)
 
 🗣️ **NARRATE:**
-> "23 achievement badges, spending streaks, impulse pause for large Want purchases, subscription auto-detection."
+> "**25 achievement badges**, spending streaks, impulse pause for large Want purchases, subscription auto-detection."
 
 ---
 

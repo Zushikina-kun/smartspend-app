@@ -1,6 +1,6 @@
 # SmartSpend — Application Pipeline
 ## How the App Works, Start to Finish
-**Version:** 2.9.11 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.41 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **For:** Anyone — adviser, panel, new team member, or user
 
 ---
@@ -78,11 +78,14 @@
 │  ┌─────────────────────────────────────────────────────────────────┐   │
 │  │  MULTI-MODEL LLM ROUTING                                         │   │
 │  │                                                                  │   │
-│  │  1st → Gemini 3.1 Flash-Lite   (1,000 free req/day)            │   │
-│  │  2nd → Gemini 3.5 Flash        (if 1st hits limit)             │   │
-│  │  3rd → Groq LLaMA 3.3 70B     (if 2nd hits limit)             │   │
-│  │  4th → Groq LLaMA 3.1 8B      (if 3rd hits limit)             │   │
-│  │  5th → Cerebras LLaMA 3.1     (last resort, fastest)          │   │
+│  │  1st → Gemini 3.5 Flash-Lite  (primary, GA stable Jul 2026)    │   │
+│  │  2nd → Gemini 3.5 Flash       (if 1st hits limit)              │   │
+│  │  3rd → GPT-OSS 120B (Groq)   (if 2nd hits limit)              │   │
+│  │  4th → Qwen3.6 27B (Groq)    (if 3rd hits limit)              │   │
+│  │  5th → Qwen3.8 27B (Groq)    (if 4th hits limit)              │   │
+│  │  6th → GPT-OSS 20B (Groq)    (if 5th hits limit)              │   │
+│  │  7th → Compound Mini (Groq)   (if 6th hits limit)              │   │
+│  │  8th → GPT-OSS 120B (Cerebras)(last resort, ~3,000 t/s)        │   │
 │  │                                                                  │   │
 │  │  If ALL hit limits → manual entry still works offline           │   │
 │  └─────────────────────────────────────────────────────────────────┘   │
@@ -251,9 +254,9 @@ USER'S PHONE
     ├── Firebase App Check ───── verifies only real signed APKs
     ├── Firebase Remote Config ── API key fetched at runtime (never in APK)
     │
-    ├── Gemini API (Google) ─── primary AI, 1,000 free req/day
-    ├── Groq API ──────────── fallback AI (LLaMA 3.3 70B / 3.1 8B)
-    ├── Cerebras ──────────── last-resort AI fallback
+    ├── Gemini API (Google) ─── primary AI (Gemini 3.5 Flash-Lite)
+    ├── Groq API ──────────── fallback AI (GPT-OSS 120B/20B, Qwen3.6/3.8 27B, Compound/Mini)
+    ├── Cerebras ──────────── last-resort AI fallback (GPT-OSS 120B)
     │
     ├── Google ML Kit ──────── OCR (receipt text extraction, on-device)
     ├── MobileScanner ──────── barcode/QR detection (on-device)

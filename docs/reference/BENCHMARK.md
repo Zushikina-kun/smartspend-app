@@ -1,7 +1,7 @@
 # SmartSpend — Comprehensive App & LLM Benchmark
 ## Competitor Analysis + AI Model Comparison
-**Last Updated:** August 27, 2026 | **Version:** 2.9.11 | **Group:** Lucid Frame
-**Sources:** PCMag 2026, NerdWallet 2026, CNBC 2026, AIMUltiple 2026, Artificial Analysis 2026, Gemini API Docs, Groq/Cerebras benchmarks, micro1.ai REALM benchmark, juaninvestor.com, BudgetPH, Alkansya AI, Sentimo, Monarch Money What's New 2026, Google DeepMind Gemini 3.7 Flash (Aug 2026)
+**Last Updated:** September 12, 2026 | **Version:** 2.9.41 | **Group:** Lucid Frame
+**Sources:** PCMag 2026, NerdWallet 2026, CNBC 2026, AIMUltiple 2026, Artificial Analysis 2026, Gemini API Docs, Groq/Cerebras benchmarks, micro1.ai REALM benchmark, juaninvestor.com, BudgetPH, Alkansya AI, Agila, Sentimo, PISO Budget Tracker, BunnyWise, Lista, Kibo, Monarch Money What's New 2026, Rocket Money Rowan (July 2026)
 
 > Content was paraphrased and summarized for compliance with licensing restrictions.
 
@@ -15,7 +15,7 @@
 YNAB, Monarch Money, Copilot Money, Quicken Simplifi, Rocket Money, PocketGuard, Goodbudget, Spendee, Wally, Monefy, Cleo, Era, EveryDollar, Honeydue, Empower
 
 **Philippine / Filipino-Context:**
-Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, Lista PH, Money Manager (Realbyte)
+Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, Lista PH, PISO Budget Tracker, **Agila: Finance Coach** (`com.janj.agila`), BunnyWise (launching), Kibo, Hunter Vault, Pocket Clear, Money Manager (Realbyte)
 
 **SmartSpend** (our system — for comparison)
 
@@ -108,8 +108,8 @@ Apps not in the main matrix above, included for completeness:
 | **Offline mode** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
 | **Bank sync** | ❌ manual | ✅ | ✅ | ✅ Paid | ✅ | ✅ | ❌ manual | ❌ manual | ❌ manual | ✅ (GCash balance) |
 | **Filipino context** | ✅ Full | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Partial | ✅ Full | ✅ Full | ✅ Full + PH languages |
-| **Gamification** | ✅ 23 badges | ✅ Challenges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Streaks/KBoy | ❌ | ❌ |
-| **Agentic actions** | ✅ 31 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Gamification** | ✅ **25 badges** | ✅ Challenges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Streaks/KBoy | ❌ | ❌ |
+| **Agentic actions** | ✅ **34** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **OCR / receipt scan** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Voice input** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Free (no subscription)** | ✅ Always free | Freemium | Freemium | ✅ Basic free | ✅ | ✅ Basic | ✅ | ✅ | ✅ | ✅ (requires GCash) |
@@ -193,6 +193,14 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 | AI Q&A from own data | Monarch (2026 AI Assistant) | ✅ Done — SmartSpend has 34 agentic actions |
 | Receipt email forwarding | Monarch (July 2026) | Low — SmartSpend has OCR + batch screenshots |
 | Investment tracking | Monarch, Copilot, Simplifi | Low (out of scope for capstone) |
+| Business profile (sales, inventory, invoices) | **Agila** (major differentiator) | Post-capstone |
+| Import from other finance apps | **Agila** (Money Manager, Bluecoins) | Medium |
+| Monthly "Wrapped" shareable card | **Agila** | Medium — quick win |
+| 100% offline, no ads, no subscription UX | **PISO Budget Tracker** | Design goal match — SmartSpend already free |
+| Investment portfolio (PSE/MP2/UITFs/crypto) | **BunnyWise** (launching) | Post-capstone |
+| Credit score / bureau access | **Lista PH** | Post-capstone |
+| AI categorization from notification text | **Kibo** | Medium — Notification Listener redesign planned |
+| Proactive AI nudge (Rowan-style) | **Rocket Money Rowan** (July 2026) | Medium — planned in backlog |
 | iOS / web version | All competitors | Post-capstone |
 | Bank sync (automated) | Most international apps | Not feasible in PH (no open banking API) |
 

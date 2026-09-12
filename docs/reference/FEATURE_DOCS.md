@@ -1,6 +1,6 @@
 # Smart Spend — Application Documentation
 
-**Version:** 2.9.11
+**Version:** 2.9.41
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
@@ -58,13 +58,22 @@ Smart Spend is **not** a banking app. It does not process payments or transfer m
                                          │
                               ┌──────────▼──────────────────────┐
                               │   Multi-Model LLM Routing       │
-                              │  1. Gemini 3.1 Flash-Lite       │
-                              │     (primary, 1,000/day free)   │
+                              │  1. Gemini 3.5 Flash-Lite       │
+                              │     (primary, GA stable)        │
                               │  2. Gemini 3.5 Flash            │
-                              │     (fallback 1, ~1,500/day)    │
-                              │  3. LLaMA 4 Scout (Groq)        │
+                              │     (fallback 1)                │
+                              │  3. GPT-OSS 120B (Groq)         │
                               │     (fallback 2, 1,000/day)     │
-                              │  4. LLaMA 3.3 70B (Groq)        │
+                              │  4. Qwen3.6 27B (Groq)          │
+                              │     (fallback 3)                │
+                              │  5. Qwen3.8 27B (Groq)          │
+                              │     (fallback 4)                │
+                              │  6. GPT-OSS 20B (Groq)          │
+                              │     (fallback 5)                │
+                              │  7. Compound Mini (Groq)        │
+                              │     (fallback 6)                │
+                              │  8. GPT-OSS 120B (Cerebras)     │
+                              │     (last resort, ~3K t/s)      │
                               │     (fallback 3, 1,000/day)     │
                               │  5. LLaMA 3.1 8B (Groq)         │
                               │     (fallback 4, 14,400/day)    │
@@ -138,12 +147,12 @@ Low-confidence entries (< 0.7) are flagged with an orange dot on the expense til
 
 ---
 
-### 2. AI Engine — Multi-Model (Gemini 3.1 Flash-Lite / Groq / Cerebras)
+### 2. AI Engine — Multi-Model (Gemini 3.5 Flash-Lite / Groq / Cerebras)
 - **Expense Parsing** — converts natural language to structured expense data
 - **Spending Insights** — analyzes patterns and generates bullet-point insights on the dashboard
 - **Financial Advice** — personalized tips based on income, spending, and predictions
 - **AI Chat** — conversational assistant with full financial context injection
-- **Multi-Model Routing** — Gemini 3.1 Flash-Lite (primary) → Gemini 3.5 Flash → LLaMA 4 Scout (Groq) → LLaMA 3.3 70B (Groq) → LLaMA 3.1 8B (Groq) → GPT-OSS 120B (Cerebras). Auto-fallback on 429. User can switch manually via model chip in AI appbar.
+- **Multi-Model Routing** — Gemini 3.5 Flash-Lite (primary) → Gemini 3.5 Flash → GPT-OSS 120B (Groq) → Qwen3.6 27B → Qwen3.8 27B → GPT-OSS 20B → Compound Mini → GPT-OSS 120B (Cerebras). Auto-fallback on 429. User can switch manually via model chip in AI appbar.
 
 #### AI Architecture — Agentic AI with Context Injection
 
@@ -208,7 +217,7 @@ The AI executes **34 action types** directly — data is written to the DB immed
 - **Filipino Financial Calendar** — aware of 13th month pay, school enrollment, Christmas spending, 11.11/12.12 sales
 - **Conversation summarization** — every 10 messages, older history compressed to bullet points; reduces token usage 40–70%
 - **Dynamic max_tokens** — 200 for logging, 400 for list/view, 600 for advice
-- **Daily limit: 60 messages/day** — remaining count shown in appbar, resets at midnight (UTC)
+- **Daily limit: 150 messages/day** — remaining count shown in appbar, resets at midnight (UTC)
 
 ---
 
@@ -642,7 +651,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - **Full synergy** — imported expenses appear in Analytics, AI context, Budget tracking, Bill Calendar, Transactions screen, Backup, CSV export, Health Score, and Achievements
 - **Firestore sync** — `insertExpense` calls `CloudService.saveExpense` automatically
 - **Notes field** — each imported expense gets "Imported from [Source]" in notes for traceability
-- **AI daily limit** — cleared on logout so next user on same device gets a fresh 60 messages
+- **AI daily limit** — cleared on logout so next user on same device gets a fresh 150 messages
 
 **AI prompt behavior:**
 - GCash: "Transfer from X to Y" where X is user = expense; where Y is user = income (skip)
@@ -1547,7 +1556,7 @@ Tap the score card on the home screen to see the full breakdown with each compon
 - Model: llama-3.1-8b-instant
 - Temperature: 0.3 (instruction-following mode)
 - Max tokens: 1500 per response
-- **Daily cap:** 60 messages/user/day (stored in SharedPreferences, resets at midnight)
+- **Daily cap:** 150 messages/user/day (stored in SharedPreferences, resets at midnight)
 
 ### Expense Parsing
 Input: natural language string
@@ -1642,7 +1651,7 @@ Both `AIChatService` and `LLMService` use comprehensive Filipino-aware category 
 | Area | Limitation |
 |------|-----------|
 | Profile Photo | Stored as local file path — Firebase Storage requires Blaze (paid) plan; cross-device photo sync is a planned future feature |
-| AI Model | Shared Groq API key — daily cap of 60 messages mitigates abuse; for production, use a backend proxy |
+| AI Model | Shared API key — daily cap of **150 messages** mitigates abuse; for production, use a backend proxy |
 | OCR Accuracy | ML Kit may struggle with handwritten or low-quality receipts |
 | Offline AI | All AI features require internet |
 | Anonymous Login | Demo mode is local-only; no Firebase anonymous auth |
@@ -1975,7 +1984,7 @@ These are intentional design decisions or platform constraints — not bugs.
 | Offline AI | Groq API requires internet | Manual entry works fully offline; AI features degrade gracefully with friendly errors |
 | Last-write-wins sync | No CRDT conflict resolution | Acceptable for single-user app; multi-device edge cases documented |
 | SQLite not encrypted | SQLCipher migration too risky pre-defense | Data behind Firebase Auth + app lock PIN |
-| 60 AI messages/day | Shared API key protection | Resets at midnight UTC; Reset Daily Limit option in ⋮ menu |
+| **150** AI messages/day | Shared API key protection | Resets at midnight UTC; Reset Daily Limit option in ⋮ menu |
 | App Check not enforced | Sideloaded APK during academic phase | App Check integrated + monitoring; enforcement deferred to production |
 
 ---
