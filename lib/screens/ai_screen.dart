@@ -1070,10 +1070,7 @@ class _AIScreenState extends State<AIScreen> {
                 case 'weekly':
                   return now2.add(const Duration(days: 7));
                 case 'yearly':
-                  final lastDay =
-                      DateTime(now2.year + 1, now2.month + 1, 0).day;
-                  return DateTime(
-                      now2.year + 1, now2.month, now2.day.clamp(1, lastDay));
+                  return DateTime(now2.year + 1, now2.month, now2.day);
                 default: // monthly
                   final nextMonth = now2.month == 12 ? 1 : now2.month + 1;
                   final nextYear = now2.month == 12 ? now2.year + 1 : now2.year;

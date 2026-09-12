@@ -7,7 +7,13 @@ import 'score_service.dart';
 import 'app_config.dart';
 
 /// Current app version — keep in sync with pubspec.yaml.
-const kAppVersion = '2.9.40';
+const kAppVersion = '2.9.41';
+
+/// Debug signing certificate SHA-1 fingerprint for this machine.
+/// Add this to Firebase Console → Project Settings → Android → SHA certificate fingerprints
+/// if Google Sign-In stops working on debug builds.
+const _kDebugSha1 =
+    '4D:1C:67:D4:78:7A:30:20:6D:5B:D5:97:6E:F6:EF:87:3D:91:12:E8';
 
 /// Exports a full debug log — chat history, expenses, budgets, settings —
 /// as a plain text file for easy debugging and QA reporting.
@@ -68,8 +74,10 @@ class DebugService {
       final profiles = await db.query('user_profile', limit: 1);
       if (profiles.isNotEmpty) {
         final p = profiles.first;
-        buffer.writeln('  uid = ${(p['uid'] as String?)?.substring(0, 8) ?? '?'}...');
-        buffer.writeln('  name = ${p['first_name'] ?? ''} ${p['last_name'] ?? ''}'.trim());
+        buffer.writeln(
+            '  uid = ${(p['uid'] as String?)?.substring(0, 8) ?? '?'}...');
+        buffer.writeln(
+            '  name = ${p['first_name'] ?? ''} ${p['last_name'] ?? ''}'.trim());
         buffer.writeln('  email = ${p['email'] ?? '(none)'}');
       } else {
         buffer.writeln('  (no profile — not signed in)');
@@ -112,7 +120,8 @@ class DebugService {
 
     // ── WALLETS ───────────────────────────────────────────
     final wallets = await DBService.getWallets();
-    final walletTotal = wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
+    final walletTotal =
+        wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
     buffer.writeln('── WALLETS (${wallets.length}) ──────────────────');
     for (final w in wallets) {
       buffer.writeln(
@@ -161,8 +170,8 @@ class DebugService {
 
     // ── RECURRING CANDIDATES (auto-detected patterns) ─────
     try {
-      final candidates = await db.query('recurring_candidates',
-          orderBy: 'avg_amount DESC');
+      final candidates =
+          await db.query('recurring_candidates', orderBy: 'avg_amount DESC');
       buffer.writeln('── RECURRING CANDIDATES (${candidates.length}) ──');
       for (final c in candidates) {
         final dismissed = (c['dismissed'] as int? ?? 0) == 1;
@@ -289,7 +298,8 @@ class DebugService {
       final summaries = await db.query('conversation_summaries',
           orderBy: 'id DESC', limit: 3);
       if (summaries.isNotEmpty) {
-        buffer.writeln('── AI CONVERSATION SUMMARIES (${summaries.length} stored) ──');
+        buffer.writeln(
+            '── AI CONVERSATION SUMMARIES (${summaries.length} stored) ──');
         for (final s in summaries) {
           final ts = (s['created_at'] as String? ?? '').substring(0, 16);
           final msgCount = s['message_count_at_summary'] ?? '?';
@@ -520,8 +530,7 @@ class DebugService {
     buffer.writeln('═══════════════════════════════════════════════');
     buffer.writeln('  BUILD INFO');
     buffer.writeln('═══════════════════════════════════════════════');
-    buffer.writeln(
-        '  Debug SHA-1: 4D:1C:67:D4:78:7A:30:20:6D:5B:D5:97:6E:F6:EF:87:3D:91:12:E8');
+    buffer.writeln('  Debug SHA-1: $_kDebugSha1');
     buffer.writeln(
         '  If Google Sign-In fails: add this SHA-1 to Firebase Console');
     buffer.writeln(

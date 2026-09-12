@@ -2208,11 +2208,8 @@ class _DashboardState extends State<Dashboard> {
                           next = current.add(const Duration(days: 7));
                           break;
                         case 'yearly':
-                          final lastDay =
-                              DateTime(current.year + 1, current.month + 1, 0)
-                                  .day;
-                          next = DateTime(current.year + 1, current.month,
-                              current.day.clamp(1, lastDay));
+                          next = DateTime(
+                              current.year + 1, current.month, current.day);
                           break;
                         default:
                           final nm =

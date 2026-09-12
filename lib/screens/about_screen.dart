@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/debug_service.dart' show kAppVersion;
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -28,9 +29,9 @@ class AboutScreen extends StatelessWidget {
               style: TextStyle(
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
-            const Text(
-              "Version 2.9.37",
-              style: TextStyle(color: Colors.grey, fontSize: 13),
+            Text(
+              "Version $kAppVersion",
+              style: const TextStyle(color: Colors.grey, fontSize: 13),
             ),
             const SizedBox(height: 6),
             const Text(
