@@ -670,6 +670,9 @@ class _ReviewRowTileState extends State<_ReviewRowTile> {
     final cs = Theme.of(context).colorScheme;
     final row = widget.row;
     return Card(
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.only(bottom: 6),
       child: Column(
         children: [

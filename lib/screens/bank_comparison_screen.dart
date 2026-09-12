@@ -139,9 +139,11 @@ class _BankComparisonScreenState extends State<BankComparisonScreen>
       itemBuilder: (_, i) {
         final w = wallets[i] as Map<String, dynamic>;
         return Card(
+          elevation: 2,
+          shadowColor: Colors.black.withValues(alpha: 0.08),
           margin: const EdgeInsets.only(bottom: 10),
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Column(
@@ -238,8 +240,10 @@ class _BankComparisonScreenState extends State<BankComparisonScreen>
     final notes = bank['notes'] as String?;
 
     return Card(
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
       margin: const EdgeInsets.only(bottom: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(
@@ -315,8 +319,10 @@ class _BankComparisonScreenState extends State<BankComparisonScreen>
                 : Colors.red;
 
     return Card(
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
       margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Column(

@@ -99,8 +99,10 @@ class _PCACalculatorScreenState extends State<PCACalculatorScreen> {
           children: [
             // Input Card
             Card(
+              elevation: 2,
+              shadowColor: Colors.black.withValues(alpha: 0.08),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
+                  borderRadius: BorderRadius.circular(16)),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(

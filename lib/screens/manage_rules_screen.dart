@@ -230,6 +230,10 @@ class _ManageRulesScreenState extends State<ManageRulesScreen> {
                     itemBuilder: (_, i) {
                       final rule = _rules[i];
                       return Card(
+                        elevation: 2,
+                        shadowColor: Colors.black.withValues(alpha: 0.08),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
                           leading: CircleAvatar(

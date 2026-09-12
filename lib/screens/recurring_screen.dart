@@ -535,6 +535,10 @@ class _RecurringScreenState extends State<RecurringScreen> {
                       final isOverdue = nextLabel == "Overdue";
 
                       return Card(
+                        elevation: 2,
+                        shadowColor: Colors.black.withValues(alpha: 0.08),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
                         margin: const EdgeInsets.only(bottom: 10),
                         child: ListTile(
                           leading: CircleAvatar(

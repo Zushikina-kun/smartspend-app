@@ -28,9 +28,16 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
   }
 
   Future<void> _load() async {
-    setState(() { _loading = true; _merged.clear(); });
+    setState(() {
+      _loading = true;
+      _merged.clear();
+    });
     final groups = await MerchantNormalizationService.detectDuplicates();
-    if (mounted) setState(() { _groups = groups; _loading = false; });
+    if (mounted)
+      setState(() {
+        _groups = groups;
+        _loading = false;
+      });
   }
 
   Future<void> _mergeGroup(int idx) async {
@@ -115,8 +122,7 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
                       color: cs.primaryContainer.withValues(alpha: 0.5),
                       child: Row(
                         children: [
-                          Icon(Icons.info_outline,
-                              size: 16, color: cs.primary),
+                          Icon(Icons.info_outline, size: 16, color: cs.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
@@ -137,6 +143,10 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
                           final g = _groups[i];
                           final done = _merged.contains(i);
                           return Card(
+                            elevation: 2,
+                            shadowColor: Colors.black.withValues(alpha: 0.08),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
                             margin: const EdgeInsets.only(bottom: 10),
                             color: done
                                 ? Colors.green.withValues(alpha: 0.06)
@@ -173,9 +183,8 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
                                                 return GestureDetector(
                                                   onTap: done
                                                       ? null
-                                                      : () => setState(
-                                                          () => g.suggested =
-                                                              v.name),
+                                                      : () => setState(() =>
+                                                          g.suggested = v.name),
                                                   child: Container(
                                                     padding: const EdgeInsets
                                                         .symmetric(
@@ -209,7 +218,8 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
                                                         if (isChosen)
                                                           Icon(Icons.check,
                                                               size: 12,
-                                                              color: cs.primary),
+                                                              color:
+                                                                  cs.primary),
                                                         if (isChosen)
                                                           const SizedBox(
                                                               width: 3),
@@ -265,7 +275,8 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
                                                     "Merged as \"${g.suggested}\"",
                                                     style: TextStyle(
                                                         fontSize: 12,
-                                                        color: Colors.green[700],
+                                                        color:
+                                                            Colors.green[700],
                                                         fontWeight:
                                                             FontWeight.w500)),
                                               ])

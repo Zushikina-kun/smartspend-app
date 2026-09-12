@@ -321,8 +321,10 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                   final badge = _allBadges[i];
                   final isEarned = _earned.contains(badge.id);
                   return Card(
+                    elevation: 2,
+                    shadowColor: Colors.black.withValues(alpha: 0.08),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
+                        borderRadius: BorderRadius.circular(16)),
                     color: isEarned
                         ? cs.primaryContainer.withValues(alpha: 0.5)
                         : cs.surfaceContainerHighest.withValues(alpha: 0.3),

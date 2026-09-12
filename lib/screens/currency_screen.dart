@@ -106,7 +106,16 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
-            color: cs.primaryContainer,
+            decoration: BoxDecoration(
+              color: cs.primaryContainer,
+              boxShadow: [
+                BoxShadow(
+                  color: cs.primary.withValues(alpha: 0.12),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
             child: Row(
               children: [
                 Icon(Icons.currency_exchange, color: cs.onPrimaryContainer),
