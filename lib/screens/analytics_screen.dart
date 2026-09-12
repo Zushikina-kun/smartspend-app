@@ -2081,7 +2081,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                     break;
                                   case 'overspend_control':
                                     tip =
-                                        '💡 Try the envelope method: divide your daily budget into mental "envelopes" per category. Once a category is empty, stop spending there for the day.';
+                                        '💡 Try the envelope method: divide your daily budget into mental "envelopes" per category. Once a category is empty, stop spending there for the day. Note: single large planned purchases (gadgets, events) count at half-penalty on this score.';
                                     break;
                                   case 'budget_adherence':
                                     tip =

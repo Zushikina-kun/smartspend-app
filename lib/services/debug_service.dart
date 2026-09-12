@@ -137,9 +137,9 @@ class DebugService {
     // ── CHAT HISTORY ──────────────────────────────────────
     final chat = await DBService.getChatHistory(limit: 200);
     buffer.writeln('── AI CHAT HISTORY (${chat.length} messages) ───');
-    // Count errors and actions for summary
+    // Count errors from message content (actions are stripped before save,
+    // so we read the action count from the ai_request_trace setting instead)
     int errorCount = 0;
-    int actionCount = 0;
     for (final msg in chat) {
       final role = (msg['role'] as String).toUpperCase().padRight(5);
       final ts = (msg['timestamp'] as String).substring(0, 19);
@@ -154,13 +154,19 @@ class DebugService {
           rawText.contains('timed out') ||
           rawText.contains('Daily AI limit');
       if (isError) errorCount++;
-      // Count ACTION lines in AI messages
-      if (msg['role'] == 'ai') {
-        actionCount += RegExp(r'ACTION:\{').allMatches(rawText).length;
-      }
       final prefix = isError ? '[ERROR] ' : '';
       buffer.writeln('  [$ts] $role: $prefix$text');
     }
+    // Read total action count from the rolling ai_request_trace (authoritative —
+    // ACTION lines are stripped from saved messages so counting them there gives 0)
+    int actionCount = 0;
+    try {
+      final trace = await DBService.getSetting('ai_request_trace') ?? '';
+      for (final line in trace.split('\n').where((l) => l.isNotEmpty)) {
+        final m = RegExp(r'actions=(\d+)').firstMatch(line);
+        if (m != null) actionCount += int.tryParse(m.group(1) ?? '0') ?? 0;
+      }
+    } catch (_) {}
     buffer.writeln(
         '  SUMMARY: $errorCount errors, $actionCount actions executed');
     buffer.writeln();

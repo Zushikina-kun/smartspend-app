@@ -363,25 +363,63 @@ class ScoreService {
     String comp2Reason;
     if (monthlyIncome > 0 && daysPassed > 0) {
       final dailyBudget = monthlyIncome / daysInMonth;
-      // Group expenses by date
+      // Group expenses by date, also track per-day item count and max single item
       final dailySpend = <String, double>{};
+      final dailyItemCount = <String, int>{};
+      final dailyMaxItem = <String, double>{};
       for (final e in expenses) {
         final date = (e['date'] as String).substring(0, 10);
-        dailySpend[date] = (dailySpend[date] ?? 0) + (e['amount'] as num);
+        final amt = (e['amount'] as num).toDouble();
+        dailySpend[date] = (dailySpend[date] ?? 0) + amt;
+        dailyItemCount[date] = (dailyItemCount[date] ?? 0) + 1;
+        if (amt > (dailyMaxItem[date] ?? 0)) dailyMaxItem[date] = amt;
       }
-      // Count days where spending exceeded daily budget
-      int overDays = 0;
+
+      // Count overspend days with nuance:
+      // - "Hard" overspend: multiple items pushed total over budget → full penalty
+      // - "Soft" overspend: a single large one-off item caused the overspend
+      //   (e.g. buying a gadget), while the rest of the day's spending is within
+      //   budget → half penalty (it's a planned purchase, not daily habit)
+      int hardOverDays = 0;
+      int softOverDays = 0;
       for (final entry in dailySpend.entries) {
-        if (entry.value > dailyBudget) overDays++;
+        final date = entry.key;
+        final total = entry.value;
+        if (total <= dailyBudget) continue;
+        final itemCount = dailyItemCount[date] ?? 1;
+        final maxItem = dailyMaxItem[date] ?? 0;
+        final spendWithoutMax = total - maxItem;
+        // Soft if: single item caused the overspend AND rest of day is within budget
+        final isSingleItemOverspend =
+            itemCount == 1 || spendWithoutMax <= dailyBudget;
+        if (isSingleItemOverspend) {
+          softOverDays++;
+        } else {
+          hardOverDays++;
+        }
       }
+
+      // Score: hard overspend days count fully; soft days count at 50%
       final activeDays = dailySpend.length.clamp(1, daysPassed);
-      final overRatio = overDays / activeDays;
+      final weightedOver = hardOverDays + softOverDays * 0.5;
+      final overRatio = weightedOver / activeDays;
       comp2 = (1.0 - overRatio).clamp(0.0, 1.0) * 25;
-      if (overDays == 0) {
+
+      final totalOverDays = hardOverDays + softOverDays;
+      if (totalOverDays == 0) {
         comp2Reason = "No days exceeded daily budget ✓";
+      } else if (hardOverDays == 0) {
+        // All overages were single large purchases
+        comp2Reason =
+            "$softOverDays of $activeDays logged days exceeded daily budget "
+            "(one-off large purchase${softOverDays > 1 ? 's' : ''} — reduced penalty)";
+      } else if (softOverDays == 0) {
+        comp2Reason =
+            "$hardOverDays of $activeDays logged days exceeded daily budget";
       } else {
         comp2Reason =
-            "$overDays of $activeDays logged days exceeded daily budget";
+            "$totalOverDays of $activeDays logged days exceeded daily budget "
+            "($softOverDays one-off purchase${softOverDays > 1 ? 's' : ''}, $hardOverDays habitual)";
       }
     } else {
       comp2 = 20.0; // partial credit when no income set

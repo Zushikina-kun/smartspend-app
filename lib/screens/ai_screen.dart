@@ -602,8 +602,14 @@ class _AIScreenState extends State<AIScreen> {
             final customTime = action.params['time'] as String?;
             final expenseDate =
                 customDate ?? now.toIso8601String().substring(0, 10);
+            // Validate customTime — only accept HH:mm or HH:mm:ss format.
+            // The AI occasionally returns natural-language strings like
+            // "after brunch" or "morning" which corrupt the time field.
+            final timeRegex = RegExp(r'^\d{1,2}:\d{2}(:\d{2})?$');
             final expenseTime =
-                customTime ?? now.toIso8601String().substring(11, 19);
+                (customTime != null && timeRegex.hasMatch(customTime.trim()))
+                    ? customTime.trim()
+                    : now.toIso8601String().substring(11, 19);
 
             // ── DB-LEVEL DUPLICATE GUARD ─────────────────────────────────────
             // Reject if identical (name + amount + date) was already saved
