@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import '../services/db_service.dart';
 import '../services/app_config.dart';
+import '../services/app_lock_service.dart';
 import '../services/event_bus.dart';
+import '../services/theme_service.dart';
 import '../main.dart';
+import 'home_screen.dart' show SpendingLimitsSheet;
+import 'pin_setup_screen.dart';
+import 'currency_screen.dart';
 
 /// Full-screen App Settings — replaces the old bottom sheet.
 /// All toggles are always interactive (no grayed-out states).
@@ -78,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     balanceMode = (await DBService.getSetting('balance_mode')) == 'true';
     roundUpSavings =
         (await DBService.getSetting('round_up_savings')) != 'false';
-    compactMode = (await DBService.getSetting('compact_mode')) == 'true';
+    compactMode = themeService.compactMode;
     incomeWalletMode = await DBService.getIncomeWalletMode();
     anomalyEnabled =
         (await DBService.getSetting('anomaly_detection_enabled')) != 'false';
@@ -131,6 +136,86 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _saveAndRefresh(String key, bool value) {
     _save(key, value);
     fireEvent(AppEvent.incomeChanged);
+  }
+
+  void _showThemePicker() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('App Theme'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: AppTheme.values.map((t) {
+            final isSelected = themeService.appTheme == t;
+            return ListTile(
+              dense: true,
+              leading:
+                  CircleAvatar(radius: 12, backgroundColor: t.primaryColor),
+              title: Text(t.label),
+              trailing: isSelected
+                  ? Icon(Icons.check_circle,
+                      color: Theme.of(context).colorScheme.primary)
+                  : null,
+              onTap: () async {
+                await themeService.setTheme(t);
+                if (mounted) {
+                  Navigator.pop(context);
+                  setState(() {});
+                }
+              },
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
+        ],
+      ),
+    );
+  }
+
+  void _showTextSizePicker() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Text Size'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            (1.0, 'Normal', 'Default text size'),
+            (1.15, 'Large', 'Easier to read'),
+            (1.3, 'Extra Large', 'Best for accessibility'),
+          ].map((option) {
+            final isSelected = themeService.textScale == option.$1;
+            return ListTile(
+              dense: true,
+              leading: Icon(
+                isSelected
+                    ? Icons.radio_button_checked
+                    : Icons.radio_button_unchecked,
+                color:
+                    isSelected ? Theme.of(context).colorScheme.primary : null,
+              ),
+              title: Text(option.$2),
+              subtitle: Text(option.$3, style: const TextStyle(fontSize: 11)),
+              onTap: () async {
+                await themeService.setTextScale(option.$1);
+                if (mounted) {
+                  Navigator.pop(context);
+                  setState(() {});
+                }
+              },
+            );
+          }).toList(),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel')),
+        ],
+      ),
+    );
   }
 
   Widget _sectionLabel(String text) => Padding(
@@ -293,6 +378,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _save('budget_alerts_enabled', v);
                   },
                 ),
+                // Spending limits nav tile
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: InkWell(
+                    onTap: () => SpendingLimitsSheet.show(context),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(children: [
+                        Icon(Icons.speed_outlined,
+                            size: 20, color: Colors.grey[600]),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Spending limits',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                                Text(
+                                    'Set daily, weekly, monthly, or yearly caps',
+                                    style: TextStyle(
+                                        fontSize: 11, color: Colors.grey[500])),
+                              ]),
+                        ),
+                        Icon(Icons.chevron_right, color: Colors.grey[400]),
+                      ]),
+                    ),
+                  ),
+                ),
 
                 // ── DISPLAY ─────────────────────────────────────────────────
                 _sectionLabel('DISPLAY'),
@@ -318,6 +434,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _save('round_up_savings', v);
                   },
                 ),
+
+                // ── APPEARANCE ───────────────────────────────────────────────
+                _sectionLabel('APPEARANCE'),
+                _tile(
+                  icon: Icons.dark_mode_outlined,
+                  title: 'Dark mode',
+                  subtitle: 'Switch between light and dark theme',
+                  value: themeService.isDark,
+                  onChanged: (_) {
+                    themeService.toggle();
+                    setState(() {});
+                  },
+                ),
                 _tile(
                   icon: Icons.density_medium_outlined,
                   title: 'Compact mode',
@@ -325,8 +454,213 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   value: compactMode,
                   onChanged: (v) {
                     setState(() => compactMode = v);
+                    // Single source of truth: ThemeService (SharedPreferences).
+                    // DB compact_mode key kept in sync for debug log visibility only.
                     themeService.setCompactMode(v);
-                    _saveAndRefresh('compact_mode', v);
+                    _save('compact_mode', v);
+                  },
+                ),
+                _tile(
+                  icon: Icons.contrast_outlined,
+                  title: 'High contrast',
+                  subtitle: 'Pure black/white theme for maximum readability',
+                  value: themeService.highContrast,
+                  onChanged: (v) {
+                    themeService.setHighContrast(v);
+                    setState(() {});
+                  },
+                ),
+                // App Theme picker
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: InkWell(
+                    onTap: _showThemePicker,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(children: [
+                        Icon(Icons.palette_outlined,
+                            size: 20, color: Colors.grey[600]),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('App theme',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                                Text('Current: ${themeService.appTheme.label}',
+                                    style: TextStyle(
+                                        fontSize: 11, color: Colors.grey[500])),
+                              ]),
+                        ),
+                        Row(children: [
+                          Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: themeService.appTheme.primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Icon(Icons.chevron_right, color: Colors.grey[400]),
+                        ]),
+                      ]),
+                    ),
+                  ),
+                ),
+                // Text size picker
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: InkWell(
+                    onTap: _showTextSizePicker,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(children: [
+                        Icon(Icons.text_fields_outlined,
+                            size: 20, color: Colors.grey[600]),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Text size',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                                Text('Current: ${themeService.textScaleLabel}',
+                                    style: TextStyle(
+                                        fontSize: 11, color: Colors.grey[500])),
+                              ]),
+                        ),
+                        Icon(Icons.chevron_right, color: Colors.grey[400]),
+                      ]),
+                    ),
+                  ),
+                ),
+                // Display currency
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const CurrencyScreen())),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(children: [
+                        Icon(Icons.language_outlined,
+                            size: 20, color: Colors.grey[600]),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Display currency',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                                Text(
+                                    'Tap to change — all amounts stored in PHP',
+                                    style: TextStyle(
+                                        fontSize: 11, color: Colors.grey[500])),
+                              ]),
+                        ),
+                        Icon(Icons.chevron_right, color: Colors.grey[400]),
+                      ]),
+                    ),
+                  ),
+                ),
+
+                // ── SECURITY ─────────────────────────────────────────────────
+                _sectionLabel('SECURITY'),
+                FutureBuilder<bool>(
+                  future: AppLockService.isEnabled(),
+                  builder: (ctx, snap) {
+                    final enabled = snap.data ?? false;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: InkWell(
+                        onTap: () async {
+                          final hasPin = await AppLockService.hasPin();
+                          if (!hasPin || !enabled) {
+                            final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const PinSetupScreen()));
+                            if (result == true && mounted) setState(() {});
+                          } else {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: const Text('Disable App Lock'),
+                                content: const Text(
+                                    'Remove PIN and biometric lock?'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text('Cancel')),
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text('Disable',
+                                          style: TextStyle(color: Colors.red))),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await AppLockService.removePin();
+                              if (mounted) setState(() {});
+                            }
+                          }
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(children: [
+                            Icon(
+                              enabled
+                                  ? Icons.lock_outlined
+                                  : Icons.lock_open_outlined,
+                              size: 20,
+                              color: enabled
+                                  ? Colors.green[700]
+                                  : Colors.grey[600],
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        enabled
+                                            ? 'App Lock — ON'
+                                            : 'App Lock — OFF',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: enabled
+                                                ? Colors.green[700]
+                                                : null)),
+                                    Text(
+                                        enabled
+                                            ? 'PIN + biometric active. Tap to disable.'
+                                            : 'Set a PIN to protect your data',
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey[500])),
+                                  ]),
+                            ),
+                            Icon(Icons.chevron_right, color: Colors.grey[400]),
+                          ]),
+                        ),
+                      ),
+                    );
                   },
                 ),
 
@@ -364,6 +698,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                 // ── NOTIFICATIONS ────────────────────────────────────────────
                 _sectionLabel('NOTIFICATIONS'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          color: Colors.amber.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(children: [
+                      const Icon(Icons.info_outline,
+                          size: 16, color: Colors.amber),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Notifications require system permission. '
+                          'If alerts aren\'t arriving, check Settings → Apps → SmartSpend → Notifications.',
+                          style:
+                              TextStyle(fontSize: 11, color: Colors.grey[700]),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ),
                 _tile(
                   icon: Icons.search_outlined,
                   title: 'Spending anomaly alerts',

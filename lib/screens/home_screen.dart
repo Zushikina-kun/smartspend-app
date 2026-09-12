@@ -1267,8 +1267,8 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
                     () => _go(const BudgetScreen())),
                 _tile(
                     Icons.currency_exchange,
-                    "Currency Exchange",
-                    "Live rates for 34+ currencies",
+                    "Display Currency",
+                    "Change how amounts are shown — 34+ currencies",
                     Colors.teal,
                     () => _go(const CurrencyScreen())),
                 _tile(
