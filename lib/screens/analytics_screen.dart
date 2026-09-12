@@ -580,6 +580,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           _aiAdvice = advice;
           _loadingAdvice = false;
         });
+      // Cache successful insight for offline/quota fallback
+      DBService.setSetting('cached_ai_insight', advice).catchError((_) {});
+      DBService.setSetting('cached_ai_insight_date',
+              DateTime.now().toIso8601String().substring(0, 10))
+          .catchError((_) {});
     } catch (e) {
       if (mounted) {
         final msg = e.toString().replaceAll('Exception: ', '');
@@ -589,12 +594,27 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             msg.contains('404') ||
             msg.contains('payment_required') ||
             msg.contains('Payment required');
-        setState(() {
-          _aiAdvice = isKeyIssue
-              ? "AI advice unavailable right now — daily quota may have been reached. Try again after midnight, or check a different AI model in Settings."
-              : "Could not get advice. Tap Refresh to try again.";
-          _loadingAdvice = false;
-        });
+        // Try to show cached insight with date label
+        String fallback = isKeyIssue
+            ? "AI advice unavailable right now — daily quota may have been reached. Try again after midnight, or check a different AI model in Settings."
+            : "Could not get advice. Tap Refresh to try again.";
+        try {
+          final cached = await DBService.getSetting('cached_ai_insight');
+          final cachedDate =
+              await DBService.getSetting('cached_ai_insight_date');
+          if (cached != null && cached.isNotEmpty) {
+            final dateLabel = cachedDate != null && cachedDate.isNotEmpty
+                ? " (from $cachedDate)"
+                : "";
+            fallback =
+                "⏳ AI quota reached — showing last insight$dateLabel:\n\n$cached";
+          }
+        } catch (_) {}
+        if (mounted)
+          setState(() {
+            _aiAdvice = fallback;
+            _loadingAdvice = false;
+          });
       }
     }
   }
@@ -1509,6 +1529,144 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 24),
+                      ],
+
+                      // Savings Rate Trend (last 6 months)
+                      if (_incomeWalletMode &&
+                          _monthlyIncome > 0 &&
+                          _cachedMonthlyTotals.length >= 2) ...[
+                        const Text("Savings Rate (last 6 months)",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        Text(
+                            "% of monthly income saved each month. Target: 20%+",
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.grey[500])),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 160,
+                          child: Builder(builder: (ctx) {
+                            final cs = Theme.of(ctx).colorScheme;
+                            final months = monthly.keys.toList();
+                            final spots = <FlSpot>[];
+                            for (int i = 0; i < months.length; i++) {
+                              final spent = monthly[months[i]] ?? 0;
+                              final rate = ((_monthlyIncome - spent) /
+                                      _monthlyIncome *
+                                      100)
+                                  .clamp(-100.0, 100.0);
+                              spots.add(FlSpot(i.toDouble(), rate));
+                            }
+                            return LineChart(
+                              LineChartData(
+                                minY: -20,
+                                maxY: 100,
+                                gridData: FlGridData(
+                                  show: true,
+                                  drawVerticalLine: false,
+                                  horizontalInterval: 20,
+                                  getDrawingHorizontalLine: (v) => FlLine(
+                                    color: v == 20
+                                        ? Colors.green.withValues(alpha: 0.4)
+                                        : cs.outline.withValues(alpha: 0.12),
+                                    strokeWidth: v == 20 ? 1.5 : 1,
+                                    dashArray: v == 20 ? [4, 4] : null,
+                                  ),
+                                ),
+                                borderData: FlBorderData(show: false),
+                                titlesData: FlTitlesData(
+                                  leftTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      reservedSize: 32,
+                                      interval: 20,
+                                      getTitlesWidget: (v, _) => Text(
+                                          '${v.toInt()}%',
+                                          style: const TextStyle(fontSize: 9)),
+                                    ),
+                                  ),
+                                  rightTitles: const AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  topTitles: const AxisTitles(
+                                      sideTitles:
+                                          SideTitles(showTitles: false)),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      getTitlesWidget: (val, _) {
+                                        final idx = val.toInt();
+                                        if (idx < 0 || idx >= months.length)
+                                          return const SizedBox();
+                                        final parts = months[idx].split('-');
+                                        final m = int.tryParse(parts[1]) ?? 0;
+                                        return Text(_monthNames[m],
+                                            style:
+                                                const TextStyle(fontSize: 10));
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    spots: spots,
+                                    isCurved: true,
+                                    color: cs.primary,
+                                    barWidth: 2.5,
+                                    dotData: FlDotData(
+                                      show: true,
+                                      getDotPainter: (spot, _, __, ___) =>
+                                          FlDotCirclePainter(
+                                        radius: 3.5,
+                                        color: spot.y >= 20
+                                            ? Colors.green
+                                            : spot.y >= 0
+                                                ? cs.primary
+                                                : Colors.red,
+                                        strokeWidth: 0,
+                                        strokeColor: Colors.transparent,
+                                      ),
+                                    ),
+                                    belowBarData: BarAreaData(
+                                      show: true,
+                                      color: cs.primary.withValues(alpha: 0.07),
+                                    ),
+                                  ),
+                                ],
+                                lineTouchData: LineTouchData(
+                                  touchTooltipData: LineTouchTooltipData(
+                                    getTooltipItems: (spots) => spots
+                                        .map((s) => LineTooltipItem(
+                                              '${s.y.toStringAsFixed(0)}%',
+                                              TextStyle(
+                                                  color: s.y >= 20
+                                                      ? Colors.green
+                                                      : s.y >= 0
+                                                          ? cs.primary
+                                                          : Colors.red,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 12),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                        const SizedBox(height: 6),
+                        Row(children: [
+                          Container(
+                              width: 12,
+                              height: 2,
+                              color: Colors.green,
+                              margin: const EdgeInsets.only(right: 4)),
+                          const Text("20% target",
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.green)),
+                        ]),
                         const SizedBox(height: 24),
                       ],
 
@@ -4918,6 +5076,11 @@ class _MonthlySummaryCardState extends State<_MonthlySummaryCard> {
         monthLabel: _monthLabel,
       );
       if (mounted) setState(() => _summary = result);
+      // Cache for offline/quota fallback
+      DBService.setSetting('cached_monthly_summary', result).catchError((_) {});
+      DBService.setSetting('cached_monthly_summary_date',
+              DateTime.now().toIso8601String().substring(0, 10))
+          .catchError((_) {});
     } catch (e) {
       if (mounted) {
         final msg = e.toString().replaceAll('Exception: ', '');
@@ -4927,9 +5090,22 @@ class _MonthlySummaryCardState extends State<_MonthlySummaryCard> {
             msg.contains('404') ||
             msg.contains('payment_required') ||
             msg.contains('Payment required');
-        setState(() => _summary = isKeyIssue
+        String fallback = isKeyIssue
             ? "AI summary unavailable right now — daily quota may have been reached. Try again after midnight."
-            : "Could not generate summary. Tap Refresh to try again.");
+            : "Could not generate summary. Tap Refresh to try again.";
+        try {
+          final cached = await DBService.getSetting('cached_monthly_summary');
+          final cachedDate =
+              await DBService.getSetting('cached_monthly_summary_date');
+          if (cached != null && cached.isNotEmpty) {
+            final dateLabel = cachedDate != null && cachedDate.isNotEmpty
+                ? " (from $cachedDate)"
+                : "";
+            fallback =
+                "⏳ AI quota reached — showing last summary$dateLabel:\n\n$cached";
+          }
+        } catch (_) {}
+        if (mounted) setState(() => _summary = fallback);
       }
     } finally {
       if (mounted) setState(() => _loading = false);
