@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sqflite/sqflite.dart';
 import 'db_service.dart';
 import 'event_bus.dart';
+import 'debug_service.dart' show kAppVersion;
 
 /// Handles backup and restore of all app data as a JSON file.
 /// Uses the system share sheet — user can save to phone storage,
@@ -55,7 +56,7 @@ class BackupService {
     return {
       'version': 9,
       'exported_at': DateTime.now().toIso8601String(),
-      'app_version': '2.9.37',
+      'app_version': kAppVersion,
       'expenses': expenses.map((e) => e.toMap()).toList(),
       'budgets': budgets.map((b) => b.toMap()).toList(),
       'goals': goals,
