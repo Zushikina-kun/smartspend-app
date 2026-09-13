@@ -5,24 +5,27 @@
 > **Single consolidated planning document.** Fuses inputs from:
 > `PROJECT_STATUS.md`, `FEATURE_DOCS.md`, `BENCHMARK.md`, `CAPSTONE_REFERENCE.md`,
 > `DEFENSE_GUIDE.md`, `SYSTEM_OVERVIEW.md`, `SmartSpend_Ideas_Reference.pdf`,
-> the 15-item recommendation list, and live online research (September 2026).
+> the 15-item recommendation list, live online research (September 2026),
+> and `LLM_Engineering_Cheatsheet_v6.md` (free API directory, new models).
 >
 > **Nothing marked ❌ or 🔧 has been implemented.** Planning and documentation only.
 >
 > *Sources consulted: PSA OpenSTAT, BSP Monetary Policy Reports, World Bank Commodity Markets,
 > PCMag 2026, Rocket Money Rowan press release, BudgetPH, PISO Budget Tracker, BunnyWise,
-> Google Play SMS policy docs, OpenAI ChatGPT Finance announcement.*
+> Google Play SMS policy docs, OpenAI ChatGPT Finance announcement,
+> Moonshot AI Kimi K3 release (July 2026), Qwen3.8 release (August 2026),
+> OpenRouter free model directory (September 2026), Cisco NetAcad AI literacy curriculum.*
 > *Content from external sources paraphrased for compliance with licensing restrictions.*
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v2.9.41)
+## Part 0 — Authoritative Build Numbers (v2.9.47)
 
 Use these everywhere. Many docs are stale.
 
-| Metric | v2.9.41 value |
+| Metric | v2.9.47 value |
 |--------|--------------|
-$12.9.47 |
+| Version string | **2.9.47** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
@@ -40,9 +43,10 @@ $12.9.47 |
 | Filipino item catalog | 150+ items |
 | Log choice sheet options | 7 |
 | Currencies | 57 |
-$126 |
+| Hub tiles | **26** |
 | PH banks in DB | 20 banks + 5 e-wallets |
 | Daily AI message limit | **150** (raised from 60) |
+| Color themes | **10** (5 new added v2.9.45) |
 | Paluwagan | ✅ **Implemented** v2.9.35 (update manuscript) |
 
 ---
@@ -1162,3 +1166,320 @@ Remove duplicate: Dark Mode / App Theme / Text Size / High Contrast → handled 
 **Fix:** Add a "Done spending today" toggle to the Daily Summary card or as a quick action in the log choice sheet. When toggled ON, logging an expense shows the "⚠️ You said you were done spending today" nudge. Clear automatically at midnight.
 
 **Effort:** ~1h | **Risk:** Low
+
+---
+
+## Part 11 — AI Provider & Model Updates (September 2026)
+
+> Based on research from LLM_Engineering_Cheatsheet_v6.md, adviser conversation (Kimi K2.6, Qwen 3.8 mentions), and online research.
+> See the cheatsheet Appendix A for full provider code examples.
+
+### 11A — Current Fallback Chain Status
+
+SmartSpend's 8-provider failover chain (v2.9.24+) is still valid but needs a note on model updates:
+
+| Priority | Provider | Model ID | Status |
+|---|---|---|---|
+| 1 | Google | `gemini-3.5-flash-lite` | ✅ Current, GA stable |
+| 2 | Google | `gemini-3.5-flash` | ✅ Current, GA stable |
+| 3 | Groq | `openai/gpt-oss-120b` | ✅ Active on free/dev tier |
+| 4 | Groq | `qwen/qwen3.6-27b` | ✅ Active on free/dev tier |
+| 5 | Groq | `qwen/qwen3.8-27b` | ✅ Active on free/dev tier |
+| 6 | Groq | `openai/gpt-oss-20b` | ✅ Active on free/dev tier |
+| 7 | Groq | `groq/compound-mini` | ✅ Active on free/dev tier |
+| 8 | Cerebras | `openai/gpt-oss-120b` | ✅ 1M tokens/day |
+
+> ⚠️ **Do NOT add to chain:** `gemini-3.7-flash` (paid only, $0.75/1M), Kimi K2.6/K3 (no free API), GitHub Models (retired July 30, 2026), any LLaMA model (retired from Groq Feb–Aug 2026).
+
+---
+
+### 11B — Notable New Models (Not in SmartSpend Chain, Worth Knowing)
+
+These are NOT in SmartSpend's current failover chain (no free programmatic API or not yet suitable), but are worth tracking for future upgrades:
+
+#### Kimi K3 — Moonshot AI (July 16, 2026)
+- **Architecture:** 2.8T MoE, 104B active per token, 1M context window
+- **License:** Open weights on Hugging Face (July 27, 2026)
+- **Benchmarks:** #1 open-weight model on Artificial Analysis Intelligence Index (v4)
+- **Specs:** 896 experts, 16 selected per token; Kimi Delta Attention; native vision
+- **Notable:** Largest open-weight model ever released; outperforms closed models on coding
+- **Free access:** NVIDIA NIM (free allocation), OpenRouter (not currently `:free`)
+- **Paid API:** Moonshot AI platform — tiered by account top-up
+- **Why not in chain:** No permanent free API tier; NVIDIA NIM free allocation runs out quickly
+- **Future consideration:** Post-capstone v3.x upgrade for `financial_advice` tier
+
+#### Kimi K2.6 — Moonshot AI (April 20, 2026)
+- **Architecture:** 1T MoE, 32B active, 256K context
+- **Benchmarks:** 80.2% SWE-Bench Verified, 96.4% AIME 2026
+- **Agent Swarm:** 300 sub-agents, 4,000 coordinated steps per run
+- **Pricing:** $0.60/$2.50 per MTok on Moonshot; $0.60/$2.80 on OpenRouter
+- **Free access:** OpenRouter `:free` tier (availability varies, not permanent)
+- **Note:** Original Kimi K2 API discontinued May 25, 2026
+
+#### Qwen3.8-27B — Alibaba (August 14, 2026)
+- **Architecture:** Dense (all 27B parameters active), Apache 2.0
+- **Context:** 262,144 tokens (extendable to 1M)
+- **Modalities:** Text + images + video
+- **Benchmarks:** 52 on Artificial Analysis Intelligence Index, 61.7% SWE-bench Pro
+- **Local:** ~17GB VRAM at Q4_K_M — fits RTX 4090; best locally runnable ~30B VLM
+- **Free API access:** Groq (`qwen/qwen3.8-27b` — **already in our chain!**), NVIDIA NIM
+- **Already in chain:** ✅ Yes — Tier 5 in SmartSpend's fallover
+
+#### Qwen3.8-Max — Alibaba (August 3, 2026)
+- **Architecture:** 2.4T MoE, ~95B active, 1M context, text + images + video
+- **Pricing:** $2/$6 per MTok — not free
+- **Open weights:** Released on Hugging Face ~1 week after API launch
+- **Significance:** Alibaba's frontier flagship; strong competition for GPT-5 class models
+
+#### DeepSeek V4 Family (April 23, 2026)
+- **Models:** `deepseek-v4-flash` (163K context, $0.14/MTok), `deepseek-v4-pro` ($0.66/MTok)
+- **License:** MIT — fully open weights
+- **Free access:** 5M token grant on new account signup; also via NVIDIA NIM
+- **Why not in chain:** No permanent free daily quota; trial credit depletes
+- **Best use:** Cheapest paid upgrade path if Gemini free tier is insufficient (10–30× cheaper than OpenAI/Anthropic)
+
+---
+
+### 11C — Qwen Free Proxy via OpenCode — STATUS UPDATE
+
+The `Using Qwen Models Free with OpenCode.md` document in this repo describes a method using `qwen.aikit.club` to access Qwen models through a localStorage token extraction from `chat.qwen.ai`.
+
+**⚠️ This method is OUTDATED and unreliable:**
+- The Qwen free OAuth tier that powered this approach was **shut down on April 15, 2026**
+- Direct proxy services like `qwen.aikit.club` are third-party, not official, and can disappear without notice
+- Extracting localStorage tokens is technically a violation of Qwen's Terms of Service
+- The official Qwen Code free tier was reduced from 1,000 req/day → 100 req/day → discontinued
+
+**Current free access to Qwen models:**
+- **Groq free/dev tier:** `qwen/qwen3.6-27b` and `qwen/qwen3.8-27b` — 1,000 RPD each — **this is the real free path**
+- **NVIDIA NIM:** Free allocation on signup
+
+**For AI coding tools (the actual use case from the video):**
+- **OpenCode:** $10/month Go subscription for reliable access; free tier is limited (~200 req/5h)
+- **Alternative:** Use Kiro IDE (which you're already using), Cursor, or VS Code + Continue with Groq API key (free)
+
+**Recommendation:** Delete or archive `Using Qwen Models Free with OpenCode.md` — it describes a deprecated method. The accurate current approach is documented in `LLM_Engineering_Cheatsheet_v6.md` Appendix A.
+
+---
+
+## Part 12 — New Feature Ideas (September 2026 Research)
+
+> Based on: fintech 2026 research, NielsenIQ Philippines report, SmartOSC digital banking trends, competitor analysis.
+
+### 12A — Spending Accountability Partner (Priority: 🟡 Medium)
+**Inspired by:** NielsenIQ 2026 finding — "consumers want digital services that are fast, easy, secure, and **human-supported**"
+
+**What it is:** Optional "check-in" feature where the user sets a weekly spending target, and gets a single no-judgment push notification at the end of the week:
+
+```
+📊 Week Check-In
+You set a ₱2,000/week Food goal.
+This week: ₱1,840 — ₱160 under. ✅ Nice work!
+```
+
+- No AI call needed — pure DB computation
+- Only fires if user has set a weekly budget for that category
+- No guilt framing — uses positive language ("nice work!" not "you failed")
+- Based on behavioral finance: accountability + positive reinforcement improves adherence
+- **Effort:** ~2h. Pure StartupAlerts + flutter_local_notifications
+
+**Conflict check:** Different from existing "What Changed?" (5D) — this is weekly, category-specific, and requires the user to have set a target. Complements existing budget alerts (which fire when you exceed limits — this fires to celebrate or note progress).
+
+---
+
+### 12B — Quick Income Log Shortcut (Priority: 🟡 Medium)
+**What it is:** A persistent floating chip on the home screen (below the wallet card) for the user's most recent income source. One tap → confirms income received → adds to income + updates wallet.
+
+**Example:** If the user's last income entry was "Salary ₱12,000", the chip shows:
+```
+[💰 Received Salary ₱12,000?  Log it →]
+```
+
+- Shown only for students/employed users when last income was > 25 days ago
+- Works alongside the existing "Log Allowance" button (which is for custom amount)
+- This is for repeat-same-amount income (salary, allowance) — the common case
+- **Effort:** ~1h. New chip in home dashboard, reads last income entry from DB
+
+---
+
+### 12C — Expense "Undo" History Card (Priority: 🟡 Medium)
+**What it is:** A dismissible card at the top of Transactions that shows the last 3 AI-logged expenses with a simple "Undo?" button for each. Appears for 24 hours after logging.
+
+**Why:** Users frequently tell AI "I spent 500" then realize it was logged wrong (wrong category, wrong amount). Currently they have to navigate to Edit Expense. This surface brings the undo action directly to where they look — the expense list.
+
+- Already exists: shake-to-undo and the snackbar undo in AI chat
+- This is a **complementary surface** for users who don't know about shake
+- Uses existing undo infrastructure — no new logic needed, just new UI surface
+- **Effort:** ~2h. New card widget in transactions_screen reading last 3 AI-logged entries
+
+---
+
+### 12D — AI Provider Health Dashboard (Priority: 🟢 Low)
+**What it is:** A small status row in Settings → App Settings → AI MODEL section showing which providers are currently responding, which have hit their daily limit, and which are flagged:
+
+```
+AI Providers
+✅ Gemini 3.5 Flash-Lite   Active (primary)
+✅ Groq GPT-OSS 120B       Active
+⚠️ Groq Qwen3.6-27B       Rate-limited
+⚡ Cerebras                Last resort
+```
+
+- Reads from `ai_request_trace` in settings (already logged per request)
+- Purely informational — no backend ping needed
+- Helps users understand why responses might feel slower on some days
+- **Effort:** ~2h. New widget in settings_screen reading from existing trace data
+
+---
+
+### 12E — "Translate My Receipt" Shortcut (Priority: 🟢 Low)
+**What it is:** An AI shortcut in the Log Expense sheet: "📷 Translate Receipt" — specifically aimed at Japanese, Korean, or English receipts common for online shopping. AI reads the receipt OCR text and reformats it into a set of Filipino-contextualized expense items.
+
+- Already exists: batch screenshot import + OCR
+- This is a **friendlier entry point** for the common "I bought from Shopee/Lazada/AliExpress" use case
+- Pre-fills the "Import" source in the log sheet with a single button
+- **Effort:** ~1h. New option in _showLogExpenseSheetLocal → opens SmartCameraScreen with receipt mode preset
+
+---
+
+### 12F — Payday Countdown Widget (Priority: 🟡 Medium)
+**What it is:** Replaces or augments the existing "Smart Daily Allowance" card with a payday countdown when `payday_date` is set:
+
+```
+📅 Payday in 12 days  (Oct 15)
+Safe to spend today: ₱420
+At this pace: ₱11,200 by payday (under ₱12,000 ✅)
+```
+
+- Directly addresses BudgetPH's payday-cycle feature gap
+- Works for 15th/30th and custom payday dates
+- Falls back to Smart Daily Allowance display when no payday date set
+- Related to Safe-to-Spend (5A) but simpler — just shows the countdown + daily budget
+- **Effort:** ~2h. Modify existing `_buildDailyLimitCard` in home_screen
+
+---
+
+### 12G — AI Model Upgrade Pathway (Priority: 🟢 Low / Research)
+**Context:** As Kimi K3 and Qwen3.8-Max become cheaper/more accessible, SmartSpend could route specific high-value queries to better models while keeping the bulk on the free chain.
+
+**Proposed tiered routing upgrade for v3.x:**
+
+| Tier | Current model | Potential upgrade |
+|---|---|---|
+| `fast` — expense parsing | Gemini 3.5 Flash-Lite | Keep (best free) |
+| `smart` — analysis | GPT-OSS 120B (Groq) | Kimi K2.6 or K3 if free tier emerges |
+| `financial_advice` | Gemini 3.5 Flash | Qwen3.8-27B (already in chain!) or Kimi K3 |
+
+**Current assessment (September 2026):**
+- Gemini 3.5 Flash-Lite is still the best free-tier primary — GA stable, 500 RPD, low latency
+- Qwen3.8-27B on Groq (already Tier 5) could be promoted to `financial_advice` tier given its strong reasoning
+- Kimi K3 → post-capstone only (no permanent free API)
+- DeepSeek V4 Flash → best paid upgrade path (~$0.14/MTok = ~₱8 per 1M tokens)
+
+---
+
+## Part 13 — Defense Preparation Timeline (Updated)
+
+### Before Pre-Final Defense (This Week)
+
+**Code — DONE ✅**
+- All 9 Phase 1 tasks completed (v2.9.45)
+- Full UI polish across all 37 screens (v2.9.46–v2.9.47)
+- App is at v2.9.47, release on GitHub
+
+**Docs — Still Needed (Brix/Cyrille)**
+- [ ] Install v2.9.47 APK on demo phone
+- [ ] Update FEATURE_DOCS.md (still on v2.9.11)
+- [ ] Rehearse demo flow (see DEFENSE_GUIDE.md Part 2)
+- [ ] Create Figures 1.1, 1.2, 2.1, 2.2 (Cyrille)
+- [ ] Fill Compliance Matrix
+
+---
+
+### After Pre-Final Defense → Before Final Defense
+
+**Code priority (sorted by impact on final defense demo + manuscript):**
+
+| Priority | Feature | Effort | Why it matters |
+|---|---|---|---|
+| 🔥 1 | **Safe-to-Spend number** (5A) | ~1 day | Closes BudgetPH's biggest gap; strong demo moment |
+| 🔥 2 | **Payday Countdown Widget** (12F) | ~2h | Completes payday-cycle story; quick win |
+| 🔥 3 | **Income prediction / Payday countdown** (#13) | ~3h | Adds forward-looking card; differentiates from BudgetPH |
+| 🟠 4 | **"What Changed?" monthly notification** (5D) | ~2h | Pure DB, no AI, impressive proactivity |
+| 🟠 5 | **AI chat history export** (#14) | ~3h | Useful for SUS survey respondents |
+| 🟠 6 | **Auto-categorization evidence threshold** (5C) | ~1 day | Fixes known AI annoyance; good paper contribution |
+| 🟠 7 | **Proactive AI nudge notifications** (5B) | ~2 days | Rowan-style; strong competitive differentiator |
+| 🟡 8 | **Quick Income Log chip** (12B) | ~1h | Student UX — easy win |
+| 🟡 9 | **Expense Undo History card** (12C) | ~2h | Reduces user frustration with AI logging |
+| 🟡 10 | **Spending Accountability Partner** (12A) | ~2h | Gamification layer; supports behavioral theory |
+
+**Docs:**
+- [ ] SUS survey — 30 respondents (Djaunathan)
+- [ ] Play Store closed testing — 12 testers × 14 days (Brix)
+- [ ] Insert survey + SUS results into manuscript Ch.3 (Cyrille)
+- [ ] Update all FHS equations in manuscript (v2.9.42 changes)
+- [ ] Add Agila, Lista PH, Kibo to competitor table
+
+---
+
+### Post-Final Defense → v3.x Roadmap
+
+| Feature | Effort | Notes |
+|---|---|---|
+| Price Intelligence / Price Pulse (Part 4) | ~2 weeks | PSA API + personal inflation; strong academic contribution |
+| Notification Listener for GCash | ~2 days | Play Store compliant alternative to READ_SMS |
+| Semester interval recurring detection (#1a) | ~1h | Student-specific |
+| Monthly GitHub-style heatmap (#3) | ~1 day | Full per-date grid |
+| Photo gallery screen (#15) | ~3h | Hub → Receipts GridView |
+| Expense Correction Suggestions (5E) | ~1 day | Data quality sweep |
+| True net worth historical chart (#9) | ~3h | Snapshot-based |
+| SQLite encryption | ~2 days | Pre-Play Store |
+| Backend API proxy (Cloud Functions) | ~3 days | Pre-Play Store |
+| App Check enforcement | ~2h | Pre-Play Store |
+| Kimi K3 / Qwen3.8-27B routing upgrade | ~1 day | When free tier emerges |
+| Investment tracker (PSE/MP2/UITF/crypto) | ~2 weeks | After BunnyWise launches |
+| iOS version | ~2 months | Post-capstone |
+| Business mode AI actions | ~1 week | Invoice/inventory |
+| Couple/family shared finances | ~2 weeks | Multi-account architecture |
+| Mascot / personality layer | ~1 week | vs Sentimo KBoy |
+| AI Provider Health Dashboard (12D) | ~2h | Nice dev-facing feature |
+| "Translate My Receipt" shortcut (12E) | ~1h | Quick usability win |
+| AI Model Upgrade Pathway (12G) | ~1 day | Route financial_advice to Qwen3.8-27B |
+
+---
+
+## Part 14 — Competitor Intelligence Update (September 2026)
+
+### Updated Competitor List
+
+| App | Status | Key gap vs SmartSpend |
+|-----|--------|----------------------|
+| BudgetPH | Active | No agentic AI, no multi-modal, no voice |
+| PISO Budget Tracker | Active | No AI whatsoever |
+| Agila: Finance Coach | Active v1.2.7 | Business profile strong; no FHS, no batch screenshots |
+| BunnyWise | Launching | Investment-focused; no AI, no expense tracking |
+| MayBudget | Active | Basic tracker only |
+| Lista PH | Active | Credit score access; no AI, no FHS |
+| Kibo | Active | AI categorization; limited PH context |
+| GCash Pera Coach | Active (Mar 2026) | Literacy Q&A only; no expense tracking |
+| Rocket Money + Rowan | US only | Agentic AI via SMS (conceptual benchmark) |
+
+**New threats to monitor (not yet launched in PH):**
+- **Finanzya** (dupple.com 2026 review) — 96% auto-categorization accuracy, retirement/FIRE forecast, 31 currencies — strong international competitor if it localizes for PH
+- **ChatGPT Finance** — US/Plaid only now, but OpenAI's expansion pace means PH entry is possible within 1–2 years
+
+### SmartSpend's Widening Lead
+
+With v2.9.47 UI polish, SmartSpend now competes not just on features but on **visual design quality** — the soft-shadow card system, gradient profile header, and grouped settings cards put it closer to production-quality apps like GCash and Maya in terms of visual polish.
+
+Remaining gaps to close for Play Store submission:
+1. Safe-to-Spend / payday cycle (BudgetPH gap)
+2. SQLite encryption (pre-Play Store requirement)
+3. Backend API proxy (security hardening)
+4. App Check enforcement
+5. Privacy policy hosted URL
+
+---
+
+*Updated September 12, 2026. New in this revision: Parts 11–14 — AI provider updates, Kimi K3/Qwen3.8 models, Qwen free proxy deprecation notice, 7 new feature ideas (12A–12G), defense timeline, updated competitor intelligence.*
+*Content paraphrased for compliance with licensing restrictions.*
