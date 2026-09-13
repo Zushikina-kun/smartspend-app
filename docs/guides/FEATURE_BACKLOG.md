@@ -1483,3 +1483,395 @@ Remaining gaps to close for Play Store submission:
 
 *Updated September 12, 2026. New in this revision: Parts 11–14 — AI provider updates, Kimi K3/Qwen3.8 models, Qwen free proxy deprecation notice, 7 new feature ideas (12A–12G), defense timeline, updated competitor intelligence.*
 *Content paraphrased for compliance with licensing restrictions.*
+
+---
+
+## Part 15 — Gap Analysis: Research-Identified Missing Items (September 2026)
+
+> Identified from cross-referencing LLM engineering research (v6 cheatsheet), competitor analysis,
+> Philippine market data (NielsenIQ, BSP, PSA FIES), and responsible AI frameworks (Cisco/Mapua).
+> Organized by phase: before final defense → post-capstone.
+
+---
+
+### Gap Category 1 — AI Engineering Gaps (from LLM Cheatsheet Research)
+
+---
+
+#### 15A — Chat History Token Compression (Priority: 🟠 Before Final Defense)
+**Gap identified from:** §49 Token Budget for Mobile Apps (LLM Cheatsheet v6)
+
+**Problem:** SmartSpend sends the **full chat history** on every AI message. A user with a 30-turn conversation is sending ~15,000 tokens of old context every single message — burning through the 150/day limit 3–5× faster than needed, and hitting the "lost in the middle" degradation zone where the model ignores middle context.
+
+**What to add:**
+- Keep last 8 turns in full detail
+- Summarize everything older into a single 2–3 sentence briefing (one cheap AI call)
+- Store the summary as `chat_context_summary` in settings, update it when history grows past 8 turns
+
+**Implementation in Dart (AIChatService):**
+```dart
+// Before building the messages array for an API call:
+if (_history.length > 8) {
+  final summary = await _summarizeOldTurns(_history.sublist(0, _history.length - 8));
+  final compressed = [
+    {'role': 'user',  'content': 'Earlier conversation summary: $summary'},
+    ..._history.sublist(_history.length - 8),
+  ];
+  return compressed;
+}
+return _history;
+```
+
+**Effort:** ~2h  
+**Conflict check:** None — purely internal to `AIChatService.sendMessage()`. Users don't see the compression. The summary is generated with a minimal prompt costing ~100 tokens total.
+
+---
+
+#### 15B — Action Source Restriction + Allowlist (Priority: 🟠 Before Final Defense)
+**Gap identified from:** §47 Agentic Action Parsing & Hardening + §50 Prompt Injection in Mobile Contexts
+
+**Problem:** SmartSpend executes any parsed action from any source — AI chat, OCR text, clipboard paste, barcode. This means:
+1. A malicious/malformed receipt or barcode could theoretically trigger `delete_by_date` or `delete_expense`
+2. There's no explicit allowlist — unknown action names could be attempted
+
+**What to add:**
+1. **Action allowlist** — a `Set<String>` of known valid action names; reject anything not on it
+2. **Source-based action blocking** — destructive actions only allowed from `userChat` source, never from OCR/paste/barcode
+
+```dart
+// In LLMService or AIChatService:
+const _allowedActions = {
+  'log_expense', 'update_expense', 'delete_expense', 'delete_by_date',
+  'set_income', 'add_income', 'set_wallet_balance', 'transfer_wallet',
+  'set_budget', 'add_goal', 'update_goal', 'delete_goal',
+  'add_debt', 'update_debt', 'add_recurring', 'delete_recurring',
+  'add_installment_plan', 'plan_salary_split', 'analyze_goal_feasibility',
+  'suggest_debt_payoff', 'generate_monthly_plan', 'compare_periods',
+  'explain_fhs_breakdown', 'project_savings_timeline', 'detect_subscriptions',
+  'compute_contribution', 'suggest_idle_money', 'suggest_expense_cuts',
+  'simulate_what_if', 'create_debt_payment_plan', 'split_expense',
+  'set_spending_limit', 'add_insurance_policy', 'set_account_type',
+};
+
+const _destructiveActions = {
+  'delete_expense', 'delete_by_date', 'delete_goal',
+  'delete_recurring',
+};
+
+enum ActionSource { userChat, ocrText, clipboardPaste, barcodeScanner }
+
+bool isAllowedAction(String name, ActionSource source) {
+  if (!_allowedActions.contains(name)) return false; // reject unknown
+  if (_destructiveActions.contains(name) && source != ActionSource.userChat) {
+    return false; // destructive only from chat
+  }
+  return true;
+}
+```
+
+**Effort:** ~3h  
+**Conflict check:** None — purely additive guard. All existing flows continue working. The check runs after parsing, before executing.
+
+---
+
+#### 15C — First-Time AI Advice Disclaimer (Priority: 🟡 Before Final Defense)
+**Gap identified from:** Appendix B AI Ethics Checklist (LLM Cheatsheet v6) + RA 11765 (Financial Products Consumer Protection Act)
+
+**Problem:** The financial advice disclaimer is in `about_screen.dart` only. Most users never read About. When AI generates financial advice (salary split, debt payoff, investment suggestion), there's no user-facing disclosure that this is general information, not professional advice.
+
+**Best practice** (Mint, YNAB, Cleo global standard): one-time in-app dialog on first financial_advice-tier response.
+
+**What to add:**
+- DB settings key `ai_advice_disclaimer_shown` — checked before first financial_advice response
+- If not shown: brief `AlertDialog` with one "Got it" button
+- Never shown again after first dismissal
+
+**Dialog text:**
+```
+ℹ️ About AI Financial Advice
+
+SmartSpend's AI provides general financial information for
+educational purposes only.
+
+It is NOT a licensed financial advisor, and its suggestions
+are not personalized professional advice.
+
+For major financial decisions, consult a licensed professional.
+```
+
+**Effort:** ~30min  
+**Conflict check:** None. The existing `financial_advice` model tier routing already exists — just add the dialog trigger before it fires for the first time.
+
+---
+
+### Gap Category 2 — UX & Platform Gaps
+
+---
+
+#### 15D — GCash Share Intent Receiver (Priority: 🟠 Before Final Defense)
+**Gap identified from:** Philippine market research — NielsenIQ 2026 "99% of Filipinos shopped online; only 52% use mobile banking apps actively" — reducing friction for GCash users is high value
+
+**Problem:** GCash (and BPI, BDO, Maya) have a "Share" button on every transaction. This triggers Android's `ACTION_SEND` intent with the transaction text as a string. SmartSpend already handles clipboard paste, but **does not register as a share target**, so it never appears in the share sheet.
+
+**What to add:**
+1. Register `android.intent.action.SEND` in `AndroidManifest.xml` with `text/plain` MIME type
+2. Handle the incoming intent in `MainActivity.kt` / Flutter — extract the text and open the import/parse flow
+
+```xml
+<!-- AndroidManifest.xml — inside the existing MainActivity <intent-filter> -->
+<intent-filter>
+    <action android:name="android.intent.action.SEND" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <data android:mimeType="text/plain" />
+</intent-filter>
+```
+
+```dart
+// In main.dart or home_screen — handle the share intent:
+// Use the 'receive_sharing_intent' package or platform channels
+// When text arrives → pass to BankImportScreen or AI parse flow
+```
+
+**User experience:**
+1. User opens GCash → views a transaction → taps Share
+2. SmartSpend appears in the share sheet
+3. User taps SmartSpend → app opens with the transaction text pre-filled in the import/parse screen
+4. AI parses and confirms
+
+**Effort:** ~3h (manifest change + intent handler + route to existing import flow)  
+**Conflict check:** None. The clipboard paste flow already exists — this just adds a second entry point into the same flow. The `receive_sharing_intent` Flutter package handles the Android intent bridging. Uses existing `BankImportScreen` / paste-to-parse infrastructure.
+
+> ⚠️ **No server needed.** This is a pure Android client feature — no backend, no new permissions beyond what the existing clipboard paste already does conceptually.
+
+---
+
+#### 15E — Android Home Screen Widget (Priority: 🟡 Post-Capstone, v3.x)
+**Gap identified from:** User expectation benchmarking — all top-ranked finance apps (Mint, YNAB, Monarch, Simplifi) have home screen widgets. None of the Filipino competitors do.
+
+**What it shows:**
+```
+┌────────────────────────┐
+│  SmartSpend            │
+│  This month: ₱8,450    │
+│  Today: ₱240  │  FHS: 72│
+└────────────────────────┘
+```
+
+**Implementation:** Flutter `home_widget` package (pub.dev) — writes widget data to shared preferences readable by a native Android widget.
+
+**Effort:** ~1 day  
+**Conflict check:** None — entirely separate from app. Widget reads from shared prefs that the app writes on load.
+
+> **Why defer to post-capstone:** Requires native Android widget XML + Kotlin/Java, which adds complexity. Not needed for defense demo. High polish value for Play Store launch.
+
+---
+
+#### 15F — Subscription Cancellation Workflow (Priority: 🟡 Post-Capstone)
+**Gap identified from:** Rocket Money Rowan analysis + PCMag 2026 top finance app features
+
+**Problem:** SmartSpend detects recurring subscriptions (`detect_subscriptions` AI action) but has no "help me cancel this" flow. Users find forgotten subscriptions but then have no in-app path to act on them.
+
+**What to add:**
+- In the Subscriptions card on Home and in RecurringScreen: "Cancel?" button per subscription
+- Tapping "Cancel?" opens AI chat pre-filled with: "Help me cancel [subscription name]. What steps do I take?"
+- AI provides the cancellation steps (GCash GSubscriptions, Netflix account settings, etc.)
+- User can also mark it "Cancelled" which removes it from subscriptions and keeps it in history
+
+**Effort:** ~1 day  
+**Conflict check:** Uses existing AI chat deep-link pattern and `delete_recurring` action. No new infrastructure needed — just new UI flow.
+
+---
+
+#### 15G — PSA FIES Spending Benchmarks ("vs. average Filipino") (Priority: 🟡 Post-Capstone)
+**Gap identified from:** Competitor analysis — Finanzya has "96% auto-categorization accuracy" and peer benchmarking. Simplifi, Monarch benchmark against anonymized users.
+
+**What it is:** Add a "vs. average" indicator to each spending category in Analytics:
+```
+Food:  ₱2,800/month
+📊 NCR avg (FIES 2024): ₱3,100/month — you spend ₱300 less ✅
+```
+
+**Data source:** PSA Family Income and Expenditure Survey (FIES) 2024 — published publicly, free, by region (NCR, Luzon, Visayas, Mindanao). Average monthly household food expenditure, transport, bills, etc.
+
+**Implementation:**
+- Hardcode FIES 2024 regional averages as Dart constants (the data is published, doesn't change often)
+- User sets their region in profile (already has `accountType` — extend to include region)
+- Show delta in Analytics "By Category" view
+- Refresh every FIES survey cycle (~every 3 years) — update by hardcoded constant
+
+**Effort:** ~1 day (data lookup + UI additions)  
+**Conflict check:** Purely additive to existing analytics. The FIES data is a one-time lookup, no API needed.
+
+---
+
+### Gap Category 3 — Security & Compliance Gaps
+
+---
+
+#### 15H — AI Confidence Explainability (Priority: 🟡 Before Final Defense — Quick)
+**Gap identified from:** AI literacy framework (§B2, B4) — "transparency" principle requires users understand when AI is uncertain
+
+**Problem:** Low-confidence AI-logged expenses show an orange dot on the tile (existing feature). But there's no explanation *why* the AI was uncertain, and no prompt to the user to verify.
+
+**What to add:**
+- When `confidence_score < 0.7`, show a small banner on the ExpenseTile detail (Edit screen):
+  `"⚠️ AI logged this with low confidence — please verify the amount and category"`
+- In `ai_screen.dart`, after logging a low-confidence batch, show:
+  `"I wasn't fully sure about 2 items — tap to review"`
+
+**Effort:** ~1h  
+**Conflict check:** The `confidence_score` and `ai_generated` fields already exist on every expense. This is purely a display addition.
+
+---
+
+#### 15I — OFxPERA Framework Readiness Note (Priority: 🟢 Research / Documentation)
+**Gap identified from:** BSP Open Finance PH / OFxPERA framework research
+
+**What it is:** BSP Circular 1105 and the Open Finance Exchange for Personal Finance Management (OFxPERA) framework defines how licensed apps can receive standardized transaction data from banks/e-wallets with user consent — without SMS reading or screen scraping.
+
+**SmartSpend is architecturally ready for this** because:
+- It already has a SQLite schema for expenses with all required fields
+- Firebase Auth provides the user identity layer
+- The import/paste flow is the exact UX pattern OFxPERA would replace with an API call
+
+**What to add to docs/backlog (not code):**
+- Note in manuscript Ch.2 and Ch.4: "SmartSpend is designed to be OFxPERA-compatible — when BSP's Open Finance framework becomes available to app developers, the paste-to-import flow can be replaced with a secure API call to the user's consented bank data"
+- Add `ofxpera_ready` to the About screen's tech stack listing
+- This is a **documentation and positioning** item, not a code change
+
+**Effort:** 30min (manuscript note + About screen addition)  
+**Conflict check:** None — purely additive documentation.
+
+---
+
+### Gap Category 4 — Post-Capstone Roadmap Additions
+
+---
+
+#### 15J — FIRE Calculator (Priority: 🟢 Post-Capstone)
+**Gap identified from:** Finanzya competitor analysis (top-ranked personal finance tool 2026)
+
+**What it is:** Financial Independence, Retire Early calculator — the most requested feature missing from Filipino finance apps according to 2026 personal finance app reviews.
+
+**What it shows:**
+```
+🔥 FIRE Calculator
+Current savings: ₱45,000
+Monthly savings rate: ₱2,200
+Target: 25× annual expenses (4% rule)
+Annual expenses: ₱96,000 → FIRE target: ₱2,400,000
+
+At current rate: FIRE in ~32 years (age 52)
+With 20% more savings/month: 26 years (age 46)
+```
+
+**Formula:** `FIRE Number = annual_expenses × 25` (the 4% safe withdrawal rule)
+
+**Data needed:** Already in SmartSpend — monthly expenses, income, savings rate
+
+**Effort:** ~1 day  
+**Where:** Analytics screen, new "FIRE" card, shown only in income/wallet mode
+
+---
+
+#### 15K — Multi-Currency Expense Tracking for OFW (Priority: 🟢 Post-Capstone)
+**Gap identified from:** Philippine market context — OFW (Overseas Filipino Workers) segment; GCash supports international remittance; NielsenIQ 2026 notes Filipino users want comprehensive financial tools
+
+**Problem:** SmartSpend stores all amounts in PHP and converts for display only. A user who spent $150 abroad can't log it as USD — they have to manually convert first.
+
+**What to add:**
+- Optional currency selector on the Add Expense screen (default: current display currency)
+- Store `original_amount` and `original_currency` alongside `amount` (PHP)
+- Auto-convert at log time using the cached exchange rate
+- Show in expense history: "₱8,400 (was $150)"
+
+**Effort:** ~2 days (schema migration for two new fields + UI update)  
+**Conflict check:** Non-breaking — `amount` remains PHP always. New fields are additive. FHS, budgets, analytics all continue using PHP `amount` unchanged.
+
+---
+
+#### 15L — GCash Deeplink / OFW Remittance Tracker (Priority: 🟢 Post-Capstone)
+**Gap identified from:** GCash 41.5M monthly users (Bloomberg 2026); remittance is a major financial flow for Filipino families
+
+**What it is:** A dedicated "Remittance" income category + tracking card showing:
+- Incoming remittances logged (from family abroad)
+- Running total this year
+- Source currency + conversion rate at time of receipt
+
+**Effort:** ~3h (new category + home card variant)  
+**Where:** Income screen + Home wallet card
+
+---
+
+### Updated Priority Queue (Full, Including Part 15)
+
+#### 🟠 Before Final Defense (code, sorted by effort asc)
+
+| # | Feature | Effort | Phase |
+|---|---------|--------|-------|
+| 15C | First-time AI advice disclaimer | 30min | Security/compliance |
+| 15H | AI confidence explainability banner | 1h | UX/trust |
+| 15I | OFxPERA readiness note (docs only) | 30min | Documentation |
+| 15A | Chat history token compression | 2h | Performance |
+| 12B | Quick Income Log chip | 1h | UX |
+| 12F | Payday Countdown Widget | 2h | Feature |
+| 12A | Spending Accountability Partner (weekly push) | 2h | Gamification |
+| 12C | Expense Undo History card | 2h | UX |
+| 15D | GCash Share Intent receiver | 3h | Platform |
+| 15B | Action source restriction + allowlist | 3h | Security |
+| 13 | Income prediction / Payday countdown | 3h | Feature |
+| 14 | AI chat history export | 3h | Feature |
+| 5A | Safe-to-Spend number | 1 day | Feature (BudgetPH gap) |
+| 5C | Auto-categorization evidence threshold | 1 day | AI quality |
+| 5B | Proactive AI nudge notifications | 2 days | Engagement |
+
+#### 🟢 Post-Capstone v3.x (sorted by effort asc)
+
+| # | Feature | Effort |
+|---|---------|--------|
+| 12D | AI Provider Health Dashboard | 2h |
+| 12E | "Translate My Receipt" shortcut | 1h |
+| 5D | "What Changed?" monthly notification | 2h |
+| 5E | Expense Correction Suggestions | 1 day |
+| 9 | True net worth historical chart | 3h |
+| 15 | Photo gallery screen | 3h |
+| 15L | Remittance tracker | 3h |
+| 15G | PSA FIES spending benchmarks | 1 day |
+| 3 | Monthly GitHub-style heatmap | 1 day |
+| 15F | Subscription cancellation workflow | 1 day |
+| 12G | AI Model Upgrade Pathway (Qwen routing) | 1 day |
+| 15E | Android home screen widget | 1 day |
+| 15J | FIRE calculator | 1 day |
+| 15K | Multi-currency OFW tracking | 2 days |
+| 4 | Notification Listener (GCash) | 2 days |
+| SQLite encryption | 2 days | |
+| Backend API proxy | 3 days | |
+| App Check enforcement | 2h | |
+| 5F | PSE/MP2/UITF investment tracker | 2 weeks |
+| iOS version | 2 months | |
+| Couple/family shared finances | 2 weeks | |
+| Business mode AI actions | 1 week | |
+| Mascot / personality layer | 1 week | |
+
+---
+
+### Conflict Check — Part 15 New Items
+
+| Feature | Potential conflict | Resolution |
+|---------|-------------------|-----------|
+| 15A Token compression | Long-running AI chat context may lose details | Summary explicitly says "earlier conversation summary" — model treats it as context, not fact. Users can scroll history to see full prior turns. |
+| 15B Action allowlist | If a new action is added to the AI system prompt but not to the Dart allowlist, it silently fails | **Fix:** Keep allowlist in a shared constant. When adding a new action to the AI system prompt, ALWAYS update the Dart allowlist simultaneously. Document this in the development checklist. |
+| 15C AI advice disclaimer | Fires too frequently if user switches accounts or reinstalls | Key: `ai_advice_disclaimer_shown` stored per-account in Firestore (synced) so it follows the user across devices. |
+| 15D Share intent receiver | Conflicts with clipboard paste if both fire for same transaction | Intent receiver route takes priority over clipboard nudge when the share source is detected. The clipboard nudge is suppressed if a share intent was just handled (add a 5-second debounce flag). |
+| 15G PSA FIES benchmarks | FIES data is household-level, not individual | Clearly label: "Based on PSA FIES 2024 average household expenditure — individual spending varies." Divide household figure by 3.7 (average PH household size) to get per-person estimate. |
+| 15H Confidence explainability | Showing "AI was uncertain" may erode trust | Frame positively: "I wasn't fully sure — please verify" rather than "Warning: AI may be wrong." Same information, lower anxiety. |
+| 15K Multi-currency | Amount field is currently a single PHP double | `amount` remains PHP always. New fields `original_amount` (double) + `original_currency` (String) are additive. All existing code that reads `amount` is unaffected. Migration: `ALTER TABLE expenses ADD COLUMN original_amount REAL; ADD COLUMN original_currency TEXT;` — safe, non-breaking. |
+
+---
+
+*Part 15 added September 12, 2026.*
+*Gap analysis cross-referenced from: LLM Engineering Cheatsheet v6 (§47, §49, §50, Appendix B),
+NielsenIQ Philippines 2026 Consumer Report, BSP Open Finance/OFxPERA framework,
+PSA FIES 2024, Competitor analysis (Finanzya, Rocket Money Rowan),
+Cisco AI Literacy Framework (responsible AI principles).*
+*Content paraphrased for compliance with licensing restrictions.*
