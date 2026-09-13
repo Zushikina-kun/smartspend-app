@@ -1787,3 +1787,669 @@ All v5 items still apply. Added:
 *Covers Activities 1–16, Activity New A–E, Personality/Companion AI, SSE Streaming, Testing,*
 *Gemini Thinking Mode, Computer Use, MCP/A2A/LangGraph v1 2026 updates,*
 *Flutter/Dart mobile integration, multi-provider failover, context injection, PII redaction.*
+
+
+---
+
+# APPENDIX A — Complete Free LLM API Provider Directory (September 2026)
+
+> **Compiled from:** research on Groq, Cerebras, Google AI Studio, OpenRouter, NVIDIA NIM, Mistral, Cohere, SambaNova, Cloudflare, DeepSeek, Kimi/Moonshot, Qwen/Alibaba, and aggregator platforms.
+> **Important:** Free tiers change fast. Verify limits at provider docs before building. Some providers listed here went from free → paid between July–September 2026 (GitHub Models retired July 30, 2026; Meta Llama and Qwen tiers on OpenRouter removed August 2026).
+> Content paraphrased for compliance with licensing restrictions.
+
+---
+
+## A1. The Tier System
+
+Not all "free" is equal. Three distinct tiers exist:
+
+| Tier | What it means | Typical limit |
+|------|---------------|---------------|
+| **Permanently free** | Ongoing free allocation, resets daily/monthly | 250–1,000+ req/day |
+| **Trial credit** | One-time grant on signup — runs out | $5–$20 equivalent, then pay |
+| **Rate-limited preview** | Free but very slow RPM, for evaluation only | 1–5 RPM |
+
+**For production-grade zero-cost systems, only use Permanently Free providers.** Trial credits vanish. Rate-limited previews break real apps.
+
+---
+
+## A2. Permanently Free Providers (Best for Projects)
+
+### 🟢 Google AI Studio — Gemini Family
+**URL:** `https://aistudio.google.com`  
+**Key type:** No credit card required. Single API key.  
+**OpenAI-compatible:** No — uses `google-genai` SDK or REST.
+
+| Model ID | RPM | RPD | Context | Best for |
+|---|---|---|---|---|
+| `gemini-3.5-flash-lite` | 15 | 500 | 1M tokens | **Default** — all tasks, free tier primary |
+| `gemini-3.5-flash` | 10 | 250 | 1M tokens | Complex reasoning, agentic, coding |
+| `gemini-embedding-2-preview` | 100 | 1,000 | 2K | Embeddings (3072-dim vectors) |
+
+> ⚠️ `gemini-3.1-flash-lite` returns 404 on most accounts as of September 2026 — migrate to `gemini-3.5-flash-lite`. `gemini-2.5-flash` shuts down October 16, 2026.  
+> ⚠️ `gemini-3.7-flash` (August 2026) is paid-only — $0.75/1M input tokens.
+
+```python
+from google import genai
+from google.genai import types
+
+client = genai.Client(api_key="YOUR_GEMINI_KEY")
+
+response = client.models.generate_content(
+    model="gemini-3.5-flash-lite",
+    contents="Explain agentic AI in one paragraph.",
+    config=types.GenerateContentConfig(
+        temperature=0.4,
+        max_output_tokens=512,
+    ),
+)
+print(response.text)
+```
+
+---
+
+### 🟢 Groq — LPU Fast Inference
+**URL:** `https://console.groq.com`  
+**Key type:** No credit card. Free developer tier.  
+**OpenAI-compatible:** ✅ Yes — `from groq import Groq` or `openai` SDK with base URL.
+
+Current free/dev tier lineup (September 2026):
+
+| Model ID | RPD | Context | Speed | Notes |
+|---|---|---|---|---|
+| `openai/gpt-oss-120b` | 1,000 | 131K | Fast LPU | Best quality on this tier |
+| `openai/gpt-oss-20b` | 1,000 | 131K | Very fast | Lighter, good for classification |
+| `qwen/qwen3.6-27b` | 1,000 | 131K | Fast | Multimodal reasoning |
+| `qwen/qwen3.8-27b` | 1,000 | 131K | Fast | Updated Qwen fallback |
+| `groq/compound` | 500 | 131K | Fast | Groq's own model |
+| `groq/compound-mini` | 250 | 131K | Fastest | Last resort |
+
+> ⚠️ **LLaMA RETIRED:** `llama-4-scout`, `llama-3.3-70b`, `llama-3.1-8b` removed from Groq free/dev tier Feb–Aug 2026. They return 404. Do not use them.
+
+```python
+from groq import Groq
+
+client = Groq(api_key="YOUR_GROQ_KEY")
+
+response = client.chat.completions.create(
+    model="openai/gpt-oss-120b",
+    messages=[
+        {"role": "system", "content": "You are a financial assistant."},
+        {"role": "user",   "content": "Explain the 50/30/20 rule."},
+    ],
+    temperature=0.4,
+    max_tokens=512,
+)
+print(response.choices[0].message.content)
+```
+
+---
+
+### 🟢 Cerebras — Wafer-Scale Fast Inference
+**URL:** `https://inference.cerebras.ai`  
+**Key type:** Free tier, no credit card.  
+**OpenAI-compatible:** ✅ Yes — OpenAI-compatible base URL.
+
+| Model ID | Daily limit | Speed | Notes |
+|---|---|---|---|
+| `openai/gpt-oss-120b` | 1M tokens/day | ~3,000 tokens/sec | Fastest inference available on free tier |
+
+Cerebras is the **last-resort fallback** in multi-provider chains — very high daily token budget but high latency variance.
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_CEREBRAS_KEY",
+    base_url="https://api.cerebras.ai/v1",
+)
+
+response = client.chat.completions.create(
+    model="openai/gpt-oss-120b",
+    messages=[{"role": "user", "content": "What is RAG?"}],
+    temperature=0.4,
+    max_tokens=512,
+)
+```
+
+---
+
+### 🟢 Mistral AI — La Plateforme Free Experiment Tier
+**URL:** `https://console.mistral.ai`  
+**Key type:** Free Experiment tier on signup. No credit card.  
+**OpenAI-compatible:** ✅ Yes — `from mistralai import Mistral`.
+
+| Model ID | Free Tier Limit | Context | Notes |
+|---|---|---|---|
+| `mistral-small-latest` | ~1 req/s, ~1B tokens/month | 128K | Compact, fast |
+| `mistral-large-latest` | ~1 req/s, ~1B tokens/month | 128K | Best Mistral quality |
+| `codestral-latest` | ~1 req/s | 256K | Code specialist |
+| `mistral-embed` | ~1 req/s | 8K | Embeddings |
+
+> ⚠️ Experiment tier is **not for production** — violates Mistral ToS. Use for evaluation/dev only.
+
+```python
+from mistralai import Mistral
+
+client = Mistral(api_key="YOUR_MISTRAL_KEY")
+
+response = client.chat.complete(
+    model="mistral-small-latest",
+    messages=[{"role": "user", "content": "Summarize this expense report."}],
+)
+print(response.choices[0].message.content)
+```
+
+---
+
+### 🟢 Cohere — Trial API Key
+**URL:** `https://dashboard.cohere.com`  
+**Key type:** Trial key on signup. No credit card. **1,000 API calls/month total.**  
+**OpenAI-compatible:** No — uses `cohere` SDK.
+
+| Model ID | Context | Best for |
+|---|---|---|
+| `command-r-plus-08-2024` | 128K | Best reasoning quality |
+| `command-r-08-2024` | 128K | General use |
+| `embed-multilingual-v3.0` | 512 tokens | Multilingual embeddings |
+
+> ⚠️ Trial keys are rate-limited and **cannot be used for production**. 1,000 calls/month is enough for dev/research.
+
+---
+
+### 🟢 NVIDIA NIM — 100+ Models Free API
+**URL:** `https://build.nvidia.com/models`  
+**Key type:** Free with NVIDIA developer account. No credit card initially.  
+**OpenAI-compatible:** ✅ Yes — all models via `https://integrate.api.nvidia.com/v1`.
+
+NVIDIA NIM hosts 100+ frontier models under one API key — DeepSeek, Llama, Qwen, Nemotron, Mistral, GLM, and more. Most have a free call allocation on signup.
+
+| Notable model | Context | Notes |
+|---|---|---|
+| `nvidia/llama-3.3-nemotron-super-49b-v1` | 128K | NVIDIA's own instruction model |
+| `meta/llama-3.3-70b-instruct` | 128K | Free allocation on NIM |
+| `deepseek-ai/deepseek-v4-flash` | 163K | DeepSeek via NIM |
+| `qwen/qwen3.8-27b` | 262K | Qwen via NIM |
+| `mistralai/mistral-large-2-instruct` | 128K | Mistral via NIM |
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_NVIDIA_NIM_KEY",
+    base_url="https://integrate.api.nvidia.com/v1",
+)
+
+response = client.chat.completions.create(
+    model="meta/llama-3.3-70b-instruct",
+    messages=[{"role": "user", "content": "Write a Python function to sort a list."}],
+    temperature=0.2,
+    max_tokens=512,
+)
+```
+
+> ⚠️ Free allocations are per-model and vary. After the free allocation, NIM bills per token. Monitor usage carefully on the dashboard.
+
+---
+
+### 🟢 SambaNova — Developer Tier
+**URL:** `https://cloud.sambanova.ai`  
+**Key type:** Free developer tier. No credit card.  
+**OpenAI-compatible:** ✅ Yes.
+
+| Limit | Value |
+|---|---|
+| Daily tokens | 20M tokens/day across all models |
+| Rate limit | Model-specific |
+
+Models available: Llama, Qwen, DeepSeek (preview), and SambaNova's own models.
+
+> ⚠️ Preview models are for evaluation only and may be removed without notice. Not for production.
+
+---
+
+### 🟢 Cloudflare Workers AI — 10K Neurons/Day
+**URL:** `https://developers.cloudflare.com/workers-ai`  
+**Key type:** Workers Free plan — 10,000 Neurons/day. Resets at 00:00 UTC.  
+**OpenAI-compatible:** ✅ Yes — REST API, also accessible from Workers code.
+
+Cloudflare uses "Neurons" as a normalized compute unit (not direct token equivalency — varies by model). ~10,000 Neurons/day supports light development.
+
+Models hosted: Llama 3, Mistral, Gemma, Qwen, Phi, and others.
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.cloudflare.com/client/v4/accounts/YOUR_ACCOUNT_ID/ai/run/@cf/meta/llama-3-8b-instruct",
+    headers={"Authorization": "Bearer YOUR_CF_KEY"},
+    json={"messages": [{"role": "user", "content": "Hello!"}]},
+)
+print(response.json()["result"]["response"])
+```
+
+> ⚠️ Best for lightweight inference inside Cloudflare Workers pipelines, not standalone AI apps. 10K Neurons runs out quickly with large prompts.
+
+---
+
+### 🟢 OpenRouter — 20+ Free Models, Single API Key
+**URL:** `https://openrouter.ai`  
+**Key type:** Free account, no credit card. Free models have `:free` suffix in model ID.  
+**OpenAI-compatible:** ✅ Yes — `https://openrouter.ai/api/v1`.
+
+OpenRouter aggregates models from 30+ providers under a single key. Free `:free` models rotate — as of August 2026, ~14 active `:free` IDs (was 20+ earlier; Meta Llama and some Qwen free tiers removed August 2026).
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_OPENROUTER_KEY",
+    base_url="https://openrouter.ai/api/v1",
+)
+
+response = client.chat.completions.create(
+    model="moonshotai/kimi-k2.6:free",   # check openrouter.ai for current :free models
+    messages=[{"role": "user", "content": "What is a vector database?"}],
+    extra_headers={
+        "X-Title": "SmartSpend Research",    # optional but good practice
+    },
+)
+```
+
+> ⚠️ `:free` models are community-funded — availability changes without notice. Always check `https://openrouter.ai/models?max_price=0` for the current free model list.  
+> ⚠️ Rate limit: ~20 requests/minute on free tier.
+
+---
+
+## A3. Trial-Credit Providers (One-Time, Runs Out)
+
+These give you a free credit that depletes, then require payment. Useful for evaluation, not for ongoing free projects.
+
+| Provider | Free grant | Notes |
+|---|---|---|
+| **DeepSeek** | 5M tokens on signup | `deepseek-v4-flash`, `deepseek-v4-pro` — very cheap even after credit ($0.14–$0.66/MTok) |
+| **Together AI** | $5 credit | 100+ open models; no ongoing free tier as of mid-2026 |
+| **Fireworks AI** | $1 credit | No ongoing free tier as of mid-2026 |
+
+---
+
+## A4. Retired / No Longer Free (Important — Don't Build Against These)
+
+| Provider/Model | What happened | Date |
+|---|---|---|
+| **GitHub Models** | Fully retired | July 30, 2026 |
+| **Groq LLaMA 4 Scout** | Retired from free/dev tier | Feb–Aug 2026 |
+| **Groq LLaMA 3.3 70B** | Retired from free/dev tier | Feb–Aug 2026 |
+| **Groq LLaMA 3.1 8B** | Retired from free/dev tier | Feb–Aug 2026 |
+| **OpenRouter Meta Llama free tier** | Removed | August 2026 |
+| **OpenRouter some Qwen free tiers** | Removed | August 2026 |
+| **Gemini 2.5 Flash** | Shutting down | October 16, 2026 |
+| **Gemini 2.5 Flash-Lite** | Not available to new users | 2026 |
+| **Gemini 3.1 Flash-Lite** | Returns 404 on most accounts | September 2026 |
+
+---
+
+## A5. New Open-Weight Models Worth Knowing (2026)
+
+These are open-weight models you can self-host or access via various platforms. Even if the API isn't free, understanding their capabilities helps you choose the right model.
+
+---
+
+### Kimi K2.6 — Moonshot AI
+**Released:** April 20, 2026  
+**License:** Modified MIT  
+**Architecture:** Mixture-of-Experts (MoE)
+
+| Spec | Value |
+|---|---|
+| Total parameters | 1 trillion |
+| Active per token | 32 billion |
+| Context window | 262,144 tokens (256K) |
+| Experts | 384 total, 8 selected + 1 shared per token |
+| Training tokens | 15.5 trillion |
+
+**Benchmark highlights** (as reported by Moonshot AI and third parties):
+- SWE-Bench Verified: 80.2%
+- AIME 2026: 96.4%
+- GPQA-Diamond: 90.5%
+- SWE-Bench Pro: 58.6% (vs GPT-5.4's 57.7%)
+
+**Notable features:**
+- Agent Swarm: scales to 300 domain-specialized sub-agents, up to 4,000 coordinated steps per run
+- Designed for long-horizon agentic coding and multi-step autonomous execution
+- Native multimodal (image input processed internally via MoonViT — not exposed as direct API param)
+- Persistent background agent execution (12+ continuous hours)
+
+**Access:** OpenRouter (`moonshotai/kimi-k2.6:free` when available), DeepInfra (`moonshotai/Kimi-K2.6`), Hugging Face weights
+
+> ⚠️ The original Kimi K2 (non-.6) hosted API was discontinued May 25, 2026. Use K2.6 or later.
+
+**Code example (via OpenRouter or any OpenAI-compatible endpoint):**
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_KEY",
+    base_url="https://openrouter.ai/api/v1",  # or DeepInfra
+)
+
+response = client.chat.completions.create(
+    model="moonshotai/kimi-k2.6:free",
+    messages=[
+        {"role": "system", "content": "You are a software engineering assistant."},
+        {"role": "user",   "content": "Write a FastAPI endpoint that accepts a JSON body and returns it uppercase."},
+    ],
+    temperature=0.1,
+    max_tokens=1024,
+)
+print(response.choices[0].message.content)
+```
+
+**Best for in your projects:**
+- Complex multi-step coding tasks
+- Long-horizon autonomous agent runs
+- Multi-agent orchestration (Agent Swarm approach)
+- When you need GPT-5-class coding quality at open-weight cost
+
+---
+
+### Qwen3.8-27B — Alibaba
+**Released:** August 14, 2026  
+**License:** Apache 2.0  
+**Architecture:** Dense (not MoE)
+
+| Spec | Value |
+|---|---|
+| Parameters | 27 billion (all active — dense) |
+| Context window | 262,144 tokens (extendable to 1M) |
+| Input modalities | Text + images + video |
+| License | Apache 2.0 |
+| Download size | ~17GB at Q4_K_M quantization |
+
+**Benchmark highlights:**
+- Artificial Analysis Intelligence Index: 52
+- SWE-bench Pro: 61.7%
+- Scores ~14 points above Qwen3 on the Intelligence Index
+
+**Notable features:**
+- Dense model — every 27B parameter activates on every token (unlike MoE models)
+- Native vision-language: processes image and video input
+- Best locally runnable ~30B VLM as of August 2026 per multiple analyses
+- Apache 2.0 = commercial use allowed
+
+**Local hardware requirements (approximate):**
+- Q4_K_M: ~17GB VRAM — fits in RTX 4090 (24GB) or dual RTX 3090 (48GB)
+- Q5_K_M: ~21GB VRAM
+- Full BF16: ~54GB VRAM
+
+**Access:** Groq (`qwen/qwen3.8-27b`), NVIDIA NIM, Hugging Face weights for local
+
+---
+
+### Qwen3.8-Max — Alibaba
+**Released:** August 3, 2026  
+**License:** Open weights (Hugging Face) within a week of release  
+**Architecture:** Mixture-of-Experts (MoE)
+
+| Spec | Value |
+|---|---|
+| Total parameters | 2.4 trillion |
+| Active per token | ~95 billion |
+| Context window | 1,000,000 tokens (1M) |
+| Input modalities | Text + images + video |
+
+This is Alibaba's frontier flagship — not the 27B dense model. Extremely powerful but requires massive infrastructure to self-host. Available via API on premium providers.
+
+---
+
+### DeepSeek V4 Family — DeepSeek AI
+**Released:** April 23, 2026  
+**License:** MIT  
+
+| Model | Context | Pricing (API) |
+|---|---|---|
+| `deepseek-v4-flash` | 163K | $0.14–$0.22/MTok input |
+| `deepseek-v4-pro` | 163K | $0.66/MTok input |
+| `deepseek-v4-flash-vision-exp` | 163K | Experimental, vision input |
+
+**Free access:** 5M token credit on new API account signup. Also available via NVIDIA NIM and OpenRouter.  
+**Note:** Even paid pricing is 10–30× cheaper than comparable OpenAI/Anthropic models. For projects that exhaust free tiers, DeepSeek V4 Flash is the most cost-effective upgrade path.
+
+---
+
+## A6. Multi-Provider Failover Chain — Recommended September 2026
+
+For projects needing maximum free-tier coverage with zero cost, this is the recommended chain order (prioritize cheapest → most capable for each tier):
+
+```
+Tier 1 — Primary (Google):
+  gemini-3.5-flash-lite (500 RPD)
+
+Tier 2 — Secondary (Google):
+  gemini-3.5-flash (250 RPD)
+
+Tier 3 — Fast Fallback (Groq):
+  openai/gpt-oss-120b (1,000 RPD)
+
+Tier 4 — Groq Backup:
+  qwen/qwen3.6-27b (1,000 RPD)
+
+Tier 5 — Groq Backup 2:
+  openai/gpt-oss-20b (1,000 RPD)
+
+Tier 6 — Groq Last Resort:
+  groq/compound-mini (250 RPD)
+
+Tier 7 — Token Overflow (Cerebras):
+  openai/gpt-oss-120b (1M tokens/day)
+
+Optional Tier 8 — Overflow via OpenRouter:
+  Any :free model available at time of call
+```
+
+**Total combined capacity (approximate):** ~5,000+ requests/day across all free tiers.
+
+For the **SmartSpend** architecture specifically, Tiers 1–7 above match the production chain (commits in v2.9.24+).
+
+---
+
+## A7. OpenAI-Compatible API Pattern (Universal)
+
+Most providers above accept the same API format. This pattern works with Groq, Cerebras, NVIDIA NIM, SambaNova, OpenRouter, and any other OpenAI-compatible provider:
+
+```python
+from openai import OpenAI
+
+def make_client(provider: str) -> OpenAI:
+    configs = {
+        "groq":      {"base_url": "https://api.groq.com/openai/v1",        "key_env": "GROQ_API_KEY"},
+        "cerebras":  {"base_url": "https://api.cerebras.ai/v1",            "key_env": "CEREBRAS_API_KEY"},
+        "nvidia":    {"base_url": "https://integrate.api.nvidia.com/v1",   "key_env": "NVIDIA_API_KEY"},
+        "sambanova": {"base_url": "https://api.sambanova.ai/v1",           "key_env": "SAMBANOVA_API_KEY"},
+        "openrouter":{"base_url": "https://openrouter.ai/api/v1",          "key_env": "OPENROUTER_API_KEY"},
+        "mistral":   {"base_url": "https://api.mistral.ai/v1",             "key_env": "MISTRAL_API_KEY"},
+        "deepseek":  {"base_url": "https://api.deepseek.com",              "key_env": "DEEPSEEK_API_KEY"},
+    }
+    cfg = configs[provider]
+    import os
+    return OpenAI(api_key=os.getenv(cfg["key_env"]), base_url=cfg["base_url"])
+
+# Usage
+client = make_client("groq")
+response = client.chat.completions.create(
+    model="openai/gpt-oss-120b",
+    messages=[{"role": "user", "content": "Hello!"}],
+    max_tokens=256,
+)
+```
+
+**Dart/Flutter equivalent (SmartSpend pattern):**
+```dart
+Future<String> callOpenAICompatible({
+  required String baseUrl,
+  required String apiKey,
+  required String model,
+  required String system,
+  required String user,
+  int maxTokens = 1024,
+}) async {
+  final response = await http.post(
+    Uri.parse('$baseUrl/chat/completions'),
+    headers: {
+      'Authorization': 'Bearer $apiKey',
+      'Content-Type':  'application/json',
+    },
+    body: jsonEncode({
+      'model': model,
+      'messages': [
+        {'role': 'system', 'content': system},
+        {'role': 'user',   'content': user},
+      ],
+      'temperature': 0.4,
+      'max_tokens':  maxTokens,
+    }),
+  ).timeout(const Duration(seconds: 30));
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body)['choices'][0]['message']['content'] as String;
+  }
+  throw Exception('${response.statusCode}: ${response.body}');
+}
+```
+
+---
+
+## A8. Provider Selection Quick-Reference
+
+| Goal | Best choice |
+|------|-------------|
+| Highest quality free tier | `gemini-3.5-flash` (Google) |
+| Fastest inference | Cerebras (`~3,000 tokens/sec`) or Groq LPU |
+| Most models under one key | NVIDIA NIM (100+) or OpenRouter (400+) |
+| Best coding + agentic tasks | Kimi K2.6 (via OpenRouter or DeepInfra) |
+| Best open-weight vision model ~30B | Qwen3.8-27B |
+| Most daily tokens (free) | Cerebras (1M tokens/day) |
+| Offline / self-hosted | Qwen3.8-27B Q4_K_M (~17GB VRAM) via llama.cpp |
+| Best cost-efficient paid upgrade | DeepSeek V4 Flash ($0.14/MTok) |
+| Single key for everything | OpenRouter (but `:free` models change frequently) |
+
+---
+
+# APPENDIX B — AI Literacy & Responsible Use Foundations
+
+> Based on Cisco Networking Academy and general AI literacy curricula (2026). These concepts complement the engineering sections above — knowing *how* to build AI systems is incomplete without knowing *when* and *why* to apply them responsibly.
+> Note: The specific Mapua Ascend Learning and Cisco NetAcad course URLs provided require login — these foundations are drawn from publicly available curriculum summaries and Cisco's published AI literacy framework.
+
+---
+
+## B1. Core AI Literacy Framework
+
+AI literacy has four interlocking skills — you need all four to use AI responsibly:
+
+| Skill | What it means | Engineering relevance |
+|---|---|---|
+| **Use** | Apply AI tools effectively to real tasks | Prompt engineering, tool selection |
+| **Understand** | Know how AI works, its limits, and failure modes | Hallucination, context limits, retrieval gaps |
+| **Evaluate** | Critically assess AI output — accuracy, bias, sourcing | RAG Triad evaluation (§16), LLM-as-Judge |
+| **Create** | Design AI systems and workflows | The rest of this cheatsheet |
+
+Most developers jump straight to *Create* without mastering *Evaluate* — this is why so many AI apps hallucinate confidently in production.
+
+---
+
+## B2. Responsible AI Principles (IEEE/UNESCO/EU AI Act 2026 Consensus)
+
+| Principle | What it means in practice |
+|---|---|
+| **Transparency** | Users know when they're interacting with AI, and AI explains its reasoning |
+| **Fairness** | Training data and outputs don't systematically disadvantage groups |
+| **Accountability** | A human is responsible for AI decisions — "AI did it" is not an excuse |
+| **Privacy** | Minimal PII collected and transmitted (see §48 — PII Redaction) |
+| **Safety** | AI outputs are validated before acting (see §35 — Safety Pipeline) |
+| **Human oversight** | High-stakes decisions have a human in the loop (see §18 — HITL) |
+
+**For your projects:** Documenting which principles your system addresses is increasingly required for academic capstone defense panels, ethics reviews, and future app store submissions.
+
+---
+
+## B3. Prompt Literacy — Writing Effective Prompts
+
+Prompt engineering is a skill, not magic. The Prompt Engineering Literacy Scale (PELS, Hwang et al. 2023) defines it as:
+
+> "The capacity to create precise prompts for AI systems, interpret outputs, and iteratively revise prompts to elicit desired behavior."
+
+### The TRACE Framework for Strong Prompts
+
+| Letter | Element | Example |
+|---|---|---|
+| **T**ask | What you want the AI to do | "Summarize the following expense list" |
+| **R**ole | Who the AI should be | "You are a Filipino financial advisor" |
+| **A**udience | Who the output is for | "...for a college student with ₱6,000/month income" |
+| **C**ontext | Background information | "The user's goal is to save for an emergency fund" |
+| **E**xample/Format | What good output looks like | "Respond in 3 bullet points, each under 20 words" |
+
+Not every prompt needs all 5 — use what's relevant.
+
+### Prompt Iteration Pattern
+
+```
+Draft prompt → Test on 5 diverse inputs → Identify failure cases → Revise prompt → Re-test
+```
+
+Never deploy a prompt tested on only 1–2 examples. Edge cases — ambiguous inputs, unusual characters, adversarial phrasing — reveal prompt weaknesses.
+
+---
+
+## B4. Understanding AI Failure Modes
+
+Every developer should know these before shipping AI features to users:
+
+| Failure mode | What happens | How to detect/fix |
+|---|---|---|
+| **Hallucination** | Model confidently states false information | RAG Triad groundedness check; cite sources |
+| **Prompt injection** | External content overrides AI instructions | `<external_data>` delimiters; is_safe() check (§20, §50) |
+| **Confirmation bias** | Model agrees with user regardless of truth | Test with adversarial prompts; use an evaluator model |
+| **Sycophancy** | Model says what user wants to hear, not what's accurate | System prompt: "Disagree if the user is factually wrong" |
+| **Lost in the middle** | Facts in the middle of a long context ignored | Keep context under ~32K tokens; put critical info first or last |
+| **Cascading errors** | Error in one agent step propagates and compounds | Validate output at each step; don't chain blindly |
+| **Quota exhaustion** | Provider hits daily limit mid-conversation | Multi-provider failover (§44); cache last response |
+| **Stale knowledge** | Model's training data cutoff means outdated facts | Inject current data via RAG or context injection; don't rely on model's world knowledge for time-sensitive facts |
+
+---
+
+## B5. AI Ethics Checklist for Projects
+
+Before shipping an AI feature, ask:
+
+- [ ] **Transparency:** Does the user know this response is AI-generated?
+- [ ] **Accuracy:** Is there a validation layer (schema, RAG Triad, or human review) before output reaches users?
+- [ ] **Privacy:** Is PII stripped before sending to cloud LLMs? (§48)
+- [ ] **Consent:** Do users know their inputs may be processed by third-party AI providers?
+- [ ] **Harm potential:** Can this AI action cause financial, physical, or reputational harm if wrong? → Require HITL (§18)
+- [ ] **Bias audit:** Has the system been tested on diverse users, not just the developer's own demographic?
+- [ ] **Fallback:** If AI fails, does the user have a non-AI path? (manual entry, cached response)
+- [ ] **Disclaimer:** Is there a clear statement that AI outputs are not professional advice (legal, financial, medical)?
+
+**For SmartSpend specifically:** The About screen and every AI financial response includes: *"General financial information for educational purposes only — not personalized professional advice."* This is the standard global approach used by Mint, YNAB, and Cleo.
+
+---
+
+## B6. AI in Philippine Academic Context
+
+Specific considerations for Filipino capstone/thesis projects using AI:
+
+| Issue | Guidance |
+|---|---|
+| **RA 10173 (Data Privacy Act)** | PII must be redacted before cloud LLM transmission. Mobile numbers, reference numbers, account numbers = PII. (See §48) |
+| **RA 11765 (Financial Products Consumer Protection Act)** | AI financial advice must clearly disclaim it is not professional advice. |
+| **Academic integrity** | AI-assisted writing must be disclosed. Using AI to generate manuscript sections without disclosure is academic misconduct under most Philippine university policies. |
+| **Manuscript AI disclosure statement** | "This manuscript was written by the researchers. AI tools were used for grammar checking, code generation, and research synthesis. All claims, interpretations, and conclusions are the researchers' own." |
+| **Panel Q&A on AI ethics** | Panels increasingly ask about data privacy, AI transparency, and responsible AI. Know the principles in §B2. |
+| **Citation for AI-generated content** | If AI was used to generate a figure, table, or paragraph, cite it: e.g., "Generated with assistance from Google Gemini 3.5 Flash-Lite (September 2026)." |
+
+---
+
+*Appendices A and B added September 12, 2026.*
+*Appendix A: Free LLM API Directory — covers Google, Groq, Cerebras, Mistral, Cohere, NVIDIA NIM, SambaNova, Cloudflare, OpenRouter, DeepSeek, Kimi K2.6, Qwen3.8. Includes retired providers.*
+*Appendix B: AI Literacy & Responsible Use — TRACE prompt framework, failure modes, ethics checklist, Philippine academic context.*
+*Content was paraphrased for compliance with licensing restrictions.*
