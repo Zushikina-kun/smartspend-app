@@ -143,13 +143,14 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Currencies supported | 57 |
 | Screens | 37 |
 | Services | 26 |
-$125 |
+| Achievement badges | **25** (23 original + No-Spend Day + No-Spend Streak) |
 | Daily quests | 10 rotating |
 | Expense categories | 14 built-in + unlimited custom |
 | Screenshot platforms detected | 40+ |
 | PH banks in database | 20 banks + 5 e-wallets |
 | Backup format | JSON version 9 |
-| Build size | 44.7 MB (arm64-v8a, obfuscated) |
+| Build size | **45.1 MB** (arm64-v8a, split, obfuscated) |
+| Color themes | **10** (Indigo, Olive, Burnt Orange, Slate, Forest + 5 new v2.9.45) |
 | GitHub | https://github.com/Zushikina-kun/smartspend-app |
 | Group | Lucid Frame |
 | School | Lorma Colleges — CCSE, BSIT 4th Year |
@@ -218,7 +219,7 @@ A: They handle actual money movement. SmartSpend is a tracker and advisor — do
 A: GCash Pera Coach (launched March 2026, developed with Microsoft) is an AI-powered financial literacy coach embedded inside GCash. It provides Q&A and financial education in English and Filipino — but it doesn't track expenses, has no Financial Health Score, no offline mode, and no agentic actions. SmartSpend is a dedicated financial management system: it tracks your actual spending, computes an FHS, runs 34 autonomous AI actions, and works fully offline. Pera Coach teaches you about money; SmartSpend manages your money. They're complementary tools, not substitutes.
 
 **Q: How does SmartSpend compare to BudgetPH?**
-A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (34 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (23 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
+A: BudgetPH is the closest Filipino-context competitor — it has a paluwagan tracker, 15th/30th payday cycle awareness, and a simpler budget score. SmartSpend leads on AI depth (34 agentic actions vs insights-only), multi-modal input (voice, OCR, barcode, batch screenshots), offline-first architecture, and gamification (25 badges vs basic XP/levels). BudgetPH leads on paluwagan and payday cycle features — both are on SmartSpend's post-capstone roadmap.
 
 **Q: Why doesn't SmartSpend have a paluwagan tracker?**
 A: Paluwagan is on the post-capstone roadmap as the highest-priority Filipino-specific feature. The core system architecture supports it — it would use the existing debt/recurring infrastructure with a new rotating-round tracking layer. It was deprioritized during Capstone 2 to focus on the AI agentic system and Financial Health Score, which are the primary academic contributions. BudgetPH currently has this feature.

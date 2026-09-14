@@ -78,7 +78,7 @@ Tarsi – Budget Tracker, BudgetPH (KindlyF), Alkansya AI, Sentimo, SweldoWise, 
 | Cloud sync | ✅ Firebase | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ❌ |
 | PIN + biometric lock | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **GAMIFICATION** | | | | | | | | | | | | | | |
-| Achievement badges | ✅ 23 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Levels/XP | ❌ | ❌ | ❌ |
+| Achievement badges | ✅ **25** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Levels/XP | ❌ | ❌ | ❌ |
 | Daily quests / streaks | ✅ 10 rotating | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Streak | ❌ | ❌ | ❌ |
 | Mood tracking | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **MISC** | | | | | | | | | | | | | | |
@@ -137,16 +137,16 @@ BudgetPH is the most direct Filipino-context competitor discovered during this r
 | AI | Spending insights only | 34 agentic actions, full conversational AI |
 | Voice input | ❌ | ✅ |
 | OCR / Barcode | ❌ | ✅ |
-| Paluwagan | ✅ Full tracker | ❌ Not implemented |
+| Paluwagan | ✅ Full tracker | ✅ Implemented v2.9.35 |
 | 15th & 30th payday cycle | ✅ Core feature | ❌ Not implemented |
 | Offline | ✅ | ✅ |
 | Financial Health Score | ✅ Budget score (simpler) | ✅ 4-component FHS (more detailed) |
-| Gamification | ✅ Levels, XP, streaks | ✅ 23 badges, 10 quests, streaks |
+| Gamification | ✅ Levels, XP, streaks | ✅ **25** badges, 10 quests, streaks |
 | Platform | Web PWA + Android | Android only |
 | Bank integration | CSV import only | Manual + CSV |
 | Price | Free | Free |
 
-**Gap SmartSpend can address:** Paluwagan and 15th/30th payday cycle support would significantly strengthen SmartSpend's Filipino-first positioning against BudgetPH.
+**Paluwagan: ✅ Implemented v2.9.35** (basic: group management, member payout order, contribution logging, round tracking). **Gap remaining:** 15th/30th payday cycle budget reset — still not implemented. Adding this would further close the gap against BudgetPH.
 
 #### vs Alkansya AI
 Filipino-context, iOS-only, with a simple AI chat for expense entry. Notably, Alkansya (alkansya.online — a separate web app) now includes a Financial Health Score feature. However it is far less comprehensive than SmartSpend — no offline mode, no voice input, Android not supported, no batch screenshot import, no gamification badges.
@@ -180,13 +180,13 @@ PCMag/CNBC ranked it #1 for 2026 among paid apps. Connects to 14,000+ institutio
 | **Only app with batch screenshot import** | 40+ platform types auto-detected — unique globally |
 | **Only app with FHS dual-mode** | Full mode (income-based) + Lightweight mode (habit-based) — no equivalent exists |
 | **Only free offline-capable Android app with cloud sync** | Tarsi and Monefy are offline but no sync; all cloud apps require internet |
-| **Most gamification depth** | 23 badges + 10 daily quests + streaks — BudgetPH has simpler XP/levels |
+| **Most gamification depth** | **25 badges** + 10 daily quests + streaks — BudgetPH has simpler XP/levels |
 
 ### 1.5 Where SmartSpend Falls Short
 
 | Gap | Who Has It | Priority |
 |-----|-----------|----------|
-| Paluwagan tracker | BudgetPH | High — uniquely Filipino, missing from SmartSpend |
+| Paluwagan tracker | BudgetPH | ✅ Basic implementation added v2.9.35 — BudgetPH still has fuller version |
 | 15th & 30th payday cycle | BudgetPH, SweldoWise, SweldoTrack | High — payday-aware budgeting reset |
 | Mascot / personality layer | Sentimo (KBoy carabao) | Low — fun UX differentiator |
 | Couple / family sharing | Monarch (Goals 3.0), Wally, Goodbudget | Medium |

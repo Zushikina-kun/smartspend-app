@@ -1,11 +1,11 @@
 # Smart Spend — Application Documentation
 
-**Version:** 2.9.41
+**Version:** 2.9.47
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** September 8, 2026 (v2.9.19 — full audit, 34 agentic actions, 6 AI providers, research sweep)
-**Build:** app-arm64-v8a-release.apk — 44.7 MB (August 2026)
+**Last Updated:** September 12, 2026 (v2.9.47 — full audit, all Phase 1 tasks, full-app UI polish)
+**Build:** app-arm64-v8a-release.apk — 45.1 MB (September 12, 2026)
 
 ---
 
@@ -1730,7 +1730,7 @@ All rights reserved by **Lucid Frame**, 2026.
 | Round-up savings | Auto-save spare change to goals |
 | Price memory | 15%+ price increase alert |
 | Barcode product lookup | Open Food Facts API + local PH database |
-| 23 badges + 10 daily quests | Gamification enhanced |
+| **25** badges + 10 daily quests | Gamification enhanced — No-Spend Day + No-Spend Streak added v2.9.42 |
 | DTI ratio card | Debt-to-Income in Analytics |
 | Emergency fund calculator | Smart outlier exclusion |
 | PCA calculator | Peso Cost Averaging screen |
@@ -1916,7 +1916,24 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 🗺️ Complete Feature Status & Roadmap
 
-### ✅ Fully Implemented (v2.9.1 Final)
+### ✅ Fully Implemented (v2.9.47 — September 12, 2026)
+
+**New since v2.9.41 (Phase 1 UI Polish + v2.9.45–2.9.47):**
+- **10 color themes** — Indigo, Olive, Burnt Orange, Slate, Forest + Crimson Red, Deep Navy, Midnight Teal, Rose Pink, Charcoal (added v2.9.45)
+- **Savings rate trend chart** — 6-month line chart in Analytics, 20% target dashed line (v2.9.45)
+- **Quick budget slider** — long-press any budget tile opens edit dialog (v2.9.45)
+- **Analytics AI cache fallback** — both Advice + Monthly Summary cards show cached result with date on quota error (v2.9.45)
+- **Done Spending toggle in log sheet** — appears in Log Expense bottom sheet (v2.9.45)
+- **Home Customize shortcut** — tune icon in header opens 6-toggle section visibility sheet (v2.9.45)
+- **Profile gradient header** — primaryContainer gradient card with avatar, stats, edit button (v2.9.46)
+- **Quick Access grid redesign** — 9 items, icon-in-circle tiles with colored shadow (v2.9.46)
+- **Settings grouped section cards** — each section wrapped in soft-shadow card (v2.9.46)
+- **Hub search bar + 4 category groups** — FINANCES / TRANSACTIONS & DATA / TOOLS / HELP (v2.9.46)
+- **Full-app soft-UI polish** — 30 files updated, consistent shadow/radius/fill across all 37 screens (v2.9.47)
+- **25 achievement badges** — No-Spend Day + No-Spend Streak added (v2.9.42)
+- **Hub tiles: 26** — expanded from 22 in v2.9.44
+- **AI PII redaction** — RA 10173 compliance, strips mobile numbers + ref numbers before LLM (v2.9.42)
+- **FHS improvements** — Overspend one-off penalty (0.5×), Category Balance exempts Bills/Health/Education, Warning Decay skips essential categories (v2.9.42)
 
 All features listed in sections 1–62 of this document are fully built and working in the current build. Key highlights:
 - **34 AI action types** (v2.9.19): log_expense, set_budget, set_income, add_income, add_goal, update_goal, delete_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, delete_by_date, add_installment_plan, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense, set_spending_limit, add_insurance_policy
