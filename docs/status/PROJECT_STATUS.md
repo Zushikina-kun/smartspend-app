@@ -36,6 +36,14 @@
 | Add **analytics AI cache fallback** to Implemented | Cyrille | ❌ | Added v2.9.45 — both Advice + Monthly Summary |
 | Add **RA 10173 PII redaction** section to manuscript (Ch.2 or Ch.3) | Cyrille | ❌ | Implemented v2.9.42 — mobile numbers stripped before LLM |
 | Add **Agila, PISO, BunnyWise** to competitor table in manuscript | Cyrille | ❌ | See kiro-to-claude-handoff-v2 §13 for details |
+| Add **Lista PH, Kibo, Finanzya** to competitor table | Cyrille | ❌ | New competitors from Sep 2026 research — see FEATURE_BACKLOG Part 14 |
+| Add **OFxPERA readiness** note to manuscript Ch.2/Ch.4 | Cyrille | ❌ | "SmartSpend is architecturally OFxPERA-ready" — see FEATURE_BACKLOG 15I |
+| Add **AI advice disclaimer** — first-time dialog note to manuscript | Cyrille | ❌ | RA 11765 responsible AI compliance — see FEATURE_BACKLOG 15C |
+| Update docs: **BENCHMARK.md** badge 23→25, paluwagan ❌→✅ | Brix | ✅ | Done Sep 12, 2026 |
+| Update docs: **FEATURE_DOCS.md** version 2.9.41→2.9.47, badge 23→25 | Brix | ✅ | Done Sep 12, 2026 |
+| Update docs: **CAPSTONE_REFERENCE.md** v2.9.41 blurb, badge 23→25, themes 5→10 | Brix | ✅ | Done Sep 12, 2026 |
+| Update docs: **DEFENSE_GUIDE.md** fix broken table row, badge, build size | Brix | ✅ | Done Sep 12, 2026 |
+| Archive Qwen/OpenCode doc with deprecation notice | Brix | ✅ | Deprecated April 15, 2026 — notice added Sep 12 |
 | Rehearse demo flow with v2.9.47 | All | ❌ | See demo script below |
 | Charge demo phone to 100% the night before — do NOT open the app | Brix | ❌ | Cold start required for demo |
 

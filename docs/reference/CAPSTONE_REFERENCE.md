@@ -6,7 +6,7 @@
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.41).
+> All figures are accurate to the final build (v2.9.47).
 
 ---
 
@@ -333,7 +333,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 |-----------|-----------|----------------------|
 | **Nudge Theory** (Thaler & Sunstein, 2008) | Subtle choice architecture guides behavior without restricting freedom | Warning Decay, Impulse Pause, budget alert framing, startup gap prompts |
 | **Prospect Theory / Loss Aversion** (Kahneman & Tversky, 1979) | Losses feel ~2× more painful than equivalent gains | Warning Decay: score drops −5 pts/day for ignored budget overruns, making consequences concrete |
-| **Self-Determination Theory (SDT)** (Deci & Ryan, 2000) | Intrinsic motivation sustained by Autonomy, Competence, and Relatedness | *Competence* → 23 badges + streaks reward skill growth; *Autonomy* → non-prescriptive budgets + customizable goals; *Relatedness* → Filipino-first framing and local financial context |
+| **Self-Determination Theory (SDT)** (Deci & Ryan, 2000) | Intrinsic motivation sustained by Autonomy, Competence, and Relatedness | *Competence* → 25 badges + streaks reward skill growth; *Autonomy* → non-prescriptive budgets + customizable goals; *Relatedness* → Filipino-first framing and local financial context |
 | **Technology Acceptance Model (TAM)** (Davis, 1989) | Adoption driven by Perceived Usefulness + Perceived Ease of Use | Multi-modal input reduces friction (PEOU); FHS gives actionable insight (PU); Demo Mode lowers onboarding barrier |
 | **Atlantis Press PLS-SEM** (Sharma, Gaba & Sharma, 2026; N=656) | Empirical structural model: nudges + gamification → financial intention → well-being, moderated by algorithm transparency | Validates SmartSpend's nudge + gamification design with exact path coefficients: Budget Feedback Nudge β=0.28 (t=6.21), Gamified Rewards β=0.25 (t=5.89). Perceived Algorithm Transparency moderates the well-being path (β=0.14, t=2.95, p<0.001, R²DFWB=0.56) |
 - Spending Streaks & Challenges
@@ -373,7 +373,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 - Balance mode toggle
 - Round-up savings toggle
 - Compact mode toggle
-- 5 color themes + dark mode
+- 10 color themes + dark mode (5 new added v2.9.45: Crimson, Navy, Teal, Rose, Charcoal)
 
 ---
 
@@ -430,7 +430,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | PH Gov (SSS/PhilHealth/Pag-IBIG) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Records | ❌ | ❌ |
 | Paluwagan tracker | ✅ Basic | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ |
 | 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| Gamification (badges/quests) | ✅ 23 badges | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ |
+| Gamification (badges/quests) | ✅ **25 badges** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ |
 | Free (no subscription) | ✅ Always | ❌ $14.99/mo | ❌ $9.99/mo | ❌ $10.99/mo | ⚠️ Limited | ✅ | ✅ | ⚠️ Limited | ✅ (GCash required) |
 | Spending Limits (multi-period) | ✅ Daily/Wk/Mo/Yr | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Logging Gap Detection | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
