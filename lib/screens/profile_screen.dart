@@ -1347,7 +1347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : netWorth;
                             final isPositive = displayValue >= 0;
                             final label = balanceMode
-                                ? "Total Cash Available"
+                                ? "Wallet Balance"
                                 : isAllowanceBased
                                     ? "Remaining Balance (This Month)"
                                     : "Net Worth";
@@ -1384,6 +1384,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     style: const TextStyle(
                                                         fontSize: 12,
                                                         color: Colors.grey)),
+                                                const SizedBox(width: 4),
+                                                const InfoButton(
+                                                  title: "Net Worth / Balance",
+                                                  body:
+                                                      "This card shows one of three values depending on your settings:\n\n"
+                                                      "💰 Net Worth — total income earned + wallet balances − total spending − outstanding debts. Updates when you add wallets or record debt payments.\n\n"
+                                                      "📊 Remaining Balance — for students/allowance-based accounts: income this month minus spending so far.\n\n"
+                                                      "🏦 Wallet Balance (Balance Mode) — just the sum of your wallet balances. Enable via App Settings → Balance Mode.\n\n"
+                                                      "Tap the card to manage wallet balances.",
+                                                  size: 11,
+                                                ),
                                                 const SizedBox(width: 4),
                                                 const Icon(
                                                     Icons

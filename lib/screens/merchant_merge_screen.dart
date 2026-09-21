@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/info_button.dart';
 import '../services/merchant_normalization_service.dart';
 import '../services/db_service.dart';
 import '../services/event_bus.dart';
@@ -74,6 +75,17 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
       appBar: AppBar(
         title: const Text("Merchant Cleanup"),
         actions: [
+          const InfoButton(
+            title: "Merchant Cleanup",
+            body:
+                "Fixes duplicate or inconsistent shop names across your expense history.\n\n"
+                "Why this happens: the same merchant gets logged with slightly different spellings — 'Jollibee', 'jollibee', 'JOLLIBEE Megamall' — creating separate entries in analytics.\n\n"
+                "How to use:\n"
+                "• This screen shows groups of names that likely refer to the same merchant\n"
+                "• Tap the name you want to keep as the canonical version\n"
+                "• Tap 'Merge' — all matching expenses are renamed to that version\n\n"
+                "After merging, your spending charts and merchant totals will be cleaner and more accurate.",
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: "Re-scan",

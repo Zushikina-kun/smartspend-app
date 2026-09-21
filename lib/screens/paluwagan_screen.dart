@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/info_button.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
@@ -176,6 +177,18 @@ class _PalawaganScreenState extends State<PalawaganScreen> {
       appBar: AppBar(
         title: const Text("Paluwagan Tracker"),
         actions: [
+          const InfoButton(
+            title: "Paluwagan Tracker",
+            body:
+                "A paluwagan is a Filipino rotating savings group (ROSCA — Rotating Savings and Credit Association).\n\n"
+                "How it works:\n"
+                "• A group of people each contribute a fixed amount every round (e.g. ₱500/week)\n"
+                "• One member receives the whole pot each round\n"
+                "• Members rotate until everyone has received once\n"
+                "• 5 members × ₱500 = ₱2,500 pot per round\n\n"
+                "This screen tracks: group members, payout order, contribution amount per round, and who has already received.\n\n"
+                "Tap + to create a new group. Tap a group to log contributions and mark payouts.",
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: "New group",
