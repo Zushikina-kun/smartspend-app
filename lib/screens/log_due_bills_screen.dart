@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/info_button.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
@@ -138,6 +139,14 @@ class _LogDueBillsScreenState extends State<LogDueBillsScreen> {
       appBar: AppBar(
         title: const Text("Log Due Bills"),
         actions: [
+          const InfoButton(
+            title: "Log Due Bills",
+            body:
+                "A checklist of all your recurring transactions that are overdue or due today.\n\n"
+                "Instead of logging each bill one by one via AI or manual entry, tick the ones you want to log and tap 'Save All' — all selected items are logged as expenses in one tap.\n\n"
+                "You can adjust the amount for each item before saving (useful if the actual amount differed from the expected).\n\n"
+                "After saving, the next due date for each item is automatically advanced.",
+          ),
           TextButton(
             onPressed: _loading || _saving ? null : _saveSelected,
             child: Text("Save All",

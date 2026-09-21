@@ -1086,11 +1086,10 @@ class _DebtScreenState extends State<DebtScreen>
             title: "Debts & Lending",
             body:
                 "Track money you owe others (I Owe tab) and money others owe you (Owed to Me tab).\n\n"
-                "• Payment Plans tab — track ShopeePayLater, GCash GLoan, HomeCredit, etc.\n"
                 "• Set a due date to get a reminder notification 7 days before\n"
                 "• Tap 'Pay' to record partial or full payments\n"
                 "• The progress bar shows how much has been paid\n"
-                "• Plans tab — track ShopeePayLater, GCash GLoan, HomeCredit, and any fixed monthly payment plan",
+                "• Payment Plans tab — track ShopeePayLater, GCash GLoan, HomeCredit, and any fixed monthly installment plan",
           ),
           IconButton(
             icon: const Icon(Icons.credit_score_outlined),

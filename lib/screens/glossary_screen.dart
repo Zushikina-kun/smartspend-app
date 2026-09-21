@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/info_button.dart';
 
 /// Financial Glossary — explains key financial terms in plain Filipino-English
 class GlossaryScreen extends StatefulWidget {
@@ -144,6 +145,15 @@ class _GlossaryScreenState extends State<GlossaryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Financial Glossary"),
+        actions: [
+          const InfoButton(
+            title: "Financial Glossary",
+            body:
+                "Plain-English explanations of financial terms used in SmartSpend and in everyday Filipino personal finance.\n\n"
+                "Covers: FHS, FMS, DTI, 50/30/20 Rule, MP2, UITFs, UITF, Paluwagan, PhilHealth, SSS, Pag-IBIG, Emergency Fund, TRAIN Law, and more.\n\n"
+                "Tap any term to expand its full definition. Use the search bar to find a specific term quickly.",
+          ),
+        ],
       ),
       body: Column(
         children: [

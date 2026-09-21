@@ -1539,6 +1539,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         const Text("Savings Rate (last 6 months)",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 6),
+                        const InfoButton(
+                          title: "Savings Rate Trend",
+                          body:
+                              "Shows what % of your monthly income you saved each month for the last 6 months.\n\n"
+                              "Formula: (Income − Total Spent) ÷ Income × 100\n\n"
+                              "🎯 Target line: 20% — the standard recommended savings rate.\n"
+                              "🟢 Green dot = at or above 20%\n"
+                              "🔵 Blue dot = saving something, below 20%\n"
+                              "🔴 Red dot = spending exceeded income that month\n\n"
+                              "Only shown when income tracking is on and you have 2+ months of data.",
+                          size: 13,
+                        ),
                         const SizedBox(height: 4),
                         Text(
                             "% of monthly income saved each month. Target: 20%+",
@@ -2720,6 +2733,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold)),
+                                const SizedBox(width: 6),
+                                const InfoButton(
+                                  title: "Spending Heatmap",
+                                  body:
+                                      "Shows which days of the week you tend to spend the most, based on your full expense history.\n\n"
+                                      "Darker cells = more spending on that day of week.\n\n"
+                                      "Use this to spot patterns: if Saturdays are always dark, you may want to plan ahead for weekend spending.",
+                                  size: 13,
+                                ),
                                 const SizedBox(width: 6),
                                 Text("last 5 weeks",
                                     style: TextStyle(
@@ -3986,6 +4008,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               const Text("Spending by Tag",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
               const SizedBox(width: 6),
+              const InfoButton(
+                title: "Spending by Tag",
+                body: "Groups your expenses by custom #hashtag labels.\n\n"
+                    "How to tag: when logging an expense (via AI or manual), add #hashtags to the notes field.\n\n"
+                    "Examples:\n"
+                    "• \"Grab ride to work #commute\" → tracked under #commute\n"
+                    "• \"Pizza with friends #lakad\" → tracked under #lakad\n"
+                    "• \"New keyboard #setup\" → tracked under #setup\n\n"
+                    "Useful for tracking project budgets, trip spending, shared expenses, or any custom grouping that doesn't fit a standard category.",
+                size: 13,
+              ),
+              const SizedBox(width: 6),
               Text("${sorted.length} tag${sorted.length == 1 ? '' : 's'}",
                   style: TextStyle(
                       fontSize: 11,
@@ -4375,6 +4409,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               const SizedBox(width: 8),
               const Text("Emergency Fund Calculator",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              const SizedBox(width: 6),
+              const InfoButton(
+                title: "Emergency Fund Calculator",
+                body:
+                    "Calculates how much you need to cover 3 and 6 months of essential expenses.\n\n"
+                    "Formula: average monthly spending (last 3 months) × 3 or 6.\n\n"
+                    "Large one-time purchases (gadgets, trips) are excluded from the average to avoid inflating the target.\n\n"
+                    "💡 The 3-month fund covers short-term emergencies (job loss, medical bills). The 6-month fund is the gold standard for financial security.\n\n"
+                    "To start building it: Hub → Savings Goals → add a goal named 'Emergency Fund'.",
+                size: 13,
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -4457,6 +4502,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               SizedBox(width: 8),
               Text("Financial Milestones",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              SizedBox(width: 6),
+              InfoButton(
+                title: "Financial Milestones",
+                body:
+                    "Auto-computed achievements based on your financial journey — not the same as the gamification badges.\n\n"
+                    "Examples:\n"
+                    "• First month logging every day\n"
+                    "• First savings goal completed\n"
+                    "• First month with FHS ≥80\n"
+                    "• First debt fully paid\n\n"
+                    "Milestones are detected automatically from your data and timestamped — they form a timeline of your financial progress.",
+                size: 13,
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -4831,6 +4889,16 @@ class _PeriodComparisonWidgetState extends State<_PeriodComparisonWidget> {
                     const Text("Period Comparison",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 6),
+                    const InfoButton(
+                      title: "Period Comparison",
+                      body:
+                          "Compare spending between any two months side by side.\n\n"
+                          "Tap the date pickers to select Month A and Month B, then tap Compare.\n\n"
+                          "Shows: total spending, per-category breakdown, and the difference for each category.\n\n"
+                          "💡 Most useful for: checking if you improved after a bad month, or comparing a holiday month to a normal month.",
+                      size: 13,
+                    ),
                     if (!_expanded)
                       Text(
                         "${fmt.format(_periodA)} vs ${fmt.format(_periodB)} — tap to compare",
@@ -5369,6 +5437,15 @@ class _MarketInsightsCardState extends State<_MarketInsightsCard> {
                       style:
                           TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                     ),
+                  ),
+                  const InfoButton(
+                    title: "Market Insights",
+                    body:
+                        "Live PHP exchange rates vs major currencies — useful for understanding the value of remittances, online purchases in USD/EUR, and imported goods.\n\n"
+                        "Rates update every hour from open.er-api.com.\n\n"
+                        "Also shows a rotating financial literacy tip — a quick fact about savings, investing, or budgeting.\n\n"
+                        "Tap the refresh icon (top right) to force-update rates.",
+                    size: 13,
                   ),
                   if (_updatedAt.isNotEmpty)
                     Text(_updatedAt,

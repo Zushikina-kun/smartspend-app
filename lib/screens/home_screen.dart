@@ -2872,6 +2872,16 @@ class _DashboardState extends State<Dashboard> {
               const SizedBox(width: 6),
               const Text("Day in Review",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              const SizedBox(width: 4),
+              const InfoButton(
+                title: "Day in Review",
+                body: "A quick end-of-day summary of today's spending.\n\n"
+                    "• Total spent today vs yesterday\n"
+                    "• Top spending category\n"
+                    "• Whether you stayed within your daily budget\n\n"
+                    "Only appears after 6 PM if you have expenses logged today.",
+                size: 13,
+              ),
             ]),
             const SizedBox(height: 8),
             Row(children: [
@@ -3212,6 +3222,17 @@ class _DashboardState extends State<Dashboard> {
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: color)),
+                const SizedBox(width: 4),
+                InfoButton(
+                  title: "Daily Spending Limit",
+                  body:
+                      "Tracks how much you've spent today vs your daily limit.\n\n"
+                      "• Orange at 80% — approaching your limit\n"
+                      "• Red at 100%+ — limit exceeded\n\n"
+                      "Smart Daily Allowance (below the bar) = remaining monthly budget ÷ days left in the month — how much you can safely spend today.\n\n"
+                      "To set or change your limit: Profile → Spending Limits → Daily.",
+                  size: 13,
+                ),
                 const Spacer(),
                 Text(
                   "${CurrencyService.format(_dailySpent)} / ${CurrencyService.format(_dailyLimit)}",
@@ -3516,6 +3537,16 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.white70,
                           fontSize: 12,
                           fontWeight: FontWeight.w500)),
+                  const SizedBox(width: 4),
+                  const InfoButton(
+                    title: "My Wallets",
+                    body:
+                        "Tap this card to manage individual wallet balances.\n\n"
+                        "Tracks: Cash on Hand, GCash, Maya, GrabPay, ShopeePay, Debit Card, Credit Card, BDO, BPI, and 25+ other banks.\n\n"
+                        "Total = combined balance across all accounts.\n\n"
+                        "Wallets auto-deduct when you log expenses (if enabled in App Settings → Auto-deduct wallets). Tap Hub → My Wallets to add or update balances.",
+                    size: 13,
+                  ),
                   const Spacer(),
                   Container(
                     padding:
@@ -6459,6 +6490,16 @@ class _DoneSpendingToggleState extends State<_DoneSpendingToggle> {
                         fontWeight: FontWeight.w600,
                         color: _isDone ? Colors.green : null,
                       ),
+                    ),
+                    const SizedBox(width: 4),
+                    const InfoButton(
+                      title: "Done Spending Today",
+                      body:
+                          "Tap to mark that you're done spending for the day.\n\n"
+                          "Why it matters: SmartSpend only scores logged days. If you stop spending but forget to log anything, the app may think you had an incomplete day.\n\n"
+                          "Toggling this on signals a clean, complete day — which counts positively toward your Logging Consistency score.\n\n"
+                          "You'll get a gentle reminder if you log more expenses after toggling it on.",
+                      size: 12,
                     ),
                     Text(
                       _isDone
