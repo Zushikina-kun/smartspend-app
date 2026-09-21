@@ -15,7 +15,7 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v2.9.47** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.47-arm64-v8a.apk` from GitHub releases |
+| Install **v2.9.47** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.49-arm64-v8a.apk` from GitHub releases |
 | Verify About screen shows **"Version 2.9.47"** | Brix | ❌ | Should be automatic now — kAppVersion constant |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
 | Create **Figure 1.1** — PH financial literacy bar chart (BSP CFIS 2025 data) | Cyrille | ❌ | Key stats: 50% adults have formal accounts; 74% literacy rate |
@@ -49,25 +49,29 @@
 
 ### 🟡 After pre-final defense (before final)
 
-| Task | Owner | Status |
-|------|-------|--------|
-| SUS survey — 30 respondents (20 parents, 10 young professionals) | Djaunathan | ❌ |
-| Use SUS respondents as Google Play Closed Testing pool (12 testers × 14 days) | Brix | ❌ |
-| Create Google Play Console account ($25 USD) + identity verification | Brix | ❌ |
-| Build AAB: `flutter build appbundle --release --obfuscate --split-debug-info=build/debug-info` | Brix | ❌ |
-| Create Privacy Policy hosted page (GitHub Pages) | Cyrille | ❌ |
-| Validator signatures — Appendix A certificates | Brix | ❌ |
-| BSP citation update: Ch.1 stats from BSP 2021 → BSP CFIS 2025 | Cyrille | ❌ |
-| Insert survey results + SUS scores into manuscript Ch.3 | Cyrille | ❌ |
-| CV section for all three researchers | All | ❌ |
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| SUS survey — 30 respondents (20 parents, 10 young professionals) | Djaunathan | ❌ | See Deployment Roadmap for respondent recruitment via Internal Testing |
+| Google Play Internal Testing — invite 12+ testers via Gmail | Brix | ❌ | Requires Play Console ($25) + Privacy Policy first |
+| Run Internal Testing 14 days minimum | Djaunathan | ❌ | Required before production eligibility |
+| Create Google Play Console account ($25 USD) | Brix | ❌ | One-time fee — see Deployment Roadmap |
+| Build AAB: `flutter build appbundle --release --obfuscate --split-debug-info=build/debug-info` | Brix | ❌ | 5 min — produces `app-release.aab` |
+| Create Privacy Policy hosted page (GitHub Pages) | Cyrille | ❌ | Required Play Store field — template in Deployment Roadmap |
+| Enforce Firebase App Check | Brix | ❌ | Firebase Console → App Check → Enforce (currently monitoring only) |
+| Validator signatures — Appendix A certificates | Brix | ❌ | |
+| BSP citation update: Ch.1 stats from BSP 2021 → BSP CFIS 2025 | Cyrille | ❌ | |
+| Insert survey results + SUS scores into manuscript Ch.3 | Cyrille | ❌ | |
+| Update comparative research in manuscript with new competitors | Cyrille | ❌ | Use `SmartSpend_Comparative_Research_Updated_Sep2026.md` — new: Tarsi, Alkansya AI, ChatGPT Finance, Cleo 3.0, Origin, Finanzya |
+| Update FHS formula section in manuscript with v2.9.42 changes | Cyrille | ❌ | Overspend soft/hard penalty, Category Balance exemptions, Warning Decay discretionary-only |
+| CV section for all three researchers | All | ❌ | |
 
 ---
 
-## DEMO SCRIPT — Pre-Final Defense (v2.9.47)
+## DEMO SCRIPT — Pre-Final Defense (v2.9.49)
 
 ### Setup (night before)
-1. Download `SmartSpend-v2.9.47-arm64-v8a.apk` from GitHub releases
-2. Install on demo phone; verify About screen shows **"Version 2.9.47"**
+1. Download `SmartSpend-v2.9.49-arm64-v8a.apk` from GitHub releases
+2. Install on demo phone; verify About screen shows **"Version 2.9.49"**
 3. Charge phone to 100%, do NOT open the app again until demo
 4. Have WiFi ready (AI needs internet for first message)
 
@@ -120,7 +124,7 @@
 
 ---
 
-## APP STATUS — v2.9.47 (Current — Defense Build)
+## APP STATUS — v2.9.49 (Current — Defense Build)
 
 ### AI System
 - **Primary model**: Gemini 3.5 Flash-Lite (GA stable — migrated from 3.1 on Sep 10, 2026 due to 404 errors in production)
@@ -216,3 +220,140 @@ The following corrections are NOT yet applied in the manuscript Google Doc. Appl
 | 22 | Add Agila as competitor | Ch.2 competitor table | Android + iOS; business profile strength |
 | 23 | Add PISO Budget Tracker as competitor | Ch.2 competitor table | Offline-first, Filipino-made |
 | 24 | Adviser = Ellen F. Mangaoang MIT | Title page | Verzola = Capstone 1 only |
+
+---
+
+## DEPLOYMENT ROADMAP
+
+> Added September 21, 2026. Full deployment options and task list.
+
+---
+
+### ✅ DONE RIGHT NOW — Direct APK (No setup needed)
+
+The APK is already installable by anyone. This is sufficient for:
+- Defense demo
+- Validator installations
+- SUS survey respondents
+- Classmates testing
+
+| How | Link |
+|-----|------|
+| Download APK | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v2.9.49 |
+| File to use | `SmartSpend-v2.9.49-arm64-v8a.apk` (most phones) |
+| Install step | Enable "Install from unknown sources" on phone → tap APK |
+
+---
+
+### 🟠 BEFORE FINAL DEFENSE — Google Play Internal Testing
+
+This is the path for getting 30 SUS survey respondents on the official Play Store version. Does NOT require waiting for Play Store review.
+
+| # | Task | Owner | Est. time | Status |
+|---|------|-------|-----------|--------|
+| 1 | **Create Privacy Policy page** (GitHub Pages) — required field in Play Console | Cyrille | 2h | ❌ |
+| 2 | **Create Google Play Console account** — $25 USD one-time fee | Brix | 30min | ❌ |
+| 3 | **Enforce Firebase App Check** — currently monitoring mode; enforce before upload | Brix | 15min | ❌ |
+| 4 | **Build AAB** (Android App Bundle — Play Store requires this, not APK) | Brix | 5min | ❌ |
+| 5 | **Upload to Internal Testing track** — immediate access, no review wait | Brix | 30min | ❌ |
+| 6 | **Invite SUS respondents** via Gmail to Internal Testing | Brix/Djaunathan | 30min | ❌ |
+| 7 | **Run 14-day closed test** (12 testers minimum for production eligibility) | Djaunathan | 2 weeks | ❌ |
+
+**Commands:**
+```bash
+# Step 3 — Enforce App Check (Firebase Console → App Check → SmartSpend → Enforce)
+# (done in Firebase Console, not terminal)
+
+# Step 4 — Build AAB
+flutter build appbundle --release --obfuscate --split-debug-info=build/debug-info
+# Output: build/app/outputs/bundle/release/app-release.aab
+
+# Upload app-release.aab to Play Console → Internal Testing
+```
+
+**Privacy Policy template content (for Cyrille to host on GitHub Pages):**
+
+```
+SmartSpend Privacy Policy
+
+Data collected: Email address (Firebase Auth), expense and financial data,
+usage data (AI message count, feature interactions).
+
+Data storage: Primarily on-device (SQLite). Optionally synced to Firebase
+Firestore, scoped to your user account (UID). No third party can access
+your data.
+
+AI processing: When you use AI features, expense text is sent to third-party
+AI providers (Google, Groq, Cerebras). Personal identifiers (phone numbers,
+reference numbers) are stripped before transmission.
+
+Data deletion: Logout clears local data. You may request Firestore deletion
+by contacting us.
+
+Contact: [team email]
+Last updated: September 2026
+```
+
+---
+
+### 🟡 ZERO-COST ALTERNATIVES (Before or Instead of Play Store)
+
+These require no fee and can be done immediately:
+
+| Platform | How | Effort | Audience |
+|----------|-----|--------|----------|
+| **APKPure** | Upload APK at apkpure.com/developer | 30min | Global Android users |
+| **F-Droid** | Submit to f-droid.org (open source required) | 1–3 week review | Developer/privacy community |
+| **Amazon Appstore** | Free developer account at developer.amazon.com | 1–3 day review | Android + Kindle |
+| **Samsung Galaxy Store** | Free at seller.samsungapps.com | 3–5 day review | Samsung users (PH heavy) |
+| **Direct link + QR code** | Host APK on GitHub, generate QR → print for defense | 15min | Panel, validators, classmates |
+
+**For the defense specifically:** Generate a QR code pointing to the GitHub release APK. Panel members can scan and install during or after the demo. Zero cost, instant.
+
+---
+
+### 🟢 POST-CAPSTONE — Full Play Store Production Release
+
+After the final defense and SUS survey are complete:
+
+| # | Task | Owner | Est. time | Notes |
+|---|------|-------|-----------|-------|
+| 1 | **Prepare 8 screenshots** (1080×1920 or 1440×2560) | Cyrille | 2–4h | Show: Home, AI chat, Analytics, FHS, Hub, Settings, Profile, Achievements |
+| 2 | **Feature graphic** (1024×500 PNG) | Cyrille | 1h | App banner image for Play Store listing |
+| 3 | **App icon** (512×512 PNG, no transparency) | Cyrille | 30min | Use existing logo.png, resize |
+| 4 | **Short description** (80 chars max) | Cyrille | 30min | e.g. "AI-powered Filipino personal finance tracker. Free, offline-first." |
+| 5 | **Full description** (4,000 chars max) | Cyrille | 1–2h | Feature list, FHS explanation, Filipino context |
+| 6 | **Complete Data Safety form** | Brix | 1h | Declare: email, financial data, usage. No ads. |
+| 7 | **Content rating** (IARC questionnaire) | Brix | 20min | Finance app, 18+, no violence/gambling |
+| 8 | **Rotate API keys before public launch** | Brix | 30min | Generate new Groq API key → update Firebase Remote Config |
+| 9 | **Submit to Production track** | Brix | 30min | After Internal Testing ≥14 days |
+| 10 | **Wait for Play Store review** | — | 3–7 days | Google reviews all production submissions |
+
+**Security tasks before production launch:**
+- [ ] **Enforce Firebase App Check** (currently monitoring mode) — blocks sideloaded/modified APKs
+- [ ] **Cloud Functions proxy** for API keys (optional but recommended — key never in APK) — ~3 days work
+- [ ] **SQLite encryption** (sqlcipher) — optional but adds data-at-rest protection — ~2 days work
+- [ ] **Backend rate limiting** upgrade — optional enhancement
+
+---
+
+### 📋 DEPLOYMENT SUMMARY
+
+| Path | Cost | Time to users | Requirements | Best for |
+|------|------|---------------|-------------|----------|
+| **Direct APK (GitHub)** | Free | Now | None | Defense demo, validators, classmates |
+| **QR code to APK** | Free | Now | None | Defense day, printed handout |
+| **APKPure** | Free | 30min | APK file | Global visibility |
+| **Play Internal Testing** | $25 one-time | Same day | Play Console account + Privacy Policy | SUS survey respondents |
+| **Samsung Galaxy Store** | Free | 3–5 days | Samsung dev account | PH Samsung users |
+| **F-Droid** | Free | 1–3 weeks | Open source license | Privacy-conscious users |
+| **Play Store Production** | Included with $25 | 3–7 days | Screenshots + data safety + 14-day test | General public |
+
+**Recommended sequence:**
+1. Now → Use GitHub APK for defense + validators
+2. After pre-final defense → Pay $25 + create Privacy Policy → Internal Testing for SUS survey
+3. After final defense → Submit screenshots/listing → Production release
+
+---
+
+*Deployment section added September 21, 2026.*
