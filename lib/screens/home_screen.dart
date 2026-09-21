@@ -611,7 +611,7 @@ class _HomeScreenState extends State<HomeScreen> {
               maxLines: 3,
               decoration: const InputDecoration(
                   labelText: "Other people's names (one per line, optional)",
-                  hintText: "Cyrille\nDjaunathan",
+                  hintText: "Maria\nJuan",
                   border: OutlineInputBorder(),
                   isDense: true)),
         ])),
@@ -2285,8 +2285,8 @@ class _DashboardState extends State<Dashboard> {
       // Compute badges
       final badges = <String>[];
       if (streak >= 3) badges.add('🔥 $streak-day streak');
-      if (streak >= 7) badges.add('💯 Week on track');
-      if (streak >= 30) badges.add('🏆 30-day champion');
+      if (streak >= 7) badges.add('💯 Week Warrior');
+      if (streak >= 30) badges.add('🏆 Month Master');
       // Check savings goal progress
       final goals = await DBService.getGoals();
       for (final g in goals) {
@@ -3418,13 +3418,14 @@ class _DashboardState extends State<Dashboard> {
               const SizedBox(width: 4),
               InfoButton(
                 title: "Achievements & Streaks",
-                body: "Badges you earn by staying on track financially.\n\n"
-                    "🔥 Streak — consecutive days with a Fair or Good score (≥60)\n"
-                    "💯 Week on track — 7+ day streak\n"
-                    "🏆 30-day champion — 30+ day streak\n"
-                    "💰 ₱1K+ saved — a savings goal has ₱1,000+ contributed\n"
-                    "🎯 Goal reached — a savings goal is 100% funded\n"
-                    "📅 Active tracker — logged expenses today",
+                body: "Badges earned by staying on track financially.\n\n"
+                    "🔥 3-Day Streak — 3 consecutive good-score days\n"
+                    "💯 Week Warrior — 7+ day streak\n"
+                    "🏆 Month Master — 30+ day streak\n"
+                    "💰 Saver — saved ≥20% of income for a month\n"
+                    "🎯 Goal Getter — completed a savings goal\n"
+                    "📅 Consistent Logger — logged every day for 14 days\n\n"
+                    "25 badges total — Hub → Achievements to see them all.",
                 size: 13,
               ),
             ],

@@ -433,7 +433,7 @@ class _BatchManualEntryScreenState extends State<BatchManualEntryScreen> {
                   const TextInputType.numberWithOptions(decimal: true),
               style: const TextStyle(fontSize: 13),
               decoration: InputDecoration(
-                hintText: "0",
+                hintText: "e.g. 50",
                 hintStyle: const TextStyle(fontSize: 12, color: Colors.grey),
                 isDense: true,
                 contentPadding:

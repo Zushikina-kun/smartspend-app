@@ -85,7 +85,7 @@ class _PalawaganScreenState extends State<PalawaganScreen> {
                         maxLines: 3,
                         decoration: const InputDecoration(
                           labelText: "Members (one per line, in payout order)",
-                          hintText: "Brix\nCyrille\nDjaunathan",
+                          hintText: "Juan\nMaria\nPedro",
                           border: OutlineInputBorder(),
                           isDense: true,
                         ),

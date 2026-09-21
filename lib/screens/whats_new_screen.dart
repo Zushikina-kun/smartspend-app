@@ -28,9 +28,9 @@ class WhatsNewScreen extends StatelessWidget {
     ),
     (
       '🤖',
-      'AI Works Again — New Models & Keys (v2.9.29)',
-      'Fixed: Gemini 3.5 Flash-Lite is now the primary model (the old '
-          'gemini-3.1-flash-lite was shut down by Google). Groq fallback '
+      'AI Updated — New Models & Keys (v2.9.29)',
+      'Fixed: Gemini 3.5 Flash-Lite is now the primary model (the previous '
+          'gemini-3.1-flash-lite endpoint became unavailable). Groq fallback '
           'now uses models verified on your account tier.'
     ),
     (
@@ -106,7 +106,7 @@ class WhatsNewScreen extends StatelessWidget {
               children: [
                 Icon(Icons.new_releases_outlined, size: 40, color: cs.primary),
                 const SizedBox(height: 8),
-                Text("Smart Spend v$_version",
+                Text("SmartSpend v$_version",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

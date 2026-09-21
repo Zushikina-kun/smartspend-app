@@ -1129,8 +1129,8 @@ class _DebtScreenState extends State<DebtScreen>
           : TabBarView(
               controller: _tabs,
               children: [
-                _buildList(_owe, "No debts recorded.", Colors.redAccent),
-                _buildList(_lent, "No lending recorded.", Colors.green),
+                _buildList(_owe, "Nothing owed yet.", Colors.redAccent),
+                _buildList(_lent, "Nothing lent out yet.", Colors.green),
                 _buildPlansTab(),
               ],
             ),
