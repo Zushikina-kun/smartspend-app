@@ -219,7 +219,7 @@ const _sections = [
       _HelpItem(
         title: "What is Smart Spend?",
         body:
-            "Smart Spend is an AI-powered financial assistant for your phone. It helps you track expenses, manage budgets, set savings goals, and get personalized financial advice — all by just talking to it naturally.",
+            "SmartSpend is an AI-powered financial assistant for your phone. It helps you track expenses, manage budgets, set savings goals, and get personalized financial advice — all by just talking to it naturally.",
         example:
             "Think of it as a smart money diary that understands plain language.",
       ),
@@ -302,7 +302,7 @@ const _sections = [
       _HelpItem(
         title: "Daily message limit",
         body:
-            "The AI has a limit of 60 messages per day to protect the shared API key. The remaining count is shown in the top bar. It resets at midnight UTC. You can reset it manually via the ⋮ menu → Reset Daily Limit.",
+            "SmartSpend allows up to 150 AI messages per day across all 8 providers. Each provider has its own 60-message daily quota — when one is reached, the app automatically switches to the next available model. The remaining count is shown in the top bar and resets at midnight UTC. You can also reset it manually via the ⋮ menu → Reset Daily Limit.",
       ),
       _HelpItem(
         title: "Language",
@@ -319,7 +319,7 @@ const _sections = [
       _HelpItem(
         title: "What is Lightweight Mode?",
         body:
-            "Lightweight Mode lets you use Smart Spend without entering any income or managing wallets. "
+            "Lightweight Mode lets you use SmartSpend without entering any income or managing wallets. "
             "It's designed for users who just want to track spending habits.\n\n"
             "To enable: Profile → ⚙️ App Settings → Tracking Mode → Turn off 'Track income & wallets'\n\n"
             "When OFF:\n"
@@ -358,7 +358,7 @@ const _sections = [
       _HelpItem(
         title: "How does the Logging Gap check work?",
         body:
-            "On app startup (once per day), Smart Spend checks if you had any days without logged expenses since your last session.\n\n"
+            "On app startup (once per day), SmartSpend checks if you had any days without logged expenses since your last session.\n\n"
             "If gaps are found, a dialog appears per gap asking:\n"
             "• 'Yes, I spent' — you spent but forgot to log → FHS gets a small penalty (−3 pts per day, max −15)\n"
             "• 'Nope, nothing' — genuinely no spending → FHS gets a bonus (+2 pts per day, max +10)\n\n"
@@ -1153,7 +1153,7 @@ const _sections = [
     items: [
       _HelpItem(
         title: "Built-in categories",
-        body: "Smart Spend has 14 built-in categories:\n\n"
+        body: "SmartSpend has 14 built-in categories:\n\n"
             "• 🍔 Food — meals, drinks, snacks, groceries, restaurants\n"
             "• 🚌 Transportation — jeepney, bus, Grab, tricycle, fuel\n"
             "• 📱 Bills — electricity, internet, subscriptions, loans\n"
@@ -1305,7 +1305,7 @@ const _sections = [
             "🔥 5-day streak → you've had a Fair or Good score for 5 days in a row.",
       ),
       _HelpItem(
-        title: "All 23 badges",
+        title: "All 25 badges",
         body: "Getting Started:\n"
             "🌱 First Step — Log your first expense\n"
             "📱 App Explorer — Use 5 different features\n\n"
@@ -1326,7 +1326,9 @@ const _sections = [
             "🚫 Impulse Control — Decline impulse pause 5 times\n"
             "📅 Consistent Logger — Log every day for 14 days\n"
             "🔍 Detail Oriented — Add notes to 10 expenses\n"
-            "🛡️ Insurance Aware — Track 1+ insurance policy\n\n"
+            "🛡️ Insurance Aware — Track 1+ insurance policy\n"
+            "⭕ No-Spend Day — Complete a full day with zero spending\n"
+            "🔟 No-Spend Streak — Have 5 no-spend days in a month\n\n"
             "Fun:\n"
             "🌙 Night Owl — Log after 10 PM\n"
             "☀️ Early Bird — Log before 8 AM\n\n"
@@ -1356,7 +1358,7 @@ const _sections = [
       _HelpItem(
         title: "Where do I see my badges?",
         body:
-            "Hub → Achievements. Shows all 23 badges in a grid — earned ones are highlighted, locked ones show 🔒. The count in the top bar shows how many you've earned. Pull down to refresh.",
+            "Hub → Achievements. Shows all 25 badges in a grid — earned ones are highlighted, locked ones show 🔒. The count in the top bar shows how many you've earned. Pull down to refresh.",
       ),
     ],
   ),
@@ -1651,7 +1653,7 @@ const _sections = [
         body: "Option A — PDF text (most reliable):\n"
             "1. GCash app → Profile → Transaction History → Request via email\n"
             "2. Open the email → open the PDF → select all text → copy\n"
-            "3. In Smart Spend: Hub → Import from Bank / GCash → paste → Parse with AI\n\n"
+            "3. In SmartSpend: Hub → Import from Bank / GCash → paste → Parse with AI\n\n"
             "Option B — Screenshot OCR:\n"
             "1. Open GCash → scroll through your transaction list\n"
             "2. Screenshot the list → tap Camera button in the import screen to OCR it\n"
@@ -1762,7 +1764,7 @@ const _sections = [
       _HelpItem(
         title: "What is subscription auto-detection?",
         body:
-            "Smart Spend automatically scans your expense history for recurring patterns — expenses with similar descriptions appearing 2 or more times at consistent weekly or monthly intervals.\n\n"
+            "SmartSpend automatically scans your expense history for recurring patterns — expenses with similar descriptions appearing 2 or more times at consistent weekly or monthly intervals.\n\n"
             "When a pattern is detected, a teal prompt card appears on the Home screen:\n"
             "\"Recurring pattern detected — want to track it as a recurring transaction?\"\n\n"
             "This runs once per day in the background.",

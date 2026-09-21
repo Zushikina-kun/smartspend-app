@@ -507,6 +507,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                 const SizedBox(height: 12),
                                 const Text("No transactions found.",
                                     style: TextStyle(color: Colors.grey)),
+                                const SizedBox(height: 6),
+                                const Text(
+                                    "Try clearing your search or filters.",
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 12)),
                               ],
                             ),
                           )

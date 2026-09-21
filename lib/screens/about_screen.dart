@@ -24,8 +24,7 @@ class AboutScreen extends StatelessWidget {
                   size: 80, color: cs.primary),
             ),
             const SizedBox(height: 12),
-            Text(
-              "Smart Spend",
+            Text("SmartSpend",
               style: TextStyle(
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
@@ -45,9 +44,9 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 12),
 
             _infoCard(context, [
-              "Smart Spend is an AI-powered mobile financial assistant designed to help users automatically record, analyze, and manage their personal finances with minimal effort.",
+              "SmartSpend is an AI-powered mobile financial assistant designed to help users automatically record, analyze, and manage their personal finances with minimal effort.",
               "",
-              "Using voice input, OCR receipt scanning, barcode scanning, and natural language processing, Smart Spend converts everyday spending into structured financial data — giving users real-time insights, budget alerts, and personalized AI advice.",
+              "Using voice input, OCR receipt scanning, barcode scanning, and natural language processing, SmartSpend converts everyday spending into structured financial data — giving users real-time insights, budget alerts, and personalized AI advice.",
             ]),
 
             const SizedBox(height: 20),
@@ -61,7 +60,7 @@ class AboutScreen extends StatelessWidget {
               ("✏️ Manual Entry", "Type expenses in plain language"),
               (
                 "🤖 AI Chat Assistant",
-                "Powered by Gemini 3.5 Flash-Lite (5-provider auto-failover)"
+                "Powered by Gemini 3.5 Flash-Lite (8-provider auto-failover)"
               ),
               (
                 "🧾 AI Expense Logging",
@@ -99,7 +98,7 @@ class AboutScreen extends StatelessWidget {
               ),
               (
                 "🏆 Achievements & Badges",
-                "23 earnable badges + 10 daily quests with streak tracking",
+                "25 earnable badges + 10 daily quests (4 shown per day from a pool of 10)",
               ),
               (
                 "🎮 Daily Challenges",
@@ -135,12 +134,12 @@ class AboutScreen extends StatelessWidget {
                 "Keyword → category rules for faster logging"
               ),
               ("📸 Receipt Photos", "Attach photos to any expense"),
-              ("💱 Multi-Currency", "Live exchange rates for 34+ currencies"),
+              ("💱 Multi-Currency", "Live exchange rates for 57 currencies"),
               ("📋 Transactions Log", "Full searchable expense history"),
               ("💾 Backup & Restore", "Export/import data via share sheet"),
               ("🔐 Google Sign-In", "Sign in with your Google account"),
               ("🔒 App Lock", "PIN + biometric lock per account"),
-              ("🌙 Dark Mode + Themes", "5 color themes, light & dark mode"),
+              ("🌙 Dark Mode + Themes", "10 color themes, light & dark mode"),
               ("📤 CSV Export", "Export your data anytime"),
               (
                 "📊 50/30/20 Rule",
@@ -385,13 +384,13 @@ class AboutScreen extends StatelessWidget {
 
             _infoCard(context, [
               "Framework: Flutter (Dart)",
-              "AI Engine: Multi-model LLM — Gemini 3.5 Flash-Lite (primary), Gemini 3.5 Flash, LLaMA 4 Scout (Groq), LLaMA 3.3 70B (Groq), LLaMA 3.1 8B (Groq), GPT-OSS 120B (Cerebras) — 34 agentic actions, auto-failover",
-              "Local Database: SQLite (sqflite) v11",
+              "AI Engine: Multi-model LLM with 8-provider auto-failover — Gemini 3.5 Flash-Lite (primary), Gemini 3.5 Flash, GPT-OSS 120B (Groq), Qwen3.6 27B (Groq), Qwen3.8 27B (Groq), GPT-OSS 20B (Groq), Compound Mini (Groq), GPT-OSS 120B (Cerebras) — 34 agentic actions",
+              "Local Database: SQLite (sqflite)",
               "Cloud Auth & Sync: Firebase Auth + Firestore",
               "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules, insurance_policies",
               "OCR: Google ML Kit Text Recognition",
               "Charts: fl_chart",
-              "Backup v9: System share sheet — expenses, budgets, goals, income, recurring, debts, payment plans, categories, rules, mood log, wallets, insurance (file_picker for restore)",
+              "Backup & Restore: Full data backup exported as a JSON file via the system share sheet — covers expenses, budgets, goals, income, recurring, debts, payment plans, categories, rules, mood log, wallets, and insurance policies",
               "App Lock: local_auth (PIN + biometric, per-account)",
               "Exchange Rates: open.er-api.com",
               "Crash Reporting: Firebase Crashlytics",
@@ -444,7 +443,7 @@ class AboutScreen extends StatelessWidget {
                 ],
               ),
               child: const Text(
-                "Smart Spend is an academic project intended for educational and demonstration purposes. "
+                "SmartSpend is an academic project intended for educational and demonstration purposes. "
                 "This app is NOT a licensed financial advisor, investment advisor, insurance broker, or tax consultant. "
                 "Nothing in this app constitutes personalized financial, investment, insurance, or tax advice. "
                 "AI-generated insights are based on user-provided data and general knowledge — always consult a licensed financial professional before making significant financial decisions. "
