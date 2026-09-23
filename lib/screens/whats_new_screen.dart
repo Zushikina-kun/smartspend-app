@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.50';
-  static const _prefKey = 'whats_new_seen_2_9_50';
+  static const _version = '2.9.51';
+  static const _prefKey = 'whats_new_seen_2_9_51';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,6 +33,14 @@ class WhatsNewScreen extends StatelessWidget {
           'for each task — fast responses use Flash-Lite, in-depth financial '
           'advice uses Flash, and the app falls back gracefully when any '
           'provider is slow or unavailable.',
+    ),
+    (
+      '⚡',
+      'AI Failover Fixed (v2.9.51)',
+      'Critical fix: when the AI switched to a backup model after a 404 error, '
+          'the fallback was silently failing because each retry re-checked the daily '
+          'message limit and double-counted it. Fallback retries now skip the limit '
+          'check — the chain actually works through all providers as intended.',
     ),
     (
       '⚡',

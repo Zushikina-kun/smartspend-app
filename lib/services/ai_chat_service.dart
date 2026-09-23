@@ -816,16 +816,21 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
   }
 
   /// Returns (reply text, list of actions to execute)
-  static Future<(String, List<AIAction>)> sendMessage(String message) async {
-    // D2: enforce daily cap before hitting the API
-    final allowed = await _checkAndIncrementLimit();
-    if (!allowed) {
-      throw Exception(
-          "Daily AI limit reached (${_dailyLimit} messages/day). Try again tomorrow.");
-    }
+  static Future<(String, List<AIAction>)> sendMessage(String message,
+      {bool isFallbackRetry = false}) async {
+    // D2: enforce daily cap before hitting the API — skip on fallback retries
+    // to avoid double-counting and prevent the limit check from blocking the
+    // fallback chain (a retry should not consume an extra message slot).
+    if (!isFallbackRetry) {
+      final allowed = await _checkAndIncrementLimit();
+      if (!allowed) {
+        throw Exception(
+            "Daily AI limit reached (${_dailyLimit} messages/day). Try again tomorrow.");
+      }
 
-    _history.add({"role": "user", "content": _redactPii(message)});
-    _messagesSinceLastSummary++;
+      _history.add({"role": "user", "content": _redactPii(message)});
+      _messagesSinceLastSummary++;
+    }
 
     // ── §25 OBSERVABILITY — request trace start ───────────────────────────────
     final traceStart = DateTime.now();
@@ -1049,7 +1054,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       if (response.statusCode == 429) {
         final switched = AppConfig.autoFallback();
         if (switched) {
-          return sendMessage(message);
+          return sendMessage(message, isFallbackRetry: true);
         }
         // All providers exhausted — reset to Auto for next attempt
         AppConfig.resetLimits();
@@ -1068,7 +1073,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         await Future.delayed(const Duration(milliseconds: 500));
         final switched = AppConfig.autoFallback();
         if (switched) {
-          return sendMessage(message);
+          return sendMessage(message, isFallbackRetry: true);
         }
         // All providers exhausted — reset chain to Auto for next attempt
         AppConfig.resetLimits();
