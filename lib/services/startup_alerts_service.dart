@@ -226,8 +226,11 @@ class StartupAlertsService {
       // 0c. "What Changed?" monthly delta alert — fires once on days 1–3 of a
       // new month, comparing last month vs the month before. Pure DB math,
       // no AI call. Helps users see momentum at a glance.
+      // Gated by show_monthly_recap setting (default: true).
+      final showMonthlyRecap =
+          (await DBService.getSetting('show_monthly_recap')) != 'false';
       final now = DateTime.now();
-      if (now.day <= 3) {
+      if (showMonthlyRecap && now.day <= 3) {
         final deltaKey = 'monthly_delta_notif_$thisMonth';
         final alreadySent = await DBService.getSetting(deltaKey);
         if (alreadySent == null) {
