@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.52';
-  static const _prefKey = 'whats_new_seen_2_9_52';
+  static const _version = '2.9.53';
+  static const _prefKey = 'whats_new_seen_2_9_53';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,14 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '⚙️',
+      'More Home Screen Toggles (v2.9.53)',
+      'Three new optional cards can now be turned on/off in App Settings → '
+          'Home Screen: Payday Countdown, Monthly Recap alert, and Daily & '
+          'Weekly Challenges. All three are also covered by Lite Mode — one '
+          'tap hides all 13 optional sections at once.',
+    ),
     (
       '📅',
       'Income Prediction & Payday Countdown (v2.9.52)',

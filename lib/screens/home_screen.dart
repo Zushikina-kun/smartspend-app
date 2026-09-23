@@ -1823,6 +1823,9 @@ class _DashboardState extends State<Dashboard> {
   bool _showMoodHome = true;
   bool _showForecast = true;
   bool _showPrediction = true;
+  bool _showPaydayCountdown = true;
+  bool _showMonthlyRecap = true;
+  bool _showChallenges = true;
 
   // Track the most recently added expense date so budget/limit alerts
   // are suppressed when a historical (past-month) entry was just logged.
@@ -1928,6 +1931,12 @@ class _DashboardState extends State<Dashboard> {
         (await DBService.getSetting('show_forecast')) != 'false';
     final showPrediction =
         (await DBService.getSetting('show_prediction')) != 'false';
+    final showPaydayCountdown =
+        (await DBService.getSetting('show_payday_countdown')) != 'false';
+    final showMonthlyRecap =
+        (await DBService.getSetting('show_monthly_recap')) != 'false';
+    final showChallenges =
+        (await DBService.getSetting('show_challenges')) != 'false';
     if (!mounted) return; // widget may have been disposed during async gap
     setState(() {
       _expenses = expenses;
@@ -1952,6 +1961,9 @@ class _DashboardState extends State<Dashboard> {
       _showMoodHome = showMoodHome;
       _showForecast = showForecast;
       _showPrediction = showPrediction;
+      _showPaydayCountdown = showPaydayCountdown;
+      _showMonthlyRecap = showMonthlyRecap;
+      _showChallenges = showChallenges;
       // Only show loading indicator if we don't have an insight yet
       if (_insight == "Analyzing your expenses...") _loadingInsight = true;
       final spent = <String, double>{};
@@ -4722,7 +4734,8 @@ class _DashboardState extends State<Dashboard> {
 
               // Payday countdown / income prediction — shown when ≥2 income
               // entries exist and next expected date is within a reasonable window
-              if (_incomeWalletMode) _buildPaydayCountdownCard(context),
+              if (_incomeWalletMode && _showPaydayCountdown)
+                _buildPaydayCountdownCard(context),
 
               // Multi-period spending limits card — tappable, shown when any limit set
               _buildSpendingLimitCard(context),
@@ -4804,20 +4817,22 @@ class _DashboardState extends State<Dashboard> {
               }),
 
               // GM-1: Daily Challenges card
-              _DailyChallengesWidget(
-                expenses: _expenses,
-                budgets: _budgets,
-                score: _score,
-                monthlyIncome: _monthlyIncome,
-                incomeWalletMode: _incomeWalletMode,
-              ),
+              if (_showChallenges)
+                _DailyChallengesWidget(
+                  expenses: _expenses,
+                  budgets: _budgets,
+                  score: _score,
+                  monthlyIncome: _monthlyIncome,
+                  incomeWalletMode: _incomeWalletMode,
+                ),
 
               // GM-7: Weekly Challenge card
-              _WeeklyChallengeWidget(
-                expenses: _expenses,
-                budgets: _budgets,
-                monthlyIncome: _monthlyIncome,
-              ),
+              if (_showChallenges)
+                _WeeklyChallengeWidget(
+                  expenses: _expenses,
+                  budgets: _budgets,
+                  monthlyIncome: _monthlyIncome,
+                ),
 
               // UX-4: Emergency fund prompt for users without one
               FutureBuilder<List<Map<String, dynamic>>>(

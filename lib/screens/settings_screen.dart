@@ -46,6 +46,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool showMoodHome = true;
   bool showForecast = true;
   bool showPrediction = true;
+  bool showPaydayCountdown = true;
+  bool showMonthlyRecap = true;
+  bool showChallenges = true;
 
   // ── Analytics sections ──────────────────────────────────────────────────────
   bool showDTI = true;
@@ -61,6 +64,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       !showMoodHome &&
       !showForecast &&
       !showPrediction &&
+      !showPaydayCountdown &&
+      !showMonthlyRecap &&
+      !showChallenges &&
       !showDTI &&
       !showEmergencyFund &&
       !showMilestones &&
@@ -94,6 +100,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showMoodHome = (await DBService.getSetting('show_mood_home')) != 'false';
     showForecast = (await DBService.getSetting('show_forecast')) != 'false';
     showPrediction = (await DBService.getSetting('show_prediction')) != 'false';
+    showPaydayCountdown =
+        (await DBService.getSetting('show_payday_countdown')) != 'false';
+    showMonthlyRecap =
+        (await DBService.getSetting('show_monthly_recap')) != 'false';
+    showChallenges = (await DBService.getSetting('show_challenges')) != 'false';
     showDTI = (await DBService.getSetting('show_dti')) != 'false';
     showEmergencyFund =
         (await DBService.getSetting('show_emergency_fund')) != 'false';
@@ -111,6 +122,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       showMoodHome = !on;
       showForecast = !on;
       showPrediction = !on;
+      showPaydayCountdown = !on;
+      showMonthlyRecap = !on;
+      showChallenges = !on;
       showDTI = !on;
       showEmergencyFund = !on;
       showMilestones = !on;
@@ -122,6 +136,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     DBService.setSetting('show_mood_home', on ? 'false' : 'true');
     DBService.setSetting('show_forecast', on ? 'false' : 'true');
     DBService.setSetting('show_prediction', on ? 'false' : 'true');
+    DBService.setSetting('show_payday_countdown', on ? 'false' : 'true');
+    DBService.setSetting('show_monthly_recap', on ? 'false' : 'true');
+    DBService.setSetting('show_challenges', on ? 'false' : 'true');
     DBService.setSetting('show_dti', on ? 'false' : 'true');
     DBService.setSetting('show_emergency_fund', on ? 'false' : 'true');
     DBService.setSetting('show_milestones', on ? 'false' : 'true');
@@ -913,6 +930,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (v) {
                       setState(() => showPrediction = v);
                       _saveAndRefresh('show_prediction', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.calendar_month_outlined,
+                    title: 'Payday / income countdown',
+                    subtitle:
+                        'Card predicting your next income date and amount',
+                    value: showPaydayCountdown,
+                    onChanged: (v) {
+                      setState(() => showPaydayCountdown = v);
+                      _saveAndRefresh('show_payday_countdown', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.bar_chart_rounded,
+                    title: 'Monthly recap alert',
+                    subtitle:
+                        'Alert on days 1–3 of each month comparing last month vs the month before',
+                    value: showMonthlyRecap,
+                    onChanged: (v) {
+                      setState(() => showMonthlyRecap = v);
+                      _saveAndRefresh('show_monthly_recap', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.emoji_events_outlined,
+                    title: 'Daily & weekly challenges',
+                    subtitle:
+                        'Gamification quests and weekly spending challenges',
+                    value: showChallenges,
+                    onChanged: (v) {
+                      setState(() => showChallenges = v);
+                      _saveAndRefresh('show_challenges', v);
                     },
                   ),
                 ]),
