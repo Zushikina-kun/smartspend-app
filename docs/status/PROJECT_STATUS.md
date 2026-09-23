@@ -1,6 +1,6 @@
 # SmartSpend — Project Status
-**Version:** 2.9.47 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** September 12, 2026
+**Version:** 2.9.51 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** September 26, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
@@ -9,14 +9,14 @@
 
 ---
 
-## PRE-FINAL DEFENSE — NEXT WEEK CHECKLIST
+## PRE-FINAL DEFENSE — CHECKLIST
 
 ### 🔴 Critical — Must be done before defense day
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v2.9.49** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.49-arm64-v8a.apk` from GitHub releases |
-| Verify About screen shows **"Version 2.9.49"** | Brix | ❌ | Should be automatic now — kAppVersion constant |
+| Install **v2.9.51** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.51-arm64-v8a.apk` from GitHub releases |
+| Verify About screen shows **"Version 2.9.51"** | Brix | ❌ | Should be automatic — kAppVersion constant |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
 | Create **Figure 1.1** — PH financial literacy bar chart (BSP CFIS 2025 data) | Cyrille | ❌ | Key stats: 50% adults have formal accounts; 74% literacy rate |
 | Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output; use the table in CAPSTONE_REFERENCE.md §3 |
