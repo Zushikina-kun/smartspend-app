@@ -1,5 +1,5 @@
 # SmartSpend — Master Feature Backlog & Planning
-**Version:** 2.9.47 | **Updated:** September 12, 2026
+**Version:** 2.9.51 | **Updated:** September 26, 2026
 **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 
 > **Single consolidated planning document.** Fuses inputs from:
@@ -19,20 +19,20 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v2.9.47)
+## Part 0 — Authoritative Build Numbers (v2.9.51)
 
 Use these everywhere. Many docs are stale.
 
-| Metric | v2.9.47 value |
+| Metric | v2.9.51 value |
 |--------|--------------|
-| Version string | **2.9.47** |
+| Version string | **2.9.51** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
-| Build size | ~45 MB arm64-v8a, split, obfuscated |
+| Build size | ~47 MB arm64-v8a, split, obfuscated |
 | SQLite schema | v11, 20 tables |
 | AI providers in fallback chain | **8** (not 5 or 6) |
-| Primary AI model | **Gemini 3.5 Flash-Lite** (not 3.1 — migrated Sep 10, 2026) |
+| Primary AI model | **Auto (Gemini 3.5 Flash-Lite default)** — Auto mode added v2.9.50 |
 | Agentic actions | **34** (not 31) |
 | Input modalities | 7 |
 | Screens | 37+ |
@@ -48,6 +48,13 @@ Use these everywhere. Many docs are stale.
 | Daily AI message limit | **150** (raised from 60) |
 | Color themes | **10** (5 new added v2.9.45) |
 | Paluwagan | ✅ **Implemented** v2.9.35 (update manuscript) |
+
+### Recent releases
+| Version | Key changes |
+|---------|------------|
+| v2.9.51 | **Critical fix:** AI fallback chain was silently failing — recursive `sendMessage()` re-ran daily limit check on each retry, blocking every provider switch. Added `isFallbackRetry` flag. |
+| v2.9.50 | Nav bar overlap fixed on all 8 screens (viewPadding.bottom); Auto model mode with task-based routing; 500ms grace delay on auth failures; distinct error messages |
+| v2.9.49 | (previous baseline) |
 
 ---
 
@@ -481,50 +488,59 @@ Based on research and internal audit, these items from the previous backlog need
 
 ## Part 8 — Complete Priority Queue
 
-### 🔴 This Week — Before Pre-Final Defense (code)
+### ✅ Done (v2.9.50–2.9.51)
+
+| Feature | Version | Notes |
+|---------|---------|-------|
+| Nav bar overlap — all 8 screens | v2.9.50 | viewPadding.bottom on all affected screens |
+| Auto model mode | v2.9.50 | Dynamic task routing: fast→Flash-Lite, advice→Flash |
+| Smarter AI failover (delay + error messages) | v2.9.50 | 500ms grace, distinct slow-connection vs auth errors |
+| AI fallback chain critical fix | v2.9.51 | isFallbackRetry flag — chain now actually works |
+
+### 🔥 Do Next — Before Final Defense (high impact, feasible)
+
+| Feature | Effort | Why now |
+|---------|--------|---------|
+| **Safe-to-Spend number (5A)** | ~1 day | Biggest competitive gap vs BudgetPH; prominent on Home; strong demo talking point |
+| **Income prediction / Payday countdown (#13)** | ~3h | Uses existing DB data; relevant for student account type (your profile) |
+| **Auto-categorization evidence threshold (5C)** | ~1 day | Debug log shows AI already miscategorizes items — prevents drift, YNAB comparison point |
+| **"What Changed?" monthly delta notification (5D)** | ~2h | Reuses rollover detection; no AI call; very quick win |
+| **AI chat history export (#14)** | ~3h | Rounds out the existing expense export; low risk |
+
+### 🟠 Queue After Above — Also Before Final Defense
 
 | Feature | Effort | Notes |
 |---------|--------|-------|
-| Verify Day-in-Review card works after 6pm | ✅ Done | PROJECT_STATUS says added v2.9.36; demo script references it; confirm in actual runtime |
-| Savings rate trend chart (#10) | ✅ Done — v2.9.45 | 6-month % line chart; fl_chart in use; data in DB |
-| Quick budget slider (#11) | ✅ Done — v2.9.45 | Long-press → Slider; fixed ₱ mode only |
-| Analytics AI cache fallback (#8 partial) | ✅ Done — v2.9.45 | Mirror what Home screen already does |
+| Proactive AI nudge notifications (5B) | ~2 days | Rocket Money/Rowan comparison; uses existing flutter_local_notifications |
+| Semester interval in recurring detector (#1a) | ~1h | Tiny additive fix to existing recurring detector |
+| Expense Correction Suggestions (5E) | ~1 day | Data quality sweep; Hub badge; uses existing update_expense action |
 
-### 🟠 Post-Defense Priority 1 (before final defense)
+### ⏸ Defer — Medium/Low Priority
 
-| Feature | Effort |
-|---------|--------|
-| Safe-to-Spend number (5A) | ~1 day |
-| 15th/30th payday envelope budget reset | ~1 day |
-| Income prediction / Payday countdown (#13) | ~3h |
-| AI chat history export (#14) | ~3h |
-| Proactive AI nudge notifications (5B) | ~2 days |
-| Auto-categorization evidence threshold (5C) | ~1 day |
-| Semester interval in recurring detector (#1a) | ~1h |
-| Insurance Tracker auto-link (#1b) | ~2h |
-| "What Changed?" monthly delta notification (5D) | ~2h |
-| Notification Listener for GCash (replaces SMS plan) | ~2 days |
+| Feature | Reason to defer |
+|---------|----------------|
+| Notification Listener for GCash | Accessibility permission dialog confusing for demo; high setup friction |
+| 15th/30th payday envelope budget reset | Overlaps with Safe-to-Spend (5A); do that first |
+| Insurance Tracker auto-link (#1b) | Niche; low demo value |
+| Monthly GitHub-style heatmap (#3) | Nice-to-have; existing 5-week heatmap sufficient |
+| Photo gallery screen (#15) | Hub addition; low capstone relevance |
+| True net worth historical chart (#9) | ~3h; existing FHS sparkline adequate for defense |
 
 ### 🟢 Post-Capstone Roadmap (v3.x)
 
 | Feature | Effort | Notes |
 |---------|--------|-------|
-| Price Intelligence / Price Pulse (Part 4) | ~2 weeks | PSA API + 5 sub-features |
-| Monthly GitHub-style heatmap calendar (#3) | ~1 day | Full per-date grid |
-| Photo gallery screen (#15) | ~3h | Hub → Receipts GridView |
-| Expense Correction Suggestions (5E) | ~1 day | Data quality sweep |
-| True net worth historical chart (#9) | ~3h | Snapshot-based, not FHS proxy |
-| Custom date range in export (#12 partial) | ~2h | Date-range picker in Transactions |
-| PSE/MP2/UITF investment tracker (5F) | ~2 weeks | After BunnyWise launches — assess overlap |
-| ScanReviewScreen rename | 30 min | Code hygiene |
-| SQLite encryption | ~2 days | sqlcipher |
-| Backend API proxy | ~3 days | Cloud Functions |
-| App Check enforcement | ~2h | Before Play Store |
+| Price Intelligence / Price Pulse (Part 4) | ~2 weeks | Wait for PSA OpenSTAT to exit "Alpha" status |
+| PSE/MP2/UITF investment tracker (5F) | ~2 weeks | After BunnyWise launches — assess overlap first |
+| ScanReviewScreen rename | 30 min | Code hygiene only |
+| SQLite encryption | ~2 days | sqlcipher; post-Play Store |
+| Backend API proxy | ~3 days | Cloud Functions; pre-Play Store enforcement |
+| App Check enforcement | ~2h | Before Play Store submission |
 | iOS / web version | ~2 months | Post-capstone only |
 | Business mode AI actions | ~1 week | Invoice tracking |
 | Couple/family shared finances | ~2 weeks | Multi-account architecture |
-| Mascot / personality (vs Sentimo KBoy) | ~1 week | Fun differentiator |
-| Profile photo cross-device sync | ~1 day | Requires Firebase Blaze |
+| Mascot / personality (vs Sentimo KBoy, Agila) | ~1 week | Fun differentiator |
+| Profile photo cross-device sync | ~1 day | Requires Firebase Blaze plan |
 
 ---
 
