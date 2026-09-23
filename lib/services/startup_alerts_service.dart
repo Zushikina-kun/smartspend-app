@@ -223,6 +223,64 @@ class StartupAlertsService {
         }
       }
 
+      // 0c. "What Changed?" monthly delta alert — fires once on days 1–3 of a
+      // new month, comparing last month vs the month before. Pure DB math,
+      // no AI call. Helps users see momentum at a glance.
+      final now = DateTime.now();
+      if (now.day <= 3) {
+        final deltaKey = 'monthly_delta_notif_$thisMonth';
+        final alreadySent = await DBService.getSetting(deltaKey);
+        if (alreadySent == null) {
+          await DBService.setSetting(deltaKey, 'true');
+          final lastMonthDate = DateTime(now.year, now.month - 1);
+          final prevMonthDate = DateTime(now.year, now.month - 2);
+          final lastMonth =
+              '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
+          final prevMonth =
+              '${prevMonthDate.year}-${prevMonthDate.month.toString().padLeft(2, '0')}';
+          final lastSpent = await DBService.getTotalSpent(month: lastMonth);
+          final prevSpent = await DBService.getTotalSpent(month: prevMonth);
+          // Only show if both months have enough data (≥3 expenses)
+          final lastCount = await DBService.getExpenseCountForMonth(lastMonth);
+          final prevCount = await DBService.getExpenseCountForMonth(prevMonth);
+          if (lastSpent > 0 &&
+              prevSpent > 0 &&
+              lastCount >= 3 &&
+              prevCount >= 3) {
+            final diff = lastSpent - prevSpent;
+            final lastMonthName = DateFormat('MMMM').format(lastMonthDate);
+            final prevMonthName = DateFormat('MMMM').format(prevMonthDate);
+            // Find top category for last month
+            final lastMonthExpenses =
+                await DBService.getExpenses(month: lastMonth);
+            final catTotals = <String, double>{};
+            for (final e in lastMonthExpenses) {
+              catTotals[e.category] = (catTotals[e.category] ?? 0) + e.amount;
+            }
+            final topCat = catTotals.isEmpty
+                ? null
+                : (catTotals.entries.toList()
+                      ..sort((a, b) => b.value.compareTo(a.value)))
+                    .first
+                    .key;
+            final improved = diff < 0;
+            final emoji = improved ? '✅' : '📈';
+            final diffAbs = diff.abs().toStringAsFixed(0);
+            final comparison = improved
+                ? '₱$diffAbs less than $prevMonthName $emoji'
+                : '₱$diffAbs more than $prevMonthName $emoji';
+            final topCatNote = topCat != null ? ' Top: $topCat.' : '';
+            alerts.add(StartupAlert(
+              title: '📊 $lastMonthName Recap',
+              message:
+                  'You spent ₱${lastSpent.toStringAsFixed(0)} — $comparison.$topCatNote',
+              icon: Icons.bar_chart_rounded,
+              color: improved ? Colors.green : Colors.orange,
+            ));
+          }
+        }
+      }
+
       // 1. Check for exceeded budgets
       final budgets = await DBService.getBudgets();
       final expenses = await DBService.getExpenses(month: currentMonth);

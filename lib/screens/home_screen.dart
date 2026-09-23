@@ -1810,6 +1810,12 @@ class _DashboardState extends State<Dashboard> {
   Map<String, double> _allLimits = {};
   Map<String, double> _allSpent = {};
 
+  // ── Income prediction / Payday countdown ─────────────────────────────────
+  // Computed from last 3 income entries — shown as a card when in income mode.
+  DateTime? _nextExpectedIncome; // predicted next income date
+  double _avgIncomeAmount = 0; // average of last 3 income amounts
+  int _avgIncomeInterval = 0; // average days between last 3 income entries
+
   // ── SECTION VISIBILITY (user-controlled via App Settings) ────────────────
   bool _showSubscriptions = true;
   bool _showQuickLog = true;
@@ -2065,6 +2071,51 @@ class _DashboardState extends State<Dashboard> {
 
     // Spending streak calculation (#13)
     _computeStreak();
+
+    // ── Income prediction — compute from last 3 income entries ────────────
+    // Works for both employed (regular payday) and students (irregular allowance).
+    // Requires ≥2 income entries with dates to compute an interval.
+    try {
+      final allIncome = await DBService.getIncome();
+      if (allIncome.length >= 2) {
+        // Sort by date descending, take last 4 (need 3 intervals = 4 points)
+        final sorted = allIncome
+            .where((e) => (e['date'] as String?)?.isNotEmpty == true)
+            .toList()
+          ..sort(
+              (a, b) => (b['date'] as String).compareTo(a['date'] as String));
+        final recent = sorted.take(4).toList();
+        // Compute intervals between consecutive entries
+        final intervals = <int>[];
+        for (int i = 0; i < recent.length - 1; i++) {
+          try {
+            final d1 = DateTime.parse(recent[i]['date'] as String);
+            final d2 = DateTime.parse(recent[i + 1]['date'] as String);
+            final diff = d1.difference(d2).inDays.abs();
+            if (diff > 0 && diff <= 400) intervals.add(diff);
+          } catch (_) {}
+        }
+        if (intervals.isNotEmpty) {
+          final avgInterval =
+              (intervals.reduce((a, b) => a + b) / intervals.length).round();
+          // Average amount from the most recent 3 entries
+          final amtEntries = sorted.take(3).toList();
+          final avgAmount = amtEntries.fold<double>(
+                  0, (s, e) => s + (e['amount'] as num).toDouble()) /
+              amtEntries.length;
+          // Predict next date from the most recent income entry
+          final lastDate = DateTime.parse(recent.first['date'] as String);
+          final predicted = lastDate.add(Duration(days: avgInterval));
+          if (mounted) {
+            setState(() {
+              _nextExpectedIncome = predicted;
+              _avgIncomeInterval = avgInterval;
+              _avgIncomeAmount = avgAmount;
+            });
+          }
+        }
+      }
+    } catch (_) {}
 
     // BF-2: Compute plain-language score narrative from breakdown
     final breakdownForNarrative = ScoreService.getBreakdown(
@@ -3658,6 +3709,132 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Payday Countdown / Income Prediction card.
+  /// Shows days until next expected income + predicted amount.
+  /// Computed from last 3 income entries — works for both salaried and students.
+  /// Only shown in income/wallet mode when ≥2 income entries exist.
+  Widget _buildPaydayCountdownCard(BuildContext context) {
+    if (!_incomeWalletMode) return const SizedBox.shrink();
+    if (_nextExpectedIncome == null || _avgIncomeInterval <= 0) {
+      return const SizedBox.shrink();
+    }
+    final cs = Theme.of(context).colorScheme;
+    final now = DateTime.now();
+    final next = _nextExpectedIncome!;
+    final daysUntil =
+        next.difference(DateTime(now.year, now.month, now.day)).inDays;
+
+    // Don't show if last income was very recent (within 2 days) or
+    // more than 2× the interval away (stale data)
+    if (daysUntil < -(_avgIncomeInterval * 2) ||
+        daysUntil > _avgIncomeInterval * 2) {
+      return const SizedBox.shrink();
+    }
+
+    final isOverdue = daysUntil < 0;
+    final isToday = daysUntil == 0;
+    final isSoon = daysUntil >= 1 && daysUntil <= 3;
+
+    final Color accentColor = isOverdue
+        ? Colors.orange
+        : isToday
+            ? Colors.green
+            : isSoon
+                ? Colors.blue
+                : cs.primary;
+
+    final String timeLabel = isOverdue
+        ? '${(-daysUntil)} day${(-daysUntil) == 1 ? '' : 's'} overdue'
+        : isToday
+            ? 'Expected today!'
+            : 'in $daysUntil day${daysUntil == 1 ? '' : 's'}';
+
+    // Interval label for subtitle
+    final String intervalLabel = _avgIncomeInterval <= 8
+        ? 'weekly'
+        : _avgIncomeInterval <= 16
+            ? 'biweekly'
+            : _avgIncomeInterval <= 35
+                ? 'monthly'
+                : '~${_avgIncomeInterval}d';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: accentColor.withValues(alpha: 0.07),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: accentColor.withValues(alpha: 0.22)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(9),
+              decoration: BoxDecoration(
+                color: accentColor.withValues(alpha: 0.13),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                isToday ? Icons.celebration : Icons.calendar_month_outlined,
+                color: accentColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    Text(
+                      isOverdue ? '💸 Allowance Overdue' : '📅 Next Income',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                        color: accentColor,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    InfoButton(
+                      title: 'Income Prediction',
+                      body:
+                          'Estimated from your last ${_avgIncomeInterval}d average ($intervalLabel). '
+                          'Tap Profile → Income to log a new entry and keep this accurate.',
+                      size: 13,
+                    ),
+                  ]),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${CurrencyService.format(_avgIncomeAmount)} · $timeLabel',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: cs.onSurface.withValues(alpha: 0.65),
+                    ),
+                  ),
+                  Text(
+                    'Based on ${_avgIncomeInterval}d avg · ${DateFormat('MMM d').format(next)}',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: cs.onSurface.withValues(alpha: 0.42),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _logAllowance(double amount) async {
     try {
       // 1. Log as income entry
@@ -4542,6 +4719,10 @@ class _DashboardState extends State<Dashboard> {
 
               // Quick "Log Allowance" button — only in income/wallet mode
               if (_incomeWalletMode) _buildLogAllowanceButton(context),
+
+              // Payday countdown / income prediction — shown when ≥2 income
+              // entries exist and next expected date is within a reasonable window
+              if (_incomeWalletMode) _buildPaydayCountdownCard(context),
 
               // Multi-period spending limits card — tappable, shown when any limit set
               _buildSpendingLimitCard(context),

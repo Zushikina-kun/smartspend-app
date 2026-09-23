@@ -70,6 +70,27 @@ class RecurringHelper {
         return current.add(const Duration(days: 1));
       case 'weekly':
         return current.add(const Duration(days: 7));
+      case 'biweekly':
+        return current.add(const Duration(days: 14));
+      case 'quarterly':
+        final qMonth = current.month + 3;
+        final qYear = current.year + (qMonth > 12 ? 1 : 0);
+        final qm = ((qMonth - 1) % 12) + 1;
+        final qLast = DateTime(qYear, qm + 1, 0).day;
+        return DateTime(qYear, qm, current.day.clamp(1, qLast));
+      case 'semester':
+        // ~4 months — school semester / trimestral billing
+        final sMonth = current.month + 4;
+        final sYear = current.year + (sMonth > 12 ? 1 : 0);
+        final sm = ((sMonth - 1) % 12) + 1;
+        final sLast = DateTime(sYear, sm + 1, 0).day;
+        return DateTime(sYear, sm, current.day.clamp(1, sLast));
+      case 'semi-annual':
+        final haMonth = current.month + 6;
+        final haYear = current.year + (haMonth > 12 ? 1 : 0);
+        final ham = ((haMonth - 1) % 12) + 1;
+        final haLast = DateTime(haYear, ham + 1, 0).day;
+        return DateTime(haYear, ham, current.day.clamp(1, haLast));
       case 'yearly':
         return DateTime(current.year + 1, current.month, current.day);
       default: // monthly
