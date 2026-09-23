@@ -117,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(28),
+          padding: EdgeInsets.only(left: 28, right: 28, top: 28, bottom: 28 + MediaQuery.of(context).viewPadding.bottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

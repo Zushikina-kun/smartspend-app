@@ -15,8 +15,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v2.9.47** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.49-arm64-v8a.apk` from GitHub releases |
-| Verify About screen shows **"Version 2.9.47"** | Brix | ❌ | Should be automatic now — kAppVersion constant |
+| Install **v2.9.49** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.49-arm64-v8a.apk` from GitHub releases |
+| Verify About screen shows **"Version 2.9.49"** | Brix | ❌ | Should be automatic now — kAppVersion constant |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
 | Create **Figure 1.1** — PH financial literacy bar chart (BSP CFIS 2025 data) | Cyrille | ❌ | Key stats: 50% adults have formal accounts; 74% literacy rate |
 | Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output; use the table in CAPSTONE_REFERENCE.md §3 |
@@ -44,7 +44,7 @@
 | Update docs: **CAPSTONE_REFERENCE.md** v2.9.41 blurb, badge 23→25, themes 5→10 | Brix | ✅ | Done Sep 12, 2026 |
 | Update docs: **DEFENSE_GUIDE.md** fix broken table row, badge, build size | Brix | ✅ | Done Sep 12, 2026 |
 | Archive Qwen/OpenCode doc with deprecation notice | Brix | ✅ | Deprecated April 15, 2026 — notice added Sep 12 |
-| Rehearse demo flow with v2.9.47 | All | ❌ | See demo script below |
+| Rehearse demo flow with v2.9.49 | All | ❌ | See demo script below |
 | Charge demo phone to 100% the night before — do NOT open the app | Brix | ❌ | Cold start required for demo |
 
 ### 🟡 After pre-final defense (before final)
@@ -89,7 +89,7 @@
 6. **Hub** — scroll through: Goals, Debts, Recurring, **Paluwagan** (highlight as Filipino-specific), **Log Due Bills**, **Merchant Cleanup**
 7. **Profile** — show FMS score, FHS breakdown with tips, achievement badges (25), Insurance Tracker
 
-### Panel Q&A — Updated Answers (v2.9.47)
+### Panel Q&A — Updated Answers (v2.9.49)
 
 | Question | Answer |
 |---|---|
@@ -115,7 +115,7 @@
 | Week 1 | Project Reorientation | ✅ Done |
 | Week 2 | Chapter 3 | ⚠️ Draft exists — needs figures + model/FHS corrections |
 | Week 3 | Chapter 4 | ⚠️ Draft exists — needs survey data |
-| Week 4 | Final software check | ✅ Done (v2.9.47 is stable) |
+| Week 4 | Final software check | ✅ Done (v2.9.49 is stable) |
 | **Week 5–6** | **Pre-Final Defense** | 🔴 **Next week** |
 | Week 7 | SUS survey (30 respondents) + Play Store closed testing start | ❌ Pending |
 | Week 8–10 | Complete manuscript + Play Store submission | ❌ Pending |

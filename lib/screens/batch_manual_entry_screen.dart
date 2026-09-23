@@ -289,7 +289,12 @@ class _BatchManualEntryScreenState extends State<BatchManualEntryScreen> {
           ),
           // ── Footer ───────────────────────────────────────────────────────
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              8,
+              16,
+              12 + MediaQuery.of(context).viewPadding.bottom,
+            ),
             decoration: BoxDecoration(
               color: cs.surface,
               boxShadow: [

@@ -66,53 +66,58 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             onPageChanged: (i) => setState(() => _page = i),
             itemBuilder: (_, i) => _pages[i],
           ),
-          Positioned(
-            bottom: 48,
-            left: 24,
-            right: 24,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    _pages.length,
-                    (i) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: _page == i ? 24 : 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: _page == i ? Colors.white : Colors.white38,
-                        borderRadius: BorderRadius.circular(4),
+          // Use MediaQuery.viewPadding.bottom to clear 3-button nav bar
+          // in edge-to-edge mode — hardcoded 48 wasn't enough
+          Builder(
+            builder: (context) => Positioned(
+              bottom: 24 + MediaQuery.of(context).viewPadding.bottom,
+              left: 24,
+              right: 24,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      _pages.length,
+                      (i) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: _page == i ? 24 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: _page == i ? Colors.white : Colors.white38,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: _finish,
-                      child: const Text("Skip",
-                          style: TextStyle(color: Colors.white70)),
-                    ),
-                    ElevatedButton(
-                      onPressed: _next,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: _pages[_page].color,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 32, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24)),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: _finish,
+                        child: const Text("Skip",
+                            style: TextStyle(color: Colors.white70)),
                       ),
-                      child: Text(
-                          _page == _pages.length - 1 ? "Get Started" : "Next"),
-                    ),
-                  ],
-                ),
-              ],
+                      ElevatedButton(
+                        onPressed: _next,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: _pages[_page].color,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                        ),
+                        child: Text(_page == _pages.length - 1
+                            ? "Get Started"
+                            : "Next"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],

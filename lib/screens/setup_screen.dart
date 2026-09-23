@@ -288,6 +288,10 @@ class _SetupScreenState extends State<SetupScreen> {
                   ),
                 ],
               ),
+              // Extra clearance for 3-button nav bar in edge-to-edge mode
+              SizedBox(
+                  height:
+                      MediaQuery.of(context).viewPadding.bottom > 0 ? 8 : 0),
             ],
           ),
         ),

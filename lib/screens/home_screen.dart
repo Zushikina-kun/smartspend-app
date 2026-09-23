@@ -330,19 +330,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           bottomNavigationBar: BottomAppBar(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _navItem(Icons.home, "Home", 0, onTap: () {
-                  setState(() => _index = 0);
-                  _checkTour();
-                }),
-                _navItem(Icons.bar_chart, "Analytics", 1),
-                _navItem(Icons.smart_toy, "AI", 2),
-                _navItem(Icons.grid_view_rounded, "Hub", -1,
-                    onTap: () => _showQuickAccessHub(context)),
-                _navItem(Icons.person, "Profile", 3),
-              ],
+            padding: EdgeInsets.zero,
+            child: SafeArea(
+              top: false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _navItem(Icons.home, "Home", 0, onTap: () {
+                    setState(() => _index = 0);
+                    _checkTour();
+                  }),
+                  _navItem(Icons.bar_chart, "Analytics", 1),
+                  _navItem(Icons.smart_toy, "AI", 2),
+                  _navItem(Icons.grid_view_rounded, "Hub", -1,
+                      onTap: () => _showQuickAccessHub(context)),
+                  _navItem(Icons.person, "Profile", 3),
+                ],
+              ),
             ),
           ),
         ),
@@ -900,7 +904,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: onTap ?? () => setState(() => _index = idx),
       borderRadius: BorderRadius.circular(12),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
