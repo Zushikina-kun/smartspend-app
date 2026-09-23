@@ -850,6 +850,41 @@ class DBService {
     return (result.first['c'] as int? ?? 0);
   }
 
+  /// Returns the historically most-frequent category for a given item name.
+  /// Used by the auto-categorization evidence threshold: if an item has been
+  /// logged ≥[minCount] times and one category accounts for ≥[minRatio] of
+  /// those entries, return that category so the AI's suggestion can be
+  /// overridden with the user's established pattern.
+  ///
+  /// Returns null if there is insufficient evidence (fewer entries or no
+  /// dominant category), leaving the AI's own suggestion in place.
+  static Future<String?> getMostFrequentCategoryForItem(
+    String itemName, {
+    int minCount = 3,
+    double minRatio = 0.60,
+  }) async {
+    if (itemName.trim().isEmpty) return null;
+    final db = await getDB();
+    // Count occurrences per category for this item name (case-insensitive)
+    final rows = await db.rawQuery('''
+      SELECT category, COUNT(*) AS cnt
+      FROM expenses
+      WHERE LOWER(item_name) = LOWER(?)
+        AND item_name IS NOT NULL AND item_name != ''
+      GROUP BY category
+      ORDER BY cnt DESC
+      LIMIT 5
+    ''', [itemName.trim()]);
+    if (rows.isEmpty) return null;
+    final total = rows.fold<int>(0, (s, r) => s + (r['cnt'] as int));
+    if (total < minCount) return null;
+    final topCat = rows.first['category'] as String?;
+    final topCnt = rows.first['cnt'] as int;
+    if (topCat == null || topCat.isEmpty) return null;
+    if (topCnt / total < minRatio) return null;
+    return topCat;
+  }
+
   /// Returns up to [limit] autocomplete suggestions matching the given prefix.
   ///
   /// Each result contains the most-recent values for that item:  ///   { 'item_name', 'amount', 'category', 'payment_method', 'shop_name', 'is_want', 'count' }
@@ -2159,6 +2194,9 @@ class DBService {
         frequency = 'biweekly';
       } else if (avgInterval >= 85 && avgInterval <= 95) {
         frequency = 'quarterly'; // every ~3 months
+      } else if (avgInterval >= 120 && avgInterval <= 135) {
+        frequency =
+            'semester'; // every ~4 months (school semester / trimestral)
       } else if (avgInterval >= 175 && avgInterval <= 195) {
         frequency = 'semi-annual'; // every ~6 months
       } else if (avgInterval >= 350 && avgInterval <= 380) {

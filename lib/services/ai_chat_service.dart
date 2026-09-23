@@ -339,6 +339,37 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
   /// for real-time category auto-suggest as user types the item name.
   static String suggestCategory(String text) => _normalizeCategory(text);
 
+  /// Resolve final category for an AI-logged expense.
+  ///
+  /// Priority order (highest → lowest):
+  ///   1. User-defined keyword rules  (checked inside _normalizeCategory)
+  ///   2. Historical majority category — if item logged ≥3× and one category
+  ///      accounts for ≥60% of those entries, trust the established pattern
+  ///      over the AI's suggestion.  Prevents AI drift (e.g. "Sting" flipping
+  ///      between Food and Others after 10 consistent Food entries).
+  ///   3. AI's own category suggestion (normalised via keyword matching)
+  ///   4. _normalizeCategory fallback on the item name
+  static Future<String> _resolveCategory(
+      String aiCategory, String itemName) async {
+    // Step 1+3: apply user rules + keyword normalisation on the AI's suggestion
+    final normalised =
+        _normalizeCategory(aiCategory.isNotEmpty ? aiCategory : itemName);
+
+    // Step 2: check historical majority — only overrides when evidence is clear
+    try {
+      final historical =
+          await DBService.getMostFrequentCategoryForItem(itemName);
+      if (historical != null && historical.isNotEmpty) {
+        // Only override if the AI/keyword result differs — no-op when they agree
+        return historical;
+      }
+    } catch (_) {}
+
+    // Step 4: fall back to keyword-normalised result
+    if (normalised.isNotEmpty) return normalised;
+    return _normalizeCategory(itemName);
+  }
+
   static String _normalizeCategory(String raw) {
     // 1. Check user-defined rules first (highest priority)
     if (_userRules.isNotEmpty) {
@@ -1174,14 +1205,16 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         if (seen.contains(jsonStr)) continue;
         seen.add(jsonStr);
         final parsed = jsonDecode(jsonStr) as Map<String, dynamic>;
-        if (parsed.containsKey('category')) {
-          parsed['category'] = _normalizeCategory(parsed['category'] as String);
-        }
-        // Sanitize generic item name prefixes the model sometimes emits
-        // e.g. "your jeepney fare for" → "Jeepney fare"
+        // Sanitize item name first so _resolveCategory uses the clean name
         if (parsed.containsKey('item_name')) {
           parsed['item_name'] =
               _sanitizeItemName(parsed['item_name'] as String);
+        }
+        if (parsed.containsKey('category') || parsed.containsKey('item_name')) {
+          final aiCat = parsed['category'] as String? ?? '';
+          final itemName = parsed['item_name'] as String? ?? '';
+          // Apply evidence threshold: historical majority → AI suggestion → keyword
+          parsed['category'] = await _resolveCategory(aiCat, itemName);
         }
         actions.add(AIAction(type: parsed['type'] as String, params: parsed));
       } catch (_) {}
@@ -1224,7 +1257,8 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
             }
             final amount = double.tryParse(logMatch.group(2) ?? '') ?? 0;
             if (amount > 0) {
-              final category = _normalizeCategory(itemName);
+              // Apply evidence threshold: historical majority → keyword fallback
+              final category = await _resolveCategory('', itemName);
               const wantCategories = [
                 'Shopping',
                 'Entertainment',

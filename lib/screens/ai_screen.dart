@@ -7,6 +7,8 @@ import 'package:shake/shake.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import '../services/ai_chat_service.dart';
 import '../services/db_service.dart';
 import '../services/llm_service.dart';
@@ -2475,6 +2477,56 @@ class _AIScreenState extends State<AIScreen> {
                     behavior: SnackBarBehavior.floating,
                   ));
                 }
+              } else if (val == 'export_chat') {
+                try {
+                  final history = await DBService.getChatHistory(limit: 500);
+                  if (history.isEmpty) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("No chat history to export."),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                    return;
+                  }
+                  final buf = StringBuffer();
+                  buf.writeln('SmartSpend AI Chat Export');
+                  buf.writeln(
+                      'Exported: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now())}');
+                  buf.writeln('Messages: ${history.length}');
+                  buf.writeln('=' * 48);
+                  buf.writeln();
+                  for (final m in history) {
+                    final role = m['role'] == 'user' ? 'You' : 'Peso (AI)';
+                    final ts = m['timestamp'] as String? ?? '';
+                    final fmtTs = ts.isNotEmpty
+                        ? DateFormat('MMM d, yyyy h:mm a')
+                            .format(DateTime.parse(ts).toLocal())
+                        : '';
+                    if (fmtTs.isNotEmpty) buf.writeln('[$fmtTs]');
+                    buf.writeln('$role: ${m['message']}');
+                    buf.writeln();
+                  }
+                  final dir = await getTemporaryDirectory();
+                  final fname =
+                      'SmartSpend_Chat_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.txt';
+                  final file = File('${dir.path}/$fname');
+                  await file.writeAsString(buf.toString());
+                  await Share.shareXFiles(
+                    [XFile(file.path, mimeType: 'text/plain')],
+                    subject: 'SmartSpend Chat History',
+                  );
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "Export failed: ${e.toString().replaceAll('Exception: ', '')}"),
+                      behavior: SnackBarBehavior.floating,
+                    ));
+                  }
+                }
               }
             },
             itemBuilder: (_) => [
@@ -2495,6 +2547,16 @@ class _AIScreenState extends State<AIScreen> {
                     Icon(Icons.refresh, size: 18),
                     SizedBox(width: 10),
                     Text("Reset Daily Limit"),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'export_chat',
+                child: Row(
+                  children: [
+                    Icon(Icons.download_outlined, size: 18),
+                    SizedBox(width: 10),
+                    Text("Export Chat History"),
                   ],
                 ),
               ),

@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.51';
-  static const _prefKey = 'whats_new_seen_2_9_51';
+  static const _version = '2.9.52';
+  static const _prefKey = 'whats_new_seen_2_9_52';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,66 +20,59 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
+      '📅',
+      'Income Prediction & Payday Countdown (v2.9.52)',
+      'A new card on the Home screen shows how many days until your next '
+          'expected income, predicted from your last 3 entries. Works for '
+          'both salaried and students with irregular allowances. Color-coded: '
+          'green = today, blue = coming soon, orange = overdue.',
+    ),
+    (
+      '📊',
+      '"What Changed?" Monthly Recap (v2.9.52)',
+      'On the first 3 days of each month the app shows a quick alert '
+          'comparing last month vs the month before — total spent, whether '
+          'you improved, and your top spending category. No AI call needed.',
+    ),
+    (
+      '💬',
+      'Export Chat History (v2.9.52)',
+      'AI screen → ⋮ menu → "Export Chat History" saves your full '
+          'conversation with Peso as a timestamped text file and shares it '
+          'via your device\'s share sheet.',
+    ),
+    (
+      '🧠',
+      'Smarter AI Categorization (v2.9.52)',
+      'The AI no longer drifts on items you\'ve logged many times. If an '
+          'item like "Sting" has ≥3 prior entries with 60%+ in one category, '
+          'that category wins — regardless of what the AI suggests.',
+    ),
+    (
+      '🔁',
+      'Semester Interval Detection (v2.9.52)',
+      'The recurring expense detector now recognises semester-spaced '
+          'payments (120–135 days) — useful for tuition, school fees, and '
+          'other trimestral bills. All intervals now advance correctly.',
+    ),
+    (
+      '🔧',
+      'AI Fallback Chain Fixed (v2.9.51)',
+      'Critical fix: fallback retries were re-checking the daily message '
+          'limit and blocking every provider switch. The chain now walks '
+          'through all 8 providers as intended.',
+    ),
+    (
       '🧭',
       'Nav Bar Overlap Fixed (v2.9.50)',
-      'Buttons and inputs that were hidden behind the 3-button navigation bar '
-          'on older Android phones are now fully accessible. Every screen '
-          'properly clears the system nav bar inset.',
+      'Buttons and inputs hidden behind the 3-button navigation bar on '
+          'older Android phones are now fully accessible on all screens.',
     ),
     (
       '🤖',
       'Auto Model Mode (v2.9.50)',
-      'New "Auto (Recommended)" AI option dynamically picks the best model '
-          'for each task — fast responses use Flash-Lite, in-depth financial '
-          'advice uses Flash, and the app falls back gracefully when any '
-          'provider is slow or unavailable.',
-    ),
-    (
-      '⚡',
-      'AI Failover Fixed (v2.9.51)',
-      'Critical fix: when the AI switched to a backup model after a 404 error, '
-          'the fallback was silently failing because each retry re-checked the daily '
-          'message limit and double-counted it. Fallback retries now skip the limit '
-          'check — the chain actually works through all providers as intended.',
-    ),
-    (
-      '⚡',
-      'Smarter AI Failover (v2.9.50)',
-      'On a slow connection the app now waits briefly before switching models '
-          'instead of failing immediately. Error messages now clearly '
-          'distinguish "slow connection" from "invalid API key", and the chain '
-          'resets to Auto after all providers are tried.',
-    ),
-    (
-      '✏️',
-      'Manual Mode Overhaul (v2.9.26)',
-      '"Log Expense" now opens a choice sheet: AI Chat, Manual Form, '
-          'Batch Add (up to 8 expenses at once), or Voice → Form. '
-          'Manual entry is now a first-class feature — works 100% offline.',
-    ),
-    (
-      '🔄',
-      'AI Fallback Persists Across Restarts (v2.9.21)',
-      'When the app switches to a backup AI model, it remembers that choice '
-          'after you close and reopen. No more retrying a failed key on every cold start.',
-    ),
-    (
-      '📊',
-      'FHS Lightweight Mode Fixed (v2.9.21)',
-      'Lightweight mode now shows the correct four components: Spending '
-          'Restraint, Logging Consistency, Category Balance, and Habit Streak.',
-    ),
-    (
-      '⚠️',
-      'Smarter Alerts (v2.9.21–2.9.22)',
-      '330%+ velocity alerts suppressed when last month had fewer than 5 '
-          'expenses. Student accounts no longer get an "income too low" warning.',
-    ),
-    (
-      '🎯',
-      'Daily Quests Respect Lightweight Mode (v2.9.21)',
-      'Wallet and income quests are now hidden when income tracking is off '
-          '— replaced with habit-based quests you can actually complete.',
+      'New "Auto (Recommended)" AI option routes each task to the best '
+          'available model — fast for logging, Flash for financial advice.',
     ),
   ];
 
