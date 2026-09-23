@@ -1,11 +1,12 @@
 # SmartSpend — Project Status
-**Version:** 2.9.51 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.53 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** September 26, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
 > For feature backlog and planning see `docs/guides/FEATURE_BACKLOG.md`
-> For Claude AI handoff see `docs/manuscript/reseaches/kiro-to-claude-handoff-2026-09-12-v2.md`
+> For Claude AI handoff (latest) see `docs/manuscript/reseaches/kiro-to-claude-handoff-2026-09-26-v3.md`
+> Previous handoffs: `kiro-to-claude-handoff-2026-09-12-v2.md` (v2.9.43–47), `kiro-to-claude-handoff-2026-09-12.md` (v2.9.38–42)
 
 ---
 
@@ -15,14 +16,35 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v2.9.51** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.51-arm64-v8a.apk` from GitHub releases |
-| Verify About screen shows **"Version 2.9.51"** | Brix | ❌ | Should be automatic — kAppVersion constant |
+| Install **v2.9.53** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.53-arm64-v8a.apk` from GitHub releases |
+| Verify About screen shows **"Version 2.9.53"** | Brix | ❌ | kAppVersion constant auto-syncs |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
 | Create **Figure 1.1** — PH financial literacy bar chart (BSP CFIS 2025 data) | Cyrille | ❌ | Key stats: 50% adults have formal accounts; 74% literacy rate |
 | Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output; use the table in CAPSTONE_REFERENCE.md §3 |
 | Create **Figure 2.1** — SUS score interpretation chart | Cyrille | ❌ | Bangor et al. (2009) adjective scale; target ≥80 = Good |
 | Create **Figure 2.2** — Kanban board / development methodology diagram | Cyrille | ❌ | Agile Kanban sprints; show Backlog → In Progress → Done |
 | Fill in **Compliance Matrix** | All | ❌ | `docs/capstone/SmartSpend_Master_Bug_Tracker.docx` |
+| Move **Paluwagan** from "Future Work" to "Implemented" in manuscript | Cyrille | ✅ | Implemented v2.9.35 |
+| Update manuscript **model list** (remove LLaMA, add Auto mode + GPT-OSS/Qwen) | Cyrille | ❌ | See handoff v3 §3a for correct chain |
+| Update manuscript **FHS equations** with v2.9.42 changes | Cyrille | ❌ | Overspend nuance + Category Balance exemptions + Decay exemptions |
+| Update manuscript **agentic action count** to 34 | Cyrille | ❌ | Was 31 in some manuscript sections |
+| Update manuscript **badge count** to 25 | Cyrille | ❌ | Was 23 in some sections |
+| Update manuscript **daily limit** to 150 | Cyrille | ❌ | Was 60 in some sections |
+| Update manuscript **color theme count** to 10 | Cyrille | ❌ | 5 new themes added v2.9.45 |
+| Update manuscript **hub tile count** to 26 | Cyrille | ❌ | Expanded from 22 in v2.9.44 |
+| Add **v2.9.50–53 features** to Implemented list in manuscript | Cyrille | ❌ | See handoff v3 §6 — 10 features to move |
+| Update **settings toggles count** (9 home, 4 analytics, 13 Lite Mode) | Cyrille | ❌ | See handoff v3 §5 |
+| Add **savings rate trend chart** to Implemented | Cyrille | ❌ | Added v2.9.45 |
+| Add **quick budget slider** to Implemented | Cyrille | ❌ | Added v2.9.45 |
+| Add **analytics AI cache fallback** to Implemented | Cyrille | ❌ | Added v2.9.45 |
+| Add **RA 10173 PII redaction** section to manuscript (Ch.2 or Ch.3) | Cyrille | ❌ | Implemented v2.9.42 — mobile numbers stripped before LLM |
+| Add **Agila, PISO, BunnyWise** to competitor table in manuscript | Cyrille | ❌ | See FEATURE_BACKLOG Part 10 |
+| Update docs: **BENCHMARK.md** badge 23→25, paluwagan ❌→✅ | Brix | ✅ | Done Sep 12, 2026 |
+| Update docs: **FEATURE_DOCS.md** version 2.9.41→2.9.53 | Brix | ❌ | |
+| Update docs: **CAPSTONE_REFERENCE.md** version, Auto model, new features | Brix | ❌ | |
+| Update docs: **DEFENSE_GUIDE.md** version, model names, new features | Brix | ❌ | |
+| Rehearse demo flow with v2.9.53 | All | ❌ | See demo script below |
+| Charge demo phone to 100% the night before — do NOT open the app | Brix | ❌ | Cold start required for demo |
 | Move **Paluwagan** from "Future Work" to "Implemented" in manuscript | Cyrille | ✅ | Implemented v2.9.35 |
 | Update manuscript **model list** (remove LLaMA, add GPT-OSS/Qwen) | Cyrille | ❌ | See kiro-to-claude-handoff-v2 for correct chain |
 | Update manuscript **FHS equations** with v2.9.42 changes | Cyrille | ❌ | Overspend nuance + Category Balance exemptions + Decay exemptions |
