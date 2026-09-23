@@ -1020,7 +1020,9 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
           continue;
         }
         if (needsSwitch) AppConfig.setModel(originalModelId);
-        rethrow;
+        throw Exception(
+            "Couldn't reach the AI — looks like a slow or unstable connection. "
+            "Check your internet and try again.");
       }
 
       // 503 / 529 = server overloaded — silent backoff and retry
@@ -1049,6 +1051,8 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         if (switched) {
           return sendMessage(message);
         }
+        // All providers exhausted — reset to Auto for next attempt
+        AppConfig.resetLimits();
         throw Exception(
             "Daily AI limit reached on all models. Try again tomorrow, or add a Gemini/Cerebras API key in Settings.");
       }
@@ -1059,13 +1063,19 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
           response.statusCode == 402 ||
           response.statusCode == 403 ||
           response.statusCode == 404) {
+        // Brief pause before switching — gives slow connections time to stabilize
+        // and avoids hammering all providers instantly on a flaky network
+        await Future.delayed(const Duration(milliseconds: 500));
         final switched = AppConfig.autoFallback();
         if (switched) {
           return sendMessage(message);
         }
-        throw Exception(
-            "AI error (${response.statusCode}): authentication failed on all providers. "
-            "Please check your API keys or use manual entry.");
+        // All providers exhausted — reset chain to Auto for next attempt
+        AppConfig.resetLimits();
+        throw Exception("Couldn't authenticate with any AI provider "
+            "(error ${response.statusCode}). "
+            "This is an API key issue, not your connection. "
+            "Try the ⋮ menu → Reset Daily Limit, or check Settings.");
       }
       // All other errors — fatal
       throw Exception(

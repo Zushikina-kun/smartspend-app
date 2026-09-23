@@ -2939,15 +2939,20 @@ class _AIScreenState extends State<AIScreen> {
               child: LinearProgressIndicator(),
             ),
           SafeArea(
+            // top:false — only care about bottom inset here (keyboard + nav bar)
+            top: false,
             child: Padding(
               padding: EdgeInsets.only(
                 left: 12,
                 right: 12,
                 top: 8,
-                // Push input row above keyboard when it's open
+                // When keyboard is open: ride on top of it.
+                // When keyboard is closed: still need to clear the system
+                // navigation bar (3-button or gesture handle) by adding
+                // MediaQuery.padding.bottom on top of the base 8px.
                 bottom: MediaQuery.of(context).viewInsets.bottom > 0
                     ? MediaQuery.of(context).viewInsets.bottom + 8
-                    : 8,
+                    : MediaQuery.of(context).padding.bottom + 8,
               ),
               child: Row(
                 children: [
