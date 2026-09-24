@@ -34,7 +34,7 @@ class AppConfig {
 
   // ── FALLBACK KEYS (fetched via Firebase Remote Config at runtime) ──────────
   static const _fallbackGroqKey =
-      "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";
+      "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";
   static const _fallbackGeminiKey =
       "AQ.Ab8RN6LZ3JhKel-t0ovzCNEySO2KuE3LYLNAQWjr6ewBGs-nUA";
   static const _fallbackCerebrasKey =
