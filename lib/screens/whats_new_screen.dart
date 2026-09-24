@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.55';
-  static const _prefKey = 'whats_new_seen_2_9_55';
+  static const _version = '2.9.56';
+  static const _prefKey = 'whats_new_seen_2_9_56';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,14 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🛡️',
+      'AI Resilience Fix (v2.9.56)',
+      'Fixed: if the app opened without internet and Remote Config keys '
+          'hadn\'t loaded yet, AI would silently burn through all 8 providers '
+          'with empty keys before showing an error. Now shows a clear '
+          '"no internet on startup" message immediately instead.',
+    ),
     (
       '🔐',
       'Keys Moved to Remote Config (v2.9.55)',
