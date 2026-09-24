@@ -500,11 +500,16 @@ class _AIScreenState extends State<AIScreen> {
           errMsg.contains('429') ||
           errMsg.contains('rate limit') ||
           errMsg.contains('all models');
+      final isKeysNotLoaded = errMsg.contains('AI keys not loaded');
 
       // Determine failure type for appropriate messaging
       String errorText;
       String errorType;
-      if (isTimeout) {
+      if (isKeysNotLoaded) {
+        errorText = "📡 AI unavailable — no internet connection on startup. "
+            "Close and reopen the app with internet access to load AI keys.";
+        errorType = 'timeout';
+      } else if (isTimeout) {
         errorText =
             "⏱️ Connection timed out — the AI took too long to respond.";
         errorType = 'timeout';

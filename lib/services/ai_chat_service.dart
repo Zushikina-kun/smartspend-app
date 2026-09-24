@@ -863,6 +863,18 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       _messagesSinceLastSummary++;
     }
 
+    // ── KEY GUARD: fail fast if no API keys loaded ────────────────────────────
+    // Keys come exclusively from Firebase Remote Config (no fallback in source).
+    // If Remote Config was unreachable on startup, all keys are empty — alert
+    // the user immediately rather than burning through the 8-provider fallback
+    // chain with empty bearer tokens (each would return 401 and waste quota).
+    if (AppConfig.groqApiKey.isEmpty) {
+      throw Exception(
+          "AI keys not loaded yet — this usually means no internet connection "
+          "on startup. Close and reopen the app with internet access, "
+          "or try again in a moment.");
+    }
+
     // ── §25 OBSERVABILITY — request trace start ───────────────────────────────
     final traceStart = DateTime.now();
 
