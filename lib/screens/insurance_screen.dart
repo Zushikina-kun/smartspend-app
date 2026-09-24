@@ -61,37 +61,35 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.shield_outlined, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            const Text("No policies tracked yet",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-            const SizedBox(height: 8),
-            Text(
-              "Add your insurance policies, SSS, PhilHealth, or Pag-IBIG contributions to track premiums and due dates.",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey[600], fontSize: 13),
-            ),
-            const SizedBox(height: 24),
-            // Quick-add buttons for common PH contributions
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              alignment: WrapAlignment.center,
-              children: [
-                _quickAddChip("SSS", "SSS", "monthly", Icons.account_balance),
-                _quickAddChip("PhilHealth", "PhilHealth", "monthly",
-                    Icons.local_hospital),
-                _quickAddChip("Pag-IBIG", "Pag-IBIG", "monthly", Icons.home),
-              ],
-            ),
-          ],
-        ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.shield_outlined, size: 64, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          const Text("No policies tracked yet",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          const SizedBox(height: 8),
+          Text(
+            "Add your insurance policies, SSS, PhilHealth, or Pag-IBIG contributions to track premiums and due dates.",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+          ),
+          const SizedBox(height: 24),
+          // Quick-add buttons for common PH contributions
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            alignment: WrapAlignment.center,
+            children: [
+              _quickAddChip("SSS", "SSS", "monthly", Icons.account_balance),
+              _quickAddChip(
+                  "PhilHealth", "PhilHealth", "monthly", Icons.local_hospital),
+              _quickAddChip("Pag-IBIG", "Pag-IBIG", "monthly", Icons.home),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -120,7 +118,8 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
     return RefreshIndicator(
       onRefresh: _load,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+        padding: EdgeInsets.fromLTRB(
+            16, 12, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
         children: [
           // Summary card
           _buildSummaryCard(),

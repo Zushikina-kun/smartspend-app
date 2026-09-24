@@ -525,7 +525,8 @@ class _RecurringScreenState extends State<RecurringScreen> {
               : RefreshIndicator(
                   onRefresh: _load,
                   child: ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+                    padding: EdgeInsets.fromLTRB(16, 16, 16,
+                        80 + MediaQuery.of(context).viewPadding.bottom),
                     itemCount: _items.length,
                     itemBuilder: (_, i) {
                       final item = _items[i];

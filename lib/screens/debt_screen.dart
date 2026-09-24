@@ -340,7 +340,8 @@ class _DebtScreenState extends State<DebtScreen>
           ),
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+              padding: EdgeInsets.fromLTRB(
+                  16, 8, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
               itemCount: items.length,
               itemBuilder: (_, i) {
                 final d = items[i];
@@ -877,7 +878,8 @@ class _DebtScreenState extends State<DebtScreen>
     return RefreshIndicator(
       onRefresh: _load,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+        padding: EdgeInsets.fromLTRB(
+            16, 8, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
         children: [
           if (activePlans.isNotEmpty) ...[
             Padding(

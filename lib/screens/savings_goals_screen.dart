@@ -525,7 +525,8 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
               : RefreshIndicator(
                   onRefresh: _load,
                   child: ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+                    padding: EdgeInsets.fromLTRB(16, 16, 16,
+                        80 + MediaQuery.of(context).viewPadding.bottom),
                     itemCount: _goals.length,
                     itemBuilder: (_, i) {
                       final g = _goals[i];

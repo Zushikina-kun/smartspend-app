@@ -567,6 +567,9 @@ Based on research and internal audit, these items from the previous backlog need
 
 | Feature | Effort | Notes |
 |---------|--------|-------|
+| **Tablet / large-screen layout** | ~1 week | App currently works on tablets but doesn't use the extra space — all screens are single-column. Add responsive breakpoints: side-by-side panels on tablets (e.g. Home + Analytics side by side), wider card grids, larger chart areas. Use `LayoutBuilder` + breakpoint at ~600dp. |
+| **Tappable chart type switcher** | ~1 day | Analytics charts are fixed types. Let users tap a chart to cycle through types: pie → bar → line → donut. Each tap rotates to next type, saves preference per chart. Low effort since fl_chart already handles all types; just need state + animation. |
+| **Landscape orientation support** | ~2 days | App is portrait-locked (no explicit lock, but layouts assume portrait). Landscape mode breaks the home screen card stack. Add `OrientationBuilder` guards on key screens or set preferred orientations per screen. |
 | Price Intelligence / Price Pulse (Part 4) | ~2 weeks | Wait for PSA OpenSTAT to exit "Alpha" status |
 | PSE/MP2/UITF investment tracker (5F) | ~2 weeks | After BunnyWise launches — assess overlap first |
 | ScanReviewScreen rename | 30 min | Code hygiene only |

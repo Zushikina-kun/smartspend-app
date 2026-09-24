@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.57';
-  static const _prefKey = 'whats_new_seen_2_9_57';
+  static const _version = '2.9.58';
+  static const _prefKey = 'whats_new_seen_2_9_58';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,15 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '📱',
+      'Small Screen Overflow Fixes (v2.9.58)',
+      'Fixed 6 more overflow/clipping issues found in the follow-up audit: '
+          'Insurance and Paluwagan empty states now scroll instead of '
+          'overflowing. FAB screens (Budget, Debt, Recurring, Insurance, '
+          'Savings Goals) list padding now adds the system nav bar height '
+          'so the last item is never hidden behind the nav bar on 3-button phones.',
+    ),
     (
       '💬',
       'AI Chat Chips No Longer Overlap Input (v2.9.57)',

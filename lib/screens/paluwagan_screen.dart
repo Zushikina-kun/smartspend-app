@@ -199,30 +199,28 @@ class _PalawaganScreenState extends State<PalawaganScreen> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _groups.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      const Text("🏦", style: TextStyle(fontSize: 48)),
-                      const SizedBox(height: 12),
-                      const Text("No paluwagan groups yet",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 8),
-                      Text(
-                          "Track your rotating savings group — members, payout order, and contributions.",
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: cs.onSurface.withValues(alpha: 0.55)),
-                          textAlign: TextAlign.center),
-                      const SizedBox(height: 16),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.add),
-                        label: const Text("Add Paluwagan Group"),
-                        onPressed: () => _showAddGroupDialog(),
-                      ),
-                    ]),
-                  ),
+              ? SingleChildScrollView(
+                  padding: const EdgeInsets.all(32),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    const Text("🏦", style: TextStyle(fontSize: 48)),
+                    const SizedBox(height: 12),
+                    const Text("No paluwagan groups yet",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    Text(
+                        "Track your rotating savings group — members, payout order, and contributions.",
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: cs.onSurface.withValues(alpha: 0.55)),
+                        textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.add),
+                      label: const Text("Add Paluwagan Group"),
+                      onPressed: () => _showAddGroupDialog(),
+                    ),
+                  ]),
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(12),

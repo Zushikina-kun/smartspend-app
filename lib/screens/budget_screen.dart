@@ -313,7 +313,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       ],
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+                      padding: EdgeInsets.fromLTRB(16, 16, 16,
+                          80 + MediaQuery.of(context).viewPadding.bottom),
                       itemCount: _budgets.length + 1, // +1 for summary header
                       itemBuilder: (_, i) {
                         // Summary card at top
