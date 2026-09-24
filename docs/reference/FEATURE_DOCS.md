@@ -1,6 +1,6 @@
 # Smart Spend — Application Documentation
 
-**Version:** 2.9.53
+**Version:** 2.9.58
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester

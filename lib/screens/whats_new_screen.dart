@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.58';
-  static const _prefKey = 'whats_new_seen_2_9_58';
+  static const _version = '2.9.59';
+  static const _prefKey = 'whats_new_seen_2_9_59';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,34 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '💚',
+      'Safe to Spend (v2.9.59)',
+      'New card on the Home screen showing how much you can spend freely '
+          'before your next payday, after reserving upcoming bills, savings '
+          'goal contributions, and overdue debts. Green = comfortable, '
+          'orange = tight, red = deficit. Toggle in Settings → Home Screen.',
+    ),
+    (
+      '⚠️',
+      'AI Advice Disclaimer (v2.9.59)',
+      'A one-time dialog now appears before the first financial advice '
+          'response — clarifying that Peso is not a licensed financial adviser. '
+          'Shown once per account and never again.',
+    ),
+    (
+      '🔍',
+      'AI Confidence Review Badge (v2.9.59)',
+      'Expense tiles logged by AI with low confidence (< 70%) now show '
+          'a small "Review" badge. Tapping it explains why and opens Edit.',
+    ),
+    (
+      '📤',
+      'Share from GCash / Any App (v2.9.59)',
+      'SmartSpend now appears in the Android share sheet. Share any '
+          'transaction text from GCash, Maya, or your bank app directly '
+          'into the AI chat — it routes to the same clipboard nudge flow.',
+    ),
     (
       '📱',
       'Small Screen Overflow Fixes (v2.9.58)',

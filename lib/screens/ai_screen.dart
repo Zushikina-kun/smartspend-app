@@ -60,12 +60,18 @@ class _AIScreenState extends State<AIScreen> {
   StreamSubscription? _eventSub;
   ShakeDetector? _shakeDetector;
   Timer? _debounceTimer;
+  // ── AI ADVICE DISCLAIMER ─────────────────────────────────────────────────
+  // One-time dialog shown before the first financial advice response.
+  // Satisfies RA 11765 responsible-AI positioning: "not a licensed adviser".
+  bool _adviceDisclaimerShown = false;
 
   @override
   void initState() {
     super.initState();
     _loadContext();
     _checkClipboardForTransaction(); // nudge if GCash/bank text detected
+    _loadAdviceDisclaimerState(); // restore one-time advice disclaimer flag
+    _checkShareIntent(); // check if app was opened via Android share intent
     // Silently refresh AI context when data changes elsewhere (debounced)
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
@@ -108,6 +114,93 @@ class _AIScreenState extends State<AIScreen> {
   }
 
   /// Checks clipboard for GCash/bank transaction text on screen open.
+  /// Load the one-time advice disclaimer flag from DB.
+  Future<void> _loadAdviceDisclaimerState() async {
+    try {
+      final seen = await DBService.getSetting('ai_advice_disclaimer_shown');
+      if (seen == 'true' && mounted) {
+        setState(() => _adviceDisclaimerShown = true);
+      }
+    } catch (_) {}
+  }
+
+  /// Show the one-time financial advice disclaimer dialog.
+  /// Returns true if user accepted, false if dismissed.
+  Future<bool> _showAdviceDisclaimer() async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        title: const Row(children: [
+          Text("⚠️ ", style: TextStyle(fontSize: 20)),
+          Text("Financial Advice Notice"),
+        ]),
+        content: const Text(
+          "Peso gives general financial guidance based on your logged data — "
+          "not professional financial advice.\n\n"
+          "SmartSpend AI:\n"
+          "• Is not a licensed financial adviser\n"
+          "• Cannot predict market performance\n"
+          "• May make errors — always verify important decisions\n\n"
+          "For major financial decisions (loans, investments, insurance), "
+          "consult a licensed professional.",
+          style: TextStyle(fontSize: 13, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancel"),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("I understand"),
+          ),
+        ],
+      ),
+    );
+    if (result == true) {
+      setState(() => _adviceDisclaimerShown = true);
+      await DBService.setSetting('ai_advice_disclaimer_shown', 'true');
+    }
+    return result == true;
+  }
+
+  /// Check if the app was launched via Android ACTION_SEND share intent.
+  /// If shared text looks like a financial transaction, route it to the
+  /// same clipboard nudge banner used for manually copied text.
+  static const _shareChannel =
+      MethodChannel('com.lucidframe.smartspend_app/share_intent');
+
+  Future<void> _checkShareIntent() async {
+    try {
+      final sharedText =
+          await _shareChannel.invokeMethod<String>('getSharedText');
+      if (sharedText == null || sharedText.trim().isEmpty) return;
+      // Reuse clipboard nudge logic — set the shared text as the nudge text
+      if (mounted) {
+        setState(() {
+          _clipboardNudgeText = sharedText.trim();
+          _clipboardNudgeDismissed = false;
+        });
+      }
+    } catch (_) {
+      // Share intent not available (non-Android or no pending intent) — ignore
+    }
+
+    // Also listen for warm-start shares (app already running)
+    _shareChannel.setMethodCallHandler((call) async {
+      if (call.method == 'onSharedTextReceived') {
+        final text = call.arguments as String?;
+        if (text != null && text.isNotEmpty && mounted) {
+          setState(() {
+            _clipboardNudgeText = text.trim();
+            _clipboardNudgeDismissed = false;
+          });
+        }
+      }
+    });
+  }
+
   /// If detected, shows a non-intrusive banner offering to paste it into chat.
   Future<void> _checkClipboardForTransaction() async {
     try {
@@ -452,6 +545,16 @@ class _AIScreenState extends State<AIScreen> {
     final text = retryText ?? _controller.text.trim();
     if (text.isEmpty || _sending) return;
 
+    // ── ADVICE DISCLAIMER — show once before first financial advice query ──
+    // Detects advice-type queries before sending; shows dialog only once ever.
+    if (!_adviceDisclaimerShown) {
+      final taskType = AIChatService.detectTaskTypePublic(text);
+      if (taskType == 'financial_advice') {
+        final accepted = await _showAdviceDisclaimer();
+        if (!accepted) return; // user cancelled — don't send
+      }
+    }
+
     setState(() {
       _messages.add({"role": "user", "text": text});
       _sending = true;
@@ -469,12 +572,17 @@ class _AIScreenState extends State<AIScreen> {
 
       final (reply, actions) = await AIChatService.sendMessage(text);
 
-      // Execute all actions immediately
-      for (final action in actions) {
+      // Apply action allowlist — chat context allows all 34 actions.
+      // Import/OCR contexts (when routed here) only allow expense logging.
+      final filteredActions =
+          AIChatService.filterActionsBySource(actions, 'chat');
+
+      // Execute all filtered actions immediately
+      for (final action in filteredActions) {
         await _executeAction(action);
       }
       // Refresh context after actions so next message sees updated DB
-      if (actions.isNotEmpty) await _loadContext(silent: true);
+      if (filteredActions.isNotEmpty) await _loadContext(silent: true);
 
       await DBService.saveChatMessage(role: 'ai', message: reply);
 
