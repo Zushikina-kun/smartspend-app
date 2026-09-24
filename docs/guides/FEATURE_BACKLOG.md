@@ -1,5 +1,5 @@
 # SmartSpend — Master Feature Backlog & Planning
-**Version:** 2.9.53 | **Updated:** September 2026 — Codex code-audit pass
+**Version:** 2.9.59 | **Updated:** September 2026 — Codex code-audit pass
 **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 
 > **Single consolidated planning document.** Fuses inputs from:

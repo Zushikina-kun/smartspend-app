@@ -1,10 +1,10 @@
 # Smart Spend — Application Documentation
 
-**Version:** 2.9.58
+**Version:** 2.9.59
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** September 12, 2026 (v2.9.47 — full audit, all Phase 1 tasks, full-app UI polish)
+**Last Updated:** September 12, 2026 (v2.9.59 — full audit, all Phase 1 tasks, full-app UI polish)
 **Build:** app-arm64-v8a-release.apk — 45.1 MB (September 12, 2026)
 
 ---
@@ -333,7 +333,7 @@ Two adjustments are applied on top of the raw component total:
 
 ---
 
-### 6a. Financial Management Score (FMS) — v2.9.5+
+### 6a. Financial Management Score (FMS) — v2.9.59+
 
 The **Financial Management Score** is a companion metric to the FHS that measures *how consistently and diligently the user manages their financial data* in the app — separate from financial outcomes.
 
@@ -364,7 +364,7 @@ Financial health (FHS) measures outcomes — are you saving, are you staying wit
 
 ---
 
-### 6b. Weekly Category Card — v2.9.5+
+### 6b. Weekly Category Card — v2.9.59+
 
 The **Weekly Category Card** surfaces on the Home screen and Analytics, showing each spending category's current-week total vs the 4-week rolling average with a High / Normal / Low label.
 
@@ -788,7 +788,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Push notification at 80% of limit and when exceeded
 - Opt-in — hidden when limit is 0 or not set
 
-### 32b. Period Spending Limit (v2.9.1)
+### 32b. Period Spending Limit (v2.9.59)
 - Set one total spending cap per **day / week / month / year** — Profile → ⚙️ Settings → Spending Limit
 - Period picker: Day | Week | Month | Year
 - Home dashboard shows a period limit progress bar when set (separate from legacy daily limit)
@@ -796,7 +796,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
 - Works independently of income/wallet mode — available in both full and lightweight mode
 - Spend is calculated in real-time via `DBService.getSpentInPeriod(period)`
 
-### 32c. Lightweight Mode (v2.9.1)
+### 32c. Lightweight Mode (v2.9.59)
 - **Toggle:** Profile → ⚙️ Settings → Tracking Mode → "Track income & wallets" (default ON for existing users, OFF-auto-detect for new users)
 - When **OFF**: wallet card, allowance button, income card, net worth card are all hidden on home and profile screens. AI skips income/wallet advice and context.
 - When **OFF**: FHS recalculates using 4 habit-based components:
@@ -806,7 +806,7 @@ AI-powered bulk import of transaction history from any bank or e-wallet.
   4. **Habit Streak** (25pts) — consecutive logged days, full score at 14
 - DB key: `income_wallet_mode` ('true'/'false'). `DBService.getIncomeWalletMode()` auto-detects existing users (returns true if income entries exist)
 
-### 32d. Logging Gap Detection (v2.9.1)
+### 32d. Logging Gap Detection (v2.9.59)
 - On startup (once per day), `StartupAlertsService._detectLoggingGaps()` finds contiguous unlogged day ranges since the first logged expense
 - Shows `_GapCheckDialog` per gap asking: "Yes I spent (forgot)" → penalty (−3 pts/day, max −15) or "Nope, nothing" → bonus (+2 pts/day, max +10)
 - Penalty/bonus stored in `gap_penalty_days` / `gap_clean_days` DB settings
@@ -1713,7 +1713,7 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 📋 Pending Work & Roadmap
 
-*Last updated: September 8, 2026 (v2.9.19). All coding tasks complete.*
+*Last updated: September 8, 2026 (v2.9.59). All coding tasks complete.*
 
 ### ✅ COMPLETED IN SESSIONS 13–15 (v2.8.0)
 
@@ -1730,7 +1730,7 @@ All rights reserved by **Lucid Frame**, 2026.
 | Round-up savings | Auto-save spare change to goals |
 | Price memory | 15%+ price increase alert |
 | Barcode product lookup | Open Food Facts API + local PH database |
-| **25** badges + 10 daily quests | Gamification enhanced — No-Spend Day + No-Spend Streak added v2.9.42 |
+| **25** badges + 10 daily quests | Gamification enhanced — No-Spend Day + No-Spend Streak added v2.9.59 |
 | DTI ratio card | Debt-to-Income in Analytics |
 | Emergency fund calculator | Smart outlier exclusion |
 | PCA calculator | Peso Cost Averaging screen |
@@ -1916,27 +1916,27 @@ All rights reserved by **Lucid Frame**, 2026.
 
 ## 🗺️ Complete Feature Status & Roadmap
 
-### ✅ Fully Implemented (v2.9.47 — September 12, 2026)
+### ✅ Fully Implemented (v2.9.59 — September 12, 2026)
 
-**New since v2.9.41 (Phase 1 UI Polish + v2.9.45–2.9.47):**
-- **10 color themes** — Indigo, Olive, Burnt Orange, Slate, Forest + Crimson Red, Deep Navy, Midnight Teal, Rose Pink, Charcoal (added v2.9.45)
-- **Savings rate trend chart** — 6-month line chart in Analytics, 20% target dashed line (v2.9.45)
-- **Quick budget slider** — long-press any budget tile opens edit dialog (v2.9.45)
-- **Analytics AI cache fallback** — both Advice + Monthly Summary cards show cached result with date on quota error (v2.9.45)
-- **Done Spending toggle in log sheet** — appears in Log Expense bottom sheet (v2.9.45)
-- **Home Customize shortcut** — tune icon in header opens 6-toggle section visibility sheet (v2.9.45)
-- **Profile gradient header** — primaryContainer gradient card with avatar, stats, edit button (v2.9.46)
-- **Quick Access grid redesign** — 9 items, icon-in-circle tiles with colored shadow (v2.9.46)
-- **Settings grouped section cards** — each section wrapped in soft-shadow card (v2.9.46)
-- **Hub search bar + 4 category groups** — FINANCES / TRANSACTIONS & DATA / TOOLS / HELP (v2.9.46)
-- **Full-app soft-UI polish** — 30 files updated, consistent shadow/radius/fill across all 37 screens (v2.9.47)
-- **25 achievement badges** — No-Spend Day + No-Spend Streak added (v2.9.42)
-- **Hub tiles: 26** — expanded from 22 in v2.9.44
-- **AI PII redaction** — RA 10173 compliance, strips mobile numbers + ref numbers before LLM (v2.9.42)
-- **FHS improvements** — Overspend one-off penalty (0.5×), Category Balance exempts Bills/Health/Education, Warning Decay skips essential categories (v2.9.42)
+**New since v2.9.59 (Phase 1 UI Polish + v2.9.59–2.9.59):**
+- **10 color themes** — Indigo, Olive, Burnt Orange, Slate, Forest + Crimson Red, Deep Navy, Midnight Teal, Rose Pink, Charcoal (added v2.9.59)
+- **Savings rate trend chart** — 6-month line chart in Analytics, 20% target dashed line (v2.9.59)
+- **Quick budget slider** — long-press any budget tile opens edit dialog (v2.9.59)
+- **Analytics AI cache fallback** — both Advice + Monthly Summary cards show cached result with date on quota error (v2.9.59)
+- **Done Spending toggle in log sheet** — appears in Log Expense bottom sheet (v2.9.59)
+- **Home Customize shortcut** — tune icon in header opens 6-toggle section visibility sheet (v2.9.59)
+- **Profile gradient header** — primaryContainer gradient card with avatar, stats, edit button (v2.9.59)
+- **Quick Access grid redesign** — 9 items, icon-in-circle tiles with colored shadow (v2.9.59)
+- **Settings grouped section cards** — each section wrapped in soft-shadow card (v2.9.59)
+- **Hub search bar + 4 category groups** — FINANCES / TRANSACTIONS & DATA / TOOLS / HELP (v2.9.59)
+- **Full-app soft-UI polish** — 30 files updated, consistent shadow/radius/fill across all 37 screens (v2.9.59)
+- **25 achievement badges** — No-Spend Day + No-Spend Streak added (v2.9.59)
+- **Hub tiles: 26** — expanded from 22 in v2.9.59
+- **AI PII redaction** — RA 10173 compliance, strips mobile numbers + ref numbers before LLM (v2.9.59)
+- **FHS improvements** — Overspend one-off penalty (0.5×), Category Balance exempts Bills/Health/Education, Warning Decay skips essential categories (v2.9.59)
 
 All features listed in sections 1–62 of this document are fully built and working in the current build. Key highlights:
-- **34 AI action types** (v2.9.19): log_expense, set_budget, set_income, add_income, add_goal, update_goal, delete_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, delete_by_date, add_installment_plan, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense, set_spending_limit, add_insurance_policy
+- **34 AI action types** (v2.9.59): log_expense, set_budget, set_income, add_income, add_goal, update_goal, delete_goal, add_debt, update_debt, add_recurring, delete_recurring, set_account_type, update_expense, delete_expense, delete_by_date, add_installment_plan, set_wallet_balance, transfer_wallet, plan_salary_split, analyze_goal_feasibility, suggest_debt_payoff, generate_monthly_plan, compare_periods, explain_fhs_breakdown, project_savings_timeline, detect_subscriptions, compute_contribution, suggest_idle_money, suggest_expense_cuts, simulate_what_if, create_debt_payment_plan, split_expense, set_spending_limit, add_insurance_policy
 - **62+ features** across all screens
 - **Wallet Balances** — Cash on Hand, GCash, Maya, 17 PH banks, remittance centers (section 61)
 - **Firebase App Check** — Play Integrity integrated, monitoring mode (section 62)
@@ -1953,8 +1953,8 @@ These features were planned but deferred because they require significant archit
 | Feature | Why Deferred | Estimated Effort | When |
 |---------|-------------|-----------------|------|
 | ~~**Multi-wallet system** (GCash/Cash/Bank/Savings)~~ | ✅ **DONE** — Wallet Balances feature tracks Cash on Hand, GCash, Maya, 17 banks, remittance centers. Note: this is balance tracking, not full multi-wallet with transfers. | — | Implemented v2.5.0 |
-| ~~**Transfer transactions** (Cash → GCash top-up)~~ | ✅ **DONE** — `transfer_wallet` AI action implemented. Wallet-to-wallet transfers supported via AI chat. | — | Implemented v2.9.1 |
-| ~~**Spending heatmap calendar**~~ | ✅ **DONE** — Day-of-week heatmap implemented in Analytics screen. | — | Implemented v2.9.1 |
+| ~~**Transfer transactions** (Cash → GCash top-up)~~ | ✅ **DONE** — `transfer_wallet` AI action implemented. Wallet-to-wallet transfers supported via AI chat. | — | Implemented v2.9.59 |
+| ~~**Spending heatmap calendar**~~ | ✅ **DONE** — Day-of-week heatmap implemented in Analytics screen. | — | Implemented v2.9.59 |
 | **Debt payment timeline** | Visual payoff projection chart per debt. Data exists, just needs visualization. | Medium | Capstone 2 |
 | **PDF export (monthly summary)** | Needs `pdf` + `printing` packages (~2MB APK increase). Clean printable report for parents/employers. | Medium | Capstone 2 |
 | **Quick-log chip customization** | Let users pin specific expenses as permanent quick-log chips. Currently auto-derived from history. | Low | Capstone 2 |
@@ -2006,6 +2006,6 @@ These are intentional design decisions or platform constraints — not bugs.
 
 ---
 
-*SmartSpend v2.9.19 — Lucid Frame*
+*SmartSpend v2.9.59 — Lucid Frame*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2026–2027 (1st Semester)*
