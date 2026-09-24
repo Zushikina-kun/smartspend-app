@@ -265,6 +265,52 @@ class ExpenseTile extends StatelessWidget {
                               fontSize: 10, color: Colors.grey)),
                   ],
                 ),
+                // Low-confidence AI badge — tappable to explain
+                if (confidenceColor != null)
+                  GestureDetector(
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text("⚠️ Review Suggested"),
+                        content: Text(
+                          "The AI wasn't fully confident about this entry "
+                          "(${(expense.confidenceScore * 100).toStringAsFixed(0)}% confidence).\n\n"
+                          "Please check the category and amount are correct. "
+                          "Tap Edit to make changes.",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("OK"),
+                          ),
+                          if (onEdit != null)
+                            FilledButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                onEdit!();
+                              },
+                              child: const Text("Edit"),
+                            ),
+                        ],
+                      ),
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                            color: Colors.orange.withValues(alpha: 0.4)),
+                      ),
+                      child: const Text("Review",
+                          style: TextStyle(
+                              fontSize: 9,
+                              color: Colors.orange,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                  ),
                 PopupMenuButton<String>(
                   icon:
                       const Icon(Icons.more_vert, size: 18, color: Colors.grey),

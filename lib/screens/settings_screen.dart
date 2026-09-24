@@ -49,6 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool showPaydayCountdown = true;
   bool showMonthlyRecap = true;
   bool showChallenges = true;
+  bool showSafeToSpend = true;
 
   // ── Analytics sections ──────────────────────────────────────────────────────
   bool showDTI = true;
@@ -67,6 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       !showPaydayCountdown &&
       !showMonthlyRecap &&
       !showChallenges &&
+      !showSafeToSpend &&
       !showDTI &&
       !showEmergencyFund &&
       !showMilestones &&
@@ -105,6 +107,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showMonthlyRecap =
         (await DBService.getSetting('show_monthly_recap')) != 'false';
     showChallenges = (await DBService.getSetting('show_challenges')) != 'false';
+    showSafeToSpend =
+        (await DBService.getSetting('show_safe_to_spend')) != 'false';
     showDTI = (await DBService.getSetting('show_dti')) != 'false';
     showEmergencyFund =
         (await DBService.getSetting('show_emergency_fund')) != 'false';
@@ -125,6 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       showPaydayCountdown = !on;
       showMonthlyRecap = !on;
       showChallenges = !on;
+      showSafeToSpend = !on;
       showDTI = !on;
       showEmergencyFund = !on;
       showMilestones = !on;
@@ -139,6 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     DBService.setSetting('show_payday_countdown', on ? 'false' : 'true');
     DBService.setSetting('show_monthly_recap', on ? 'false' : 'true');
     DBService.setSetting('show_challenges', on ? 'false' : 'true');
+    DBService.setSetting('show_safe_to_spend', on ? 'false' : 'true');
     DBService.setSetting('show_dti', on ? 'false' : 'true');
     DBService.setSetting('show_emergency_fund', on ? 'false' : 'true');
     DBService.setSetting('show_milestones', on ? 'false' : 'true');
@@ -941,6 +947,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (v) {
                       setState(() => showPaydayCountdown = v);
                       _saveAndRefresh('show_payday_countdown', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.savings_outlined,
+                    title: 'Safe to Spend',
+                    subtitle:
+                        'Wallet balance minus upcoming bills, goal contributions, and overdue debts',
+                    value: showSafeToSpend,
+                    onChanged: (v) {
+                      setState(() => showSafeToSpend = v);
+                      _saveAndRefresh('show_safe_to_spend', v);
                     },
                   ),
                   _tile(

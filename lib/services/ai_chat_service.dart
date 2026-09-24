@@ -22,6 +22,32 @@ class AIChatService {
   static const _prefKeyCount = 'ai_chat_count';
   static const _prefKeyDate = 'ai_chat_date';
 
+  // ── ACTION ALLOWLIST ─────────────────────────────────────────────────────
+  // Restricts which AI actions can fire based on the input source context.
+  // 'chat'   = user typed a message — all 34 actions allowed
+  // 'import' = OCR receipt / batch screenshot / bank CSV paste — only
+  //            expense-logging actions allowed (prevents prompt injection
+  //            from malicious receipt text triggering delete/set_income etc.)
+  static const _importAllowedActions = {
+    'log_expense',
+    'log_multiple_expenses',
+    'update_expense',
+    'tag_expense',
+  };
+
+  /// Filter actions by source context. Returns filtered list.
+  /// Non-allowed actions are silently dropped (not executed).
+  static List<AIAction> filterActionsBySource(
+      List<AIAction> actions, String sourceContext) {
+    if (sourceContext == 'chat') return actions; // no restriction
+    if (sourceContext == 'import') {
+      return actions
+          .where((a) => _importAllowedActions.contains(a.type))
+          .toList();
+    }
+    return actions;
+  }
+
   static Future<bool> _checkAndIncrementLimit() async {
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now().toUtc().toIso8601String().substring(0, 10);
@@ -800,6 +826,11 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
   /// financial_advice — complex multi-step financial planning queries that benefit
   /// from deeper reasoning (§29 model routing, §34 thinking mode).
   /// Routes to gemini_flash when available for highest-quality output.
+  /// Public wrapper for _detectTaskType — used by UI to preview task type
+  /// before sending (e.g. for the AI advice disclaimer check).
+  static String detectTaskTypePublic(String message) =>
+      _detectTaskType(message);
+
   static String _detectTaskType(String message) {
     final lower = message.toLowerCase();
 

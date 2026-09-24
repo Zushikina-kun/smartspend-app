@@ -1816,6 +1816,14 @@ class _DashboardState extends State<Dashboard> {
   double _avgIncomeAmount = 0; // average of last 3 income amounts
   int _avgIncomeInterval = 0; // average days between last 3 income entries
 
+  // ── Safe-to-Spend ─────────────────────────────────────────────────────────
+  // Computed from wallet balance minus upcoming obligations before next payday.
+  double _safeToSpend = 0;
+  double _reservedBills = 0;
+  double _reservedGoals = 0;
+  double _reservedDebts = 0;
+  bool _showSafeToSpend = true;
+
   // ── SECTION VISIBILITY (user-controlled via App Settings) ────────────────
   bool _showSubscriptions = true;
   bool _showQuickLog = true;
@@ -1937,6 +1945,8 @@ class _DashboardState extends State<Dashboard> {
         (await DBService.getSetting('show_monthly_recap')) != 'false';
     final showChallenges =
         (await DBService.getSetting('show_challenges')) != 'false';
+    final showSafeToSpend =
+        (await DBService.getSetting('show_safe_to_spend')) != 'false';
     if (!mounted) return; // widget may have been disposed during async gap
     setState(() {
       _expenses = expenses;
@@ -1964,6 +1974,7 @@ class _DashboardState extends State<Dashboard> {
       _showPaydayCountdown = showPaydayCountdown;
       _showMonthlyRecap = showMonthlyRecap;
       _showChallenges = showChallenges;
+      _showSafeToSpend = showSafeToSpend;
       // Only show loading indicator if we don't have an insight yet
       if (_insight == "Analyzing your expenses...") _loadingInsight = true;
       final spent = <String, double>{};
@@ -2128,6 +2139,96 @@ class _DashboardState extends State<Dashboard> {
         }
       }
     } catch (_) {}
+
+    // ── Safe-to-Spend computation ─────────────────────────────────────────
+    // Formula: wallet total − upcoming bills before next payday
+    //                        − monthly goal contributions remaining
+    //                        − overdue debts
+    // Only computed in income/wallet mode.
+    if (incomeWalletMode) {
+      try {
+        final walletTotal = _wallets.fold<double>(
+            0, (s, w) => s + (w['balance'] as num).toDouble());
+
+        // Determine the window: today → next expected income date
+        final now = DateTime.now();
+        final windowEnd =
+            _nextExpectedIncome ?? now.add(const Duration(days: 30));
+        final daysInWindow = windowEnd.difference(now).inDays.clamp(1, 60);
+
+        // 1. Upcoming recurring bills due before next payday
+        double reservedBills = 0;
+        for (final r in recurring) {
+          if ((r['is_expense'] as int? ?? 1) != 1) continue; // skip income
+          try {
+            final nextDate = DateTime.parse(r['next_date'] as String);
+            if (!nextDate.isAfter(windowEnd)) {
+              reservedBills += (r['amount'] as num).toDouble();
+            }
+          } catch (_) {}
+        }
+
+        // 2. Savings goal contributions — pro-rated for remaining days
+        double reservedGoals = 0;
+        final goals = await DBService.getGoals();
+        for (final g in goals) {
+          final target = (g['target_amount'] as num).toDouble();
+          final current = (g['current_amount'] as num).toDouble();
+          if (current >= target) continue; // already reached
+          // Estimate a monthly contribution: (target - current) / 6 months
+          // as a conservative default when no deadline is set
+          final deadline = g['deadline'] as String?;
+          double monthlyContrib;
+          if (deadline != null && deadline.isNotEmpty) {
+            try {
+              final due = DateTime.parse(deadline);
+              final months = due.difference(now).inDays / 30.0;
+              if (months > 0) {
+                monthlyContrib = (target - current) / months;
+              } else {
+                monthlyContrib = target - current; // overdue goal
+              }
+            } catch (_) {
+              monthlyContrib = (target - current) / 6;
+            }
+          } else {
+            monthlyContrib = (target - current) / 6;
+          }
+          // Pro-rate to the window
+          reservedGoals +=
+              (monthlyContrib * daysInWindow / 30).clamp(0, target - current);
+        }
+
+        // 3. Overdue debts (owe type, unpaid portion, past due date)
+        double reservedDebts = 0;
+        for (final d in debts) {
+          if (d['type'] != 'owe') continue;
+          final paid = (d['paid_amount'] as num?)?.toDouble() ?? 0;
+          final total = (d['amount'] as num).toDouble();
+          if (paid >= total) continue;
+          final dueDate = d['due_date'] as String?;
+          if (dueDate != null && dueDate.isNotEmpty) {
+            try {
+              final due = DateTime.parse(dueDate);
+              if (!due.isAfter(windowEnd)) {
+                reservedDebts += (total - paid);
+              }
+            } catch (_) {}
+          }
+        }
+
+        final safe =
+            (walletTotal - reservedBills - reservedGoals - reservedDebts);
+        if (mounted) {
+          setState(() {
+            _safeToSpend = safe;
+            _reservedBills = reservedBills;
+            _reservedGoals = reservedGoals;
+            _reservedDebts = reservedDebts;
+          });
+        }
+      } catch (_) {}
+    }
 
     // BF-2: Compute plain-language score narrative from breakdown
     final breakdownForNarrative = ScoreService.getBreakdown(
@@ -3847,6 +3948,138 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Safe-to-Spend card — shows spendable balance after reserving
+  /// upcoming bills, goal contributions, and overdue debts.
+  /// Only shown in income/wallet mode with wallet data available.
+  Widget _buildSafeToSpendCard(BuildContext context) {
+    if (!_incomeWalletMode) return const SizedBox.shrink();
+    final walletTotal = _wallets.fold<double>(
+        0, (s, w) => s + (w['balance'] as num).toDouble());
+    if (walletTotal <= 0) return const SizedBox.shrink();
+
+    final cs = Theme.of(context).colorScheme;
+    final isSafe = _safeToSpend >= 0;
+    final accentColor = isSafe
+        ? (_safeToSpend < walletTotal * 0.2 ? Colors.orange : Colors.green)
+        : Colors.red;
+
+    // Determine window label
+    final windowLabel = _nextExpectedIncome != null
+        ? 'Until ${DateFormat('MMM d').format(_nextExpectedIncome!)}'
+        : 'This month';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+        decoration: BoxDecoration(
+          color: accentColor.withValues(alpha: 0.07),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: accentColor.withValues(alpha: 0.22)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(children: [
+              Icon(
+                isSafe ? Icons.wallet_outlined : Icons.warning_amber_rounded,
+                size: 18,
+                color: accentColor,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                isSafe ? '💚 Safe to Spend' : '🔴 Overspent',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                  color: accentColor,
+                ),
+              ),
+              const SizedBox(width: 4),
+              InfoButton(
+                title: 'Safe to Spend',
+                body: 'Your wallet balance minus upcoming bills, '
+                    'savings goal contributions, and overdue debts '
+                    'before your next expected income.\n\n'
+                    'This is how much you can spend freely right now '
+                    'without missing any obligations.',
+                size: 13,
+              ),
+              const Spacer(),
+              Text(
+                windowLabel,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: cs.onSurface.withValues(alpha: 0.45),
+                ),
+              ),
+            ]),
+            const SizedBox(height: 8),
+            // Big number
+            Text(
+              CurrencyService.format(_safeToSpend.abs()),
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: accentColor,
+              ),
+            ),
+            if (!isSafe)
+              Text(
+                'Deficit — you\'ve exceeded your available balance',
+                style: TextStyle(
+                    fontSize: 11, color: cs.onSurface.withValues(alpha: 0.6)),
+              ),
+            const SizedBox(height: 8),
+            // Breakdown row
+            Wrap(
+              spacing: 12,
+              runSpacing: 4,
+              children: [
+                _safeToSpendChip('💰 Wallet',
+                    CurrencyService.format(walletTotal), Colors.green),
+                if (_reservedBills > 0)
+                  _safeToSpendChip(
+                      '📋 Bills',
+                      '−${CurrencyService.format(_reservedBills)}',
+                      Colors.orange),
+                if (_reservedGoals > 0)
+                  _safeToSpendChip(
+                      '🎯 Goals',
+                      '−${CurrencyService.format(_reservedGoals)}',
+                      Colors.blue),
+                if (_reservedDebts > 0)
+                  _safeToSpendChip('💸 Debts',
+                      '−${CurrencyService.format(_reservedDebts)}', Colors.red),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _safeToSpendChip(String label, String value, Color color) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(label, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+        const SizedBox(width: 3),
+        Text(value,
+            style: TextStyle(
+                fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+      ],
+    );
+  }
+
   Future<void> _logAllowance(double amount) async {
     try {
       // 1. Log as income entry
@@ -4736,6 +4969,10 @@ class _DashboardState extends State<Dashboard> {
               // entries exist and next expected date is within a reasonable window
               if (_incomeWalletMode && _showPaydayCountdown)
                 _buildPaydayCountdownCard(context),
+
+              // Safe-to-Spend — wallet balance minus reserved bills/goals/debts
+              if (_incomeWalletMode && _showSafeToSpend)
+                _buildSafeToSpendCard(context),
 
               // Multi-period spending limits card — tappable, shown when any limit set
               _buildSpendingLimitCard(context),

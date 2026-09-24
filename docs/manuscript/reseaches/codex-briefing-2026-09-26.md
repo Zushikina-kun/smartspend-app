@@ -1,6 +1,6 @@
 # SmartSpend — Codex Briefing Document
 **Compiled:** September 26, 2026
-**Version:** 2.9.53
+**Version:** 2.9.58
 **For:** OpenAI Codex (or any AI coding agent starting fresh on this project)
 **Purpose:** Everything Codex needs to understand the project, write correct code, and avoid breaking things.
 
