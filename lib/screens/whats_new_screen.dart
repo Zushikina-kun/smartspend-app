@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.53';
-  static const _prefKey = 'whats_new_seen_2_9_53';
+  static const _version = '2.9.54';
+  static const _prefKey = 'whats_new_seen_2_9_54';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,13 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🔑',
+      'API Key Rotated (v2.9.54)',
+      'The Groq API key was rotated after GitHub Secret Scanning detected '
+          'the previous key in a public commit. AI features continue to work '
+          'normally — no action needed on your end.',
+    ),
     (
       '⚙️',
       'More Home Screen Toggles (v2.9.53)',
