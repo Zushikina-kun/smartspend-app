@@ -32,13 +32,15 @@ import 'db_service.dart';
 class AppConfig {
   AppConfig._();
 
-  // ── FALLBACK KEYS (fetched via Firebase Remote Config at runtime) ──────────
-  static const _fallbackGroqKey =
-      "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";
-  static const _fallbackGeminiKey =
-      "AQ.Ab8RN6LZ3JhKel-t0ovzCNEySO2KuE3LYLNAQWjr6ewBGs-nUA";
-  static const _fallbackCerebrasKey =
-      "csk-cwr9ye2pxwyhe89hmexm3t84e5fe3tykjd2d9c86p5vxjd94";
+  // ── FALLBACK KEYS (set as Remote Config defaults at runtime — NOT stored in source) ──
+  // These constants are intentionally empty. Real keys are injected via
+  // AppConfig.init() → rc.setDefaults() from values stored only in the
+  // Firebase Remote Config console, never in this file.
+  // To rotate a key: update it in Firebase Remote Config console → publish.
+  // The app picks it up on next cold start (minimumFetchInterval: 1 hour).
+  static const _fallbackGroqKey = "";
+  static const _fallbackGeminiKey = "";
+  static const _fallbackCerebrasKey = "";
 
   // ── API ENDPOINTS ──────────────────────────────────────────────────────────
   static const _groqUrl = "https://api.groq.com/openai/v1/chat/completions";
@@ -366,49 +368,40 @@ class AppConfig {
     _activeModelId = 'auto';
 
     // 2. Restore last-used model (user preference OR last auto-fallback).
-    //    This means a failed Gemini key won't retry from gemini_flash_lite
-    //    on every cold start after the user/auto-fallback already moved to Groq.
-    //
-    //    EXCEPTION: if the fallback key itself changed (new build with fresh keys),
-    //    reset back to gemini_flash_lite so the new key gets a clean first attempt.
-    //    We detect this by storing a short fingerprint of the fallback key.
+    //    Keys are no longer stored in source — fingerprint check is skipped
+    //    since _fallbackGeminiKey is always empty now. The model preference
+    //    is restored unconditionally; a fresh Remote Config fetch in step 3
+    //    will provide real keys regardless.
     try {
-      final keyFingerprint = _fallbackGeminiKey.length > 8
-          ? _fallbackGeminiKey.substring(_fallbackGeminiKey.length - 8)
-          : _fallbackGeminiKey;
-      final savedFingerprint =
-          await DBService.getSetting('active_key_fingerprint');
-      if (savedFingerprint != keyFingerprint) {
-        // Keys changed — reset to Gemini and record the new fingerprint.
-        _activeModelId = 'gemini_flash_lite';
-        await DBService.setSetting('active_key_fingerprint', keyFingerprint);
-        await _saveActiveModel();
-      } else {
-        final saved = await DBService.getSetting('active_model_id');
-        final validIds = availableModels.map((m) => m.$1).toSet();
-        if (saved != null && validIds.contains(saved)) {
-          _activeModelId = saved;
-        }
+      final saved = await DBService.getSetting('active_model_id');
+      final validIds = availableModels.map((m) => m.$1).toSet();
+      if (saved != null && validIds.contains(saved)) {
+        _activeModelId = saved;
       }
     } catch (_) {}
 
-    // 3. Load Remote Config keys
+    // 3. Load keys from Firebase Remote Config.
+    //    Real keys are stored ONLY in the Firebase Remote Config console —
+    //    they are not hardcoded here. Update keys there and publish to rotate.
     try {
       final rc = FirebaseRemoteConfig.instance;
       await rc.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: const Duration(hours: 1),
       ));
+      // No defaults passed here — empty defaults mean the app gracefully
+      // degrades if Remote Config is unreachable (AI features unavailable,
+      // all other features work normally).
       await rc.setDefaults({
-        'groq_api_key': _fallbackGroqKey,
-        'gemini_api_key': _fallbackGeminiKey,
-        'cerebras_api_key': _fallbackCerebrasKey,
+        'groq_api_key': '',
+        'gemini_api_key': '',
+        'cerebras_api_key': '',
       });
       await rc.fetchAndActivate();
       final rGroq = rc.getString('groq_api_key');
-      if (rGroq.isNotEmpty && rGroq != _fallbackGroqKey) _remoteGroqKey = rGroq;
+      if (rGroq.isNotEmpty) _remoteGroqKey = rGroq;
       final rGemini = rc.getString('gemini_api_key');
-      if (rGemini.isNotEmpty && rGemini != _fallbackGeminiKey) {
+      if (rGemini.isNotEmpty) {
         _remoteGeminiKey = rGemini;
         // Only upgrade if user was forced off Gemini due to auth failure.
         // Don't override 'auto' or a deliberate manual model choice.
@@ -418,11 +411,10 @@ class AppConfig {
         }
       }
       final rCerebras = rc.getString('cerebras_api_key');
-      if (rCerebras.isNotEmpty && rCerebras != _fallbackCerebrasKey) {
-        _remoteCerebrasKey = rCerebras;
-      }
+      if (rCerebras.isNotEmpty) _remoteCerebrasKey = rCerebras;
     } catch (_) {
-      // Remote Config unavailable — fallback keys already applied above
+      // Remote Config unavailable — AI features will not work until next
+      // successful fetch. All non-AI features work normally offline.
     }
   }
 }
