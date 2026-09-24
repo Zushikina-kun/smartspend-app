@@ -31,8 +31,8 @@ smartspend_app/
 │   │   ├── expense.dart             # Expense model + fromMap/toMap
 │   │   ├── budget.dart              # Budget model
 │   │   └── user_profile.dart        # UserProfile model
-│   ├── screens/                     # 40 screens (see §4)
-│   ├── services/                    # 26 services (see §5)
+│   ├── screens/                     # Screen widgets (see §4)
+│   ├── services/                    # Service layer (see §5)
 │   └── widgets/
 │       ├── expense_tile.dart        # Reusable expense list tile
 │       ├── info_button.dart         # ❓ tooltip button used across all screens
@@ -89,7 +89,7 @@ Key packages and what they're used for:
 
 ---
 
-## 4. All Screens (40 total)
+## 4. All Screens
 
 | Screen file | What it does |
 |-------------|-------------|
@@ -123,7 +123,6 @@ Key packages and what they're used for:
 | `smart_camera_screen.dart` | Unified camera: barcode/QR/receipt/screenshot |
 | `achievements_screen.dart` | 25 badges + badge progress |
 | `chat_history_screen.dart` | Full AI conversation history |
-| `transactions_screen.dart` | Transaction list, filters, export |
 | `manage_categories_screen.dart` | Custom categories management |
 | `manage_rules_screen.dart` | Auto-categorization keyword rules |
 | `merchant_merge_screen.dart` | Merge duplicate merchant names |
@@ -138,7 +137,7 @@ Key packages and what they're used for:
 
 ---
 
-## 5. All Services (26 total)
+## 5. All Services
 
 | Service file | What it does |
 |-------------|-------------|
@@ -423,15 +422,21 @@ fireEvent(AppEvent.goalChanged);      // for savings goal changes
 
 The FHS formula is academic-validated and critical to the capstone thesis. **Do not modify `score_service.dart` without explicit instruction.**
 
-**4 components:**
-- **Spending Restraint (40 pts)** — how well spending stays within income/budget
-- **Logging Consistency (25 pts)** — how often user logs expenses (gap-aware)
-- **Category Balance (20 pts)** — spread across categories (not all in one)
-- **Habit Streak (15 pts)** — consecutive days with logs
+**Current code uses four 25-point components.**
 
-**Two modes:**
-- Full mode (`incomeWalletMode: true`) — all 4 components, savings rate weighted
-- Lightweight mode (`incomeWalletMode: false`) — Spending Restraint uses spending limit, no savings rate
+Full mode (`incomeWalletMode: true`):
+- Savings Rate
+- Overspend Control
+- Budget Adherence
+- Logging Consistency
+
+Lightweight mode (`incomeWalletMode: false`):
+- Spending Restraint
+- Logging Consistency
+- Category Balance
+- Habit Streak
+
+The formula also applies warning decay and logging-gap adjustments in supporting methods/settings. When documentation disagrees, treat `score_service.dart` as the source of truth.
 
 ---
 
@@ -518,8 +523,8 @@ Without these files, the app will compile but AI features will not work. The app
 | Metric | Value |
 |--------|-------|
 | Version | 2.9.53+53 |
-| Screens | 40 |
-| Services | 26 |
+| Screens | 41 Dart files |
+| Services | 29 Dart files |
 | SQLite tables | 20 |
 | AI providers in chain | 8 |
 | Agentic actions | 34 |
@@ -535,7 +540,7 @@ Without these files, the app will compile but AI features will not work. The app
 | Optional home toggles | 9 |
 | Optional analytics toggles | 4 |
 | Lite Mode coverage | 13 sections |
-| Input modalities | 7 (voice, text, camera, screenshot, barcode, OCR, share intent) |
+| Input modalities | 7 user-facing paths (voice, text, camera, screenshot batch, barcode, OCR/receipt, paste/import). Android share intent is planned, not yet wired. |
 | Min Android SDK | API 21 (Android 5.0) |
 | Target Android SDK | API 36 |
 
@@ -550,7 +555,7 @@ Without these files, the app will compile but AI features will not work. The app
 - Any file in `docs/` — documentation only, no code
 - `assets/` files — no changes to images, JSON data, or logos
 - Firebase configuration in `main.dart` — do not change Firebase init order
-- The `kAppVersion` constant in `main.dart` — this auto-syncs to About screen and What's New screen
+- The `kAppVersion` constant in `lib/services/debug_service.dart` — this feeds About screen, debug logs, and backup metadata
 
 ---
 

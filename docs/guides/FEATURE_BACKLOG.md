@@ -1,5 +1,5 @@
 # SmartSpend — Master Feature Backlog & Planning
-**Version:** 2.9.51 | **Updated:** September 26, 2026
+**Version:** 2.9.53 | **Updated:** September 2026 — Codex code-audit pass
 **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 
 > **Single consolidated planning document.** Fuses inputs from:
@@ -8,7 +8,7 @@
 > the 15-item recommendation list, live online research (September 2026),
 > and `LLM_Engineering_Cheatsheet_v6.md` (free API directory, new models).
 >
-> **Nothing marked ❌ or 🔧 has been implemented.** Planning and documentation only.
+> **Status note:** Older sections below may still include historical ❌ or 🔧 markers from earlier planning passes. Treat Part 0 and Part 0A as the current authority, then use the detailed sections for design notes.
 >
 > *Sources consulted: PSA OpenSTAT, BSP Monetary Policy Reports, World Bank Commodity Markets,
 > PCMag 2026, Rocket Money Rowan press release, BudgetPH, PISO Budget Tracker, BunnyWise,
@@ -19,24 +19,24 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v2.9.51)
+## Part 0 — Authoritative Build Numbers (v2.9.53)
 
 Use these everywhere. Many docs are stale.
 
-| Metric | v2.9.51 value |
+| Metric | v2.9.53 value |
 |--------|--------------|
-| Version string | **2.9.51** |
+| Version string | **2.9.53** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
-| Build size | ~47 MB arm64-v8a, split, obfuscated |
+| Build size | ~46.7 MB arm64-v8a, split, obfuscated |
 | SQLite schema | v11, 20 tables |
 | AI providers in fallback chain | **8** (not 5 or 6) |
 | Primary AI model | **Auto (Gemini 3.5 Flash-Lite default)** — Auto mode added v2.9.50 |
 | Agentic actions | **34** (not 31) |
 | Input modalities | 7 |
-| Screens | 37+ |
-| Services | 26+ |
+| Screens | 41 Dart files |
+| Services | 29 Dart files |
 | Achievement badges | **25** (23 + No-Spend Day + No-Spend Streak) |
 | Daily quests pool | 10 |
 | Batch screenshot platforms | 40+ |
@@ -47,14 +47,46 @@ Use these everywhere. Many docs are stale.
 | PH banks in DB | 20 banks + 5 e-wallets |
 | Daily AI message limit | **150** (raised from 60) |
 | Color themes | **10** (5 new added v2.9.45) |
+| Optional home toggles | **9** |
+| Optional analytics toggles | **4** |
+| Lite Mode coverage | **13 sections** |
 | Paluwagan | ✅ **Implemented** v2.9.35 (update manuscript) |
 
 ### Recent releases
 | Version | Key changes |
 |---------|------------|
+| v2.9.53 | Settings refinement: 3 new home toggles (payday countdown, monthly recap, challenges); Lite Mode expanded to 13 sections. |
+| v2.9.52 | Tier 1 features: payday countdown, monthly recap alert, AI chat export, auto-categorization evidence threshold, semester recurring interval. |
 | v2.9.51 | **Critical fix:** AI fallback chain was silently failing — recursive `sendMessage()` re-ran daily limit check on each retry, blocking every provider switch. Added `isFallbackRetry` flag. |
 | v2.9.50 | Nav bar overlap fixed on all 8 screens (viewPadding.bottom); Auto model mode with task-based routing; 500ms grace delay on auth failures; distinct error messages |
 | v2.9.49 | (previous baseline) |
+
+---
+
+## Part 0A — Codex Code-Audit Findings (v2.9.53)
+
+This section records issues found by direct code inspection after the v2.9.53 Kiro handoff. Use this as the current fix/refine queue before adding more features.
+
+### Fixed in this audit pass
+
+| Finding | Evidence | Action |
+|---------|----------|--------|
+| App-facing version drift: `pubspec.yaml` and What's New say 2.9.53, but debug/About/backup exports used `kAppVersion = '2.9.49'`. | `pubspec.yaml`; `lib/services/debug_service.dart`; `lib/screens/whats_new_screen.dart` | Updated `kAppVersion` to `2.9.53`. |
+
+### High-priority cleanup / refinement queue
+
+| Priority | Item | Why it matters | Suggested files |
+|----------|------|----------------|-----------------|
+| 🔴 P0 | Run and clear `flutter analyze --no-pub` errors before release builds. | Large screens/services make regressions easy; analyzer is the cheapest guardrail. | Whole repo |
+| 🔴 P0 | Reconcile docs that still say v2.9.40/2.9.41/2.9.49/2.9.51. | Defense/manuscript references are inconsistent with the current build. | `README.md`, `HOWTORUN.md`, `docs/reference/*`, `docs/status/PROJECT_STATUS.md` |
+| 🔴 P0 | Keep the FHS formula documented from code, not from stale briefings. | `score_service.dart` currently uses four 25-point components; some docs mention other weights. This can confuse panel/manuscript claims. | `docs/reference/*`, manuscript drafts |
+| 🟠 P1 | Implement action allowlist + source restrictions before expanding AI imports. | `AIChatService` validates fields, but an explicit allowlist/source policy would reduce prompt-injection and malformed OCR risk. | `ai_chat_service.dart`, `ai_screen.dart`, import flows |
+| 🟠 P1 | Add first-time AI financial advice disclaimer. | About screen disclaimer is easy to miss; one-time advice-tier dialog helps RA 11765/responsible-AI positioning. | `ai_screen.dart`, `ai_chat_service.dart`, `DBService` setting |
+| 🟠 P1 | Add low-confidence AI explanation/review prompt. | `confidence_score` exists, but users need clearer guidance when AI is uncertain. | `expense_tile.dart`, `edit_expense_screen.dart`, `ai_screen.dart` |
+| 🟠 P1 | Build Safe-to-Spend card. | This remains the strongest BudgetPH/payday-cycle gap; payday countdown alone does not reserve bills/goals/debts. | `home_screen.dart`, `db_service.dart` |
+| 🟡 P2 | Clarify Android share-intent status. | Code inspection found clipboard parsing, but no `ACTION_SEND` receiver or `receive_sharing_intent` package. Do not describe share intent as implemented until wired. | `android/app/src/main/AndroidManifest.xml`, `MainActivity.kt`, `ai_screen.dart` or `bank_import_screen.dart` |
+| 🟡 P2 | Extract or test high-risk monoliths gradually. | `home_screen.dart`, `analytics_screen.dart`, `ai_screen.dart`, `db_service.dart`, and `ai_chat_service.dart` are very large; future changes need smaller helper methods and focused tests. | Same files, `test/` |
+| 🟡 P2 | Replace placeholder tests with focused service tests. | Current widget test only checks `1 + 1`; no guard around FHS, recurring date advancement, category evidence, or backup schema. | `test/` |
 
 ---
 
@@ -68,8 +100,11 @@ Use these everywhere. Many docs are stale.
 | 6 | Tags analytics "By Tag" | Analytics; tag filter in Transactions; in CSV export |
 | 7 | "Afford This?" calculator | Home → Log Expense sheet |
 | 8 | Offline AI insight cache | Home AI Insights (shows cached with date on quota error) |
+| 8B | Analytics AI cache fallback | Analytics AI Advice + Monthly Summary cache fallback |
 | 9 | Net Worth tracker | Profile screen; wallet-based; FHS sparkline |
 | 12 | Filtered export | Transactions → ⬇ exports current filtered list |
+| 13 | Income prediction / Payday countdown card | Home → `_buildPaydayCountdownCard()` (v2.9.52) |
+| 14 | AI chat history export | AI screen → ⋮ → Export Chat History (v2.9.52) |
 
 ---
 
@@ -77,10 +112,9 @@ Use these everywhere. Many docs are stale.
 
 | # | Feature | What exists | What's still missing | Priority |
 |---|---------|-------------|---------------------|----------|
-| 1 | Smart Recurring Detector | Quarterly/yearly/semi-annual detection (400-day lookback); insurance keyword → Bills | (a) Semester interval ~120–135 days; (b) "Add to Insurance Tracker?" UI prompt on insurance-keyword detection | 🟡 |
+| 1 | Smart Recurring Detector | Quarterly/yearly/semi-annual/semester detection (400-day lookback); insurance keyword → Bills | "Add to Insurance Tracker?" UI prompt on insurance-keyword detection | 🟡 |
 | 3 | Spending heatmap | Day-of-week 7-column heatmap + 5-week calendar in Analytics | Full monthly GitHub-style per-date grid (28–31 cells, date-specific coloring) | 🟡 |
-| 4 | SMS/notification listener | Clipboard paste-to-parse; share-intent detection; clipboard nudge banner | **⚠️ READ_SMS is blocked by Google Play policy** — apps must be the default SMS handler. This is NOT feasible for a finance tracker on Play Store. Reframe as "GCash notification deep-link" via Android Notification Listener instead. | 🔴 Policy issue — redesign needed |
-| 8 | Offline AI cache — Analytics | Home insight cached with date | Analytics "AI Advice" and "Monthly Summary" don't fall back to cache | 🔥 Quick |
+| 4 | SMS/notification listener | Clipboard paste-to-parse; clipboard nudge banner | **⚠️ READ_SMS is blocked by Google Play policy** — apps must be the default SMS handler. Android share intent and Notification Listener are separate pending features. | 🔴 Policy issue — redesign needed |
 | 9 | Net Worth trend chart | FHS sparkline as proxy | True net-worth-over-time chart using periodic snapshots (not FHS score proxy) | 🟡 |
 | 15 | Expense photo gallery | photo_path field; inline thumbnail on tiles | Dedicated gallery GridView in Hub → "Receipts" | 🟢 |
 
@@ -88,15 +122,15 @@ Use these everywhere. Many docs are stale.
 
 ---
 
-### ❌ Not Built At All
+### ✅ Recently Completed From Original 15-Item List
 
 | # | Feature | Priority | Est. effort |
 |---|---------|----------|-------------|
 | 2 | "Day in Review" end-of-day card | ✅ **Implemented v2.9.36, verified v2.9.45** | — |
 | 10 | Savings rate trend chart (6-month line) | ✅ **Implemented v2.9.45** | — |
 | 11 | Quick budget slider (long-press) | ✅ **Implemented v2.9.45** | — |
-| 13 | Income prediction / Payday countdown card | 🟡 | ~3h |
-| 14 | AI chat history export | 🟡 | ~3h |
+| 13 | Income prediction / Payday countdown card | ✅ **Implemented v2.9.52** | — |
+| 14 | AI chat history export | ✅ **Implemented v2.9.52** | — |
 
 ---
 
@@ -135,6 +169,9 @@ Use these everywhere. Many docs are stale.
 | Payday Cycle filter | Current | Analytics |
 | Round-trip fare logger | Current | Log choice sheet |
 | Multi-period spending limits | Current | Profile → Spending Limits |
+| Auto-categorization evidence threshold | v2.9.52 | `DBService.getMostFrequentCategoryForItem()` + `AIChatService._resolveCategory()` |
+| Monthly recap alert | v2.9.52 | `StartupAlertsService.checkAlerts()` |
+| Semester recurring interval | v2.9.52 | `DBService.detectRecurringCandidates()` + `RecurringHelper._advanceDate()` |
 
 ---
 
@@ -147,8 +184,7 @@ Use these everywhere. Many docs are stale.
 | SQLite encryption | Plain SQLite | sqlcipher integration | 🟢 Post-capstone |
 | Backend API proxy | Key in APK (mitigated by rate limit) | Cloud Functions proxy | 🟡 Pre–Play Store |
 | App Check enforcement | Monitoring mode | Enforcement mode (before Play Store) | 🟡 Pre–Play Store |
-| Auto-categorization intelligence | Keyword-match rules + user-defined rules | YNAB-style "two-of-three evidence" before changing a category (YNAB June 2026 update) — prevents AI miscategorization from overriding a known category | 🟡 Medium |
-| Notification Listener (replaces READ_SMS) | Clipboard paste; share-intent | `NotificationListenerService` — reads GCash/bank notification text non-destructively; user grants access in Android Accessibility settings; Play Store compliant | 🟡 Medium |
+| Notification Listener (replaces READ_SMS) | Clipboard paste; no Android share-intent receiver yet | `NotificationListenerService` — reads GCash/bank notification text non-destructively; user grants access in Android Accessibility settings; Play Store compliant | 🟡 Medium |
 
 ---
 
@@ -502,18 +538,19 @@ Based on research and internal audit, these items from the previous backlog need
 | Feature | Effort | Why now |
 |---------|--------|---------|
 | **Safe-to-Spend number (5A)** | ~1 day | Biggest competitive gap vs BudgetPH; prominent on Home; strong demo talking point |
-| **Income prediction / Payday countdown (#13)** | ~3h | Uses existing DB data; relevant for student account type (your profile) |
-| **Auto-categorization evidence threshold (5C)** | ~1 day | Debug log shows AI already miscategorizes items — prevents drift, YNAB comparison point |
-| **"What Changed?" monthly delta notification (5D)** | ~2h | Reuses rollover detection; no AI call; very quick win |
-| **AI chat history export (#14)** | ~3h | Rounds out the existing expense export; low risk |
+| **Action allowlist + source restrictions (15B)** | ~3h | Hardens AI actions before adding more OCR/share/import entry points |
+| **First-time AI advice disclaimer (15C)** | 30min | Quick compliance/trust win for financial advice responses |
+| **AI confidence explainability banner (15H)** | ~1h | Uses existing `confidence_score`; helps users review uncertain logs |
+| **Document/version reconciliation** | ~1–2h | README/HOWTORUN/reference docs still disagree with v2.9.53 |
 
 ### 🟠 Queue After Above — Also Before Final Defense
 
 | Feature | Effort | Notes |
 |---------|--------|-------|
 | Proactive AI nudge notifications (5B) | ~2 days | Rocket Money/Rowan comparison; uses existing flutter_local_notifications |
-| Semester interval in recurring detector (#1a) | ~1h | Tiny additive fix to existing recurring detector |
 | Expense Correction Suggestions (5E) | ~1 day | Data quality sweep; Hub badge; uses existing update_expense action |
+| GCash/Bank share intent receiver (15D) | ~3h | Register Android `ACTION_SEND`, route shared text into existing import/parse flow |
+| Chat history token compression (15A) | ~2h | Current summarization exists, but token-window compression before each request still needs verification/refinement |
 
 ### ⏸ Defer — Medium/Low Priority
 
@@ -552,13 +589,13 @@ This section documents potential contradictions between new planned features and
 |-------------|-------------------|-----------|
 | Safe-to-Spend (5A) | May confuse users vs existing Cash Flow card and Net Worth card | Cash Flow = month view; Net Worth = all-time; Safe-to-Spend = current pay cycle. Show Safe-to-Spend only in income/wallet mode, only when payday_date is set. Add a clear label distinguishing it from other cards. |
 | Proactive nudge notifications (5B) | Startup alerts already fire on app open for budget/overdue/score-drop | Startup alerts = reactive (something already happened). Proactive nudges = forward-looking (something is coming). Keep them in separate notification channels. Add "Proactive Nudges" toggle in App Settings separate from existing alert toggles. |
-| Auto-categorization evidence threshold (5C) | User-defined rules in the Auto-Categorization Rules screen | Priority order: (1) User-defined rules (highest), (2) Historical majority category (new), (3) AI suggestion. This never overrides user rules — only adds a safety net against AI drift. |
+| Auto-categorization evidence threshold (5C) | User-defined rules in the Auto-Categorization Rules screen | ✅ Implemented v2.9.52. Current priority order: user-defined rules first, then historical majority, then AI/keyword fallback. |
 | Notification Listener (revised #4) | Clipboard nudge banner already exists | These are different: clipboard = user manually copied text; notification listener = automatic detection of incoming app notifications. Both can coexist. If notification listener is active, the clipboard banner can be suppressed for the same transaction. |
 | Quick budget slider (#11) | % of income budget mode | Slider only activates for fixed ₱ budgets. % mode uses existing dialog. Long-press on a % budget shows a tooltip explaining why the slider is not shown. |
 | Savings rate trend chart (#10) | FHS score history line chart already in Analytics | These are different metrics on different scales. FHS is 0–100; savings rate % is 0–100% but means something different. They can coexist in Analytics. Consider putting savings rate chart inside the FHS section as a drill-down. |
 | Monthly heatmap calendar (#3) | Existing 5-week heatmap and day-of-week heatmap | The 5-week version shows actual calendar weeks. The day-of-week version shows aggregate averages. A full monthly GitHub-style view would replace/upgrade the 5-week version, not conflict with the day-of-week aggregate. |
 | Price Pulse / PSA API (Part 4) | Exchange rate fetching already uses a similar caching pattern | Price cache uses the same `settings` table pattern as exchange rates. Just add a new set of keys. No structural conflict. |
-| "What Changed?" notification (5D) | Rollover logic runs at month start and already fires alerts | This notification is a single summary push, not an interactive alert. Use the existing `rollover_applied_month` detection as the trigger but fire a notification instead of (or in addition to) the rollover calculation. |
+| "What Changed?" monthly recap (5D) | Rollover logic runs at month start and already fires alerts | ✅ Implemented v2.9.52 as a startup alert gated by `show_monthly_recap`. Future work: optional push notification variant. |
 | Investment tracker (5F) | PCA/MP2 calculator already exists in Analytics | PCA calculator is a planning tool (how much to contribute). An investment tracker is a balance tracker (how much you have). They answer different questions and don't conflict. |
 
 ---
@@ -1419,15 +1456,16 @@ At this pace: ₱11,200 by payday (under ₱12,000 ✅)
 | Priority | Feature | Effort | Why it matters |
 |---|---|---|---|
 | 🔥 1 | **Safe-to-Spend number** (5A) | ~1 day | Closes BudgetPH's biggest gap; strong demo moment |
-| 🔥 2 | **Payday Countdown Widget** (12F) | ~2h | Completes payday-cycle story; quick win |
-| 🔥 3 | **Income prediction / Payday countdown** (#13) | ~3h | Adds forward-looking card; differentiates from BudgetPH |
-| 🟠 4 | **"What Changed?" monthly notification** (5D) | ~2h | Pure DB, no AI, impressive proactivity |
-| 🟠 5 | **AI chat history export** (#14) | ~3h | Useful for SUS survey respondents |
-| 🟠 6 | **Auto-categorization evidence threshold** (5C) | ~1 day | Fixes known AI annoyance; good paper contribution |
-| 🟠 7 | **Proactive AI nudge notifications** (5B) | ~2 days | Rowan-style; strong competitive differentiator |
-| 🟡 8 | **Quick Income Log chip** (12B) | ~1h | Student UX — easy win |
-| 🟡 9 | **Expense Undo History card** (12C) | ~2h | Reduces user frustration with AI logging |
-| 🟡 10 | **Spending Accountability Partner** (12A) | ~2h | Gamification layer; supports behavioral theory |
+| 🔥 2 | **Action allowlist + source restrictions** (15B) | ~3h | Security hardening before more import surfaces |
+| 🔥 3 | **First-time AI advice disclaimer** (15C) | 30min | Trust/compliance for financial advice |
+| 🟠 4 | **AI confidence explainability banner** (15H) | ~1h | Makes low-confidence AI logs reviewable |
+| 🟠 5 | **Proactive AI nudge notifications** (5B) | ~2 days | Rowan-style; strong competitive differentiator |
+| 🟠 6 | **GCash/Bank share intent receiver** (15D) | ~3h | Lets users share transaction text into SmartSpend instead of manual copy/paste |
+| 🟡 7 | **Quick Income Log chip** (12B) | ~1h | Student UX — easy win |
+| 🟡 8 | **Expense Undo History card** (12C) | ~2h | Reduces user frustration with AI logging |
+| 🟡 9 | **Spending Accountability Partner** (12A) | ~2h | Gamification layer; supports behavioral theory |
+
+**Already implemented since this table was first drafted:** Payday Countdown Widget / Income Prediction (#13), "What Changed?" monthly recap (5D), AI chat history export (#14), auto-categorization evidence threshold (5C), semester recurring detection (#1a).
 
 **Docs:**
 - [ ] SUS survey — 30 respondents (Djaunathan)
@@ -1444,7 +1482,6 @@ At this pace: ₱11,200 by payday (under ₱12,000 ✅)
 |---|---|---|
 | Price Intelligence / Price Pulse (Part 4) | ~2 weeks | PSA API + personal inflation; strong academic contribution |
 | Notification Listener for GCash | ~2 days | Play Store compliant alternative to READ_SMS |
-| Semester interval recurring detection (#1a) | ~1h | Student-specific |
 | Monthly GitHub-style heatmap (#3) | ~1 day | Full per-date grid |
 | Photo gallery screen (#15) | ~3h | Hub → Receipts GridView |
 | Expense Correction Suggestions (5E) | ~1 day | Data quality sweep |
@@ -1830,16 +1867,14 @@ With 20% more savings/month: 26 years (age 46)
 | 15I | OFxPERA readiness note (docs only) | 30min | Documentation |
 | 15A | Chat history token compression | 2h | Performance |
 | 12B | Quick Income Log chip | 1h | UX |
-| 12F | Payday Countdown Widget | 2h | Feature |
 | 12A | Spending Accountability Partner (weekly push) | 2h | Gamification |
 | 12C | Expense Undo History card | 2h | UX |
 | 15D | GCash Share Intent receiver | 3h | Platform |
 | 15B | Action source restriction + allowlist | 3h | Security |
-| 13 | Income prediction / Payday countdown | 3h | Feature |
-| 14 | AI chat history export | 3h | Feature |
 | 5A | Safe-to-Spend number | 1 day | Feature (BudgetPH gap) |
-| 5C | Auto-categorization evidence threshold | 1 day | AI quality |
 | 5B | Proactive AI nudge notifications | 2 days | Engagement |
+
+**Moved out of this queue as already implemented:** `12F` / `13` Payday Countdown, `14` AI chat history export, `5C` auto-categorization evidence threshold, `5D` monthly recap alert, semester recurring interval, Analytics AI cache fallback.
 
 #### 🟢 Post-Capstone v3.x (sorted by effort asc)
 
