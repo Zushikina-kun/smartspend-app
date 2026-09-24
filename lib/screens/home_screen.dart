@@ -2147,7 +2147,9 @@ class _DashboardState extends State<Dashboard> {
     // Only computed in income/wallet mode.
     if (incomeWalletMode) {
       try {
-        final walletTotal = _wallets.fold<double>(
+        // Fetch wallets directly — _wallets state var loads separately/later
+        final wallets = await DBService.getWallets();
+        final walletTotal = wallets.fold<double>(
             0, (s, w) => s + (w['balance'] as num).toDouble());
 
         // Determine the window: today → next expected income date
