@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.56';
-  static const _prefKey = 'whats_new_seen_2_9_56';
+  static const _version = '2.9.57';
+  static const _prefKey = 'whats_new_seen_2_9_57';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,15 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '💬',
+      'AI Chat Chips No Longer Overlap Input (v2.9.57)',
+      'Fixed: on small screens, the suggestion chips ("How am I doing '
+          'this month?", "What if I cut Food by ₱500/month?", etc.) would '
+          'overlap the text input field when the keyboard was open. The '
+          'chips area is now scrollable, and the input bar nav clearance '
+          'was also corrected to use viewPadding instead of padding.',
+    ),
     (
       '🛡️',
       'AI Resilience Fix (v2.9.56)',
