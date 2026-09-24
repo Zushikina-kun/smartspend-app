@@ -2711,7 +2711,9 @@ class _AIScreenState extends State<AIScreen> {
             child: _messages.isEmpty && !_contextLoaded
                 ? const Center(child: CircularProgressIndicator())
                 : _messages.isEmpty
-                    ? Center(
+                    ? SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 24),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -3016,10 +3018,12 @@ class _AIScreenState extends State<AIScreen> {
                 // When keyboard is open: ride on top of it.
                 // When keyboard is closed: still need to clear the system
                 // navigation bar (3-button or gesture handle) by adding
-                // MediaQuery.padding.bottom on top of the base 8px.
+                // MediaQuery.viewPadding.bottom on top of the base 8px.
+                // Use viewPadding (not padding) — padding.bottom can be 0
+                // when the keyboard is open in edgeToEdge mode.
                 bottom: MediaQuery.of(context).viewInsets.bottom > 0
                     ? MediaQuery.of(context).viewInsets.bottom + 8
-                    : MediaQuery.of(context).padding.bottom + 8,
+                    : MediaQuery.of(context).viewPadding.bottom + 8,
               ),
               child: Row(
                 children: [
