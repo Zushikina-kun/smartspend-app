@@ -146,6 +146,8 @@ class StartupAlertsService {
       final lastMonth =
           '${lastMonthDate.year}-${lastMonthDate.month.toString().padLeft(2, '0')}';
       await DBService.applyMonthlyRollover(lastMonth);
+      // ← Write the key AFTER applying so the guard works next time
+      await DBService.setSetting('rollover_applied_month', thisMonth);
     } catch (_) {} // silent
   }
 
