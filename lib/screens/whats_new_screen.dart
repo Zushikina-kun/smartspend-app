@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.59';
-  static const _prefKey = 'whats_new_seen_2_9_59';
+  static const _version = '2.9.60';
+  static const _prefKey = 'whats_new_seen_2_9_60';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,6 +20,13 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
+      '🤖',
+      'Auto Model Now Default for All Users (v2.9.60)',
+      'If you upgraded from v2.9.49 or earlier, the app now automatically '
+          'switches you to Auto (Recommended) once. No need to manually go '
+          'into Settings — Auto routes each task to the best available model.',
+    ),
+    (
       '💚',
       'Safe to Spend (v2.9.59)',
       'New card on the Home screen showing how much you can spend freely '
@@ -29,20 +36,20 @@ class WhatsNewScreen extends StatelessWidget {
     ),
     (
       '⚠️',
-      'AI Advice Disclaimer (v2.9.59)',
+      'AI Advice Disclaimer (v2.9.60)',
       'A one-time dialog now appears before the first financial advice '
           'response — clarifying that Peso is not a licensed financial adviser. '
           'Shown once per account and never again.',
     ),
     (
       '🔍',
-      'AI Confidence Review Badge (v2.9.59)',
+      'AI Confidence Review Badge (v2.9.60)',
       'Expense tiles logged by AI with low confidence (< 70%) now show '
           'a small "Review" badge. Tapping it explains why and opens Edit.',
     ),
     (
       '📤',
-      'Share from GCash / Any App (v2.9.59)',
+      'Share from GCash / Any App (v2.9.60)',
       'SmartSpend now appears in the Android share sheet. Share any '
           'transaction text from GCash, Maya, or your bank app directly '
           'into the AI chat — it routes to the same clipboard nudge flow.',
