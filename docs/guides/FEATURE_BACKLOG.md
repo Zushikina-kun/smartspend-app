@@ -567,6 +567,7 @@ Based on research and internal audit, these items from the previous backlog need
 
 | Feature | Effort | Notes |
 |---------|--------|-------|
+| **Experience Presets — Lite / Casual / Normal / Pro (5G)** | ~1 day | See Part 5G below for full spec |
 | **Tablet / large-screen layout** | ~1 week | App currently works on tablets but doesn't use the extra space — all screens are single-column. Add responsive breakpoints: side-by-side panels on tablets (e.g. Home + Analytics side by side), wider card grids, larger chart areas. Use `LayoutBuilder` + breakpoint at ~600dp. |
 | **Tappable chart type switcher** | ~1 day | Analytics charts are fixed types. Let users tap a chart to cycle through types: pie → bar → line → donut. Each tap rotates to next type, saves preference per chart. Low effort since fl_chart already handles all types; just need state + animation. |
 | **Landscape orientation support** | ~2 days | App is portrait-locked (no explicit lock, but layouts assume portrait). Landscape mode breaks the home screen card stack. Add `OrientationBuilder` guards on key screens or set preferred orientations per screen. |
@@ -1929,3 +1930,266 @@ NielsenIQ Philippines 2026 Consumer Report, BSP Open Finance/OFxPERA framework,
 PSA FIES 2024, Competitor analysis (Finanzya, Rocket Money Rowan),
 Cisco AI Literacy Framework (responsible AI principles).*
 *Content paraphrased for compliance with licensing restrictions.*
+
+---
+
+## Part 16 — Experience Presets & UI Mode System (September 2026)
+
+**Added:** September 27, 2026
+**Status:** Planned — post-capstone priority (v3.x)
+**Effort:** ~1.5 days (implementation) + ~0.5 days (migration logic)
+
+---
+
+### 16A — What This Is
+
+**Context:** SmartSpend currently has one preset — "Lite Mode" — which hides all 14 optional sections at once. The user request is to expand this into a graduated **multi-level experience system** similar to how productivity apps (Notion, Linear, Bear) and finance apps (Copilot, Monarch) handle progressive disclosure: new users start simple, power users unlock more.
+
+**Research basis:**
+- Progressive disclosure is the #1 UX recommendation for finance apps in 2026 ([g-co.agency/insights](https://www.g-co.agency/insights/the-best-ux-design-practices-for-finance-apps), 2026)
+- Rocket Money succeeds with simplicity/automation; YNAB succeeds with hands-on detail — users self-select into one approach ([financebuzz.com](https://financebuzz.com/rocket-money-vs-ynab))
+- Agila offers Personal vs Business profiles (separate mode switching), not a complexity ladder
+- PISO Budget Tracker's no-frills offline positioning appeals to users overwhelmed by feature-rich apps
+- Kiro's own Auto/Supervised modes are a direct analogy: same capability, different levels of user control
+
+**User types SmartSpend serves:**
+| Type | Description | Needs |
+|------|-------------|-------|
+| **New user / student** | First finance app, overwhelmed, just wants to log spending | Minimal cards, no jargon, no FHS breakdown, guided logging |
+| **Casual user** | Logs regularly, checks monthly totals, uses budgets | Core tracking + budgets + basic charts, moderate card count |
+| **Normal user** | Active tracker, uses goals/debts/recurring, checks FHS | Most features visible, some advanced cards |
+| **Power user** | Wants everything — all analytics, all cards, AI advice, all tools | Full feature set, no hiding, detailed FHS breakdown |
+
+---
+
+### 16B — Proposed Preset System
+
+**Replace** the current binary "Lite Mode" toggle with a **4-level preset selector** in Quick Presets. Lite Mode becomes the "Lite" preset.
+
+| Preset | Emoji | Who it's for | Home cards visible | Analytics visible |
+|--------|-------|-------------|-------------------|------------------|
+| **Lite** | 🪶 | Brand new users, overwhelmed users | Balance card + FHS + Recent expenses only | Pie chart only |
+| **Casual** | 😊 | Students, occasional trackers | + Quick log + Badges + Day in Review | + Want vs Need + By Tag |
+| **Normal** | ⚖️ | Regular users (current default) | + Wallet + Payday + Safe-to-Spend + Subscription + Forecast | + 50/30/20 + DTI + Emergency fund |
+| **Pro** | 🚀 | Power users, heavy analysts | Everything — all 14 optional sections | Everything including Market Insights + Milestones |
+
+**Setting key:** `experience_preset` (values: `'lite'`, `'casual'`, `'normal'`, `'pro'`)
+**Default for new installs:** `'normal'`
+**Migration for existing users:** Map current Lite Mode state → if `liteMode == true` → `'lite'`; else → `'normal'`
+
+---
+
+### 16C — Exact Feature Mapping Per Preset
+
+#### Home screen cards
+
+| Card / Setting key | Lite 🪶 | Casual 😊 | Normal ⚖️ | Pro 🚀 |
+|-------------------|---------|-----------|-----------|--------|
+| Balance / spending summary | ✅ always | ✅ | ✅ | ✅ |
+| FHS score | ✅ always | ✅ | ✅ | ✅ |
+| Recent expenses | ✅ always | ✅ | ✅ | ✅ |
+| Quick log chips (`show_quick_log`) | ❌ | ✅ | ✅ | ✅ |
+| Badges row (`show_badges`) | ❌ | ✅ | ✅ | ✅ |
+| Daily & weekly challenges (`show_challenges`) | ❌ | ✅ | ✅ | ✅ |
+| Day in Review (time-based) | ❌ | ✅ | ✅ | ✅ |
+| Mood check-in (`show_mood_home`) | ❌ | ❌ | ✅ | ✅ |
+| Wallet summary card | ❌ | ❌ | ✅ | ✅ |
+| Log Allowance button | ❌ | ❌ | ✅ | ✅ |
+| Payday countdown (`show_payday_countdown`) | ❌ | ❌ | ✅ | ✅ |
+| Safe to Spend (`show_safe_to_spend`) | ❌ | ❌ | ✅ | ✅ |
+| Subscription summary (`show_subscriptions`) | ❌ | ❌ | ✅ | ✅ |
+| Cash flow forecast (`show_forecast`) | ❌ | ❌ | ✅ | ✅ |
+| Behavioral prediction (`show_prediction`) | ❌ | ❌ | ❌ | ✅ |
+| Monthly recap alert (`show_monthly_recap`) | ❌ | ❌ | ✅ | ✅ |
+
+#### Analytics cards
+
+| Card / Setting key | Lite 🪶 | Casual 😊 | Normal ⚖️ | Pro 🚀 |
+|-------------------|---------|-----------|-----------|--------|
+| Pie chart (category breakdown) | ✅ always | ✅ | ✅ | ✅ |
+| Want vs Need | ❌ | ✅ | ✅ | ✅ |
+| By Tag | ❌ | ✅ | ✅ | ✅ |
+| 50/30/20 tracker | ❌ | ❌ | ✅ | ✅ |
+| DTI ratio (`show_dti`) | ❌ | ❌ | ✅ | ✅ |
+| Emergency fund calculator (`show_emergency_fund`) | ❌ | ❌ | ✅ | ✅ |
+| Financial milestones (`show_milestones`) | ❌ | ❌ | ❌ | ✅ |
+| Market insights / exchange rates (`show_market_insights`) | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+### 16D — Implementation Notes
+
+**`settings_screen.dart` changes:**
+- Replace Lite Mode `Switch` in QUICK PRESETS with a 4-button segmented selector (or `ToggleButtons` widget)
+- Each preset button applies its full set of `setSetting` calls atomically
+- Individual toggles in HOME SCREEN and ANALYTICS sections remain available — presets are a starting point, not a lock
+- Add subtitle: *"Presets adjust which cards are shown. You can still customize individually below."*
+
+**`_applyPreset(String preset)` method replaces `_applyLiteMode(bool on)`:**
+```dart
+void _applyPreset(String preset) {
+  // Set all 14 show_ settings based on the preset level
+  // Save 'experience_preset' key to DB
+  // Fire AppEvent.incomeChanged to refresh Home
+}
+```
+
+**Backward compatibility:**
+- Existing `liteMode` getter becomes: `_activePreset == 'lite'`
+- `_applyLiteMode(true)` maps to `_applyPreset('lite')`
+- Users on current Lite Mode get migrated to `'lite'` preset automatically
+
+**Settings screen display:** Show a small preview description under each preset button:
+- 🪶 Lite — *"Just the essentials"*
+- 😊 Casual — *"For regular trackers"*
+- ⚖️ Normal — *"Balanced — recommended"*  
+- 🚀 Pro — *"Everything, all at once"*
+
+**Conflict check — individual toggles still work:**
+Presets set initial values but individual toggles in the HOME SCREEN section override them. A user on Normal who wants to hide Safe-to-Spend can still toggle it off. Presets are non-destructive entry points.
+
+---
+
+### 16E — Why This is Better Than Lite Mode Alone
+
+Current Lite Mode problems:
+1. **Binary** — either everything or nothing. No middle ground.
+2. **No discovery path** — a new user on Lite Mode has no way to gradually discover features
+3. **Doesn't address cognitive load** — the real problem isn't toggle count, it's information density
+4. **Lite Mode doesn't carry context** — it doesn't explain *why* cards are hidden
+
+The preset system fixes all four:
+1. Four levels cover new → power user spectrum
+2. Users can "upgrade" their preset as they get comfortable
+3. Each preset is tuned for a specific cognitive load level
+4. The preset name (Casual, Normal, Pro) communicates the intended experience
+
+**Analogy to existing SmartSpend patterns:**
+- AI model selector: Auto → Manual (same concept — default is automatic, power users go manual)
+- Lightweight mode: off (simple) vs on (full FHS with income tracking)
+- This is the same progressive disclosure applied to the entire UI
+
+---
+
+## Part 17 — Overlap Audit & Fusion Candidates (September 2026)
+
+**Added:** September 27, 2026
+**Status:** Confirmed issues found in code audit — some are bugs, some are design decisions to revisit
+
+---
+
+### 17A — `_buildDailyLimitCard` vs `_buildSpendingLimitCard` — MERGE NEEDED
+
+**Files:** `home_screen.dart` lines ~3352 and ~3462
+
+**The problem:**
+`_buildDailyLimitCard` is the old single-value daily limit system (setting key: `daily_limit`).
+`_buildSpendingLimitCard` is the new multi-period system (daily/weekly/monthly/yearly, setting keys: `allLimits`).
+
+The display logic:
+```dart
+_buildSpendingLimitCard(context),  // always shown when any new limit is set
+if (_dailyLimit > 0 && _allLimits.values.every((v) => v == 0))
+  _buildDailyLimitCard(context),   // only shown when NEW system has NO limits at all
+```
+
+**The overlap:** A user who set `daily_limit = 250` (old system) and then later set a new daily limit sees BOTH cards. The conditional tries to prevent this but relies on `_allLimits.values.every((v) => v == 0)` which only works if the user hasn't set ANY new limits.
+
+**Recommended fix:**
+During app init / DB migration: if `daily_limit > 0` and `allLimits['daily'] == 0`, auto-migrate `daily_limit` to `allLimits['daily']` and clear `daily_limit`. Then remove `_buildDailyLimitCard` entirely — it's legacy.
+
+**Effort:** ~1h. **Priority:** 🟠 Pre-Play Store (avoids confusing users with two limit cards).
+
+---
+
+### 17B — `_buildPaydayCountdownCard` + `_buildSafeToSpendCard` — CANDIDATE FOR FUSION
+
+**Files:** `home_screen.dart` lines ~3831 and ~3956
+
+**The overlap:**
+Both cards appear right after each other in the same section of the home screen. Both are income-mode only. Both use `_nextExpectedIncome` as their reference point. They answer related but different questions:
+- Payday countdown: *"When is my next income?"*
+- Safe-to-Spend: *"How much can I spend before then?"*
+
+**The case for keeping them separate:** They're genuinely different metrics. Payday countdown is forward-looking (time). Safe-to-Spend is financial (amount). Some users want the date, others want the number. Showing both is fine — as long as they don't look like duplicates.
+
+**The case for fusion:** Two cards in a row about the same pay cycle creates visual noise. A single combined card could show both: "💚 ₱1,240 safe to spend · Next income in 18 days."
+
+**Recommended approach for v3.x:** Keep both as separate toggles but offer a "compact combined view" setting that merges them into one row. Don't break existing behavior in v2.x.
+
+**Effort:** ~3h for combined view. **Priority:** 🟢 Post-capstone.
+
+---
+
+### 17C — `_buildCashFlowCard` + `_buildPredictionCard` — CANDIDATE FOR TAB FUSION
+
+**Files:** `home_screen.dart` lines ~4119 and ~4255
+
+**The overlap:**
+- Cash Flow card: income vs spent vs projected remaining (data-driven, current month)
+- Prediction card: AI end-of-month forecast (AI-driven, probabilistic)
+
+Both are controlled by separate toggles (`show_forecast` and `show_prediction`) and shown one after the other. A user with both on sees two cards about the same topic — "how will this month end?"
+
+**Recommended approach:** Combine into a single `_buildOutlookCard` with two tabs:
+- Tab 1: "Cash Flow" (current data-driven view)
+- Tab 2: "AI Forecast" (AI prediction)
+
+This reduces card count from 2 to 1 and makes the relationship clear. The tab preference can be persisted per user.
+
+**Effort:** ~2h. **Priority:** 🟡 Medium (v3.x).
+
+---
+
+### 17D — `mood_checkin_enabled` vs `show_mood_home` — CONSOLIDATION NEEDED
+
+**Files:** `settings_screen.dart`
+
+**The problem:** Two separate settings for the mood feature:
+- `mood_checkin_enabled` — system-wide toggle ("does the mood check-in system work at all?")
+- `show_mood_home` — home screen visibility toggle ("is the mood card shown on Home?")
+
+If `mood_checkin_enabled = false` but `show_mood_home = true`, the card appears but does nothing when tapped. Confusing.
+
+**Current behavior check needed:** Does the mood card check `mood_checkin_enabled` before showing, or only `show_mood_home`?
+
+**Recommended fix:** Merge into a single `show_mood_home` toggle. Removing the card IS disabling the feature — there's no global "mood system" outside of the Home card. The `mood_checkin_enabled` key can be kept for the notification/startup check but should mirror `show_mood_home` value.
+
+**Effort:** ~30 min. **Priority:** 🟡 Medium (small but confusing).
+
+---
+
+### 17E — Lite Mode → Experience Presets Migration
+
+See Part 16. The current `liteMode` getter and `_applyLiteMode()` should be replaced by `_applyPreset('lite')` and `_activePreset == 'lite'`. This is a planned v3.x refactor.
+
+---
+
+### 17F — `preferred_model` vs `active_model_id` — REDUNDANT KEYS
+
+**Files:** `settings_screen.dart` line 814, `app_config.dart`
+
+`settings_screen.dart` writes BOTH `preferred_model` AND `active_model_id` when user taps a model. `app_config.dart` only reads `active_model_id`. So `preferred_model` is a dead write that wastes a DB call.
+
+**Recommended fix:** Remove the `DBService.setSetting('preferred_model', m.$1)` line in `settings_screen.dart`. `AppConfig.setModel()` already calls `_saveActiveModel()` which writes `active_model_id`.
+
+**Effort:** 1 line deletion. **Priority:** 🟢 Low (no user impact, just clutter).
+
+---
+
+### 17G — Summary Table
+
+| Overlap / Issue | Type | Priority | Effort | Action |
+|----------------|------|----------|--------|--------|
+| Daily limit card vs Spending limit card | Bug / duplicate UI | 🟠 Pre-Play Store | ~1h | Migrate old `daily_limit` to new system, remove legacy card |
+| Payday countdown + Safe-to-Spend (adjacent) | Design — optional fusion | 🟢 Post-capstone | ~3h | Combined compact card as optional view |
+| Cash Flow + Prediction card (adjacent) | Design — fusion | 🟡 Medium | ~2h | Single `_buildOutlookCard` with tabs |
+| `mood_checkin_enabled` vs `show_mood_home` | Settings confusion | 🟡 Medium | ~30 min | Consolidate to one toggle |
+| Lite Mode vs Experience Presets | Architecture | 🟢 v3.x | ~1.5 days | Replace Lite Mode with 4-preset system (Part 16) |
+| `preferred_model` dead write | Code clutter | 🟢 Low | 1 line | Delete redundant `setSetting` call |
+
+---
+
+*Part 16 and 17 added September 27, 2026.*
+*Research sources: g-co.agency UX practices (2026), financebuzz.com YNAB vs Rocket Money (2026),
+procreator.design finance app design (2026). Content paraphrased for compliance.*
