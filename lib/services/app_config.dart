@@ -367,16 +367,25 @@ class AppConfig {
     // 1. Apply safe default before anything else — Auto mode picks best at runtime
     _activeModelId = 'auto';
 
-    // 2. Restore last-used model (user preference OR last auto-fallback).
-    //    Keys are no longer stored in source — fingerprint check is skipped
-    //    since _fallbackGeminiKey is always empty now. The model preference
-    //    is restored unconditionally; a fresh Remote Config fetch in step 3
-    //    will provide real keys regardless.
+    // 2. One-time migration: reset to 'auto' for users upgrading from before v2.9.50.
+    //    v2.9.50 introduced Auto mode as the first entry in availableModels.
+    //    Users who upgraded from v2.9.49 or earlier have 'gemini_flash_lite' (or
+    //    another pre-auto model) saved in DB. We reset them to 'auto' exactly once
+    //    so they benefit from the new dynamic routing without having to manually switch.
     try {
-      final saved = await DBService.getSetting('active_model_id');
-      final validIds = availableModels.map((m) => m.$1).toSet();
-      if (saved != null && validIds.contains(saved)) {
-        _activeModelId = saved;
+      final migDone = await DBService.getSetting('model_migration_v2950_done');
+      if (migDone == null) {
+        // First run after v2.9.50+ — reset to auto regardless of saved model
+        _activeModelId = 'auto';
+        await DBService.setSetting('active_model_id', 'auto');
+        await DBService.setSetting('model_migration_v2950_done', 'true');
+      } else {
+        // Migration already ran — restore the user's last chosen model
+        final saved = await DBService.getSetting('active_model_id');
+        final validIds = availableModels.map((m) => m.$1).toSet();
+        if (saved != null && validIds.contains(saved)) {
+          _activeModelId = saved;
+        }
       }
     } catch (_) {}
 
