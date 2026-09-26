@@ -871,6 +871,9 @@ class _AIScreenState extends State<AIScreen> {
               if (expenseDate !=
                   DateTime.now().toIso8601String().substring(0, 10))
                 throw Exception('backdated');
+              // Optional confirm-before-deduct (same as manual entry)
+              final confirmDeduct =
+                  await DBService.getSetting('wallet_confirm_deduct') == 'true';
               final paymentMethod =
                   action.params['payment_method'] as String? ?? 'Cash';
               String? walletName;
@@ -888,6 +891,28 @@ class _AIScreenState extends State<AIScreen> {
               if (walletName != null) {
                 final wallet = await DBService.findWalletByName(walletName);
                 if (wallet != null && (wallet['balance'] as num) > 0) {
+                  // Optional confirm-before-deduct dialog
+                  if (confirmDeduct && mounted) {
+                    final bal = (wallet['balance'] as num).toDouble();
+                    final proceed = await showDialog<bool>(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Deduct from wallet?'),
+                        content: Text(
+                            'Deduct ${CurrencyService.format(amount)} from '
+                            '$walletName?\n\nCurrent balance: ${CurrencyService.format(bal)}'),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Skip')),
+                          FilledButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text('Deduct')),
+                        ],
+                      ),
+                    );
+                    if (proceed != true) throw Exception('user_skipped');
+                  }
                   final oldBal = (wallet['balance'] as num).toDouble();
                   final newBal = (oldBal - amount).clamp(0.0, double.infinity);
                   await DBService.setWalletBalance(wallet['id'] as int, newBal);
@@ -1989,7 +2014,7 @@ class _AIScreenState extends State<AIScreen> {
               ...AppConfig.availableModels.map((m) {
                 final isActive = AppConfig.activeModelId == m.$1;
                 final isGroqLimited =
-                    m.$1 == 'groq_llama' && AppConfig.groqLimitReached;
+                    m.$1.startsWith('groq_') && AppConfig.groqLimitReached;
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: CircleAvatar(
