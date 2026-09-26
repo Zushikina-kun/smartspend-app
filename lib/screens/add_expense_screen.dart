@@ -9,6 +9,7 @@ import '../services/ai_chat_service.dart';
 import '../services/item_catalog_service.dart';
 import '../services/merchant_normalization_service.dart';
 import '../services/event_bus.dart';
+import '../services/currency_service.dart';
 import '../models/budget.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
@@ -606,6 +607,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             await DBService.getSetting('wallet_auto_deduct');
         if (autoDeductSetting == 'false') throw Exception('disabled');
         if (isBackdated) throw Exception('backdated'); // skip for past dates
+        // Optional confirm-before-deduct mode
+        final confirmDeduct =
+            await DBService.getSetting('wallet_confirm_deduct') == 'true';
         String? walletName;
         if (_selectedPayment == 'Cash')
           walletName = 'Cash on Hand';
@@ -619,6 +623,27 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         if (walletName != null) {
           final wallet = await DBService.findWalletByName(walletName);
           if (wallet != null && (wallet['balance'] as num) > 0) {
+            // Optional: ask user before deducting
+            if (confirmDeduct && mounted) {
+              final bal = (wallet['balance'] as num).toDouble();
+              final proceed = await showDialog<bool>(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('Deduct from wallet?'),
+                  content: Text('Deduct ${CurrencyService.format(amount)} from '
+                      '$walletName?\n\nCurrent balance: ${CurrencyService.format(bal)}'),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Skip')),
+                    FilledButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Deduct')),
+                  ],
+                ),
+              );
+              if (proceed != true) throw Exception('user_skipped');
+            }
             final oldBal = (wallet['balance'] as num).toDouble();
             final newBal = (oldBal - amount).clamp(0.0, double.infinity);
             await DBService.setWalletBalance(wallet['id'] as int, newBal);

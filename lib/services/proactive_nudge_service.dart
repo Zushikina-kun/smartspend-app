@@ -24,6 +24,7 @@ class ProactiveNudgeService {
   static const _idGoalClose = 2003;
   static const _idIncomeStale = 2004;
   static const _idShortfallRisk = 2005;
+  static const _idSavingsMilestone = 2006;
 
   static Future<void> check() async {
     try {
@@ -68,6 +69,11 @@ class ProactiveNudgeService {
 
       if (incomeWalletMode && income > 0 && walletTotal > 0) {
         await _checkShortfallRisk(expenses, income, walletTotal, now);
+      }
+
+      // Positive reinforcement — only fires when things are going well
+      if (incomeWalletMode && income > 0) {
+        await _checkSavingsMilestone(expenses, income, now);
       }
     } catch (_) {
       // Best-effort — never crash the app
@@ -208,6 +214,34 @@ class ProactiveNudgeService {
         _idShortfallRisk,
         '📉 At this pace, you may run short',
         'Projected shortfall: ${CurrencyService.format(shortfall)} before month end. Tap to check your spending.',
+      );
+    }
+  }
+
+  // ── Trigger 6: Positive — savings milestone (saving ≥20% of income) ──────
+  static Future<void> _checkSavingsMilestone(
+      List<Expense> expenses, double income, DateTime now) async {
+    final monthKey = DateFormat('yyyy-MM').format(now);
+    final milestoneKey = 'nudge_savings_milestone_$monthKey';
+    if (await DBService.getSetting(milestoneKey) != null) return;
+
+    // Only fire mid-month (day 15+) so we have enough data
+    if (now.day < 15) return;
+
+    final totalSpent = expenses.fold<double>(0, (s, e) => s + e.amount);
+    final saved = income - totalSpent;
+    final savingsRate = income > 0 ? saved / income : 0;
+
+    // Fire if saving ≥20% AND absolute amount is meaningful (≥₱200)
+    if (savingsRate >= 0.20 && saved >= 200) {
+      await DBService.setSetting(milestoneKey, 'true');
+      final pct = (savingsRate * 100).toStringAsFixed(0);
+      await _show(
+        _idSavingsMilestone,
+        '🎉 Great progress — you\'ve saved ${pct}% this month!',
+        'You\'ve spent ${CurrencyService.format(totalSpent)} out of '
+            '${CurrencyService.format(income)} — '
+            '${CurrencyService.format(saved)} saved so far. Keep it up!',
       );
     }
   }

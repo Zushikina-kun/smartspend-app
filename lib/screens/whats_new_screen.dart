@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.61';
-  static const _prefKey = 'whats_new_seen_2_9_61';
+  static const _version = '2.9.62';
+  static const _prefKey = 'whats_new_seen_2_9_62';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,34 +20,55 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
+      '💳',
+      'Wallet Confirm-Before-Deduct Option (v2.9.62)',
+      'New setting in Behavior: "Confirm before deducting" — when on, '
+          'a dialog asks "Deduct ₱X from GCash?" before each expense. '
+          'Off by default so logging stays fast. Turn it on in Settings → Behavior.',
+    ),
+    (
+      '🎉',
+      'Positive Savings Milestone Nudge (v2.9.62)',
+      'When you\'re saving ≥20% of your income mid-month, the app sends '
+          'a celebratory nudge: "Great progress — you\'ve saved 24% this month!" '
+          'Not just alerts when things go wrong.',
+    ),
+    (
+      '📊',
+      'Cash Flow + Forecast in One Tabbed Card (v2.9.62)',
+      'The Cash Flow and Spending Forecast cards are now combined into '
+          'one "Outlook" card with two tabs — tap to switch between them. '
+          'Reduces the home screen card count when both are enabled.',
+    ),
+    (
       '🔔',
-      'Smart Suggestions (v2.9.61)',
+      'Smart Suggestions (v2.9.62)',
       'The app now sends forward-looking push notifications once per day: '
           'upcoming bills (3-day warning), high spending pace, goal milestones, '
           'stale income, and shortfall risk. Toggle in Settings → Notifications.',
     ),
     (
       '🧹',
-      'Data Quality (v2.9.61)',
+      'Data Quality (v2.9.62)',
       'New "Data Quality" tool in Hub → Tools scans your expenses for issues: '
           'missing timestamps, inconsistent item names, items stuck in Others, '
           'and suspicious round AI-logged amounts. One-tap Fix All.',
     ),
     (
       '💳',
-      'Wallet Deduct Confirmation (v2.9.61)',
+      'Wallet Deduct Confirmation (v2.9.62)',
       'After manually logging an expense, a snackbar now confirms which '
           'wallet was deducted and the new balance — with an Undo button.',
     ),
     (
       '⚙️',
-      'Settings Cleanup (v2.9.61)',
+      'Settings Cleanup (v2.9.62)',
       'Removed duplicate mood toggle. Legacy daily limit auto-migrates to '
           'the new multi-period system. Minor dead code removed.',
     ),
     (
       '🤖',
-      'Auto Model Now Default for All Users (v2.9.61)',
+      'Auto Model Now Default for All Users (v2.9.62)',
       'If you upgraded from v2.9.49 or earlier, the app now automatically '
           'switches you to Auto (Recommended) once. No need to manually go '
           'into Settings — Auto routes each task to the best available model.',
@@ -62,20 +83,20 @@ class WhatsNewScreen extends StatelessWidget {
     ),
     (
       '⚠️',
-      'AI Advice Disclaimer (v2.9.61)',
+      'AI Advice Disclaimer (v2.9.62)',
       'A one-time dialog now appears before the first financial advice '
           'response — clarifying that Peso is not a licensed financial adviser. '
           'Shown once per account and never again.',
     ),
     (
       '🔍',
-      'AI Confidence Review Badge (v2.9.61)',
+      'AI Confidence Review Badge (v2.9.62)',
       'Expense tiles logged by AI with low confidence (< 70%) now show '
           'a small "Review" badge. Tapping it explains why and opens Edit.',
     ),
     (
       '📤',
-      'Share from GCash / Any App (v2.9.61)',
+      'Share from GCash / Any App (v2.9.62)',
       'SmartSpend now appears in the Android share sheet. Share any '
           'transaction text from GCash, Maya, or your bank app directly '
           'into the AI chat — it routes to the same clipboard nudge flow.',
