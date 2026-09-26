@@ -279,13 +279,13 @@ class AppConfig {
       _consecutiveFailures++;
       if (_consecutiveFailures >= 3) {
         // All auto-routing attempts failed — temporarily force Groq as base
+        // for this SESSION ONLY (do not persist — next cold start returns to auto)
         _consecutiveFailures = 0;
         _activeModelId = 'groq_llama4_scout';
-        _saveActiveModel();
-        return true; // still have providers to try
+        // Note: intentionally NOT calling _saveActiveModel() here so the
+        // fallback is session-only. Auto mode resumes on next cold start.
+        return true;
       }
-      // Stay in auto but failures are noted; _autoActualModel will pick differently
-      // on next call once Gemini failures are tracked
       return true;
     }
 
@@ -384,7 +384,15 @@ class AppConfig {
         final saved = await DBService.getSetting('active_model_id');
         final validIds = availableModels.map((m) => m.$1).toSet();
         if (saved != null && validIds.contains(saved)) {
-          _activeModelId = saved;
+          // If the saved model is a chain-fallback model (groq_* / cerebras_*),
+          // it was likely saved by an old bug where autoFallback() persisted
+          // the session fallback. Reset to 'auto' so the user isn't stuck.
+          final isStuckFallback =
+              saved.startsWith('groq_') || saved.startsWith('cerebras_');
+          _activeModelId = isStuckFallback ? 'auto' : saved;
+          if (isStuckFallback) {
+            await DBService.setSetting('active_model_id', 'auto');
+          }
         }
       }
     } catch (_) {}
@@ -412,10 +420,15 @@ class AppConfig {
       final rGemini = rc.getString('gemini_api_key');
       if (rGemini.isNotEmpty) {
         _remoteGeminiKey = rGemini;
-        // Only upgrade if user was forced off Gemini due to auth failure.
-        // Don't override 'auto' or a deliberate manual model choice.
-        if (!_activeModelId.startsWith('gemini') && _activeModelId != 'auto') {
-          _activeModelId = 'gemini_flash_lite';
+        // Keys loaded successfully — if the current model is a fallback-chain
+        // model (not Auto and not a deliberate user Gemini choice), reset to
+        // Auto so the user benefits from fresh key availability.
+        // Only reset if the model looks like it was a chain fallback:
+        // groq_*, cerebras_* are fallbacks; gemini_* and 'auto' are user choices.
+        final isChainFallback = _activeModelId.startsWith('groq_') ||
+            _activeModelId.startsWith('cerebras_');
+        if (isChainFallback) {
+          _activeModelId = 'auto';
           await _saveActiveModel();
         }
       }
