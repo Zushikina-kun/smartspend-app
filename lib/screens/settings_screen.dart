@@ -24,7 +24,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // ── Behavior ────────────────────────────────────────────────────────────────
   bool autoDeduct = true;
-  bool moodEnabled = true;
   bool impulseEnabled = true;
   bool budgetAlerts = true;
 
@@ -38,6 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // ── Notifications ───────────────────────────────────────────────────────────
   bool anomalyEnabled = true;
+  bool proactiveNudgesEnabled = true;
 
   // ── Home screen sections ────────────────────────────────────────────────────
   bool showSubscriptions = true;
@@ -82,8 +82,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadSettings() async {
     autoDeduct = (await DBService.getSetting('wallet_auto_deduct')) != 'false';
-    moodEnabled =
-        (await DBService.getSetting('mood_checkin_enabled')) != 'false';
+    // mood_checkin_enabled is now unified with show_mood_home — one toggle controls both.
+    // Migrate any existing mood_checkin_enabled=false → show_mood_home=false on first load.
+    final oldMoodKey = await DBService.getSetting('mood_checkin_enabled');
+    if (oldMoodKey == 'false') {
+      await DBService.setSetting('show_mood_home', 'false');
+      await DBService.setSetting(
+          'mood_checkin_enabled', 'true'); // clear old key
+    }
     impulseEnabled =
         (await DBService.getSetting('impulse_pause_enabled')) != 'false';
     budgetAlerts =
@@ -95,6 +101,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     incomeWalletMode = await DBService.getIncomeWalletMode();
     anomalyEnabled =
         (await DBService.getSetting('anomaly_detection_enabled')) != 'false';
+    proactiveNudgesEnabled =
+        (await DBService.getSetting('show_proactive_nudges')) != 'false';
     showSubscriptions =
         (await DBService.getSetting('show_subscriptions')) != 'false';
     showQuickLog = (await DBService.getSetting('show_quick_log')) != 'false';
@@ -418,16 +426,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (v) {
                       setState(() => autoDeduct = v);
                       _save('wallet_auto_deduct', v);
-                    },
-                  ),
-                  _tile(
-                    icon: Icons.emoji_emotions_outlined,
-                    title: 'Daily mood check-in',
-                    subtitle: 'Show mood prompt each day',
-                    value: moodEnabled,
-                    onChanged: (v) {
-                      setState(() => moodEnabled = v);
-                      _save('mood_checkin_enabled', v);
                     },
                   ),
                   _tile(
@@ -797,6 +795,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _save('anomaly_detection_enabled', v);
                     },
                   ),
+                  _tile(
+                    icon: Icons.tips_and_updates_outlined,
+                    title: 'Smart suggestions',
+                    subtitle:
+                        'Daily nudges: upcoming bills, pace alerts, goal milestones, shortfall risk',
+                    value: proactiveNudgesEnabled,
+                    onChanged: (v) {
+                      setState(() => proactiveNudgesEnabled = v);
+                      _save('show_proactive_nudges', v);
+                    },
+                  ),
                 ]),
 
                 // ── AI MODEL ─────────────────────────────────────────────────
@@ -811,7 +820,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onTap: () {
                         setState(() {});
                         AppConfig.setModel(m.$1);
-                        DBService.setSetting('preferred_model', m.$1);
+                        // Note: AppConfig.setModel() calls _saveActiveModel()
+                        // which writes 'active_model_id' — no extra DB write needed
                       },
                       borderRadius: BorderRadius.circular(14),
                       child: Container(
@@ -910,8 +920,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   _tile(
                     icon: Icons.emoji_emotions_outlined,
-                    title: 'Mood check-in (home)',
-                    subtitle: 'Daily mood prompt on the home screen',
+                    title: 'Daily mood check-in',
+                    subtitle: 'Show daily mood prompt on the home screen',
                     value: showMoodHome,
                     onChanged: (v) {
                       setState(() => showMoodHome = v);

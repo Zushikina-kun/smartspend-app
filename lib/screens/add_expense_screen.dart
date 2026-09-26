@@ -8,6 +8,7 @@ import '../services/category_service.dart';
 import '../services/ai_chat_service.dart';
 import '../services/item_catalog_service.dart';
 import '../services/merchant_normalization_service.dart';
+import '../services/event_bus.dart';
 import '../models/budget.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
@@ -618,9 +619,26 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         if (walletName != null) {
           final wallet = await DBService.findWalletByName(walletName);
           if (wallet != null && (wallet['balance'] as num) > 0) {
-            final newBal = ((wallet['balance'] as num) - amount).toDouble();
-            await DBService.setWalletBalance(
-                wallet['id'] as int, newBal.clamp(0.0, double.infinity));
+            final oldBal = (wallet['balance'] as num).toDouble();
+            final newBal = (oldBal - amount).clamp(0.0, double.infinity);
+            await DBService.setWalletBalance(wallet['id'] as int, newBal);
+            // ── Wallet deduct confirmation snackbar with undo ──────────────
+            if (mounted) {
+              final walletId = wallet['id'] as int;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('💳 Deducted from $walletName → new balance: '
+                    '₱${newBal.toStringAsFixed(2)}'),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 5),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () async {
+                    await DBService.setWalletBalance(walletId, oldBal);
+                    fireEvent(AppEvent.incomeChanged);
+                  },
+                ),
+              ));
+            }
           }
         }
       } catch (_) {}

@@ -559,6 +559,23 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         lower.contains('pag-ibig') ||
         lower.contains('bayad')) return 'Bills';
 
+    // ── TRANSFERS / CASH-IN ────────────────────────────────────────────────────
+    // GCash cash-in and money transfers are wallet movements, not true expenses.
+    // Kept as 'Others' intentionally — Expense Correction Suggestions will surface
+    // them as candidates to review. Explicit match prevents category drift.
+    if (lower.contains('money transfer') ||
+        lower.contains('cash in') ||
+        lower.contains('cash-in') ||
+        lower.contains('cashin') ||
+        lower.contains('send money') ||
+        lower.contains('padala') ||
+        lower.contains('gcash transfer') ||
+        lower.contains('transaction fee') ||
+        lower.contains('transfer fee') ||
+        lower.contains('remittance') ||
+        lower.contains('western union') ||
+        lower.contains('palawan')) return 'Others';
+
     // ── SHOPPING ──────────────────────────────────────────────────────────────
     if (lower.contains('shop') ||
         lower.contains('cloth') ||
