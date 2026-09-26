@@ -47,6 +47,7 @@ import 'batch_manual_entry_screen.dart';
 import 'batch_image_import_screen.dart';
 import 'smart_camera_screen.dart';
 import 'chat_history_screen.dart';
+import 'data_quality_screen.dart';
 import 'help_screen.dart';
 import '../services/startup_alerts_service.dart';
 
@@ -1456,6 +1457,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             Colors.teal,
             () => _go(const ChatHistoryScreen())
           ),
+          (
+            Icons.verified_outlined,
+            "Data Quality",
+            "Find and fix imported data issues — duplicates, wrong categories, suspicious amounts",
+            Colors.green,
+            () => _go(const DataQualityScreen())
+          ),
         ]
       ),
       (
@@ -2065,12 +2073,18 @@ class _DashboardState extends State<Dashboard> {
       _dailySpent = todaySpent;
     });
 
-    // Load daily limit and check notification
+    // Load daily limit — migrate to new multi-period system if needed
     final dailyLimit = await DBService.getDailyLimit();
-    if (mounted) setState(() => _dailyLimit = dailyLimit);
-    if (dailyLimit > 0 && _dailySpent >= dailyLimit * 0.8) {
-      NotificationService.showDailyLimitAlert(_dailySpent, dailyLimit);
+    if (dailyLimit > 0) {
+      // Auto-migrate: move legacy daily_limit into the new limit_daily key
+      // and clear the old key so _buildDailyLimitCard never shows again.
+      final existingNewDaily = (await DBService.getAllLimits())['daily'] ?? 0;
+      if (existingNewDaily == 0) {
+        await DBService.setSetting('limit_daily', dailyLimit.toString());
+        await DBService.setSetting('daily_limit', '0');
+      }
     }
+    if (mounted) setState(() => _dailyLimit = 0); // always hide legacy card
 
     // Multi-period limit notification checks
     // Only fire when the last-added expense is in the current period
@@ -4979,10 +4993,8 @@ class _DashboardState extends State<Dashboard> {
               // Multi-period spending limits card — tappable, shown when any limit set
               _buildSpendingLimitCard(context),
 
-              // Legacy daily limit bar — only shown when NEW system has NO limits at all
-              // (prevents both cards showing when user has legacy daily + new non-daily limits)
-              if (_dailyLimit > 0 && _allLimits.values.every((v) => v == 0))
-                _buildDailyLimitCard(context),
+              // (Legacy daily limit card removed — daily_limit migrated to
+              //  multi-period spending limits system on first load after v2.9.61)
 
               // Subscription leak summary
               if (_showSubscriptions) _buildSubscriptionSummaryCard(context),
@@ -5966,8 +5978,8 @@ class _MoodCheckInWidgetState extends State<_MoodCheckInWidget> {
   }
 
   Future<void> _load() async {
-    final enabled =
-        (await DBService.getSetting('mood_checkin_enabled')) != 'false';
+    // mood_checkin_enabled merged into show_mood_home — read unified key
+    final enabled = (await DBService.getSetting('show_mood_home')) != 'false';
     final entry = await DBService.getTodayMood();
     if (mounted) {
       setState(() {

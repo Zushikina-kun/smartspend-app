@@ -888,10 +888,26 @@ class _AIScreenState extends State<AIScreen> {
               if (walletName != null) {
                 final wallet = await DBService.findWalletByName(walletName);
                 if (wallet != null && (wallet['balance'] as num) > 0) {
-                  final newBal =
-                      ((wallet['balance'] as num) - amount).toDouble();
-                  await DBService.setWalletBalance(
-                      wallet['id'] as int, newBal.clamp(0.0, double.infinity));
+                  final oldBal = (wallet['balance'] as num).toDouble();
+                  final newBal = (oldBal - amount).clamp(0.0, double.infinity);
+                  await DBService.setWalletBalance(wallet['id'] as int, newBal);
+                  // Show snackbar confirmation with undo
+                  if (mounted) {
+                    final walletId = wallet['id'] as int;
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          '💳 Deducted from $walletName → ₱${newBal.toStringAsFixed(2)}'),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 5),
+                      action: SnackBarAction(
+                        label: 'Undo',
+                        onPressed: () async {
+                          await DBService.setWalletBalance(walletId, oldBal);
+                          fireEvent(AppEvent.incomeChanged);
+                        },
+                      ),
+                    ));
+                  }
                 }
               }
             } catch (_) {}

@@ -5,6 +5,9 @@ import 'currency_service.dart';
 
 class NotificationService {
   static final _plugin = FlutterLocalNotificationsPlugin();
+
+  /// Public access for services that need to fire their own notifications.
+  static FlutterLocalNotificationsPlugin get plugin => _plugin;
   static bool _initialized = false;
 
   static Future<void> init() async {

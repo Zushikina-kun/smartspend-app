@@ -11,6 +11,7 @@ import 'screens/home_screen.dart';
 import 'services/theme_service.dart';
 import 'services/currency_service.dart';
 import 'services/notification_service.dart';
+import 'services/proactive_nudge_service.dart';
 import 'services/app_lock_service.dart';
 import 'services/app_config.dart';
 import 'services/db_service.dart';
@@ -65,6 +66,8 @@ void main() async {
     }).catchError((_) => NotificationService.checkAnomalyDetection());
     NotificationService.checkCategoryVelocity();
     NotificationService.checkWantSpendingAlert();
+    // Proactive nudges — forward-looking alerts (subscription due, pace high, goal close, etc.)
+    ProactiveNudgeService.check();
     runApp(const SmartSpendApp());
   }, (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);

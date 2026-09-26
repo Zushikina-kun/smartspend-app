@@ -2193,3 +2193,60 @@ See Part 16. The current `liteMode` getter and `_applyLiteMode()` should be repl
 *Part 16 and 17 added September 27, 2026.*
 *Research sources: g-co.agency UX practices (2026), financebuzz.com YNAB vs Rocket Money (2026),
 procreator.design finance app design (2026). Content paraphrased for compliance.*
+
+---
+
+## Part 18 — Wallet System Improvement Plan (September 2026)
+
+**Added:** September 27, 2026
+**Status:** Partially improved in v2.9.61 (snackbar + undo). Full redesign is post-capstone.
+
+---
+
+### 18A — Current Wallet Flow Problems (User-Identified)
+
+The wallet system works mechanically but feels disconnected from the natural expense-logging flow. Specific issues:
+
+1. **Silent deduction** — before v2.9.61, auto-deduct happened with zero user feedback. Fixed: snackbar with Undo now shows after every deduction.
+
+2. **No per-expense control** — the setting is global (auto-deduct ON or OFF for all). There's no way to say "deduct this expense but not that one" per transaction.
+
+3. **AI doesn't confirm the wallet** — when the AI logs an expense via chat, it picks the wallet based on payment method (Cash → Cash on Hand, GCash → GCash). The user can't say "actually use a different wallet for this one" mid-conversation.
+
+4. **Wallet balances go stale quickly** — if the user pays with a card, ShopeePay, or an unlisted method, nothing is deducted and the wallet balance drifts from reality.
+
+5. **No transaction history per wallet** — users can't see "what expenses were deducted from GCash this month" — they can only see the current balance.
+
+---
+
+### 18B — What Was Fixed in v2.9.61
+
+- `add_expense_screen.dart`: After saving, a snackbar shows `💳 Deducted from GCash → new balance: ₱1,200.00` with a 5-second Undo button.
+- `ai_screen.dart`: Same snackbar added to the AI `log_expense` action deduct path.
+- Both paths use `oldBal` / `newBal` stored before the write so Undo is accurate.
+
+---
+
+### 18C — Planned Improvements (Post-Capstone / v3.x)
+
+| Feature | Effort | Notes |
+|---------|--------|-------|
+| **Per-expense "deduct from wallet?" prompt** | ~1 day | New optional mode: when logging an expense, a quick bottom sheet asks "Deduct ₱85 from Cash on Hand?" with Yes/No/Pick wallet. Gated by a setting `wallet_confirm_deduct` (default: off — keeps current auto-deduct for speed). |
+| **AI wallet confirmation in chat** | ~1 day | When AI logs an expense, it includes the wallet deduction in its reply: "Logged Lunch ₱60 — deducted from Cash on Hand (balance: ₱6,940). Want to use a different wallet?" User can reply "use GCash instead" and AI fires `transfer_wallet`. |
+| **Per-wallet transaction history** | ~2 days | Wallet detail screen shows a list of all expenses deducted from that wallet, grouped by month. Helps users verify wallet balance accuracy. |
+| **Card/bank payment tracking** | ~1 day | Add "Credit Card", "Debit Card (BDO)", etc. as wallet types that don't auto-deduct (spending on credit doesn't reduce wallet balance) but track the liability separately. |
+| **Wallet reconciliation** | ~1 day | Monthly prompt: "Your GCash balance should be ₱X based on logged expenses. Your recorded balance is ₱Y. Update it?" — helps catch drift from unlogged transactions. |
+
+---
+
+### 18D — Conflict Check
+
+| Feature | Conflict | Resolution |
+|---------|----------|-----------|
+| Per-expense prompt vs auto-deduct speed | Adding a confirmation dialog per expense increases friction | Gate behind `wallet_confirm_deduct` setting (default: OFF). Power users who want visibility enable it; default behavior unchanged. |
+| AI wallet confirmation in chat | Multi-turn wallet follow-up adds complexity to action parsing | Only fires when `wallet_auto_deduct = true` AND the payment method maps to a known wallet. Implemented as a follow-up message, not a blocking action. |
+| Wallet transaction history | Requires tracking which wallet_id deducted each expense | Add `wallet_id` column to expenses table (nullable, migration-safe). Only populated going forward. |
+
+---
+
+*Part 18 added September 27, 2026.*
