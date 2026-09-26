@@ -2968,6 +2968,16 @@ class _DashboardState extends State<Dashboard> {
                       'Daily mood check-in'
                     ),
                     (
+                      'show_payday_countdown',
+                      Icons.calendar_month_outlined,
+                      'Payday countdown'
+                    ),
+                    (
+                      'show_safe_to_spend',
+                      Icons.savings_outlined,
+                      'Safe to Spend'
+                    ),
+                    (
                       'show_forecast',
                       Icons.waterfall_chart_outlined,
                       'Cash flow forecast'
@@ -2976,6 +2986,16 @@ class _DashboardState extends State<Dashboard> {
                       'show_prediction',
                       Icons.psychology_outlined,
                       'Behavioral prediction'
+                    ),
+                    (
+                      'show_monthly_recap',
+                      Icons.bar_chart_rounded,
+                      'Monthly recap alert'
+                    ),
+                    (
+                      'show_challenges',
+                      Icons.emoji_events_outlined,
+                      'Daily & weekly challenges'
                     ),
                   ].map((item) {
                     final key = item.$1;
