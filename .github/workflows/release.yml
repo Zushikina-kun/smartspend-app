@@ -90,7 +90,7 @@ jobs:
           body: |
             ## SmartSpend ${{ github.ref_name }}
 
-            **Automated release** — built from tag `${{ github.ref_name }}` on `${{ github.sha }}`.
+            **Built from tag `${{ github.ref_name }}`** · commit `${{ github.sha }}`
 
             See the [commit history](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) for full changes.
 
@@ -100,11 +100,15 @@ jobs:
             | Modern phones (2018+) | `SmartSpend-${{ github.ref_name }}-arm64-v8a.apk` |
             | Older/32-bit phones | `SmartSpend-${{ github.ref_name }}-armeabi-v7a.apk` |
             | Emulator | `SmartSpend-${{ github.ref_name }}-x86_64.apk` |
+
+            > This is the authoritative release build. APKs are built by GitHub Actions with proper signing, obfuscation, and code shrinking.
           files: |
             build/app/outputs/flutter-apk/SmartSpend-${{ github.ref_name }}-arm64-v8a.apk
             build/app/outputs/flutter-apk/SmartSpend-${{ github.ref_name }}-armeabi-v7a.apk
             build/app/outputs/flutter-apk/SmartSpend-${{ github.ref_name }}-x86_64.apk
           generate_release_notes: false
           make_latest: true
+          # Always overwrite if a manual release was created first
+          overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
