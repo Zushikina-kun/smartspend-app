@@ -24,6 +24,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // ── Behavior ────────────────────────────────────────────────────────────────
   bool autoDeduct = true;
+  bool walletConfirmDeduct = false; // opt-in: ask before deducting each expense
   bool impulseEnabled = true;
   bool budgetAlerts = true;
 
@@ -82,6 +83,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadSettings() async {
     autoDeduct = (await DBService.getSetting('wallet_auto_deduct')) != 'false';
+    walletConfirmDeduct =
+        (await DBService.getSetting('wallet_confirm_deduct')) == 'true';
     // mood_checkin_enabled is now unified with show_mood_home — one toggle controls both.
     // Migrate any existing mood_checkin_enabled=false → show_mood_home=false on first load.
     final oldMoodKey = await DBService.getSetting('mood_checkin_enabled');
@@ -426,6 +429,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (v) {
                       setState(() => autoDeduct = v);
                       _save('wallet_auto_deduct', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.help_outline_rounded,
+                    title: 'Confirm before deducting',
+                    subtitle:
+                        'Ask "Deduct from wallet?" before each expense — off by default for speed',
+                    value: walletConfirmDeduct,
+                    onChanged: (v) {
+                      setState(() => walletConfirmDeduct = v);
+                      _save('wallet_confirm_deduct', v);
                     },
                   ),
                   _tile(

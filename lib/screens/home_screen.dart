@@ -1839,6 +1839,7 @@ class _DashboardState extends State<Dashboard> {
   bool _showMoodHome = true;
   bool _showForecast = true;
   bool _showPrediction = true;
+  int _outlookTab = 0; // 0 = Cash Flow, 1 = Prediction
   bool _showPaydayCountdown = true;
   bool _showMonthlyRecap = true;
   bool _showChallenges = true;
@@ -4365,6 +4366,83 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Tabbed wrapper that combines Cash Flow and Prediction into one card.
+  /// Tab 0 = Cash Flow (income vs spent vs upcoming bills)
+  /// Tab 1 = Spending Forecast (pace-based budget overspend prediction)
+  Widget _buildOutlookCard(BuildContext context) {
+    // Clamp to available tabs if one is disabled
+    final availableTabs = <int>[];
+    if (_showForecast) availableTabs.add(0);
+    if (_showPrediction) availableTabs.add(1);
+    if (availableTabs.isEmpty) return const SizedBox.shrink();
+
+    // If only one tab available, just show that card directly
+    if (availableTabs.length == 1) {
+      return availableTabs.first == 0
+          ? _buildCashFlowCard(context)
+          : _buildPredictionCard(context);
+    }
+
+    // Clamp active tab to available range
+    final activeTab =
+        availableTabs.contains(_outlookTab) ? _outlookTab : availableTabs.first;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Tab selector row floats above the active card
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2),
+            child: Row(
+              children: [
+                _outlookTabBtn(context, 0, '📊 Cash Flow', activeTab),
+                const SizedBox(width: 8),
+                _outlookTabBtn(context, 1, '🔮 Forecast', activeTab),
+              ],
+            ),
+          ),
+          // Active card — keeps its own container + shadow + bottom padding
+          activeTab == 0
+              ? _buildCashFlowCard(context)
+              : _buildPredictionCard(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _outlookTabBtn(
+      BuildContext context, int tab, String label, int activeTab) {
+    final cs = Theme.of(context).colorScheme;
+    final isActive = tab == activeTab;
+    return GestureDetector(
+      onTap: () => setState(() => _outlookTab = tab),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        decoration: BoxDecoration(
+          color: isActive
+              ? cs.primary.withValues(alpha: 0.12)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: isActive
+              ? Border.all(color: cs.primary.withValues(alpha: 0.35))
+              : null,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+            color: isActive ? cs.primary : cs.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCashFlowCard(BuildContext context) {
     if (_monthlyIncome <= 0) return const SizedBox.shrink();
     // Hide if no expenses and no upcoming bills — nothing to show
@@ -5206,11 +5284,9 @@ class _DashboardState extends State<Dashboard> {
                   );
                 }),
 
-              // Cash Flow Forecast card
-              if (_showForecast) _buildCashFlowCard(context),
-
-              // Behavioral Prediction card
-              if (_showPrediction) _buildPredictionCard(context),
+              // Outlook card — tabbed Cash Flow + Prediction in one card
+              // Only shown when at least one of the two is enabled
+              if (_showForecast || _showPrediction) _buildOutlookCard(context),
               Row(
                 children: [
                   Expanded(
