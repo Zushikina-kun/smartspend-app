@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartSpend — Defense Reviewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F3EC; --ink:#20261F; --ink-soft:#4B5348; --line:#D8D2C2;
+    --ledger:#1B4332; --ledger-soft:#E7EEE7; --gold:#B3892B; --gold-soft:#F3E7C8;
+    --bad:#8C3B2E; --bad-soft:#F3E1DC; --card:#FFFEFA;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+    box-sizing:border-box;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#171A15; --ink:#EDEAE0; --ink-soft:#AEB3A6; --line:#33392E;
+      --ledger:#7FBE9B; --ledger-soft:#20261F; --gold:#D8B15C; --gold-soft:#2B2416;
+      --bad:#E28C7A; --bad-soft:#2E2019; --card:#1D2118;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#171A15; --ink:#EDEAE0; --ink-soft:#AEB3A6; --line:#33392E;
+    --ledger:#7FBE9B; --ledger-soft:#20261F; --gold:#D8B15C; --gold-soft:#2B2416;
+    --bad:#E28C7A; --bad-soft:#2E2019; --card:#1D2118;
+  }
+  html{scroll-padding-top:env(safe-area-inset-top,0px); height:100%;}
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    line-height:1.5; min-height:100%;
+  }
+  h1,h2,h3{font-family:'Fraunces', Georgia, serif; font-weight:600; letter-spacing:-0.01em; margin:0;}
+  .wrap{max-width:720px; margin:0 auto; padding:0 20px 64px;}
+
+  /* header */
+  header.top{
+    position:sticky; top:0; z-index:10; background:var(--ledger); color:var(--ledger-soft);
+    padding:calc(env(safe-area-inset-top,0px) + 16px) 20px 0;
+    border-bottom:1px solid rgba(0,0,0,.15);
+  }
+  .top-inner{max-width:720px; margin:0 auto;}
+  .top-inner h1{font-size:1.5rem; color:#fff;}
+  .top-meta{font-size:.85rem; opacity:.85; margin-top:4px;}
+  .tabs{display:flex; gap:2px; margin-top:16px;}
+  .tabs label{
+    flex:1; text-align:center; padding:10px 8px; font-size:.9rem; font-weight:500;
+    cursor:pointer; color:var(--ledger-soft); opacity:.65; border-bottom:2px solid transparent;
+  }
+  input[name=tab]{display:none;}
+  #tab-demo:checked ~ header .tabs label[for="tab-demo"],
+  #tab-qa:checked ~ header .tabs label[for="tab-qa"]{opacity:1; border-color:var(--gold);}
+  section.panel{display:none; padding-top:28px;}
+  #tab-demo:checked ~ main #panel-demo{display:block;}
+  #tab-qa:checked ~ main #panel-qa{display:block;}
+
+  h2.section-title{font-size:1.15rem; margin:36px 0 12px; color:var(--ledger);}
+  h2.section-title:first-child{margin-top:0;}
+  p{color:var(--ink-soft); margin:8px 0;}
+
+  /* opening statement */
+  blockquote{
+    margin:0; padding:16px 18px; background:var(--card); border-left:3px solid var(--gold);
+    font-family:'Fraunces', serif; font-size:1.02rem; font-style:italic; color:var(--ink);
+    border-radius:2px;
+  }
+  blockquote p{color:var(--ink); margin:0 0 10px;}
+  blockquote p:last-child{margin-bottom:0;}
+
+  /* checklist */
+  ul.checklist{list-style:none; margin:0; padding:0; border-top:1px solid var(--line);}
+  ul.checklist li{
+    display:flex; gap:10px; align-items:flex-start; padding:11px 2px;
+    border-bottom:1px solid var(--line); font-size:.94rem;
+  }
+  ul.checklist input[type=checkbox]{margin-top:3px; width:17px; height:17px; accent-color:var(--ledger); flex-shrink:0;}
+  ul.checklist label{cursor:pointer;}
+
+  /* demo steps - genuine sequence, numbered */
+  .step{position:relative; padding:0 0 22px 34px; border-left:1px solid var(--line); margin-left:8px;}
+  .step:last-child{border-left-color:transparent; padding-bottom:0;}
+  .step::before{
+    content:attr(data-n); position:absolute; left:-13px; top:0;
+    width:26px; height:26px; border-radius:50%; background:var(--ledger); color:var(--ledger-soft);
+    font-family:'IBM Plex Mono', monospace; font-size:.72rem; font-weight:500;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  .step-head h3{font-size:1rem; color:var(--ink);}
+  .step-time{font-family:'IBM Plex Mono', monospace; font-size:.75rem; color:var(--gold); white-space:nowrap;}
+  .step-body{margin-top:6px; font-size:.93rem;}
+  .step-body ul{margin:6px 0; padding-left:20px;}
+  .step-body li{margin:3px 0;}
+  .say{
+    margin-top:8px; padding:10px 12px; background:var(--card); border-left:2px solid var(--ledger);
+    font-style:italic; font-size:.9rem; color:var(--ink);
+  }
+
+  /* trouble cards */
+  .trouble{background:var(--bad-soft); border-radius:6px; padding:12px 14px; margin:10px 0;}
+  .trouble strong{display:block; font-size:.88rem; margin-bottom:3px; color:var(--bad);}
+  .trouble p{margin:0; font-size:.9rem; color:var(--ink);}
+
+  table{width:100%; border-collapse:collapse; font-size:.88rem; margin:8px 0;}
+  th,td{text-align:left; padding:8px 6px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{color:var(--ink-soft); font-weight:500; font-size:.78rem;}
+  .overflow{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+
+  /* Q&A accordion */
+  .cat{margin:0 0 26px;}
+  .cat > summary{
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.05rem; color:var(--ledger);
+    cursor:pointer; list-style:none; padding:6px 0; border-bottom:1px solid var(--line);
+  }
+  .cat > summary::-webkit-details-marker{display:none;}
+  .cat > summary::before{content:"▸ "; color:var(--gold);}
+  .cat[open] > summary::before{content:"▾ "; }
+  .qa{border-bottom:1px solid var(--line);}
+  .qa summary{
+    padding:12px 4px; cursor:pointer; list-style:none; font-weight:500; font-size:.93rem;
+    display:flex; gap:8px;
+  }
+  .qa summary::-webkit-details-marker{display:none;}
+  .qa summary::before{content:"Q"; font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--gold);
+    border:1px solid var(--gold); border-radius:50%; width:18px; height:18px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; margin-top:1px;}
+  .qa .a{padding:0 4px 14px 30px; font-size:.9rem; color:var(--ink-soft);}
+  .qa .a p{margin:6px 0; color:var(--ink-soft);}
+
+  .facts-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); margin:10px 0; border-radius:4px; overflow:hidden;}
+  .fact{background:var(--card); padding:10px 12px;}
+  .fact .v{font-family:'IBM Plex Mono', monospace; font-weight:500; font-size:.95rem; color:var(--ledger);}
+  .fact .k{font-size:.72rem; color:var(--ink-soft); margin-top:1px;}
+
+  .oneliners{margin:0; padding:0; list-style:none;}
+  .oneliners li{padding:9px 0; border-bottom:1px solid var(--line); font-size:.9rem;}
+  .oneliners b{color:var(--ink);}
+  .oneliners span{color:var(--ink-soft);}
+
+  .role-tag{display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:.72rem;
+    background:var(--gold-soft); color:var(--gold); padding:2px 7px; border-radius:3px; margin-right:6px;}
+
+  footer{text-align:center; font-size:.75rem; color:var(--ink-soft); margin-top:40px; padding-top:16px; border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+<input type="radio" name="tab" id="tab-demo" checked>
+<input type="radio" name="tab" id="tab-qa">
+
+<header class="top">
+  <div class="top-inner">
+    <h1>SmartSpend Defense Reviewer</h1>
+    <div class="top-meta">Lucid Frame · Pre-Finals Defense · Tue, Sep 29, 2026</div>
+    <div class="tabs">
+      <label for="tab-demo">Demo Script</label>
+      <label for="tab-qa">Panel Q&amp;A</label>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="panel" id="panel-demo">
+
+  <h2 class="section-title">Night-before phone setup</h2>
+  <ul class="checklist" id="checklist"></ul>
+
+  <h2 class="section-title">Opening statement — memorize this</h2>
+  <blockquote>
+    <p>Good morning/afternoon. We are Lucid Frame — Brix, Cyrille, and Djaunathan.</p>
+    <p>SmartSpend is an AI-assisted personal finance tracker for Android, designed specifically for everyday Filipinos. The problem we're solving is simple: most Filipinos know they should track their money, but they don't — because it's too tedious. SmartSpend removes that friction. You just talk to the app, and it handles the rest.</p>
+    <p>Our app uses a free, multi-model AI system with 34 automatic actions — it can log expenses, set budgets, track debts, and give financial advice, all from a single chat message. It also gives you a Financial Health Score — a single number from 0 to 100 that tells you how well you're managing your money this month.</p>
+  </blockquote>
+
+  <h2 class="section-title">Demo flow — 10 minutes</h2>
+
+  <div class="step" data-n="1">
+    <div class="step-head"><h3>Cold start impression</h3><span class="step-time">0:30</span></div>
+    <div class="step-body">
+      <p>Open the app cold (feels snappier). Let the panel see the Home screen for 3 seconds.</p>
+      <div class="say">"This is the main dashboard. The big number at the top is this month's spending. Below it is the Financial Health Score. Everything updates in real time as you log expenses."</div>
+    </div>
+  </div>
+
+  <div class="step" data-n="2">
+    <div class="step-head"><h3>AI logging — the core feature</h3><span class="step-time">2:00</span></div>
+    <div class="step-body">
+      <p>Lead with this — it's the most impressive thing in the app.</p>
+      <ul>
+        <li>Tap the AI chat button (bottom nav)</li>
+        <li>Type: <b>"I spent 60 for lunch and 30 for jeep"</b></li>
+        <li>Watch it log 2 expenses at once</li>
+      </ul>
+      <div class="say">"I just logged 2 expenses in one sentence. The AI understood the items, amounts, categories, and dates — without me filling any form. This is an agentic action — 34 types in total."</div>
+      <div class="say">If asked how it works: "The message goes to our AI engine — Gemini 3.5 Flash-Lite by default — which parses the natural language into structured data. The AI returns a JSON action like <code>{type: 'log_expense', item: 'lunch', amount: 60, category: 'Food'}</code> which the app executes automatically. Users type naturally in Filipino, English, or Taglish."</div>
+    </div>
+  </div>
+
+  <div class="step" data-n="3">
+    <div class="step-head"><h3>Financial Health Score</h3><span class="step-time">2:00</span></div>
+    <div class="step-body">
+      <p>Go back to Home → tap the FHS score card → show the breakdown.</p>
+      <div class="say">"The score has 4 equal components, 25 points each: Savings rate, overspend control, budget adherence, logging consistency. Add them up and you get your score out of 100. Above 80 is excellent, 60–79 is good, below 60 needs attention."</div>
+    </div>
+  </div>
+
+  <div class="step" data-n="4">
+    <div class="step-head"><h3>Smart import — technical showcase</h3><span class="step-time">2:00</span></div>
+    <div class="step-body">
+      <ul>
+        <li>Log Expense → Batch Screenshots (Smart Import)</li>
+        <li>If a Shopee screenshot is ready, run the real import</li>
+      </ul>
+      <div class="say">"Beyond typing, we support 7 input methods. The most unique is batch screenshot import — receipts from 40+ platforms: Shopee, Lazada, GCash, Steam, even Jollibee. ML Kit reads the text on-device, then AI structures it into expense records."</div>
+    </div>
+  </div>
+
+  <div class="step" data-n="5">
+    <div class="step-head"><h3>Analytics</h3><span class="step-time">1:00</span></div>
+    <div class="step-body">
+      <p>Analytics tab → pie chart + 50/30/20 tracker.</p>
+      <div class="say">"Analytics breaks down where your money goes — by category, want vs need, and the 50/30/20 rule. Debt-to-income ratio and emergency fund calculator are here too."</div>
+    </div>
+  </div>
+
+  <div class="step" data-n="6">
+    <div class="step-head"><h3>Safe-to-Spend &amp; wallet</h3><span class="step-time">1:00</span></div>
+    <div class="step-body">
+      <p>Home → scroll to Safe to Spend card.</p>
+      <div class="say">"This is our differentiator vs BudgetPH. It tells you exactly how much you can safely spend before your next paycheck, after reserving bills, savings goals, and overdue debts. One number, no guesswork."</div>
+    </div>
+  </div>
+
+  <div class="step" data-n="7">
+    <div class="step-head"><h3>Settings — user control</h3><span class="step-time">0:30</span></div>
+    <div class="step-body">
+      <p>Settings → Quick Presets → toggle Lite Mode ON briefly, then OFF.</p>
+      <div class="say">"For new users who feel overwhelmed, one tap enables Lite Mode — hides all 14 optional sections and shows only the essentials. They turn features back on as they get comfortable."</div>
+    </div>
+  </div>
+
+  <div class="step" data-n="8">
+    <div class="step-head"><h3>Closing statement</h3><span class="step-time">0:30</span></div>
+    <div class="step-body">
+      <div class="say">"To summarize: SmartSpend is the only free Filipino-English AI finance app on Android that supports 34 automatic actions, batch screenshot import from 40+ platforms, a dual-mode Financial Health Score, and features designed for students and young professionals in the Philippine context — allowance tracking, paluwagan, SSS contributions, payday cycle awareness. We built this using Flutter, Firebase, SQLite, and an 8-provider AI fallback chain so the app works even when individual providers hit their daily limits. Thank you."</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">When things go wrong</h2>
+  <div class="trouble"><strong>AI doesn't respond</strong><p>"The AI requires internet. Let me show you the manual entry instead — it works 100% offline." → Log Expense → Manual Form.</p></div>
+  <div class="trouble"><strong>App crashes or freezes</strong><p>"Let me restart — the cold start is actually a better demo anyway." → Force close, reopen.</p></div>
+  <div class="trouble"><strong>Panel asks something you don't know</strong><p>"That's a great question — I'll need to check the exact implementation detail, but the general approach is..." Never say "I don't know" alone — always bridge to what you DO know.</p></div>
+
+  <h2 class="section-title">Role split</h2>
+  <div class="overflow"><table>
+    <tr><th>Who</th><th>Does what</th></tr>
+    <tr><td><span class="role-tag">Brix</span></td><td>Drives the phone demo, explains technical implementation, AI/FHS questions</td></tr>
+    <tr><td><span class="role-tag">Cyrille</span></td><td>Research background, problem statement, competitor comparison</td></tr>
+    <tr><td><span class="role-tag">Djaunathan</span></td><td>Methodology questions, testing, SUS survey plan, project management</td></tr>
+  </table></div>
+
+</section>
+
+<section class="panel" id="panel-qa">
+
+  <details class="cat" open>
+    <summary>1. What is this app and why does it matter?</summary>
+    <details class="qa"><summary>What problem does SmartSpend solve?</summary><div class="a"><p>Most Filipinos don't track their finances because it's tedious — manually opening an app, filling forms, picking categories, remembering amounts. SmartSpend removes that friction: you just talk to it naturally ("I spent 60 for lunch and 30 for jeep") and it logs both expenses automatically. For Filipino students and young professionals already glued to their phones, this lowers the barrier to building a financial habit.</p></div></details>
+    <details class="qa"><summary>Who is your target user?</summary><div class="a"><p>Two groups: (1) Filipino college students with irregular allowances, handled via the allowance cycle and student account type. (2) Young working professionals aged 21–35 who earn a salary but have never tracked finances before. Designed mobile-first, AI-assisted, to fit existing phone habits.</p></div></details>
+    <details class="qa"><summary>How is this different from BudgetPH or PISO?</summary><div class="a"><p>1) AI with 34 agentic actions — the others have no AI, you log manually; we support voice, OCR, and screenshot import. 2) Batch screenshot import from 40+ platforms (Shopee, GCash, Steam, bank apps) — unique to SmartSpend. 3) Financial Health Score — a single 0–100 score across 4 dimensions; others just show balance and history.</p></div></details>
+  </details>
+
+  <details class="cat">
+    <summary>2. How does the Financial Health Score work?</summary>
+    <details class="qa"><summary>Explain the FHS formula simply</summary><div class="a">
+      <p>4 equal parts, 25 points each, total 100:</p>
+      <p><b>Savings Rate (25):</b> full points at 20% savings, scales proportionally below. <code>25 × min(1, actual_rate / 0.20)</code></p>
+      <p><b>Overspend Control (25):</b> <code>25 × (days_within_budget / days_elapsed)</code></p>
+      <p><b>Budget Adherence (25):</b> <code>25 × (categories_on_track / total_budgeted)</code>. No budgets set → full 25, we don't penalize new users.</p>
+      <p><b>Logging Consistency (25):</b> <code>25 × (days_logged / days_elapsed_this_month)</code></p>
+      <p>Clamped 0–100. Above 80 is excellent.</p>
+    </div></details>
+    <details class="qa"><summary>What if someone has no income, like a student?</summary><div class="a"><p>Two modes. Full Mode uses all 4 components including Savings Rate, which needs income data. Lightweight Mode (students can enable) swaps income-dependent components for spending-habit ones: Spending Restraint, Logging Consistency, Category Balance, Habit Streak — a meaningful score with no salary needed.</p></div></details>
+    <details class="qa"><summary>Why 20% savings target specifically?</summary><div class="a"><p>From the 50/30/20 budgeting framework — 50% needs, 30% wants, 20% savings — widely recognized in personal finance literature and cited in BSP financial literacy recommendations. Used as benchmark so users get a clear, researched goal instead of an arbitrary number.</p></div></details>
+    <details class="qa"><summary>How does the score handle logging gaps?</summary><div class="a"><p>Logging Gap Detection: when days show no log but wallet balance changed (suggesting spending happened), the app asks "Did you have transactions on those days?" Confirming yes applies a small penalty to Logging Consistency; confirming a genuine no-spend day gives a small bonus. More accurate and more honest than silently ignoring missing days.</p></div></details>
+  </details>
+
+  <details class="cat">
+    <summary>3. How does the AI work?</summary>
+    <details class="qa"><summary>Is the AI safe? Does it access our financial data?</summary><div class="a"><p>The AI receives only typed text and a summarized expense context — categories and amounts, no names or personal identifiers. Mobile numbers are redacted before sending. Expense data lives locally in SQLite and never leaves the phone except for encrypted Firebase sync. Compliant with RA 10173 (Data Privacy Act).</p></div></details>
+    <details class="qa"><summary>What happens when the AI is down or internet is slow?</summary><div class="a"><p>An 8-provider fallback chain: Gemini → Groq models → Cerebras, each with its own daily limit. The app tracks and persists the active provider across restarts. If all 8 fail or hit limits, manual entry — log, view, analyze — still works 100% offline.</p></div></details>
+    <details class="qa"><summary>How do you prevent the AI from making mistakes?</summary><div class="a"><p>Three layers: (1) Auto-categorization evidence threshold — 10 prior "Food" logs can't be flipped to "Others" on one uncertain response. (2) Action allowlist — import/OCR flows can only trigger expense-logging actions, never delete or modify account settings. (3) Confidence score 0–1 per AI-logged expense; below 70% shows a "Review" badge.</p></div></details>
+    <details class="qa"><summary>Who pays for the AI?</summary><div class="a"><p>Free tiers across providers — Gemini 3.5 Flash-Lite (primary) free via Google AI Studio, Groq and Cerebras free API access. 150 messages/day per user across all providers, at zero cost for a research project. Production scaling would move to paid tiers via Firebase Remote Config, which is already implemented for key management.</p></div></details>
+  </details>
+
+  <details class="cat">
+    <summary>4. Technical implementation</summary>
+    <details class="qa"><summary>Why Flutter and not native Android or React Native?</summary><div class="a"><p>Single codebase targeting Android, iOS, and web. For our Android-only capstone scope it also gave first-party ML Kit access for OCR and barcode scanning. Dart iterates faster than Kotlin for UI work — mattered given a 1-semester timeline.</p></div></details>
+    <details class="qa"><summary>How does batch screenshot import work?</summary><div class="a"><p>User selects multiple gallery screenshots. Each runs through Google ML Kit text recognition on-device (no internet needed). Extracted text goes to the AI with a structured prompt to extract item, amount, date, merchant. The AI returns JSON, parsed and shown for user confirmation before saving. 40+ platforms supported via keyword detection for their receipt formats.</p></div></details>
+    <details class="qa"><summary>How is data stored? Is it secure?</summary><div class="a"><p>Primary storage: SQLite on-device (20 tables), synced to Firebase Firestore for cloud backup. API keys are not stored in the APK — fetched from Firebase Remote Config at startup. Firebase App Check blocks unauthorized API access. Local security: PIN or biometric lock.</p></div></details>
+    <details class="qa"><summary>Database schema version and table count?</summary><div class="a"><p>Schema version 11, 20 tables — expenses, income, budgets, wallets, savings_goals, debts, recurring, installments, insurance_policies, paluwagan, chat_history, score_history among them. Migrations handled in the <code>onUpgrade</code> callback so existing user data is preserved.</p></div></details>
+  </details>
+
+  <details class="cat">
+    <summary>5. Research and methodology</summary>
+    <details class="qa"><summary>What is your research methodology?</summary><div class="a"><p>Agile Kanban — Backlog → In Progress → Done in sprints. Evaluation: System Usability Scale (SUS), 10-item questionnaire, 0–100 score, 30 respondents (20 parents, 10 young professionals) post-defense. Targeting above 80, mapping to "Good" on the Bangor et al. (2009) adjective scale.</p></div></details>
+    <details class="qa"><summary>What makes this a capstone contribution?</summary><div class="a"><p>(1) Dual-mode FHS — adapts its formula to whether the user tracks income; no other Filipino finance app has a similar system. (2) Multi-modal AI input with 34 agentic actions in Taglish — voice, OCR, barcode, screenshot import in one app. (3) 8-provider AI fallback chain — a resilience architecture for AI availability across free-tier providers, practical for apps that can't afford paid subscriptions.</p></div></details>
+    <details class="qa"><summary>How is this different from just using ChatGPT?</summary><div class="a"><p>ChatGPT has no persistent data — context is lost each session. SmartSpend maintains a complete on-device financial database (218 expenses, 5 wallets, 3 savings goals in our test account) and executes 34 action types: saves to the database, updates wallet balances, sends notifications, calculates scores. ChatGPT Finance is also US-only and requires a bank link via Plaid — unavailable in the Philippines.</p></div></details>
+  </details>
+
+  <details class="cat">
+    <summary>6. Hard questions / challenges</summary>
+    <details class="qa"><summary>What are the limitations of your app?</summary><div class="a"><p>(1) The AI works best with clear input — ambiguous messages can produce wrong categories; mitigated by the evidence threshold but not perfect. (2) No Play Store release yet — requires Google's 14-day closed testing with 12 testers. (3) No iOS version — Flutter supports it but needs a Mac with Xcode. (4) The FHS formula isn't validated with real user data yet — the SUS survey and post-defense testing will address that.</p></div></details>
+    <details class="qa"><summary>How do you handle RA 10173 (Data Privacy Act)?</summary><div class="a"><p>Four measures: (1) PII redaction before sending to AI — mobile numbers and email patterns stripped. (2) One-time AI advice disclaimer clarifying we're not a licensed financial adviser (RA 11765 compliance). (3) Data stored locally by default; Firestore sync is user-controlled. (4) Privacy policy discloses what's collected, how it's stored, and user rights — to be hosted as a Play Store submission prerequisite.</p></div></details>
+    <details class="qa"><summary>What happens after the 150 message/day AI limit?</summary><div class="a"><p>A clear message that the daily limit is reached, resetting at midnight UTC. Manual entry stays fully functional — Log Expense, Edit, Budgets, Analytics, all Hub tools work without AI. Limit is per user, per day; at 150 across 8 providers, total capacity is ~1,200/day across all users — sufficient for a research prototype. Production scaling would use paid API tiers.</p></div></details>
+  </details>
+
+  <h2 class="section-title">Quick facts — memorize these</h2>
+  <div class="facts-grid">
+    <div class="fact"><div class="v">2.9.65</div><div class="k">Version</div></div>
+    <div class="fact"><div class="v">Android · Flutter/Dart</div><div class="k">Platform</div></div>
+    <div class="fact"><div class="v">8</div><div class="k">AI providers (Gemini, 5 Groq, Cerebras)</div></div>
+    <div class="fact"><div class="v">34</div><div class="k">Agentic actions</div></div>
+    <div class="fact"><div class="v">7</div><div class="k">Input modalities</div></div>
+    <div class="fact"><div class="v">25</div><div class="k">Achievement badges</div></div>
+    <div class="fact"><div class="v">150/day</div><div class="k">Daily AI message limit</div></div>
+    <div class="fact"><div class="v">10</div><div class="k">Color themes</div></div>
+    <div class="fact"><div class="v">26</div><div class="k">Hub tiles</div></div>
+    <div class="fact"><div class="v">57</div><div class="k">Currencies supported</div></div>
+    <div class="fact"><div class="v">40+</div><div class="k">Batch screenshot platforms</div></div>
+    <div class="fact"><div class="v">20 + 5</div><div class="k">PH banks + e-wallets</div></div>
+    <div class="fact"><div class="v">20</div><div class="k">SQLite tables</div></div>
+    <div class="fact"><div class="v">4 × 25</div><div class="k">FHS components → 100</div></div>
+    <div class="fact"><div class="v">≥80</div><div class="k">FHS "Good" (Bangor et al.)</div></div>
+    <div class="fact"><div class="v">20%</div><div class="k">Savings rate target</div></div>
+  </div>
+
+  <h2 class="section-title">Phrases to avoid / use instead</h2>
+  <div class="overflow"><table>
+    <tr><th>Don't say</th><th>Say instead</th></tr>
+    <tr><td>"I don't know"</td><td>"Let me clarify that — what we implemented is..."</td></tr>
+    <tr><td>"It's complicated"</td><td>"The way it works is simple — ..."</td></tr>
+    <tr><td>"We didn't have time to..."</td><td>"That's on our post-capstone roadmap — specifically..."</td></tr>
+    <tr><td>"It sometimes doesn't work"</td><td>"There's an edge case we handle by..."</td></tr>
+    <tr><td>"The AI decides"</td><td>"The AI parses the text and returns a structured action, which the app executes"</td></tr>
+    <tr><td>"It just works"</td><td>Explain HOW it works</td></tr>
+    <tr><td>"We copied from..."</td><td>"We were inspired by [app] but our implementation differs because..."</td></tr>
+  </table></div>
+
+  <h2 class="section-title">One-line answers — rapid fire</h2>
+  <ul class="oneliners">
+    <li><b>What is SmartSpend?</b><br><span>An AI-powered expense tracker for Filipinos that lets you log spending by just talking to it.</span></li>
+    <li><b>What is the FHS?</b><br><span>A 0–100 score measuring savings rate, spending control, budget adherence, and logging consistency — 25 points each.</span></li>
+    <li><b>Why AI?</b><br><span>To eliminate the manual data entry barrier that stops most people from tracking finances.</span></li>
+    <li><b>What database?</b><br><span>SQLite locally, Firebase Firestore for cloud sync.</span></li>
+    <li><b>How many users tested it?</b><br><span>SUS survey with 30 respondents is planned post-defense.</span></li>
+    <li><b>Is it on the Play Store?</b><br><span>Not yet — 14-day closed testing, scheduled post-defense.</span></li>
+    <li><b>Team role split?</b><br><span>Brix: lead developer and system architect. Cyrille: UI/UX and documentation. Djaunathan: project management and QA.</span></li>
+  </ul>
+
+  <footer>SmartSpend · Team Lucid Frame · Compiled for internal review</footer>
+
+</section>
+
+</main>
+
+<script>
+(function(){
+  var items = [
+    "Install SmartSpend-v2.9.65-arm64-v8a.apk from GitHub releases",
+    "Settings → Quick Presets → Lite Mode OFF",
+    "Settings → AI MODEL → Auto (Recommended)",
+    "AI screen → ⋮ → Reset Daily Limit",
+    "Charge to 100%, don't reopen the app until demo",
+    "Have WiFi ready — AI needs internet for the first message"
+  ];
+  var list = document.getElementById('checklist');
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem('ss_checklist') || '{}'); } catch(e) { state = {}; }
+  items.forEach(function(text, i){
+    var li = document.createElement('li');
+    var cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.id = 'chk' + i;
+    cb.checked = !!state[i];
+    var label = document.createElement('label');
+    label.setAttribute('for', 'chk' + i);
+    label.textContent = text;
+    cb.addEventListener('change', function(){
+      state[i] = cb.checked;
+      try { localStorage.setItem('ss_checklist', JSON.stringify(state)); } catch(e) {}
+    });
+    li.appendChild(cb); li.appendChild(label);
+    list.appendChild(li);
+  });
+})();
+</script>
+</body>
+</html>
