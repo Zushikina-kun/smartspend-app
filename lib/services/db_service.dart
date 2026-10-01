@@ -567,6 +567,31 @@ class DBService {
             conflictAlgorithm: ConflictAlgorithm.ignore);
       }
     } catch (_) {}
+
+    // v2.9.66 — second dedup pass: remove exact duplicates where same item,
+    // amount, and date appear more than once regardless of source.
+    // Keeps the entry with the highest id (most recent import wins).
+    try {
+      final dup2Done = await db.query('settings',
+          where: 'key = ?', whereArgs: ['dup_cleanup_v2966']);
+      if (dup2Done.isEmpty) {
+        final dups2 = await db.rawQuery('''
+          SELECT MIN(id) as old_id
+          FROM expenses
+          GROUP BY LOWER(item_name), ROUND(amount, 0), date
+          HAVING COUNT(*) > 1
+        ''');
+        for (final row in dups2) {
+          final oldId = row['old_id'] as int?;
+          if (oldId != null) {
+            await db.delete('expenses', where: 'id = ?', whereArgs: [oldId]);
+          }
+        }
+        await db.insert(
+            'settings', {'key': 'dup_cleanup_v2966', 'value': 'true'},
+            conflictAlgorithm: ConflictAlgorithm.ignore);
+      }
+    } catch (_) {}
   }
 
   static Future<void> _createTables(Database db) async {

@@ -1788,6 +1788,8 @@ class _DashboardState extends State<Dashboard> {
   double _monthlyIncome = 0;
   String _insight = "Analyzing your expenses...";
   int _score = 0;
+  int _prevScore =
+      0; // last month's score — shown when current month has no data
   bool _loadingInsight = true;
   List<String> _overBudgetCategories = [];
   List<Map<String, dynamic>> _overdueRecurring = [];
@@ -1956,6 +1958,8 @@ class _DashboardState extends State<Dashboard> {
         (await DBService.getSetting('show_challenges')) != 'false';
     final showSafeToSpend =
         (await DBService.getSetting('show_safe_to_spend')) != 'false';
+    final prevScoreRaw = await DBService.getSetting('prev_fhs_score');
+    final prevScore = int.tryParse(prevScoreRaw ?? '') ?? 0;
     if (!mounted) return; // widget may have been disposed during async gap
     setState(() {
       _expenses = expenses;
@@ -1964,6 +1968,7 @@ class _DashboardState extends State<Dashboard> {
       _lastMonthExpenseCount = lastMonthCount;
       _budgets = budgets;
       _score = score;
+      _prevScore = prevScore;
       _monthlyIncome = income;
       // Lightweight mode & spending limit state
       _incomeWalletMode = incomeWalletMode;
@@ -5570,13 +5575,39 @@ class _DashboardState extends State<Dashboard> {
                               ],
                             ),
                             const SizedBox(height: 4),
-                            Text("$_score / 100",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondaryContainer)),
+                            // Show "–/100 (new month)" when no expenses yet this month
+                            Builder(builder: (context) {
+                              final noDataThisMonth = _expenses
+                                  .where(
+                                      (e) => e.date.startsWith(_currentMonth))
+                                  .isEmpty;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    noDataThisMonth
+                                        ? '— / 100'
+                                        : '$_score / 100',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondaryContainer),
+                                  ),
+                                  if (noDataThisMonth && _prevScore > 0)
+                                    Text(
+                                      'Last month: $_prevScore — log expenses to start October!',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSecondaryContainer
+                                              .withValues(alpha: 0.65)),
+                                    ),
+                                ],
+                              );
+                            }),
                             Row(
                               children: [
                                 Text(_scoreLabel(_score),
