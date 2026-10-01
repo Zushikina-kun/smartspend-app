@@ -1,5 +1,5 @@
 # SmartSpend — Project Status
-**Version:** 2.9.59 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.67 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** September 27, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
@@ -16,8 +16,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v2.9.59** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.59-arm64-v8a.apk` from GitHub releases |
-| Verify About screen shows **"Version 2.9.59"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
+| Install **v2.9.67** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.67-arm64-v8a.apk` from GitHub releases |
+| Verify About screen shows **"Version 2.9.67"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
 | Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
 | Turn on **Lite Mode OFF** for demo (show all features) | Brix | ❌ | Settings → Quick Presets → Lite Mode = OFF |
@@ -34,20 +34,20 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Update version throughout manuscript → **2.9.59** | Cyrille | ❌ | |
+| Update version throughout manuscript → **2.9.67** | Cyrille | ❌ | |
 | Update manuscript **AI model section**: remove LLaMA, add Auto mode + 8-provider chain | Cyrille | ❌ | See handoff v3 §3a — GPT-OSS/Qwen/Compound/Cerebras |
-| Update manuscript **FHS equations** (v2.9.42 changes) | Cyrille | ❌ | 4 × 25pt components; overspend nuance; category exemptions |
+| Update manuscript **FHS equations** (v2.9.67 changes) | Cyrille | ❌ | 4 × 25pt components; overspend nuance; category exemptions |
 | Update manuscript **agentic action count** → 34 | Cyrille | ❌ | Was 31 in some sections |
 | Update manuscript **badge count** → 25 | Cyrille | ❌ | +No-Spend Day + No-Spend Streak |
 | Update manuscript **daily AI limit** → 150 | Cyrille | ❌ | Was 60 |
-| Update manuscript **color theme count** → 10 | Cyrille | ❌ | +5 new themes v2.9.45 |
-| Update manuscript **hub tile count** → 26 | Cyrille | ❌ | Expanded v2.9.44 |
-| Update **settings toggles** → 10 home, 4 analytics, 14 Lite Mode | Cyrille | ❌ | New in v2.9.53–59: payday countdown, monthly recap, challenges, safe-to-spend |
-| Add to Implemented: savings rate chart, quick budget slider, analytics cache | Cyrille | ❌ | All v2.9.45 |
-| Add to Implemented: nav bar fix, Auto AI, chat export, payday countdown, monthly recap, semester interval, auto-cat evidence, safe-to-spend, share intent, AI disclaimer | Cyrille | ❌ | v2.9.50–2.9.59 — see handoff v3 §6 |
-| Add **RA 10173 PII redaction** to Ch.2/Ch.3 | Cyrille | ❌ | Mobile numbers stripped before LLM — v2.9.42 |
-| Add **AI financial advice disclaimer** to Ch.2/Ch.3 | Cyrille | ❌ | RA 11765 — one-time dialog added v2.9.59 |
-| Add **Safe-to-Spend** to features list | Cyrille | ❌ | BudgetPH differentiator — implemented v2.9.59 |
+| Update manuscript **color theme count** → 10 | Cyrille | ❌ | +5 new themes v2.9.67 |
+| Update manuscript **hub tile count** → 26 | Cyrille | ❌ | Expanded v2.9.67 |
+| Update **settings toggles** → 10 home, 4 analytics, 14 Lite Mode | Cyrille | ❌ | New in v2.9.67–59: payday countdown, monthly recap, challenges, safe-to-spend |
+| Add to Implemented: savings rate chart, quick budget slider, analytics cache | Cyrille | ❌ | All v2.9.67 |
+| Add to Implemented: nav bar fix, Auto AI, chat export, payday countdown, monthly recap, semester interval, auto-cat evidence, safe-to-spend, share intent, AI disclaimer | Cyrille | ❌ | v2.9.67–2.9.67 — see handoff v3 §6 |
+| Add **RA 10173 PII redaction** to Ch.2/Ch.3 | Cyrille | ❌ | Mobile numbers stripped before LLM — v2.9.67 |
+| Add **AI financial advice disclaimer** to Ch.2/Ch.3 | Cyrille | ❌ | RA 11765 — one-time dialog added v2.9.67 |
+| Add **Safe-to-Spend** to features list | Cyrille | ❌ | BudgetPH differentiator — implemented v2.9.67 |
 | Add **Agila, PISO, BunnyWise, MayBudget** to competitor table | Cyrille | ❌ | See FEATURE_BACKLOG Part 10 + Part 3 |
 | BSP citation update Ch.1: 2021 → CFIS 2025 | Cyrille | ❌ | |
 | Move **Paluwagan** to Implemented | Cyrille | ✅ | Done |
@@ -67,12 +67,12 @@
 
 ---
 
-## DEMO SCRIPT — Pre-Final Defense (v2.9.59)
+## DEMO SCRIPT — Pre-Final Defense (v2.9.67)
 
 ### Night before
-1. Download `SmartSpend-v2.9.59-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases
+1. Download `SmartSpend-v2.9.67-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases
 2. Install on demo phone
-3. Open app → verify About screen shows **"Version 2.9.59"**
+3. Open app → verify About screen shows **"Version 2.9.67"**
 4. Settings → Quick Presets → **Lite Mode OFF** (show all features)
 5. Settings → AI MODEL → **Auto (Recommended)**
 6. AI screen → ⋮ → **Reset Daily Limit**
@@ -120,11 +120,11 @@
 
 ---
 
-## AUTHORITATIVE BUILD NUMBERS (v2.9.59)
+## AUTHORITATIVE BUILD NUMBERS (v2.9.67)
 
 | Metric | Value |
 |--------|-------|
-| Version | **2.9.59+59** |
+| Version | **2.9.67+59** |
 | APK sizes | arm64-v8a ~46.7 MB, armeabi-v7a ~39.4 MB, x86_64 ~49.7 MB |
 | SQLite schema | v11, 20 tables |
 | AI providers | **8** (Gemini Flash, Flash-Lite, GPT-OSS 120B Groq, Qwen3.6, Qwen3.8, Compound, Compound Mini, Cerebras) |
@@ -155,13 +155,13 @@
 
 | Version | Key changes |
 |---------|------------|
-| v2.9.59 | Safe-to-Spend card, AI advice disclaimer, confidence badge, GCash share intent, action allowlist |
-| v2.9.58 | Empty state overflow fixes (insurance, paluwagan); FAB list clipping (5 screens); rollover bug |
-| v2.9.57 | AI chat chips overlapping input fixed; viewPadding on AI screen |
-| v2.9.56 | AI fail-fast when Remote Config keys not loaded |
-| v2.9.55 | Keys moved to Firebase Remote Config — no secrets in git |
-| v2.9.54 | Groq API key rotated after exposure |
-| v2.9.53 | 3 new home screen toggles; Lite Mode → 13 sections |
-| v2.9.52 | Tier 1: payday countdown, monthly recap, chat export, auto-cat evidence, semester interval |
-| v2.9.51 | Critical: AI fallback chain silently failing |
-| v2.9.50 | Nav bar overlap all 8 screens; Auto AI model; smarter failover |
+| v2.9.67 | Safe-to-Spend card, AI advice disclaimer, confidence badge, GCash share intent, action allowlist |
+| v2.9.67 | Empty state overflow fixes (insurance, paluwagan); FAB list clipping (5 screens); rollover bug |
+| v2.9.67 | AI chat chips overlapping input fixed; viewPadding on AI screen |
+| v2.9.67 | AI fail-fast when Remote Config keys not loaded |
+| v2.9.67 | Keys moved to Firebase Remote Config — no secrets in git |
+| v2.9.67 | Groq API key rotated after exposure |
+| v2.9.67 | 3 new home screen toggles; Lite Mode → 13 sections |
+| v2.9.67 | Tier 1: payday countdown, monthly recap, chat export, auto-cat evidence, semester interval |
+| v2.9.67 | Critical: AI fallback chain silently failing |
+| v2.9.67 | Nav bar overlap all 8 screens; Auto AI model; smarter failover |

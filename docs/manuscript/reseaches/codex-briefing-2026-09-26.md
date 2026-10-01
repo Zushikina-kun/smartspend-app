@@ -1,6 +1,6 @@
 # SmartSpend — Codex Briefing Document
 **Compiled:** September 26, 2026
-**Version:** 2.9.59
+**Version:** 2.9.67
 **For:** OpenAI Codex (or any AI coding agent starting fresh on this project)
 **Purpose:** Everything Codex needs to understand the project, write correct code, and avoid breaking things.
 
@@ -17,7 +17,7 @@ It is a **capstone project** (college thesis) by team Lucid Frame at Lorma Colle
 **Target users:** Filipino college students, young professionals, and parents.
 **Platform:** Android only (Flutter). iOS/web are out of scope.
 **Language:** Dart (Flutter 3.x stable).
-**Version as of this briefing:** `2.9.59+53`
+**Version as of this briefing:** `2.9.67+53`
 
 ---
 
@@ -52,7 +52,7 @@ smartspend_app/
 
 ---
 
-## 3. Dependencies (pubspec.yaml — v2.9.59)
+## 3. Dependencies (pubspec.yaml — v2.9.67)
 
 Key packages and what they're used for:
 
@@ -271,7 +271,7 @@ The AI can perform these actions autonomously from natural language:
 **Advisory:** `give_financial_advice`, `explain_fhs_score`, `suggest_savings_goal`
 **Other:** `set_spending_limit`, `show_savings_goals`, `show_debts`
 
-### 7c. Category resolution priority (v2.9.52+)
+### 7c. Category resolution priority (v2.9.67+)
 
 ```
 _resolveCategory(aiCategory, itemName):
@@ -401,7 +401,7 @@ fireEvent(AppEvent.goalChanged);      // for savings goal changes
 
 5. **Use `const` everywhere possible** — the analyzer enforces `prefer_const_constructors`. New widgets should be `const` where the constructor allows.
 
-6. **No `withOpacity()`** — use `.withValues(alpha: x)` instead. `withOpacity` was replaced globally in v2.9.47.
+6. **No `withOpacity()`** — use `.withValues(alpha: x)` instead. `withOpacity` was replaced globally in v2.9.67.
 
 7. **No hardcoded colors** — always use `Theme.of(context).colorScheme` values. No `Colors.blue` directly in cards (ok in icons with explicit meaning like `Colors.green` for positive).
 
@@ -442,16 +442,16 @@ The formula also applies warning decay and logging-gap adjustments in supporting
 
 ## 11. Known Files That Are Stale / Have Wrong Version Numbers
 
-These files have not been updated to v2.9.59 yet — treat the version numbers in them as wrong:
+These files have not been updated to v2.9.67 yet — treat the version numbers in them as wrong:
 
 | File | Stale version | Correct version |
 |------|--------------|----------------|
-| `README.md` | 2.9.40 | 2.9.59 |
-| `HOWTORUN.md` | 2.9.40 | 2.9.59 |
-| `docs/reference/SYSTEM_OVERVIEW.md` | 2.9.41 | 2.9.59 |
-| `docs/reference/APPLICATION_PIPELINE.md` | 2.9.47 | 2.9.59 |
-| `docs/reference/FEATURE_DOCS.md` | 2.9.41 | 2.9.59 |
-| `docs/reference/CAPSTONE_REFERENCE.md` | 2.9.41–47 | 2.9.59 |
+| `README.md` | 2.9.67 | 2.9.67 |
+| `HOWTORUN.md` | 2.9.67 | 2.9.67 |
+| `docs/reference/SYSTEM_OVERVIEW.md` | 2.9.67 | 2.9.67 |
+| `docs/reference/APPLICATION_PIPELINE.md` | 2.9.67 | 2.9.67 |
+| `docs/reference/FEATURE_DOCS.md` | 2.9.67 | 2.9.67 |
+| `docs/reference/CAPSTONE_REFERENCE.md` | 2.9.67–47 | 2.9.67 |
 
 **Authoritative source for current state:** `docs/manuscript/reseaches/kiro-to-claude-handoff-2026-09-26-v3.md`
 
@@ -479,7 +479,7 @@ These are the features that should be built next, in priority order:
 
 **URL:** `https://github.com/Zushikina-kun/smartspend-app`
 **Branch:** `master` (single branch workflow)
-**Release tags:** v2.9.50 through v2.9.59 on GitHub Releases
+**Release tags:** v2.9.67 through v2.9.67 on GitHub Releases
 
 **Build commands:**
 ```bash
@@ -518,11 +518,11 @@ Without these files, the app will compile but AI features will not work. The app
 
 ---
 
-## 15. Quick Reference — Key Numbers (v2.9.59)
+## 15. Quick Reference — Key Numbers (v2.9.67)
 
 | Metric | Value |
 |--------|-------|
-| Version | 2.9.59+53 |
+| Version | 2.9.67+53 |
 | Screens | 41 Dart files |
 | Services | 29 Dart files |
 | SQLite tables | 20 |
@@ -560,5 +560,5 @@ Without these files, the app will compile but AI features will not work. The app
 ---
 
 *Compiled by Kiro — September 26, 2026*
-*Authoritative for project state as of v2.9.59.*
+*Authoritative for project state as of v2.9.67.*
 *Read alongside: `kiro-to-claude-handoff-2026-09-26-v3.md` (for feature history and manuscript context)*

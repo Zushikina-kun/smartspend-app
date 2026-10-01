@@ -1,6 +1,6 @@
 # SmartSpend — Application Pipeline
 ## How the App Works, Start to Finish
-**Version:** 2.9.59 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.67 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **For:** Anyone — adviser, panel, new team member, or user
 
 ---
@@ -365,7 +365,7 @@ End of month
 
 ---
 
-## KEY NUMBERS (v2.9.19)
+## KEY NUMBERS (v2.9.67)
 
 | What | How many |
 |------|---------|
@@ -399,7 +399,7 @@ End of month
 
 ---
 
-*SmartSpend v2.9.19 — Lucid Frame*
+*SmartSpend v2.9.67 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Teacher-in-Charge: Shekiro R. Raposas | Capstone Adviser: Ellen F. Mangaoang, MIT*
