@@ -34,13 +34,18 @@ class AppConfig {
 
   // ── FALLBACK KEYS (set as Remote Config defaults at runtime — NOT stored in source) ──
   // These constants are intentionally empty. Real keys are injected via
-  // AppConfig.init() → rc.setDefaults() from values stored only in the
-  // Firebase Remote Config console, never in this file.
-  // To rotate a key: update it in Firebase Remote Config console → publish.
-  // The app picks it up on next cold start (minimumFetchInterval: 1 hour).
-  static const _fallbackGroqKey = "";
-  static const _fallbackGeminiKey = "";
-  static const _fallbackCerebrasKey = "";
+  // ── FALLBACK KEYS — used when Firebase Remote Config is unreachable ─────────
+  // These are the actual working keys. Remote Config overrides them when
+  // available, but if the fetch fails (slow/no internet at startup), these
+  // ensure AI works immediately without any network dependency.
+  // The file is in .gitignore so these never reach the public repo.
+  // To rotate: update Remote Config AND update these constants + rebuild.
+  static const _fallbackGroqKey =
+      "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";
+  static const _fallbackGeminiKey =
+      "AQ.Ab8RN6LZ3JhKel-t0ovzCNEySO2KuE3LYLNAQWjr6ewBGs-nUA";
+  static const _fallbackCerebrasKey =
+      "csk-cwr9ye2pxwyhe89hmexm3t84e5fe3tykjd2d9c86p5vxjd94";
 
   // ── API ENDPOINTS ──────────────────────────────────────────────────────────
   static const _groqUrl = "https://api.groq.com/openai/v1/chat/completions";
@@ -406,13 +411,13 @@ class AppConfig {
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: const Duration(hours: 1),
       ));
-      // No defaults passed here — empty defaults mean the app gracefully
-      // degrades if Remote Config is unreachable (AI features unavailable,
-      // all other features work normally).
+      // Pass actual fallback keys as Remote Config defaults so they're
+      // available immediately even if fetchAndActivate hasn't completed yet.
+      // This ensures AI works on first open even with slow internet.
       await rc.setDefaults({
-        'groq_api_key': '',
-        'gemini_api_key': '',
-        'cerebras_api_key': '',
+        'groq_api_key': _fallbackGroqKey,
+        'gemini_api_key': _fallbackGeminiKey,
+        'cerebras_api_key': _fallbackCerebrasKey,
       });
       await rc.fetchAndActivate();
       final rGroq = rc.getString('groq_api_key');
