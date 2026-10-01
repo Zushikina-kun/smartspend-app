@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.68';
-  static const _prefKey = 'whats_new_seen_2_9_68';
+  static const _version = '2.9.69';
+  static const _prefKey = 'whats_new_seen_2_9_69';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,20 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🎛️',
+      'Experience Presets (v2.9.69)',
+      'The binary Lite Mode switch is replaced by four experience levels: '
+          '🪶 Lite (essentials only), 😊 Casual (regular tracker), '
+          '⚖️ Normal (balanced — recommended), and 🚀 Pro (everything on). '
+          'Find them in Settings → Quick Presets. Individual toggles below still work.',
+    ),
+    (
+      '🔧',
+      'Hub renamed to Tools (v2.9.69)',
+      'The bottom nav item is now labelled "Tools" instead of "Hub" — '
+          'clearer for new users. The sheet title is "Tools & Hub".',
+    ),
     (
       '🎨',
       'Slate Theme + Color Cleanup (v2.9.68)',

@@ -129,38 +129,90 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) setState(() => _loading = false);
   }
 
-  void _applyLiteMode(bool on) {
+  void _applyLiteMode(bool on) => _applyPreset(on ? 'lite' : 'normal');
+
+  /// Apply an experience preset — sets all 14 show_* keys atomically.
+  /// Presets are starting points; individual toggles below still work.
+  void _applyPreset(String preset) {
+    // Visibility matrix per preset level
+    // Lite 🪶 — essentials only
+    // Casual 😊 — regular tracker
+    // Normal ⚖️ — balanced (default)
+    // Pro 🚀 — everything
+    final s = preset == 'lite'
+        ? _PresetValues.lite()
+        : preset == 'casual'
+            ? _PresetValues.casual()
+            : preset == 'pro'
+                ? _PresetValues.pro()
+                : _PresetValues.normal();
+
     setState(() {
-      showSubscriptions = !on;
-      showQuickLog = !on;
-      showBadges = !on;
-      showMoodHome = !on;
-      showForecast = !on;
-      showPrediction = !on;
-      showPaydayCountdown = !on;
-      showMonthlyRecap = !on;
-      showChallenges = !on;
-      showSafeToSpend = !on;
-      showDTI = !on;
-      showEmergencyFund = !on;
-      showMilestones = !on;
-      showMarketInsights = !on;
+      showSubscriptions = s.subscriptions;
+      showQuickLog = s.quickLog;
+      showBadges = s.badges;
+      showMoodHome = s.moodHome;
+      showForecast = s.forecast;
+      showPrediction = s.prediction;
+      showPaydayCountdown = s.paydayCountdown;
+      showMonthlyRecap = s.monthlyRecap;
+      showChallenges = s.challenges;
+      showSafeToSpend = s.safeToSpend;
+      showDTI = s.dti;
+      showEmergencyFund = s.emergencyFund;
+      showMilestones = s.milestones;
+      showMarketInsights = s.marketInsights;
     });
-    DBService.setSetting('show_subscriptions', on ? 'false' : 'true');
-    DBService.setSetting('show_quick_log', on ? 'false' : 'true');
-    DBService.setSetting('show_badges', on ? 'false' : 'true');
-    DBService.setSetting('show_mood_home', on ? 'false' : 'true');
-    DBService.setSetting('show_forecast', on ? 'false' : 'true');
-    DBService.setSetting('show_prediction', on ? 'false' : 'true');
-    DBService.setSetting('show_payday_countdown', on ? 'false' : 'true');
-    DBService.setSetting('show_monthly_recap', on ? 'false' : 'true');
-    DBService.setSetting('show_challenges', on ? 'false' : 'true');
-    DBService.setSetting('show_safe_to_spend', on ? 'false' : 'true');
-    DBService.setSetting('show_dti', on ? 'false' : 'true');
-    DBService.setSetting('show_emergency_fund', on ? 'false' : 'true');
-    DBService.setSetting('show_milestones', on ? 'false' : 'true');
-    DBService.setSetting('show_market_insights', on ? 'false' : 'true');
+    void w(String k, bool v) => DBService.setSetting(k, v ? 'true' : 'false');
+    w('show_subscriptions', s.subscriptions);
+    w('show_quick_log', s.quickLog);
+    w('show_badges', s.badges);
+    w('show_mood_home', s.moodHome);
+    w('show_forecast', s.forecast);
+    w('show_prediction', s.prediction);
+    w('show_payday_countdown', s.paydayCountdown);
+    w('show_monthly_recap', s.monthlyRecap);
+    w('show_challenges', s.challenges);
+    w('show_safe_to_spend', s.safeToSpend);
+    w('show_dti', s.dti);
+    w('show_emergency_fund', s.emergencyFund);
+    w('show_milestones', s.milestones);
+    w('show_market_insights', s.marketInsights);
+    DBService.setSetting('experience_preset', preset);
     fireEvent(AppEvent.incomeChanged);
+  }
+
+  /// Detect current active preset from show_* state, falling back to 'custom'.
+  String get _activePreset {
+    if (_matchesPreset('lite')) return 'lite';
+    if (_matchesPreset('casual')) return 'casual';
+    if (_matchesPreset('normal')) return 'normal';
+    if (_matchesPreset('pro')) return 'pro';
+    return 'custom';
+  }
+
+  bool _matchesPreset(String preset) {
+    final s = preset == 'lite'
+        ? _PresetValues.lite()
+        : preset == 'casual'
+            ? _PresetValues.casual()
+            : preset == 'pro'
+                ? _PresetValues.pro()
+                : _PresetValues.normal();
+    return showSubscriptions == s.subscriptions &&
+        showQuickLog == s.quickLog &&
+        showBadges == s.badges &&
+        showMoodHome == s.moodHome &&
+        showForecast == s.forecast &&
+        showPrediction == s.prediction &&
+        showPaydayCountdown == s.paydayCountdown &&
+        showMonthlyRecap == s.monthlyRecap &&
+        showChallenges == s.challenges &&
+        showSafeToSpend == s.safeToSpend &&
+        showDTI == s.dti &&
+        showEmergencyFund == s.emergencyFund &&
+        showMilestones == s.milestones &&
+        showMarketInsights == s.marketInsights;
   }
 
   void _save(String key, bool value) {
@@ -356,65 +408,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           : ListView(
               padding: const EdgeInsets.fromLTRB(18, 12, 18, 40),
               children: [
-                // ── LITE MODE ───────────────────────────────────────────────
+                // ── EXPERIENCE PRESETS ──────────────────────────────────
                 _sectionLabel('QUICK PRESETS'),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 4),
-                  decoration: BoxDecoration(
-                    color: liteMode
-                        ? theme.colorScheme.primary.withValues(alpha: 0.08)
-                        : theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: liteMode
-                        ? Border.all(
-                            color: theme.colorScheme.primary
-                                .withValues(alpha: 0.3))
-                        : null,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.06),
-                        blurRadius: 12,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  child: Row(children: [
-                    Icon(Icons.view_compact_outlined,
-                        size: 22,
-                        color: liteMode
-                            ? theme.colorScheme.primary
-                            : Colors.grey[600]),
-                    const SizedBox(width: 14),
-                    Expanded(
-                        child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Lite Mode',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color:
-                                  liteMode ? theme.colorScheme.primary : null),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          liteMode
-                              ? 'ON — only core cards visible. Tap to restore all.'
-                              : 'Hides all optional cards in one tap — clean, simple view.',
-                          style:
-                              TextStyle(fontSize: 11, color: Colors.grey[500]),
-                        ),
-                      ],
-                    )),
-                    Switch(
-                      value: liteMode,
-                      onChanged: _applyLiteMode,
-                      activeThumbColor: theme.colorScheme.primary,
-                    ),
-                  ]),
+                _ExperiencePresetSelector(
+                  activePreset: _activePreset,
+                  onSelect: _applyPreset,
                 ),
 
                 // ── BEHAVIOR ────────────────────────────────────────────────
@@ -1058,6 +1056,197 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 20),
               ],
             ),
+    );
+  }
+}
+
+// ── _PresetValues — visibility matrix for each experience level ─────────────
+
+class _PresetValues {
+  final bool subscriptions, quickLog, badges, moodHome, forecast, prediction;
+  final bool paydayCountdown, monthlyRecap, challenges, safeToSpend;
+  final bool dti, emergencyFund, milestones, marketInsights;
+
+  const _PresetValues({
+    required this.subscriptions,
+    required this.quickLog,
+    required this.badges,
+    required this.moodHome,
+    required this.forecast,
+    required this.prediction,
+    required this.paydayCountdown,
+    required this.monthlyRecap,
+    required this.challenges,
+    required this.safeToSpend,
+    required this.dti,
+    required this.emergencyFund,
+    required this.milestones,
+    required this.marketInsights,
+  });
+
+  // 🪶 Lite — essentials only: balance card + FHS + recent expenses
+  factory _PresetValues.lite() => const _PresetValues(
+        subscriptions: false,
+        quickLog: false,
+        badges: false,
+        moodHome: false,
+        forecast: false,
+        prediction: false,
+        paydayCountdown: false,
+        monthlyRecap: false,
+        challenges: false,
+        safeToSpend: false,
+        dti: false,
+        emergencyFund: false,
+        milestones: false,
+        marketInsights: false,
+      );
+
+  // 😊 Casual — for regular trackers: adds quick log, badges, challenges
+  factory _PresetValues.casual() => const _PresetValues(
+        subscriptions: false,
+        quickLog: true,
+        badges: true,
+        moodHome: false,
+        forecast: false,
+        prediction: false,
+        paydayCountdown: false,
+        monthlyRecap: true,
+        challenges: true,
+        safeToSpend: false,
+        dti: false,
+        emergencyFund: false,
+        milestones: false,
+        marketInsights: false,
+      );
+
+  // ⚖️ Normal — balanced, recommended: adds wallet, payday, safe-to-spend, subscriptions
+  factory _PresetValues.normal() => const _PresetValues(
+        subscriptions: true,
+        quickLog: true,
+        badges: true,
+        moodHome: true,
+        forecast: true,
+        prediction: false,
+        paydayCountdown: true,
+        monthlyRecap: true,
+        challenges: true,
+        safeToSpend: true,
+        dti: true,
+        emergencyFund: true,
+        milestones: false,
+        marketInsights: false,
+      );
+
+  // 🚀 Pro — everything visible
+  factory _PresetValues.pro() => const _PresetValues(
+        subscriptions: true,
+        quickLog: true,
+        badges: true,
+        moodHome: true,
+        forecast: true,
+        prediction: true,
+        paydayCountdown: true,
+        monthlyRecap: true,
+        challenges: true,
+        safeToSpend: true,
+        dti: true,
+        emergencyFund: true,
+        milestones: true,
+        marketInsights: true,
+      );
+}
+
+// ── _ExperiencePresetSelector widget ────────────────────────────────────────
+
+class _ExperiencePresetSelector extends StatelessWidget {
+  final String activePreset;
+  final void Function(String) onSelect;
+
+  const _ExperiencePresetSelector({
+    required this.activePreset,
+    required this.onSelect,
+  });
+
+  static const _presets = [
+    ('lite', '🪶', 'Lite', 'Just the essentials'),
+    ('casual', '😊', 'Casual', 'Regular tracker'),
+    ('normal', '⚖️', 'Normal', 'Balanced — recommended'),
+    ('pro', '🚀', 'Pro', 'Everything on'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 4-button grid
+        Row(
+          children: _presets.map((p) {
+            final isActive = activePreset == p.$1;
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: GestureDetector(
+                  onTap: () => onSelect(p.$1),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: isActive
+                          ? cs.primary.withValues(alpha: 0.10)
+                          : cs.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isActive
+                            ? cs.primary.withValues(alpha: 0.45)
+                            : cs.outline.withValues(alpha: 0.15),
+                        width: isActive ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(p.$2, style: const TextStyle(fontSize: 18)),
+                        const SizedBox(height: 4),
+                        Text(
+                          p.$3,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: isActive ? cs.primary : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 8),
+        // Subtitle for active preset
+        Text(
+          () {
+            final match =
+                _presets.where((p) => p.$1 == activePreset).firstOrNull;
+            if (match != null) return match.$4;
+            return 'Custom — some toggles changed individually';
+          }(),
+          style: TextStyle(
+              fontSize: 11, color: cs.onSurface.withValues(alpha: 0.5)),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Presets adjust which cards are shown. You can still customize individually below.',
+          style: TextStyle(
+              fontSize: 10, color: cs.onSurface.withValues(alpha: 0.4)),
+        ),
+        const SizedBox(height: 12),
+      ],
     );
   }
 }

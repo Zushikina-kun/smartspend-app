@@ -449,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }),
                   _navItem(Icons.bar_chart, "Analytics", 1),
                   _navItem(Icons.smart_toy, "AI", 2),
-                  _navItem(Icons.grid_view_rounded, "Hub", -1,
+                  _navItem(Icons.grid_view_rounded, "Tools", -1,
                       onTap: () => _showQuickAccessHub(context)),
                   _navItem(Icons.person, "Profile", 3),
                 ],
@@ -1627,7 +1627,7 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
           ),
           const SizedBox(height: 14),
           // Title
-          const Text("Quick Access",
+          const Text("Tools & Hub",
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           // Search bar
