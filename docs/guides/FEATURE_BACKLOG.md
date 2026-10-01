@@ -2250,3 +2250,184 @@ The wallet system works mechanically but feels disconnected from the natural exp
 ---
 
 *Part 18 added September 27, 2026.*
+
+---
+
+## Part 19 — UX Friction Reduction Plan (October 2026)
+
+**Context:** Panel feedback during pre-finals: the app has "masyado color pollution" and feels complicated. The adviser noted it should be easier to use than paper/pen, notepad, or Excel. This section documents a systematic plan to reduce friction while keeping all features.
+
+---
+
+### 19A — Why SmartSpend Should Beat Paper/Excel (the core argument)
+
+Paper/pen and Excel are the status quo. To displace them, the app must win on at least 3 of these 5 axes:
+
+| Axis | Paper/Pen | Excel/GSheets | SmartSpend (current) | SmartSpend (target) |
+|------|-----------|---------------|---------------------|---------------------|
+| **Speed to log** | 2 sec | 10-15 sec (open, find row, type) | 5 sec (open app, tap AI, type) | 3 sec (widget/quick-log) |
+| **Zero maintenance** | ✅ No setup | ❌ Manual formulas | ✅ Auto-calculates | ✅ |
+| **Insights** | ❌ None | ⚠️ Manual charts | ✅ Auto FHS, AI advice | ✅ |
+| **Mobile-native** | ❌ Paper stays home | ❌ Opens in browser | ✅ Always in pocket | ✅ |
+| **Filipino context** | ❌ Generic | ❌ Generic | ✅ GCash, jeep, paluwagan | ✅ |
+
+**The win condition:** Make logging faster than opening Excel, and the app wins. Currently both are ~5-10 seconds. The app needs to be 3 seconds or under for the most common action.
+
+**Research finding:** Apps beat spreadsheets when they eliminate the setup cost (formulas, categories, formatting). SmartSpend already does this with AI. The friction is in *discovery* and *navigation*, not in the core logging flow. ([moneycoach.ai](https://moneycoach.ai/blog/budget-app-vs-spreadsheet), 2026)
+
+---
+
+### 19B — Current Friction Audit
+
+| Friction Point | Where | Impact | Fix |
+|---------------|-------|--------|-----|
+| **27 settings toggles** | Settings screen | High — overwhelming for new users | Experience Presets (Part 16) — hide most behind Normal/Pro |
+| **51 navigation targets from Home** | Home screen | High — too many cards competing | Lite Mode default for new users; progressive reveal |
+| **5 bottom nav items + Hub** | Bottom bar | Medium — Hub is unclear to new users | Rename Hub → "Tools"; add description on first open |
+| **Setup screen was 4 pages** | Setup | Medium — now fixed with scroll in v2.9.67 | ✅ Fixed |
+| **FHS score shown as 0 on new month** | Home | Medium — ✅ Fixed in v2.9.67 | ✅ Fixed |
+| **AI chat as primary input** | AI screen | Low — actually fast, but discovery is the issue | Add home screen AI quick-input bar (type without navigating) |
+| **Expense editing is 3 taps deep** | Transactions | Medium | Long-press on expense tile → quick edit inline |
+| **Budget setup requires knowing categories first** | Budget screen | Medium | First-run budget suggestions based on spending history |
+| **Hub has 26+ items in a flat list** | Hub | High — users can't find things | Group + search already there; add "Most used" shortcut row |
+
+---
+
+### 19C — GUI/Color Issues (Panel Feedback)
+
+**What the panel said:** "Masyado color pollution" / "generic" / "eyesore"
+
+**Root causes identified:**
+1. **Default theme was Ocean Blue** (#0066FF) — a saturated corporate blue that reads "generic fintech" → Fixed to Deep Navy in v2.9.67
+2. **Green wallet card + blue nav + orange alerts + purple analytics** = 4+ saturated colors on one screen simultaneously
+3. **Every card has a different accent color** — no visual hierarchy, everything fights for attention
+4. **Card shapes are inconsistent** — some r:12, some r:16, some r:18, some r:20
+5. **Font mixing** — bold + regular + italic all on same card without clear hierarchy
+
+**The core problem:** The app uses color **decoratively** (to make things look different) instead of **semantically** (to mean something). In a mature financial app, color should only appear when it *means* something:
+- 🟢 Green = good/positive (savings rate ≥20%, FHS ≥80, on budget)
+- 🔴 Red = problem (over budget, FHS <60, overdue debt)
+- 🟡 Orange = warning (approaching limit, score dropping)
+- Neutral (navy/charcoal/surface) = everything else
+
+**Action plan:**
+- Remove decorative colors from all cards — use `surfaceContainerLow` universally
+- Color only appears in status indicators, not card backgrounds or borders
+- Standardize border radius to 16dp for all cards (already the target, enforce it)
+- Add a new "Slate" theme optimized for demo: clean dark-blue-gray, no vibrancy
+- Ensure font hierarchy: one bold headline, one regular body, no italic in cards
+
+---
+
+### 19D — Specific UI Improvements (Prioritized)
+
+#### P0 — Immediate (before next defense)
+
+| # | Fix | Where | Effort |
+|---|-----|-------|--------|
+| U1 | **Home AI quick-input bar** — a single line text field pinned above the nav bar that sends to AI without navigating to AI screen | `home_screen.dart` | ~2h |
+| U2 | **Remove all decorative card colors** — all home cards become `surfaceContainerLow` + shadow; only FHS score ring uses color | Home screen | ~2h |
+| U3 | **Consistent border radius** — audit all screens, enforce 16dp cards | All screens | ~1h |
+| U4 | **Add "Slate" default theme** — `#334155` dark blue-gray, reserved for demos and first impressions | `theme_service.dart` | ~30min |
+| U5 | **Hub → "Tools" rename + first-open description** | Hub sheet | ~30min |
+| U6 | **Normal preset as default** — new users get Normal (not all toggles on) | `settings_screen.dart` | ~30min |
+
+#### P1 — Before Final Defense
+
+| # | Fix | Where | Effort |
+|---|-----|-------|--------|
+| U7 | **Experience Presets** (Part 16) — replace Lite Mode toggle with Lite/Casual/Normal/Pro segmented selector | `settings_screen.dart` | 1.5 days |
+| U8 | **Budget first-run suggestions** — after first 5 expenses logged, app suggests budget amounts based on actual spending | `budget_screen.dart` | ~3h |
+| U9 | **Quick-edit on expense tile long-press** — inline amount/category edit without opening Edit screen | `expense_tile.dart` | ~2h |
+| U10 | **"Most used" row at top of Hub** — 4 most-visited Hub items as large chips | Hub sheet | ~1h |
+| U11 | **Onboarding value proposition screen** — before setup, show a 3-card swipe explaining the 3 main benefits | New screen | ~2h |
+
+---
+
+### 19E — App Distribution Strategy (Alternatives to Google Play)
+
+**Context:** Google Play has a 14-day closed testing requirement, $25 fee, identity verification, and increasingly strict policies. Need backup plans for the final defense.
+
+#### Tier 1 — Already working (use for defense now)
+
+| Channel | What it is | How to use |
+|---------|------------|-----------|
+| **GitHub Releases** | Direct APK download from repo | ✅ Already set up — `https://github.com/Zushikina-kun/smartspend-app/releases` |
+| **GitHub Pages** | Web-hosted reviewer/documentation | ✅ Already live — `reviewer.html` |
+| **Firebase App Distribution** | Send APK to testers via email link | Easy — Firebase Console → App Distribution → upload APK → invite testers by Gmail |
+
+#### Tier 2 — Quick to set up (1-2 hours each)
+
+| Channel | Notes | Cost | Requirements |
+|---------|-------|------|-------------|
+| **APKPure** | Large independent catalog, popular in PH | Free | Submit APK + description + screenshots |
+| **APKMirror** | Trusted archive, good for sharing specific versions | Free | Submit signed APK — requires WhisperCore verification |
+| **Aptoide** | Decentralized, no review gatekeeping | Free | Create developer account, upload APK |
+| **Samsung Galaxy Store** | Pre-installed on all Samsung phones — huge in PH | Free | Samsung developer account (free), 70% rev share |
+
+#### Tier 3 — Takes longer
+
+| Channel | Notes | Timeline |
+|---------|-------|----------|
+| **Google Play Store** | Most reach but 14-day closed testing required | 4-6 weeks post-defense |
+| **F-Droid** | Open-source only — SmartSpend uses Firebase (proprietary) → **NOT eligible** | N/A |
+| **Huawei AppGallery** | Relevant for Huawei users | ~1 week setup, no closed testing requirement |
+
+#### ⚠️ Important notes on alternatives:
+- **Amazon Appstore** shut down for non-Fire Android devices on **August 20, 2025** — no longer viable
+- **F-Droid** requires fully open-source code with no proprietary dependencies — Firebase disqualifies SmartSpend
+- **Direct APK sideloading** is already working and requires zero setup — this is what you use for the defense demo
+- **Firebase App Distribution** is the best "controlled testing" option — invite your 30 SUS survey respondents via Gmail, they get a direct install link
+
+#### Recommended distribution plan:
+
+```
+NOW (for final defense):
+  → Direct APK from GitHub Releases (already working)
+  → Firebase App Distribution for SUS respondents (30 testers)
+
+SOON (within 1 month post-defense):
+  → Samsung Galaxy Store (fastest path to real users in PH, no closed testing)
+  → APKPure (passive discovery)
+
+AFTER 14-DAY TESTING:
+  → Google Play Store (most reach, hardest to get into)
+```
+
+---
+
+### 19F — N1 through N3: Financial Planner Features
+
+These were already in the backlog but now promoted to P1 given adviser feedback.
+
+#### N1 — Debt Payoff Calculator Screen (~2 days)
+**What it is:** A standalone screen (not just AI chat) where you input your debts, and the app shows a month-by-month payoff schedule using both avalanche (highest interest first) and snowball (smallest balance first) strategies.
+
+**Why it matters for final defense:** The adviser asked for "magandang financial planner" — a debt payoff calculator is the clearest evidence that SmartSpend is a planner, not just a tracker.
+
+**Implementation:**
+- New `debt_payoff_screen.dart`
+- Reads existing debts from DB (already tracked)
+- Inputs: monthly payment budget, strategy choice
+- Output: table of months → which debt gets paid → balance remaining
+- Show total interest saved by avalanche vs snowball
+
+#### N2 — Goals Timeline View (~1 day)
+**What it is:** A consolidated view showing all savings goals on a shared horizontal timeline, with projected completion dates based on current contribution rate.
+
+**Why it matters:** Currently goals are shown as individual progress bars. A timeline makes the app feel like a financial *planner* — you see your future, not just your current progress.
+
+**Implementation:**
+- New card in Analytics or Hub
+- X-axis = months, Y-axis = goals
+- Each goal shows: current progress bar, projected completion date, monthly contribution needed
+
+#### N3 — True Net Worth Chart (~1 day)
+**What it is:** A monthly chart of (wallet total + savings goals) − (debts + installments remaining). Different from the current FHS sparkline which uses score history, not actual money.
+
+**Why it matters:** Net worth trending is the single most important number for a financial planner. Seeing it go up over months is motivating.
+
+---
+
+*Part 19 added October 1, 2026.*
+*Research sources: g-co.agency UX practices (2026), forasoft.com Android distribution (2026), agiletech.vn Play Store alternatives (2026), moneycoach.ai app vs spreadsheet (2026). Content paraphrased for compliance.*
