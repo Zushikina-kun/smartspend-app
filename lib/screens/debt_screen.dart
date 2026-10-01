@@ -881,6 +881,28 @@ class _DebtScreenState extends State<DebtScreen>
         padding: EdgeInsets.fromLTRB(
             16, 8, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
         children: [
+          // Auto-archive banner — shows when any plan is fully paid
+          if (donePlans.isNotEmpty)
+            Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+              ),
+              child: Row(children: [
+                const Text('🎉', style: TextStyle(fontSize: 18)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    '${donePlans.length} plan${donePlans.length == 1 ? '' : 's'} fully paid! Scroll down to archive.',
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ]),
+            ),
           if (activePlans.isNotEmpty) ...[
             Padding(
               padding: const EdgeInsets.only(bottom: 8, top: 4),

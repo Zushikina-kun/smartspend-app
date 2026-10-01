@@ -211,13 +211,12 @@ class _SetupScreenState extends State<SetupScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Progress
-              Row(
+        child: Column(
+          children: [
+            // Progress bar — stays fixed at top
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              child: Row(
                 children: List.generate(
                     4,
                     (i) => Expanded(
@@ -233,16 +232,29 @@ class _SetupScreenState extends State<SetupScreen> {
                           ),
                         )),
               ),
-              const SizedBox(height: 32),
-
-              if (_step == 0) ..._buildStep0(cs),
-              if (_step == 1) ..._buildStep1(cs),
-              if (_step == 2) ..._buildStep2(cs),
-              if (_step == 3) ..._buildStep3(cs),
-
-              const Spacer(),
-
-              Row(
+            ),
+            const SizedBox(height: 20),
+            // Scrollable step content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_step == 0) ..._buildStep0(cs),
+                    if (_step == 1) ..._buildStep1(cs),
+                    if (_step == 2) ..._buildStep2(cs),
+                    if (_step == 3) ..._buildStep3(cs),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ),
+            // Back/Continue buttons — always visible at bottom
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                  24, 0, 24, 16 + MediaQuery.of(context).viewPadding.bottom),
+              child: Row(
                 children: [
                   if (_step > 0)
                     Expanded(
@@ -288,57 +300,70 @@ class _SetupScreenState extends State<SetupScreen> {
                   ),
                 ],
               ),
-              // Extra clearance for 3-button nav bar in edge-to-edge mode
-              SizedBox(
-                  height:
-                      MediaQuery.of(context).viewPadding.bottom > 0 ? 8 : 0),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   List<Widget> _buildStep0(ColorScheme cs) => [
-        const Text("Welcome to Smart Spend! 👋",
+        const Text("Nasaan na ba ang pera mo? 💸",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         const Text(
-            "Your personal AI financial companion. Let's set things up in just a few steps.",
-            style: TextStyle(color: Colors.grey)),
-        const SizedBox(height: 24),
-        // Wallet-first: show wallet icons prominently
+            "Most Filipinos can't answer that question at the end of the month. SmartSpend tracks every peso automatically — so you always know.",
+            style: TextStyle(color: Colors.grey, height: 1.4)),
+        const SizedBox(height: 20),
+        // Value prop card
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.green.shade600, Colors.green.shade800],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(16),
+            color: cs.primaryContainer,
+            borderRadius: BorderRadius.circular(14),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text("💵 Your wallets are the heart of the app",
+            children: [
+              Text("Why track your expenses?",
                   style: TextStyle(
-                      color: Colors.white,
+                      color: cs.onPrimaryContainer,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15)),
-              SizedBox(height: 8),
-              Text(
-                "Track your cash, GCash, Maya, BDO, BPI — everything in one place.\n\n"
-                "You tell the app how much money you have, and it tracks where it goes.",
-                style:
-                    TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
-              ),
+                      fontSize: 14)),
+              const SizedBox(height: 10),
+              ...([
+                "💸 Small daily expenses add up fast — ₱30 jeep fare × 2/day = ₱1,320/month",
+                "📊 You can't improve what you don't measure",
+                "🆘 Knowing where your money goes is your first step to saving it",
+                "🚫 Stop running out of money before the next allowance/payday",
+              ].map((t) => Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(t.substring(0, 2),
+                            style: const TextStyle(fontSize: 14)),
+                        const SizedBox(width: 8),
+                        Expanded(
+                            child: Text(t.substring(2).trim(),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: cs.onPrimaryContainer
+                                        .withValues(alpha: 0.8),
+                                    height: 1.4))),
+                      ],
+                    ),
+                  ))),
             ],
           ),
         ),
-        const SizedBox(height: 16),
-        const Text("What works best for you?",
+        const SizedBox(height: 20),
+        const Text("Who are you?",
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
+        Text("This helps us personalise your experience.",
+            style: TextStyle(
+                fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5))),
         const SizedBox(height: 12),
         // Simplified role picker — just 4 options instead of 8
         ...([

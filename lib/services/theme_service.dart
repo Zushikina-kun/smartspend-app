@@ -150,7 +150,7 @@ class ThemeService extends ChangeNotifier {
   static const _compactKey = 'compact_mode';
 
   bool _isDark = false;
-  AppTheme _appTheme = AppTheme.blue;
+  AppTheme _appTheme = AppTheme.navy; // Deep Navy — more professional default
   double _textScale = 1.0; // 1.0 = normal, 1.15 = large, 1.3 = extra large
   bool _highContrast = false;
   bool _compactMode = false;
