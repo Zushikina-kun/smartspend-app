@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.67';
-  static const _prefKey = 'whats_new_seen_2_9_67';
+  static const _version = '2.9.68';
+  static const _prefKey = 'whats_new_seen_2_9_68';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,35 +20,40 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '📱',
-      'Setup Screen Scrollable + Better Onboarding (v2.9.67)',
-      'Setup screen now scrolls — account type options no longer get cut off '
-          'on small phones. Also updated the opening message to explain '
-          'WHY tracking matters ("Nasaan na ba ang pera mo?") before asking '
-          'you to pick an account type.',
-    ),
-    (
-      '📊',
-      'FHS New Month + Duplicate Cleanup (v2.9.67)',
-      'On day 1 of a new month with no expenses, the app now shows your '
-          'last month\'s score instead of a blank state. Also removed '
-          'duplicate expenses that were logged twice (chat + screenshot).',
-    ),
-    (
       '🎨',
-      'Deep Navy Default Theme + Completed Plans Banner (v2.9.67)',
-      'Default theme changed to Deep Navy — more professional. '
-          'Fully paid payment plans now show a banner at the top of the '
-          'list so you don\'t miss them.',
+      'Slate Theme + Color Cleanup (v2.9.68)',
+      'New "Slate" color theme added (#334155) — now the default for new '
+          'installs. It\'s cleaner and easier on the eyes during demos. '
+          'Decorative card colors (purple, teal, blue, orange) removed '
+          'from the home screen — color is now reserved for status only.',
     ),
     (
-      '🚨',
-      'Critical Fix: AI Now Works Without Perfect Internet (v2.9.67)',
-      'The AI was completely non-functional if Firebase Remote Config '
-          'could not be reached at startup (slow WiFi, first open, etc). '
-          'API keys are now embedded as fallbacks in the app — AI works '
-          'immediately even without internet, and Remote Config still '
-          'overrides them when available for key rotation.',
+      '🤖',
+      'AI Quick-Input Bar on Home (v2.9.68)',
+      'You can now ask the AI or log an expense without leaving the home '
+          'screen — just type in the bar at the bottom and tap Send. '
+          'The reply appears as a snackbar with a "Full Chat" button.',
+    ),
+    (
+      '💳',
+      'Debt Payoff Calculator (v2.9.68)',
+      'Hub → Tools → Debt Payoff Calculator. Enter your monthly budget, '
+          'and it simulates both avalanche (highest rate first) and snowball '
+          '(lowest balance first) strategies — showing months to freedom '
+          'and total interest paid for each.',
+    ),
+    (
+      '🏁',
+      'Goals Timeline on Home (v2.9.68)',
+      'The home screen now shows a horizontal timeline of your active savings '
+          'goals with projected completion dates based on your contribution rate.',
+    ),
+    (
+      '📈',
+      'True Net Worth Chart on Profile (v2.9.68)',
+      'The Profile tab now shows a real Net Worth chart: '
+          'wallet balances + goal savings − outstanding debts, '
+          'plotted over the last 6 months using your actual income and expense data.',
     ),
     (
       '🔧',

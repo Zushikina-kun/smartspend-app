@@ -13,6 +13,7 @@ enum AppTheme {
   teal,
   rose,
   charcoal,
+  slate,
 }
 
 extension AppThemeExtension on AppTheme {
@@ -38,6 +39,8 @@ extension AppThemeExtension on AppTheme {
         return 'Rose Pink';
       case AppTheme.charcoal:
         return 'Charcoal';
+      case AppTheme.slate:
+        return 'Slate';
     }
   }
 
@@ -63,6 +66,8 @@ extension AppThemeExtension on AppTheme {
         return const Color(0xFFE91E8C);
       case AppTheme.charcoal:
         return const Color(0xFF37474F);
+      case AppTheme.slate:
+        return const Color(0xFF334155);
     }
   }
 
@@ -88,6 +93,8 @@ extension AppThemeExtension on AppTheme {
         return const Color(0xFFE91E8C);
       case AppTheme.charcoal:
         return const Color(0xFF546E7A);
+      case AppTheme.slate:
+        return const Color(0xFF334155);
     }
   }
 
@@ -113,6 +120,8 @@ extension AppThemeExtension on AppTheme {
         return 'rose';
       case AppTheme.charcoal:
         return 'charcoal';
+      case AppTheme.slate:
+        return 'slate';
     }
   }
 
@@ -136,8 +145,10 @@ extension AppThemeExtension on AppTheme {
         return AppTheme.rose;
       case 'charcoal':
         return AppTheme.charcoal;
+      case 'slate':
+        return AppTheme.slate;
       default:
-        return AppTheme.blue;
+        return AppTheme.slate; // new-install default: Slate
     }
   }
 }
@@ -150,7 +161,7 @@ class ThemeService extends ChangeNotifier {
   static const _compactKey = 'compact_mode';
 
   bool _isDark = false;
-  AppTheme _appTheme = AppTheme.navy; // Deep Navy — more professional default
+  AppTheme _appTheme = AppTheme.slate; // Slate — clean demo default
   double _textScale = 1.0; // 1.0 = normal, 1.15 = large, 1.3 = extra large
   bool _highContrast = false;
   bool _compactMode = false;
