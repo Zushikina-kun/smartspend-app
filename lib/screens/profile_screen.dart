@@ -1,5 +1,6 @@
 import 'home_screen.dart' show SpendingLimitsSheet;
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -1625,6 +1626,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     const SizedBox(height: 16),
 
+                    // N3: True Net Worth Chart
+                    const _NetWorthCard(),
+
+                    const SizedBox(height: 16),
+
                     // Score breakdown
                     if (_scoreBreakdown.isNotEmpty) ...[
                       Align(
@@ -2877,6 +2883,237 @@ class WalletsSheetState extends State<WalletsSheet> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ── N3: True Net Worth Card ───────────────────────────────────────────────────
+/// Shows a 6-month rolling net worth trend using real data:
+/// Net Worth = wallet_balances + goal_savings − debt_balances
+class _NetWorthCard extends StatefulWidget {
+  const _NetWorthCard();
+
+  @override
+  State<_NetWorthCard> createState() => _NetWorthCardState();
+}
+
+class _NetWorthCardState extends State<_NetWorthCard> {
+  bool _loading = true;
+  List<FlSpot> _spots = [];
+  List<String> _labels = [];
+  double _current = 0;
+  double _minY = 0;
+  double _maxY = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final now = DateTime.now();
+    final wallets = await DBService.getWallets();
+    final goals = await DBService.getGoals();
+    final debts = await DBService.getDebts(type: 'owe');
+    final expenses = await DBService.getExpenses();
+    final income = await DBService.getIncome();
+
+    // Current snapshot
+    final walletTotal = wallets.fold<double>(
+        0, (s, w) => s + ((w['balance'] as num?)?.toDouble() ?? 0));
+    final goalSavings = goals.fold<double>(
+        0, (s, g) => s + ((g['current_amount'] as num?)?.toDouble() ?? 0));
+    final debtTotal = debts.fold<double>(0, (s, d) {
+      final amt = (d['amount'] as num?)?.toDouble() ?? 0;
+      final paid = (d['paid_amount'] as num?)?.toDouble() ?? 0;
+      return s + (amt - paid).clamp(0, double.infinity);
+    });
+    _current = walletTotal + goalSavings - debtTotal;
+
+    // Build 6-month rolling estimates
+    // Each month: cumulative income − cumulative expenses for that month and prior
+    final spots = <FlSpot>[];
+    final labels = <String>[];
+
+    // Use income entries and expense entries to estimate cumulative NW per month
+    for (int m = 5; m >= 0; m--) {
+      final dt = DateTime(now.year, now.month - m, 1);
+      final monthKey = '${dt.year}-${dt.month.toString().padLeft(2, '0')}';
+
+      // Income for this month
+      final monthIncome = income
+          .where((i) => (i['date'] as String? ?? '').startsWith(monthKey))
+          .fold<double>(
+              0, (s, i) => s + ((i['amount'] as num?)?.toDouble() ?? 0));
+
+      // Expenses for this month
+      final monthExp = expenses
+          .where((e) => e.date.startsWith(monthKey))
+          .fold<double>(0, (s, e) => s + e.amount);
+
+      // Net for the month (income − expense) as delta
+      spots.add(FlSpot((5 - m).toDouble(), monthIncome - monthExp));
+      labels.add(
+          '${dt.month.toString().padLeft(2, '0')}/${dt.year.toString().substring(2)}');
+    }
+
+    // Convert deltas to running NW from base (_current - sum of all deltas + each point's cumsum)
+    // Recalculate as cumulative
+    final totalDelta = spots.fold<double>(0, (s, sp) => s + sp.y);
+    final base = _current - totalDelta;
+    double running = base;
+    final cumSpots = <FlSpot>[];
+    for (final sp in spots) {
+      running += sp.y;
+      cumSpots.add(FlSpot(sp.x, running));
+    }
+
+    final allY = cumSpots.map((s) => s.y).toList();
+    allY.sort();
+
+    setState(() {
+      _spots = cumSpots;
+      _labels = labels;
+      _minY = allY.first * (allY.first < 0 ? 1.15 : 0.85);
+      _maxY = allY.last * (allY.last >= 0 ? 1.15 : 0.85);
+      if (_maxY <= _minY) _maxY = _minY + 1000;
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) return const SizedBox.shrink();
+    final cs = Theme.of(context).colorScheme;
+    final isPositive = _current >= 0;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.account_balance_outlined, color: cs.primary, size: 16),
+              const SizedBox(width: 8),
+              const Text('Net Worth',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: isPositive
+                      ? Colors.green.withValues(alpha: 0.12)
+                      : Colors.red.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  CurrencyService.format(_current),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: isPositive ? Colors.green : Colors.red),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Wallets + Savings − Debts',
+            style: TextStyle(
+                fontSize: 11, color: cs.onSurface.withValues(alpha: 0.5)),
+          ),
+          const SizedBox(height: 14),
+          if (_spots.length >= 2)
+            SizedBox(
+              height: 120,
+              child: LineChart(
+                LineChartData(
+                  minX: 0,
+                  maxX: 5,
+                  minY: _minY,
+                  maxY: _maxY,
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: false,
+                    getDrawingHorizontalLine: (v) => FlLine(
+                      color: cs.outline.withValues(alpha: 0.12),
+                      strokeWidth: 1,
+                    ),
+                  ),
+                  borderData: FlBorderData(show: false),
+                  titlesData: FlTitlesData(
+                    leftTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 22,
+                        getTitlesWidget: (v, _) {
+                          final i = v.toInt();
+                          if (i < 0 || i >= _labels.length)
+                            return const SizedBox.shrink();
+                          return Text(_labels[i],
+                              style: const TextStyle(fontSize: 9));
+                        },
+                      ),
+                    ),
+                  ),
+                  lineTouchData: LineTouchData(
+                    touchTooltipData: LineTouchTooltipData(
+                      getTooltipItems: (pts) => pts
+                          .map((p) => LineTooltipItem(
+                                CurrencyService.format(p.y),
+                                const TextStyle(
+                                    fontSize: 11, fontWeight: FontWeight.bold),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: _spots,
+                      isCurved: true,
+                      color: isPositive ? Colors.green : Colors.red,
+                      barWidth: 2.5,
+                      dotData: const FlDotData(show: false),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        color: (isPositive ? Colors.green : Colors.red)
+                            .withValues(alpha: 0.08),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                'Log income and expenses for at least 2 months to see the trend.',
+                style: TextStyle(
+                    fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
+              ),
+            ),
+        ],
       ),
     );
   }

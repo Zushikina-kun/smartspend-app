@@ -49,6 +49,7 @@ import 'smart_camera_screen.dart';
 import 'chat_history_screen.dart';
 import 'data_quality_screen.dart';
 import 'help_screen.dart';
+import 'debt_payoff_screen.dart';
 import '../services/startup_alerts_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,6 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showTour = false;
   bool _isOffline = false;
   Timer? _connectivityTimer;
+
+  // U1: AI quick-input bar
+  final TextEditingController _quickInputController = TextEditingController();
+  bool _quickInputLoading = false;
 
   @override
   void initState() {
@@ -82,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _connectivityTimer?.cancel();
+    _quickInputController.dispose();
     super.dispose();
   }
 
@@ -268,6 +274,104 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) fireEvent(AppEvent.incomeChanged);
   }
 
+  // U1: Submit AI quick input from home bar
+  Future<void> _submitQuickInput() async {
+    final text = _quickInputController.text.trim();
+    if (text.isEmpty || _quickInputLoading) return;
+    setState(() => _quickInputLoading = true);
+    _quickInputController.clear();
+    FocusScope.of(context).unfocus();
+
+    try {
+      final result = await AIChatService.sendMessage(text);
+      final reply = result.$1; // first element is the reply string
+      if (!mounted) return;
+      // Show snackbar with truncated AI reply
+      final preview =
+          reply.length > 120 ? '${reply.substring(0, 120)}…' : reply;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(preview, style: const TextStyle(fontSize: 13)),
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: "Full Chat",
+            onPressed: () => setState(() => _index = 2),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("AI error: $e", style: const TextStyle(fontSize: 13)),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _quickInputLoading = false);
+    }
+  }
+
+  Widget _buildQuickInputBar(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    // Only show on Home tab
+    if (_index != 0) return const SizedBox.shrink();
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 6, 8, 6),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        border:
+            Border(top: BorderSide(color: cs.outline.withValues(alpha: 0.12))),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.smart_toy_outlined, size: 18, color: cs.primary),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: _quickInputController,
+              enabled: !_isOffline && !_quickInputLoading,
+              textInputAction: TextInputAction.send,
+              onSubmitted: (_) => _submitQuickInput(),
+              style: const TextStyle(fontSize: 13),
+              decoration: InputDecoration(
+                hintText: _isOffline
+                    ? "No internet — AI unavailable"
+                    : "Ask AI or log an expense…",
+                hintStyle: TextStyle(
+                    fontSize: 13, color: cs.onSurface.withValues(alpha: 0.4)),
+                isDense: true,
+                filled: true,
+                fillColor: cs.surfaceContainerLow,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          _quickInputLoading
+              ? const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2)),
+                )
+              : IconButton(
+                  icon: Icon(Icons.send, size: 18, color: cs.primary),
+                  onPressed: _isOffline ? null : _submitQuickInput,
+                  padding: const EdgeInsets.all(8),
+                  constraints: const BoxConstraints(),
+                ),
+        ],
+      ),
+    );
+  }
+
   void _showQuickAccessHub(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -328,6 +432,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: IndexedStack(index: _index, children: _screens),
               ),
+              // U1: AI quick-input bar — only visible on Home tab
+              _buildQuickInputBar(context),
             ],
           ),
           bottomNavigationBar: BottomAppBar(
@@ -1408,6 +1514,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
       (
         'TOOLS',
         [
+          (
+            Icons.account_balance_wallet_outlined,
+            "Debt Payoff Calculator",
+            "Avalanche vs snowball — see which saves you more interest",
+            Colors.deepPurple,
+            () => _go(const DebtPayoffScreen())
+          ),
           (
             Icons.category_outlined,
             "Categories",
@@ -3823,19 +3936,19 @@ class _DashboardState extends State<Dashboard> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.blue.withValues(alpha: 0.07),
+            color: cs.surfaceContainerLow,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.blue.withValues(alpha: 0.25)),
+            border: Border.all(color: cs.outline.withValues(alpha: 0.18)),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.12),
+                  color: cs.primary.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.add_card, color: Colors.blue, size: 20),
+                child: Icon(Icons.add_card, color: cs.primary, size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -3844,9 +3957,7 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     const Text("Add Money to Wallet",
                         style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                            color: Colors.blue)),
+                            fontWeight: FontWeight.w600, fontSize: 13)),
                     Text(
                       "Tap: +${CurrencyService.format(dailyAmount)} to Cash · Long-press: custom amount",
                       style: TextStyle(
@@ -3856,7 +3967,7 @@ class _DashboardState extends State<Dashboard> {
                   ],
                 ),
               ),
-              const Icon(Icons.touch_app, size: 16, color: Colors.blue),
+              Icon(Icons.touch_app, size: 16, color: cs.primary),
             ],
           ),
         ),
@@ -4224,23 +4335,20 @@ class _DashboardState extends State<Dashboard> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.purple.withValues(alpha: 0.06),
+          color: cs.surfaceContainerLow,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.purple.withValues(alpha: 0.2)),
+          border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const Icon(Icons.subscriptions_outlined,
-                    color: Colors.purple, size: 16),
+                Icon(Icons.subscriptions_outlined, color: cs.primary, size: 16),
                 const SizedBox(width: 6),
                 const Text("Subscription Summary",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                        color: Colors.purple)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                 const SizedBox(width: 4),
                 const InfoButton(
                   title: "Subscription Summary",
@@ -4255,9 +4363,7 @@ class _DashboardState extends State<Dashboard> {
                 Text(
                   "${CurrencyService.format(totalMonthly)}/mo",
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                      color: Colors.purple),
+                      fontWeight: FontWeight.bold, fontSize: 13),
                 ),
               ],
             ),
@@ -4279,8 +4385,9 @@ class _DashboardState extends State<Dashboard> {
                     "${s['title']} ${CurrencyService.format(amt)}",
                     style: const TextStyle(fontSize: 11),
                   ),
-                  backgroundColor: Colors.purple.withValues(alpha: 0.08),
-                  side: BorderSide(color: Colors.purple.withValues(alpha: 0.2)),
+                  backgroundColor:
+                      cs.surfaceContainerHighest.withValues(alpha: 0.6),
+                  side: BorderSide(color: cs.outline.withValues(alpha: 0.2)),
                   padding: EdgeInsets.zero,
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 );
@@ -4337,24 +4444,21 @@ class _DashboardState extends State<Dashboard> {
         width: double.infinity,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.deepOrange.withValues(alpha: 0.07),
+          color: cs.surfaceContainerLow,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.deepOrange.withValues(alpha: 0.25)),
+          border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const Icon(Icons.trending_up,
-                    color: Colors.deepOrange, size: 16),
+                const Icon(Icons.trending_up, color: Colors.orange, size: 16),
                 const SizedBox(width: 6),
                 const Expanded(
                   child: Text("Spending Forecast",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                          color: Colors.deepOrange)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                 ),
                 InfoButton(
                   title: "Spending Forecast",
@@ -4624,6 +4728,7 @@ class _DashboardState extends State<Dashboard> {
         ? ((_totalSpent - _lastMonthTotal) / _lastMonthTotal * 100)
         : 0.0;
     final overBudget = _overBudgetCategories;
+    final cs = Theme.of(context).colorScheme;
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: _loadData,
@@ -5136,21 +5241,21 @@ class _DashboardState extends State<Dashboard> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.purple.withValues(alpha: 0.07),
+                      color: cs.surfaceContainerLow,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                          color: Colors.purple.withValues(alpha: 0.2)),
+                      border:
+                          Border.all(color: cs.outline.withValues(alpha: 0.18)),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.label_outline,
-                            color: Colors.purple, size: 16),
+                        Icon(Icons.label_outline, color: cs.primary, size: 16),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             "$untagged expenses this month aren't tagged as Need or Want yet.",
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.purple),
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: cs.onSurface.withValues(alpha: 0.75)),
                           ),
                         ),
                         TextButton(
@@ -5159,7 +5264,7 @@ class _DashboardState extends State<Dashboard> {
                               MaterialPageRoute(
                                   builder: (_) => const TransactionsScreen())),
                           style: TextButton.styleFrom(
-                              foregroundColor: Colors.purple,
+                              foregroundColor: cs.primary,
                               padding: EdgeInsets.zero),
                           child: const Text("Tag now",
                               style: TextStyle(fontSize: 12)),
@@ -5208,26 +5313,25 @@ class _DashboardState extends State<Dashboard> {
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.teal.withValues(alpha: 0.07),
+                        color: cs.surfaceContainerLow,
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                            color: Colors.teal.withValues(alpha: 0.2)),
+                            color: cs.outline.withValues(alpha: 0.15)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.shield_outlined,
-                              color: Colors.teal, size: 20),
+                          Icon(Icons.shield_outlined,
+                              color: cs.primary, size: 20),
                           const SizedBox(width: 10),
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("No emergency fund yet",
+                                const Text("No emergency fund yet",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 13,
-                                        color: Colors.teal)),
-                                Text(
+                                        fontSize: 13)),
+                                const Text(
                                     "A 3-month safety net protects you from unexpected expenses.",
                                     style: TextStyle(
                                         fontSize: 11, color: Colors.grey)),
@@ -5996,6 +6100,11 @@ class _DashboardState extends State<Dashboard> {
               // ── FEATURE PORTALS ──────────────────────────────────────────
               // Quick-access cards for the most useful features
               _buildFeaturePortals(context),
+
+              const SizedBox(height: 12),
+
+              // ── N2: GOALS TIMELINE ────────────────────────────────────────
+              const _GoalsTimelineCard(),
 
               const SizedBox(height: 20),
 
@@ -7208,12 +7317,12 @@ class _WeeklyChallengeWidgetState extends State<_WeeklyChallengeWidget> {
         decoration: BoxDecoration(
           color: achieved
               ? Colors.green.withValues(alpha: 0.08)
-              : Colors.indigo.withValues(alpha: 0.07),
+              : cs.surfaceContainerLow,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: achieved
                 ? Colors.green.withValues(alpha: 0.3)
-                : Colors.indigo.withValues(alpha: 0.2),
+                : cs.outline.withValues(alpha: 0.15),
           ),
         ),
         child: Column(
@@ -7326,29 +7435,29 @@ class _RecurringCandidateCardState extends State<_RecurringCandidateCard> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.teal.withValues(alpha: 0.07),
+        color: cs.surfaceContainerLow,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.teal.withValues(alpha: 0.25)),
+        border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.repeat_outlined, color: Colors.teal, size: 16),
+              Icon(Icons.repeat_outlined, color: cs.primary, size: 16),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   "Recurring pattern detected",
                   style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                      color: Colors.teal),
+                      fontWeight: FontWeight.bold, fontSize: 13),
                 ),
               ),
               if (count > 1)
                 Text("+${count - 1} more",
-                    style: const TextStyle(fontSize: 11, color: Colors.teal)),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: cs.onSurface.withValues(alpha: 0.5))),
             ],
           ),
           const SizedBox(height: 8),
@@ -7712,6 +7821,213 @@ class _SpendingLimitsSheetState extends State<SpendingLimitsSheet> {
               child: FilledButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text("Done"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── N2: Goals Timeline Card ───────────────────────────────────────────────────
+/// Shows all active savings goals on a horizontal timeline with projected
+/// completion dates based on each goal's current monthly contribution rate.
+class _GoalsTimelineCard extends StatefulWidget {
+  const _GoalsTimelineCard();
+
+  @override
+  State<_GoalsTimelineCard> createState() => _GoalsTimelineCardState();
+}
+
+class _GoalsTimelineCardState extends State<_GoalsTimelineCard> {
+  List<Map<String, dynamic>> _goals = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final goals = await DBService.getGoals();
+    if (mounted)
+      setState(() {
+        _goals = goals;
+        _loading = false;
+      });
+  }
+
+  /// Months until completion: (remaining / avgMonthlyContribution)
+  /// Uses creation date vs current_amount to estimate avg monthly contribution.
+  int? _monthsToComplete(Map<String, dynamic> g) {
+    final target = (g['target_amount'] as num?)?.toDouble() ?? 0;
+    final current = (g['current_amount'] as num?)?.toDouble() ?? 0;
+    if (current >= target) return 0;
+    final remaining = target - current;
+    // Estimate monthly contribution from creation date
+    final createdStr = g['created_at'] as String? ?? '';
+    DateTime? created;
+    try {
+      created = DateTime.parse(createdStr);
+    } catch (_) {}
+    if (created == null || current <= 0) return null;
+    final monthsElapsed = DateTime.now().difference(created).inDays / 30.0;
+    if (monthsElapsed < 0.5) return null;
+    final monthlyRate = current / monthsElapsed;
+    if (monthlyRate <= 0) return null;
+    return (remaining / monthlyRate).ceil();
+  }
+
+  DateTime? _projectedDate(int? months) {
+    if (months == null) return null;
+    return DateTime.now().add(Duration(days: months * 30));
+  }
+
+  String _fmtDate(DateTime? dt) {
+    if (dt == null) return 'Unknown';
+    return '${dt.year}-${dt.month.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) return const SizedBox.shrink();
+    final active = _goals.where((g) {
+      final target = (g['target_amount'] as num?)?.toDouble() ?? 0;
+      final current = (g['current_amount'] as num?)?.toDouble() ?? 0;
+      return target > 0 && current < target;
+    }).toList();
+    if (active.isEmpty) return const SizedBox.shrink();
+
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.flag_outlined, color: cs.primary, size: 16),
+                const SizedBox(width: 6),
+                const Text('Goals Timeline',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const SavingsGoalsScreen())),
+                  child: Text('Manage',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: cs.primary,
+                          fontWeight: FontWeight.w500)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            // Timeline: each goal is a dot with label
+            SizedBox(
+              height: 90,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: active.length,
+                separatorBuilder: (_, __) => Row(
+                  children: [
+                    const SizedBox(width: 6),
+                    Container(
+                        width: 24,
+                        height: 2,
+                        color: cs.outline.withValues(alpha: 0.25)),
+                    const SizedBox(width: 6),
+                  ],
+                ),
+                itemBuilder: (_, i) {
+                  final g = active[i];
+                  final target = (g['target_amount'] as num?)?.toDouble() ?? 0;
+                  final current =
+                      (g['current_amount'] as num?)?.toDouble() ?? 0;
+                  final pct =
+                      target > 0 ? (current / target).clamp(0.0, 1.0) : 0.0;
+                  final months = _monthsToComplete(g);
+                  final projDate = _projectedDate(months);
+                  final isOnTrack = months != null && months <= 36;
+
+                  return SizedBox(
+                    width: 100,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Progress circle
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SizedBox(
+                              width: 44,
+                              height: 44,
+                              child: CircularProgressIndicator(
+                                value: pct,
+                                strokeWidth: 4,
+                                backgroundColor:
+                                    cs.outline.withValues(alpha: 0.15),
+                                valueColor: AlwaysStoppedAnimation(
+                                    isOnTrack ? cs.primary : Colors.orange),
+                              ),
+                            ),
+                            Text(
+                              '${(pct * 100).toStringAsFixed(0)}%',
+                              style: const TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          g['name'] as String? ?? '',
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          months == null
+                              ? 'No data'
+                              : months == 0
+                                  ? '✓ Done'
+                                  : _fmtDate(projDate),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: months == null
+                                ? cs.onSurface.withValues(alpha: 0.4)
+                                : months == 0
+                                    ? Colors.green
+                                    : isOnTrack
+                                        ? cs.primary
+                                        : Colors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
