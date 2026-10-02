@@ -61,6 +61,8 @@ class WhatsNewScreen extends StatelessWidget {
           'top for faster access.',
     ),
     (
+      '🎛️',
+      'Experience Presets (v2.9.69)',
       '🪶 Lite (essentials only), 😊 Casual (regular tracker), '
           '⚖️ Normal (balanced — recommended), and 🚀 Pro (everything on). '
           'Find them in Settings → Quick Presets. Individual toggles below still work.',
