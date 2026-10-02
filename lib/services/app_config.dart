@@ -4,31 +4,20 @@ import 'db_service.dart';
 /// Centralized app configuration. Multi-model LLM routing (best → good → fallback):
 ///
 /// PRIORITY ORDER (best quality to fastest/most available):
-/// 1. Gemini 3.5 Flash        — Best reasoning, GA stable (endpoint: gemini-3.5-flash)
-/// 2. Gemini 3.5 Flash-Lite   — Fastest Gemini, GA stable (endpoint: gemini-3.5-flash-lite)
-/// 3. Groq LLaMA 4 Scout      — Best open-source quality, 1,000 req/day, 30,000 TPM, ~460 t/s
-/// 4. Groq LLaMA 3.3 70B      — Good quality, 1,000 req/day (NOTE: RPD reduced from 14,400 in late 2025)
-/// 5. Groq LLaMA 3.1 8B       — Fastest + highest volume: 14,400 req/day — best for fast tasks
-/// 6. Cerebras GPT-OSS 120B   — 1M tokens/day FREE, ~3,000 t/s — last resort
+/// 1. Gemini 3.5 Flash        — Best reasoning, GA stable
+/// 2. Gemini 3.5 Flash-Lite   — Fastest Gemini, GA stable (primary default)
+/// 3. Groq GPT-OSS 120B       — openai/gpt-oss-120b, 1,000 req/day
+/// 4. Groq Qwen3.6 27B        — qwen/qwen3.6-27b, 1,000 req/day
+/// 5. Groq Qwen3.8 27B        — qwen/qwen3.8-27b, 1,000 req/day
+/// 6. Groq GPT-OSS 20B        — openai/gpt-oss-20b, 1,000 req/day
+/// 7. Groq Compound Mini      — groq/compound-mini, 250 req/day
+/// 8. Cerebras GPT-OSS 120B   — 1M tokens/day FREE, ~3,000 t/s — last resort
 ///
-/// Also available on Groq free tier (not in main chain):
-///   moonshotai/kimi-k2-instruct — 1,000 RPD, 60 RPM, strong reasoning
-///   qwen/qwen3-32b              — 1,000 RPD, 60 RPM
-///   openai/gpt-oss-120b         — 1,000 RPD, 30 RPM (same model as Cerebras)
+/// NOTE: All LLaMA models were RETIRED from Groq free/dev tier Feb–Aug 2026.
+/// Active Groq lineup: openai/gpt-oss-120b, openai/gpt-oss-20b,
+///   qwen/qwen3.6-27b, qwen/qwen3.8-27b, groq/compound, groq/compound-mini
 ///
-/// Model API names verified against provider docs (September 2026):
-///   Gemini:   gemini-3.5-flash, gemini-3.5-flash-lite (GA stable — verified Sep 2026)
-///             NOTE: gemini-3.1-flash-lite returned HTTP 404 in production Sep 9, 2026.
-///             Root cause: likely endpoint routing instability or key/quota issue.
-///             Official Google EOL for 3.1 is May 2027 — not a confirmed shutdown.
-///             Migrated to gemini-3.5-flash-lite per Google's upgrade path.
-///   Groq:     LLaMA models (llama-4-scout, llama-3.3-70b, llama-3.1-8b) RETIRED from
-///             free/dev tier in Feb–Aug 2026 waves (Groq deprecation docs + GitHub trackers).
-///             Active on this account: openai/gpt-oss-120b, openai/gpt-oss-20b,
-///             qwen/qwen3.6-27b, qwen/qwen3.8-27b, groq/compound, groq/compound-mini
-///   Cerebras: gpt-oss-120b (llama3.1-70b deprecated Feb 2026 → replaced by gpt-oss-120b)
-///
-/// Current default: Gemini 3.5 Flash-Lite (GA stable, fastest + most cost-effective 3.5 model)
+/// Current default: Auto mode → Gemini 3.5 Flash-Lite (GA stable, fastest 3.5)
 class AppConfig {
   AppConfig._();
 
@@ -59,17 +48,17 @@ class AppConfig {
   // Available: openai/gpt-oss-120b (1K/day), openai/gpt-oss-20b (1K/day),
   //            qwen/qwen3.6-27b (1K/day), qwen/qwen3.8-27b (1K/day),
   //            groq/compound (250/day), groq/compound-mini (250/day)
-  // NOT available: llama-*, kimi-k2, qwen3-32b (wrong account tier)
+  // RETIRED (Feb–Aug 2026): llama-4-scout, llama-3.3-70b, llama-3.1-8b, kimi-k2, qwen3-32b
   static const _groqLlama4Scout = "openai/gpt-oss-120b";
   // GPT-OSS 120B on Groq: 1K RPD, 8K TPM, strong reasoning — primary Groq model
   static const _groqKimiK2 = "qwen/qwen3.6-27b";
-  // Qwen3.6 27B: 1K RPD, 8K TPM, multimodal+reasoning
+  // Qwen3.6 27B: 1K RPD, 8K TPM — good reasoning + multilingual
   static const _groqQwen3 = "qwen/qwen3.8-27b";
-  // Qwen3.8 27B: 1K RPD, 8K TPM, newer Qwen
+  // Qwen3.8 27B: 1K RPD, 8K TPM — newer Qwen, strong reasoning
   static const _groqModel70B = "groq/compound";
-  // Groq Compound: 250 RPD, 70K TPM — good general model
+  // Groq Compound: 250 RPD, 70K TPM — general purpose
   static const _groqModel8B = "groq/compound-mini";
-  // Compound Mini: 250 RPD, 70K TPM — fast, good for simple tasks
+  // Compound Mini: 250 RPD, 70K TPM — fast, simple tasks
 
   // Gemini models via Google AI Studio (OpenAI-compatible endpoint)
   static const _geminiFlash = "gemini-3.5-flash";
@@ -440,8 +429,8 @@ class AppConfig {
       final rCerebras = rc.getString('cerebras_api_key');
       if (rCerebras.isNotEmpty) _remoteCerebrasKey = rCerebras;
     } catch (_) {
-      // Remote Config unavailable — AI features will not work until next
-      // successful fetch. All non-AI features work normally offline.
+      // Remote Config unavailable — fallback keys (set via setDefaults above)
+      // are already active. AI works normally without network.
     }
   }
 }

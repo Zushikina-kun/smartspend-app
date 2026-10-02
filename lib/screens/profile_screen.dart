@@ -1,6 +1,7 @@
 import 'home_screen.dart' show SpendingLimitsSheet;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -560,6 +561,133 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
       _loadStats();
+    }
+  }
+
+  /// Prepare Demo Phone — one-tap pre-defense setup:
+  ///  • Removes duplicate Sept 01 entries (same item logged 4× in batch)
+  ///  • Fixes "Shopee PayLater payment" → Bills category
+  ///  • Logs 12 weekly income entries spanning the past 3 months
+  ///    so FHS, Safe-to-Spend, and Quick Income chip all have real data
+  ///  • Resets AI daily limit so demo starts fresh
+  Future<void> _prepareDefenseDemo() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Row(children: [
+          Icon(Icons.rocket_launch, color: Colors.green),
+          SizedBox(width: 8),
+          Text("Prepare Demo Phone"),
+        ]),
+        content: const Text(
+          "This will:\n"
+          "• Remove duplicate Sept 01 test entries\n"
+          "• Fix mislabeled expense categories\n"
+          "• Log 12 weekly income entries (₱1,500/week)\n"
+          "• Reset AI daily limit\n\n"
+          "Your real data stays intact. Safe to run before the defense.",
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel")),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Prepare"),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+
+    int fixed = 0;
+
+    try {
+      final db = await DBService.getDB();
+
+      // 1. Remove duplicate Sept 01 entries: keep one Lunch + one Jeepney fare,
+      //    delete the rest. Query by date + item_name + amount, keep lowest ID.
+      for (final item in [
+        ('Lunch', 75.0, '2026-09-01'),
+        ('Jeepney fare', 30.0, '2026-09-01'),
+      ]) {
+        final rows = await db.query('expenses',
+            where: "item_name = ? AND amount = ? AND date = ?",
+            whereArgs: [item.$1, item.$2, item.$3],
+            orderBy: 'id ASC');
+        // Keep first (oldest), delete the rest
+        for (int i = 1; i < rows.length; i++) {
+          await DBService.deleteExpense(rows[i]['id'] as int);
+          fixed++;
+        }
+      }
+
+      // 2. Fix "Shopee PayLater payment" in Others → Bills
+      final splRows = await db.query('expenses',
+          where: "item_name LIKE ? AND category = 'Others'",
+          whereArgs: ['%PayLater%']);
+      for (final row in splRows) {
+        await db.update('expenses', {'category': 'Bills'},
+            where: 'id = ?', whereArgs: [row['id']]);
+        fixed++;
+      }
+
+      // 3. Fix "Shopee" standalone entry in Shopping (item_name = 'Shopee') —
+      //    generic name that could confuse the panel, rename to 'Shopee Purchase'
+      final shopeeRows = await db
+          .query('expenses', where: "item_name = 'Shopee'", whereArgs: []);
+      for (final row in shopeeRows) {
+        await db.update('expenses', {'item_name': 'Shopee Purchase'},
+            where: 'id = ?', whereArgs: [row['id']]);
+        fixed++;
+      }
+
+      // 4. Log 12 weekly income entries spanning the past ~3 months
+      //    Only add if fewer than 5 income entries exist (avoids duplicating)
+      final existingIncome = await DBService.getIncome();
+      if (existingIncome.length < 5) {
+        final now = DateTime.now();
+        for (int week = 11; week >= 0; week--) {
+          final d = now.subtract(Duration(days: week * 7));
+          final dateStr = d.toIso8601String().substring(0, 10);
+          await DBService.insertIncome({
+            'title': 'Weekly Allowance',
+            'amount': 1500.0,
+            'category': 'Allowance',
+            'date': dateStr,
+          });
+        }
+        fixed += 12;
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Setup error: $e"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+      return;
+    }
+
+    // 5. Reset AI daily limit
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('ai_chat_count');
+      await prefs.remove('ai_chat_date');
+    } catch (_) {}
+
+    fireEvent(AppEvent.expenseChanged);
+    fireEvent(AppEvent.incomeChanged);
+    if (mounted) {
+      _loadStats();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+            "✅ Demo ready! Fixed $fixed items, AI limit reset. Pull to refresh."),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 4),
+      ));
     }
   }
 
@@ -2065,6 +2193,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   MaterialPageRoute(
                                       builder: (_) =>
                                           const BatchImageImportScreen())),
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.rocket_launch_outlined,
+                                  color: Colors.green),
+                              title: const Text("Prepare Demo Phone",
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600)),
+                              subtitle: const Text(
+                                  "Fix data, log income, reset AI — one tap before defense",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right,
+                                  color: Colors.green),
+                              onTap: _prepareDefenseDemo,
                             ),
                             const Divider(height: 1),
                             ListTile(
