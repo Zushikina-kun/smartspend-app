@@ -1,5 +1,5 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.67 | **Date:** September 12, 2026
+**Version:** 2.9.71 | **Date:** October 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
@@ -15,8 +15,8 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.67
-**Build date:** September 12, 2026
+**Version:** 2.9.71
+**Build date:** October 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
 **Target SDK:** Android 16 (API 36)

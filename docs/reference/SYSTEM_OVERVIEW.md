@@ -1,6 +1,6 @@
 # SmartSpend — System Overview
 ## How the Application Works
-**Version:** 2.9.67 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 2.9.71 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 **Prepared for:** Adviser Introduction & Panel Defense Reference
 
 ---

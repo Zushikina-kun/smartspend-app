@@ -1,6 +1,6 @@
 # SmartSpend — Project Status
-**Version:** 2.9.67 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** September 27, 2026
+**Version:** 2.9.71 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** October 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
@@ -131,11 +131,11 @@
 | Default AI model | **Auto** (task-based routing) |
 | Agentic actions | **34** |
 | Input modalities | **7** (voice, text, camera, screenshots, barcode, OCR, share intent) |
-| Screens | 41 Dart files |
-| Services | 29 Dart files |
+| Screens | 43 Dart files |
+| Services | 31 Dart files |
 | Achievement badges | **25** |
 | Daily AI limit | **150 messages/day** |
-| Color themes | **10** |
+| Color themes | **11** |
 | Daily quests | **10** |
 | Hub tiles | **26** |
 | Currencies | **57** |

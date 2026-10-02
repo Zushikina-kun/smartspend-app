@@ -1,5 +1,5 @@
 # SmartSpend — Defense Guide
-**Version:** 2.9.47 | **September 2026** | **Lucid Frame**
+**Version:** 2.9.71 | **October 2026** | **Lucid Frame**
 
 > This is your single reference for both the DEMO and the DEFENSE.
 > Read it fully before your pre-final and final defenses.
@@ -133,7 +133,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | **2.9.47** |
+| Version | **2.9.71** |
 | Platform | Android (Flutter) |
 | Database | SQLite version 11, 20 tables |
 | AI providers | **8** (auto-failover, all free tier) |
@@ -141,16 +141,15 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Daily AI limit | **150 messages/user** |
 | AI agentic actions | 34 |
 | Currencies supported | 57 |
-| Screens | 37 |
-| Services | 26 |
-| Achievement badges | **25** (23 original + No-Spend Day + No-Spend Streak) |
+| Screens | 43 |
+| Services | 31 |
+| Achievement badges | **25** |
 | Daily quests | 10 rotating |
 | Expense categories | 14 built-in + unlimited custom |
 | Screenshot platforms detected | 40+ |
 | PH banks in database | 20 banks + 5 e-wallets |
 | Backup format | JSON version 9 |
-| Build size | **45.1 MB** (arm64-v8a, split, obfuscated) |
-| Color themes | **10** (Indigo, Olive, Burnt Orange, Slate, Forest + 5 new v2.9.45) |
+| Color themes | **11** (Blue, Sky Blue, Forest Green, Royal Purple, Sunset Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, **Slate** — default) |
 | GitHub | https://github.com/Zushikina-kun/smartspend-app |
 | Group | Lucid Frame |
 | School | Lorma Colleges — CCSE, BSIT 4th Year |
@@ -242,8 +241,8 @@ A: No — LLaMA 4 Scout (`meta-llama/llama-4-scout-17b-16e-instruct`) and all LL
 **Q: Financial Management Score — how is it different from FHS? Isn't it redundant?**
 A: They measure completely different things. The FHS measures financial *outcomes* — are you saving 20%, are you staying within budget, are your spending levels controlled? The FMS measures financial *management behavior* — are you logging consistently, are your entries complete, are you engaging with the app regularly? A user can have a high FHS (great financial outcomes) and a low FMS (rarely opens the app — all data was entered in one session). The two scores together give a complete picture: financial health AND financial discipline. This separation is grounded in Financial Health Network (2026) and Elenvo AI (2026) research recommendations, which explicitly distinguish health outcomes from management behaviors.
 
-**Q: What happens when ALL 6 API providers are simultaneously rate-limited?**
-A: If all 6 providers return 429 (rate limit) errors simultaneously, the AI chat screen shows a friendly error: "All AI providers are currently busy. Please try again in a few minutes or use manual entry." The app remains fully functional — all core features (manual expense logging, budgets, goals, analytics, FHS, wallets, debts) work entirely without AI. The rate limit resets within minutes for Groq and Cerebras (per-minute limits) or at midnight for daily limits. In practice, with 6 providers offering a combined ~50,000+ requests/day across all tiers, simultaneous exhaustion is statistically negligible for a 30-respondent academic study.
+**Q: What happens when ALL 8 API providers are simultaneously rate-limited?**
+A: If all 8 providers return 429 (rate limit) errors simultaneously, the AI chat screen shows a friendly error: "All AI providers are currently busy. Please try again in a few minutes or use manual entry." The app remains fully functional — all core features (manual expense logging, budgets, goals, analytics, FHS, wallets, debts) work entirely without AI. The rate limit resets within minutes for Groq and Cerebras (per-minute limits) or at midnight for daily limits. In practice, with 8 providers offering a combined ~50,000+ requests/day across all tiers, simultaneous exhaustion is statistically negligible for a 30-respondent academic study.
 
 **Q: What is the Weekly Category Card?**
 A: The Weekly Category Card compares each spending category's current-week total against the 4-week rolling average and labels it High, Normal, or Low. High means current week is 20%+ above your usual — orange warning. Normal means within ±20% of your usual — green. Low means 20%+ below — blue positive signal. It is grounded in behavioral finance research showing that relative personal comparisons (vs your own past) are more motivating than absolute budget limits (vs an external target). Seeing "Food: HIGH — ₱2,400 vs your usual ₱1,800" is more actionable than "₱2,400 spent of ₱3,000 budget."
@@ -293,7 +292,7 @@ A: The `AndroidManifest.xml` registers an `android.intent.action.SEND` intent-fi
 
 ---
 
-*SmartSpend v2.9.47 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
+*SmartSpend v2.9.71 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*
 
 

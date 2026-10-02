@@ -19,38 +19,36 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v2.9.53)
+## Part 0 — Authoritative Build Numbers (v2.9.71)
 
 Use these everywhere. Many docs are stale.
 
-| Metric | v2.9.53 value |
+| Metric | v2.9.71 value |
 |--------|--------------|
-| Version string | **2.9.53** |
+| Version string | **2.9.71** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
-| Build size | ~46.7 MB arm64-v8a, split, obfuscated |
 | SQLite schema | v11, 20 tables |
 | AI providers in fallback chain | **8** (not 5 or 6) |
-| Primary AI model | **Auto (Gemini 3.5 Flash-Lite default)** — Auto mode added v2.9.50 |
-| Agentic actions | **34** (not 31) |
+| Primary AI model | **Auto (Gemini 3.5 Flash-Lite default)** |
+| Agentic actions | **34** |
 | Input modalities | 7 |
-| Screens | 41 Dart files |
-| Services | 29 Dart files |
-| Achievement badges | **25** (23 + No-Spend Day + No-Spend Streak) |
+| Screens | **43** Dart files |
+| Services | **31** Dart files |
+| Achievement badges | **25** |
 | Daily quests pool | 10 |
 | Batch screenshot platforms | 40+ |
 | Filipino item catalog | 150+ items |
 | Log choice sheet options | 7 |
 | Currencies | 57 |
-| Hub tiles | **26** |
+| Hub tiles | **30+** |
 | PH banks in DB | 20 banks + 5 e-wallets |
-| Daily AI message limit | **150** (raised from 60) |
-| Color themes | **10** (5 new added v2.9.45) |
-| Optional home toggles | **9** |
+| Daily AI message limit | **150** |
+| Color themes | **11** (Slate is new default) |
+| Optional home toggles | **14** (managed by Experience Presets) |
 | Optional analytics toggles | **4** |
-| Lite Mode coverage | **13 sections** |
-| Paluwagan | ✅ **Implemented** v2.9.35 (update manuscript) |
+| Experience Presets | 🪶 Lite / 😊 Casual / ⚖️ Normal / 🚀 Pro |
 
 ### Recent releases
 | Version | Key changes |
