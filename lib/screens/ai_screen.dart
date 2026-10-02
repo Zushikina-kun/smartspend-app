@@ -2614,6 +2614,30 @@ class _AIScreenState extends State<AIScreen> {
                     ));
                   }
                 }
+              } else if (val == 'reset_ai') {
+                // Full AI reset — demo recovery: resets model to Auto,
+                // clears daily limit counter, resets consecutive failure count
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('ai_chat_count');
+                await prefs.remove('ai_chat_date');
+                AppConfig
+                    .resetLimits(); // resets to Auto + clears failure counter
+                AIChatService.clearHistory(); // clear in-memory history
+                if (mounted) {
+                  setState(() {
+                    _messages.clear();
+                    _adviceDisclaimerShown = false;
+                    _clipboardNudgeDismissed = false;
+                    _clipboardNudgeText = null;
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text(
+                        "✅ AI fully reset — model set to Auto, limit cleared"),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    duration: Duration(seconds: 3),
+                  ));
+                }
               } else if (val == 'reset_limit') {
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.remove('ai_chat_count');
@@ -2679,6 +2703,18 @@ class _AIScreenState extends State<AIScreen> {
               }
             },
             itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: 'reset_ai',
+                child: Row(
+                  children: [
+                    Icon(Icons.restart_alt, size: 18, color: Colors.green),
+                    SizedBox(width: 10),
+                    Text("Reset AI State",
+                        style: TextStyle(
+                            color: Colors.green, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
               const PopupMenuItem(
                 value: 'export_debug',
                 child: Row(

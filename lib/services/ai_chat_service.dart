@@ -1065,6 +1065,17 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         AppConfig.groqApiKey.isNotEmpty;
     if (needsSwitch) AppConfig.setModel(taskModelId);
 
+    // ── KEY GUARD — catch empty key BEFORE hitting the API ───────────────────
+    // If AppConfig.groqApiKey is blank after all fallback resolution, the API
+    // will return 401 and we'll burn a retry cycle. Fail fast with a clear
+    // message instead. This can only happen if all three fallback constants
+    // were somehow emptied AND Remote Config was also unreachable.
+    if (AppConfig.groqApiKey.isEmpty) {
+      if (needsSwitch) AppConfig.setModel(originalModelId);
+      throw Exception("AI configuration error — no API key available. "
+          "Try restarting the app. If the problem persists, check your internet connection.");
+    }
+
     // ── EXPONENTIAL BACKOFF (LLM Cheatsheet §13) ─────────────────────────────
     // Retries silently on 503 / timeout up to 3 times with jitter.
     // 429 (rate limit) gets model fallback instead of backoff.

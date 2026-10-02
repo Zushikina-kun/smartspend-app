@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.70';
-  static const _prefKey = 'whats_new_seen_2_9_70';
+  static const _version = '2.9.73';
+  static const _prefKey = 'whats_new_seen_2_9_73';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,20 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🚀',
+      'Prepare Demo Phone (v2.9.73)',
+      'Profile → Prepare Demo Phone: one tap before the defense fixes '
+          'duplicate entries, corrects mislabeled categories, logs 12 weeks of '
+          'income so all home screen features have real data, and resets the AI daily limit.',
+    ),
+    (
+      '🔄',
+      'Reset AI State (v2.9.73)',
+      'AI screen → ⋮ → Reset AI State (green, top of menu): resets model to Auto, '
+          'clears the daily message counter, and wipes in-memory chat history. '
+          'One tap to clean demo state mid-presentation.',
+    ),
     (
       '⚡',
       'Quick Income Log chip (v2.9.70)',
