@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:io';
 import '../models/expense.dart';
@@ -14,6 +15,7 @@ import '../services/event_bus.dart';
 import '../services/notification_service.dart';
 import '../services/ai_chat_service.dart';
 import '../services/behavioral_feedback_service.dart';
+import '../services/category_service.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
@@ -1267,10 +1269,38 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
   int _recurringCount = 0;
   bool _loaded = false;
 
+  // U10: Most Used — track top 4 tapped items by title
+  static const _hubCountKey = 'hub_tap_count_';
+  List<String> _mostUsedTitles = [];
+
+  Future<void> _recordTap(String title) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = '$_hubCountKey${title.toLowerCase().replaceAll(' ', '_')}';
+    await prefs.setInt(key, (prefs.getInt(key) ?? 0) + 1);
+  }
+
+  Future<void> _loadMostUsed() async {
+    final prefs = await SharedPreferences.getInstance();
+    final all = prefs
+        .getKeys()
+        .where((k) => k.startsWith(_hubCountKey))
+        .map((k) => (
+              k.substring(_hubCountKey.length).replaceAll('_', ' '),
+              prefs.getInt(k) ?? 0
+            ))
+        .where((e) => e.$2 >= 2) // only show items tapped ≥2 times
+        .toList()
+      ..sort((a, b) => b.$2.compareTo(a.$2));
+    if (mounted) {
+      setState(() => _mostUsedTitles = all.take(4).map((e) => e.$1).toList());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _loadCounts();
+    _loadMostUsed();
   }
 
   Future<void> _loadCounts() async {
@@ -1317,6 +1347,11 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
   void _go(Widget screen) {
     Navigator.pop(context);
     Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+  }
+
+  void _goAndRecord(String title, Widget screen) {
+    _recordTap(title);
+    _go(screen);
   }
 
   @override
@@ -1630,6 +1665,87 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
           const Text("Tools & Hub",
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
+          // U10: Most Used shortcuts — only shown when search is empty and user has tapped items ≥2x
+          if (_searchQuery.isEmpty && _mostUsedTitles.isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('MOST USED',
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.grey[500],
+                          letterSpacing: 0.8)),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      for (final title in _mostUsedTitles) ...[
+                        Expanded(
+                          child: Builder(builder: (ctx) {
+                            // Find the matching item across all groups
+                            (
+                              IconData,
+                              String,
+                              String,
+                              Color,
+                              VoidCallback
+                            )? match;
+                            for (final group in allItems) {
+                              try {
+                                match = group.$2.firstWhere((item) =>
+                                    item.$2.toLowerCase() ==
+                                    title.toLowerCase());
+                                break;
+                              } catch (_) {}
+                            }
+                            if (match == null) return const SizedBox.shrink();
+                            final item = match;
+                            return GestureDetector(
+                              onTap: () {
+                                _recordTap(item.$2);
+                                item.$5();
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(right: 6),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 4),
+                                decoration: BoxDecoration(
+                                  color: cs.surfaceContainerLow,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color:
+                                          cs.outline.withValues(alpha: 0.12)),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(item.$1, color: cs.primary, size: 20),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      item.$2,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ],
           // Search bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1728,7 +1844,10 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
   Widget _tile(
       (IconData, String, String, Color, VoidCallback) item, ColorScheme cs) {
     return InkWell(
-      onTap: item.$5,
+      onTap: () {
+        _recordTap(item.$2);
+        item.$5();
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
         child: Row(
@@ -2531,7 +2650,138 @@ class _DashboardState extends State<Dashboard> {
     _loadData();
   }
 
-  // BF-1: Show a celebration banner using a themed SnackBar
+  // U9: Quick-edit bottom sheet — change amount or category inline
+  // without navigating to the full Edit Expense screen.
+  void _showQuickEditSheet(BuildContext context, Expense expense) {
+    final cs = Theme.of(context).colorScheme;
+    final amtCtrl =
+        TextEditingController(text: expense.amount.toStringAsFixed(0));
+    String selectedCategory = expense.category;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom,
+            left: 20,
+            right: 20,
+            top: 20),
+        child: StatefulBuilder(
+          builder: (ctx, setS) => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'Quick Edit — ${expense.itemName}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+              const SizedBox(height: 16),
+              // Amount field
+              TextField(
+                controller: amtCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  prefixText: '₱ ',
+                  filled: true,
+                  fillColor: cs.surfaceContainerLow,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+                autofocus: true,
+              ),
+              const SizedBox(height: 12),
+              // Category picker (horizontal scroll chips)
+              const Text('Category',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 36,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: CategoryService.builtIn.map((cat) {
+                    final active = cat == selectedCategory;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: FilterChip(
+                        label: Text(cat, style: const TextStyle(fontSize: 12)),
+                        selected: active,
+                        onSelected: (_) => setS(() => selectedCategory = cat),
+                        selectedColor: cs.primary.withValues(alpha: 0.15),
+                        checkmarkColor: cs.primary,
+                        side: BorderSide(
+                            color: active
+                                ? cs.primary.withValues(alpha: 0.5)
+                                : cs.outline.withValues(alpha: 0.2)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 0),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () async {
+                        final newAmt = double.tryParse(amtCtrl.text.trim()) ??
+                            expense.amount;
+                        Navigator.pop(ctx);
+                        await DBService.updateExpense(expense.copyWith(
+                          amount: newAmt,
+                          category: selectedCategory,
+                        ));
+                        _loadData();
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Updated "${expense.itemName}"'),
+                              behavior: SnackBarBehavior.floating,
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('Save'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showCelebrationBanner(CelebrationEvent event) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -3975,6 +4225,86 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// 12B: Quick Income Log chip — one-tap repeat income logging.
+  /// Shows when last income entry was >20 days ago, using _avgIncomeAmount.
+  /// Only visible in income/wallet mode. Complements the allowance button.
+  Widget _buildQuickIncomeChip(BuildContext context) {
+    if (_avgIncomeAmount <= 0 || _avgIncomeInterval <= 0) {
+      return const SizedBox.shrink();
+    }
+    // Only show when overdue (past expected date by at least 1 day)
+    if (_nextExpectedIncome == null) return const SizedBox.shrink();
+    final daysOverdue = DateTime.now().difference(_nextExpectedIncome!).inDays;
+    if (daysOverdue < 1) return const SizedBox.shrink();
+
+    final cs = Theme.of(context).colorScheme;
+    final label =
+        _avgIncomeInterval <= 8 ? 'Weekly allowance' : 'Monthly income';
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GestureDetector(
+        onTap: () async {
+          // Log income with last known average amount
+          await DBService.insertIncome({
+            'title': label,
+            'amount': _avgIncomeAmount,
+            'category': 'Salary',
+            'date': DateTime.now().toIso8601String().substring(0, 10),
+          });
+          fireEvent(AppEvent.incomeChanged);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    '✅ Logged: $label ${CurrencyService.format(_avgIncomeAmount)}'),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
+        },
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+          decoration: BoxDecoration(
+            color: Colors.green.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.green.withValues(alpha: 0.25)),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.arrow_downward, color: Colors.green, size: 18),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Received $label?',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          color: Colors.green),
+                    ),
+                    Text(
+                      'Tap to log ${CurrencyService.format(_avgIncomeAmount)} · ${daysOverdue}d overdue',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: cs.onSurface.withValues(alpha: 0.55)),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.add_circle_outline,
+                  color: Colors.green, size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Payday Countdown / Income Prediction card.
   /// Shows days until next expected income + predicted amount.
   /// Computed from last 3 income entries — works for both salaried and students.
@@ -5189,11 +5519,13 @@ class _DashboardState extends State<Dashboard> {
               // Quick "Log Allowance" button — only in income/wallet mode
               if (_incomeWalletMode) _buildLogAllowanceButton(context),
 
+              // 12B: Quick Income Log chip — shown when last income > 20 days ago
+              if (_incomeWalletMode) _buildQuickIncomeChip(context),
+
               // Payday countdown / income prediction — shown when ≥2 income
               // entries exist and next expected date is within a reasonable window
               if (_incomeWalletMode && _showPaydayCountdown)
                 _buildPaydayCountdownCard(context),
-
               // Safe-to-Spend — wallet balance minus reserved bills/goals/debts
               if (_incomeWalletMode && _showSafeToSpend)
                 _buildSafeToSpendCard(context),
@@ -6181,6 +6513,8 @@ class _DashboardState extends State<Dashboard> {
                         expense: _expenses[i],
                         onEdit: () => _editExpense(_expenses[i]),
                         onDelete: () => _deleteExpense(_expenses[i].id!),
+                        onLongPress: () =>
+                            _showQuickEditSheet(context, _expenses[i]),
                       ),
                     ),
             ],

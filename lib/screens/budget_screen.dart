@@ -19,6 +19,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
   bool _loading = true;
   double _monthlyIncome = 0;
   List<String> _categories = CategoryService.builtIn;
+  // U8: first-run suggestions — top categories from last 30 days
+  Map<String, double> _suggestedAmounts = {};
 
   final _currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
 
@@ -33,10 +35,38 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final expenses = await DBService.getExpenses(month: _currentMonth);
     final income = await DBService.getMonthlyIncome();
     final cats = await CategoryService.getAll();
+    // U8: build category totals for suggestion card (all-time for richer data)
+    final allExpenses = await DBService.getExpenses();
+    final catTotals = <String, double>{};
+    for (final e in allExpenses) {
+      catTotals[e.category] = (catTotals[e.category] ?? 0) + e.amount;
+    }
 
     final spent = <String, double>{};
     for (final e in expenses) {
       spent[e.category] = (spent[e.category] ?? 0) + e.amount;
+    }
+
+    // U8: compute monthly averages for suggestion (total ÷ months of data)
+    Map<String, double> suggestions = {};
+    if (allExpenses.isNotEmpty && budgets.isEmpty) {
+      // Find date range to compute months of data
+      final dates = allExpenses.map((e) => e.date).toList()..sort();
+      final firstDate = DateTime.tryParse(dates.first) ?? DateTime.now();
+      final months =
+          (DateTime.now().difference(firstDate).inDays / 30).clamp(1.0, 24.0);
+      // Round each average to nearest 50 for clean numbers
+      catTotals.forEach((cat, total) {
+        final avg = total / months;
+        if (avg >= 50) {
+          final rounded = ((avg / 50).round() * 50).toDouble();
+          suggestions[cat] = rounded;
+        }
+      });
+      // Sort by value desc, take top 5 categories
+      final sorted = suggestions.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      suggestions = Map.fromEntries(sorted.take(5));
     }
 
     setState(() {
@@ -44,6 +74,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
       _spent = spent;
       _monthlyIncome = income;
       _categories = cats;
+      _suggestedAmounts = suggestions;
       _loading = false;
     });
   }
@@ -262,6 +293,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
               child: _budgets.isEmpty
                   ? ListView(
                       children: [
+                        // U8: Smart budget suggestions when ≥5 expenses logged
+                        if (_suggestedAmounts.isNotEmpty)
+                          _buildSuggestionsCard(context),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.6,
                           child: Center(
@@ -624,6 +658,115 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       },
                     ),
             ),
+    );
+  }
+
+  // U8: Budget first-run suggestion card
+  Widget _buildSuggestionsCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: cs.primaryContainer.withValues(alpha: 0.25),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: cs.primary.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.auto_awesome, color: cs.primary, size: 16),
+                const SizedBox(width: 8),
+                const Text('Smart Budget Suggestions',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                const Spacer(),
+                Text('Based on your spending history',
+                    style: TextStyle(
+                        fontSize: 10,
+                        color: cs.onSurface.withValues(alpha: 0.5))),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Tap any to set it as your monthly budget.',
+              style: TextStyle(
+                  fontSize: 12, color: cs.onSurface.withValues(alpha: 0.6)),
+            ),
+            const SizedBox(height: 12),
+            ..._suggestedAmounts.entries.map((entry) {
+              final cat = entry.key;
+              final amt = entry.value;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(cat,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 12)),
+                          Text(
+                            '≈ ${CurrencyService.format(amt)}/month avg',
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: cs.onSurface.withValues(alpha: 0.55)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FilledButton.tonal(
+                      onPressed: () async {
+                        await DBService.setBudget(cat, amt);
+                        await _loadData();
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                'Budget set: $cat — ${CurrencyService.format(amt)}/mo'),
+                            behavior: SnackBarBehavior.floating,
+                          ));
+                        }
+                      },
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text('Set ${CurrencyService.format(amt)}',
+                          style: const TextStyle(fontSize: 12)),
+                    ),
+                  ],
+                ),
+              );
+            }),
+            const SizedBox(height: 4),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () async {
+                  for (final e in _suggestedAmounts.entries) {
+                    await DBService.setBudget(e.key, e.value);
+                  }
+                  await _loadData();
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('All suggested budgets applied!'),
+                      behavior: SnackBarBehavior.floating,
+                    ));
+                  }
+                },
+                child: const Text('Apply All Suggestions'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

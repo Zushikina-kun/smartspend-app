@@ -39,6 +39,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   bool _showNeedsOnly = false;
   String? _activeTag;
 
+  // 12C: Recent AI-logged expenses for undo card (last 3, within 24h)
+  List<Expense> _recentAiExpenses = [];
+  bool _undoCardDismissed = false;
+
   // Listen for AI/external data changes (update_expense, new log, delete)
   // so the list re-sorts automatically without the user needing to pull-to-refresh.
   StreamSubscription<AppEvent>? _eventSub;
@@ -73,14 +77,29 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     final expenses = await DBService.getExpenses();
     final allCats = await CategoryService.getAll();
     // Also include any categories that exist in expenses but aren't in the current list
-    // (e.g. a custom category was deleted but old expenses still reference it)
     final expenseCats = expenses.map((e) => e.category).toSet();
     final knownCats = allCats.toSet();
     final orphanCats = expenseCats.difference(knownCats).toList()..sort();
+
+    // 12C: Last 3 AI-logged expenses within the past 24 hours for undo card
+    // Use updatedAt (ISO timestamp) if available; otherwise use date == today
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final cutoff =
+        DateTime.now().subtract(const Duration(hours: 24)).toIso8601String();
+    final recentAi = expenses
+        .where((e) {
+          if (!e.aiGenerated) return false;
+          if (e.updatedAt != null) return e.updatedAt!.compareTo(cutoff) >= 0;
+          return e.date == today; // fallback: today's entries
+        })
+        .take(3)
+        .toList();
+
     setState(() {
       _all = expenses;
       _categories = ['All', ...allCats, ...orphanCats];
       if (!_categories.contains(_selectedCategory)) _selectedCategory = 'All';
+      _recentAiExpenses = recentAi;
       _loading = false;
       _applyFilter();
     });
@@ -160,6 +179,95 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Future<void> _delete(int id) async {
     await DBService.deleteExpense(id);
     _load();
+  }
+
+  // 12C: Recent AI undo history card
+  Widget _buildRecentAiCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: cs.outline.withValues(alpha: 0.15)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.history, size: 14, color: cs.primary),
+              const SizedBox(width: 6),
+              const Text('Recently AI-logged',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              const Text(' · tap × to remove',
+                  style: TextStyle(fontSize: 11, color: Colors.grey)),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => setState(() => _undoCardDismissed = true),
+                child: Icon(Icons.close,
+                    size: 16, color: cs.onSurface.withValues(alpha: 0.4)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          for (final e in _recentAiExpenses)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(e.itemName,
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w500)),
+                        Text(
+                          '${e.category} · ${CurrencyService.format(e.amount)}',
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: cs.onSurface.withValues(alpha: 0.5)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      if (e.id == null) return;
+                      await DBService.deleteExpense(e.id!);
+                      _load();
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Removed "${e.itemName}" from AI log'),
+                          behavior: SnackBarBehavior.floating,
+                          duration: const Duration(seconds: 2),
+                        ));
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                            color: Colors.red.withValues(alpha: 0.2)),
+                      ),
+                      child: const Text('Remove',
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w500)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   Future<void> _deleteSelected() async {
@@ -267,6 +375,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               onRefresh: _load,
               child: Column(
                 children: [
+                  // 12C: Recent AI undo card — only when not selecting, not searching,
+                  // not dismissed, and there are recent AI-logged expenses
+                  if (!_isSelecting &&
+                      !_undoCardDismissed &&
+                      _recentAiExpenses.isNotEmpty &&
+                      _searchQuery.isEmpty &&
+                      _period == 'all')
+                    _buildRecentAiCard(context),
+
                   // Search bar
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
