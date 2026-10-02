@@ -1,6 +1,6 @@
 # SmartSpend — Application Pipeline
 ## How the App Works, Start to Finish
-**Version:** 2.9.67 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
+**Version:** 2.9.71 | **Group:** Lucid Frame | **AY:** 2026–2027, 1st Semester
 **For:** Anyone — adviser, panel, new team member, or user
 
 ---
@@ -370,18 +370,18 @@ End of month
 | What | How many |
 |------|---------|
 | AI agentic action types | 34 |
-| App screens | 37 |
-| Backend services | 26 |
+| App screens | 43 |
+| Backend services | 31 |
 | SQLite tables | 20 |
-| LLM providers (auto-failover) | 6 |
-| Achievement badges | 23 |
+| LLM providers (auto-failover) | 8 |
+| Achievement badges | 25 |
 | Daily quests (rotating) | 10 |
 | Expense categories | 14 built-in + unlimited custom |
 | PH banks in database | 20 banks + 5 e-wallets |
 | Screenshot platform types detected | 40+ |
 | Currencies supported | 57 |
-| Free tier AI limit | 60 messages/user/day |
-| APK size (arm64-v8a) | 44.7 MB |
+| Daily AI limit | 150 messages/user |
+| Color themes | 11 |
 
 ---
 

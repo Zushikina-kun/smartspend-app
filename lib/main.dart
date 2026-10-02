@@ -63,7 +63,9 @@ void main() async {
     // Anomaly detection — only if not disabled in settings
     DBService.getSetting('anomaly_detection_enabled').then((val) {
       if (val != 'false') NotificationService.checkAnomalyDetection();
-    }).catchError((_) => NotificationService.checkAnomalyDetection());
+    }).catchError((_) {
+      NotificationService.checkAnomalyDetection();
+    });
     NotificationService.checkCategoryVelocity();
     NotificationService.checkWantSpendingAlert();
     // Proactive nudges — forward-looking alerts (subscription due, pace high, goal close, etc.)
