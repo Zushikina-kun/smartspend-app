@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import '../models/expense.dart';
+import '../models/budget.dart';
 import 'db_service.dart';
 import 'currency_service.dart';
 import 'notification_service.dart';
@@ -25,6 +26,7 @@ class ProactiveNudgeService {
   static const _idIncomeStale = 2004;
   static const _idShortfallRisk = 2005;
   static const _idSavingsMilestone = 2006;
+  static const _idWeeklyCheckIn = 2007; // 12A
 
   static Future<void> check() async {
     try {
@@ -74,6 +76,13 @@ class ProactiveNudgeService {
       // Positive reinforcement — only fires when things are going well
       if (incomeWalletMode && income > 0) {
         await _checkSavingsMilestone(expenses, income, now);
+      }
+
+      // 12A: Weekly spending accountability check-in — fires on Sundays (weekday == 7)
+      // or the last day of the week if the user opened the app then
+      final budgets = await DBService.getBudgets();
+      if (budgets.isNotEmpty) {
+        await _checkWeeklyAccountability(expenses, budgets, income, now);
       }
     } catch (_) {
       // Best-effort — never crash the app
@@ -244,6 +253,61 @@ class ProactiveNudgeService {
             '${CurrencyService.format(saved)} saved so far. Keep it up!',
       );
     }
+  }
+
+  // ── Trigger 7: Weekly spending accountability check-in (12A) ─────────────
+  // Fires once per week (ISO week key) regardless of day, but the message is
+  // framed as a Sunday wrap-up. Shows top category vs weekly budget target.
+  static Future<void> _checkWeeklyAccountability(List<Expense> expenses,
+      List<Budget> budgets, double monthlyIncome, DateTime now) async {
+    final weekKey = 'nudge_accountability_${DateFormat('yyyy-ww').format(now)}';
+    if (await DBService.getSetting(weekKey) != null) return;
+
+    // Compute this week's spending by category
+    final weekStart = now.subtract(Duration(days: now.weekday - 1));
+    final catTotals = <String, double>{};
+    double weekTotal = 0;
+    for (final e in expenses) {
+      try {
+        final d = DateTime.parse(e.date);
+        if (!d.isBefore(weekStart)) {
+          catTotals[e.category] = (catTotals[e.category] ?? 0) + e.amount;
+          weekTotal += e.amount;
+        }
+      } catch (_) {}
+    }
+    if (weekTotal == 0) return; // nothing spent this week — skip
+
+    // Find top category
+    final sortedCats = catTotals.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+    final topCat = sortedCats.isEmpty ? null : sortedCats.first;
+
+    // Compute weekly budget (monthly ÷ 4.33)
+    final weeklyBudget = monthlyIncome > 0 ? monthlyIncome / 4.33 : 0.0;
+    final isUnder = weeklyBudget > 0 && weekTotal <= weeklyBudget;
+
+    String title;
+    String body;
+
+    if (isUnder) {
+      final saved = weeklyBudget - weekTotal;
+      title = '✅ Great week — you stayed under budget!';
+      body = 'You spent ${CurrencyService.format(weekTotal)} this week '
+          '(budget: ${CurrencyService.format(weeklyBudget)}). '
+          '${CurrencyService.format(saved)} to spare. 🎉';
+    } else if (topCat != null) {
+      title = '📊 Week Check-In';
+      body = '${topCat.key} was your biggest spend this week: '
+          '${CurrencyService.format(topCat.value)}. '
+          'Total: ${CurrencyService.format(weekTotal)}. '
+          '${weeklyBudget > 0 ? 'Weekly target: ${CurrencyService.format(weeklyBudget)}.' : 'Set a budget to track progress.'}';
+    } else {
+      return; // not enough data
+    }
+
+    await DBService.setSetting(weekKey, 'true');
+    await _show(_idWeeklyCheckIn, title, body);
   }
 
   // ── Internal: fire a local push notification ────────────────────────────

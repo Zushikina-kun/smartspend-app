@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.69';
-  static const _prefKey = 'whats_new_seen_2_9_69';
+  static const _version = '2.9.70';
+  static const _prefKey = 'whats_new_seen_2_9_70';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,10 +20,48 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🎛️',
-      'Experience Presets (v2.9.69)',
-      'The binary Lite Mode switch is replaced by four experience levels: '
-          '🪶 Lite (essentials only), 😊 Casual (regular tracker), '
+      '⚡',
+      'Quick Income Log chip (v2.9.70)',
+      'When your expected income is overdue, a green chip appears on the home '
+          'screen with your last average amount. One tap logs it instantly — '
+          'no form, no navigation.',
+    ),
+    (
+      '↩️',
+      'AI Undo History in Transactions (v2.9.70)',
+      'Transactions now shows a card at the top with the last 3 AI-logged '
+          'expenses from the past 24 hours. Each has a Remove button — '
+          'faster than finding and deleting from the full list.',
+    ),
+    (
+      '✏️',
+      'Quick-Edit on Long-Press (v2.9.70)',
+      'Long-press any expense on the home screen to instantly edit its '
+          'amount and category — without opening the full edit form.',
+    ),
+    (
+      '📊',
+      'Weekly Accountability Check-In (v2.9.70)',
+      'A new weekly push notification fires once per week showing your '
+          'top spending category and whether you stayed under your '
+          'weekly budget target.',
+    ),
+    (
+      '💡',
+      'Smart Budget Suggestions (v2.9.70)',
+      'If you have expenses but no budgets set, the Budgets screen now '
+          'shows suggested amounts based on your actual spending history — '
+          'rounded to the nearest ₱50. Tap any to set it, or Apply All.',
+    ),
+    (
+      '⭐',
+      'Most Used shortcuts in Tools (v2.9.70)',
+      'The Tools & Hub sheet now tracks which items you open most. After '
+          'tapping any item twice, it appears in a Most Used row at the '
+          'top for faster access.',
+    ),
+    (
+      '🪶 Lite (essentials only), 😊 Casual (regular tracker), '
           '⚖️ Normal (balanced — recommended), and 🚀 Pro (everything on). '
           'Find them in Settings → Quick Presets. Individual toggles below still work.',
     ),
