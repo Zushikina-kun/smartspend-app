@@ -24,7 +24,8 @@ class AboutScreen extends StatelessWidget {
                   size: 80, color: cs.primary),
             ),
             const SizedBox(height: 12),
-            Text("SmartSpend",
+            Text(
+              "SmartSpend",
               style: TextStyle(
                   fontSize: 26, fontWeight: FontWeight.bold, color: cs.primary),
             ),
@@ -395,6 +396,8 @@ class AboutScreen extends StatelessWidget {
               "Exchange Rates: open.er-api.com",
               "Crash Reporting: Firebase Crashlytics",
               "API Config: AppConfig (centralized, .gitignore protected)",
+              "GCash / Bank Share Intent: android.intent.action.SEND (text/plain) — SmartSpend appears in Android share sheet; transaction text routed to AI chat via MethodChannel",
+              "OFxPERA Readiness: Architecture is BSP Open Finance-compatible — SQLite schema, Firebase Auth identity layer, and paste-to-import UX are designed for future replacement with a consent-gated bank API call when BSP's Open Finance API is available to third-party developers (per BSP Circular 1105)",
             ]),
 
             const SizedBox(height: 20),
@@ -448,7 +451,8 @@ class AboutScreen extends StatelessWidget {
                 "Nothing in this app constitutes personalized financial, investment, insurance, or tax advice. "
                 "AI-generated insights are based on user-provided data and general knowledge — always consult a licensed financial professional before making significant financial decisions. "
                 "SmartSpend is not liable for any financial losses resulting from actions taken based on information provided by this app.\n\n"
-                "Philippine regulatory reference: Securities and Exchange Commission (SEC-PH), Insurance Commission, Bangko Sentral ng Pilipinas (BSP), RA 11765 (Financial Products and Services Consumer Protection Act).",
+                "Philippine regulatory reference: Securities and Exchange Commission (SEC-PH), Insurance Commission, Bangko Sentral ng Pilipinas (BSP), RA 11765 (Financial Products and Services Consumer Protection Act).\n\n"
+                "Open Finance: SmartSpend is architecturally compatible with the BSP Open Finance Framework (Circular 1105) and OFxPERA standard. The app does not currently connect to any bank API. Future integration with BSP-licensed data providers would require additional regulatory compliance steps.",
                 style: TextStyle(fontSize: 12, height: 1.5),
                 textAlign: TextAlign.center,
               ),
