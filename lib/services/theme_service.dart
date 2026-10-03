@@ -14,6 +14,7 @@ enum AppTheme {
   rose,
   charcoal,
   slate,
+  emerald,
 }
 
 extension AppThemeExtension on AppTheme {
@@ -41,6 +42,8 @@ extension AppThemeExtension on AppTheme {
         return 'Charcoal';
       case AppTheme.slate:
         return 'Slate';
+      case AppTheme.emerald:
+        return 'Emerald';
     }
   }
 
@@ -68,6 +71,8 @@ extension AppThemeExtension on AppTheme {
         return const Color(0xFF37474F);
       case AppTheme.slate:
         return const Color(0xFF334155);
+      case AppTheme.emerald:
+        return const Color(0xFF00C896);
     }
   }
 
@@ -95,6 +100,8 @@ extension AppThemeExtension on AppTheme {
         return const Color(0xFF546E7A);
       case AppTheme.slate:
         return const Color(0xFF334155);
+      case AppTheme.emerald:
+        return const Color(0xFF00A87A);
     }
   }
 
@@ -122,6 +129,8 @@ extension AppThemeExtension on AppTheme {
         return 'charcoal';
       case AppTheme.slate:
         return 'slate';
+      case AppTheme.emerald:
+        return 'emerald';
     }
   }
 
@@ -147,8 +156,10 @@ extension AppThemeExtension on AppTheme {
         return AppTheme.charcoal;
       case 'slate':
         return AppTheme.slate;
+      case 'emerald':
+        return AppTheme.emerald;
       default:
-        return AppTheme.slate; // new-install default: Slate
+        return AppTheme.emerald; // new-install default: Emerald (Peso's color)
     }
   }
 }
@@ -161,7 +172,8 @@ class ThemeService extends ChangeNotifier {
   static const _compactKey = 'compact_mode';
 
   bool _isDark = false;
-  AppTheme _appTheme = AppTheme.slate; // Slate — clean demo default
+  AppTheme _appTheme =
+      AppTheme.emerald; // Emerald — Peso's signature color, fresh + modern
   double _textScale = 1.0; // 1.0 = normal, 1.15 = large, 1.3 = extra large
   bool _highContrast = false;
   bool _compactMode = false;

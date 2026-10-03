@@ -2501,9 +2501,9 @@ class _AIScreenState extends State<AIScreen> {
         ),
         actions: [
           const InfoButton(
-            title: "Smart AI Assistant",
+            title: "Peso — Your Money Buddy",
             body:
-                "Your personal finance AI — powered by Gemini 3.5 Flash-Lite (primary) with 8-provider auto-failover.\n\n"
+                "I'm Peso, SmartSpend's AI — powered by Gemini 3.5 Flash-Lite (primary) with 8-provider auto-failover.\n\n"
                 "The AI knows your expenses, budgets, goals, income, debts, and mood.\n\n"
                 "💡 Try asking:\n"
                 "• \"Spent 30 for jeepney\" — logs instantly\n"

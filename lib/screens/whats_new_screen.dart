@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.73';
-  static const _prefKey = 'whats_new_seen_2_9_73';
+  static const _version = '2.9.76';
+  static const _prefKey = 'whats_new_seen_2_9_76';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,27 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🪙',
+      'Meet Peso! (v2.9.76)',
+      'SmartSpend now has a mascot — Peso the coin! A friendly round ₱ coin '
+          'character who greets you in setup, pops up on empty screens with '
+          'helpful tips in Filipino/English, and shows sad when offline. '
+          'Look for Peso in the "Peso" tab at the bottom.',
+    ),
+    (
+      '💚',
+      'Emerald theme — Peso\'s color (v2.9.76)',
+      'New "Emerald" theme (#00C896) is now the default for new installs. '
+          'Fresh, modern, easy on the eyes. Change it anytime in Settings → Quick Presets.',
+    ),
+    (
+      '📊',
+      'Monthly Wrapped card (v2.9.76)',
+      'On the first 3 days of each month, a shareable "Your Month in Review" '
+          'card shows Peso celebrating your stats: total spent, top category, '
+          'most-logged item, savings rate, and FHS score.',
+    ),
     (
       '🚀',
       'Prepare Demo Phone (v2.9.73)',
