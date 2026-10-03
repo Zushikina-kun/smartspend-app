@@ -3073,7 +3073,11 @@ class _NetWorthCardState extends State<_NetWorthCard> {
       final paid = (d['paid_amount'] as num?)?.toDouble() ?? 0;
       return s + (amt - paid).clamp(0, double.infinity);
     });
-    _current = walletTotal + goalSavings - debtTotal;
+    // Include installment plan remaining balances as liabilities
+    // (GLoan, ShopeePayLater etc. are in installment_plans, not debts table)
+    final installmentsRemaining =
+        await DBService.getInstallmentsRemainingTotal();
+    _current = walletTotal + goalSavings - debtTotal - installmentsRemaining;
 
     // Build 6-month rolling estimates
     // Each month: cumulative income − cumulative expenses for that month and prior
