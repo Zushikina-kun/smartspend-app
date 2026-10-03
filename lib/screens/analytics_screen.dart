@@ -4417,7 +4417,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     "Formula: average monthly spending (last 3 months) × 3 or 6.\n\n"
                     "Large one-time purchases (gadgets, trips) are excluded from the average to avoid inflating the target.\n\n"
                     "💡 The 3-month fund covers short-term emergencies (job loss, medical bills). The 6-month fund is the gold standard for financial security.\n\n"
-                    "To start building it: Hub → Savings Goals → add a goal named 'Emergency Fund'.",
+                    "To start building it: Tools → Savings Goals → add a goal named 'Emergency Fund'.",
                 size: 13,
               ),
             ],

@@ -2,17 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'screens/splash_screen.dart';
-import 'screens/app_lock_screen.dart';
-import 'screens/home_screen.dart';
 import 'services/theme_service.dart';
 import 'services/currency_service.dart';
 import 'services/notification_service.dart';
 import 'services/proactive_nudge_service.dart';
-import 'services/app_lock_service.dart';
 import 'services/app_config.dart';
 import 'services/db_service.dart';
 

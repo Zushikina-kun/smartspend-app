@@ -466,499 +466,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Bottom sheet shown when tapping Log Expense — lets user pick how to log
-  void _showLogExpenseSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 36,
-                  height: 4,
-                  decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(2)),
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text("How would you like to log?",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-              const SizedBox(height: 12),
-              // ① AI Chat — most powerful
-              _logSheetTile(
-                context,
-                icon: Icons.smart_toy_outlined,
-                color: Theme.of(context).colorScheme.primary,
-                title: "Ask Peso (AI)",
-                subtitle: "Type or speak — Peso logs it instantly",
-                onTap: () {
-                  Navigator.pop(context);
-                  setState(() => _index = 2);
-                },
-              ),
-              // ② Manual Form — works 100% offline, no AI needed
-              _logSheetTile(
-                context,
-                icon: Icons.edit_note,
-                color: Colors.green,
-                title: "Manual Form",
-                subtitle:
-                    "Fill in the details yourself — no AI needed, always works",
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const AddExpenseScreen()));
-                },
-              ),
-              // ③ Batch Add — multiple expenses at once
-              _logSheetTile(
-                context,
-                icon: Icons.playlist_add,
-                color: Colors.deepOrange,
-                title: "Batch Add",
-                subtitle:
-                    "Log several expenses at once — great when AI is unavailable",
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const BatchManualEntryScreen()));
-                },
-              ),
-              // ④ Voice → Manual Form
-              _logSheetTile(
-                context,
-                icon: Icons.mic_outlined,
-                color: Colors.red,
-                title: "Voice → Manual Form",
-                subtitle:
-                    "Speak, app listens — you review and confirm the details",
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) =>
-                              const AddExpenseScreen(startWithVoice: true)));
-                },
-              ),
-              // ⑤ Round-Trip Transport
-              _logSheetTile(
-                context,
-                icon: Icons.sync_alt,
-                color: Colors.indigo,
-                title: "Round-Trip Fare",
-                subtitle:
-                    "Log 2 identical transport fares (go + return) at once",
-                onTap: () {
-                  Navigator.pop(context);
-                  _showRoundTripDialog(context);
-                },
-              ),
-              // ⑥ Split Bill
-              _logSheetTile(
-                context,
-                icon: Icons.call_split,
-                color: Colors.purple,
-                title: "Split Bill",
-                subtitle:
-                    "Divide a total among people — logs your share + creates debts",
-                onTap: () {
-                  Navigator.pop(context);
-                  _showSplitterDialog(context);
-                },
-              ),
-              // ⑦ Afford This?
-              _logSheetTile(
-                context,
-                icon: Icons.calculate_outlined,
-                color: Colors.teal,
-                title: "Afford This?",
-                subtitle:
-                    "Check if a price fits within your budget and wallet balance",
-                onTap: () {
-                  Navigator.pop(context);
-                  _showAffordCalculator(context);
-                },
-              ),
-              const SizedBox(height: 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Round-trip fare dialog — logs 2 identical transport entries at once
-  void _showRoundTripDialog(BuildContext context) {
-    final amountCtrl = TextEditingController();
-    final itemCtrl = TextEditingController(text: 'Jeepney fare');
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Round-Trip Fare"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-                "Logs 2 identical transport entries — one for each direction.",
-                style: TextStyle(fontSize: 12, color: Colors.grey)),
-            const SizedBox(height: 12),
-            TextField(
-              controller: itemCtrl,
-              decoration: const InputDecoration(
-                labelText: "Transport type",
-                border: OutlineInputBorder(),
-                isDense: true,
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: amountCtrl,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(
-                labelText: "One-way fare (₱)",
-                border: OutlineInputBorder(),
-                isDense: true,
-              ),
-              autofocus: true,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () async {
-              final amt = double.tryParse(amountCtrl.text.trim());
-              final name = itemCtrl.text.trim();
-              if (amt == null || amt <= 0 || name.isEmpty) return;
-              Navigator.pop(context);
-              final now = DateTime.now();
-              final date = now.toIso8601String().substring(0, 10);
-              final time = now.toIso8601String().substring(11, 16);
-              for (int i = 0; i < 2; i++) {
-                await DBService.insertExpense({
-                  'item_name': name,
-                  'category': 'Transportation',
-                  'amount': amt,
-                  'date': date,
-                  'time': time,
-                  'payment_method': 'Cash',
-                  'notes': i == 0 ? 'Going' : 'Return',
-                  'ai_generated': 0,
-                  'confidence_score': 1.0,
-                  'is_want': 0,
-                });
-              }
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      "Round-trip logged: $name ₱${(amt * 2).toStringAsFixed(0)} (2×₱${amt.toStringAsFixed(0)})"),
-                  backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                ));
-              }
-            },
-            child: const Text("Log Round Trip"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Bill splitter dialog — divides total among N people, logs user's share + debts
-  void _showSplitterDialog(BuildContext context) {
-    final totalCtrl = TextEditingController();
-    final itemCtrl = TextEditingController(text: 'Shared meal');
-    final peopleCtrl = TextEditingController(text: '2');
-    final namesCtrl = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Split Bill"),
-        content: SingleChildScrollView(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Text("Logs your share and creates debt entries for others.",
-              style: TextStyle(fontSize: 12, color: Colors.grey)),
-          const SizedBox(height: 10),
-          TextField(
-              controller: itemCtrl,
-              decoration: const InputDecoration(
-                  labelText: "What was it?",
-                  border: OutlineInputBorder(),
-                  isDense: true)),
-          const SizedBox(height: 8),
-          TextField(
-              controller: totalCtrl,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(
-                  labelText: "Total amount (₱)",
-                  border: OutlineInputBorder(),
-                  isDense: true),
-              autofocus: true),
-          const SizedBox(height: 8),
-          TextField(
-              controller: peopleCtrl,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                  labelText: "Number of people (including you)",
-                  border: OutlineInputBorder(),
-                  isDense: true)),
-          const SizedBox(height: 8),
-          TextField(
-              controller: namesCtrl,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                  labelText: "Other people's names (one per line, optional)",
-                  hintText: "Maria\nJuan",
-                  border: OutlineInputBorder(),
-                  isDense: true)),
-        ])),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () async {
-              final total = double.tryParse(totalCtrl.text.trim());
-              final people = int.tryParse(peopleCtrl.text.trim()) ?? 2;
-              final item = itemCtrl.text.trim();
-              if (total == null || total <= 0 || people < 2 || item.isEmpty)
-                return;
-              final share = total / people;
-              final names = namesCtrl.text
-                  .trim()
-                  .split('\n')
-                  .where((s) => s.trim().isNotEmpty)
-                  .toList();
-              Navigator.pop(context);
-              final now = DateTime.now();
-              // Log user's share as expense
-              await DBService.insertExpense({
-                'item_name': item,
-                'category': 'Food',
-                'amount': share,
-                'date': now.toIso8601String().substring(0, 10),
-                'time': now.toIso8601String().substring(11, 16),
-                'payment_method': 'Cash',
-                'notes': 'Split ${people}way — your share',
-                'ai_generated': 0,
-                'confidence_score': 1.0,
-                'is_want': 1,
-              });
-              // Create debt entry for each other person
-              for (int i = 0; i < people - 1; i++) {
-                final person = i < names.length ? names[i] : 'Person ${i + 1}';
-                await DBService.insertDebt({
-                  'title': 'Split: $item',
-                  'person': person,
-                  'amount': share,
-                  'paid_amount': 0.0,
-                  'type': 'lent',
-                  'due_date': '',
-                  'notes': 'Split bill — owes you ₱${share.toStringAsFixed(0)}',
-                  'created_at': now.toIso8601String(),
-                });
-              }
-              fireEvent(AppEvent.expenseChanged);
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                      "Your share ₱${share.toStringAsFixed(0)} logged + ${people - 1} debt${people - 1 == 1 ? '' : 's'} created"),
-                  backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                ));
-              }
-            },
-            child: const Text("Split & Log"),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// "Afford This?" calculator — checks if a price fits budget + wallet
-  void _showAffordCalculator(BuildContext context) {
-    final priceCtrl = TextEditingController();
-    final categoryCtrl = TextEditingController(text: 'Food');
-    showDialog(
-      context: context,
-      builder: (_) => StatefulBuilder(
-          builder: (ctx, setS) => AlertDialog(
-                title: const Row(children: [
-                  Text("🤔", style: TextStyle(fontSize: 20)),
-                  SizedBox(width: 8),
-                  Text("Afford This?"),
-                ]),
-                content: Column(mainAxisSize: MainAxisSize.min, children: [
-                  TextField(
-                    controller: priceCtrl,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    autofocus: true,
-                    decoration: const InputDecoration(
-                      labelText: "Price (₱)",
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                    ),
-                    onChanged: (_) => setS(() {}),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: categoryCtrl,
-                    decoration: const InputDecoration(
-                      labelText: "Category (optional)",
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                    ),
-                  ),
-                ]),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(ctx),
-                      child: const Text("Close")),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final price = double.tryParse(priceCtrl.text.trim());
-                      if (price == null || price <= 0) return;
-                      Navigator.pop(ctx);
-                      // Fetch data needed
-                      final wallets = await DBService.getWallets();
-                      final budgets = await DBService.getBudgets();
-                      final income = await DBService.getMonthlyIncome();
-                      final currentMonth =
-                          DateTime.now().toIso8601String().substring(0, 7);
-                      final expenses =
-                          await DBService.getExpenses(month: currentMonth);
-                      final totalWallet = wallets.fold(
-                          0.0, (s, w) => s + (w['balance'] as num));
-                      final monthSpent =
-                          expenses.fold(0.0, (s, e) => s + e.amount);
-                      final catSpent = expenses
-                          .where((e) =>
-                              e.category.toLowerCase() ==
-                              categoryCtrl.text.trim().toLowerCase())
-                          .fold(0.0, (s, e) => s + e.amount);
-                      final catBudget = budgets
-                          .where((b) =>
-                              b.category.toLowerCase() ==
-                                  categoryCtrl.text.trim().toLowerCase() &&
-                              b.amount > 0)
-                          .firstOrNull;
-
-                      if (!context.mounted) return;
-                      // Build result message
-                      final lines = <String>[];
-                      // 1. Wallet check
-                      if (totalWallet > 0) {
-                        if (price <= totalWallet) {
-                          lines.add(
-                              "💵 Wallet balance: ₱${totalWallet.toStringAsFixed(0)} — you have enough.");
-                        } else {
-                          lines.add(
-                              "⚠️ Wallet balance: ₱${totalWallet.toStringAsFixed(0)} — ₱${(price - totalWallet).toStringAsFixed(0)} short.");
-                        }
-                      }
-                      // 2. Monthly income check
-                      if (income > 0) {
-                        final remaining = income - monthSpent;
-                        if (price <= remaining) {
-                          lines.add(
-                              "📅 Monthly budget: ₱${remaining.toStringAsFixed(0)} left — still on track.");
-                        } else {
-                          lines.add(
-                              "🚨 Monthly income used up. This would put you ₱${(price - remaining).toStringAsFixed(0)} over.");
-                        }
-                      }
-                      // 3. Category budget check
-                      if (catBudget != null) {
-                        final catRemaining = catBudget.amount - catSpent;
-                        if (price <= catRemaining) {
-                          lines.add(
-                              "✅ ${catBudget.category} budget: ₱${catRemaining.toStringAsFixed(0)} remaining — fits.");
-                        } else {
-                          lines.add(
-                              "⚠️ ${catBudget.category} budget: only ₱${catRemaining.toStringAsFixed(0)} left — would exceed by ₱${(price - catRemaining).toStringAsFixed(0)}.");
-                        }
-                      }
-                      if (lines.isEmpty)
-                        lines.add(
-                            "Set your income and wallets for a full analysis.");
-
-                      showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                          title: Text(
-                              "₱${price.toStringAsFixed(0)} — Can you afford it?"),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: lines
-                                .map((l) => Padding(
-                                      padding: const EdgeInsets.only(bottom: 6),
-                                      child: Text(l,
-                                          style: const TextStyle(
-                                              fontSize: 13, height: 1.4)),
-                                    ))
-                                .toList(),
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text("Got it")),
-                          ],
-                        ),
-                      );
-                    },
-                    child: const Text("Check"),
-                  ),
-                ],
-              )),
-    );
-  }
-
-  Widget _logSheetTile(
-    BuildContext context, {
-    required IconData icon,
-    required Color color,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Icon(icon, color: color, size: 20),
-      ),
-      title: Text(title,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-      subtitle: Text(subtitle,
-          style: const TextStyle(fontSize: 12, color: Colors.grey)),
-      onTap: onTap,
-    );
-  }
-
   Widget _navItem(IconData icon, String label, int idx, {VoidCallback? onTap}) {
     final selected = _index == idx;
     final color =
@@ -1348,11 +855,6 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
   void _go(Widget screen) {
     Navigator.pop(context);
     Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
-  }
-
-  void _goAndRecord(String title, Widget screen) {
-    _recordTap(title);
-    _go(screen);
   }
 
   @override
@@ -2034,16 +1536,10 @@ class _DashboardState extends State<Dashboard> {
   List<Map<String, dynamic>> _wallets = []; // wallet balances for home display
   StreamSubscription? _eventSub;
   int _lastInsightExpenseCount = -1; // only refresh insight when data changes
-  double _dailySpent = 0;
-  double _dailyLimit = 0;
   int _streak = 0; // consecutive days under budget
   List<String> _earnedBadges = [];
   // BF-2: Plain-language score narrative
   String _scoreNarrative = '';
-  // BF-1: Pending celebration event to show once after _loadData completes
-  CelebrationEvent? _pendingCelebration;
-  // BF-1: Logging streak (days with ≥1 expense) — needed for celebration check
-  int _logStreak = 0;
 
   // ── NEW: lightweight mode + multi-period spending limits ─────────────────
   bool _incomeWalletMode = true;
@@ -2297,33 +1793,18 @@ class _DashboardState extends State<Dashboard> {
           NotificationService.showBudgetAlert(b.category, spentAmt, b.amount);
         }
       }
-
-      // Daily spending limit check (#14)
-      final today = DateTime.now().toIso8601String().substring(0, 10);
-      final todaySpent = expenses.where((e) {
-        try {
-          // Normalize date format to YYYY-MM-DD for safe comparison
-          return DateTime.parse(e.date).toIso8601String().substring(0, 10) ==
-              today;
-        } catch (_) {
-          return e.date == today;
-        }
-      }).fold<double>(0, (s, e) => s + e.amount);
-      _dailySpent = todaySpent;
     });
 
     // Load daily limit — migrate to new multi-period system if needed
     final dailyLimit = await DBService.getDailyLimit();
     if (dailyLimit > 0) {
       // Auto-migrate: move legacy daily_limit into the new limit_daily key
-      // and clear the old key so _buildDailyLimitCard never shows again.
       final existingNewDaily = (await DBService.getAllLimits())['daily'] ?? 0;
       if (existingNewDaily == 0) {
         await DBService.setSetting('limit_daily', dailyLimit.toString());
         await DBService.setSetting('daily_limit', '0');
       }
     }
-    if (mounted) setState(() => _dailyLimit = 0); // always hide legacy card
 
     // Multi-period limit notification checks
     // Only fire when the last-added expense is in the current period
@@ -2524,8 +2005,6 @@ class _DashboardState extends State<Dashboard> {
     if (mounted) {
       setState(() {
         _scoreNarrative = narrative;
-        _logStreak = logStreak;
-        _pendingCelebration = celebration;
       });
       // Show celebration banner if one was triggered
       if (celebration != null) {
@@ -3676,7 +3155,7 @@ class _DashboardState extends State<Dashboard> {
                   "• Import — bulk import from GCash, BPI, BDO, Maya\n"
                   "• Recurring — manage bills and subscriptions\n"
                   "• Achievements — badges and spending streaks\n\n"
-                  "All features are also in the Hub (grid icon in the bottom bar).",
+                  "All features are also in the Tools screen (grid icon in the bottom bar).",
               size: 13,
             ),
           ],
@@ -3750,114 +3229,6 @@ class _DashboardState extends State<Dashboard> {
           }).toList(),
         ),
       ],
-    );
-  }
-
-  Widget _buildDailyLimitCard(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final ratio =
-        _dailyLimit > 0 ? (_dailySpent / _dailyLimit).clamp(0.0, 1.0) : 0.0;
-    final isOver = _dailySpent >= _dailyLimit;
-    final isWarning = ratio >= 0.8 && !isOver;
-    final color = isOver
-        ? Colors.red
-        : isWarning
-            ? Colors.orange
-            : cs.primary;
-
-    // Smart daily allowance: remaining monthly budget ÷ days left
-    final now = DateTime.now();
-    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
-    final daysLeft = daysInMonth - now.day + 1;
-    final totalBudget =
-        _monthlyIncome > 0 ? _monthlyIncome : _dailyLimit * daysInMonth;
-    final remaining = totalBudget - _totalSpent;
-    final smartDaily =
-        daysLeft > 0 ? (remaining / daysLeft).clamp(0.0, double.infinity) : 0.0;
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.07),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.25)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.today_outlined, size: 16, color: color),
-                const SizedBox(width: 6),
-                Text("Today's Spending",
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: color)),
-                const SizedBox(width: 4),
-                InfoButton(
-                  title: "Daily Spending Limit",
-                  body:
-                      "Tracks how much you've spent today vs your daily limit.\n\n"
-                      "• Orange at 80% — approaching your limit\n"
-                      "• Red at 100%+ — limit exceeded\n\n"
-                      "Smart Daily Allowance (below the bar) = remaining monthly budget ÷ days left in the month — how much you can safely spend today.\n\n"
-                      "To set or change your limit: Profile → Spending Limits → Daily.",
-                  size: 13,
-                ),
-                const Spacer(),
-                Text(
-                  "${CurrencyService.format(_dailySpent)} / ${CurrencyService.format(_dailyLimit)}",
-                  style: TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.bold, color: color),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: ratio,
-                backgroundColor: color.withValues(alpha: 0.15),
-                valueColor: AlwaysStoppedAnimation<Color>(color),
-                minHeight: 6,
-              ),
-            ),
-            if (isOver)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                    "Daily limit exceeded by ${CurrencyService.format(_dailySpent - _dailyLimit)}",
-                    style: const TextStyle(fontSize: 11, color: Colors.red)),
-              )
-            else if (isWarning)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                    "${(ratio * 100).toStringAsFixed(0)}% of daily limit used",
-                    style: const TextStyle(fontSize: 11, color: Colors.orange)),
-              ),
-            // Smart daily allowance — Cleo Autopilot-style
-            if (smartDaily > 0 && _monthlyIncome > 0) ...[
-              const SizedBox(height: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: cs.surfaceContainerHighest.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  "💡 Smart allowance: ${CurrencyService.format(smartDaily)}/day for remaining $daysLeft days",
-                  style: TextStyle(
-                      fontSize: 10, color: cs.onSurface.withValues(alpha: 0.6)),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
     );
   }
 
@@ -4020,7 +3391,7 @@ class _DashboardState extends State<Dashboard> {
                     "💰 Saver — saved ≥20% of income for a month\n"
                     "🎯 Goal Getter — completed a savings goal\n"
                     "📅 Consistent Logger — logged every day for 14 days\n\n"
-                    "25 badges total — Hub → Achievements to see them all.",
+                    "25 badges total — Tools → Achievements to see them all.",
                 size: 13,
               ),
             ],
@@ -4118,7 +3489,7 @@ class _DashboardState extends State<Dashboard> {
                         "Tap this card to manage individual wallet balances.\n\n"
                         "Tracks: Cash on Hand, GCash, Maya, GrabPay, ShopeePay, Debit Card, Credit Card, BDO, BPI, and 25+ other banks.\n\n"
                         "Total = combined balance across all accounts.\n\n"
-                        "Wallets auto-deduct when you log expenses (if enabled in App Settings → Auto-deduct wallets). Tap Hub → My Wallets to add or update balances.",
+                        "Wallets auto-deduct when you log expenses (if enabled in App Settings → Auto-deduct wallets). Tap Tools → My Wallets to add or update balances.",
                     size: 13,
                   ),
                   const Spacer(),
@@ -4687,7 +4058,7 @@ class _DashboardState extends State<Dashboard> {
                       "Shows all your active recurring expenses (bills, subscriptions) and their combined monthly cost.\n\n"
                       "Monthly total = sum of all recurring expenses converted to monthly equivalent.\n"
                       "Annual total = monthly × 12.\n\n"
-                      "Tap Hub → Recurring Transactions to manage or log them.",
+                      "Tap Tools → Recurring Transactions to manage or log them.",
                   size: 13,
                 ),
                 const Spacer(),
