@@ -1,5 +1,5 @@
 # SmartSpend — Defense Guide
-**Version:** 2.9.71 | **October 2026** | **Lucid Frame**
+**Version:** 2.9.77 | **October 2026** | **Lucid Frame**
 
 > This is your single reference for both the DEMO and the DEFENSE.
 > Read it fully before your pre-final and final defenses.
@@ -133,7 +133,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | **2.9.71** |
+| Version | **2.9.77** |
 | Platform | Android (Flutter) |
 | Database | SQLite version 11, 20 tables |
 | AI providers | **8** (auto-failover, all free tier) |
@@ -149,7 +149,7 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 | Screenshot platforms detected | 40+ |
 | PH banks in database | 20 banks + 5 e-wallets |
 | Backup format | JSON version 9 |
-| Color themes | **11** (Blue, Sky Blue, Forest Green, Royal Purple, Sunset Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, **Slate** — default) |
+| Color themes | **12** (Blue, Sky Blue, Forest Green, Royal Purple, Sunset Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, Slate, **Emerald** — default for new installs) |
 | GitHub | https://github.com/Zushikina-kun/smartspend-app |
 | Group | Lucid Frame |
 | School | Lorma Colleges — CCSE, BSIT 4th Year |
@@ -275,7 +275,7 @@ A: The `AndroidManifest.xml` registers an `android.intent.action.SEND` intent-fi
 9. **Show Achievements** — badge grid
 
 ### Before presenting:
-- [ ] Reset AI limit: AI screen → ⋮ → Reset Daily Limit
+- [ ] Reset AI limit: Peso screen → ⋮ → Reset Daily Limit
 - [ ] Load demo data if needed: Profile → Load Demo Data
 
 ---
@@ -292,7 +292,7 @@ A: The `AndroidManifest.xml` registers an `android.intent.action.SEND` intent-fi
 
 ---
 
-*SmartSpend v2.9.71 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
+*SmartSpend v2.9.77 — Lucid Frame | Lorma Colleges CCSE BSIT 2026–2027 (1st Sem)*
 *You built something genuinely impressive. Know the logic, not the memorization. 🎯*
 
 
