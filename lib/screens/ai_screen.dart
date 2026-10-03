@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shake/shake.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:async';
+import '../widgets/peso_mascot.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -2491,7 +2492,13 @@ class _AIScreenState extends State<AIScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Smart AI Assistant"),
+        title: Row(
+          children: [
+            const PesoMascot(size: 28, mood: PesoMood.happy),
+            const SizedBox(width: 8),
+            const Text("Peso"),
+          ],
+        ),
         actions: [
           const InfoButton(
             title: "Smart AI Assistant",
@@ -2897,16 +2904,21 @@ class _AIScreenState extends State<AIScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.smart_toy,
-                                size: 64, color: Colors.grey[300]),
-                            const SizedBox(height: 12),
-                            const Text("Ask me anything about your finances.",
-                                style: TextStyle(color: Colors.grey)),
-                            const SizedBox(height: 6),
-                            const Text(
-                                "I know your expenses, budgets, income & health score.",
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
+                            // Peso mascot with personalized greeting
+                            Builder(builder: (ctx) {
+                              final hour = DateTime.now().hour;
+                              final greeting = hour < 12
+                                  ? "Magandang umaga! ☀️"
+                                  : hour < 18
+                                      ? "Kumain ka na ba? 😄"
+                                      : "Good evening! 🌙";
+                              return PesoMascot.withSpeech(
+                                size: 80,
+                                mood: PesoMood.happy,
+                                text:
+                                    "$greeting\nAko si Peso — your money buddy!\nAsk me anything or just say what you spent.",
+                              );
+                            }),
                             const SizedBox(height: 20),
                             // Contextual quick-action chips (time-based)
                             Builder(builder: (ctx) {

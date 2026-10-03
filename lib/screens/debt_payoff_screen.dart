@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
+import '../widgets/peso_mascot.dart';
 
 /// N1 — Debt Payoff Calculator
 /// Loads all "owe" debts from DB, lets user set a monthly extra budget,
@@ -182,14 +183,17 @@ class _DebtPayoffScreenState extends State<DebtPayoffScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.handshake_outlined,
-                size: 64, color: cs.primary.withValues(alpha: 0.4)),
+            PesoMascot.withSpeech(
+              size: 80,
+              mood: PesoMood.celebrating,
+              text: "Wala kang utang!\nGanda nyan — Peso is proud of you! 💚",
+            ),
             const SizedBox(height: 16),
             const Text('No active debts',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text(
-              'Add debts you owe under Hub → Debts & Loans.',
+              'Add debts you owe under Tools → Debts & Loans.',
               textAlign: TextAlign.center,
               style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6)),
             ),

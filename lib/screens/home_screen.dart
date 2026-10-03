@@ -19,6 +19,7 @@ import '../services/category_service.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import 'edit_expense_screen.dart';
 import 'analytics_screen.dart';
 import 'ai_screen.dart';
@@ -338,8 +339,8 @@ class _HomeScreenState extends State<HomeScreen> {
               style: const TextStyle(fontSize: 13),
               decoration: InputDecoration(
                 hintText: _isOffline
-                    ? "No internet — AI unavailable"
-                    : "Ask AI or log an expense…",
+                    ? "No internet — Peso unavailable"
+                    : "Ask Peso or log an expense…",
                 hintStyle: TextStyle(
                     fontSize: 13, color: cs.onSurface.withValues(alpha: 0.4)),
                 isDense: true,
@@ -450,7 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     _checkTour();
                   }),
                   _navItem(Icons.bar_chart, "Analytics", 1),
-                  _navItem(Icons.smart_toy, "AI", 2),
+                  _navItem(Icons.smart_toy, "Peso", 2),
                   _navItem(Icons.grid_view_rounded, "Tools", -1,
                       onTap: () => _showQuickAccessHub(context)),
                   _navItem(Icons.person, "Profile", 3),
@@ -6110,11 +6111,11 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                 ),
                               ),
-                            // "Explain My Score" shortcut — navigates to AI tab
+                            // "Explain My Score" shortcut — navigates to Peso tab
                             GestureDetector(
                               onTap: () => widget.onNavigate(2),
                               child: Text(
-                                "💬 Ask AI to explain my score",
+                                "💬 Ask Peso to explain my score →",
                                 style: TextStyle(
                                     fontSize: 10,
                                     color:
@@ -6477,8 +6478,12 @@ class _DashboardState extends State<Dashboard> {
                       child: Center(
                         child: Column(
                           children: [
-                            Icon(Icons.receipt_long_outlined,
-                                size: 64, color: Colors.grey[300]),
+                            PesoMascot.withSpeech(
+                              size: 72,
+                              mood: PesoMood.thinking,
+                              text:
+                                  "Wala pa akong makita!\nSabi mo kanina kumain ka — i-log mo! 😄",
+                            ),
                             const SizedBox(height: 16),
                             const Text("No expenses recorded yet",
                                 style: TextStyle(
@@ -6487,14 +6492,14 @@ class _DashboardState extends State<Dashboard> {
                                     fontWeight: FontWeight.w500)),
                             const SizedBox(height: 6),
                             const Text(
-                                "Tap the AI button below to log your first expense\nby typing, speaking, or scanning a receipt",
+                                "Just type what you spent — Peso will handle the rest.",
                                 style:
                                     TextStyle(color: Colors.grey, fontSize: 12),
                                 textAlign: TextAlign.center),
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               icon: const Icon(Icons.smart_toy, size: 16),
-                              label: const Text("Open AI Assistant"),
+                              label: const Text("Talk to Peso"),
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
@@ -8232,7 +8237,46 @@ class _GoalsTimelineCardState extends State<_GoalsTimelineCard> {
       final current = (g['current_amount'] as num?)?.toDouble() ?? 0;
       return target > 0 && current < target;
     }).toList();
-    if (active.isEmpty) return const SizedBox.shrink();
+    if (active.isEmpty) {
+      final cs = Theme.of(context).colorScheme;
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: GestureDetector(
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const SavingsGoalsScreen())),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: cs.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: cs.outline.withValues(alpha: 0.12)),
+            ),
+            child: Row(
+              children: [
+                const PesoMascot(size: 44, mood: PesoMood.thinking),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Set a savings goal!',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13)),
+                      Text(
+                          'Tell Peso what you\'re saving for — laptop, vacation, emergency fund.',
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: cs.onSurface.withValues(alpha: 0.55))),
+                    ],
+                  ),
+                ),
+                Icon(Icons.add_circle_outline, color: cs.primary, size: 22),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     final cs = Theme.of(context).colorScheme;
     return Padding(
