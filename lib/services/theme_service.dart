@@ -195,7 +195,7 @@ class ThemeService extends ChangeNotifier {
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
     _isDark = prefs.getBool(_darkKey) ?? false;
-    final themeKey = prefs.getString(_themeKey) ?? 'blue';
+    final themeKey = prefs.getString(_themeKey) ?? 'emerald';
     _appTheme = AppThemeExtension.fromKey(themeKey);
     _textScale = prefs.getDouble(_textScaleKey) ?? 1.0;
     _highContrast = prefs.getBool(_highContrastKey) ?? false;

@@ -556,7 +556,6 @@ class _PesoWithSpeech extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     final bColor = bubbleColor ?? kPesoGreenLight;
     final tColor = textStyle?.color ?? const Color(0xFF004D39);
 

@@ -44,15 +44,15 @@ class _FeatureTourState extends State<FeatureTour>
   static const _steps = [
     _TourStep(
       icon: Icons.smart_toy_outlined,
-      color: Color(0xFF7C3AED),
-      title: "AI is the Heart of the App",
+      color: Color(0xFF00C896),
+      title: "Peso — Your Money Buddy 🪙",
       body:
-          "Tap the AI button in the bottom navigation bar to open your financial assistant.\n\n"
+          "Tap the Peso button (🪙) in the bottom nav to chat with your AI.\n\n"
           "You can:\n"
           "🎙️ Speak — just say what you spent\n"
           "📷 Camera — scan receipts or barcodes\n"
           "✏️ Type — describe it in plain language\n\n"
-          "The AI logs expenses, updates wallets, sets budgets, tracks debts, and more — 34 action types, all automatic.",
+          "Peso logs expenses, updates wallets, sets budgets, tracks debts, and more — 34 action types, all automatic.",
     ),
     _TourStep(
       icon: Icons.home_outlined,
@@ -75,7 +75,7 @@ class _FeatureTourState extends State<FeatureTour>
           "💰 Budgets — set monthly limits per category (14 categories: Food, Gaming, Travel, Pets & more).\n\n"
           "🎯 Savings Goals — track targets with progress bars.\n\n"
           "⚙️ App Settings — toggle wallet auto-deduct, mood, impulse pause, balance mode.\n\n"
-          "Find everything in the Hub (grid icon) or Profile.",
+          "Find everything in the Tools screen (grid icon) or Profile.",
     ),
     _TourStep(
       icon: Icons.bar_chart_outlined,
@@ -94,13 +94,13 @@ class _FeatureTourState extends State<FeatureTour>
       icon: Icons.tips_and_updates_outlined,
       color: Color(0xFF0099DD),
       title: "Pro Tips",
-      body: "• Say 'my GCash is ₱500' to update wallet via AI\n"
-          "• Import GCash/BPI/BDO history: Hub → Import from Bank\n"
+      body: "• Say 'my GCash is ₱500' to update wallet via Peso\n"
+          "• Import GCash/BPI/BDO history: Tools → Import from Bank\n"
           "• Scan receipts → 'Import Items' for multi-item parsing\n"
           "• Tag expenses with #hashtags for filtering\n"
-          "• Shake phone to undo last AI action (60 sec window)\n"
+          "• Shake phone to undo last Peso action (60 sec window)\n"
           "• Profile → App Settings for Balance Mode & toggles\n"
-          "• 34 action types + daily quests — check Hub → Achievements",
+          "• 34 action types + daily quests — check Tools → Achievements",
     ),
   ];
 

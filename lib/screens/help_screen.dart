@@ -245,7 +245,7 @@ const _sections = [
       _HelpItem(
         title: "How do I log an expense?",
         body:
-            "Tap the AI button in the bottom bar. Just type or speak what you spent — the AI understands natural language and logs it automatically.",
+            "Tap the Peso button in the bottom bar. Just type or speak what you spent — Peso understands natural language and logs it automatically.",
         example:
             '"I spent 150 pesos on lunch at Jollibee" → AI logs ₱150 under Food.',
       ),
@@ -710,7 +710,7 @@ const _sections = [
       _HelpItem(
         title: "Log Expense button",
         body:
-            "The 'Log Expense' button in the top right of the dashboard takes you directly to the AI screen — the fastest way to record a new expense.",
+            "The 'Log Expense' button in the top right of the dashboard takes you directly to Peso — the fastest way to record a new expense.",
       ),
       _HelpItem(
         title: "Daily spending limit bar",
@@ -842,7 +842,7 @@ const _sections = [
       _HelpItem(
         title: "How do I set a budget?",
         body:
-            "Go to Hub → Budgets → tap + Add Budget. Choose a category and set a monthly limit. You can also ask the AI: 'Set my food budget to 3000 pesos.'",
+            "Go to Tools → Budgets → tap + Add Budget. Choose a category and set a monthly limit. You can also ask the AI: 'Set my food budget to 3000 pesos.'",
         example:
             'Food budget: ₱3,000/month → progress bar turns orange at 80%, red when exceeded.',
       ),
@@ -871,7 +871,7 @@ const _sections = [
       _HelpItem(
         title: "Creating a savings goal",
         body:
-            "Hub → Savings Goals → tap + New Goal. Enter the name, target amount, how much you've already saved, start date, and optional deadline. The app calculates how much you need to save per month.",
+            "Tools → Savings Goals → tap + New Goal. Enter the name, target amount, how much you've already saved, start date, and optional deadline. The app calculates how much you need to save per month.",
         example: 'Goal: New Laptop ₱35,000 by December → Save ₱4,375/month.',
       ),
       _HelpItem(
@@ -890,7 +890,7 @@ const _sections = [
       _HelpItem(
         title: "Tracking debts",
         body:
-            "Hub → Debts & Lending. 'I Owe' tab for money you owe others, 'Owed to Me' for money others owe you. Set due dates to get reminder notifications.",
+            "Tools → Debts & Lending. 'I Owe' tab for money you owe others, 'Owed to Me' for money others owe you. Set due dates to get reminder notifications.",
         example:
             'Borrowed ₱5,000 from Kuya Mark, due May 15 → app reminds you 7 days before.',
       ),
@@ -903,7 +903,7 @@ const _sections = [
         title: "Payment Plans & Installment Tracker",
         body:
             "For items bought on installment (phone, laptop, appliance) AND credit services (ShopeePayLater, GCash GLoan, HomeCredit, etc.).\n\n"
-            "Go to Hub → Debts & Lending → Plans tab. Add a plan with:\n"
+            "Go to Tools → Debts & Lending → Plans tab. Add a plan with:\n"
             "• Plan name + provider\n"
             "• Total amount + monthly payment (auto-computed)\n"
             "• Number of months + due day of month\n"
@@ -1173,7 +1173,7 @@ const _sections = [
       _HelpItem(
         title: "Adding a custom category",
         body:
-            "Go to Profile → Manage Categories, or Hub → Categories. Tap + to add a new category name. Custom categories appear alongside the built-in ones in all dropdowns.",
+            "Go to Profile → Manage Categories, or Tools → Categories. Tap + to add a new category name. Custom categories appear alongside the built-in ones in all dropdowns.",
         example:
             'Add "School" → now available in Add Expense, Budget, and Recurring screens.',
       ),
@@ -1220,7 +1220,7 @@ const _sections = [
       _HelpItem(
         title: "Viewing upcoming events",
         body:
-            "Go to Hub → Bill Calendar. See all your recurring bills, debt due dates, savings goal deadlines, installment payment days, and expected income — all on one calendar, color-coded by type:\n\n"
+            "Go to Tools → Bill Calendar. See all your recurring bills, debt due dates, savings goal deadlines, installment payment days, and expected income — all on one calendar, color-coded by type:\n\n"
             "🟠 Orange — Recurring bills\n"
             "🟢 Green — Expected income\n"
             "🔴 Red — Debt payments due\n"
@@ -1358,7 +1358,7 @@ const _sections = [
       _HelpItem(
         title: "Where do I see my badges?",
         body:
-            "Hub → Achievements. Shows all 25 badges in a grid — earned ones are highlighted, locked ones show 🔒. The count in the top bar shows how many you've earned. Pull down to refresh.",
+            "Tools → Achievements. Shows all 25 badges in a grid — earned ones are highlighted, locked ones show 🔒. The count in the top bar shows how many you've earned. Pull down to refresh.",
       ),
     ],
   ),
@@ -1370,7 +1370,7 @@ const _sections = [
       _HelpItem(
         title: "Insurance & Contributions Tracker",
         body:
-            "Hub → Insurance & Contributions. Track all your insurance policies and government contributions in one place.\n\n"
+            "Tools → Insurance & Contributions. Track all your insurance policies and government contributions in one place.\n\n"
             "• Quick-add SSS, PhilHealth, Pag-IBIG with one tap\n"
             "• Set premium amounts, frequency, and due dates\n"
             "• Mark as Paid — auto-advances next due date\n"
@@ -1380,8 +1380,8 @@ const _sections = [
       _HelpItem(
         title: "Adding SSS, PhilHealth, Pag-IBIG",
         body: "Two ways:\n\n"
-            "1. Hub → Insurance & Contributions → tap the quick-add chips (SSS, PhilHealth, Pag-IBIG)\n"
-            "2. Hub → Recurring Transactions → tap + for preset templates\n\n"
+            "1. Tools → Insurance & Contributions → tap the quick-add chips (SSS, PhilHealth, Pag-IBIG)\n"
+            "2. Tools → Recurring Transactions → tap + for preset templates\n\n"
             "The Insurance screen tracks premiums with due dates and overdue alerts. Recurring Transactions auto-logs the expense each month.",
         example: "Tap SSS chip → set ₱1,400/month → next due date → done.",
       ),
@@ -1487,7 +1487,7 @@ const _sections = [
       _HelpItem(
         title: "Can I change my answers later?",
         body:
-            "Yes. You can update your account type from Profile → Account Type, adjust budgets from Hub → Budgets, and add or edit savings goals from Hub → Savings Goals at any time.",
+            "Yes. You can update your account type from Profile → Account Type, adjust budgets from Tools → Budgets, and add or edit savings goals from Tools → Savings Goals at any time.",
       ),
     ],
   ),
@@ -1625,7 +1625,7 @@ const _sections = [
       _HelpItem(
         title: "How do I add a rule?",
         body:
-            "Go to Hub → Auto-Categorization Rules → tap + Add Rule. Enter a keyword (e.g. '7-Eleven') and select the category it should map to. Rules are case-insensitive and use partial matching.",
+            "Go to Tools → Auto-Categorization Rules → tap + Add Rule. Enter a keyword (e.g. '7-Eleven') and select the category it should map to. Rules are case-insensitive and use partial matching.",
         example:
             'Rule: "grab" → Transportation. Now "GrabFood", "Grab Car", "Grab Express" all map to Transportation.',
       ),
@@ -1646,14 +1646,14 @@ const _sections = [
         body:
             "Import your spending history from any bank or e-wallet in bulk. Instead of logging transactions one by one, paste your transaction history text and the AI parses all of it at once.\n\n"
             "Supported sources: GCash, Maya (PayMaya), BPI, BDO, UnionBank, Seabank, and any bank with a text-based export.\n\n"
-            "Access it from: Hub → Import from Bank / GCash, or Profile → Data section.",
+            "Access it from: Tools → Import from Bank / GCash, or Profile → Data section.",
       ),
       _HelpItem(
         title: "How do I import GCash transactions?",
         body: "Option A — PDF text (most reliable):\n"
             "1. GCash app → Profile → Transaction History → Request via email\n"
             "2. Open the email → open the PDF → select all text → copy\n"
-            "3. In SmartSpend: Hub → Import from Bank / GCash → paste → Parse with AI\n\n"
+            "3. In SmartSpend: Tools → Import from Bank / GCash → paste → Parse with AI\n\n"
             "Option B — Screenshot OCR:\n"
             "1. Open GCash → scroll through your transaction list\n"
             "2. Screenshot the list → tap Camera button in the import screen to OCR it\n"
@@ -1833,10 +1833,10 @@ const _sections = [
             "Each card shows a brief description so you know what it does at a glance.",
       ),
       _HelpItem(
-        title: "Is this different from the Hub?",
+        title: "Is this different from the Tools screen?",
         body:
-            "Yes. The Hub (grid icon in the bottom bar) shows ALL features in a scrollable list. The Quick Access portals on the Home screen show only the 6 most commonly used features as visual cards.\n\n"
-            "Use the portals for quick daily access. Use the Hub when you need a feature that's not in the portals.",
+            "Yes. The Tools screen (grid icon in the bottom bar) shows ALL features in a scrollable list. The Quick Access portals on the Home screen show only the 6 most commonly used features as visual cards.\n\n"
+            "Use the portals for quick daily access. Use Tools when you need a feature that's not in the portals.",
       ),
     ],
   ),

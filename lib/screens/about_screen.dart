@@ -60,7 +60,7 @@ class AboutScreen extends StatelessWidget {
               ("📦 Barcode Scanner", "Scan + save barcode history"),
               ("✏️ Manual Entry", "Type expenses in plain language"),
               (
-                "🤖 AI Chat Assistant",
+                "🤖 Peso (AI Chat)",
                 "Powered by Gemini 3.5 Flash-Lite (8-provider auto-failover)"
               ),
               (

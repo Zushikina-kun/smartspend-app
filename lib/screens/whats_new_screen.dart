@@ -126,7 +126,7 @@ class WhatsNewScreen extends StatelessWidget {
     (
       '💳',
       'Debt Payoff Calculator (v2.9.68)',
-      'Hub → Tools → Debt Payoff Calculator. Enter your monthly budget, '
+      'Tools → Tools → Debt Payoff Calculator. Enter your monthly budget, '
           'and it simulates both avalanche (highest rate first) and snowball '
           '(lowest balance first) strategies — showing months to freedom '
           'and total interest paid for each.',
@@ -192,7 +192,7 @@ class WhatsNewScreen extends StatelessWidget {
     (
       '🧹',
       'Data Quality (v2.9.67)',
-      'New "Data Quality" tool in Hub → Tools scans your expenses for issues: '
+      'New "Data Quality" tool in Tools → Tools scans your expenses for issues: '
           'missing timestamps, inconsistent item names, items stuck in Others, '
           'and suspicious round AI-logged amounts. One-tap Fix All.',
     ),
