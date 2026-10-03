@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:share_plus/share_plus.dart';
 import 'dart:async';
 import 'dart:io';
 import '../models/expense.dart';
@@ -393,21 +394,20 @@ class _HomeScreenState extends State<HomeScreen> {
         Scaffold(
           body: Column(
             children: [
-              // Offline indicator
+              // Offline indicator — Peso looking sad
               if (_isOffline)
                 Container(
                   width: double.infinity,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  color: Colors.grey[800],
-                  child: const Row(
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                  color: const Color(0xFF1C1C1E),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.wifi_off, size: 14, color: Colors.white70),
-                      SizedBox(width: 6),
-                      Text("No internet — AI features unavailable",
+                    children: const [
+                      SizedBox(width: 8),
+                      Text("😟 Peso can't connect — AI unavailable offline",
                           style:
-                              TextStyle(color: Colors.white70, fontSize: 12)),
+                              TextStyle(color: Colors.white70, fontSize: 11.5)),
                     ],
                   ),
                 ),
@@ -497,8 +497,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 context,
                 icon: Icons.smart_toy_outlined,
                 color: Theme.of(context).colorScheme.primary,
-                title: "AI Chat",
-                subtitle: "Type or speak — AI logs it instantly",
+                title: "Ask Peso (AI)",
+                subtitle: "Type or speak — Peso logs it instantly",
                 onTap: () {
                   Navigator.pop(context);
                   setState(() => _index = 2);
@@ -3152,10 +3152,10 @@ class _DashboardState extends State<Dashboard> {
                     child: Icon(Icons.smart_toy_outlined,
                         color: Theme.of(context).colorScheme.primary,
                         size: 20)),
-                title: const Text("AI Chat",
+                title: const Text("Ask Peso (AI)",
                     style:
                         TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                subtitle: const Text("Type or speak — AI logs it instantly",
+                subtitle: const Text("Type or speak — Peso logs it instantly",
                     style: TextStyle(fontSize: 12, color: Colors.grey)),
                 onTap: () {
                   Navigator.pop(context);
@@ -6439,6 +6439,9 @@ class _DashboardState extends State<Dashboard> {
               // ── N2: GOALS TIMELINE ────────────────────────────────────────
               const _GoalsTimelineCard(),
 
+              // ── MONTHLY WRAPPED (first 3 days of month) ────────────────────
+              if (_showMonthlyRecap) const _MonthlyWrappedCard(),
+
               const SizedBox(height: 20),
 
               Row(
@@ -8407,6 +8410,331 @@ class _GoalsTimelineCardState extends State<_GoalsTimelineCard> {
                   );
                 },
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── MONTHLY WRAPPED CARD ──────────────────────────────────────────────────────
+/// Shows a "Your Month in Review" card on days 1–3 of each new month.
+/// Designed like Spotify Wrapped — shareable, visual, celebratory.
+/// Uses Peso celebrating mood. Dismissible after first view.
+class _MonthlyWrappedCard extends StatefulWidget {
+  const _MonthlyWrappedCard();
+
+  @override
+  State<_MonthlyWrappedCard> createState() => _MonthlyWrappedCardState();
+}
+
+class _MonthlyWrappedCardState extends State<_MonthlyWrappedCard> {
+  bool _dismissed = false;
+  bool _loading = true;
+  Map<String, dynamic>? _data;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final now = DateTime.now();
+    // Only show on days 1–3 of the month
+    if (now.day > 3) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
+
+    // Check if dismissed this month
+    final dismissKey = 'wrapped_dismissed_${now.year}_${now.month}';
+    final dismissed = await DBService.getSetting(dismissKey) == 'true';
+    if (dismissed) {
+      if (mounted)
+        setState(() {
+          _dismissed = true;
+          _loading = false;
+        });
+      return;
+    }
+
+    // Load last month's data
+    final lastMonthDt = DateTime(now.year, now.month - 1);
+    final lastMonth =
+        '${lastMonthDt.year}-${lastMonthDt.month.toString().padLeft(2, '0')}';
+    final expenses = await DBService.getExpenses(month: lastMonth);
+    if (expenses.isEmpty) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
+
+    final total = expenses.fold<double>(0, (s, e) => s + e.amount);
+    final income = await DBService.getMonthlyIncome();
+
+    // Top category
+    final cats = <String, double>{};
+    for (final e in expenses) {
+      cats[e.category] = (cats[e.category] ?? 0) + e.amount;
+    }
+    final topCat = cats.entries.reduce((a, b) => a.value > b.value ? a : b);
+
+    // Most logged item
+    final items = <String, int>{};
+    for (final e in expenses) {
+      items[e.itemName] = (items[e.itemName] ?? 0) + 1;
+    }
+    final topItem = items.entries.reduce((a, b) => a.value > b.value ? a : b);
+
+    // Savings rate
+    final savings =
+        income > 0 ? ((income - total) / income * 100).clamp(-999, 100) : 0.0;
+
+    // Previous month's score for comparison
+    final prevScore =
+        int.tryParse(await DBService.getSetting('prev_fhs_score') ?? '') ?? 0;
+
+    final monthName = DateFormat('MMMM').format(lastMonthDt);
+
+    if (mounted) {
+      setState(() {
+        _data = {
+          'month': monthName,
+          'year': lastMonthDt.year,
+          'total': total,
+          'income': income,
+          'savings': savings,
+          'topCat': topCat.key,
+          'topCatAmt': topCat.value,
+          'topItem': topItem.key,
+          'topItemCount': topItem.value,
+          'score': prevScore,
+          'txCount': expenses.length,
+          'dismissKey': dismissKey,
+        };
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _dismiss() async {
+    final key = _data?['dismissKey'] as String?;
+    if (key != null) await DBService.setSetting(key, 'true');
+    if (mounted) setState(() => _dismissed = true);
+  }
+
+  Future<void> _share() async {
+    if (_data == null) return;
+    final d = _data!;
+    final savingsLine = (d['income'] as double) > 0
+        ? 'Savings rate: ${(d['savings'] as double).toStringAsFixed(0)}%\n'
+        : '';
+    final text = '📊 My ${d['month']} ${d['year']} in Review — SmartSpend\n\n'
+        '💸 Total spent: ${CurrencyService.format(d['total'] as double)}\n'
+        '${savingsLine}'
+        '🏆 Top category: ${d['topCat']} (${CurrencyService.format(d['topCatAmt'] as double)})\n'
+        '📝 Most logged: "${d['topItem']}" × ${d['topItemCount']}x\n'
+        '❤️ FHS Score: ${d['score']}/100\n'
+        '📌 ${d['txCount']} transactions logged\n\n'
+        'Track yours with SmartSpend 📱';
+    await Share.share(text, subject: 'My ${d['month']} Financial Recap');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading || _dismissed || _data == null) return const SizedBox.shrink();
+    final cs = Theme.of(context).colorScheme;
+    final d = _data!;
+    final savings = d['savings'] as double;
+    final isPositive = savings >= 0;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              kPesoGreen.withValues(alpha: 0.12),
+              kPesoGreen.withValues(alpha: 0.04),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: kPesoGreen.withValues(alpha: 0.3)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header row
+              Row(
+                children: [
+                  const PesoMascot(size: 44, mood: PesoMood.celebrating),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${d['month']} ${d['year']} in Review',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '${d['txCount']} transactions · ${CurrencyService.format(d['total'] as double)} spent',
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: cs.onSurface.withValues(alpha: 0.55)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close,
+                        size: 18, color: cs.onSurface.withValues(alpha: 0.35)),
+                    onPressed: _dismiss,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+
+              // Stats row
+              Row(
+                children: [
+                  _statChip(
+                    icon: Icons.category_outlined,
+                    label: 'Top spend',
+                    value: d['topCat'] as String,
+                    color: cs.primary,
+                    cs: cs,
+                  ),
+                  const SizedBox(width: 8),
+                  _statChip(
+                    icon: Icons.repeat_outlined,
+                    label: 'Most logged',
+                    value: '${d['topItem']}',
+                    color: Colors.orange,
+                    cs: cs,
+                  ),
+                  if ((d['income'] as double) > 0) ...[
+                    const SizedBox(width: 8),
+                    _statChip(
+                      icon:
+                          isPositive ? Icons.trending_up : Icons.trending_down,
+                      label: 'Saved',
+                      value: '${savings.toStringAsFixed(0)}%',
+                      color: isPositive ? Colors.green : Colors.red,
+                      cs: cs,
+                    ),
+                  ],
+                ],
+              ),
+
+              // FHS bar
+              if ((d['score'] as int) > 0) ...[
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Text('FHS Score: ',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: cs.onSurface.withValues(alpha: 0.6))),
+                    Text('${d['score']}/100',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: (d['score'] as int) >= 80
+                                ? Colors.green
+                                : (d['score'] as int) >= 60
+                                    ? Colors.orange
+                                    : Colors.red)),
+                    const Spacer(),
+                    Text(
+                      (d['score'] as int) >= 80
+                          ? '🏆 Great month!'
+                          : (d['score'] as int) >= 60
+                              ? '⭐ Good effort'
+                              : '📈 Room to grow',
+                      style: const TextStyle(fontSize: 11),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: ((d['score'] as int) / 100).clamp(0.0, 1.0),
+                    minHeight: 6,
+                    backgroundColor: cs.outline.withValues(alpha: 0.12),
+                    valueColor: AlwaysStoppedAnimation(
+                      (d['score'] as int) >= 80
+                          ? Colors.green
+                          : (d['score'] as int) >= 60
+                              ? Colors.orange
+                              : Colors.red,
+                    ),
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: 14),
+              // Share button
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _share,
+                  icon: const Icon(Icons.share_outlined, size: 16),
+                  label: const Text('Share my recap'),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: kPesoGreen.withValues(alpha: 0.5)),
+                    foregroundColor: kPesoGreen,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _statChip({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+    required ColorScheme cs,
+  }) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: color),
+            const SizedBox(height: 3),
+            Text(label,
+                style: TextStyle(
+                    fontSize: 9, color: cs.onSurface.withValues(alpha: 0.5))),
+            Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 11, fontWeight: FontWeight.bold, color: color),
             ),
           ],
         ),

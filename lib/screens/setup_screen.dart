@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
+import '../widgets/peso_mascot.dart';
 import 'home_screen.dart';
 
 class SetupScreen extends StatefulWidget {
@@ -308,6 +309,16 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   List<Widget> _buildStep0(ColorScheme cs) => [
+        // Peso greeting — first thing the user sees
+        Center(
+          child: PesoMascot.withSpeech(
+            size: 72,
+            mood: PesoMood.happy,
+            text:
+                "Hi! I'm Peso 👋\nI'll help you track every piso — no forms needed!",
+          ),
+        ),
+        const SizedBox(height: 20),
         const Text("Nasaan na ba ang pera mo? 💸",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
@@ -451,6 +462,16 @@ class _SetupScreenState extends State<SetupScreen> {
       ];
 
   List<Widget> _buildStep1(ColorScheme cs) => [
+        // Peso thinking — income step
+        Center(
+          child: PesoMascot.withSpeech(
+            size: 60,
+            mood: PesoMood.thinking,
+            text:
+                "Magkano ang pumasok sa bulsa mo? 🤔\nThis helps me compute your savings rate!",
+          ),
+        ),
+        const SizedBox(height: 16),
         Text("How much money comes in?",
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
