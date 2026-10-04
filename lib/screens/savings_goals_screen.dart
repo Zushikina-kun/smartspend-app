@@ -4,6 +4,7 @@ import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 class SavingsGoalsScreen extends StatefulWidget {
   const SavingsGoalsScreen({super.key});
@@ -300,7 +301,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                           context: ctx,
                           initialDate:
                               DateTime.now().add(const Duration(days: 30)),
-                          firstDate: DateTime.now(),
+                          firstDate: DateTime(DateTime.now().year - 1),
                           lastDate: DateTime(2030),
                         );
                         if (picked != null) {
@@ -493,13 +494,20 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.savings_outlined,
-                                  size: 64, color: Colors.grey[300]),
+                              PesoMascot.withSpeech(
+                                size: 64,
+                                mood: PesoMood.thinking,
+                                text:
+                                    "Wala pang savings goal!\nSabi mo gusto mo ng laptop? Start iyon! 🎯",
+                              ),
                               const SizedBox(height: 12),
-                              const Text("No savings goals yet.",
-                                  style: TextStyle(color: Colors.grey)),
+                              const Text("No savings goals yet",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500)),
                               const SizedBox(height: 4),
-                              const Text("Tap + to create your first goal.",
+                              const Text(
+                                  "Tap + or tell Peso what you're saving for.",
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 12)),
                               const SizedBox(height: 20),
@@ -618,9 +626,34 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                         icon: const Icon(Icons.delete_outline,
                                             size: 18, color: Colors.grey),
                                         onPressed: () async {
-                                          await DBService.deleteGoal(
-                                              g['id'] as int);
-                                          _load();
+                                          final confirm =
+                                              await showDialog<bool>(
+                                            context: context,
+                                            builder: (ctx) => AlertDialog(
+                                              title: const Text("Delete Goal"),
+                                              content: Text(
+                                                  "Delete \"${g['name']}\"? This cannot be undone."),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(ctx, false),
+                                                  child: const Text("Cancel"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(ctx, true),
+                                                  child: const Text("Delete",
+                                                      style: TextStyle(
+                                                          color: Colors.red)),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                          if (confirm == true) {
+                                            await DBService.deleteGoal(
+                                                g['id'] as int);
+                                            _load();
+                                          }
                                         },
                                         padding: EdgeInsets.zero,
                                         constraints: const BoxConstraints(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/category_service.dart';
 import '../services/db_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 class ManageCategoriesScreen extends StatefulWidget {
   const ManageCategoriesScreen({super.key});
@@ -198,16 +199,11 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.category_outlined,
-                              size: 48, color: Colors.grey[300]),
-                          const SizedBox(height: 12),
-                          const Text("No custom categories yet",
-                              style: TextStyle(color: Colors.grey)),
-                          const SizedBox(height: 4),
-                          const Text(
-                              "Tap + to add categories like School, Church, Pets",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12)),
+                          PesoMascot.withSpeech(
+                            mood: PesoMood.thinking,
+                            text:
+                                "Wala pa tayong custom categories!\nGawa tayo ng bago para mas organized.",
+                          ),
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
                             icon: const Icon(Icons.add),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/db_service.dart';
 import '../services/category_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 /// Screen for managing user-defined auto-categorization rules.
 /// Rules are keyword → category mappings applied before the built-in
@@ -194,24 +195,10 @@ class _ManageRulesScreenState extends State<ManageRulesScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.rule_outlined,
-                          size: 64, color: Colors.grey[300]),
-                      const SizedBox(height: 12),
-                      const Text("No rules yet",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.grey)),
-                      const SizedBox(height: 8),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
-                        child: Text(
-                          "Add rules to automatically categorize expenses by keyword. "
-                          "For example: \"7-Eleven\" → Food.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.grey, fontSize: 13, height: 1.5),
-                        ),
+                      PesoMascot.withSpeech(
+                        mood: PesoMood.thinking,
+                        text:
+                            "Wala pa tayong auto-rules!\nMag-add tayo para auto-categorize ang expenses.",
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton.icon(
