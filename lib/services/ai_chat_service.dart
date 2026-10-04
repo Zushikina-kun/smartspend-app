@@ -825,9 +825,10 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
       return 450;
     }
     // List/view requests — moderate length
-    if (RegExp(r'\b(list|show|give me|what are|how much|total)\b')
+    if (RegExp(
+            r'\b(list|show|give me|what are|how much|total|check|see|view|transactions|this week|last week|this month|this year)\b')
         .hasMatch(lower)) {
-      return 450;
+      return 600;
     }
     // Advice, analysis, explanation — longer response needed
     if (RegExp(
@@ -887,7 +888,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
     // Smart tasks: analysis, planning, advice, complex questions
     // NOTE: 'budget' explicitly included — budget-setting should use best model
     if (RegExp(
-            r'\b(analyze|plan|advice|suggest|explain|compare|feasib|what if|simulate|debt|goal|invest|sss|philhealth|bir|budget|limit|insurance|recurring|saving|ipon|utang|layunin|sweldo|kita|buwanang)\b')
+            r'\b(analyze|plan|advice|suggest|explain|compare|feasib|what if|simulate|debt|goal|invest|sss|philhealth|bir|budget|limit|insurance|recurring|saving|ipon|utang|layunin|sweldo|kita|buwanang|check.*transaction|show.*transaction|list.*transaction|this week|last week|transactions.*week)\b')
         .hasMatch(lower)) {
       return 'smart';
     }
@@ -1100,7 +1101,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
                 "max_tokens": _estimateMaxTokens(message),
               }),
             )
-            .timeout(const Duration(seconds: 20));
+            .timeout(const Duration(seconds: 35));
       } on Exception {
         // Timeout or network error — retryable
         if (attempt < maxRetries - 1) {

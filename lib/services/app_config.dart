@@ -169,10 +169,13 @@ class AppConfig {
     switch (_activeModelId) {
       case 'auto':
         // Auto mode routes to Gemini Flash-Lite by default; use Gemini key
-        return _remoteGeminiKey ?? _fallbackGeminiKey;
+        // Return empty if key is invalid so autoFallback() skips Gemini
+        final k = _remoteGeminiKey ?? _fallbackGeminiKey;
+        return k.startsWith('AIza') ? k : '';
       case 'gemini_flash':
       case 'gemini_flash_lite':
-        return _remoteGeminiKey ?? _fallbackGeminiKey;
+        final k = _remoteGeminiKey ?? _fallbackGeminiKey;
+        return k.startsWith('AIza') ? k : '';
       case 'cerebras_120b':
         return _remoteCerebrasKey ?? _fallbackCerebrasKey;
       default: // all Groq models
@@ -431,6 +434,25 @@ class AppConfig {
     } catch (_) {
       // Remote Config unavailable — fallback keys (set via setDefaults above)
       // are already active. AI works normally without network.
+    }
+
+    // ── GEMINI KEY VALIDITY CHECK ─────────────────────────────────────────────
+    // Google AI Studio keys always start with "AIza". Any other prefix
+    // (OAuth tokens, service account keys, etc.) will return 401 immediately.
+    // If the active key looks invalid, mark Gemini as unavailable so the
+    // fallback chain skips it without a 35-second timeout.
+    final activeGeminiKey = _remoteGeminiKey ?? _fallbackGeminiKey;
+    if (activeGeminiKey.isNotEmpty && !activeGeminiKey.startsWith('AIza')) {
+      // Key format is wrong — don't try Gemini, fall straight to Groq
+      _remoteGeminiKey = null;
+      // Log so developer can see this in the debug log
+      try {
+        final hint = activeGeminiKey.length > 6
+            ? activeGeminiKey.substring(0, 6)
+            : activeGeminiKey;
+        await DBService.setSetting('gemini_key_warning',
+            'Key starts with "$hint..." — expected "AIza...". Get a new key at aistudio.google.com/app/apikey');
+      } catch (_) {}
     }
   }
 }
