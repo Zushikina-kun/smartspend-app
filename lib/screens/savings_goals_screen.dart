@@ -745,6 +745,24 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                     ],
                                   ),
                                 ),
+                              if (!done)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: OutlinedButton.icon(
+                                      onPressed: () => _addContribution(g),
+                                      icon: const Icon(Icons.add, size: 16),
+                                      label: const Text("Add Contribution",
+                                          style: TextStyle(fontSize: 13)),
+                                      style: OutlinedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8),
+                                        visualDensity: VisualDensity.compact,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               // NI-2: Goal pace indicator
                               if (!done && deadline != null)
                                 Builder(
