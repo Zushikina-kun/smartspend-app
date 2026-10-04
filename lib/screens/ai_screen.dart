@@ -610,20 +610,53 @@ class _AIScreenState extends State<AIScreen> {
           errMsg.contains('rate limit') ||
           errMsg.contains('all models');
 
+      // ── SILENT AUTO-RETRY ON TIMEOUT ──────────────────────────────────────
+      // Timeouts and connection errors mean the current provider is slow/down.
+      // Silently switch to the next provider and retry once before showing any
+      // error to the user. This mirrors what sendMessage already does for 401/429.
+      // Only do this on the first failure (not if we already retried).
+      if ((isTimeout || isAuthError) && !errMsg.contains('all models')) {
+        final switched = AppConfig.autoFallback();
+        if (switched) {
+          // Remove the "user message" bubble we already added, re-send silently
+          // with the next provider — user sees nothing except a slight delay.
+          try {
+            // Show a brief "switching model" indicator in the input hint
+            if (mounted) setState(() {}); // trigger rebuild for label update
+            final (reply, actions) =
+                await AIChatService.sendMessage(text, isFallbackRetry: true);
+            final filteredActions =
+                AIChatService.filterActionsBySource(actions, 'chat');
+            for (final action in filteredActions) {
+              await _executeAction(action);
+            }
+            if (filteredActions.isNotEmpty) await _loadContext(silent: true);
+            await DBService.saveChatMessage(role: 'ai', message: reply);
+            if (mounted) {
+              setState(() {
+                _messages.add({"role": "ai", "text": reply});
+                _lastUserMessage = null;
+              });
+              _scrollToBottom();
+            }
+            return; // success on retry — don't show error
+          } catch (_) {
+            // Retry also failed — fall through to show error
+          }
+        }
+      }
+
       // Determine failure type for appropriate messaging
       String errorText;
       String errorType;
       if (isTimeout) {
         errorText =
-            "⏱️ Connection timed out — the AI took too long to respond.";
+            "⏱️ All AI providers timed out — your connection may be slow. Tap Retry to try again.";
         errorType = 'timeout';
       } else if (isAuthError) {
         errorText =
-            "🔑 AI provider authentication failed (key may be expired or invalid). "
-            "The app will try switching to a different AI model.";
+            "🔑 All AI providers failed authentication. Check Firebase Remote Config for updated keys.";
         errorType = 'auth';
-        // Auto-attempt fallback silently on auth errors too
-        AppConfig.autoFallback();
       } else if (isLimitError) {
         errorText =
             "📊 Daily AI limit reached across all models. The AI can't respond right now.";
@@ -3090,7 +3123,7 @@ class _AIScreenState extends State<AIScreen> {
                                           spacing: 6,
                                           runSpacing: 6,
                                           children: [
-                                            // Retry
+                                            // Retry with next available model
                                             if (canRetry)
                                               _errorActionButton(
                                                 icon: Icons.refresh,
@@ -3104,11 +3137,12 @@ class _AIScreenState extends State<AIScreen> {
                                                           _lastUserMessage);
                                                 },
                                               ),
-                                            // Try different model
+                                            // Try different model — only show if there's
+                                            // still a provider to switch to
                                             if (canSwitchModel)
                                               _errorActionButton(
                                                 icon: Icons.swap_horiz,
-                                                label: "Try Different Model",
+                                                label: "Switch Model",
                                                 color: Colors.orange,
                                                 onTap: () {
                                                   final switched =
@@ -3123,11 +3157,11 @@ class _AIScreenState extends State<AIScreen> {
                                                             context)
                                                         .showSnackBar(SnackBar(
                                                       content: Text(
-                                                          "Switched to ${AppConfig.activeModelLabel} — retrying..."),
+                                                          "Trying ${AppConfig.activeModelLabel}..."),
                                                       behavior: SnackBarBehavior
                                                           .floating,
                                                       duration: const Duration(
-                                                          seconds: 3),
+                                                          seconds: 2),
                                                     ));
                                                   } else {
                                                     ScaffoldMessenger.of(
@@ -3135,7 +3169,7 @@ class _AIScreenState extends State<AIScreen> {
                                                         .showSnackBar(
                                                             const SnackBar(
                                                       content: Text(
-                                                          "No more fallback models available. Try manual entry."),
+                                                          "All 8 models tried — log manually or check your connection."),
                                                       behavior: SnackBarBehavior
                                                           .floating,
                                                     ));
