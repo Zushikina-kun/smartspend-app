@@ -325,7 +325,7 @@ class _DebtScreenState extends State<DebtScreen>
                     const SizedBox(height: 4),
                     const Text(
                         "💡 Or tell the AI: \"I borrowed ₱500 from Juan\"",
-                        style: TextStyle(color: Colors.blue, fontSize: 12)),
+                        style: TextStyle(color: Colors.grey, fontSize: 12)),
                   ],
                 ),
               ),
@@ -431,8 +431,33 @@ class _DebtScreenState extends State<DebtScreen>
                                   icon: const Icon(Icons.delete_outline,
                                       size: 16, color: Colors.grey),
                                   onPressed: () async {
-                                    await DBService.deleteDebt(d['id'] as int);
-                                    _load();
+                                    final confirm = await showDialog<bool>(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                        title: const Text("Delete Debt"),
+                                        content: Text(
+                                            "Delete \"${d['title']}\"? This cannot be undone."),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(ctx, false),
+                                            child: const Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(ctx, true),
+                                            child: const Text("Delete",
+                                                style: TextStyle(
+                                                    color: Colors.red)),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    if (confirm == true) {
+                                      await DBService.deleteDebt(
+                                          d['id'] as int);
+                                      _load();
+                                    }
                                   },
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
@@ -1118,8 +1143,29 @@ class _DebtScreenState extends State<DebtScreen>
                   icon: const Icon(Icons.delete_outline,
                       size: 16, color: Colors.grey),
                   onPressed: () async {
-                    await DBService.deleteInstallmentPlan(p['id'] as int);
-                    _load();
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text("Delete Plan"),
+                        content: Text(
+                            "Delete \"${p['title']}\"? Payment history will also be removed."),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text("Delete",
+                                style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirm == true) {
+                      await DBService.deleteInstallmentPlan(p['id'] as int);
+                      _load();
+                    }
                   },
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
