@@ -499,7 +499,8 @@ class _BankImportScreenState extends State<BankImportScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            "${_rows.length} transaction${_rows.length == 1 ? '' : 's'} found",
+                            "${_rows.length} transaction${_rows.length == 1 ? '' : 's'} found"
+                            "${_selectedSource != 'Receipt' ? ' (credits/income skipped)' : ''}",
                             style: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w600),
                           ),

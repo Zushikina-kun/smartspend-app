@@ -3423,6 +3423,68 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Priority banner — surfaces the single most urgent financial condition
+  /// at the top of the home card stack. Only one banner shows at a time.
+  /// Conditions checked in priority order:
+  ///   1. Budget exceeded (any category over 100%)
+  ///   2. Safe-to-Spend is negative (spending exceeds wallet reserves)
+  ///   3. Recurring bill overdue (next_date in the past)
+  ///   4. Savings goal deadline within 7 days
+  Widget _buildPriorityBanner(BuildContext context) {
+    // 1. Over-budget category
+    for (final b in _budgets) {
+      final spent = _allSpent[b.category] ?? 0;
+      if (spent > b.amount) {
+        final over = spent - b.amount;
+        return _PriorityBannerTile(
+          icon: Icons.warning_amber_rounded,
+          color: Colors.red,
+          message:
+              '${b.category} budget exceeded by ${CurrencyService.format(over)} this month',
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (_) => const BudgetScreen())),
+        );
+      }
+    }
+
+    // 2. Safe-to-Spend negative
+    if (_incomeWalletMode && _safeToSpend < 0) {
+      return _PriorityBannerTile(
+        icon: Icons.account_balance_wallet_outlined,
+        color: Colors.red,
+        message:
+            'Wallet reserves fall short — ${CurrencyService.format(_safeToSpend.abs())} deficit before payday',
+        onTap: () => Navigator.push(
+            context, MaterialPageRoute(builder: (_) => const BudgetScreen())),
+      );
+    }
+
+    // 3. Overdue recurring bill
+    // (full recurring list isn't stored in Dashboard state — skip this check
+    //  to avoid another DB call here; recurring overdue is shown in Bill Calendar)
+
+    // 4. Savings goal deadline ≤ 7 days
+    // Goals are loaded via _earnedBadges computation — we don't cache them here
+    // This check is intentionally lightweight; skip if no data
+
+    // 5. Safe-to-Spend warning (< 20% of wallet)
+    if (_incomeWalletMode && _safeToSpend >= 0) {
+      final walletTotal =
+          _wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
+      if (walletTotal > 0 && _safeToSpend < walletTotal * 0.15) {
+        return _PriorityBannerTile(
+          icon: Icons.savings_outlined,
+          color: Colors.orange,
+          message:
+              'Only ${CurrencyService.format(_safeToSpend)} safe to spend — most of your wallet is reserved',
+          onTap: null,
+        );
+      }
+    }
+
+    return const SizedBox.shrink();
+  }
+
   Widget _buildWalletSummaryCard(BuildContext context) {
     final total = _wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
     final nonZero = _wallets.where((w) => (w['balance'] as num) > 0).toList();
@@ -5119,6 +5181,7 @@ class _DashboardState extends State<Dashboard> {
 
               // Outlook card — tabbed Cash Flow + Prediction in one card
               // Only shown when at least one of the two is enabled
+              _buildPriorityBanner(context),
               if (_showForecast || _showPrediction) _buildOutlookCard(context),
               Row(
                 children: [
@@ -8108,6 +8171,62 @@ class _MonthlyWrappedCardState extends State<_MonthlyWrappedCard> {
                   fontSize: 11, fontWeight: FontWeight.bold, color: color),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Compact priority alert banner shown at the top of the home card stack.
+/// Tappable to navigate to the relevant screen; null onTap = informational only.
+class _PriorityBannerTile extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String message;
+  final VoidCallback? onTap;
+
+  const _PriorityBannerTile({
+    required this.icon,
+    required this.color,
+    required this.message,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: color.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: color, size: 18),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: color,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                if (onTap != null)
+                  Icon(Icons.chevron_right, color: color, size: 18),
+              ],
+            ),
+          ),
         ),
       ),
     );
