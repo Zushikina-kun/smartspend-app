@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.76';
-  static const _prefKey = 'whats_new_seen_2_9_76';
+  static const _version = '2.9.84';
+  static const _prefKey = 'whats_new_seen_2_9_84';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,40 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🏆',
+      'Achievement Celebrations (v2.9.84)',
+      'When you unlock a new badge for the first time — like a savings streak, '
+          'reaching a goal, or scanning 10 receipts — a golden SnackBar now '
+          'celebrates the moment with the badge emoji and what you earned.',
+    ),
+    (
+      '📊',
+      'Analytics Interpretive Labels (v2.9.84)',
+      'The Monthly Spending chart now tells you if this month is above or below '
+          'your average — e.g. "📈 This month is 23% above your average". '
+          'The Savings Rate chart shows how far you are from the 20% target.',
+    ),
+    (
+      '💬',
+      'AI Chat Date Dividers (v2.9.84)',
+      'Long chat sessions now show Today / Yesterday / date dividers '
+          'between message groups so you can orient yourself in long conversations.',
+    ),
+    (
+      '🛡️',
+      'Delete Confirmations Everywhere (v2.9.83)',
+      'Budget categories, debts, installment plans, recurring bills, savings '
+          'goals, and income entries all now ask for confirmation before deleting. '
+          'No more accidental data loss.',
+    ),
+    (
+      '🎯',
+      'Peso Empty States (v2.9.82)',
+      'Empty screens now show Peso with a friendly Taglish tip instead of a '
+          'plain grey icon. Covers Savings Goals, Recurring, Transactions, '
+          'Income, Manage Categories, and Manage Rules.',
+    ),
     (
       '🪙',
       'Meet Peso! (v2.9.76)',

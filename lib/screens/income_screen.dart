@@ -360,15 +360,14 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Colors.green, Color(0xFF00897B)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: Theme.of(context).colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withValues(alpha: 0.25),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.15),
                         blurRadius: 14,
                         offset: const Offset(0, 4),
                       ),
@@ -625,17 +624,21 @@ class _IncomeScreenState extends State<IncomeScreen> {
   }
 
   Widget _summaryItem(String label, String value) {
-    return Column(
-      children: [
-        Text(value,
-            style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18)),
-        const SizedBox(height: 2),
-        Text(label,
-            style: const TextStyle(color: Colors.white70, fontSize: 11)),
-      ],
-    );
+    return Builder(builder: (context) {
+      final onContainer = Theme.of(context).colorScheme.onPrimaryContainer;
+      return Column(
+        children: [
+          Text(value,
+              style: TextStyle(
+                  color: onContainer,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18)),
+          const SizedBox(height: 2),
+          Text(label,
+              style: TextStyle(
+                  color: onContainer.withValues(alpha: 0.7), fontSize: 11)),
+        ],
+      );
+    });
   }
 }

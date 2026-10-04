@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/expense.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
@@ -52,6 +53,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   void initState() {
     super.initState();
+    _restoreFilter();
     _load();
     // Re-sort and reload whenever an expense is added, updated, or deleted
     // elsewhere (e.g. via the AI chat update_expense action).
@@ -63,6 +65,28 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         });
       }
     });
+  }
+
+  Future<void> _restoreFilter() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cat = prefs.getString('txn_filter_category') ?? 'All';
+      final period = prefs.getString('txn_filter_period') ?? 'all';
+      if (mounted) {
+        setState(() {
+          _selectedCategory = cat;
+          _period = period;
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _persistFilter() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('txn_filter_category', _selectedCategory);
+      await prefs.setString('txn_filter_period', _period);
+    } catch (_) {}
   }
 
   @override
@@ -443,6 +467,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               onSelected: (_) => setState(() {
                                 _period = p.$1;
                                 _applyFilter();
+                                _persistFilter();
                               }),
                               selectedColor: Theme.of(context)
                                   .colorScheme
@@ -521,6 +546,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                     onSelected: (_) => setState(() {
                                       _selectedCategory = cat;
                                       _applyFilter();
+                                      _persistFilter();
                                     }),
                                     selectedColor: Theme.of(context)
                                         .colorScheme
