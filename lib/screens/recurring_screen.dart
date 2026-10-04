@@ -3,6 +3,7 @@ import 'dart:async';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
+import '../widgets/peso_mascot.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
 import 'budget_screen.dart';
@@ -494,21 +495,22 @@ class _RecurringScreenState extends State<RecurringScreen> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.repeat,
-                                  size: 64, color: Colors.grey[300]),
+                              PesoMascot.withSpeech(
+                                size: 64,
+                                mood: PesoMood.thinking,
+                                text:
+                                    "Wala pang recurring bills!\nTell me: 'Add Netflix ₱299 monthly' 📋",
+                              ),
                               const SizedBox(height: 12),
-                              const Text("No recurring transactions.",
-                                  style: TextStyle(color: Colors.grey)),
+                              const Text("No recurring transactions yet",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500)),
                               const SizedBox(height: 4),
                               const Text(
-                                  "Add bills, subscriptions, or recurring income.",
+                                  "Add subscriptions, bills, or recurring income.",
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 12)),
-                              const SizedBox(height: 8),
-                              const Text(
-                                  "💡 Or tell the AI: \"Add Netflix ₱299 monthly\"",
-                                  style: TextStyle(
-                                      color: Colors.blue, fontSize: 12)),
                               const SizedBox(height: 16),
                               ElevatedButton.icon(
                                 icon: const Icon(Icons.add),
@@ -724,10 +726,34 @@ class _RecurringScreenState extends State<RecurringScreen> {
                                   ),
                                 TextButton(
                                   onPressed: () async {
-                                    await DBService.deleteRecurring(
-                                        item['id'] as int);
-                                    if (mounted) Navigator.pop(context);
-                                    _load();
+                                    final confirm = await showDialog<bool>(
+                                      context: context,
+                                      builder: (ctx) => AlertDialog(
+                                        title: const Text("Delete Recurring"),
+                                        content: Text(
+                                            "Delete \"${item['title']}\"? It will stop recurring."),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(ctx, false),
+                                            child: const Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(ctx, true),
+                                            child: const Text("Delete",
+                                                style: TextStyle(
+                                                    color: Colors.red)),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    if (confirm == true) {
+                                      await DBService.deleteRecurring(
+                                          item['id'] as int);
+                                      if (mounted) Navigator.pop(context);
+                                      _load();
+                                    }
                                   },
                                   child: const Text("Delete",
                                       style: TextStyle(color: Colors.red)),

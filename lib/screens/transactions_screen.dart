@@ -3,6 +3,7 @@ import 'dart:async';
 import '../models/expense.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
+import '../widgets/peso_mascot.dart';
 import '../services/export_service.dart';
 import '../services/category_service.dart';
 import '../services/event_bus.dart';
@@ -619,14 +620,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.receipt_long_outlined,
-                                    size: 56, color: Colors.grey[300]),
-                                const SizedBox(height: 12),
-                                const Text("No transactions found.",
-                                    style: TextStyle(color: Colors.grey)),
-                                const SizedBox(height: 6),
+                                PesoMascot.withSpeech(
+                                  size: 60,
+                                  mood: PesoMood.thinking,
+                                  text:
+                                      "Wala pang nahanap!\nTry clearing your search or filters 🔍",
+                                ),
+                                const SizedBox(height: 8),
+                                const Text("No transactions found",
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500)),
+                                const SizedBox(height: 4),
                                 const Text(
-                                    "Try clearing your search or filters.",
+                                    "Try adjusting your search or filters.",
                                     style: TextStyle(
                                         color: Colors.grey, fontSize: 12)),
                               ],

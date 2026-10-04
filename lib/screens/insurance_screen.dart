@@ -53,6 +53,7 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
               ? _buildEmptyState()
               : _buildPolicyList(),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'fab_insurance',
         onPressed: _showAddPolicySheet,
         icon: const Icon(Icons.add),
         label: const Text("Add Policy"),

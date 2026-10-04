@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 const _incomeCategories = [
   'Salary',
@@ -172,7 +173,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     context: ctx,
                     initialDate: DateTime.tryParse(date) ?? DateTime.now(),
                     firstDate: DateTime(2020),
-                    lastDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 1)),
                   );
                   if (picked != null) {
                     setSheet(
@@ -349,8 +350,6 @@ class _IncomeScreenState extends State<IncomeScreen> {
         onPressed: _showAddDialog,
         icon: const Icon(Icons.add),
         label: Text(_addLabel),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -400,19 +399,11 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(
-                                          Icons.account_balance_wallet_outlined,
-                                          size: 64,
-                                          color: Colors.grey[300]),
-                                      const SizedBox(height: 12),
-                                      const Text("No income recorded yet.",
-                                          style: TextStyle(color: Colors.grey)),
-                                      const SizedBox(height: 8),
-                                      const Text(
-                                          "💡 Tell the AI: \"I received my salary of ₱15,000\"",
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontSize: 12)),
+                                      PesoMascot.withSpeech(
+                                        mood: PesoMood.thinking,
+                                        text:
+                                            "Wala pa tayong income records!\nI-tap + para mag-add ng sweldo o kita.",
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -592,9 +583,33 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                       icon: const Icon(Icons.delete_outline,
                                           size: 18, color: Colors.grey),
                                       onPressed: () async {
-                                        await DBService.deleteIncome(
-                                            item['id'] as int);
-                                        _load();
+                                        final confirm = await showDialog<bool>(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            title: const Text("Delete Income"),
+                                            content: Text(
+                                                "Remove this income entry of ${CurrencyService.format((item['amount'] as num).toDouble())}?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(ctx, false),
+                                                child: const Text("Cancel"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(ctx, true),
+                                                child: const Text("Delete",
+                                                    style: TextStyle(
+                                                        color: Colors.red)),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                        if (confirm == true) {
+                                          await DBService.deleteIncome(
+                                              item['id'] as int);
+                                          _load();
+                                        }
                                       },
                                     ),
                                   ],
