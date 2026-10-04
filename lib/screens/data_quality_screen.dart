@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/data_quality_service.dart';
 import '../services/db_service.dart';
 import '../services/event_bus.dart';
+import 'transactions_screen.dart';
 
 /// Hub → Data Quality — surfaces expense data issues with one-tap fixes.
 class DataQualityScreen extends StatefulWidget {
@@ -25,7 +26,11 @@ class _DataQualityScreenState extends State<DataQualityScreen> {
   Future<void> _scan({bool force = false}) async {
     setState(() => _loading = true);
     final issues = await DataQualityService.scan(force: force);
-    if (mounted) setState(() { _issues = issues; _loading = false; });
+    if (mounted)
+      setState(() {
+        _issues = issues;
+        _loading = false;
+      });
   }
 
   Future<void> _fixOthers(Map<String, dynamic> issue) async {
@@ -46,13 +51,63 @@ class _DataQualityScreenState extends State<DataQualityScreen> {
     }
   }
 
+  Future<void> _fixCaseDups(Map<String, dynamic> issue) async {
+    setState(() => _fixing = true);
+    final ids = (issue['expense_ids'] as List).cast<int>();
+    final fixed = await DataQualityService.fixCaseDups(ids);
+    if (mounted) {
+      setState(() => _fixing = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('✓ Merged $fixed expense names to consistent casing'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ));
+      _scan(force: true);
+    }
+  }
+
+  Future<void> _fixRoundAmounts(Map<String, dynamic> issue) async {
+    final ids = (issue['expense_ids'] as List).cast<int>();
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Delete Suspicious Entries?"),
+        content: Text(
+            "This will permanently delete ${ids.length} expense${ids.length == 1 ? '' : 's'} flagged as possible wallet updates. This cannot be undone.\n\nReview them first by tapping View."),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text("Delete", style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+    if (confirm != true || !mounted) return;
+    setState(() => _fixing = true);
+    final deleted = await DataQualityService.deleteRoundAmounts(ids);
+    if (mounted) {
+      setState(() => _fixing = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('✓ Deleted $deleted suspicious entries'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ));
+      _scan(force: true);
+    }
+  }
+
   Future<void> _openTransactions(List<int> ids) async {
-    // Navigate to transactions with a filter — for now show a message
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Tap any expense in Transactions to edit it.'),
-      behavior: SnackBarBehavior.floating,
-    ));
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => TransactionsScreen(initialIds: ids),
+      ),
+    );
+    // Re-scan on return in case user fixed something
+    _scan(force: true);
   }
 
   @override
@@ -91,15 +146,13 @@ class _DataQualityScreenState extends State<DataQualityScreen> {
                 size: 64, color: Colors.green[400]),
             const SizedBox(height: 16),
             const Text('All clean!',
-                style:
-                    TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Text(
               'No data quality issues found in your expenses.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 13,
-                  color: cs.onSurface.withValues(alpha: 0.55)),
+                  fontSize: 13, color: cs.onSurface.withValues(alpha: 0.55)),
             ),
           ],
         ),
@@ -114,15 +167,14 @@ class _DataQualityScreenState extends State<DataQualityScreen> {
       itemCount: _issues!.length + 1, // +1 for header
       itemBuilder: (_, i) {
         if (i == 0) {
-          final total = _issues!.fold<int>(
-              0, (s, issue) => s + ((issue['count'] as int?) ?? 1));
+          final total = _issues!
+              .fold<int>(0, (s, issue) => s + ((issue['count'] as int?) ?? 1));
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: Text(
               '$total issue${total == 1 ? '' : 's'} found — tap Fix to resolve each one.',
               style: TextStyle(
-                  fontSize: 13,
-                  color: cs.onSurface.withValues(alpha: 0.55)),
+                  fontSize: 13, color: cs.onSurface.withValues(alpha: 0.55)),
             ),
           );
         }
@@ -134,9 +186,12 @@ class _DataQualityScreenState extends State<DataQualityScreen> {
             final type = issue['type'] as String;
             if (type == 'others_cat') {
               _fixOthers(issue);
+            } else if (type == 'case_dup') {
+              _fixCaseDups(issue);
+            } else if (type == 'round_amount') {
+              _fixRoundAmounts(issue);
             } else {
-              _openTransactions(
-                  (issue['expense_ids'] as List).cast<int>());
+              _openTransactions((issue['expense_ids'] as List).cast<int>());
             }
           },
         );
@@ -167,9 +222,9 @@ class _IssueCard extends StatelessWidget {
   };
   static const _fixLabels = {
     'zero_time': 'View',
-    'case_dup': 'View',
+    'case_dup': 'Fix All',
     'others_cat': 'Fix All',
-    'round_amount': 'View',
+    'round_amount': 'View + Fix',
   };
 
   @override
@@ -187,8 +242,7 @@ class _IssueCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: cs.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
-        border:
-            Border.all(color: color.withValues(alpha: 0.25)),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -213,8 +267,8 @@ class _IssueCard extends StatelessWidget {
             Expanded(
               child: Text(
                 issue['title'] as String,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 13),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
               ),
             ),
           ]),

@@ -7,7 +7,9 @@ import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
 
 class DebtScreen extends StatefulWidget {
-  const DebtScreen({super.key});
+  /// 0 = I Owe, 1 = Owed to Me, 2 = Plans
+  final int initialTab;
+  const DebtScreen({super.key, this.initialTab = 0});
 
   @override
   State<DebtScreen> createState() => _DebtScreenState();
@@ -25,7 +27,8 @@ class _DebtScreenState extends State<DebtScreen>
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 3, vsync: this);
+    _tabs =
+        TabController(length: 3, vsync: this, initialIndex: widget.initialTab);
     _load();
     // Auto-refresh when AI actions modify debts or related data
     _eventSub = AppEventBus.instance.stream.listen((event) {

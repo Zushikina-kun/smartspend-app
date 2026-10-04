@@ -1,5 +1,6 @@
 import 'db_service.dart';
 import 'ai_chat_service.dart';
+import 'event_bus.dart';
 
 /// DataQualityService — scans for common expense data issues and surfaces
 /// them as actionable correction suggestions.
@@ -147,7 +148,61 @@ class DataQualityService {
     return issues;
   }
 
-  /// Total issue count — used for Hub badge
+  /// Apply fix for 'case_dup' — normalize all variants to the most-used casing
+  static Future<int> fixCaseDups(List<int> expenseIds) async {
+    final all = await DBService.getExpenses();
+    // Group the affected expenses by lowercase name
+    final groups = <String, List<dynamic>>{};
+    for (final e in all) {
+      if (!expenseIds.contains(e.id)) continue;
+      final lower = e.itemName.toLowerCase().trim();
+      groups.putIfAbsent(lower, () => []).add(e);
+    }
+    int fixed = 0;
+    for (final group in groups.values) {
+      if (group.length < 2) continue;
+      // Pick the most-used casing (highest frequency wins; tie → alphabetical)
+      final countMap = <String, int>{};
+      for (final e in group) {
+        final name = (e as dynamic).itemName as String;
+        countMap[name] = (countMap[name] ?? 0) + 1;
+      }
+      final canonical = (countMap.entries.toList()
+            ..sort((a, b) => b.value != a.value
+                ? b.value - a.value
+                : a.key.compareTo(b.key)))
+          .first
+          .key;
+      // Update all variants that differ from canonical
+      for (final e in group) {
+        final exp = e as dynamic;
+        if (exp.itemName == canonical) continue;
+        try {
+          await DBService.updateExpense(exp.copyWith(itemName: canonical));
+          fixed++;
+        } catch (_) {}
+      }
+    }
+    if (fixed > 0) await clearCache();
+    return fixed;
+  }
+
+  /// Apply fix for 'round_amount' — delete the flagged expenses after confirmation
+  static Future<int> deleteRoundAmounts(List<int> expenseIds) async {
+    int deleted = 0;
+    for (final id in expenseIds) {
+      try {
+        await DBService.deleteExpense(id);
+        deleted++;
+      } catch (_) {}
+    }
+    if (deleted > 0) {
+      fireEvent(AppEvent.expenseChanged);
+      await clearCache();
+    }
+    return deleted;
+  }
+
   static Future<int> getIssueCount() async {
     final cached = await _loadCached();
     if (cached == null) return 0;

@@ -897,9 +897,11 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
           (
             Icons.credit_score_outlined,
             "Installment & Plans",
-            "Phones, gadgets, ShopeePayLater, GLoan & more",
+            _planCount > 0
+                ? "$_planCount active plan${_planCount == 1 ? '' : 's'}"
+                : "Phones, gadgets, ShopeePayLater, GLoan & more",
             Colors.purple,
-            () => _go(const DebtScreen())
+            () => _go(const DebtScreen(initialTab: 2))
           ),
           (
             Icons.pie_chart_outline,

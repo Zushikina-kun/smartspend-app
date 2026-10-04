@@ -14,7 +14,10 @@ import 'edit_expense_screen.dart';
 import 'add_expense_screen.dart';
 
 class TransactionsScreen extends StatefulWidget {
-  const TransactionsScreen({super.key});
+  /// Optional: pre-filter to only show these expense IDs on open.
+  /// Used by Data Quality screen to show affected expenses.
+  final List<int>? initialIds;
+  const TransactionsScreen({super.key, this.initialIds});
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -132,6 +135,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   void _applyFilter() {
     final now = DateTime.now();
+    // If opened with initialIds, always show just those expenses
+    if (widget.initialIds != null && widget.initialIds!.isNotEmpty) {
+      final idSet = widget.initialIds!.toSet();
+      setState(() {
+        _filtered = _all.where((e) => idSet.contains(e.id)).toList();
+        _displayCount = _pageSize;
+      });
+      return;
+    }
     List<Expense> result = List.from(_all);
 
     result = result.where((e) {
