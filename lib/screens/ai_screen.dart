@@ -2796,7 +2796,7 @@ class _AIScreenState extends State<AIScreen> {
                       child: Text(
                         isLimit
                             ? "AI daily limit reached — resets at midnight UTC."
-                            : "AI is unavailable right now. Log expenses manually instead.",
+                            : "Peso can't connect right now. Check your internet, or go to Profile → Prepare Demo Phone to reset AI. If Gemini keeps failing, get a new API key at aistudio.google.com",
                         style: TextStyle(
                             fontSize: 12,
                             color:

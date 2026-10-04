@@ -145,8 +145,10 @@ class _DebtScreenState extends State<DebtScreen>
                 onPressed: () async {
                   final picked = await showDatePicker(
                     context: ctx,
-                    initialDate: DateTime.now().add(const Duration(days: 7)),
-                    firstDate: DateTime.now(),
+                    initialDate: dueDate != null
+                        ? DateTime.tryParse(dueDate!) ?? DateTime.now()
+                        : DateTime.now().add(const Duration(days: 7)),
+                    firstDate: DateTime(2020),
                     lastDate: DateTime(2030),
                   );
                   if (picked != null) {
@@ -262,6 +264,26 @@ class _DebtScreenState extends State<DebtScreen>
               final newPaid = ((debt['paid_amount'] as double) + paid)
                   .clamp(0.0, debt['amount'] as double);
               await DBService.updateDebt({...debt, 'paid_amount': newPaid});
+              // Also log the payment as a Bills expense so it appears
+              // in transactions and counts toward budget tracking
+              final title = debt['title'] as String? ?? 'Debt';
+              final person = debt['person'] as String? ?? '';
+              final type = debt['type'] as String? ?? 'owe';
+              final now = DateTime.now();
+              if (type == 'owe') {
+                // Money going out — log as expense
+                await DBService.insertExpense({
+                  'item_name': 'Payment to $person ($title)',
+                  'category': 'Bills',
+                  'amount': paid,
+                  'date': now.toIso8601String().substring(0, 10),
+                  'time': now.toIso8601String().substring(11, 16),
+                  'payment_method': 'Cash',
+                  'notes': 'Debt payment',
+                  'ai_generated': 0,
+                  'confidence_score': 1.0,
+                });
+              }
               if (mounted) Navigator.pop(context);
               _load();
             },
@@ -658,7 +680,7 @@ class _DebtScreenState extends State<DebtScreen>
                     context: ctx,
                     initialDate: DateTime.tryParse(startDate) ?? DateTime.now(),
                     firstDate: DateTime(2020),
-                    lastDate: DateTime.now(),
+                    lastDate: DateTime(2030),
                   );
                   if (picked != null) {
                     setSheet(() =>
@@ -732,80 +754,171 @@ class _DebtScreenState extends State<DebtScreen>
     );
   }
 
-  Future<void> _logPlanPayment(Map<String, dynamic> plan) async {
+  Future<void> _logPlanPayment(Map<String, dynamic> plan,
+      {bool partial = false}) async {
     final monthly = (plan['monthly_payment'] as num).toDouble();
     final title = plan['title'] as String;
     final provider = plan['provider'] as String?;
     final label = provider != null ? "$title ($provider)" : title;
 
+    // For quick-pay (non-partial), confirm in one step with full sheet
+    final amountCtrl = TextEditingController(text: monthly.toStringAsFixed(0));
+    String payMethod = 'GCash'; // most common for ShopeePayLater/GLoan
+    String payDate = DateTime.now().toIso8601String().substring(0, 10);
+
+    final cs = Theme.of(context).colorScheme;
+
     final confirm = await showModalBottomSheet<bool>(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Log payment for $label?",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text("Amount: ${CurrencyService.format(monthly)}",
-                style: const TextStyle(fontSize: 14)),
-            Text("Category: Bills",
-                style: TextStyle(fontSize: 13, color: Colors.grey[600])),
-            Text("Date: ${DateTime.now().toIso8601String().substring(0, 10)}",
-                style: TextStyle(fontSize: 13, color: Colors.grey[600])),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text("Cancel"),
-                  ),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheet) => Padding(
+          padding: EdgeInsets.fromLTRB(
+              24, 20, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Handle bar
+              Center(
+                child: Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2))),
+              ),
+              const SizedBox(height: 14),
+              Text("Log payment — $label",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+
+              // Amount — pre-filled with monthly, editable for partial
+              TextField(
+                controller: amountCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: "Amount paid",
+                  prefixText: "₱ ",
+                  helperText: partial
+                      ? "Enter the actual amount you paid this time"
+                      : "Full monthly: ${CurrencyService.format(monthly)}",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white),
-                    child: const Text("Confirm"),
-                  ),
+              ),
+              const SizedBox(height: 12),
+
+              // Payment method
+              DropdownButtonFormField<String>(
+                value: payMethod,
+                decoration: InputDecoration(
+                  labelText: "Paid via",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-              ],
-            ),
-          ],
+                items: const [
+                  DropdownMenuItem(value: 'GCash', child: Text("GCash")),
+                  DropdownMenuItem(value: 'Maya', child: Text("Maya")),
+                  DropdownMenuItem(value: 'Cash', child: Text("Cash")),
+                  DropdownMenuItem(
+                      value: 'Bank Transfer', child: Text("Bank Transfer")),
+                  DropdownMenuItem(
+                      value: 'Card', child: Text("Debit/Credit Card")),
+                  DropdownMenuItem(
+                      value: 'ShopeePay', child: Text("ShopeePay")),
+                ],
+                onChanged: (v) => setSheet(() => payMethod = v ?? payMethod),
+              ),
+              const SizedBox(height: 12),
+
+              // Date — defaults to today, tappable to change
+              OutlinedButton.icon(
+                icon: const Icon(Icons.calendar_today, size: 16),
+                label: Text("Date: $payDate"),
+                style: OutlinedButton.styleFrom(
+                    side:
+                        BorderSide(color: cs.outline.withValues(alpha: 0.35))),
+                onPressed: () async {
+                  final picked = await showDatePicker(
+                    context: ctx,
+                    initialDate: DateTime.tryParse(payDate) ?? DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime.now().add(const Duration(days: 1)),
+                  );
+                  if (picked != null) {
+                    setSheet(() =>
+                        payDate = picked.toIso8601String().substring(0, 10));
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.check, size: 16),
+                      label: const Text("Log Payment"),
+                      onPressed: () => Navigator.pop(ctx, true),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 13)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
 
     if (confirm != true || !mounted) return;
 
+    final paidAmount = double.tryParse(amountCtrl.text.trim()) ?? monthly;
     final now = DateTime.now();
+
     await DBService.insertExpense({
       'item_name': '$label payment',
       'category': 'Bills',
-      'amount': monthly,
-      'date': now.toIso8601String().substring(0, 10),
+      'amount': paidAmount,
+      'date': payDate,
       'time': now.toIso8601String().substring(11, 16),
-      'payment_method': 'Cash',
+      'payment_method': payMethod,
       'notes': 'Payment plan installment',
       'ai_generated': 0,
       'confidence_score': 1.0,
     });
 
-    final newPaid = (plan['months_paid'] as int) + 1;
+    // Only advance months_paid when the paid amount is ≥ the monthly amount
+    // (partial payments don't count as a full installment)
+    final int newPaid;
+    if (paidAmount >= monthly * 0.9) {
+      // ≥90% of monthly counts as a full payment
+      newPaid = (plan['months_paid'] as int) + 1;
+      await DBService.updateInstallmentPlan({...plan, 'months_paid': newPaid});
+    } else {
+      newPaid = plan['months_paid'] as int;
+      // Partial — log expense but don't advance counter
+    }
+
     final monthsTotal = plan['months_total'] as int;
-    await DBService.updateInstallmentPlan({...plan, 'months_paid': newPaid});
 
     if (mounted) {
-      if (newPaid >= monthsTotal) {
-        // Plan fully paid — offer to archive (delete) it right from the snackbar
+      if (newPaid >= monthsTotal && paidAmount >= monthly * 0.9) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("🎉 $label fully paid off! Want to archive it?"),
           backgroundColor: Colors.green,
@@ -821,8 +934,11 @@ class _DebtScreenState extends State<DebtScreen>
           ),
         ));
       } else {
+        final msg = paidAmount < monthly * 0.9
+            ? "Partial payment logged — ${CurrencyService.format(paidAmount)} recorded"
+            : "Payment logged ✓ — $newPaid/$monthsTotal months paid";
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Payment logged ✓ — $newPaid/$monthsTotal months paid"),
+          content: Text(msg),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
         ));
@@ -947,18 +1063,12 @@ class _DebtScreenState extends State<DebtScreen>
     if (nextDue.isBefore(now))
       nextDue = DateTime(now.year, now.month + 1, dueDay);
     final daysUntil = nextDue.difference(now).inDays;
-    final dueLabel = daysUntil == 0
-        ? "Due today"
-        : daysUntil < 0
-            ? "Overdue"
-            : "Due in $daysUntil days";
 
     String? interestStr;
     if (interestRate != null && interestRate > 0 && !done) {
       final totalInterest = remaining * (interestRate / 100);
       interestStr = "≈ ${CurrencyService.format(totalInterest)} total interest";
     }
-
     return Card(
       elevation: 2,
       shadowColor: Colors.black.withValues(alpha: 0.08),
@@ -996,22 +1106,7 @@ class _DebtScreenState extends State<DebtScreen>
                     ],
                   ),
                 ),
-                if (!done)
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.add_circle_outline, size: 14),
-                    label: const Text("Log Payment",
-                        style: TextStyle(fontSize: 12)),
-                    onPressed: () => _logPlanPayment(p),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                  ),
-                const SizedBox(width: 8),
+                if (!done) const SizedBox(width: 4),
                 IconButton(
                   icon: const Icon(Icons.edit, size: 16),
                   onPressed: () => _showAddPlanDialog(existing: p),
@@ -1076,13 +1171,35 @@ class _DebtScreenState extends State<DebtScreen>
                         fontSize: 11,
                         color: cs.onSurface.withValues(alpha: 0.5)),
                   ),
-                  Text(
-                    dueLabel,
-                    style: TextStyle(
+                  // Next payment date — colored by urgency
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: (daysUntil < 0
+                              ? Colors.red
+                              : daysUntil <= 3
+                                  ? Colors.orange
+                                  : Colors.green)
+                          .withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      daysUntil < 0
+                          ? "⚠️ Overdue — ${DateFormat('MMM d').format(nextDue)}"
+                          : daysUntil == 0
+                              ? "📅 Due TODAY — ${DateFormat('MMM d').format(nextDue)}"
+                              : "📅 ${DateFormat('MMM d').format(nextDue)} ($daysUntil days)",
+                      style: TextStyle(
                         fontSize: 11,
-                        color: daysUntil <= 3
-                            ? Colors.orange
-                            : cs.onSurface.withValues(alpha: 0.5)),
+                        fontWeight: FontWeight.w600,
+                        color: daysUntil < 0
+                            ? Colors.red
+                            : daysUntil <= 3
+                                ? Colors.orange
+                                : Colors.green[700],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -1093,6 +1210,46 @@ class _DebtScreenState extends State<DebtScreen>
                       style:
                           TextStyle(fontSize: 11, color: Colors.orange[700])),
                 ),
+              // Quick-pay chip row — one-tap full payment + option for partial
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  // Quick-pay full amount
+                  Expanded(
+                    child: FilledButton.icon(
+                      icon: const Icon(Icons.bolt, size: 14),
+                      label: Text(
+                        "Pay ${CurrencyService.format(monthly)}",
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      onPressed: () => _logPlanPayment(p),
+                      style: FilledButton.styleFrom(
+                        backgroundColor:
+                            daysUntil < 0 ? Colors.red : Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Partial payment button
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.edit_outlined, size: 14),
+                    label:
+                        const Text("Partial", style: TextStyle(fontSize: 12)),
+                    onPressed: () => _logPlanPayment(p, partial: true),
+                    style: OutlinedButton.styleFrom(
+                      side:
+                          BorderSide(color: cs.outline.withValues(alpha: 0.4)),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ],
         ),
