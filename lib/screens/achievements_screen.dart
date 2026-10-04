@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/db_service.dart';
 import '../widgets/info_button.dart';
 
@@ -273,6 +274,49 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         _earned = earned;
         _loading = false;
       });
+
+    // Celebrate newly unlocked badges — diff against previously stored set
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final prevStored = prefs.getStringList('earned_badge_ids') ?? [];
+      final prevSet = prevStored.toSet();
+      final newlyEarned = earned.difference(prevSet).toList();
+      await prefs.setStringList('earned_badge_ids', earned.toList());
+      if (newlyEarned.isNotEmpty && mounted) {
+        for (final id in newlyEarned) {
+          final badge = _allBadges.where((b) => b.id == id).firstOrNull;
+          if (badge == null) continue;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Text(badge.emoji, style: const TextStyle(fontSize: 22)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Badge unlocked: ${badge.name}!',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(badge.description,
+                            style: const TextStyle(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.amber[700],
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+          // Small delay between multiple unlocks so snackbars stack nicely
+          await Future.delayed(const Duration(milliseconds: 300));
+        }
+      }
+    } catch (_) {}
   }
 
   @override

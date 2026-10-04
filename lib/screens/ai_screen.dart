@@ -448,6 +448,9 @@ class _AIScreenState extends State<AIScreen> {
               _messages.add({
                 "role": msg['role'] as String,
                 "text": rawText,
+                "ts": ((msg['timestamp'] as String?) ?? '').length >= 10
+                    ? (msg['timestamp'] as String).substring(0, 10)
+                    : DateTime.now().toIso8601String().substring(0, 10),
               });
             }
           });
@@ -561,7 +564,11 @@ class _AIScreenState extends State<AIScreen> {
     }
 
     setState(() {
-      _messages.add({"role": "user", "text": text});
+      _messages.add({
+        "role": "user",
+        "text": text,
+        "ts": DateTime.now().toIso8601String().substring(0, 10),
+      });
       _sending = true;
       _lastUserMessage = text;
     });
@@ -593,7 +600,11 @@ class _AIScreenState extends State<AIScreen> {
 
       if (mounted) {
         setState(() {
-          _messages.add({"role": "ai", "text": reply});
+          _messages.add({
+            "role": "ai",
+            "text": reply,
+            "ts": DateTime.now().toIso8601String().substring(0, 10),
+          });
           _lastUserMessage = null; // clear retry on success
         });
         _scrollToBottom();
@@ -638,7 +649,11 @@ class _AIScreenState extends State<AIScreen> {
             await DBService.saveChatMessage(role: 'ai', message: reply);
             if (mounted) {
               setState(() {
-                _messages.add({"role": "ai", "text": reply});
+                _messages.add({
+                  "role": "ai",
+                  "text": reply,
+                  "ts": DateTime.now().toIso8601String().substring(0, 10),
+                });
                 _lastUserMessage = null;
               });
               _scrollToBottom();
@@ -698,6 +713,7 @@ class _AIScreenState extends State<AIScreen> {
               "is_error": "true",
               "error_type": errorType,
               "original_user_msg": text,
+              "ts": DateTime.now().toIso8601String().substring(0, 10),
             }));
       }
     } finally {
@@ -3097,11 +3113,57 @@ class _AIScreenState extends State<AIScreen> {
                             );
                           }
                           final msg = _messages[i];
+
+                          // Date divider — show when date changes between messages
+                          final msgDate = msg['ts'] ?? '';
+                          final prevDate =
+                              i > 0 ? (_messages[i - 1]['ts'] ?? '') : '';
+                          final showDateDivider =
+                              msgDate.isNotEmpty && msgDate != prevDate;
+                          Widget? dateDivider;
+                          if (showDateDivider) {
+                            final today = DateTime.now()
+                                .toIso8601String()
+                                .substring(0, 10);
+                            final yesterday = DateTime.now()
+                                .subtract(const Duration(days: 1))
+                                .toIso8601String()
+                                .substring(0, 10);
+                            final label = msgDate == today
+                                ? 'Today'
+                                : msgDate == yesterday
+                                    ? 'Yesterday'
+                                    : msgDate;
+                            dateDivider = Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Row(children: [
+                                Expanded(
+                                    child: Divider(
+                                        color: Colors.grey
+                                            .withValues(alpha: 0.3))),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Text(
+                                    label,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[500],
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Divider(
+                                        color: Colors.grey
+                                            .withValues(alpha: 0.3))),
+                              ]),
+                            );
+                          }
                           final isUser = msg["role"] == "user";
                           final text = msg["text"]!;
                           final isError = msg["is_error"] == "true";
 
-                          return Align(
+                          final bubble = Align(
                             alignment: isUser
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
@@ -3274,6 +3336,14 @@ class _AIScreenState extends State<AIScreen> {
                               ),
                             ),
                           );
+                          // Wrap bubble with optional date divider above it
+                          if (dateDivider != null) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [dateDivider, bubble],
+                            );
+                          }
+                          return bubble;
                         },
                       ),
           ),

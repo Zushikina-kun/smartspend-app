@@ -1529,6 +1529,47 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             ),
                           ),
                         ),
+                        // Interpretive label — compare current month to average
+                        Builder(builder: (context) {
+                          if (monthly.length < 2)
+                            return const SizedBox.shrink();
+                          final values = monthly.values.toList();
+                          final historicalValues = values.length > 1
+                              ? values.sublist(0, values.length - 1)
+                              : values;
+                          final avg =
+                              historicalValues.fold(0.0, (s, v) => s + v) /
+                                  historicalValues.length;
+                          final current = values.last;
+                          if (avg <= 0) return const SizedBox.shrink();
+                          final pctDiff =
+                              ((current - avg) / avg * 100).round().abs();
+                          final isHigher = current > avg * 1.03;
+                          final isLower = current < avg * 0.97;
+                          if (!isHigher && !isLower) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Text(
+                                "✅ This month is on par with your average",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.grey[600]),
+                              ),
+                            );
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              isHigher
+                                  ? "📈 This month is $pctDiff% above your average"
+                                  : "📉 This month is $pctDiff% below your average — nice!",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: isHigher
+                                      ? Colors.orange[700]
+                                      : Colors.green[700]),
+                            ),
+                          );
+                        }),
                         const SizedBox(height: 24),
                       ],
 
@@ -1680,6 +1721,48 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               style:
                                   TextStyle(fontSize: 10, color: Colors.green)),
                         ]),
+                        // Interpretive label — last savings rate vs target
+                        Builder(builder: (context) {
+                          final months = monthly.keys.toList();
+                          if (months.isEmpty) return const SizedBox.shrink();
+                          final lastKey = months.last;
+                          final lastSpent = monthly[lastKey] ?? 0;
+                          if (_monthlyIncome <= 0)
+                            return const SizedBox.shrink();
+                          final rate = ((_monthlyIncome - lastSpent) /
+                              _monthlyIncome *
+                              100);
+                          final rateInt = rate.round();
+                          if (rate >= 20) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Text(
+                                "✅ Saving $rateInt% this month — above the 20% target",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.green[700]),
+                              ),
+                            );
+                          } else if (rate > 0) {
+                            final gap = (20 - rate).round();
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Text(
+                                "🎯 Saving $rateInt% — $gap% below the 20% target",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.orange[700]),
+                              ),
+                            );
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 6),
+                              child: Text(
+                                "⚠️ Spending exceeded income this month",
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.red[700]),
+                              ),
+                            );
+                          }
+                        }),
                         const SizedBox(height: 24),
                       ],
 
