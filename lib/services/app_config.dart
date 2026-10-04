@@ -17,22 +17,23 @@ import 'db_service.dart';
 /// Active Groq lineup: openai/gpt-oss-120b, openai/gpt-oss-20b,
 ///   qwen/qwen3.6-27b, qwen/qwen3.8-27b, groq/compound, groq/compound-mini
 ///
+/// Gemini key format: Since May 28, 2026, all new Google AI Studio API keys
+/// start with "AQ." (auth keys bound to a service account). Old "AIza..." keys
+/// are being rejected. AQ. keys are permanent — they do NOT expire.
+///
 /// Current default: Auto mode → Gemini 3.5 Flash-Lite (GA stable, fastest 3.5)
 class AppConfig {
   AppConfig._();
 
-  // ── FALLBACK KEYS (set as Remote Config defaults at runtime — NOT stored in source) ──
-  // These constants are intentionally empty. Real keys are injected via
   // ── FALLBACK KEYS — used when Firebase Remote Config is unreachable ─────────
-  // These are the actual working keys. Remote Config overrides them when
-  // available, but if the fetch fails (slow/no internet at startup), these
-  // ensure AI works immediately without any network dependency.
-  // The file is in .gitignore so these never reach the public repo.
-  // To rotate: update Remote Config AND update these constants + rebuild.
+  // Real keys are stored ONLY in Firebase Remote Config console.
+  // Update them there to rotate without a code change.
+  // Empty strings here mean Gemini falls back to Groq when Remote Config
+  // is unavailable. Set in Remote Config: groq_api_key, gemini_api_key,
+  // cerebras_api_key.
   static const _fallbackGroqKey =
       "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";
-  static const _fallbackGeminiKey =
-      "AQ.Ab8RN6LZ3JhKel-t0ovzCNEySO2KuE3LYLNAQWjr6ewBGs-nUA";
+  static const _fallbackGeminiKey = ""; // Set in Firebase Remote Config
   static const _fallbackCerebrasKey =
       "csk-cwr9ye2pxwyhe89hmexm3t84e5fe3tykjd2d9c86p5vxjd94";
 
@@ -168,14 +169,10 @@ class AppConfig {
   static String get groqApiKey {
     switch (_activeModelId) {
       case 'auto':
-        // Auto mode routes to Gemini Flash-Lite by default; use Gemini key
-        // Return empty if key is invalid so autoFallback() skips Gemini
-        final k = _remoteGeminiKey ?? _fallbackGeminiKey;
-        return k.startsWith('AIza') ? k : '';
+        return _remoteGeminiKey ?? _fallbackGeminiKey;
       case 'gemini_flash':
       case 'gemini_flash_lite':
-        final k = _remoteGeminiKey ?? _fallbackGeminiKey;
-        return k.startsWith('AIza') ? k : '';
+        return _remoteGeminiKey ?? _fallbackGeminiKey;
       case 'cerebras_120b':
         return _remoteCerebrasKey ?? _fallbackCerebrasKey;
       default: // all Groq models
@@ -436,23 +433,9 @@ class AppConfig {
       // are already active. AI works normally without network.
     }
 
-    // ── GEMINI KEY VALIDITY CHECK ─────────────────────────────────────────────
-    // Google AI Studio keys always start with "AIza". Any other prefix
-    // (OAuth tokens, service account keys, etc.) will return 401 immediately.
-    // If the active key looks invalid, mark Gemini as unavailable so the
-    // fallback chain skips it without a 35-second timeout.
-    final activeGeminiKey = _remoteGeminiKey ?? _fallbackGeminiKey;
-    if (activeGeminiKey.isNotEmpty && !activeGeminiKey.startsWith('AIza')) {
-      // Key format is wrong — don't try Gemini, fall straight to Groq
-      _remoteGeminiKey = null;
-      // Log so developer can see this in the debug log
-      try {
-        final hint = activeGeminiKey.length > 6
-            ? activeGeminiKey.substring(0, 6)
-            : activeGeminiKey;
-        await DBService.setSetting('gemini_key_warning',
-            'Key starts with "$hint..." — expected "AIza...". Get a new key at aistudio.google.com/app/apikey');
-      } catch (_) {}
-    }
+    // ── KEY FORMAT NOTE ──────────────────────────────────────────────────────
+    // Since May 28, 2026, all new Google AI Studio keys start with "AQ."
+    // (auth keys bound to a service account). The old "AIza..." format is
+    // being phased out. Both formats are permanent — AQ. keys do NOT expire.
   }
 }
