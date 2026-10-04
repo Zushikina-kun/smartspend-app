@@ -42,8 +42,13 @@ void main() async {
   // Fetch API key from Remote Config (fails silently — uses local fallback)
   try {
     await AppConfig.init();
-  } catch (_) {
-    // Remote Config unavailable — local fallback key will be used
+  } catch (e) {
+    // Remote Config unavailable — local fallback key will be used.
+    // Store the error so it appears in the debug log.
+    try {
+      await DBService.setSetting(
+          'rc_last_fetch_status', 'ERROR: ${e.toString().substring(0, 120)}');
+    } catch (_) {}
   }
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;

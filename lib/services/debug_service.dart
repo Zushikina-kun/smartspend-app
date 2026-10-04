@@ -56,6 +56,9 @@ class DebugService {
         '  cerebras_key_loaded = ${AppConfig.hasCerebrasKey ? 'YES' : 'NO'}');
     buffer
         .writeln('  groq_key_loaded = ${AppConfig.hasGroqKey ? 'YES' : 'NO'}');
+    final rcStatus =
+        await DBService.getSetting('rc_last_fetch_status') ?? 'unknown';
+    buffer.writeln('  rc_last_fetch_status = $rcStatus');
     // Dump the rolling request trace with one entry per line for readability
     final traceRaw = await DBService.getSetting('ai_request_trace') ?? '';
     if (traceRaw.isNotEmpty) {

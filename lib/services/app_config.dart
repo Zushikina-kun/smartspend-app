@@ -404,18 +404,27 @@ class AppConfig {
     try {
       final rc = FirebaseRemoteConfig.instance;
       await rc.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(hours: 1),
+        fetchTimeout: const Duration(seconds: 15),
+        // Use zero interval in debug so every app start fetches fresh values.
+        // In release builds this would be 1 hour, but debug is fine to hit
+        // Remote Config on every open — it's low traffic and ensures keys load.
+        minimumFetchInterval: Duration.zero,
       ));
-      // Pass actual fallback keys as Remote Config defaults so they're
-      // available immediately even if fetchAndActivate hasn't completed yet.
-      // This ensures AI works on first open even with slow internet.
       await rc.setDefaults({
         'groq_api_key': _fallbackGroqKey,
         'gemini_api_key': _fallbackGeminiKey,
         'cerebras_api_key': _fallbackCerebrasKey,
       });
-      await rc.fetchAndActivate();
+      bool fetched = false;
+      try {
+        fetched = await rc.fetchAndActivate();
+        await DBService.setSetting(
+            'rc_last_fetch_status', fetched ? 'fresh' : 'cached');
+      } catch (fetchErr) {
+        // fetchAndActivate failed — log the error and continue with defaults
+        await DBService.setSetting('rc_last_fetch_status',
+            'FETCH_ERROR: ${fetchErr.toString().replaceAll('\n', ' ').substring(0, fetchErr.toString().length.clamp(0, 150))}');
+      }
       final rGroq = rc.getString('groq_api_key');
       if (rGroq.isNotEmpty) _remoteGroqKey = rGroq;
       final rGemini = rc.getString('gemini_api_key');
