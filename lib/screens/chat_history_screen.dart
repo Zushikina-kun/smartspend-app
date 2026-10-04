@@ -14,11 +14,19 @@ class ChatHistoryScreen extends StatefulWidget {
 class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   List<Map<String, dynamic>> _history = [];
   bool _loading = true;
+  String _searchQuery = '';
+  final _searchCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -90,9 +98,16 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
 
   /// Build a flat list with day divider items inserted
   List<dynamic> _buildItems() {
+    final source = _searchQuery.isEmpty
+        ? _history
+        : _history.where((m) {
+            final text = (m['message'] as String? ?? '').toLowerCase();
+            return text.contains(_searchQuery.toLowerCase());
+          }).toList();
+
     final items = <dynamic>[];
     String? lastDay;
-    for (final msg in _history) {
+    for (final msg in source) {
       final ts = msg['timestamp'] as String;
       String dayKey;
       try {
@@ -153,102 +168,140 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                 )
               : RefreshIndicator(
                   onRefresh: _load,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(12),
-                    itemCount: items.length,
-                    itemBuilder: (_, i) {
-                      final item = items[i];
-
-                      // Day divider
-                      if (item is Map && item['_divider'] == true) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Row(
-                            children: [
-                              const Expanded(child: Divider()),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(
-                                  item['label'] as String,
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      color:
-                                          cs.onSurface.withValues(alpha: 0.5),
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                              const Expanded(child: Divider()),
-                            ],
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+                        child: TextField(
+                          controller: _searchCtrl,
+                          decoration: InputDecoration(
+                            hintText: "Search messages…",
+                            prefixIcon: const Icon(Icons.search, size: 18),
+                            suffixIcon: _searchQuery.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear, size: 16),
+                                    onPressed: () => setState(() {
+                                      _searchCtrl.clear();
+                                      _searchQuery = '';
+                                    }),
+                                  )
+                                : null,
+                            isDense: true,
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 10),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
                           ),
-                        );
-                      }
+                          onChanged: (v) => setState(() => _searchQuery = v),
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(12),
+                          itemCount: items.length,
+                          itemBuilder: (_, i) {
+                            final item = items[i];
 
-                      // Message bubble
-                      final msg = item as Map<String, dynamic>;
-                      final isUser = msg['role'] == 'user';
-                      final text = msg['message'] as String;
-                      final time = _formatTime(msg['timestamp'] as String);
-
-                      return Align(
-                        alignment: isUser
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: GestureDetector(
-                          onLongPress: () => _copyMessage(text),
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 3),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 14, vertical: 10),
-                            constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.of(context).size.width * 0.78),
-                            decoration: BoxDecoration(
-                              color: isUser
-                                  ? Theme.of(context).colorScheme.primary
-                                  : cs.surfaceContainerHighest,
-                              borderRadius: BorderRadius.only(
-                                topLeft: const Radius.circular(14),
-                                topRight: const Radius.circular(14),
-                                bottomLeft: Radius.circular(isUser ? 14 : 2),
-                                bottomRight: Radius.circular(isUser ? 2 : 14),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(text,
-                                    style: TextStyle(
-                                        color: isUser ? Colors.white : null,
-                                        height: 1.4)),
-                                const SizedBox(height: 4),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
+                            // Day divider
+                            if (item is Map && item['_divider'] == true) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: Row(
                                   children: [
-                                    Text(time,
+                                    const Expanded(child: Divider()),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12),
+                                      child: Text(
+                                        item['label'] as String,
                                         style: TextStyle(
-                                            fontSize: 9,
-                                            color: isUser
-                                                ? Colors.white38
-                                                : Colors.grey[400])),
-                                    const SizedBox(width: 6),
-                                    GestureDetector(
-                                      onTap: () => _copyMessage(text),
-                                      child: Icon(Icons.copy,
-                                          size: 11,
-                                          color: isUser
-                                              ? Colors.white38
-                                              : Colors.grey[400]),
+                                            fontSize: 11,
+                                            color: cs.onSurface
+                                                .withValues(alpha: 0.5),
+                                            fontWeight: FontWeight.w500),
+                                      ),
                                     ),
+                                    const Expanded(child: Divider()),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              );
+                            }
+
+                            // Message bubble
+                            final msg = item as Map<String, dynamic>;
+                            final isUser = msg['role'] == 'user';
+                            final text = msg['message'] as String;
+                            final time =
+                                _formatTime(msg['timestamp'] as String);
+
+                            return Align(
+                              alignment: isUser
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: GestureDetector(
+                                onLongPress: () => _copyMessage(text),
+                                child: Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 3),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 10),
+                                  constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.78),
+                                  decoration: BoxDecoration(
+                                    color: isUser
+                                        ? Theme.of(context).colorScheme.primary
+                                        : cs.surfaceContainerHighest,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(14),
+                                      topRight: const Radius.circular(14),
+                                      bottomLeft:
+                                          Radius.circular(isUser ? 14 : 2),
+                                      bottomRight:
+                                          Radius.circular(isUser ? 2 : 14),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(text,
+                                          style: TextStyle(
+                                              color:
+                                                  isUser ? Colors.white : null,
+                                              height: 1.4)),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(time,
+                                              style: TextStyle(
+                                                  fontSize: 9,
+                                                  color: isUser
+                                                      ? Colors.white38
+                                                      : Colors.grey[400])),
+                                          const SizedBox(width: 6),
+                                          GestureDetector(
+                                            onTap: () => _copyMessage(text),
+                                            child: Icon(Icons.copy,
+                                                size: 11,
+                                                color: isUser
+                                                    ? Colors.white38
+                                                    : Colors.grey[400]),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
+                      ), // Expanded
+                    ], // Column children
+                  ), // Column
                 ),
     );
   }
