@@ -50,6 +50,12 @@ class DebugService {
     buffer.writeln('  active_model_id = ${AppConfig.activeModelId}');
     buffer.writeln('  active_model_label = ${AppConfig.activeModelLabel}');
     buffer.writeln('  groq_limit_reached = ${AppConfig.groqLimitReached}');
+    buffer.writeln(
+        '  gemini_key_loaded = ${AppConfig.hasGeminiKey ? 'YES' : 'NO — using Groq fallback'}');
+    buffer.writeln(
+        '  cerebras_key_loaded = ${AppConfig.hasCerebrasKey ? 'YES' : 'NO'}');
+    buffer
+        .writeln('  groq_key_loaded = ${AppConfig.hasGroqKey ? 'YES' : 'NO'}');
     // Dump the rolling request trace with one entry per line for readability
     final traceRaw = await DBService.getSetting('ai_request_trace') ?? '';
     if (traceRaw.isNotEmpty) {

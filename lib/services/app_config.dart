@@ -165,6 +165,13 @@ class AppConfig {
 
   static bool get groqLimitReached => _groqLimitReached;
 
+  /// Whether each key type is currently available (for debug reporting)
+  static bool get hasGeminiKey =>
+      (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
+  static bool get hasGroqKey => (_remoteGroqKey ?? _fallbackGroqKey).isNotEmpty;
+  static bool get hasCerebrasKey =>
+      (_remoteCerebrasKey ?? _fallbackCerebrasKey).isNotEmpty;
+
   /// The active API key for the current model
   static String get groqApiKey {
     switch (_activeModelId) {
