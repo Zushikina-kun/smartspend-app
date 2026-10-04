@@ -566,9 +566,35 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                         icon: const Icon(Icons.delete_outline,
                                             size: 18, color: Colors.grey),
                                         onPressed: () async {
-                                          await DBService.deleteBudget(
-                                              b.category);
-                                          _loadData();
+                                          final confirm =
+                                              await showDialog<bool>(
+                                            context: context,
+                                            builder: (ctx) => AlertDialog(
+                                              title:
+                                                  const Text("Remove Budget"),
+                                              content: Text(
+                                                  "Remove the \"${b.category}\" budget? Your expenses in this category won't be deleted."),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(ctx, false),
+                                                  child: const Text("Cancel"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(ctx, true),
+                                                  child: const Text("Remove",
+                                                      style: TextStyle(
+                                                          color: Colors.red)),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                          if (confirm == true) {
+                                            await DBService.deleteBudget(
+                                                b.category);
+                                            _loadData();
+                                          }
                                         },
                                         padding: EdgeInsets.zero,
                                         constraints: const BoxConstraints(),
