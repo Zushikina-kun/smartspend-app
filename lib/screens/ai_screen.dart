@@ -460,9 +460,13 @@ class _AIScreenState extends State<AIScreen> {
 
     if (mounted) {
       // Derive top spending category for dynamic what-if chip
+      // Exclude 'Others' and 'Bills' — not actionable for "what if I cut X"
+      const _skipCats = {'Others', 'Bills', 'Education'};
       final catTotals = <String, double>{};
-      for (final e in expenses.take(20)) {
-        catTotals[e.category] = (catTotals[e.category] ?? 0) + e.amount;
+      for (final e in expenses.take(50)) {
+        if (!_skipCats.contains(e.category)) {
+          catTotals[e.category] = (catTotals[e.category] ?? 0) + e.amount;
+        }
       }
       final topCat = catTotals.entries.isEmpty
           ? 'Food'
@@ -870,7 +874,11 @@ class _AIScreenState extends State<AIScreen> {
               'shop_name': shopName,
               'notes': 'Logged via AI chat',
               'ai_generated': 1,
-              'confidence_score': 0.9,
+              // Confidence varies by category quality:
+              // 1.0 = matched user-defined rule
+              // 0.9 = AI gave specific category (not Others)
+              // 0.65 = category is Others (AI couldn't classify)
+              'confidence_score': category == 'Others' ? 0.65 : 0.9,
               'is_want': isWant,
             });
             // Record for undo — get the inserted ID
@@ -1920,9 +1928,16 @@ class _AIScreenState extends State<AIScreen> {
       // Show error so we know if something failed
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              "Action failed (${action.type}): ${e.toString().replaceAll('Exception: ', '')}"),
-          backgroundColor: Colors.red,
+          content: Row(children: [
+            const Icon(Icons.warning_amber_rounded,
+                color: Colors.white, size: 16),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                  "Couldn't complete: ${action.type.replaceAll('_', ' ')} — ${e.toString().replaceAll('Exception: ', '')}"),
+            ),
+          ]),
+          backgroundColor: Colors.orange[800],
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 4),
         ));
@@ -1987,7 +2002,14 @@ class _AIScreenState extends State<AIScreen> {
           _isListening = false;
           _controller.text = text;
         });
-        await _send();
+        // Brief pause so user can see and review what was recognized
+        // before it sends — they can still edit if needed
+        if (text.trim().isNotEmpty) {
+          await Future.delayed(const Duration(milliseconds: 600));
+          if (mounted && _controller.text.trim() == text.trim()) {
+            await _send();
+          }
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -2086,11 +2108,11 @@ class _AIScreenState extends State<AIScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.07),
+                  color: Theme.of(ctx).colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
-                    "💡 To enable Gemini/Cerebras fallback, add API keys in Firebase Remote Config: gemini_api_key / cerebras_api_key",
+                    "💡 Keys managed in Firebase Remote Config: gemini_api_key / groq_api_key / cerebras_api_key. Auto mode tries Gemini first, falls back to Groq → Cerebras.",
                     style: TextStyle(fontSize: 11, height: 1.4)),
               ),
             ],
@@ -2554,81 +2576,82 @@ class _AIScreenState extends State<AIScreen> {
                 "34 action types: log/update/delete expenses, set budgets, set spending limits, manage goals, debts, recurring, payment plans, insurance/contributions, wallet balances, transfers, salary splits, subscription detection, idle money suggestions, expense cuts, what-if simulation, debt payment plan, split bills, and more.\n\n"
                 "Daily message limit: 150/day across 8 providers — when one model's limit is reached, the app automatically switches to the next available model.",
           ),
-          // Model selector — shows current model with status
-          GestureDetector(
-            onTap: _showModelSelector,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 4),
-              child: Chip(
-                avatar: Text(AppConfig.groqLimitReached ? '🟡' : '🟢',
-                    style: const TextStyle(fontSize: 10)),
-                label: Text(
-                  AppConfig.activeModelLabel.split(' ').first == 'Gemini'
-                      ? 'Gemini'
-                      : AppConfig.activeModelLabel.split(' ').first == 'LLaMA'
-                          ? 'LLaMA'
-                          : AppConfig.activeModelLabel.split(' ').first,
-                  style: const TextStyle(fontSize: 10),
-                ),
-                padding: EdgeInsets.zero,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
-          // D2: show remaining daily messages with reset countdown
+          // Model selector — shows current model + remaining messages, compact
           FutureBuilder<int>(
             key: ValueKey(_sending),
             future: AIChatService.getRemainingMessages(),
             builder: (_, snap) {
-              final remaining = snap.data;
-              if (remaining == null) return const SizedBox.shrink();
-              // BT-4: Show reset countdown when limit is low
-              final now = DateTime.now().toUtc();
-              final midnight = DateTime.utc(now.year, now.month, now.day + 1);
-              final hoursLeft = midnight.difference(now).inHours;
-              final minsLeft = midnight.difference(now).inMinutes % 60;
-              final resetStr = hoursLeft > 0
-                  ? "Resets in ${hoursLeft}h ${minsLeft}m"
-                  : "Resets in ${minsLeft}m";
-              return Padding(
-                padding: const EdgeInsets.only(right: 4),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "$remaining left",
-                        style: TextStyle(
-                            fontSize: 11,
-                            color: remaining <= 10
-                                ? Colors.orange
-                                : Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withValues(alpha: 0.5)),
-                      ),
-                      if (remaining <= 15)
-                        Text(
-                          resetStr,
-                          style:
-                              TextStyle(fontSize: 9, color: Colors.grey[400]),
-                        ),
-                    ],
+              final remaining = snap.data ?? 150;
+              // Build a clean short model name
+              final fullLabel = AppConfig.activeModelLabel;
+              String shortLabel;
+              if (fullLabel.startsWith('Auto')) {
+                shortLabel = 'Auto';
+              } else if (fullLabel.contains('Gemini')) {
+                shortLabel =
+                    fullLabel.contains('Flash-Lite') ? 'Gemini Lite' : 'Gemini';
+              } else if (fullLabel.contains('GPT-OSS')) {
+                shortLabel =
+                    fullLabel.contains('120B') ? 'GPT-OSS 120B' : 'GPT-OSS 20B';
+              } else if (fullLabel.contains('Qwen')) {
+                shortLabel =
+                    fullLabel.contains('3.6') ? 'Qwen 3.6' : 'Qwen 3.8';
+              } else if (fullLabel.contains('Compound')) {
+                shortLabel =
+                    fullLabel.contains('Mini') ? 'Compound Mini' : 'Compound';
+              } else if (fullLabel.contains('Cerebras')) {
+                shortLabel = 'Cerebras';
+              } else {
+                shortLabel = fullLabel.split(' ').first;
+              }
+
+              return GestureDetector(
+                onTap: _showModelSelector,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 2),
+                  child: Chip(
+                    avatar: Text(
+                        AppConfig.groqLimitReached
+                            ? '🟡'
+                            : remaining <= 10
+                                ? '🔴'
+                                : '🟢',
+                        style: const TextStyle(fontSize: 10)),
+                    label: Text(
+                      '$shortLabel · $remaining left',
+                      style: const TextStyle(fontSize: 10),
+                    ),
+                    padding: EdgeInsets.zero,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                 ),
               );
             },
           ),
           IconButton(
-            icon: const Icon(Icons.history),
-            tooltip: "Chat history",
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const ChatHistoryScreen())),
-          ),
-          IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: "Clear chat",
             onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text("Clear chat history?"),
+                  content: const Text(
+                      "This clears Peso's memory of your conversation. Your logged expenses and data are kept."),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text("Cancel")),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style:
+                          FilledButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text("Clear"),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm != true || !mounted) return;
               AIChatService.clearHistory();
               await DBService.clearChatHistory();
               setState(() {
@@ -2642,7 +2665,12 @@ class _AIScreenState extends State<AIScreen> {
             icon: const Icon(Icons.more_vert),
             tooltip: "More options",
             onSelected: (val) async {
-              if (val == 'export_debug') {
+              if (val == 'chat_history') {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ChatHistoryScreen()));
+              } else if (val == 'export_debug') {
                 try {
                   await DebugService.exportDebugLog();
                 } catch (e) {
@@ -2743,6 +2771,16 @@ class _AIScreenState extends State<AIScreen> {
               }
             },
             itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: 'chat_history',
+                child: Row(
+                  children: [
+                    Icon(Icons.history, size: 18),
+                    SizedBox(width: 10),
+                    Text("Chat History"),
+                  ],
+                ),
+              ),
               const PopupMenuItem(
                 value: 'reset_ai',
                 child: Row(
@@ -2876,57 +2914,61 @@ class _AIScreenState extends State<AIScreen> {
           ),
           // ── CLIPBOARD NUDGE BANNER ────────────────────────────────────────
           if (_clipboardNudgeText != null && !_clipboardNudgeDismissed)
-            Container(
-              margin: const EdgeInsets.fromLTRB(12, 4, 12, 0),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.teal.withValues(alpha: 0.10),
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.teal.withValues(alpha: 0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.sms_outlined, size: 16, color: Colors.teal),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "📋 GCash/bank text detected — paste it to log?",
-                      style: TextStyle(fontSize: 12, color: Colors.teal[800]),
+            Builder(builder: (ctx) {
+              final cs = Theme.of(ctx).colorScheme;
+              return Container(
+                margin: const EdgeInsets.fromLTRB(12, 4, 12, 0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: cs.primaryContainer.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: cs.primary.withValues(alpha: 0.08),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
-                  ),
-                  const SizedBox(width: 6),
-                  TextButton(
-                    onPressed: () {
-                      _controller.text = _clipboardNudgeText ?? '';
-                      setState(() => _clipboardNudgeDismissed = true);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      backgroundColor: Colors.teal.withValues(alpha: 0.12),
-                    ),
-                    child: const Text("Paste",
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.sms_outlined, size: 16, color: cs.primary),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        "📋 GCash/bank text detected — paste to log?",
                         style: TextStyle(
-                            color: Colors.teal,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600)),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 14, color: Colors.teal),
-                    onPressed: () =>
-                        setState(() => _clipboardNudgeDismissed = true),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
-            ),
+                            fontSize: 12, color: cs.onPrimaryContainer),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    TextButton(
+                      onPressed: () {
+                        _controller.text = _clipboardNudgeText ?? '';
+                        setState(() => _clipboardNudgeDismissed = true);
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        backgroundColor: cs.primary.withValues(alpha: 0.12),
+                        foregroundColor: cs.primary,
+                      ),
+                      child: const Text("Paste",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600)),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close, size: 14, color: cs.primary),
+                      onPressed: () =>
+                          setState(() => _clipboardNudgeDismissed = true),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              );
+            }),
           Expanded(
             child: _messages.isEmpty && !_contextLoaded
                 ? const Center(child: CircularProgressIndicator())
@@ -2991,8 +3033,20 @@ class _AIScreenState extends State<AIScreen> {
                                               style: const TextStyle(
                                                   fontSize: 12)),
                                           onPressed: () {
-                                            _controller.text = prompt;
-                                            _send();
+                                            // Fill the input so the user can
+                                            // review/edit before sending
+                                            setState(() {
+                                              _controller.text = prompt;
+                                              _controller.selection =
+                                                  TextSelection.fromPosition(
+                                                TextPosition(
+                                                    offset: _controller
+                                                        .text.length),
+                                              );
+                                            });
+                                            // Auto-focus the text field
+                                            FocusScope.of(ctx)
+                                                .requestFocus(FocusNode());
                                           },
                                         ))
                                     .toList(),
@@ -3028,9 +3082,13 @@ class _AIScreenState extends State<AIScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text("Peso is thinking",
-                                        style: TextStyle(
-                                            fontSize: 13, color: Colors.grey)),
+                                    Text(
+                                      "Peso",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                     const SizedBox(width: 4),
                                     _TypingDots(),
                                   ],
@@ -3210,16 +3268,7 @@ class _AIScreenState extends State<AIScreen> {
                                         );
                                       }),
                                     ],
-                                    const SizedBox(height: 4),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text("Hold to copy",
-                                          style: TextStyle(
-                                              fontSize: 9,
-                                              color: isUser
-                                                  ? Colors.white38
-                                                  : Colors.grey[400])),
-                                    ),
+                                    const SizedBox(height: 2),
                                   ],
                                 ),
                               ),
@@ -3309,14 +3358,19 @@ class _AIScreenState extends State<AIScreen> {
                         curve: Curves.easeOut,
                         child: TextField(
                           controller: _controller,
-                          maxLines: 6,
+                          maxLines: 4,
                           minLines: 1,
                           keyboardType: TextInputType.multiline,
-                          textInputAction: TextInputAction.newline,
+                          textInputAction: TextInputAction.send,
+                          onSubmitted: (_) {
+                            if (!_sending) _send();
+                          },
                           decoration: InputDecoration(
                             hintText: _isListening
                                 ? "Listening..."
-                                : "Ask about your spending...",
+                                : _sending
+                                    ? "Peso is thinking…"
+                                    : "Type or say what you spent…",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(24)),
                             contentPadding: const EdgeInsets.symmetric(
@@ -3326,11 +3380,20 @@ class _AIScreenState extends State<AIScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  FloatingActionButton.small(
-                    heroTag: 'fab_ai_send',
-                    onPressed: _send,
-                    child: const Icon(Icons.send),
+                  const SizedBox(width: 6),
+                  // Send button — disabled while sending to prevent duplicates
+                  IconButton.filled(
+                    onPressed: _sending ? null : _send,
+                    icon: const Icon(Icons.send_rounded, size: 20),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      disabledBackgroundColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.4),
+                      padding: const EdgeInsets.all(12),
+                    ),
                   ),
                 ],
               ),
