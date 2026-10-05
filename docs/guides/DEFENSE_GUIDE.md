@@ -1,5 +1,5 @@
 # SmartSpend — Defense Guide
-**Version:** 2.9.77 | **October 2026** | **Lucid Frame**
+**Version:** 2.9.92 | **October 2026** | **Lucid Frame**
 
 > This is your single reference for both the DEMO and the DEFENSE.
 > Read it fully before your pre-final and final defenses.
@@ -133,24 +133,26 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 
 | Item | Value |
 |------|-------|
-| Version | **2.9.77** |
+| Version | **2.9.92** |
 | Platform | Android (Flutter) |
-| Database | SQLite version 11, 20 tables |
-| AI providers | **8** (auto-failover, all free tier) |
-| Primary model | **Gemini 3.5 Flash-Lite** |
+| Database | SQLite v13, 25 tables |
+| AI providers | **9** (8 cloud + 1 custom local, auto-failover, all free) |
+| Primary model | **Gemini 3.5 Flash-Lite** (AQ. key via Firebase Remote Config) |
 | Daily AI limit | **150 messages/user** |
-| AI agentic actions | 34 |
+| AI agentic actions | **34** |
 | Currencies supported | 57 |
-| Screens | 43 |
-| Services | 31 |
+| Screens | **43** |
+| Services | **31** |
 | Achievement badges | **25** |
 | Daily quests | 10 rotating |
 | Expense categories | 14 built-in + unlimited custom |
 | Screenshot platforms detected | 40+ |
 | PH banks in database | 20 banks + 5 e-wallets |
 | Backup format | JSON version 9 |
-| Color themes | **12** (Blue, Sky Blue, Forest Green, Royal Purple, Sunset Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, Slate, **Emerald** — default for new installs) |
+| Color themes | **11** (Emerald default for new installs) |
+| APK size | ~45 MB (arm64-v8a, split, obfuscated) |
 | GitHub | https://github.com/Zushikina-kun/smartspend-app |
+| Website | https://zushikina-kun.github.io/smartspend-app/ |
 | Group | Lucid Frame |
 | School | Lorma Colleges — CCSE, BSIT 4th Year |
 | Academic Year | 2026–2027, 1st Semester |

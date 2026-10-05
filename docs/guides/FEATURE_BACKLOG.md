@@ -19,21 +19,21 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v2.9.71)
+## Part 0 — Authoritative Build Numbers (v2.9.92)
 
-Use these everywhere. Many docs are stale.
+Use these everywhere. Many older docs are stale.
 
-| Metric | v2.9.71 value |
+| Metric | v2.9.92 value |
 |--------|--------------|
-| Version string | **2.9.71** |
+| Version string | **2.9.92** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
-| SQLite schema | v11, 20 tables |
-| AI providers in fallback chain | **8** (not 5 or 6) |
-| Primary AI model | **Auto (Gemini 3.5 Flash-Lite default)** |
+| SQLite schema | **v13, 25 tables** |
+| AI providers in fallback chain | **9** (8 cloud + 1 custom local) |
+| Primary AI model | **Auto (Gemini 3.5 Flash-Lite default, AQ. key via Remote Config)** |
 | Agentic actions | **34** |
-| Input modalities | 7 |
+| Input modalities | **7** |
 | Screens | **43** Dart files |
 | Services | **31** Dart files |
 | Achievement badges | **25** |
@@ -45,10 +45,14 @@ Use these everywhere. Many docs are stale.
 | Hub tiles | **30+** |
 | PH banks in DB | 20 banks + 5 e-wallets |
 | Daily AI message limit | **150** |
-| Color themes | **11** (Slate is new default) |
+| Color themes | **11** (Emerald is new default for new installs) |
+| APK size | **~45 MB** (arm64-v8a, split, obfuscated) |
+| AAB size | **~75 MB** (Play Store bundle, CI-built) |
 | Optional home toggles | **14** (managed by Experience Presets) |
 | Optional analytics toggles | **4** |
 | Experience Presets | 🪶 Lite / 😊 Casual / ⚖️ Normal / 🚀 Pro |
+| Website | https://zushikina-kun.github.io/smartspend-app/ |
+| GitHub releases | https://github.com/Zushikina-kun/smartspend-app/releases |
 
 ### Recent releases
 | Version | Key changes |
