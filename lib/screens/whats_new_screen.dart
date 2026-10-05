@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.90';
-  static const _prefKey = 'whats_new_seen_2_9_90';
+  static const _version = '2.9.92';
+  static const _prefKey = 'whats_new_seen_2_9_92';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,16 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🏠',
+      'Local AI — Private Mode (v2.9.92)',
+      'Connect SmartSpend to your own LLM running on your PC/Mac. '
+          'Your financial data never leaves your home network — '
+          'no Gemini, no Groq, no cloud at all. '
+          'Settings → AI Model → Local AI. Built-in setup guide walks you through '
+          'Ollama, LM Studio, and Jan with hardware-matched model recommendations. '
+          'Cloud AI remains as automatic fallback when your local server is offline.',
+    ),
     (
       '🛡️',
       'Delete Confirmations Everywhere (v2.9.90)',

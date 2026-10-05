@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.91 | **Date:** October 2026
+**Version:** 2.9.92 | **Date:** October 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.91).
+> All figures are accurate to the final build (v2.9.92).
 
 ---
 
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.91
+**Version:** 2.9.92
 **Build date:** October 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -77,6 +77,7 @@ SmartSpend uses a **multi-provider agentic AI system** with automatic failover:
 
 | Priority | Provider | Model | Daily Limit | Best For |
 |----------|----------|-------|-------------|----------|
+| 0 | **User's own PC/Mac** | **Custom Local (Ollama / LM Studio / Jan)** | Unlimited | **Private Mode** — data never leaves home network |
 | 1 | Google AI Studio | **Gemini 3.5 Flash-Lite** | ~500/day FREE | Default — GA stable (replaced shut-down 3.1) |
 | 2 | Google AI Studio | Gemini 3.5 Flash | ~500/day FREE | Complex financial queries |
 | 3 | Groq | GPT-OSS 120B | 1,000/day FREE | Best on this account tier |
@@ -622,10 +623,11 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.82–2.9.85 | Oct 2026 | App-wide QoL: Peso empty states (7 screens); delete confirmations all screens; income theme colors; budget over-limit red border; goal contribution button; Safe-to-Spend card verified; AI chat date dividers; achievement unlock celebration; analytics interpretive labels; transaction filter persistence |
 | 2.9.86–2.9.87 | Oct 2026 | Home priority banner; chat history search; bank import feedback; Installment/Debt overlap fix (Plans tab routing); Data Quality View→Transactions navigation; Fix All for case_dup + round_amount; Remote Config fetch fix (Gemini key now loading, rc_last_fetch_status in debug log) |
 | 2.9.88–2.9.89 | Oct 2026 | Wallet balance history (wallet_history table v12); full audit trail: budget_history, goal_contribution_history, income_history, score_history.reason (DB v13); GitHub Pages website + Privacy Policy; AAB in CI; App Check debug token registered (MuMu Player) |
+| **2.9.92** | **Oct 2026** | **Local LLM support (Private Mode): custom_local provider in AppConfig, Settings → Local AI section with URL/model/key fields + Test Connection button, LocalAiSetupSheet widget (step-by-step guide for Ollama/LM Studio/Jan with hardware picker), 🏠 privacy indicator in AI chat when local is active, autoFallback chain updated, APP_CONFIG_DART secret updated** |
 | **2.9.90–2.9.91** | **Oct 2026** | **Full re-audit: delete confirmations everywhere (paluwagan, insurance, wallet, single expense); archive≠delete fix; history viewers for budget/goal/income (HistorySheet widget); FHS score reason on chart tap; Peso empty states (insurance, chat history, bill calendar); wallet history on home screen long-press; data quality spinner fix; source tags complete on all audit trail callers** |
 
 ---
 
-*SmartSpend v2.9.91 — Lucid Frame*
+*SmartSpend v2.9.92 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
 *Last updated: October 5, 2026*

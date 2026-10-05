@@ -242,3 +242,44 @@ All items are post-defense or optional polish:
 | FHS components | 4 × 25pts |
 | APK size (arm64) | ~45 MB |
 | AAB size | ~75 MB |
+
+---
+
+## What Was Done: v2.9.92 — Local LLM Support (Private Mode)
+
+### Overview
+Users can now connect SmartSpend to a locally-running LLM on their PC/Mac over WiFi. Financial data never leaves the home network when Local AI mode is active. Cloud AI (Gemini/Groq/Cerebras) remains as automatic fallback when the local server is offline or unreachable.
+
+### Files changed
+- **`lib/services/app_config.dart`**: `custom_local` added as 9th provider (priority 0 — tried first when set). New fields: `_customLocalUrl`, `_customLocalModel`, `_customLocalKey`. New methods: `setCustomLocal()`, `testCustomLocal()`. New getters: `hasCustomLocal`, `customLocalUrl/Model/Key`. All three routing getters (groqApiKey/BaseUrl/Model) handle `custom_local` case. `autoFallback()`: custom_local → gemini_flash_lite/groq. `init()` loads saved settings before Remote Config. Gemini chain-fallback reset skips `custom_local`. Imports: `package:http/http.dart`, `dart:convert` added.
+- **`lib/screens/settings_screen.dart`**: New "LOCAL AI (PRIVATE MODE)" section after AI Model list. TextEditingControllers for URL/model/key. `dispose()` added. `_loadSettings` populates from AppConfig. UI: URL field, model field, key field (obscured), Test Connection button (calls `AppConfig.testCustomLocal`), active indicator banner, Save Settings + Clear buttons, Setup Guide button, hint about fallback.
+- **`lib/widgets/local_ai_setup_sheet.dart`**: New widget. 3 tabs: Ollama / LM Studio / Jan. Hardware picker (8/16/32 GB → recommends Phi-4-mini / Qwen3 7B / Qwen3 14B). Step-by-step instructions per tool with code blocks + clipboard copy buttons. Warning about JSON reliability.
+- **`lib/screens/ai_screen.dart`**: `shortLabel` handles `custom_local` → `'🏠 Local AI'`. Green privacy banner shown above chat when `AppConfig.activeModelId == 'custom_local'`.
+- **`lib/screens/whats_new_screen.dart`**: Version bumped to 2.9.92, new entry for Local AI feature.
+
+### How users set it up (summary for manuscript)
+1. Install Ollama on PC: https://ollama.com/download
+2. Run: `ollama pull qwen3:7b` (or model matching their RAM)
+3. Start with WiFi access: `OLLAMA_HOST=0.0.0.0:11434 ollama serve`
+4. In SmartSpend → Settings → Local AI → enter `http://<PC-IP>:11434/v1`, model name → Test → Save
+5. Settings → AI Model → select "Local AI (Your Computer)"
+
+### Important technical note
+The `custom_local` provider uses the exact same OpenAI-compatible `/v1/chat/completions` endpoint format as Groq and Cerebras — zero changes to request/response parsing. Any Ollama, LM Studio, or Jan server works out of the box.
+
+### APP_CONFIG_DART secret updated ✅
+The GitHub Actions secret was updated after app_config.dart changed — future CI builds will use the new version with `custom_local` support.
+
+---
+
+## Current State (v2.9.92)
+
+| Metric | Value |
+|--------|-------|
+| Version | 2.9.92 |
+| AI providers | **9** (8 cloud + 1 custom local) |
+| New widget | `lib/widgets/local_ai_setup_sheet.dart` |
+| Local LLM tools supported | Ollama, LM Studio, Jan |
+| Recommended models | Phi-4-mini (8GB), Qwen3 7B (16GB), Qwen3 14B (32GB+) |
+| Privacy guarantee | When custom_local active: data sent only to user's own server |
+| Fallback behavior | If local server unreachable → auto falls back to Gemini/Groq |
