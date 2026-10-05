@@ -1,16 +1,81 @@
 # SmartSpend — Project Status
-**Version:** 2.9.71 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** October 2026
+**Version:** 2.9.87 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** October 5, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
 > For feature backlog and planning see `docs/guides/FEATURE_BACKLOG.md`
-> For Claude AI handoff (latest) see `docs/manuscript/reseaches/kiro-to-claude-handoff-2026-09-26-v3.md`
-> For Codex briefing see `docs/manuscript/reseaches/codex-briefing-2026-09-26.md`
+> For Kiro AI handoff (latest) see `docs/manuscript/reseaches/kiro-to-kiro-handoff-2026-10-05.md`
 
 ---
 
-## PRE-FINAL DEFENSE — CHECKLIST (Tuesday)
+## FINAL DEFENSE — CHECKLIST
+
+### 🔴 Critical — Must be done before defense day
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| Install **v2.9.87** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.87-release.apk` from GitHub releases |
+| Verify About screen shows **"Version 2.9.87"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
+| Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
+| Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) — now routes to Gemini |
+| Turn on **Lite Mode OFF** for demo (show all features) | Brix | ❌ | Settings → Quick Presets → Lite Mode = OFF |
+| Charge demo phone to 100% the night before — do NOT open app | Brix | ❌ | Cold start required for the demo |
+| Have WiFi ready for demo | Brix | ❌ | AI needs internet; Gemini key loads from Remote Config on first open |
+| Rehearse demo flow (see script below) | All | ❌ | 10-minute run-through the day before |
+| Create **Figure 1.1** — PH financial literacy bar chart | Cyrille | ❌ | BSP CFIS 2025: 50% adults formal accounts; 74% literacy rate |
+| Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output |
+| Create **Figure 2.1** — SUS score interpretation chart | Cyrille | ❌ | Bangor et al. (2009) adjective scale; target ≥80 = Good |
+| Create **Figure 2.2** — Kanban board / development methodology | Cyrille | ❌ | Agile Kanban: Backlog → In Progress → Done |
+| Fill in **Compliance Matrix** | All | ❌ | `docs/capstone/SmartSpend_Master_Bug_Tracker.docx` |
+
+### 🟠 Manuscript Updates (for Cyrille — use handoff doc as reference)
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| Update version throughout manuscript → **2.9.87** | Cyrille | ❌ | |
+| Update manuscript **AI model section**: Gemini 3.5 Flash-Lite as primary, 8-provider fallback chain | Cyrille | ❌ | AQ. key format, Remote Config delivery, Auto mode routing |
+| Update manuscript **FHS equations** | Cyrille | ❌ | 4 × 25pt components; overspend nuance; category exemptions |
+| Update manuscript **agentic action count** → 34 | Cyrille | ❌ | Was 31 in some sections |
+| Update manuscript **badge count** → 25 | Cyrille | ❌ | |
+| Update manuscript **daily AI limit** → 150 | Cyrille | ❌ | Was 60 |
+| Update manuscript **color theme count** → 11 | Cyrille | ❌ | Slate is default for new installs |
+| Update manuscript **screens count** → 43 | Cyrille | ❌ | |
+| Update **settings toggles** → 10 home, 4 analytics, 14 Lite Mode | Cyrille | ❌ | |
+| Add to Implemented: Peso mascot, Safe-to-Spend, achievement celebration, analytics labels, AI date dividers, Data Quality fixes | Cyrille | ❌ | v2.9.76–2.9.87 |
+| Add **AI financial advice disclaimer** to Ch.2/Ch.3 | Cyrille | ❌ | RA 11765 — one-time dialog |
+| Add **Safe-to-Spend** to features list | Cyrille | ❌ | BudgetPH differentiator |
+| Add **Agila, PISO, BunnyWise, MayBudget** to competitor table | Cyrille | ❌ | See FEATURE_BACKLOG Part 10 + Part 3 |
+| BSP citation update Ch.1: 2021 → CFIS 2025 | Cyrille | ❌ | |
+| Move **Paluwagan** to Implemented | Cyrille | ✅ | Done |
+
+### 🟡 Post-Defense (before final)
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| SUS survey — 30 respondents | Djaunathan | ❌ | 20 parents + 10 young professionals |
+| Google Play Console account ($25) | Brix | ❌ | Required for Play Store |
+| Build AAB: `flutter build appbundle --release --obfuscate` | Brix | ❌ | For Play Store submission |
+| Privacy Policy hosted page | Cyrille | ❌ | Required by Play Store |
+| Firebase App Check enforcement | Brix | ❌ | Switch debug provider → Play Integrity |
+| Register App Check debug token in Firebase Console | Brix | ❌ | Logcat → FirebaseAppCheck debug token UUID |
+| Validator signatures — Appendix A | Brix | ❌ | |
+| SUS survey results → manuscript Ch.3 | Cyrille | ❌ | |
+| CV section all three researchers | All | ❌ | |
+
+---
+
+## DEMO SCRIPT — Final Defense (v2.9.87)
+
+### Night before
+1. Download `SmartSpend-v2.9.87-release.apk` from https://github.com/Zushikina-kun/smartspend-app/releases
+2. Install on demo phone
+3. Open app → let it fully load (Remote Config fetches Gemini key on first open)
+4. Verify About screen shows **"Version 2.9.87"**
+5. Settings → Quick Presets → **Lite Mode OFF**
+6. Settings → AI MODEL → **Auto (Recommended)**
+7. AI screen → ⋮ → **Reset Daily Limit**
+8. Charge to 100%, do NOT open the app again until demo
 
 ### 🔴 Critical — Must be done before defense day
 
