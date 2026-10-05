@@ -404,8 +404,8 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
               final target = (goal['target_amount'] as num).toDouble();
               final prevAmount = (goal['current_amount'] as num).toDouble();
               final newAmount = (prevAmount + add).clamp(0.0, target);
-              await DBService.updateGoal(
-                  {...goal, 'current_amount': newAmount});
+              await DBService.updateGoal({...goal, 'current_amount': newAmount},
+                  source: 'manual');
               if (mounted) Navigator.pop(context);
               _load();
 

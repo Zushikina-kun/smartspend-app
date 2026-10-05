@@ -1,6 +1,6 @@
-# Kiro → Kiro Handoff — SmartSpend v2.9.87
-**Date:** October 5, 2026
-**Session scope:** AI stack audit, full app-wide QoL polish (v2.9.82–v2.9.87), RC fix, data quality fixes, release build
+# Kiro → Kiro Handoff — SmartSpend v2.9.89
+**Date:** October 5, 2026 (updated)
+**Session scope:** AI stack audit, full app-wide QoL polish (v2.9.82–v2.9.89), RC fix, data quality fixes, wallet history, audit logging, website, App Check token, release automation
 
 ---
 
@@ -8,99 +8,55 @@
 
 | Metric | Value |
 |--------|-------|
-| **Version** | 2.9.87+87 |
+| **Version** | 2.9.89+89 |
 | **GitHub** | https://github.com/Zushikina-kun/smartspend-app |
-| **Release APK** | `SmartSpend-v2.9.87-release.apk` on GitHub Releases |
+| **Website** | https://zushikina-kun.github.io/smartspend-app/ |
+| **Privacy Policy** | https://zushikina-kun.github.io/smartspend-app/privacy.html |
+| **Release APK** | GitHub Releases → v2.9.89 (arm64-v8a recommended) |
+| **AAB** | GitHub Releases → `SmartSpend-v2.9.89.aab` (Play Store upload) |
 | **Platform** | Android (Flutter/Dart) |
 | **Min SDK** | API 21 (Android 5.0) |
 | **Target SDK** | API 36 (Android 16) |
 | **Screens** | 43 Dart files |
 | **Services** | 31 Dart files |
 | **AI providers** | 8 (full fallback chain verified working) |
-| **Primary AI model** | Gemini 3.5 Flash-Lite via Google AI Studio (AQ. key format) |
+| **Primary AI model** | Gemini 3.5 Flash-Lite via Google AI Studio (AQ. key) |
 | **AI key delivery** | Firebase Remote Config — `gemini_api_key`, `groq_api_key`, `cerebras_api_key` |
 | **Agentic actions** | 34 |
 | **Badges** | 25 |
-| **Color themes** | 11 (Emerald is default for new installs) |
-| **Daily AI limit** | 150 messages |
+| **Color themes** | 11 |
+| **Daily AI limit** | 150 |
 | **FHS components** | 4 × 25pts |
+| **SQLite schema** | v13, 25 tables |
+| **App Check debug token** | `1e2e702b-9243-4fff-9744-91011adf7d58` (MuMu Player, registered in Firebase Console) |
 
 ---
 
-## What Was Done This Session (v2.9.78 → v2.9.87)
+## What Was Done This Session (v2.9.78 → v2.9.89)
 
-### v2.9.78 — AI timeout + debt QoL
-- AI timeout 20s → 35s
-- Installment plan date fix (lastDate DateTime(2030))
-- Debt due date firstDate fix
-- Log payment: payment method picker, partial payment, quick-pay chips
-- Debt payment now logs as expense
+### v2.9.78–v2.9.87 — See previous handoff notes
+(AI timeout fix, debt QoL, Gemini AQ. key, silent fallback, AI chat 13 fixes, app-wide QoL polish, delete confirmations, achievement celebration, analytics labels, AI date dividers, goal contribution button, income theme, budget border, filter persistence, home priority banner, chat history search, bank import feedback, Installment/Debt overlap fix, Data Quality View/Fix buttons)
 
-### v2.9.79 — Gemini AQ. key
-- New Gemini AQ. key stored in Firebase Remote Config
-- Reverted bad AQ. format check
+### v2.9.88 — Wallet history + website + AAB CI
+- **wallet_history table** (DB v12): every `setWalletBalance` and `transferBetweenWallets` call logs old→new balance, delta, reason, source, timestamp
+- **Wallet long-press history sheet**: tap a wallet tile to edit, long-press to see full change history with source icons (✏️ manual, 🤖 AI, ↔️ transfer, 💳 auto-deduct, 💰 income)
+- **`setWalletBalance` signature**: now takes optional `reason` and `source` params — all callers (manual edit, AI action, auto-deduct, income log, undo) tagged
+- **GitHub Pages website**: `index.html` + `privacy.html` live at https://zushikina-kun.github.io/smartspend-app/
+- **AAB build added to CI**: every release tag now builds both split APKs AND `SmartSpend-vX.X.XX.aab` for Play Store upload
+- **App Check debug token registered**: `1e2e702b-9243-4fff-9744-91011adf7d58` for MuMu Player emulator — 403 error resolved
 
-### v2.9.80 — Silent auto-fallback
-- Catches TimeoutException in `_send()`, silently calls `autoFallback()` + `sendMessage()` before showing error buttons
-
-### v2.9.81 — AI chat 13 fixes
-- Enter sends, maxLines 4, FAB→IconButton.filled, model chip merged, history→⋮ menu
-- Clear chat confirmation, suggestion chips fill input (not auto-send)
-- `_topSpendingCategory` excludes Others/Bills/Education
-- Voice 600ms pause, confidence_score 0.65 for Others, clipboard nudge uses theme
-- Action failed = orange (not red)
-
-### v2.9.82 — App-wide QoL: Peso empty states
-- PesoMascot.withSpeech on: savings_goals, recurring, transactions, income, manage_categories, manage_rules
-- Delete confirmations: savings_goals, recurring, income
-- income_screen FAB hardcoded colors removed
-- insurance_screen FAB heroTag added
-- savings_goals deadline firstDate fixed to allow past year
-
-### v2.9.83 — More delete confirmations
-- budget_screen: delete budget → confirmation dialog
-- debt_screen: delete debt → confirmation dialog
-- debt_screen: delete installment plan → confirmation dialog
-- debt empty state Colors.blue tip → Colors.grey
-
-### v2.9.84 — Achievement celebration + analytics labels + AI dividers
-- achievements_screen: SharedPreferences diff detects newly unlocked badges → amber SnackBar celebration
-- analytics_screen: interpretive label after monthly bar chart (% above/below average)
-- analytics_screen: interpretive label after savings rate chart (% vs 20% target)
-- ai_screen: all `_messages.add()` calls include `"ts"` date key
-- ai_screen: date dividers (Today/Yesterday/date) between message groups in chat
-
-### v2.9.85 — More polish
-- savings_goals_screen: "Add Contribution" OutlinedButton on each unfinished goal card
-- income_screen: summary header gradient replaced with `primaryContainer` + `onPrimaryContainer` text
-- budget_screen: over-budget cards get red left border (4px)
-- whats_new_screen: version bumped to 2.9.84, 5 new entries for v2.9.82–84 features
-- transactions_screen: `_selectedCategory` + `_period` persist via SharedPreferences across navigation
-
-### v2.9.86 — Home priority banner + chat search + bank import
-- home_screen: `_buildPriorityBanner()` — surfaces over-budget, negative safe-to-spend, low wallet warning at top
-- `_PriorityBannerTile` widget added
-- chat_history_screen: search bar with real-time filter on message content
-- bank_import_screen: transaction count label appends "(credits/income skipped)"
-- app_config.dart: `hasGeminiKey`, `hasGroqKey`, `hasCerebrasKey` public getters
-- debug_service.dart: logs key load status + `rc_last_fetch_status`
-- main.dart: error logging for Remote Config fetch failures
-
-### Remote Config fix (between v2.9.86 and v2.9.87)
-**Root cause:** `minimumFetchInterval = 1 hour` + `_fallbackGeminiKey = ""` meant app cached empty defaults and never re-fetched Gemini key.
-**Fix:** Set `minimumFetchInterval = Duration.zero` temporarily, add `fetchAndActivate()` error logging, expose fetch status in debug log.
-**Confirmed working:** Oct 5 debug log shows `gemini_key_loaded = YES`, `rc_last_fetch_status = fresh`, `model=auto`.
-**Final state:** `minimumFetchInterval` restored to `Duration(hours: 1)` for production.
-
-### v2.9.87 — Debt/Installment overlap + Data Quality fixes
-- debt_screen: `initialTab` constructor param added (0=I Owe, 1=Owed to Me, 2=Plans)
-- home_screen: "Installment & Plans" tool tile now opens `DebtScreen(initialTab: 2)` directly
-- data_quality_screen: `_openTransactions()` now navigates to `TransactionsScreen(initialIds: ids)` (was showing useless SnackBar)
-- data_quality_screen: added `_fixCaseDups()` and `_fixRoundAmounts()` handlers
-- data_quality_screen: Fix All button for `case_dup` (merges to most-used casing)
-- data_quality_screen: Fix All button for `round_amount` (confirmation dialog → delete)
-- data_quality_service.dart: added `fixCaseDups()` and `deleteRoundAmounts()` methods
-- transactions_screen: accepts `initialIds` param for filtered view from Data Quality
+### v2.9.89 — Audit logging for budget / goals / income / FHS score
+- **DB v13** adds 4 new tables + 1 column:
+  - `budget_history` — category, old_amount, new_amount, action (set/delete), source, timestamp
+  - `goal_contribution_history` — goal_id, goal_name, old_amount, new_amount, delta, source, timestamp
+  - `income_history` — old_amount, new_amount, delta, source, timestamp
+  - `score_history.reason` — new column: worst FHS component label + pts each day
+- **`setBudget(source:)`** — logs old→new amount; `salary_split` source for `plan_salary_split` AI action
+- **`deleteBudget`** — logs deletion to budget_history
+- **`updateGoal(source:)`** — logs current_amount delta; source tagged at all call sites (manual/ai/round_up/income_allocation)
+- **`setMonthlyIncome(source:)`** — new wrapper replaces old stub; logs income changes; old bare `setSetting` calls eliminated
+- **`saveScoreSnapshot(reason:)`** — home_screen derives worst FHS component as reason string ("Lowest: Savings Rate (8/25 pts)")
+- **`plan_salary_split` AI action** — now passes `source: 'salary_split'` to both `setBudget` and `setMonthlyIncome`
 
 ---
 
@@ -108,91 +64,127 @@
 
 | Component | Status |
 |-----------|--------|
-| Gemini 3.5 Flash-Lite | ✅ Active (`gemini_key_loaded = YES`) |
+| Gemini 3.5 Flash-Lite | ✅ Active (`gemini_key_loaded = YES`, `rc_last_fetch_status = fresh`) |
+| Remote Config interval | ✅ 1 hour (restored from `Duration.zero` test value) |
 | Groq fallback chain (6 providers) | ✅ Working |
 | Cerebras fallback | ✅ Key loaded |
-| Remote Config fetch | ✅ `fresh` on first open, `cached` thereafter |
+| App Check (MuMu emulator) | ✅ Token registered, 403 error gone |
 | `isFallbackRetry` flag | ✅ Prevents daily limit double-counting |
-| 35s timeout | ✅ |
-| Silent auto-fallback on timeout | ✅ (v2.9.80) |
-| Action JSON parsing | ✅ Brace-depth counter, unclosed brace recovery |
+| 35s timeout + silent auto-fallback | ✅ |
+| Action JSON parsing | ✅ |
 | Duplicate guard | ✅ 90s window + cross-session |
 | `_resolveCategory` priority | ✅ User rules → historical → AI → keyword |
-| `confidence_score` | ✅ 0.65 Others, 0.9 specific → Review chip at <0.70 |
-| 34 action handlers | ✅ All wired in `_executeAction` |
+| `confidence_score` | ✅ 0.65 Others, 0.9 specific |
+| 34 action handlers | ✅ All wired |
 
-**Model routing (Auto mode):**
-- `fast` tasks (expense logging) → Gemini 3.5 Flash-Lite
-- `financial_advice` → Gemini 3.5 Flash (best reasoning)
-- `smart` (general) → Gemini 3.5 Flash-Lite
-
----
-
-## Known Remaining Issues / Next Steps
-
-### For defense prep
-- **App Check debug token** — must register UUID from logcat in Firebase Console → App Check → Android app → Manage debug tokens. Get it by running app with `AndroidProvider.debug` and filtering logcat for `FirebaseAppCheck`.
-- **Demo phone** — install `SmartSpend-v2.9.87-release.apk` from GitHub Releases
-- **Remote Config** — keys are all published and working. No action needed.
-
-### For manuscript (Cyrille)
-- Update version to **2.9.87** throughout
-- AI section: primary model is now **Gemini 3.5 Flash-Lite** (AQ. key from Firebase Remote Config); 8-provider fallback chain (Gemini Flash → Flash-Lite → GPT-OSS 120B → Qwen3.6 → Qwen3.8 → Compound → Compound Mini → Cerebras)
-- Screens: **43**
-- Agentic actions: **34**
-- Badges: **25**
-- Daily AI limit: **150**
-- Color themes: **11**
-- APK size: **~113 MB** (release, obfuscated)
-
-### Still open from backlog (low priority)
-- Monthly "Wrapped" shareable card (Feature 5D upgrade)
-- Notification Listener for GCash (post-capstone)
-- PSE/MP2/UITF investment tracker (post-capstone)
-- iOS / web version (post-capstone)
+**Debug log fields added (v2.9.86–87):**
+- `gemini_key_loaded = YES/NO`
+- `cerebras_key_loaded = YES/NO`
+- `groq_key_loaded = YES/NO`
+- `rc_last_fetch_status = fresh/cached/ERROR:...`
 
 ---
 
-## File Locations
+## ADB / MuMu Setup (for future debug sessions)
+
+```powershell
+$adb = "$env:USERPROFILE\AppData\Local\Android\Sdk\platform-tools\adb.exe"
+& $adb connect 127.0.0.1:7555          # MuMu Player 12 default ADB port
+& $adb devices                          # confirm connected
+& $adb -s 127.0.0.1:7555 install -r "path\to\app-debug.apk"
+& $adb -s 127.0.0.1:7555 shell am start -n "com.lucidframe.smartspend_app/.MainActivity"
+& $adb -s 127.0.0.1:7555 logcat -d | Select-String "AppCheck|firebase|smartspend"
+```
+
+Note: If existing release APK blocks debug install, uninstall first:
+```powershell
+& $adb -s 127.0.0.1:7555 uninstall com.lucidframe.smartspend_app
+```
+
+---
+
+## Deployment Status
+
+| Channel | Status |
+|---------|--------|
+| GitHub Releases | ✅ Live — v2.9.89 (APKs + AAB) |
+| GitHub Pages | ✅ https://zushikina-kun.github.io/smartspend-app/ |
+| Privacy Policy | ✅ https://zushikina-kun.github.io/smartspend-app/privacy.html |
+| APKPure | ⏳ Submit manually — use arm64-v8a APK from GitHub Releases |
+| Uptodown | ⏳ Submit manually — use arm64-v8a APK from GitHub Releases |
+| Google Play Store | ❌ Post-defense — needs $25 + identity verification + 14-day closed testing |
+| App Check debug token | ✅ Registered for MuMu (`1e2e702b-9243-4fff-9744-91011adf7d58`) |
+| AAB in CI | ✅ Every tag push auto-builds `SmartSpend-vX.X.XX.aab` |
+
+**For APKPure/Uptodown submission:**
+- App name: SmartSpend
+- Package: com.lucidframe.smartspend_app
+- Category: Finance
+- Description: Free AI-assisted personal finance app for Filipino users...
+- Privacy Policy URL: https://zushikina-kun.github.io/smartspend-app/privacy.html
+- APK: download arm64-v8a from https://github.com/Zushikina-kun/smartspend-app/releases
+
+---
+
+## Remaining Items (Next Session)
+
+### High priority (code — do now)
+- Budget history viewer: show budget_history on long-press in budget screen (same pattern as wallet history sheet)
+- Goal contribution viewer: show goal_contribution_history on goal card tap or long-press
+- Income history viewer: show income_history somewhere in income screen
+
+### Medium priority (manual — Brix)
+- Google Play Store: pay $25, create developer account, complete identity verification (takes 1–2 days)
+- APKPure submission: https://developer.apkpure.com/
+- Uptodown submission: https://developers.uptodown.com/
+
+### Low priority (post-defense)
+- App Check enforcement: Firebase Console → App Check → switch from monitoring to enforcement
+- Firebase App Check on physical phone: fix Poco X6 Pro USB (Developer Options → Default USB config = MTP) or register another emulator token
+
+---
+
+## Key Numbers for Manuscript (v2.9.89)
+
+| Metric | Value |
+|--------|-------|
+| Version | 2.9.89 |
+| Platform | Android (Flutter/Dart) |
+| Min SDK | API 21 (Android 5.0) |
+| Target SDK | API 36 (Android 16) |
+| Screens | 43 |
+| Services | 31 |
+| AI providers | 8 |
+| Primary AI | Gemini 3.5 Flash-Lite |
+| Agentic actions | 34 |
+| Badges | 25 |
+| Daily quests | 10 |
+| Color themes | 11 |
+| Daily AI limit | 150 |
+| FHS components | 4 × 25pts |
+| SQLite schema | v13, 25 tables |
+| APK size (release arm64) | ~45 MB |
+| AAB size | ~75 MB |
+| PH banks in DB | 20 banks + 5 e-wallets |
+| Input modalities | 7 |
+| Currencies supported | 57 |
+
+## Key File Locations
 
 | File | Purpose |
 |------|---------|
 | `lib/services/app_config.dart` | AI model routing, Remote Config, fallback chain |
 | `lib/services/ai_chat_service.dart` | System prompt, action parsing, context building |
+| `lib/services/db_service.dart` | All DB operations — v13 schema, history tables |
 | `lib/screens/ai_screen.dart` | UI, action execution, send/retry logic |
-| `lib/services/debug_service.dart` | Debug log generation (v2.9.87: key load status) |
-| `lib/screens/debt_screen.dart` | `initialTab` param — use `DebtScreen(initialTab: 2)` for Plans |
-| `lib/screens/data_quality_screen.dart` | Fix All handlers for all 4 issue types |
-| `lib/services/data_quality_service.dart` | `fixCaseDups()`, `deleteRoundAmounts()`, `fixOthersCategory()` |
+| `lib/services/debug_service.dart` | Debug log (key load status, RC fetch status) |
+| `lib/screens/debt_screen.dart` | `initialTab` param — `DebtScreen(initialTab: 2)` for Plans |
+| `lib/screens/data_quality_screen.dart` | Fix All for all 4 issue types, View navigates to transactions |
 | `lib/screens/transactions_screen.dart` | `initialIds` param for filtered view |
-| `lib/widgets/peso_mascot.dart` | `PesoMascot.withSpeech(mood:, text:)` — note: param is `text:` not `message:` |
+| `lib/screens/profile_screen.dart` | `WalletsSheet` — long-press wallet for history |
+| `lib/widgets/peso_mascot.dart` | `PesoMascot.withSpeech(mood:, text:)` — param is `text:` not `message:` |
+| `index.html` | GitHub Pages landing page |
+| `privacy.html` | Privacy Policy (required for Play Store) |
+| `.github/workflows/release.yml` | CI — builds APKs + AAB on every tag push |
 | `docs/status/PROJECT_STATUS.md` | Defense checklist, demo script |
 | `docs/reference/CAPSTONE_REFERENCE.md` | All numbers for manuscript |
-| `docs/guides/FEATURE_BACKLOG.md` | Full feature planning, competitor analysis |
-
----
-
-## Key Numbers for Manuscript (v2.9.87)
-
-| Metric | Value | Source |
-|--------|-------|--------|
-| Version | 2.9.87 | pubspec.yaml |
-| Platform | Android (Flutter/Dart) | — |
-| Min SDK | API 21 (Android 5.0) | — |
-| Target SDK | API 36 (Android 16) | — |
-| Screens | 43 | lib/screens/ count |
-| Services | 31 | lib/services/ count |
-| AI providers | 8 | AppConfig.availableModels |
-| Primary AI | Gemini 3.5 Flash-Lite | app_config.dart |
-| Agentic actions | 34 | ai_chat_service.dart system prompt |
-| Badges | 25 | achievements_screen.dart `_allBadges` |
-| Daily quests | 10 | — |
-| Color themes | 11 | theme_service.dart |
-| Daily AI limit | 150 | ai_chat_service.dart `_dailyLimit` |
-| FHS components | 4 × 25pts | score_service.dart |
-| Filipino item catalog | 150+ items | add_expense_screen.dart |
-| APK size (release) | ~113 MB | build output |
-| PH banks in DB | 20 banks + 5 e-wallets | bank_comparison_screen.dart |
-| Input modalities | 7 (text, voice, OCR, barcode, screenshot, CSV paste, share intent) | — |
-| Currencies supported | 57 | currency_service.dart |
-| SQLite schema version | v11, 20 tables | db_service.dart |

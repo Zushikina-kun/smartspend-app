@@ -2017,7 +2017,24 @@ class _DashboardState extends State<Dashboard> {
     }
 
     // Save daily score snapshot for history tracking
-    DBService.saveScoreSnapshot(score);
+    // Build a reason string from the worst-performing FHS component
+    String? scoreReason;
+    try {
+      if (breakdownForNarrative.isNotEmpty) {
+        final worst = breakdownForNarrative.reduce((a, b) {
+          final aRatio = (a['points'] as num? ?? 0) /
+              ((a['max'] as num?)?.toDouble() ?? 25.0);
+          final bRatio = (b['points'] as num? ?? 0) /
+              ((b['max'] as num?)?.toDouble() ?? 25.0);
+          return aRatio < bRatio ? a : b;
+        });
+        final label = worst['label'] as String? ?? '';
+        final pts = (worst['points'] as num?)?.round() ?? 0;
+        final max = (worst['max'] as num?)?.round() ?? 25;
+        if (label.isNotEmpty) scoreReason = 'Lowest: $label ($pts/$max pts)';
+      }
+    } catch (_) {}
+    DBService.saveScoreSnapshot(score, reason: scoreReason);
     // GM-6: Check for level-up milestone
     NotificationService.checkLevelUp(score);
 

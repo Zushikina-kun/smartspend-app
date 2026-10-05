@@ -732,7 +732,7 @@ class _AIScreenState extends State<AIScreen> {
             final prevBudgets = await DBService.getBudgets();
             final prev =
                 prevBudgets.where((b) => b.category == category).firstOrNull;
-            await DBService.setBudget(category, amount);
+            await DBService.setBudget(category, amount, source: 'ai');
             UndoService.record(UndoableAction(
               type: 'set_budget',
               snapshot: {
@@ -748,7 +748,7 @@ class _AIScreenState extends State<AIScreen> {
         case 'set_income':
           final amount = (action.params['amount'] as num?)?.toDouble();
           if (amount != null && amount > 0) {
-            await DBService.setMonthlyIncome(amount);
+            await DBService.setMonthlyIncome(amount, source: 'ai');
             fireEvent(AppEvent.incomeChanged); // notify all screens
             _showActionSnackbar(
                 "Income updated to ${CurrencyService.format(amount)}/mo");
@@ -1195,7 +1195,8 @@ class _AIScreenState extends State<AIScreen> {
                     ((match['current_amount'] as num).toDouble() + contribution)
                         .clamp(0.0, (match['target_amount'] as num).toDouble());
                 await DBService.updateGoal(
-                    {...match, 'current_amount': newAmount});
+                    {...match, 'current_amount': newAmount},
+                    source: 'ai');
                 _showActionSnackbar(
                     "Added ${CurrencyService.format(contribution)} to ${match['name']}");
               }
@@ -1711,13 +1712,16 @@ class _AIScreenState extends State<AIScreen> {
             final needPerCat = needsBudget / needCats.length;
             final wantPerCat = wantsBudget / wantCats.length;
             for (final cat in needCats) {
-              await DBService.setBudget(cat, needPerCat.roundToDouble());
+              await DBService.setBudget(cat, needPerCat.roundToDouble(),
+                  source: 'salary_split');
             }
             for (final cat in wantCats) {
-              await DBService.setBudget(cat, wantPerCat.roundToDouble());
+              await DBService.setBudget(cat, wantPerCat.roundToDouble(),
+                  source: 'salary_split');
             }
             // Also update monthly income
-            await DBService.setMonthlyIncome(splitIncome);
+            await DBService.setMonthlyIncome(splitIncome,
+                source: 'salary_split');
             fireEvent(AppEvent.incomeChanged);
             // Create savings goal if none exists
             final goals = await DBService.getGoals();

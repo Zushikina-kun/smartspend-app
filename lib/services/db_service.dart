@@ -223,8 +223,54 @@ class DBService {
             ''');
           } catch (_) {}
         }
+        if (oldVersion < 13) {
+          // v13 — budget, goal-contribution, income, and score-reason history
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS budget_history(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                category TEXT NOT NULL,
+                old_amount REAL,
+                new_amount REAL,
+                action TEXT DEFAULT 'set',
+                source TEXT DEFAULT 'manual',
+                timestamp TEXT NOT NULL
+              )
+            ''');
+          } catch (_) {}
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS goal_contribution_history(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                goal_id INTEGER NOT NULL,
+                goal_name TEXT NOT NULL,
+                old_amount REAL NOT NULL,
+                new_amount REAL NOT NULL,
+                delta REAL NOT NULL,
+                source TEXT DEFAULT 'manual',
+                timestamp TEXT NOT NULL
+              )
+            ''');
+          } catch (_) {}
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS income_history(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                old_amount REAL NOT NULL,
+                new_amount REAL NOT NULL,
+                delta REAL NOT NULL,
+                source TEXT DEFAULT 'manual',
+                timestamp TEXT NOT NULL
+              )
+            ''');
+          } catch (_) {}
+          try {
+            await db
+                .execute('ALTER TABLE score_history ADD COLUMN reason TEXT');
+          } catch (_) {}
+        }
       },
-      version: 12,
+      version: 13,
     );
     return _db!;
   }
@@ -752,6 +798,39 @@ class DBService {
       )
     ''');
     await db.execute('''
+      CREATE TABLE IF NOT EXISTS budget_history(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        category TEXT NOT NULL,
+        old_amount REAL,
+        new_amount REAL,
+        action TEXT DEFAULT 'set',
+        source TEXT DEFAULT 'manual',
+        timestamp TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS goal_contribution_history(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        goal_id INTEGER NOT NULL,
+        goal_name TEXT NOT NULL,
+        old_amount REAL NOT NULL,
+        new_amount REAL NOT NULL,
+        delta REAL NOT NULL,
+        source TEXT DEFAULT 'manual',
+        timestamp TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS income_history(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        old_amount REAL NOT NULL,
+        new_amount REAL NOT NULL,
+        delta REAL NOT NULL,
+        source TEXT DEFAULT 'manual',
+        timestamp TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
       CREATE TABLE IF NOT EXISTS installments(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -1038,10 +1117,19 @@ class DBService {
   // ── BUDGETS ───────────────────────────────────────────────
 
   static Future<void> setBudget(String category, double amount,
-      {bool isPercentage = false, double percentageValue = 0}) async {
+      {bool isPercentage = false,
+      double percentageValue = 0,
+      String source = 'manual'}) async {
     // Allow any non-empty category (custom categories supported)
     final validCategory = category.trim().isEmpty ? 'Others' : category.trim();
     final db = await getDB();
+
+    // Read old budget before replacing (for history log)
+    final before = await db.query('budgets',
+        where: 'category = ?', whereArgs: [validCategory], limit: 1);
+    final oldAmount =
+        before.isNotEmpty ? (before.first['amount'] as num?)?.toDouble() : null;
+
     await db.insert(
         'budgets',
         {
@@ -1051,6 +1139,19 @@ class DBService {
           'percentage_value': percentageValue,
         },
         conflictAlgorithm: ConflictAlgorithm.replace);
+
+    // Log to budget_history
+    try {
+      await db.insert('budget_history', {
+        'category': validCategory,
+        'old_amount': oldAmount,
+        'new_amount': amount,
+        'action': 'set',
+        'source': source,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } catch (_) {}
+
     final rows = await db
         .query('budgets', where: 'category = ?', whereArgs: [validCategory]);
     if (rows.isNotEmpty) CloudService.pushDoc('budgets', rows.first);
@@ -1127,6 +1228,19 @@ class DBService {
         await db.query('budgets', where: 'category = ?', whereArgs: [category]);
     if (rows.isNotEmpty)
       CloudService.deleteDoc('budgets', rows.first['id'] as int);
+    // Log deletion to budget_history
+    try {
+      final oldAmount =
+          rows.isNotEmpty ? (rows.first['amount'] as num?)?.toDouble() : null;
+      await db.insert('budget_history', {
+        'category': category,
+        'old_amount': oldAmount,
+        'new_amount': null,
+        'action': 'delete',
+        'source': 'manual',
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } catch (_) {}
     await db.delete('budgets', where: 'category = ?', whereArgs: [category]);
     fireEvent(AppEvent.budgetChanged);
   }
@@ -1285,8 +1399,25 @@ class DBService {
     return double.tryParse(val ?? '') ?? 0.0;
   }
 
-  static Future<void> setMonthlyIncome(double income) async {
-    await setSetting('monthly_income', income.toString());
+  /// Set monthly income and log the change to income_history.
+  static Future<void> setMonthlyIncome(double newAmount,
+      {String source = 'manual'}) async {
+    final oldAmount = await getMonthlyIncome();
+    await setSetting('monthly_income', newAmount.toString());
+    final delta = newAmount - oldAmount;
+    if (delta != 0) {
+      try {
+        final db = await getDB();
+        await db.insert('income_history', {
+          'old_amount': oldAmount,
+          'new_amount': newAmount,
+          'delta': delta,
+          'source': source,
+          'timestamp': DateTime.now().toIso8601String(),
+        });
+      } catch (_) {}
+    }
+    fireEvent(AppEvent.incomeChanged);
   }
 
   static Future<double> getDailyLimit() async {
@@ -1513,11 +1644,39 @@ class DBService {
     fireEvent(AppEvent.goalChanged);
   }
 
-  static Future<void> updateGoal(Map<String, dynamic> data) async {
+  static Future<void> updateGoal(Map<String, dynamic> data,
+      {String source = 'manual'}) async {
     final db = await getDB();
+
+    // Read old current_amount before updating (for contribution history)
+    final before = await db.query('savings_goals',
+        where: 'id = ?', whereArgs: [data['id']], limit: 1);
+    final oldAmount = before.isNotEmpty
+        ? (before.first['current_amount'] as num?)?.toDouble() ?? 0.0
+        : 0.0;
+    final newAmount = (data['current_amount'] as num?)?.toDouble() ?? oldAmount;
+
     await db.update('savings_goals', data,
         where: 'id = ?', whereArgs: [data['id']]);
     CloudService.pushDoc('goals', data);
+
+    // Log contribution if current_amount changed
+    final delta = newAmount - oldAmount;
+    if (delta != 0) {
+      try {
+        await db.insert('goal_contribution_history', {
+          'goal_id': data['id'],
+          'goal_name': data['name'] as String? ??
+              (before.isNotEmpty ? before.first['name'] as String? ?? '' : ''),
+          'old_amount': oldAmount,
+          'new_amount': newAmount,
+          'delta': delta,
+          'source': source,
+          'timestamp': DateTime.now().toIso8601String(),
+        });
+      } catch (_) {}
+    }
+
     fireEvent(AppEvent.goalChanged);
   }
 
@@ -2085,15 +2244,17 @@ class DBService {
     } catch (_) {}
   }
 
-  static Future<void> saveScoreSnapshot(int score) async {
+  static Future<void> saveScoreSnapshot(int score, {String? reason}) async {
     final db = await getDB();
     final today = DateTime.now().toIso8601String().substring(0, 10);
     final existing =
         await db.query('score_history', where: 'date = ?', whereArgs: [today]);
     if (existing.isEmpty) {
-      await db.insert('score_history', {'score': score, 'date': today});
+      await db.insert(
+          'score_history', {'score': score, 'date': today, 'reason': reason});
     } else {
-      await db.update('score_history', {'score': score},
+      await db.update('score_history',
+          {'score': score, if (reason != null) 'reason': reason},
           where: 'date = ?', whereArgs: [today]);
     }
   }
