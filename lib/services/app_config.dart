@@ -405,10 +405,11 @@ class AppConfig {
       final rc = FirebaseRemoteConfig.instance;
       await rc.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 15),
-        // Use zero interval in debug so every app start fetches fresh values.
-        // In release builds this would be 1 hour, but debug is fine to hit
-        // Remote Config on every open — it's low traffic and ensures keys load.
-        minimumFetchInterval: Duration.zero,
+        // 1-hour cache for production — balances freshness vs quota.
+        // Keys rarely change; daily rotation is fine. Staying at 1h means
+        // only the first open each hour hits Firebase; subsequent opens
+        // within the hour serve from the local cache.
+        minimumFetchInterval: const Duration(hours: 1),
       ));
       await rc.setDefaults({
         'groq_api_key': _fallbackGroqKey,
