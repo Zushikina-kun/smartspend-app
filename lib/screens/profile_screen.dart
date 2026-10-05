@@ -1,6 +1,7 @@
 import 'home_screen.dart' show SpendingLimitsSheet;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -2858,7 +2859,15 @@ class WalletsSheetState extends State<WalletsSheet> {
       ),
     );
     if (result != null && mounted) {
-      await DBService.setWalletBalance(wallet['id'] as int, result);
+      final prev = (wallet['balance'] as num).toDouble();
+      final delta = result - prev;
+      final reason = delta == 0
+          ? 'Balance confirmed (no change)'
+          : delta > 0
+              ? 'Manual top-up (+${CurrencyService.format(delta)})'
+              : 'Manual adjustment (${CurrencyService.format(delta)})';
+      await DBService.setWalletBalance(wallet['id'] as int, result,
+          reason: reason, source: 'manual');
       final updated = await DBService.getWallets();
       setState(() => _wallets = updated);
       widget.onChanged();
@@ -2875,6 +2884,184 @@ class WalletsSheetState extends State<WalletsSheet> {
     final updated = await DBService.getWallets();
     if (mounted) setState(() => _wallets = updated);
     widget.onChanged();
+  }
+
+  Future<void> _showHistory(Map<String, dynamic> wallet) async {
+    final history = await DBService.getWalletHistory(wallet['id'] as int);
+    if (!mounted) return;
+    final cs = Theme.of(context).colorScheme;
+    final fmt = DateFormat('MMM d, y h:mm a');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (_) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.6,
+        minChildSize: 0.35,
+        maxChildSize: 0.92,
+        builder: (_, ctrl) => Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2))),
+            const SizedBox(height: 14),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(children: [
+                Text(wallet['icon'] as String? ?? '💵',
+                    style: const TextStyle(fontSize: 22)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "${wallet['name']} — Balance History",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ]),
+            ),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                "${history.length} change${history.length == 1 ? '' : 's'} recorded",
+                style: TextStyle(
+                    fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: history.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.history,
+                              size: 48, color: Colors.grey[300]),
+                          const SizedBox(height: 12),
+                          const Text("No history yet",
+                              style: TextStyle(color: Colors.grey)),
+                          const SizedBox(height: 6),
+                          Text(
+                            "Balance changes will appear here\nafter you next edit this wallet.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: cs.onSurface.withValues(alpha: 0.45)),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      controller: ctrl,
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                      itemCount: history.length,
+                      itemBuilder: (_, i) {
+                        final h = history[i];
+                        final delta = (h['delta'] as num).toDouble();
+                        final isPositive = delta > 0;
+                        final isZero = delta == 0;
+                        final deltaColor = isZero
+                            ? cs.onSurface.withValues(alpha: 0.4)
+                            : isPositive
+                                ? Colors.green
+                                : Colors.red;
+                        final reason = h['reason'] as String?;
+                        final source = h['source'] as String? ?? 'manual';
+                        final ts = h['timestamp'] as String? ?? '';
+                        String timeLabel = ts;
+                        try {
+                          timeLabel = fmt.format(DateTime.parse(ts).toLocal());
+                        } catch (_) {}
+                        final sourceIcon = source == 'ai'
+                            ? '🤖'
+                            : source == 'transfer'
+                                ? '↔️'
+                                : source == 'auto_deduct'
+                                    ? '💳'
+                                    : '✏️';
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: cs.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                                color: deltaColor.withValues(alpha: 0.2)),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(sourceIcon,
+                                  style: const TextStyle(fontSize: 18)),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(children: [
+                                      Text(
+                                        isZero
+                                            ? 'No change'
+                                            : isPositive
+                                                ? '+${CurrencyService.format(delta)}'
+                                                : '−${CurrencyService.format(delta.abs())}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: deltaColor,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        '→ ${CurrencyService.format((h['new_balance'] as num).toDouble())}',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: cs.onSurface
+                                                .withValues(alpha: 0.6)),
+                                      ),
+                                    ]),
+                                    if (reason != null && reason.isNotEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 2),
+                                        child: Text(reason,
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.55))),
+                                      ),
+                                    Text(timeLabel,
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            color: cs.onSurface
+                                                .withValues(alpha: 0.4))),
+                                  ],
+                                ),
+                              ),
+                              // Old balance
+                              Text(
+                                CurrencyService.format(
+                                    (h['old_balance'] as num).toDouble()),
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: cs.onSurface.withValues(alpha: 0.35),
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _deleteWallet(int id) async {
@@ -2918,7 +3105,7 @@ class WalletsSheetState extends State<WalletsSheet> {
                         Text("My Wallets",
                             style: TextStyle(
                                 fontSize: 17, fontWeight: FontWeight.bold)),
-                        Text("Tap a wallet to update its balance",
+                        Text("Tap to edit balance · Long-press to see history",
                             style: TextStyle(fontSize: 12, color: Colors.grey)),
                       ],
                     ),
@@ -2990,6 +3177,7 @@ class WalletsSheetState extends State<WalletsSheet> {
                           ],
                         ),
                         onTap: () => _editBalance(w),
+                        onLongPress: () => _showHistory(w),
                       ),
                     );
                   }),

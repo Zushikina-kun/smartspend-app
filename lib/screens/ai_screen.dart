@@ -968,7 +968,10 @@ class _AIScreenState extends State<AIScreen> {
                   }
                   final oldBal = (wallet['balance'] as num).toDouble();
                   final newBal = (oldBal - amount).clamp(0.0, double.infinity);
-                  await DBService.setWalletBalance(wallet['id'] as int, newBal);
+                  await DBService.setWalletBalance(wallet['id'] as int, newBal,
+                      reason:
+                          'Auto-deduct: $itemName ₱${amount.toStringAsFixed(2)}',
+                      source: 'auto_deduct');
                   // Show snackbar confirmation with undo
                   if (mounted) {
                     final walletId = wallet['id'] as int;
@@ -980,7 +983,8 @@ class _AIScreenState extends State<AIScreen> {
                       action: SnackBarAction(
                         label: 'Undo',
                         onPressed: () async {
-                          await DBService.setWalletBalance(walletId, oldBal);
+                          await DBService.setWalletBalance(walletId, oldBal,
+                              reason: 'Undo deduct', source: 'manual');
                           fireEvent(AppEvent.incomeChanged);
                         },
                       ),
@@ -1557,7 +1561,8 @@ class _AIScreenState extends State<AIScreen> {
             final wallet = await DBService.findWalletByName(walletName);
             if (wallet != null) {
               await DBService.setWalletBalance(
-                  wallet['id'] as int, walletBalance);
+                  wallet['id'] as int, walletBalance,
+                  reason: 'Set via AI chat', source: 'ai');
               _showActionSnackbar(
                   "${wallet['icon'] ?? '💵'} ${wallet['name']} updated: ${CurrencyService.format(walletBalance)}");
             } else {

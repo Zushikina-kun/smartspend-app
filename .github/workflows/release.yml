@@ -1,4 +1,3 @@
-name: Build & Release APK
 
 # Triggers automatically when you push a version tag like v2.9.9
 # To trigger: git tag v2.9.9 && git push origin v2.9.9
@@ -12,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: Build Release APKs
+    name: Build Release APKs + AAB
     runs-on: ubuntu-latest
 
     steps:
@@ -62,7 +61,7 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
-      # ── 7. Build release APKs ────────────────────────────────────────────
+      # ── 7a. Build release APKs (for GitHub Releases / sideloading) ───────
       - name: Build release APKs
         run: |
           flutter build apk \
@@ -72,14 +71,27 @@ jobs:
             --obfuscate \
             --split-debug-info=build/debug-info
 
-      # ── 8. Rename APKs to versioned names ───────────────────────────────
-      - name: Rename APKs
+      # ── 7b. Build AAB (for Google Play Store) ────────────────────────────
+      # AAB is required by Play Store. It produces a smaller download per device.
+      # The AAB is uploaded as a release asset but is NOT used for sideloading.
+      - name: Build release AAB
+        run: |
+          flutter build appbundle \
+            --release \
+            --shrink \
+            --obfuscate \
+            --split-debug-info=build/debug-info-aab
+
+      # ── 8. Rename APKs + AAB to versioned names ──────────────────────────
+      - name: Rename APKs and AAB
         run: |
           TAG="${{ github.ref_name }}"
           cd build/app/outputs/flutter-apk
           cp app-arm64-v8a-release.apk    SmartSpend-${TAG}-arm64-v8a.apk
           cp app-armeabi-v7a-release.apk  SmartSpend-${TAG}-armeabi-v7a.apk
           cp app-x86_64-release.apk       SmartSpend-${TAG}-x86_64.apk
+          cd ../bundle/release
+          cp app-release.aab              SmartSpend-${TAG}.aab
 
       # ── 9. Create GitHub Release ─────────────────────────────────────────
       - name: Create GitHub Release
@@ -94,18 +106,24 @@ jobs:
 
             See the [commit history](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}) for full changes.
 
-            ### Install
+            ### Install (Sideload)
             | Device | APK |
             |--------|-----|
             | Modern phones (2018+) | `SmartSpend-${{ github.ref_name }}-arm64-v8a.apk` |
             | Older/32-bit phones | `SmartSpend-${{ github.ref_name }}-armeabi-v7a.apk` |
             | Emulator | `SmartSpend-${{ github.ref_name }}-x86_64.apk` |
 
-            > This is the authoritative release build. APKs are built by GitHub Actions with proper signing, obfuscation, and code shrinking.
+            ### Play Store (AAB)
+            | File | Use |
+            |------|-----|
+            | `SmartSpend-${{ github.ref_name }}.aab` | Upload to Google Play Console |
+
+            > APKs are for direct installation. The AAB is for Google Play Store submission only — it cannot be sideloaded directly.
           files: |
             build/app/outputs/flutter-apk/SmartSpend-${{ github.ref_name }}-arm64-v8a.apk
             build/app/outputs/flutter-apk/SmartSpend-${{ github.ref_name }}-armeabi-v7a.apk
             build/app/outputs/flutter-apk/SmartSpend-${{ github.ref_name }}-x86_64.apk
+            build/app/outputs/bundle/release/SmartSpend-${{ github.ref_name }}.aab
           generate_release_notes: false
           make_latest: true
           # Always overwrite if a manual release was created first

@@ -205,8 +205,26 @@ class DBService {
                 "ALTER TABLE budgets ADD COLUMN percentage_value REAL DEFAULT 0");
           } catch (_) {}
         }
+        if (oldVersion < 12) {
+          // v12 — wallet balance change history
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS wallet_history(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                wallet_id INTEGER NOT NULL,
+                wallet_name TEXT NOT NULL,
+                old_balance REAL NOT NULL,
+                new_balance REAL NOT NULL,
+                delta REAL NOT NULL,
+                reason TEXT,
+                source TEXT DEFAULT 'manual',
+                timestamp TEXT NOT NULL
+              )
+            ''');
+          } catch (_) {}
+        }
       },
-      version: 11,
+      version: 12,
     );
     return _db!;
   }
@@ -718,6 +736,19 @@ class DBService {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL UNIQUE,
         icon TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS wallet_history(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        wallet_id INTEGER NOT NULL,
+        wallet_name TEXT NOT NULL,
+        old_balance REAL NOT NULL,
+        new_balance REAL NOT NULL,
+        delta REAL NOT NULL,
+        reason TEXT,
+        source TEXT DEFAULT 'manual',
+        timestamp TEXT NOT NULL
       )
     ''');
     await db.execute('''
@@ -2349,15 +2380,44 @@ class DBService {
     return wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
   }
 
-  static Future<void> setWalletBalance(int id, double balance) async {
+  static Future<void> setWalletBalance(int id, double balance,
+      {String? reason, String source = 'manual'}) async {
     final db = await getDB();
     // Clamp to 0 — wallet balance should never go negative
     final clampedBalance = balance < 0 ? 0.0 : balance;
+    final now = DateTime.now().toIso8601String();
+
+    // Read old balance + name before updating (for history log)
+    final before =
+        await db.query('wallets', where: 'id = ?', whereArgs: [id], limit: 1);
+    final oldBalance =
+        before.isNotEmpty ? (before.first['balance'] as num).toDouble() : 0.0;
+    final walletName =
+        before.isNotEmpty ? (before.first['name'] as String? ?? '') : '';
+
     final updated = {
       'balance': clampedBalance,
-      'updated_at': DateTime.now().toIso8601String()
+      'updated_at': now,
     };
     await db.update('wallets', updated, where: 'id = ?', whereArgs: [id]);
+
+    // Write to wallet_history
+    final delta = clampedBalance - oldBalance;
+    if (delta != 0 || reason != null) {
+      try {
+        await db.insert('wallet_history', {
+          'wallet_id': id,
+          'wallet_name': walletName,
+          'old_balance': oldBalance,
+          'new_balance': clampedBalance,
+          'delta': delta,
+          'reason': reason,
+          'source': source,
+          'timestamp': now,
+        });
+      } catch (_) {}
+    }
+
     // Sync to Firestore immediately
     final rows =
         await db.query('wallets', where: 'id = ?', whereArgs: [id], limit: 1);
@@ -2396,6 +2456,33 @@ class DBService {
           'wallets', {'balance': toBalance + amount, 'updated_at': now},
           where: 'id = ?', whereArgs: [toId]);
     });
+
+    // Log both sides of the transfer to wallet_history
+    try {
+      final fromName = fromRows.first['name'] as String? ?? '';
+      final toName = toRows.first['name'] as String? ?? '';
+      final toBalance = (toRows.first['balance'] as num).toDouble();
+      await db.insert('wallet_history', {
+        'wallet_id': fromId,
+        'wallet_name': fromName,
+        'old_balance': fromBalance,
+        'new_balance': fromBalance - amount,
+        'delta': -amount,
+        'reason': 'Transfer to $toName',
+        'source': 'transfer',
+        'timestamp': now,
+      });
+      await db.insert('wallet_history', {
+        'wallet_id': toId,
+        'wallet_name': toName,
+        'old_balance': toBalance,
+        'new_balance': toBalance + amount,
+        'delta': amount,
+        'reason': 'Transfer from $fromName',
+        'source': 'transfer',
+        'timestamp': now,
+      });
+    } catch (_) {}
 
     // Sync both to Firestore (best-effort, outside the transaction)
     try {
@@ -2436,6 +2523,38 @@ class DBService {
       CloudService.deleteDoc('wallets', id);
     } catch (_) {}
     fireEvent(AppEvent.incomeChanged);
+  }
+
+  /// Get balance change history for a specific wallet, newest first
+  static Future<List<Map<String, dynamic>>> getWalletHistory(int walletId,
+      {int limit = 50}) async {
+    final db = await getDB();
+    try {
+      return await db.query(
+        'wallet_history',
+        where: 'wallet_id = ?',
+        whereArgs: [walletId],
+        orderBy: 'timestamp DESC',
+        limit: limit,
+      );
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// Get history for all wallets (for export/debug), newest first
+  static Future<List<Map<String, dynamic>>> getAllWalletHistory(
+      {int limit = 200}) async {
+    final db = await getDB();
+    try {
+      return await db.query(
+        'wallet_history',
+        orderBy: 'timestamp DESC',
+        limit: limit,
+      );
+    } catch (_) {
+      return [];
+    }
   }
 
   /// Find wallet by name (case-insensitive partial match) — used by AI action

@@ -646,7 +646,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             }
             final oldBal = (wallet['balance'] as num).toDouble();
             final newBal = (oldBal - amount).clamp(0.0, double.infinity);
-            await DBService.setWalletBalance(wallet['id'] as int, newBal);
+            await DBService.setWalletBalance(wallet['id'] as int, newBal,
+                reason:
+                    'Manual expense: ${_itemNameCtrl.text.trim().isEmpty ? _selectedCategory : _itemNameCtrl.text.trim()} ₱${amount.toStringAsFixed(2)}',
+                source: 'auto_deduct');
             // ── Wallet deduct confirmation snackbar with undo ──────────────
             if (mounted) {
               final walletId = wallet['id'] as int;
@@ -658,7 +661,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 action: SnackBarAction(
                   label: 'Undo',
                   onPressed: () async {
-                    await DBService.setWalletBalance(walletId, oldBal);
+                    await DBService.setWalletBalance(walletId, oldBal,
+                        reason: 'Undo deduct', source: 'manual');
                     fireEvent(AppEvent.incomeChanged);
                   },
                 ),

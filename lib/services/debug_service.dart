@@ -7,7 +7,7 @@ import 'score_service.dart';
 import 'app_config.dart';
 
 /// Current app version — keep in sync with pubspec.yaml.
-const kAppVersion = '2.9.87';
+const kAppVersion = '2.9.88';
 
 /// Debug signing certificate SHA-1 fingerprint for this machine.
 /// Add this to Firebase Console → Project Settings → Android → SHA certificate fingerprints

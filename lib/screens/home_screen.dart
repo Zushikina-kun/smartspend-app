@@ -4013,7 +4013,9 @@ class _DashboardState extends State<Dashboard> {
       final wallet = await DBService.findWalletByName('Cash on Hand');
       if (wallet != null) {
         final newBal = ((wallet['balance'] as num) + amount).toDouble();
-        await DBService.setWalletBalance(wallet['id'] as int, newBal);
+        await DBService.setWalletBalance(wallet['id'] as int, newBal,
+            reason: 'Income logged: +${CurrencyService.format(amount)}',
+            source: 'income');
       }
       fireEvent(AppEvent.incomeChanged);
       if (mounted) {

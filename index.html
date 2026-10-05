@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartSpend — AI-Powered Filipino Finance App</title>
+  <meta name="description" content="SmartSpend is a free AI-assisted personal finance app for Filipino users. Log expenses by voice, OCR, or chat. Get a Financial Health Score. Fully offline." />
+  <meta property="og:title" content="SmartSpend — AI-Powered Filipino Finance App" />
+  <meta property="og:description" content="Free AI personal finance tracker for Filipinos. Voice input, OCR receipts, Taglish AI, Financial Health Score." />
+  <meta property="og:image" content="https://zushikina-kun.github.io/smartspend-app/assets/icon.png" />
+  <meta property="og:url" content="https://zushikina-kun.github.io/smartspend-app/" />
+  <link rel="icon" href="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+  <style>
+    :root {
+      --primary: #00C896;
+      --primary-dark: #009e78;
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --text: #f0f0f4;
+      --text-muted: #9099b2;
+      --border: rgba(255,255,255,0.08);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--text); }
+    .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-cta { background: var(--primary); color: #000 !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; font-size: 14px; transition: background .2s; }
+    .nav-cta:hover { background: var(--primary-dark); text-decoration: none; }
+
+    /* HERO */
+    .hero { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; text-align: center; }
+    .hero-badge { display: inline-block; background: rgba(0,200,150,0.12); border: 1px solid rgba(0,200,150,0.3); color: var(--primary); font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 20px; margin-bottom: 24px; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
+    .hero h1 span { color: var(--primary); }
+    .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 36px; }
+    .hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--primary); color: #000; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; transition: background .2s, transform .15s; }
+    .btn-primary:hover { background: var(--primary-dark); text-decoration: none; transform: translateY(-1px); }
+    .btn-secondary { background: var(--surface); color: var(--text); font-weight: 600; font-size: 15px; padding: 14px 28px; border-radius: 12px; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px; transition: background .2s; }
+    .btn-secondary:hover { background: var(--surface2); text-decoration: none; }
+    .hero-meta { margin-top: 20px; color: var(--text-muted); font-size: 13px; }
+
+    /* STATS ROW */
+    .stats { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
+    .stat-number { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* FEATURES */
+    .section { max-width: 900px; margin: 0 auto; padding: 20px 24px 60px; }
+    .section-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+    .section-sub { color: var(--text-muted); margin-bottom: 32px; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+    .feature-icon { font-size: 2rem; margin-bottom: 12px; }
+    .feature-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+    .feature-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* AI SECTION */
+    .ai-section { background: linear-gradient(135deg, rgba(0,200,150,0.08), rgba(0,200,150,0.03)); border: 1px solid rgba(0,200,150,0.2); border-radius: 20px; max-width: 900px; margin: 0 auto 60px; padding: 40px 32px; }
+    .ai-section h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
+    .ai-section p { color: var(--text-muted); margin-bottom: 24px; }
+    .ai-examples { display: flex; flex-direction: column; gap: 10px; }
+    .ai-example { background: var(--surface); border-radius: 10px; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+    .ai-example .you { background: rgba(0,200,150,0.15); color: var(--primary); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+    .ai-example .peso { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+
+    /* INPUT MODALITIES */
+    .modalities { display: flex; flex-wrap: wrap; gap: 10px; }
+    .modality-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+
+    /* DOWNLOAD */
+    .download-section { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; max-width: 900px; margin: 0 auto 60px; padding: 40px 32px; }
+    .download-section h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+    .download-section p { color: var(--text-muted); margin-bottom: 28px; }
+    .apk-table { width: 100%; border-collapse: collapse; }
+    .apk-table th { text-align: left; font-size: 12px; color: var(--text-muted); padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .apk-table td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .apk-table tr:last-child td { border-bottom: none; }
+    .apk-table .recommended { font-size: 11px; background: rgba(0,200,150,0.12); color: var(--primary); border-radius: 4px; padding: 2px 6px; margin-left: 6px; }
+    .apk-dl-btn { background: var(--primary); color: #000; font-weight: 700; font-size: 13px; padding: 7px 16px; border-radius: 8px; white-space: nowrap; display: inline-block; }
+    .apk-dl-btn:hover { background: var(--primary-dark); text-decoration: none; }
+    .version-note { margin-top: 16px; font-size: 12px; color: var(--text-muted); }
+
+    /* ABOUT */
+    .about-section { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .about-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .about-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary); }
+    .about-card p, .about-card li { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .about-card ul { padding-left: 16px; }
+    .about-card li { margin-bottom: 4px; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; color: var(--text-muted); font-size: 13px; }
+    footer a { color: var(--text-muted); }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .about-section { grid-template-columns: 1fr; }
+      .hero { padding: 60px 20px 40px; }
+      .ai-section, .download-section { margin: 0 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="SmartSpend icon" onerror="this.style.display='none'" />
+    SmartSpend
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#ai">AI</a>
+    <a href="#download">Download</a>
+    <a href="#about">About</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+  <a class="nav-cta" href="#download">Download Free</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🇵🇭 Made for Filipinos · 100% Free · No Subscription</div>
+  <h1>Your <span>AI-Powered</span><br/>Finance Companion</h1>
+  <p>Log expenses by voice, photo, or chat in Filipino or English. Get a real-time Financial Health Score. Works offline.</p>
+  <div class="hero-buttons">
+    <a class="btn-primary" href="#download">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4v-2h14v2H5z"/></svg>
+      Download APK
+    </a>
+    <a class="btn-secondary" href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+      View on GitHub
+    </a>
+  </div>
+  <div class="hero-meta">v2.9.88 · Android 5.0+ · Free forever</div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-number">34</div><div class="stat-label">AI Agentic Actions</div></div>
+  <div class="stat"><div class="stat-number">7</div><div class="stat-label">Input Modalities</div></div>
+  <div class="stat"><div class="stat-number">8</div><div class="stat-label">AI Providers</div></div>
+  <div class="stat"><div class="stat-number">43</div><div class="stat-label">Screens</div></div>
+  <div class="stat"><div class="stat-number">25</div><div class="stat-label">Achievement Badges</div></div>
+  <div class="stat"><div class="stat-number">57</div><div class="stat-label">Currencies</div></div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-title">Everything you need to manage money</div>
+  <div class="section-sub">Built specifically for Filipino spending habits, income cycles, and financial products.</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🏆</div>
+      <div class="feature-title">Financial Health Score</div>
+      <div class="feature-desc">A real-time 0–100 score based on your savings rate, budget adherence, debt load, and spending control. Dual-mode: full or lightweight.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧾</div>
+      <div class="feature-title">OCR Receipt Scanner</div>
+      <div class="feature-desc">Point your camera at any receipt or screenshot — SmartSpend reads it and logs all items automatically. Supports 40+ platforms including GCash, Shopee, Lazada.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-title">Savings Goals</div>
+      <div class="feature-desc">Set goals with deadlines and track progress. Auto-calculate monthly contributions. Peso celebrates every milestone from 25% to 100%.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💚</div>
+      <div class="feature-title">Safe to Spend</div>
+      <div class="feature-desc">Know exactly how much you can freely spend before your next payday after reserving upcoming bills, goal contributions, and debt payments.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💳</div>
+      <div class="feature-title">Installment Plans</div>
+      <div class="feature-desc">Track ShopeePayLater, GCash GLoan, HomeCredit and any fixed monthly payment. See remaining balance, due dates, and total interest.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏦</div>
+      <div class="feature-title">PH Government Contributions</div>
+      <div class="feature-desc">Calculate exact SSS, PhilHealth, and Pag-IBIG contributions based on your income. BIR TRAIN Law tax estimates included.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-title">Recurring Transactions</div>
+      <div class="feature-desc">Auto-detect subscriptions (Netflix, Spotify, GCash) and recurring bills. One-tap to log all due bills. Semester interval for students.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏵️</div>
+      <div class="feature-title">Paluwagan Tracker</div>
+      <div class="feature-desc">Track your rotating savings group — who paid, whose turn is next, total pot, and payout schedule. Uniquely Filipino.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Analytics & Charts</div>
+      <div class="feature-desc">Spending by category (pie), monthly trend (bar), savings rate vs 20% target (line), FHS history, mood-spending correlation, and more.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INPUT MODALITIES -->
+<section class="section">
+  <div class="section-title">Log expenses your way</div>
+  <div class="section-sub">7 ways to add expenses — whatever is fastest for you.</div>
+  <div class="modalities">
+    <div class="modality-chip">💬 Chat in Taglish or English</div>
+    <div class="modality-chip">🎙️ Voice input</div>
+    <div class="modality-chip">📷 OCR receipt scanning</div>
+    <div class="modality-chip">🖼️ Batch screenshot import</div>
+    <div class="modality-chip">🔢 Barcode product lookup</div>
+    <div class="modality-chip">📋 Bank CSV paste (GCash, BPI, BDO)</div>
+    <div class="modality-chip">✏️ Manual entry with autocomplete</div>
+  </div>
+</section>
+
+<!-- AI SECTION -->
+<section class="ai-section" id="ai">
+  <h2>🤖 Meet Peso — Your AI Finance Coach</h2>
+  <p>Ask Peso anything about your finances in Filipino or English. It reads your actual data before answering — not generic advice.</p>
+  <div class="ai-examples">
+    <div class="ai-example">
+      <span class="you">You</span>
+      Nag-gastos ako ng 250 sa jollibee kanina gamit GCash
+      <span style="color:var(--text-muted);font-size:12px;margin-left:auto">→ Logged + wallet deducted</span>
+    </div>
+    <div class="ai-example">
+      <span class="you">You</span>
+      How am I doing this month? Pwede pa ba akong gumasta?
+      <span style="color:var(--text-muted);font-size:12px;margin-left:auto">→ Safe-to-Spend analysis</span>
+    </div>
+    <div class="ai-example">
+      <span class="you">You</span>
+      Split the bill 3 ways for 1,500 dinner
+      <span style="color:var(--text-muted);font-size:12px;margin-left:auto">→ Splits + logs ₱500 expense</span>
+    </div>
+    <div class="ai-example">
+      <span class="peso">Peso</span>
+      Based on your 6-month trend, your Food spending is 23% above average this month. You still have ₱1,240 safe to spend until payday on Oct 30.
+    </div>
+  </div>
+  <p style="margin-top:18px;font-size:13px;">8-provider fallback chain: <strong>Gemini 3.5 Flash-Lite</strong> → Flash → GPT-OSS 120B → Qwen3.6 → Qwen3.8 → Compound → Compound Mini → Cerebras — always finds a working model.</p>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="download-section" id="download">
+  <h2>📥 Download SmartSpend</h2>
+  <p>Free forever. No account required for offline use. Android 5.0 (API 21) and above.</p>
+  <table class="apk-table">
+    <thead>
+      <tr>
+        <th>Device</th>
+        <th>APK</th>
+        <th>Size</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Modern phones (2018+) <span class="recommended">Recommended</span></td>
+        <td>arm64-v8a</td>
+        <td>~45 MB</td>
+        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v2.9.88-arm64-v8a.apk">Download</a></td>
+      </tr>
+      <tr>
+        <td>Older / 32-bit phones</td>
+        <td>armeabi-v7a</td>
+        <td>~38 MB</td>
+        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v2.9.88-armeabi-v7a.apk">Download</a></td>
+      </tr>
+      <tr>
+        <td>Emulator / x86 device</td>
+        <td>x86_64</td>
+        <td>~48 MB</td>
+        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v2.9.88-x86_64.apk">Download</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="version-note">
+    Current version: <strong>v2.9.88</strong> · 
+    <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank">All releases →</a> ·
+    Not sure which APK? Install the arm64-v8a version first.
+  </div>
+  <div style="margin-top:16px;font-size:13px;color:var(--text-muted);background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 16px;border:1px solid var(--border);">
+    ⚠️ <strong>Installing from outside the Play Store:</strong> Android will ask to allow "Install unknown apps" — this is normal for sideloaded APKs. Enable it for your browser or file manager when prompted.
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="about-section" id="about">
+  <div class="about-card">
+    <h3>About the Project</h3>
+    <p>SmartSpend is a capstone thesis project developed by <strong>Lucid Frame</strong> at <strong>Lorma Colleges, College of Computer Studies and Engineering (CCSE)</strong>, Bachelor of Science in Information Technology — 4th Year, Academic Year 2026–2027.</p>
+    <br/>
+    <p><strong>Researchers:</strong></p>
+    <ul>
+      <li>Brix A. Directo — Lead Developer</li>
+      <li>Cyrille John M. Rubis — UI/UX & Documentation</li>
+      <li>Djaunathan Albert S. Madayag — Project Manager & QA</li>
+    </ul>
+  </div>
+  <div class="about-card">
+    <h3>Technical Highlights</h3>
+    <ul>
+      <li>Flutter / Dart — Android (API 21–36)</li>
+      <li>SQLite local database (v12, 21 tables)</li>
+      <li>Firebase Auth, Firestore, Remote Config, Crashlytics</li>
+      <li>Gemini 3.5 Flash-Lite as primary AI (AQ. key via Remote Config)</li>
+      <li>8-provider AI fallback chain — never fails</li>
+      <li>Fully offline — all core features work without internet</li>
+      <li>Open source — <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank">MIT Non-Commercial License</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener">Releases</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="https://github.com/Zushikina-kun/smartspend-app/issues" target="_blank" rel="noopener">Report a Bug</a>
+  </div>
+  <p>SmartSpend v2.9.88 · Lucid Frame · Lorma Colleges CCSE BSIT 2026–2027</p>
+  <p style="margin-top:6px;">SmartSpend is a capstone research project. Not affiliated with any financial institution.</p>
+</footer>
+
+</body>
+</html>
