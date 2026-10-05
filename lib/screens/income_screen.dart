@@ -290,7 +290,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                       (topGoal['target_amount'] as num)
                                           .toDouble());
                               await DBService.updateGoal(
-                                  {...topGoal, 'current_amount': newAmt});
+                                  {...topGoal, 'current_amount': newAmt},
+                                  source: 'income_allocation');
                               if (mounted) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(

@@ -542,7 +542,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               final val = double.tryParse(controller.text);
               if (val != null && val > 0) {
                 setState(() => _monthlyIncome = val);
-                DBService.setMonthlyIncome(val);
+                DBService.setMonthlyIncome(val, source: 'analytics');
                 fireEvent(AppEvent.incomeChanged);
               }
               Navigator.pop(context);

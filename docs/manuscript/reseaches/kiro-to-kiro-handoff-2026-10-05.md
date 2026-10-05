@@ -1,6 +1,6 @@
-# Kiro → Kiro Handoff — SmartSpend v2.9.89
+# Kiro → Kiro Handoff — SmartSpend v2.9.91
 **Date:** October 5, 2026 (updated)
-**Session scope:** AI stack audit, full app-wide QoL polish (v2.9.82–v2.9.89), RC fix, data quality fixes, wallet history, audit logging, website, App Check token, release automation
+**Session scope:** AI stack audit, full app-wide QoL polish (v2.9.82–v2.9.91), RC fix, data quality fixes, wallet/budget/goal/income history, website, App Check token, release automation, full re-audit gap closure
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Metric | Value |
 |--------|-------|
-| **Version** | 2.9.89+89 |
+| **Version** | 2.9.91+91 |
 | **GitHub** | https://github.com/Zushikina-kun/smartspend-app |
 | **Website** | https://zushikina-kun.github.io/smartspend-app/ |
 | **Privacy Policy** | https://zushikina-kun.github.io/smartspend-app/privacy.html |
@@ -188,3 +188,57 @@ Note: If existing release APK blocks debug install, uninstall first:
 | `.github/workflows/release.yml` | CI — builds APKs + AAB on every tag push |
 | `docs/status/PROJECT_STATUS.md` | Defense checklist, demo script |
 | `docs/reference/CAPSTONE_REFERENCE.md` | All numbers for manuscript |
+
+---
+
+## What Was Done: v2.9.90–91 (Re-audit gap closure)
+
+### v2.9.90 — Full re-audit gap closure
+- **5 unguarded deletes fixed**: paluwagan group, insurance policy, wallet, single expense in transactions, single expense on home screen — all now show AlertDialog confirmation
+- **Archive ≠ Delete bug fixed**: Debt Plans "Archive" snackbar no longer calls `deleteInstallmentPlan` — it says "see Completed section" and keeps the record
+- **History viewers for all audit types**: `HistorySheet` widget (`lib/widgets/history_sheet.dart`) — reusable generic sheet. Budget (long-press card → history), Goals (history icon button per card), Income (AppBar icon → monthly income changes)
+- **FHS score reason on chart tap**: `lineTouchData` added to Analytics score chart — tooltip shows date + score + "Lowest: X (N/25 pts)"
+- **Peso empty states**: insurance_screen, chat_history_screen, bill_calendar_screen
+- **Wallet history from home**: Long-press home wallet card → history sheet (single wallet direct, multi-wallet shows picker first)
+- **Data Quality spinner fix**: spinner now shows for any fix in progress, not just "Fix All" label
+- **Colors.blue removed**: budget tip text → `Colors.grey[600]`; price-up snackbar → `Colors.orange`
+
+### v2.9.91 — Source tag completeness + What's New + handoff update
+- `analytics_screen` `setMonthlyIncome` tagged `source: 'analytics'`
+- `setup_screen` `setMonthlyIncome` tagged `source: 'setup'`
+- `undo_service` `updateGoal` tagged `source: 'undo'`
+- `income_screen` 20% allocation `updateGoal` tagged `source: 'income_allocation'`
+- `whats_new_screen`: version bumped to 2.9.90, 4 new entries for v2.9.84–90 features
+- Handoff doc updated to v2.9.91
+
+---
+
+## Remaining Items (as of v2.9.91 — nothing critical)
+
+All items are post-defense or optional polish:
+
+- **Google Play Store**: pay $25, create developer account, identity verification → closed testing 12+ users × 14 days
+- **APKPure / Uptodown**: manual submission using arm64-v8a APK from GitHub Releases
+- **App Check on physical phone**: Poco X6 Pro USB issue — try Settings → Developer Options → Default USB config = MTP. Or register another emulator/device token.
+- **Firebase App Check enforcement**: switch from monitoring to enforcement mode before Play Store submission
+
+---
+
+## Key Numbers for Manuscript (v2.9.91)
+
+| Metric | Value |
+|--------|-------|
+| Version | 2.9.91 |
+| SQLite schema | v13, 25 tables |
+| Screens | 43 |
+| Services | 31 |
+| Widgets | 6 (expense_tile, feature_tour, info_button, peso_mascot, history_sheet, + 1 more) |
+| AI providers | 8 |
+| Primary AI | Gemini 3.5 Flash-Lite (verified active, Oct 5) |
+| Agentic actions | 34 |
+| Badges | 25 |
+| Color themes | 11 |
+| Daily AI limit | 150 |
+| FHS components | 4 × 25pts |
+| APK size (arm64) | ~45 MB |
+| AAB size | ~75 MB |

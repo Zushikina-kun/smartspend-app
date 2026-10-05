@@ -127,7 +127,8 @@ class UndoService {
             final goal = goals.where((g) => g['id'] == id).firstOrNull;
             if (goal != null) {
               await DBService.updateGoal(
-                  {...goal, 'current_amount': prevAmount});
+                  {...goal, 'current_amount': prevAmount},
+                  source: 'undo');
               fireEvent(AppEvent.goalChanged);
             }
           }

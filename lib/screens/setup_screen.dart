@@ -120,7 +120,7 @@ class _SetupScreenState extends State<SetupScreen> {
         if (_incomeFrequency == 'weekly') monthly = amount * 4.33;
         if (_incomeFrequency == 'bimonthly') monthly = amount * 2;
         // manual: monthly = amount (no conversion)
-        await DBService.setMonthlyIncome(monthly);
+        await DBService.setMonthlyIncome(monthly, source: 'setup');
       }
 
       await CurrencyService.setCurrency(_currency);

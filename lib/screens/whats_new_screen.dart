@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.84';
-  static const _prefKey = 'whats_new_seen_2_9_84';
+  static const _version = '2.9.90';
+  static const _prefKey = 'whats_new_seen_2_9_90';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,35 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🛡️',
+      'Delete Confirmations Everywhere (v2.9.90)',
+      'Paluwagan groups, insurance policies, wallets, and individual expenses '
+          'now all ask for confirmation before deleting. Also fixed: completing '
+          'a payment plan no longer destroys the record — it stays in the '
+          'Completed section for reference.',
+    ),
+    (
+      '📖',
+      'Full Audit Trail (v2.9.89–90)',
+      'Every change to your wallet balance, budget, savings goal, or monthly '
+          'income is now logged with who made it (you, AI, salary split, undo). '
+          'Long-press a budget card, tap the history icon on a goal, or tap '
+          'the history icon in Income to see the full change log.',
+    ),
+    (
+      '📈',
+      'FHS Score Reason on Tap (v2.9.90)',
+      'The Financial Health Score history chart in Analytics now shows a '
+          'tooltip when you tap a dot: the date, score, and which component '
+          'was lowest that day — e.g. "Oct 5: 75 — Lowest: Savings Rate (8/25 pts)".',
+    ),
+    (
+      '💵',
+      'Wallet History from Home Screen (v2.9.90)',
+      'Long-press the wallet summary card on the home screen to view '
+          'balance change history for any wallet — directly without going to Profile.',
+    ),
     (
       '🏆',
       'Achievement Celebrations (v2.9.84)',
