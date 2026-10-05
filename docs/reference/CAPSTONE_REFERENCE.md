@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 2.9.87 | **Date:** October 2026
+**Version:** 2.9.91 | **Date:** October 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.87).
+> All figures are accurate to the final build (v2.9.91).
 
 ---
 
@@ -15,12 +15,13 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 2.9.87
+**Version:** 2.9.91
 **Build date:** October 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
 **Target SDK:** Android 16 (API 36)
-**APK size:** ~113 MB (release, obfuscated)
+**APK size:** ~45 MB (arm64-v8a release, split, obfuscated)
+**AAB size:** ~75 MB (Play Store bundle)
 
 **Development team:** Lucid Frame
 - Brix A. Directo — Lead Developer
@@ -194,7 +195,7 @@ The FHS and all associated alerts are **current-period aware**:
 | Component | Technology | Details |
 |-----------|-----------|---------|
 | Framework | Flutter (Dart) | 3.x stable, Android target |
-| Local DB | SQLite via sqflite | v11 schema, 20 tables |
+| Local DB | SQLite via sqflite | v13 schema, 25 tables |
 | Cloud Sync | Firebase Firestore | Free Spark plan, real-time sync |
 | Authentication | Firebase Auth | Email/password + Google Sign-In |
 | Crash Reporting | Firebase Crashlytics | Automatic crash collection |
@@ -214,7 +215,7 @@ The FHS and all associated alerts are **current-period aware**:
 
 ---
 
-## 6. INPUT MODALITIES (6 ways to log expenses)
+## 6. INPUT MODALITIES (7 ways to log expenses)
 
 | Method | Description | AI Used? |
 |--------|-------------|---------|
@@ -617,8 +618,14 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.36 | Sep 10, 2026 | 7 high-value features: recurring detector extended (quarterly/yearly/180d); Day-in-Review card (after 6pm); spending heatmap (5-week GitHub-style); budget rollover (per-category carry-forward); tags analytics (By Tag spending view); Afford This? calculator; offline AI insight cache |
 | **2.9.37** | **Sep 10, 2026** | **Feature #8: Clipboard SMS/bank nudge — AI screen detects GCash/bank text in clipboard and shows paste prompt. Quick Access portal "Paste & Log" added to home screen.** |
 
+| 2.9.76–2.9.81 | Oct 2026 | Peso mascot added (PesoMascot widget, withSpeech factory); Emerald theme default; Monthly Wrapped card; AI chat full system refinement (13 fixes: Enter sends, voice 600ms, confidence_score 0.65 for Others, model chip, history menu, clear chat confirmation, suggestion chips fill input); Gemini AQ. key format; silent auto-fallback on timeout |
+| 2.9.82–2.9.85 | Oct 2026 | App-wide QoL: Peso empty states (7 screens); delete confirmations all screens; income theme colors; budget over-limit red border; goal contribution button; Safe-to-Spend card verified; AI chat date dividers; achievement unlock celebration; analytics interpretive labels; transaction filter persistence |
+| 2.9.86–2.9.87 | Oct 2026 | Home priority banner; chat history search; bank import feedback; Installment/Debt overlap fix (Plans tab routing); Data Quality View→Transactions navigation; Fix All for case_dup + round_amount; Remote Config fetch fix (Gemini key now loading, rc_last_fetch_status in debug log) |
+| 2.9.88–2.9.89 | Oct 2026 | Wallet balance history (wallet_history table v12); full audit trail: budget_history, goal_contribution_history, income_history, score_history.reason (DB v13); GitHub Pages website + Privacy Policy; AAB in CI; App Check debug token registered (MuMu Player) |
+| **2.9.90–2.9.91** | **Oct 2026** | **Full re-audit: delete confirmations everywhere (paluwagan, insurance, wallet, single expense); archive≠delete fix; history viewers for budget/goal/income (HistorySheet widget); FHS score reason on chart tap; Peso empty states (insurance, chat history, bill calendar); wallet history on home screen long-press; data quality spinner fix; source tags complete on all audit trail callers** |
+
 ---
 
-*SmartSpend v2.9.37 — Lucid Frame*
+*SmartSpend v2.9.91 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
-*Last updated: September 10, 2026*
+*Last updated: October 5, 2026*

@@ -1,5 +1,5 @@
 # SmartSpend — Manuscript Guide
-**Version:** 2.9.47 | **September 2026** | **Lucid Frame**
+**Version:** 2.9.91 | **October 2026** | **Lucid Frame**
 
 > One document for all manuscript-related work.
 > PART 1 = Paper revision guide (how to write each chapter, what to say).
