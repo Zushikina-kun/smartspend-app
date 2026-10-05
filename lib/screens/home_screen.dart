@@ -2145,6 +2145,22 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> _deleteExpense(int id) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Delete Expense"),
+        content: const Text("Delete this expense? This cannot be undone."),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text("Delete", style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+    if (confirm != true) return;
     await DBService.deleteExpense(id);
     _loadData();
   }
@@ -3504,6 +3520,142 @@ class _DashboardState extends State<Dashboard> {
     return const SizedBox.shrink();
   }
 
+  /// Inline wallet history sheet — called from home wallet card long-press.
+  Widget _buildWalletHistorySheet(BuildContext context,
+      Map<String, dynamic> wallet, List<Map<String, dynamic>> history) {
+    final cs = Theme.of(context).colorScheme;
+    final fmt = DateFormat('MMM d, y h:mm a');
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.6,
+      minChildSize: 0.35,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Column(children: [
+        const SizedBox(height: 12),
+        Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2))),
+        const SizedBox(height: 14),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(children: [
+            Text(wallet['icon'] as String? ?? '💵',
+                style: const TextStyle(fontSize: 22)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text("${wallet['name']} — Balance History",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+          ]),
+        ),
+        const SizedBox(height: 10),
+        Expanded(
+          child: history.isEmpty
+              ? Center(
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Icon(Icons.history, size: 48, color: Colors.grey[300]),
+                  const SizedBox(height: 12),
+                  const Text("No balance changes recorded yet.",
+                      style: TextStyle(color: Colors.grey)),
+                ]))
+              : ListView.builder(
+                  controller: ctrl,
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                  itemCount: history.length,
+                  itemBuilder: (_, i) {
+                    final h = history[i];
+                    final delta = (h['delta'] as num).toDouble();
+                    final isPos = delta > 0;
+                    final color = delta == 0
+                        ? cs.onSurface.withValues(alpha: 0.4)
+                        : isPos
+                            ? Colors.green
+                            : Colors.red;
+                    final reason = h['reason'] as String?;
+                    final source = h['source'] as String? ?? 'manual';
+                    final ts = h['timestamp'] as String? ?? '';
+                    String timeLabel = ts;
+                    try {
+                      timeLabel = fmt.format(DateTime.parse(ts).toLocal());
+                    } catch (_) {}
+                    final icon = source == 'ai'
+                        ? '🤖'
+                        : source == 'transfer'
+                            ? '↔️'
+                            : source == 'auto_deduct'
+                                ? '💳'
+                                : source == 'income'
+                                    ? '💰'
+                                    : '✏️';
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: cs.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: color.withValues(alpha: 0.2)),
+                      ),
+                      child: Row(children: [
+                        Text(icon, style: const TextStyle(fontSize: 18)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(children: [
+                                  Text(
+                                    delta == 0
+                                        ? 'No change'
+                                        : isPos
+                                            ? '+${CurrencyService.format(delta)}'
+                                            : '−${CurrencyService.format(delta.abs())}',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: color),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '→ ${CurrencyService.format((h['new_balance'] as num).toDouble())}',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: cs.onSurface
+                                            .withValues(alpha: 0.6)),
+                                  ),
+                                ]),
+                                if (reason != null && reason.isNotEmpty)
+                                  Text(reason,
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: cs.onSurface
+                                              .withValues(alpha: 0.55))),
+                                Text(timeLabel,
+                                    style: TextStyle(
+                                        fontSize: 11,
+                                        color: cs.onSurface
+                                            .withValues(alpha: 0.4))),
+                              ]),
+                        ),
+                        Text(
+                          CurrencyService.format(
+                              (h['old_balance'] as num).toDouble()),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: cs.onSurface.withValues(alpha: 0.35),
+                              decoration: TextDecoration.lineThrough),
+                        ),
+                      ]),
+                    );
+                  }),
+        ),
+      ]),
+    );
+  }
+
   Widget _buildWalletSummaryCard(BuildContext context) {
     final total = _wallets.fold<double>(0, (s, w) => s + (w['balance'] as num));
     final nonZero = _wallets.where((w) => (w['balance'] as num) > 0).toList();
@@ -3527,6 +3679,62 @@ class _DashboardState extends State<Dashboard> {
                 if (mounted) setState(() => _wallets = updated);
               },
             ),
+          );
+        },
+        onLongPress: () async {
+          // Long-press: pick a wallet and show its history
+          if (_wallets.isEmpty) return;
+          if (_wallets.length == 1) {
+            final h =
+                await DBService.getWalletHistory(_wallets.first['id'] as int);
+            if (!context.mounted) return;
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(20))),
+              builder: (_) =>
+                  _buildWalletHistorySheet(context, _wallets.first, h),
+            );
+            return;
+          }
+          // Multiple wallets — show picker
+          final picked = await showModalBottomSheet<Map<String, dynamic>>(
+            context: context,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            builder: (ctx) => Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("View balance history for:",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  const SizedBox(height: 12),
+                  ..._wallets.map((w) => ListTile(
+                        leading: Text(w['icon'] as String? ?? '💵',
+                            style: const TextStyle(fontSize: 22)),
+                        title: Text(w['name'] as String),
+                        subtitle: Text(CurrencyService.format(
+                            (w['balance'] as num).toDouble())),
+                        onTap: () => Navigator.pop(ctx, w),
+                      )),
+                ],
+              ),
+            ),
+          );
+          if (picked == null || !mounted) return;
+          final h = await DBService.getWalletHistory(picked['id'] as int);
+          if (!context.mounted) return;
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+            builder: (_) => _buildWalletHistorySheet(context, picked, h),
           );
         },
         child: Container(

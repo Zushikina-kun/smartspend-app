@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import 'edit_expense_screen.dart';
 
 /// BC-1: Unified financial timeline calendar.
@@ -782,35 +783,15 @@ class _BillCalendarScreenState extends State<BillCalendarScreen> {
                             top: 80,
                             child: IgnorePointer(
                               child: Center(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.event_available_outlined,
-                                        size: 40,
-                                        color: cs.onSurface
-                                            .withValues(alpha: 0.2)),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      "No upcoming events this month",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: cs.onSurface
-                                              .withValues(alpha: 0.35)),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "Add recurring bills, debts, or goals\nto see them here.",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          color: cs.onSurface
-                                              .withValues(alpha: 0.25)),
-                                    ),
-                                  ],
+                                child: PesoMascot.withSpeech(
+                                  mood: PesoMood.thinking,
+                                  text:
+                                      "Wala pang events ngayong buwan!\nMag-add ng bills, goals, o debts.",
                                 ),
                               ),
                             ),
                           ),
+                        const SizedBox(height: 4),
                       ],
                     ),
                   ),

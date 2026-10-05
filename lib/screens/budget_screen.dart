@@ -4,6 +4,7 @@ import '../models/budget.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
+import '../widgets/history_sheet.dart';
 import '../widgets/info_button.dart';
 
 class BudgetScreen extends StatefulWidget {
@@ -323,13 +324,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 40),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 40),
                                   child: Text(
                                     "💡 Tip: Ask the AI to set up budgets for you — just say \"Set up budgets based on my income\"",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: Colors.blue,
+                                        color: Colors.grey[600],
                                         fontSize: 12,
                                         height: 1.5),
                                   ),
@@ -448,7 +450,20 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         final over = spentAmt > b.amount;
 
                         return GestureDetector(
-                          onLongPress: () => _showSetBudgetDialog(existing: b),
+                          onLongPress: () async {
+                            final history =
+                                await DBService.getBudgetHistory(b.category);
+                            if (context.mounted) {
+                              HistorySheet.show(
+                                context,
+                                title: '${b.category} Budget History',
+                                subtitle:
+                                    '${history.length} change${history.length == 1 ? '' : 's'} recorded',
+                                titleIcon: Icons.bar_chart_outlined,
+                                history: history,
+                              );
+                            }
+                          },
                           child: Card(
                             elevation: 2,
                             shadowColor: Colors.black.withValues(alpha: 0.08),

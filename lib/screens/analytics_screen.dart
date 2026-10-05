@@ -2200,6 +2200,42 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   ),
                                 ),
                               ],
+                              lineTouchData: LineTouchData(
+                                touchTooltipData: LineTouchTooltipData(
+                                  getTooltipItems: (touchedSpots) =>
+                                      touchedSpots.map((s) {
+                                    final idx = s.x.toInt();
+                                    if (idx < 0 ||
+                                        idx >= _scoreHistory.length) {
+                                      return null;
+                                    }
+                                    final score = s.y.toInt();
+                                    final date =
+                                        _scoreHistory[idx]['date'] as String? ??
+                                            '';
+                                    final reason =
+                                        _scoreHistory[idx]['reason'] as String?;
+                                    final color = score >= 80
+                                        ? Colors.green
+                                        : score >= 60
+                                            ? Colors.orange
+                                            : Colors.red;
+                                    String dateLabel = date;
+                                    try {
+                                      dateLabel = DateFormat('MMM d')
+                                          .format(DateTime.parse(date));
+                                    } catch (_) {}
+                                    return LineTooltipItem(
+                                      '$dateLabel: $score/100\n'
+                                      '${reason != null && reason.isNotEmpty ? reason : ''}',
+                                      TextStyle(
+                                          color: color,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
                             ),
                           ),
                         ),

@@ -4,6 +4,7 @@ import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
+import '../widgets/history_sheet.dart';
 import '../widgets/peso_mascot.dart';
 
 class SavingsGoalsScreen extends StatefulWidget {
@@ -613,7 +614,31 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                         constraints: const BoxConstraints(),
                                         tooltip: "Add contribution",
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: 4),
+                                      IconButton(
+                                        icon: const Icon(Icons.history,
+                                            size: 18, color: Colors.blueGrey),
+                                        onPressed: () async {
+                                          final h = await DBService
+                                              .getGoalContributionHistory(
+                                                  g['id'] as int);
+                                          if (context.mounted) {
+                                            HistorySheet.show(
+                                              context,
+                                              title:
+                                                  '${g['name']} — Contributions',
+                                              subtitle:
+                                                  '${h.length} contribution${h.length == 1 ? '' : 's'}',
+                                              titleIcon: Icons.savings_outlined,
+                                              history: h,
+                                            );
+                                          }
+                                        },
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        tooltip: "View contribution history",
+                                      ),
+                                      const SizedBox(width: 4),
                                       IconButton(
                                         icon: const Icon(Icons.edit, size: 18),
                                         onPressed: () =>

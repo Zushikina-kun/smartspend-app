@@ -2718,6 +2718,56 @@ class DBService {
     }
   }
 
+  /// Get budget change history for a category, newest first
+  static Future<List<Map<String, dynamic>>> getBudgetHistory(String category,
+      {int limit = 50}) async {
+    final db = await getDB();
+    try {
+      return await db.query(
+        'budget_history',
+        where: 'category = ?',
+        whereArgs: [category],
+        orderBy: 'timestamp DESC',
+        limit: limit,
+      );
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// Get goal contribution history for a specific goal, newest first
+  static Future<List<Map<String, dynamic>>> getGoalContributionHistory(
+      int goalId,
+      {int limit = 50}) async {
+    final db = await getDB();
+    try {
+      return await db.query(
+        'goal_contribution_history',
+        where: 'goal_id = ?',
+        whereArgs: [goalId],
+        orderBy: 'timestamp DESC',
+        limit: limit,
+      );
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// Get monthly income change history, newest first
+  static Future<List<Map<String, dynamic>>> getIncomeHistory(
+      {int limit = 50}) async {
+    final db = await getDB();
+    try {
+      return await db.query(
+        'income_history',
+        orderBy: 'timestamp DESC',
+        limit: limit,
+      );
+    } catch (_) {
+      return [];
+    }
+  }
+
   /// Find wallet by name (case-insensitive partial match) — used by AI action
   static Future<Map<String, dynamic>?> findWalletByName(String name) async {
     final wallets = await getWallets();

@@ -948,17 +948,15 @@ class _DebtScreenState extends State<DebtScreen>
     if (mounted) {
       if (newPaid >= monthsTotal && paidAmount >= monthly * 0.9) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("🎉 $label fully paid off! Want to archive it?"),
+          content: Text(
+              "🎉 $label fully paid off! It's now in the Completed section below."),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 6),
+          duration: const Duration(seconds: 5),
           action: SnackBarAction(
-            label: 'Archive',
+            label: 'Dismiss',
             textColor: Colors.white,
-            onPressed: () async {
-              await DBService.deleteInstallmentPlan(plan['id'] as int);
-              if (mounted) _load();
-            },
+            onPressed: () {},
           ),
         ));
       } else {

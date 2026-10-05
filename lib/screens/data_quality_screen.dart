@@ -294,7 +294,7 @@ class _IssueCard extends StatelessWidget {
           const SizedBox(height: 10),
           Align(
             alignment: Alignment.centerRight,
-            child: fixing && fixLabel == 'Fix All'
+            child: fixing
                 ? const SizedBox(
                     width: 20,
                     height: 20,

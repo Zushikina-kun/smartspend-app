@@ -3065,6 +3065,25 @@ class WalletsSheetState extends State<WalletsSheet> {
   }
 
   Future<void> _deleteWallet(int id) async {
+    final wallet = _wallets.where((w) => w['id'] == id).firstOrNull;
+    final name = wallet?['name'] as String? ?? 'this wallet';
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Delete Wallet"),
+        content: Text(
+            "Delete \"$name\"? Any recorded balance history will also be removed."),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text("Delete", style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+    if (confirm != true) return;
     await DBService.deleteWallet(id);
     final updated = await DBService.getWallets();
     if (mounted) setState(() => _wallets = updated);

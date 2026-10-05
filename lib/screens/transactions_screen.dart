@@ -214,6 +214,22 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   Future<void> _delete(int id) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Delete Expense"),
+        content: const Text("Delete this expense? This cannot be undone."),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text("Delete", style: TextStyle(color: Colors.red))),
+        ],
+      ),
+    );
+    if (confirm != true) return;
     await DBService.deleteExpense(id);
     _load();
   }

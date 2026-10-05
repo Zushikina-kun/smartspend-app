@@ -1041,7 +1041,7 @@ class _AIScreenState extends State<AIScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
                           "📈 Price up: $itemName was ${CurrencyService.format(lastPrice)} last time (+${((amount / lastPrice - 1) * 100).toStringAsFixed(0)}%)"),
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Colors.orange,
                       behavior: SnackBarBehavior.floating,
                       duration: const Duration(seconds: 3),
                     ));

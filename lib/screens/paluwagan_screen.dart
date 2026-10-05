@@ -262,12 +262,38 @@ class _PalawaganScreenState extends State<PalawaganScreen> {
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold))),
                                 PopupMenuButton<String>(
-                                  onSelected: (v) {
+                                  onSelected: (v) async {
                                     if (v == 'edit')
                                       _showAddGroupDialog(existing: g);
-                                    if (v == 'delete')
-                                      DBService.deletePalawagan(g['id'] as int)
-                                          .then((_) => _load());
+                                    if (v == 'delete') {
+                                      final confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (ctx) => AlertDialog(
+                                          title: const Text("Delete Group"),
+                                          content: Text(
+                                              "Delete \"${g['name']}\"? All round records will also be removed."),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(ctx, false),
+                                              child: const Text("Cancel"),
+                                            ),
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(ctx, true),
+                                              child: const Text("Delete",
+                                                  style: TextStyle(
+                                                      color: Colors.red)),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirm == true) {
+                                        await DBService.deletePalawagan(
+                                            g['id'] as int);
+                                        _load();
+                                      }
+                                    }
                                   },
                                   itemBuilder: (_) => [
                                     const PopupMenuItem(

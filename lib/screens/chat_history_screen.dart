@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 class ChatHistoryScreen extends StatefulWidget {
   const ChatHistoryScreen({super.key});
@@ -155,15 +156,10 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           ? const Center(child: CircularProgressIndicator())
           : _history.isEmpty
               ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.chat_bubble_outline,
-                          size: 64, color: Colors.grey[300]),
-                      const SizedBox(height: 12),
-                      const Text("No chat history yet.",
-                          style: TextStyle(color: Colors.grey)),
-                    ],
+                  child: PesoMascot.withSpeech(
+                    mood: PesoMood.thinking,
+                    text:
+                        "Wala pa tayong chat history!\nMag-usap tayo sa AI para magsimula.",
                   ),
                 )
               : RefreshIndicator(

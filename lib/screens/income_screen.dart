@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/history_sheet.dart';
 import '../widgets/peso_mascot.dart';
 
 const _incomeCategories = [
@@ -333,6 +334,23 @@ class _IncomeScreenState extends State<IncomeScreen> {
       appBar: AppBar(
         title: Text(_screenTitle),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            tooltip: "Monthly income change history",
+            onPressed: () async {
+              final history = await DBService.getIncomeHistory();
+              if (context.mounted) {
+                HistorySheet.show(
+                  context,
+                  title: 'Monthly Income History',
+                  subtitle:
+                      '${history.length} change${history.length == 1 ? '' : 's'} to declared income',
+                  titleIcon: Icons.account_balance_wallet_outlined,
+                  history: history,
+                );
+              }
+            },
+          ),
           InfoButton(
             title: _screenTitle,
             body:

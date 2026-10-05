@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 class InsuranceScreen extends StatefulWidget {
   const InsuranceScreen({super.key});
@@ -67,15 +68,10 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.shield_outlined, size: 64, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          const Text("No policies tracked yet",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-          const SizedBox(height: 8),
-          Text(
-            "Add your insurance policies, SSS, PhilHealth, or Pag-IBIG contributions to track premiums and due dates.",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+          PesoMascot.withSpeech(
+            mood: PesoMood.thinking,
+            text:
+                "Wala pa tayong insurance records!\nI-track ang SSS, PhilHealth, Pag-IBIG, o insurance mo.",
           ),
           const SizedBox(height: 24),
           // Quick-add buttons for common PH contributions
@@ -312,8 +308,29 @@ class _InsuranceScreenState extends State<InsuranceScreen> {
             } else if (v == 'edit') {
               _showAddPolicySheet(editPolicy: policy);
             } else if (v == 'delete') {
-              await DBService.deleteInsurancePolicy(policy['id'] as int);
-              await _load();
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text("Delete Policy"),
+                  content: Text(
+                      "Delete \"${policy['name']}\"? This cannot be undone."),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text("Delete",
+                          style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm == true) {
+                await DBService.deleteInsurancePolicy(policy['id'] as int);
+                await _load();
+              }
             }
           },
           itemBuilder: (_) => [

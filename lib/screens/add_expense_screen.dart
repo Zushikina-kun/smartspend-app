@@ -575,7 +575,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 content: Text(
                     "📈 Price up: $itemName was ₱${lastPrice.toStringAsFixed(0)} last time "
                     "(+${((amount / lastPrice - 1) * 100).toStringAsFixed(0)}%)"),
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.orange,
                 behavior: SnackBarBehavior.floating,
                 duration: const Duration(seconds: 3),
               ));
