@@ -5,6 +5,7 @@ import '../services/app_lock_service.dart';
 import '../services/event_bus.dart';
 import '../services/theme_service.dart';
 import '../main.dart';
+import '../widgets/local_ai_setup_sheet.dart';
 import 'home_screen.dart' show SpendingLimitsSheet;
 import 'pin_setup_screen.dart';
 import 'currency_screen.dart';
@@ -39,6 +40,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // ── Notifications ───────────────────────────────────────────────────────────
   bool anomalyEnabled = true;
   bool proactiveNudgesEnabled = true;
+
+  // ── Local AI ────────────────────────────────────────────────────────────────
+  final _localUrlCtrl = TextEditingController();
+  final _localModelCtrl = TextEditingController();
+  final _localKeyCtrl = TextEditingController();
+  String? _localTestResult; // null=untested, 'ok'=success, else=error message
+  bool _localTesting = false;
 
   // ── Home screen sections ────────────────────────────────────────────────────
   bool showSubscriptions = true;
@@ -79,6 +87,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     _loadSettings();
+  }
+
+  @override
+  void dispose() {
+    _localUrlCtrl.dispose();
+    _localModelCtrl.dispose();
+    _localKeyCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _loadSettings() async {
@@ -126,6 +142,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     showMilestones = (await DBService.getSetting('show_milestones')) != 'false';
     showMarketInsights =
         (await DBService.getSetting('show_market_insights')) != 'false';
+    // Load local AI settings
+    _localUrlCtrl.text = AppConfig.customLocalUrl;
+    _localModelCtrl.text = AppConfig.customLocalModel;
+    _localKeyCtrl.text = AppConfig.customLocalKey;
     if (mounted) setState(() => _loading = false);
   }
 
@@ -894,6 +914,205 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   );
                 }),
+
+                // ── LOCAL AI ─────────────────────────────────────────────────
+                _sectionLabel('LOCAL AI (PRIVATE MODE)'),
+                _sectionHint(
+                    'Run your own LLM on your PC/Mac and connect SmartSpend to it over WiFi. Your financial data never leaves your home network.'),
+                _sectionCard([
+                  // Active indicator
+                  if (AppConfig.hasCustomLocal) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                            color: Colors.green.withValues(alpha: 0.25)),
+                      ),
+                      child: Row(children: [
+                        const Icon(Icons.home, size: 16, color: Colors.green),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '🏠 Local AI active — ${AppConfig.customLocalModel.isNotEmpty ? AppConfig.customLocalModel : 'model not set'} @ ${AppConfig.customLocalUrl}',
+                            style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ]),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                  // URL field
+                  TextField(
+                    controller: _localUrlCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Base URL',
+                      hintText: 'http://192.168.1.5:11434/v1',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      prefixIcon: Icon(Icons.link, size: 18),
+                    ),
+                    keyboardType: TextInputType.url,
+                    onChanged: (_) => setState(() => _localTestResult = null),
+                  ),
+                  const SizedBox(height: 10),
+                  // Model field
+                  TextField(
+                    controller: _localModelCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Model name',
+                      hintText: 'qwen3:7b',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      prefixIcon: Icon(Icons.memory, size: 18),
+                    ),
+                    onChanged: (_) => setState(() => _localTestResult = null),
+                  ),
+                  const SizedBox(height: 10),
+                  // API key field (usually blank)
+                  TextField(
+                    controller: _localKeyCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'API Key (optional — leave blank for Ollama)',
+                      hintText: 'blank for most local setups',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      prefixIcon: Icon(Icons.key, size: 18),
+                    ),
+                    obscureText: true,
+                    onChanged: (_) => setState(() => _localTestResult = null),
+                  ),
+                  const SizedBox(height: 12),
+                  // Test result
+                  if (_localTestResult != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: _localTestResult == 'ok'
+                            ? Colors.green.withValues(alpha: 0.08)
+                            : Colors.red.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: _localTestResult == 'ok'
+                              ? Colors.green.withValues(alpha: 0.3)
+                              : Colors.red.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Text(
+                        _localTestResult == 'ok'
+                            ? '✅ Connected! Your local AI is responding.'
+                            : '❌ $_localTestResult',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: _localTestResult == 'ok'
+                                ? Colors.green[700]
+                                : Colors.red[700]),
+                      ),
+                    ),
+                  // Buttons row
+                  Row(children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        icon: _localTesting
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2))
+                            : const Icon(Icons.wifi_find, size: 16),
+                        label: Text(
+                            _localTesting ? 'Testing…' : 'Test Connection'),
+                        onPressed: _localTesting
+                            ? null
+                            : () async {
+                                setState(() {
+                                  _localTesting = true;
+                                  _localTestResult = null;
+                                });
+                                final url = _localUrlCtrl.text.trim();
+                                final model = _localModelCtrl.text.trim();
+                                final err =
+                                    await AppConfig.testCustomLocal(url, model);
+                                if (mounted) {
+                                  // Save on successful test
+                                  if (err == null) {
+                                    await AppConfig.setCustomLocal(
+                                      url: url,
+                                      model: model,
+                                      key: _localKeyCtrl.text.trim(),
+                                    );
+                                  }
+                                  setState(() {
+                                    _localTesting = false;
+                                    _localTestResult = err ?? 'ok';
+                                  });
+                                }
+                              },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.menu_book_outlined, size: 16),
+                      label: const Text('Setup Guide'),
+                      onPressed: () => LocalAiSetupSheet.show(context),
+                    ),
+                  ]),
+                  const SizedBox(height: 8),
+                  // Save / Clear row
+                  Row(children: [
+                    Expanded(
+                      child: FilledButton.icon(
+                        icon: const Icon(Icons.save_outlined, size: 16),
+                        label: const Text('Save Settings'),
+                        onPressed: () async {
+                          await AppConfig.setCustomLocal(
+                            url: _localUrlCtrl.text.trim(),
+                            model: _localModelCtrl.text.trim(),
+                            key: _localKeyCtrl.text.trim(),
+                          );
+                          if (mounted) {
+                            setState(() {});
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text(
+                                  '✅ Local AI settings saved. Select "Local AI" in AI Model above to use it.'),
+                              behavior: SnackBarBehavior.floating,
+                            ));
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.clear, size: 16),
+                      label: const Text('Clear'),
+                      onPressed: () async {
+                        await AppConfig.setCustomLocal(
+                            url: '', model: '', key: '');
+                        _localUrlCtrl.clear();
+                        _localModelCtrl.clear();
+                        _localKeyCtrl.clear();
+                        if (mounted) setState(() => _localTestResult = null);
+                      },
+                    ),
+                  ]),
+                  const SizedBox(height: 4),
+                  Text(
+                    'After saving, go to AI Model above and select "Local AI (Your Computer)" to activate it. Cloud AI remains as automatic fallback.',
+                    style: TextStyle(
+                        fontSize: 11,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                        height: 1.4),
+                  ),
+                ]),
 
                 // ── HOME SCREEN SECTIONS ──────────────────────────────────────
                 _sectionLabel('HOME SCREEN — SHOW / HIDE SECTIONS'),

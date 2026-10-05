@@ -1,4 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'db_service.dart';
 
 /// Centralized app configuration. Multi-model LLM routing (best → good → fallback):
@@ -77,6 +79,68 @@ class AppConfig {
   static String? _remoteGeminiKey;
   static String? _remoteCerebrasKey;
 
+  // ── CUSTOM LOCAL LLM (user-configured) ─────────────────────────────────────
+  // Set by user in Settings → AI → Local AI section.
+  // Format: base URL like "http://192.168.1.5:11434/v1" (Ollama) or ":1234/v1" (LM Studio)
+  static String? _customLocalUrl;
+  static String? _customLocalModel;
+  static String? _customLocalKey; // usually blank for Ollama
+
+  /// Whether the user has configured a local LLM endpoint.
+  static bool get hasCustomLocal =>
+      _customLocalUrl != null && _customLocalUrl!.isNotEmpty;
+
+  /// Getters for settings screen to read current values.
+  static String get customLocalUrl => _customLocalUrl ?? '';
+  static String get customLocalModel => _customLocalModel ?? '';
+  static String get customLocalKey => _customLocalKey ?? '';
+
+  /// Save custom local LLM settings to DB.
+  static Future<void> setCustomLocal({
+    required String url,
+    required String model,
+    String key = '',
+  }) async {
+    _customLocalUrl = url.trim().isEmpty ? null : url.trim();
+    _customLocalModel = model.trim().isEmpty ? null : model.trim();
+    _customLocalKey = key.trim().isEmpty ? null : key.trim();
+    await DBService.setSetting('custom_local_url', url.trim());
+    await DBService.setSetting('custom_local_model', model.trim());
+    await DBService.setSetting('custom_local_key', key.trim());
+  }
+
+  /// Test the custom local endpoint — returns null on success, error string on failure.
+  static Future<String?> testCustomLocal(String url, String model) async {
+    try {
+      final testUrl = url.endsWith('/v1')
+          ? '$url/chat/completions'
+          : '$url/v1/chat/completions';
+      final response = await http
+          .post(
+            Uri.parse(testUrl),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer test',
+            },
+            body: jsonEncode({
+              'model': model.isEmpty ? 'test' : model,
+              'messages': [
+                {'role': 'user', 'content': 'Say "ok" and nothing else.'}
+              ],
+              'max_tokens': 5,
+            }),
+          )
+          .timeout(const Duration(seconds: 8));
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        // 200 = worked; 400 often means model not found but server is running
+        return null; // success
+      }
+      return 'Server responded with status ${response.statusCode}';
+    } catch (e) {
+      return 'Could not reach server: ${e.toString().replaceAll('Exception: ', '')}';
+    }
+  }
+
   // ── ACTIVE MODEL ───────────────────────────────────────────────────────────
   // Default: Gemini 3.5 Flash-Lite — GA stable, best when Gemini key available
   static String _activeModelId = 'gemini_flash_lite';
@@ -90,6 +154,11 @@ class AppConfig {
       'auto',
       'Auto (Recommended)',
       '🤖 Picks the best model for each task — fast for logging, best for advice'
+    ),
+    (
+      'custom_local',
+      'Local AI (Your Computer)',
+      '🏠 Your own LLM via WiFi — private, no cloud, configure in Local AI settings'
     ),
     (
       'gemini_flash',
@@ -175,6 +244,8 @@ class AppConfig {
   /// The active API key for the current model
   static String get groqApiKey {
     switch (_activeModelId) {
+      case 'custom_local':
+        return _customLocalKey ?? '';
       case 'auto':
         return _remoteGeminiKey ?? _fallbackGeminiKey;
       case 'gemini_flash':
@@ -190,6 +261,12 @@ class AppConfig {
   /// The API base URL for the active model
   static String get groqBaseUrl {
     switch (_activeModelId) {
+      case 'custom_local':
+        // Use user-configured URL; default to Ollama if not set
+        final url = _customLocalUrl ?? 'http://localhost:11434/v1';
+        // Strip trailing slash, ensure /v1 suffix for OpenAI compat
+        final base = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
+        return base.endsWith('/v1') ? base : '$base/v1';
       case 'auto':
         // Auto mode defaults to Gemini endpoint
         return _geminiUrl;
@@ -206,6 +283,8 @@ class AppConfig {
   /// The model name string sent to the API
   static String get groqModel {
     switch (_activeModelId) {
+      case 'custom_local':
+        return _customLocalModel ?? 'qwen3:7b';
       case 'auto':
         // Auto mode defaults to Flash-Lite — task-specific routing handled
         // by modelForTask(); this getter is used for the system prompt header
@@ -294,6 +373,11 @@ class AppConfig {
     //                   Kimi K2 → Qwen3 32B → LLaMA 3.3 70B → LLaMA 3.1 8B →
     //                   Cerebras GPT-OSS 120B
     switch (_activeModelId) {
+      case 'custom_local':
+        // Local LLM failed/unreachable — fall back to Gemini or Groq
+        _activeModelId = hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
+        _saveActiveModel();
+        return true;
       case 'gemini_flash':
         _activeModelId = hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
         _saveActiveModel();
@@ -398,7 +482,17 @@ class AppConfig {
       }
     } catch (_) {}
 
-    // 3. Load keys from Firebase Remote Config.
+    // 3. Load custom local LLM settings (user-configured)
+    try {
+      final url = await DBService.getSetting('custom_local_url');
+      final model = await DBService.getSetting('custom_local_model');
+      final key = await DBService.getSetting('custom_local_key');
+      if (url != null && url.isNotEmpty) _customLocalUrl = url;
+      if (model != null && model.isNotEmpty) _customLocalModel = model;
+      if (key != null && key.isNotEmpty) _customLocalKey = key;
+    } catch (_) {}
+
+    // 4. Load keys from Firebase Remote Config.
     //    Real keys are stored ONLY in the Firebase Remote Config console —
     //    they are not hardcoded here. Update keys there and publish to rotate.
     try {
@@ -438,6 +532,7 @@ class AppConfig {
         // groq_*, cerebras_* are fallbacks; gemini_* and 'auto' are user choices.
         final isChainFallback = _activeModelId.startsWith('groq_') ||
             _activeModelId.startsWith('cerebras_');
+        // Don't reset custom_local — user explicitly chose it
         if (isChainFallback) {
           _activeModelId = 'auto';
           await _saveActiveModel();

@@ -2610,7 +2610,9 @@ class _AIScreenState extends State<AIScreen> {
               // Build a clean short model name
               final fullLabel = AppConfig.activeModelLabel;
               String shortLabel;
-              if (fullLabel.startsWith('Auto')) {
+              if (AppConfig.activeModelId == 'custom_local') {
+                shortLabel = '🏠 Local AI';
+              } else if (fullLabel.startsWith('Auto')) {
                 shortLabel = 'Auto';
               } else if (fullLabel.contains('Gemini')) {
                 shortLabel =
@@ -2939,61 +2941,86 @@ class _AIScreenState extends State<AIScreen> {
           ),
           // ── CLIPBOARD NUDGE BANNER ────────────────────────────────────────
           if (_clipboardNudgeText != null && !_clipboardNudgeDismissed)
-            Builder(builder: (ctx) {
-              final cs = Theme.of(ctx).colorScheme;
-              return Container(
+            // ── LOCAL AI PRIVACY BANNER ──────────────────────────────────────
+            if (AppConfig.activeModelId == 'custom_local')
+              Container(
                 margin: const EdgeInsets.fromLTRB(12, 4, 12, 0),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: cs.primaryContainer.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: cs.primary.withValues(alpha: 0.08),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  color: Colors.green.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(10),
+                  border:
+                      Border.all(color: Colors.green.withValues(alpha: 0.22)),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.sms_outlined, size: 16, color: cs.primary),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        "📋 GCash/bank text detected — paste to log?",
+                child: Row(children: [
+                  const Icon(Icons.home, size: 14, color: Colors.green),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      '🏠 Private Mode — responses from your local AI (${AppConfig.customLocalModel.isNotEmpty ? AppConfig.customLocalModel : 'local model'}). Data stays on your network.',
+                      style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ]),
+              ),
+          Builder(builder: (ctx) {
+            final cs = Theme.of(ctx).colorScheme;
+            return Container(
+              margin: const EdgeInsets.fromLTRB(12, 4, 12, 0),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: cs.primaryContainer.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: cs.primary.withValues(alpha: 0.08),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.sms_outlined, size: 16, color: cs.primary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "📋 GCash/bank text detected — paste to log?",
+                      style:
+                          TextStyle(fontSize: 12, color: cs.onPrimaryContainer),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  TextButton(
+                    onPressed: () {
+                      _controller.text = _clipboardNudgeText ?? '';
+                      setState(() => _clipboardNudgeDismissed = true);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      backgroundColor: cs.primary.withValues(alpha: 0.12),
+                      foregroundColor: cs.primary,
+                    ),
+                    child: const Text("Paste",
                         style: TextStyle(
-                            fontSize: 12, color: cs.onPrimaryContainer),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    TextButton(
-                      onPressed: () {
-                        _controller.text = _clipboardNudgeText ?? '';
-                        setState(() => _clipboardNudgeDismissed = true);
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        backgroundColor: cs.primary.withValues(alpha: 0.12),
-                        foregroundColor: cs.primary,
-                      ),
-                      child: const Text("Paste",
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w600)),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close, size: 14, color: cs.primary),
-                      onPressed: () =>
-                          setState(() => _clipboardNudgeDismissed = true),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                            fontSize: 12, fontWeight: FontWeight.w600)),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, size: 14, color: cs.primary),
+                    onPressed: () =>
+                        setState(() => _clipboardNudgeDismissed = true),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            );
+          }),
           Expanded(
             child: _messages.isEmpty && !_contextLoaded
                 ? const Center(child: CircularProgressIndicator())
