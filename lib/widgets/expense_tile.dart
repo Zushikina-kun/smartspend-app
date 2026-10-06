@@ -118,11 +118,26 @@ class ExpenseTile extends StatelessWidget {
           : expense.date;
     }
 
+    // Detect backdated entries: show "logged MMM d" when updated_at date
+    // differs from the expense date — means user entered it on a different day.
+    String? loggedDateStr;
+    try {
+      final expDate = expense.date.substring(0, 10);
+      final loggedDate = expense.updatedAt != null
+          ? expense.updatedAt!.substring(0, 10)
+          : null;
+      if (loggedDate != null && loggedDate != expDate) {
+        loggedDateStr =
+            'logged ${DateFormat('MMM d').format(DateTime.parse(loggedDate))}';
+      }
+    } catch (_) {}
+
     final subtitle = [
       expense.category,
       if (expense.shopName != null && expense.shopName!.isNotEmpty)
         expense.shopName!,
       dateStr,
+      if (loggedDateStr != null) loggedDateStr,
       if (expense.isWant == true) '🏷️ Want',
       if (expense.splitWith != null && expense.splitWith!.isNotEmpty)
         '🤝 Split w/ ${expense.splitWith}',

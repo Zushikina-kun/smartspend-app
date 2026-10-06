@@ -2997,8 +2997,12 @@ class _AIScreenState extends State<AIScreen> {
                   const SizedBox(width: 6),
                   TextButton(
                     onPressed: () {
-                      _controller.text = _clipboardNudgeText ?? '';
+                      final text = _clipboardNudgeText ?? '';
                       setState(() => _clipboardNudgeDismissed = true);
+                      if (text.isNotEmpty) {
+                        _controller.clear();
+                        _send(retryText: text);
+                      }
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(

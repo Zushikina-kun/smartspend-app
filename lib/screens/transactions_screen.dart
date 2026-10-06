@@ -148,6 +148,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     result = result.where((e) {
       try {
+        // 'logged_today' filters by when the entry was logged (updated_at),
+        // not the expense date — shows all entries entered today regardless of date
+        if (_period == 'logged_today') {
+          final loggedDate = e.updatedAt != null
+              ? e.updatedAt!.substring(0, 10)
+              : e.date.substring(0, 10);
+          return loggedDate ==
+              DateTime.now().toIso8601String().substring(0, 10);
+        }
         final d = DateTime.parse(e.date);
         switch (_period) {
           case 'daily':
@@ -486,6 +495,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           ('weekly', 'This Week'),
                           ('monthly', 'This Month'),
                           ('yearly', 'This Year'),
+                          ('logged_today', 'Logged Today'),
                         ])
                           Padding(
                             padding: const EdgeInsets.only(right: 8),

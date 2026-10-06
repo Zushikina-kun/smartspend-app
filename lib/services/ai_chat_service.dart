@@ -122,7 +122,18 @@ class AIChatService {
               !notes.startsWith('Imported')
           ? ' (${notes.length > 30 ? notes.substring(0, 30) : notes})'
           : '';
-      return "- ${e['item_name'] ?? e['category']}: ₱${e['amount']} ${(e['date'] as String).substring(5, 10)} [${isWant ? 'W' : 'N'}]$notesShort";
+      // Show logged_at when it differs from expense date so AI can distinguish
+      // "when it happened" from "when it was entered into the app"
+      final expDate = (e['date'] as String).substring(5, 10);
+      final updatedAt = e['updated_at'] as String?;
+      String loggedNote = '';
+      if (updatedAt != null && updatedAt.length >= 10) {
+        final loggedDate = updatedAt.substring(5, 10);
+        if (loggedDate != (e['date'] as String).substring(5, 10)) {
+          loggedNote = ' [logged $loggedDate]';
+        }
+      }
+      return "- ${e['item_name'] ?? e['category']}: ₱${e['amount']} $expDate [${isWant ? 'W' : 'N'}]$notesShort$loggedNote";
     }).join("\n");
 
     // Older entries — summarized by category only
@@ -952,7 +963,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "7. SOCIAL: 'thanks/ok/yes/salamat/sige/oo' → short reply, no actions. Use Filipino terms naturally when the user uses them: paluwagan, utang, bayad, pang-araw-araw, piso, laman ng bulsa, ipon, gastos, singil.\n"
         "8. SELF-CHECK: Before sending your response, verify: does each item the user mentioned have exactly ONE ACTION line? If an item appears twice in your ACTION list, remove the duplicate.\n"
         "9. ITEM NAMES: item_name must be the real item — NEVER use generic filler like 'your X for', 'the X for', 'my X'. Use the actual item: 'Jeepney fare', 'Lunch', 'Snack', 'Breakfast', 'Tricycle fare'. If the user calls it 'jeep' log it as 'Jeepney fare'. If unsure, use the noun the user said.\n"
-        "10. DATE/TIME CORRECTIONS: When the user says 'that was on [date]', 'change date to', 'set it to [time]', 'put it on [date]' about an existing expense → fire update_expense ACTION with the corrected date/time field. Do NOT just say you fixed it. No ACTION = no fix. Example: user says 'the lunch I logged was actually on July 3 not July 8' → ACTION:{\"type\":\"update_expense\",\"item_name\":\"Lunch\",\"date\":\"2026-07-03\"}.\n"
+        "10. DATE/TIME: Expense entries use format '- item: ₱amount MM-DD [W/N] [logged MM-DD]'. The first date = WHEN the expense happened (transaction date). 'logged MM-DD' (when shown) = WHEN the user entered it into the app (these are different for backdated entries). When the user asks 'what did I log recently/just now/today', use the LOGGED date. When they ask 'what did I spend on [date]', use the EXPENSE date. When the user says 'that was on [date]', 'change date to', 'put it on [date]' → fire update_expense ACTION with corrected date. No ACTION = no fix. Example: 'the lunch I logged was actually on July 3' → ACTION:{\"type\":\"update_expense\",\"item_name\":\"Lunch\",\"date\":\"2026-07-03\"}.\n"
         "11. TAGLISH ACTIONS — non-expense actions also work in Filipino/Taglish:\n"
         "   SET BUDGET: 'budget ko sa pagkain 3000', 'itakda ang food budget sa 3000', 'pag-ibayuhin ang budget sa Transportation' → set_budget\n"
         "   SET INCOME: 'sweldo ko 25000', 'kita ko kada buwan 18000', 'allowance ko 3000 bawat linggo' → set_income\n"
