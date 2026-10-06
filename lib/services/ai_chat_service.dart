@@ -567,6 +567,22 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         lower.contains('sss') ||
         lower.contains('philhealth') ||
         lower.contains('pagibig') ||
+        lower.contains('paylater payment') ||
+        lower.contains('pay later payment') ||
+        lower.contains('shopeepaylater') ||
+        lower.contains('shopee paylater') ||
+        lower.contains('shopee pay later') ||
+        lower.contains('gloan') ||
+        lower.contains('gcash gloan') ||
+        lower.contains('installment payment') ||
+        lower.contains('plan payment') ||
+        lower.contains('monthly payment') ||
+        lower.contains('loan payment') ||
+        lower.contains('credit payment') ||
+        lower.contains('homecredit') ||
+        lower.contains('home credit') ||
+        lower.contains('aeon') ||
+        lower.contains('seabank loan') ||
         lower.contains('pag-ibig') ||
         lower.contains('bayad')) return 'Bills';
 
@@ -991,6 +1007,7 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         "• update_expense: {\"type\":\"update_expense\",\"item_name\":\"X\",\"category\":\"Food\"} — also: \"new_item_name\",\"amount\",\"date\",\"time\"\n"
         "• delete_expense: {\"type\":\"delete_expense\",\"item_name\":\"X\",\"confirmed\":true} — requires user typed DELETE\n"
         "• delete_by_date: {\"type\":\"delete_by_date\",\"start_date\":\"2026-01-01\",\"end_date\":\"2026-01-31\",\"confirmed\":true}\n"
+        "• delete_by_logged_date: {\"type\":\"delete_by_logged_date\",\"logged_date\":\"2026-10-06\",\"confirmed\":true} — deletes expenses LOGGED (entered into app) on that date, regardless of their transaction date. Use when user says 'delete what I logged today', 'remove items I entered just now', 'items I logged this session'\n"
         "• add_installment_plan: {\"type\":\"add_installment_plan\",\"title\":\"X\",\"provider\":\"ShopeePayLater\",\"total_amount\":1120,\"monthly_payment\":373,\"months_total\":3,\"due_day\":5}\n"
         "• set_wallet_balance: {\"type\":\"set_wallet_balance\",\"wallet_name\":\"GCash\",\"balance\":217.27}\n"
         "• transfer_wallet: {\"type\":\"transfer_wallet\",\"from_wallet\":\"Cash on Hand\",\"to_wallet\":\"GCash\",\"amount\":1000}\n"
@@ -1576,6 +1593,8 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         return p['confirmed'] == true &&
             p['start_date'] != null &&
             p['end_date'] != null;
+      case 'delete_by_logged_date':
+        return p['confirmed'] == true && p['logged_date'] != null;
       case 'split_expense':
         // Multi-write action: logs expense + creates debt — require all critical fields
         return p['split_with'] != null &&

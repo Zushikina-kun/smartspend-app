@@ -1438,6 +1438,44 @@ class _AIScreenState extends State<AIScreen> {
           }
           break;
 
+        case 'delete_by_logged_date':
+          // Delete expenses by when they were LOGGED (updated_at), not transaction date
+          final delByLoggedConfirmed =
+              action.params['confirmed'] as bool? ?? false;
+          if (!delByLoggedConfirmed) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text(
+                    "⚠️ Bulk deletion blocked. Type DELETE in chat to confirm."),
+                backgroundColor: Colors.orange,
+                behavior: SnackBarBehavior.floating,
+              ));
+            }
+            break;
+          }
+          final loggedDate = action.params['logged_date'] as String?;
+          if (loggedDate != null) {
+            final allExpForLogDel = await DBService.getExpenses();
+            final toDeleteByLogged = allExpForLogDel.where((e) {
+              // Match by updated_at date (the logged date)
+              final logDate = e.updatedAt != null && e.updatedAt!.length >= 10
+                  ? e.updatedAt!.substring(0, 10)
+                  : e.date.substring(0, 10);
+              return logDate == loggedDate;
+            }).toList();
+            if (toDeleteByLogged.isNotEmpty) {
+              for (final exp in toDeleteByLogged) {
+                if (exp.id != null) await DBService.deleteExpense(exp.id!);
+              }
+              _showActionSnackbar(
+                  "Deleted ${toDeleteByLogged.length} expenses logged on $loggedDate");
+            } else {
+              _showActionSnackbar(
+                  "No expenses found that were logged on $loggedDate");
+            }
+          }
+          break;
+
         case 'add_installment_plan':
           // Create a Payment Plan (ShopeePayLater, GCash GLoan, HomeCredit, etc.)
           final planTitle = action.params['title'] as String? ?? 'Payment Plan';
