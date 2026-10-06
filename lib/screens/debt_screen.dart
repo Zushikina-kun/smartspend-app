@@ -919,38 +919,17 @@ class _DebtScreenState extends State<DebtScreen>
     final paidAmount = double.tryParse(amountCtrl.text.trim()) ?? monthly;
     final now = DateTime.now();
 
-    // Duplicate guard — if the same plan payment was already logged
-    // within the last 90 seconds (e.g. double-tap), skip the insert
-    bool skipInsert = false;
-    try {
-      final db = await DBService.getDB();
-      final cutoff =
-          now.subtract(const Duration(seconds: 90)).toIso8601String();
-      final recentDup = await db.rawQuery(
-        '''SELECT id FROM expenses
-           WHERE LOWER(item_name) = LOWER(?)
-             AND ABS(amount - ?) < 0.01
-             AND date = ?
-             AND COALESCE(updated_at, '1970-01-01') >= ?
-           LIMIT 1''',
-        ['$label payment', paidAmount, payDate, cutoff],
-      );
-      skipInsert = recentDup.isNotEmpty;
-    } catch (_) {}
-
-    if (!skipInsert) {
-      await DBService.insertExpense({
-        'item_name': '$label payment',
-        'category': 'Bills',
-        'amount': paidAmount,
-        'date': payDate,
-        'time': now.toIso8601String().substring(11, 16),
-        'payment_method': payMethod,
-        'notes': 'Payment plan installment',
-        'ai_generated': 0,
-        'confidence_score': 1.0,
-      });
-    }
+    await DBService.insertExpense({
+      'item_name': '$label payment',
+      'category': 'Bills',
+      'amount': paidAmount,
+      'date': payDate,
+      'time': now.toIso8601String().substring(11, 16),
+      'payment_method': payMethod,
+      'notes': 'Payment plan installment',
+      'ai_generated': 0,
+      'confidence_score': 1.0,
+    });
 
     // Only advance months_paid when the paid amount is ≥ the monthly amount
     // (partial payments don't count as a full installment)
