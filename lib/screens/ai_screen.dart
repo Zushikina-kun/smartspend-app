@@ -79,10 +79,11 @@ class _AIScreenState extends State<AIScreen> {
           event == AppEvent.budgetChanged ||
           event == AppEvent.incomeChanged ||
           event == AppEvent.goalChanged) {
-        // Debounce: cancel previous timer, wait 500ms before refreshing
-        // Prevents 12 rapid reloads during plan_salary_split
+        // Debounce: cancel previous timer, wait 200ms before refreshing
+        // (reduced from 500ms — manual entries should reflect quickly)
+        // Still debounced to avoid 12 rapid reloads during plan_salary_split
         _debounceTimer?.cancel();
-        _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+        _debounceTimer = Timer(const Duration(milliseconds: 200), () {
           _loadContext(silent: true);
         });
       }
@@ -282,6 +283,13 @@ class _AIScreenState extends State<AIScreen> {
       final db = await DBService.getDB();
       installments = await db.query('installments', orderBy: 'start_date DESC');
     } catch (_) {}
+    // Load installment_plans (ShopeePayLater, GLoan, HomeCredit, etc.) — separate from legacy installments
+    List<Map<String, dynamic>> installmentPlans = [];
+    try {
+      final db = await DBService.getDB();
+      installmentPlans =
+          await db.query('installment_plans', orderBy: 'created_at DESC');
+    } catch (_) {}
     // Load wallets for AI context
     List<Map<String, dynamic>> wallets = [];
     try {
@@ -391,6 +399,7 @@ class _AIScreenState extends State<AIScreen> {
       debts: debts,
       recurring: recurring,
       installments: installments,
+      installmentPlans: installmentPlans,
       customCategories: customCategories,
       wallets: wallets,
       todayMoodScore: todayMoodScore,

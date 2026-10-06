@@ -793,6 +793,7 @@ class _DebtScreenState extends State<DebtScreen>
     final amountCtrl = TextEditingController(text: monthly.toStringAsFixed(0));
     String payMethod = 'GCash'; // most common for ShopeePayLater/GLoan
     String payDate = DateTime.now().toIso8601String().substring(0, 10);
+    int missedCount = 1; // catch-up mode: how many months to log
 
     final cs = Theme.of(context).colorScheme;
 
@@ -884,6 +885,59 @@ class _DebtScreenState extends State<DebtScreen>
                   }
                 },
               ),
+              const SizedBox(height: 12),
+              // Catch-up mode — log multiple missed months at once
+              if (!partial) ...[
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: cs.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(10),
+                    border:
+                        Border.all(color: cs.outline.withValues(alpha: 0.15)),
+                  ),
+                  child: Row(children: [
+                    const Icon(Icons.history, size: 16, color: Colors.orange),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text("Catching up on missed months?",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500)),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.remove, size: 16),
+                      onPressed: () => setSheet(
+                          () => missedCount = (missedCount - 1).clamp(1, 12)),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                          '$missedCount month${missedCount > 1 ? 's' : ''}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13)),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add, size: 16),
+                      onPressed: () => setSheet(
+                          () => missedCount = (missedCount + 1).clamp(1, 12)),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ]),
+                ),
+                if (missedCount > 1)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      'Will log $missedCount separate expense records and advance months_paid by $missedCount',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: cs.onSurface.withValues(alpha: 0.55)),
+                    ),
+                  ),
+              ],
               const SizedBox(height: 20),
 
               Row(
@@ -919,24 +973,29 @@ class _DebtScreenState extends State<DebtScreen>
     final paidAmount = double.tryParse(amountCtrl.text.trim()) ?? monthly;
     final now = DateTime.now();
 
-    await DBService.insertExpense({
-      'item_name': '$label payment',
-      'category': 'Bills',
-      'amount': paidAmount,
-      'date': payDate,
-      'time': now.toIso8601String().substring(11, 16),
-      'payment_method': payMethod,
-      'notes': 'Payment plan installment',
-      'ai_generated': 0,
-      'confidence_score': 1.0,
-    });
+    // Log one expense per missed month (catch-up support)
+    for (int m = 0; m < missedCount; m++) {
+      await DBService.insertExpense({
+        'item_name': '$label payment',
+        'category': 'Bills',
+        'amount': paidAmount,
+        'date': payDate,
+        'time': now.toIso8601String().substring(11, 16),
+        'payment_method': payMethod,
+        'notes': missedCount > 1
+            ? 'Payment plan installment (catch-up ${m + 1}/$missedCount)'
+            : 'Payment plan installment',
+        'ai_generated': 0,
+        'confidence_score': 1.0,
+      });
+    } // end catch-up loop
 
-    // Only advance months_paid when the paid amount is ≥ the monthly amount
-    // (partial payments don't count as a full installment)
+    // Advance months_paid by missedCount (or 0 for partial)
     final int newPaid;
     if (paidAmount >= monthly * 0.9) {
-      // ≥90% of monthly counts as a full payment
-      newPaid = (plan['months_paid'] as int) + 1;
+      // ≥90% of monthly counts as full — advance by number of months logged
+      newPaid = ((plan['months_paid'] as int) + missedCount)
+          .clamp(0, plan['months_total'] as int);
       await DBService.updateInstallmentPlan({...plan, 'months_paid': newPaid});
     } else {
       newPaid = plan['months_paid'] as int;

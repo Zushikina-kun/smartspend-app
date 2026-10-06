@@ -163,6 +163,7 @@ class AIChatService {
     List<Map<String, dynamic>> debts = const [],
     List<Map<String, dynamic>> recurring = const [],
     List<Map<String, dynamic>> installments = const [],
+    List<Map<String, dynamic>> installmentPlans = const [],
     List<String> customCategories = const [],
     List<Map<String, dynamic>> wallets = const [],
     int? todayMoodScore,
@@ -254,17 +255,45 @@ class AIChatService {
               return "- ${isExp ? 'Bill' : 'Income'}: ${r['title']} ₱$amtStr ${r['frequency']} ($label)";
             }).join("\n");
 
-    final installmentsSummary = installments.isEmpty
+    final installmentsSummary = (installments.isEmpty &&
+            installmentPlans.isEmpty)
         ? ""
-        : "\n\nInstallments:\n" +
-            installments.take(5).map((i) {
-              final total = (i['total_amount'] as num).toDouble();
-              final monthly = (i['monthly_payment'] as num).toDouble();
-              final paid = (i['months_paid'] as int? ?? 0);
-              final totalMonths = (i['months_total'] as int? ?? 1);
-              final remaining = (total - monthly * paid).clamp(0.0, total);
-              return "- ${i['name']}: ₱${remaining.toStringAsFixed(0)} remaining (₱${monthly.toStringAsFixed(0)}/mo, $paid/$totalMonths months paid)";
-            }).join("\n");
+        : () {
+            // Legacy per-item installments (old system)
+            final legacyPart = installments.isEmpty
+                ? ""
+                : "\n\nInstallments:\n" +
+                    installments.take(5).map((i) {
+                      final total = (i['total_amount'] as num).toDouble();
+                      final monthly = (i['monthly_payment'] as num).toDouble();
+                      final paid = (i['months_paid'] as int? ?? 0);
+                      final totalMonths = (i['months_total'] as int? ?? 1);
+                      final remaining =
+                          (total - monthly * paid).clamp(0.0, total);
+                      return "- ${i['name']}: ₱${remaining.toStringAsFixed(0)} remaining (₱${monthly.toStringAsFixed(0)}/mo, $paid/$totalMonths months paid)";
+                    }).join("\n");
+            // Payment plans (ShopeePayLater, GCash GLoan, HomeCredit, etc.)
+            final plansPart = installmentPlans.isEmpty
+                ? ""
+                : "\n\nPayment Plans (BNPL/loans):\n" +
+                    installmentPlans.map((p) {
+                      final paid = (p['months_paid'] as int? ?? 0);
+                      final total = (p['months_total'] as int? ?? 1);
+                      final monthly = (p['monthly_payment'] as num).toDouble();
+                      final totalAmt = (p['total_amount'] as num).toDouble();
+                      final remaining =
+                          (totalAmt - monthly * paid).clamp(0.0, totalAmt);
+                      final done = paid >= total;
+                      final dueDay = p['due_day'] as int?;
+                      final provider = p['provider'] as String? ?? '';
+                      final title = p['title'] as String? ?? '';
+                      final status =
+                          done ? 'COMPLETED' : '$paid/$total months paid';
+                      final dueStr = dueDay != null ? ' (due day $dueDay)' : '';
+                      return "- $title ($provider): ₱${remaining.toStringAsFixed(0)} remaining, ₱${monthly.toStringAsFixed(0)}/mo$dueStr — $status";
+                    }).join("\n");
+            return legacyPart + plansPart;
+          }();
 
     // Wallet balances summary — omitted in lightweight mode
     final walletsSummary = (wallets.isEmpty || !incomeWalletMode)
@@ -366,7 +395,24 @@ PhilHealth: 5% of basic salary (50/50 employer/employee). Min ₱500/mo total. M
 Pag-IBIG: Employee 2%, Employer 2% of monthly salary. Max employee contribution ₱200/mo. MP2: 6-9% annual dividend, tax-free.
 BIR TRAIN Law tax brackets (annual): ₱250K exempt; ₱250K-400K: 15%; ₱400K-800K: 20%; ₱800K-2M: 25%; ₱2M-8M: 30%; above ₱8M: 35%.
 PH Digital Banks high-yield: GoTyme 5%/yr, Tonik 4%/yr, Maya 3.5%/yr, Seabank 3%/yr. All PDIC-insured up to ₱500K.
-BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. Brankas API available for PH bank integration.""";
+BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. Brankas API available for PH bank integration.
+PH BNPL/Loan Services (2026):
+- GCash GLoan (by Fuse Lending): 1.59–6.99%/mo, 1–24 months, auto-deducted from GCash wallet. Use add_installment_plan with provider="GCash GLoan".
+- GCash GCredit (by CIMB): revolving credit line, up to ₱30K, used for GCash payments. NOT an installment — track as a debt/credit line.
+- GCash GGives: BNPL for Lazada/Shopee/merchants, 0% promo or installment rate, 1–12 months. Use add_installment_plan with provider="GGives".
+- Maya Loan (Maya Bank): 1.40%/mo effective, ₱1K–₱250K, 3–24 months. Use add_installment_plan with provider="Maya Loan".
+- Maya Credit (Maya Bank): revolving credit, 3.99–5%/mo, pay minimum. Track as debt.
+- SPayLater (ShopeePayLater / SeaMoney): 0% for 1-month, or installment 1–12 months with service fee. Use add_installment_plan with provider="ShopeePayLater".
+- LazPayLater (Lazada / FinScore): 0% for 30 days or installment. Use add_installment_plan with provider="LazPayLater".
+- HomeCredit Philippines: consumer loans for gadgets/appliances, as low as 0% promo or up to ~3%/mo add-on, 6–48 months in-store. Use add_installment_plan with provider="HomeCredit".
+- BillEase: BNPL/personal loan up to ₱40K, 30 days or 1–12 months. Use add_installment_plan with provider="BillEase".
+- Skyro: personal loans, starts at 3.9%/mo, 3–24 months. Use add_installment_plan with provider="Skyro".
+- Akulaku: BNPL for online/in-store, installment 3–12 months, 0% promo available. Use add_installment_plan with provider="Akulaku".
+- Atome PH: BNPL split 3 payments (pay-in-3), 0% if on time. Short-term only. Track as single expense or 3-month plan.
+- UnaCash / PeraAgad / Digido / JuanHand: small personal loans ₱500–₱50K, 0.77–9%/mo. Use add_debt for these.
+- Credit cards (BDO/BPI/Metrobank/UnionBank/RCBC/Security/EastWest/Eastwest/Citibank): revolving credit, 2–3.5%/mo. Track balance as debt, monthly minimum as recurring bill.
+- BSP Circular 1133 cap: small loans ≤₱10K, ≤4 months → max 15% effective monthly rate.
+- When user mentions 'SPayLater', 'SPL', 'GCredit', 'GGives', 'GLoan', 'LazPayLater', 'HomeCredit', 'BillEase', 'Skyro', 'Akulaku', 'Atome' → auto-classify payment as Bills and suggest add_installment_plan if multiple payments remain.""";
   }
 
   /// Normalize category names to match our standard list.
@@ -567,13 +613,31 @@ BSP Open Finance (OFxPERA): live since July 2025, UnionBank first participant. B
         lower.contains('sss') ||
         lower.contains('philhealth') ||
         lower.contains('pagibig') ||
+        lower.contains('gcash gloan') ||
+        lower.contains('gloan') ||
+        lower.contains('gcredit') ||
+        lower.contains('ggives') ||
+        lower.contains('maya loan') ||
+        lower.contains('maya credit') ||
+        lower.contains('spaylater') ||
+        lower.contains('spl payment') ||
+        lower.contains('lazpaylater') ||
+        lower.contains('lazmall') && lower.contains('payment') ||
+        lower.contains('homecredit') ||
+        lower.contains('home credit') ||
+        lower.contains('billease') ||
+        lower.contains('skyro') ||
+        lower.contains('akulaku') ||
+        lower.contains('atome') ||
+        lower.contains('unacash') ||
+        lower.contains('peraagad') ||
+        lower.contains('digido') ||
+        lower.contains('juanhand') ||
         lower.contains('paylater payment') ||
         lower.contains('pay later payment') ||
         lower.contains('shopeepaylater') ||
         lower.contains('shopee paylater') ||
         lower.contains('shopee pay later') ||
-        lower.contains('gloan') ||
-        lower.contains('gcash gloan') ||
         lower.contains('installment payment') ||
         lower.contains('plan payment') ||
         lower.contains('monthly payment') ||

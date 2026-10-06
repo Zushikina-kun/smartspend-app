@@ -788,7 +788,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                     ),
                                   ),
                                 ),
-                              // NI-2: Goal pace indicator
+                              // NI-2: Goal pace indicator (only when deadline set)
                               if (!done && deadline != null)
                                 Builder(
                                   builder: (ctx) {
@@ -821,13 +821,50 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                     }
                                   },
                                 ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                              // Deadline nudge — tapping opens edit dialog to set deadline
+                              if (!done &&
+                                  deadline == null &&
+                                  current < target * 0.05)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 6),
+                                  child: GestureDetector(
+                                    onTap: () => _showAddDialog(existing: g),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber
+                                            .withValues(alpha: 0.09),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                            color: Colors.amber
+                                                .withValues(alpha: 0.3)),
+                                      ),
+                                      child: Row(children: [
+                                        const Icon(Icons.flag_outlined,
+                                            size: 13, color: Colors.amber),
+                                        const SizedBox(width: 6),
+                                        const Expanded(
+                                          child: Text(
+                                            "Tap to set a deadline — unlocks monthly contribution suggestions",
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.amber),
+                                          ),
+                                        ),
+                                        const Icon(Icons.chevron_right,
+                                            size: 14, color: Colors.amber),
+                                      ]),
+                                    ),
+                                  ),
+                                ),
+                            ], // closes Column children
+                          ), // closes Column
+                        ), // closes Card Padding
+                      ); // closes Card
+                    }, // closes itemBuilder
+                  ), // closes ListView.builder
+                ), // closes outer widget
     );
   }
 }
