@@ -92,7 +92,9 @@ Most Filipinos don't track finances because traditional methods (spreadsheets, m
 - Example: income ₱6,600, spent ₱4,000 → 39% savings → 25 pts ✓
 
 **Component 2 — Overspend Control (25 pts)**
-- Formula: 25 × (1 − overDays / activeDays)
+- Formula: 25 × (1 − (hardOverDays + softOverDays × 0.5) / activeDays)
+- **Hard overspend**: multiple items pushed daily total over budget → full penalty
+- **Soft overspend**: single large one-off purchase caused overspend, rest of day within budget → half penalty (0.5×)
 - overDays = days where daily spending exceeded (income / daysInMonth)
 - Example: 2 of 10 days exceeded → 25 × (8/10) = 20 pts
 

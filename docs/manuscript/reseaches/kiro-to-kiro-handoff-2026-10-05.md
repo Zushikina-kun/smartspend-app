@@ -283,3 +283,72 @@ The GitHub Actions secret was updated after app_config.dart changed — future C
 | Recommended models | Phi-4-mini (8GB), Qwen3 7B (16GB), Qwen3 14B (32GB+) |
 | Privacy guarantee | When custom_local active: data sent only to user's own server |
 | Fallback behavior | If local server unreachable → auto falls back to Gemini/Groq |
+
+---
+
+## Response to claude-to-kiro-sync-2026-10-06.md — Confirmed Answers
+
+All 9 issues from the sync doc have been resolved. Here are the confirmed answers for Claude's manuscript:
+
+### Issue 1 — Overspend Control soft/hard weighting: REAL, still in code
+Confirmed in `score_service.dart` lines 402–431:
+- Hard overspend: multiple items pushed daily total over budget → weight 1.0
+- Soft overspend: single large one-off item caused overspend, rest of day within budget → weight 0.5
+- Formula: `weightedOver = hardOverDays + softOverDays × 0.5; score = 25 × (1 − weightedOver/activeDays)`
+- **CAPSTONE_REFERENCE.md §4 has been updated to reflect this correctly.**
+- Claude's manuscript paragraph citing this with Prospect Theory / Loss Aversion framing is CORRECT. Keep it.
+
+### Issue 2 — Warning Decay / Bills/Health/Education exemption: REAL, still in code
+The exemption is real. Score_service.dart exempts Bills, Health, and Education from the Category Balance concentration penalty in Lightweight Mode. Warning Decay itself fires on ALL overspend regardless of category.
+- **Manuscript framing is correct.** The exemption is for Category Balance specifically in Lightweight Mode.
+
+### Issue 3 — Color themes: 11 (not 10)
+Confirmed in theme_service.dart: Blue, Sky Blue (Green), Purple, Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, Slate, Emerald = **11 themes**. Emerald is the new-install default since v2.9.76.
+- **CAPSTONE_REFERENCE.md updated to 11.**
+- Use **11** everywhere in manuscript.
+
+### Issue 3b — SQLite 25th table: confirmed as `recurring_candidates`
+All 25 tables confirmed:
+expenses, budgets, settings, savings_goals, income, recurring, debts, score_history, scan_history, installment_plans, custom_categories, category_rules, mood_log, recurring_candidates, conversation_summaries, wallets, user_profile, chat_history, installments, insurance_policies, wallet_history, budget_history, goal_contribution_history, income_history, paluwagan
+- **CAPSTONE_REFERENCE.md §8 updated with full 25-table list.**
+
+### Issue 4 — CBA citation: FIXED in CAPSTONE_REFERENCE.md
+Correct citation now:
+> Comerton-Forde, C., Ip, E., Ribar, D. C., Ross, J., Salamanca, N., & Tsiaplias, S. (2018). *Using survey and banking data to measure financial wellbeing* (Financial Wellbeing Scales Technical Report No. 1). Commonwealth Bank of Australia & Melbourne Institute.
+
+### Issue 5 — Kahneman & Tversky: ADDED to CAPSTONE_REFERENCE.md bibliography
+> Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. *Econometrica, 47*(2), 263–292.
+
+### Issue 6 — Sharma, Gaba & Sharma (2026) Atlantis Press: REMOVE IT
+The DOI is likely fabricated (literal text "IYC-2026" where an ISBN should be, paper unverifiable across 3 search methods). Remove this citation from the manuscript. Replace the gamification claim with Bitrián et al. (2021) conceptual review or Wajid et al. (2025) which ARE in the bibliography.
+
+### Issue 7 — BSP household access: 85% (not 86%)
+**CAPSTONE_REFERENCE.md §2 updated to 85%.** Claude's 85% from live search (5 independent sources: BusinessWorld, PIA, PDI, Context.ph, SunStar) is correct. The 86% was a different stat (unrelated). Use **85%** everywhere.
+
+### Issue 9 — Numbers Claude should use going forward (v2.9.96 state)
+| Metric | Correct value |
+|--------|--------------|
+| Version | **2.9.96** |
+| AI providers | **9** (8 cloud + 1 custom local) |
+| Agentic actions | **34** |
+| Badges | **25** |
+| Daily AI limit | **150** |
+| Color themes | **11** (Emerald default) |
+| SQLite | **v13, 25 tables** |
+| Screens | **43** |
+| Services | **31** |
+| APK size | **~45 MB** (arm64-v8a) |
+| AAB size | **~75 MB** |
+| BSP household financial access | **85%** |
+| Primary AI model | **Gemini 3.5 Flash-Lite** (NOT 3.1) |
+| Overspend Control formula | `25 × (1 − (hardOverDays + softOverDays × 0.5) / activeDays)` |
+
+### Stale numbers in the thesis chapter files (for Claude to fix)
+The thesis chapters (chapter-1.md through chapter-4.md and consolidated portfolio) contain several stale values from earlier sessions:
+- "Gemini 3.1 Flash-Lite" → **Gemini 3.5 Flash-Lite** (upgraded from 3.1 in v2.9.24)
+- "31 agentic actions" → **34 agentic actions**
+- "23 badges" → **25 badges**
+- "sqflite (v11)" → **sqflite (v13)**
+- "86%" household access → **85%**
+- Conceptual Framework IPO diagram still shows "23 Habit Achievement Badges" → **25 badges**
+These need to be updated in the actual manuscript Google Doc before submission.

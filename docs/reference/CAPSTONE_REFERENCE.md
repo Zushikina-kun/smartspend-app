@@ -46,7 +46,7 @@ No existing application combines:
 6. Completely free — no subscription required
 
 ### Key Statistics for Background
-- **BSP CFIS 2025:** Only 50% of Filipino adults have formal financial accounts (down from 56% in 2021); household access rose to 86%
+- **BSP CFIS 2025:** Only 50% of Filipino adults have formal financial accounts (down from 56% in 2021); household access rose to **85%** (up from 74% in 2024)
 - **BSP 2025:** 74% of Filipinos correctly answered basic financial literacy questions (up from 69% in 2021)
 - **SWS March 2026:** Philippine financial inclusion reached 58% — 43% e-money accounts, 21% bank accounts
 - **GCash:** 41.5 million monthly users (Bloomberg, 2026) — primary driver of financial inclusion
@@ -151,9 +151,14 @@ Score = 4 components × 25 points each = 100 maximum
 | Component | What it Measures | Formula |
 |-----------|-----------------|---------|
 | Savings Rate | Actual savings vs 20% income target | 25 × min(1, savingsRate / 0.20) |
-| Overspend Control | Days where daily spending exceeded budget | 25 × (1 − overDays / activeDays) |
+| Overspend Control | Days where daily spending exceeded budget — with **soft/hard weighting** | 25 × (1 − (hardOverDays + softOverDays × 0.5) / activeDays) |
 | Budget Adherence | % of category budgets on track | 25 × (onBudgetCategories / totalBudgetCategories) |
 | Logging Consistency | Logged days / active days **this month** | 25 × (loggedDays / activeDays) |
+
+**Overspend Control — Soft/Hard Distinction (confirmed in `score_service.dart`):**
+- **Hard overspend**: multiple items pushed daily total over budget → full 1.0 penalty weight
+- **Soft overspend**: a single large one-off item caused the overspend (e.g. buying a gadget) while the rest of the day's spending was within budget → half penalty (0.5 weight)
+- Formula: `weightedOver = hardOverDays + softOverDays × 0.5; score = 25 × (1 − weightedOver/activeDays)`
 
 ### Formula — Lightweight Mode (income/wallet tracking OFF)
 Used when user doesn't want to track income. Score adapts to spending habits only.
@@ -375,26 +380,26 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 - Balance mode toggle
 - Round-up savings toggle
 - Compact mode toggle
-- 10 color themes + dark mode (5 new added v2.9.45: Crimson, Navy, Teal, Rose, Charcoal)
+- **11 color themes** + dark mode (Blue, Sky Blue, Forest Green, Royal Purple, Sunset Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, Slate + **Emerald** as new-install default since v2.9.76)
 
 ---
 
 ## 8. DATABASE SCHEMA
 
-**SQLite v11** — 20 tables:
+**SQLite v13** — 25 tables:
 
 | Table | Purpose |
 |-------|---------|
-| expenses | All expense records (20+ columns) |
+| expenses | All expense records (20+ columns incl. updated_at, tags, photo_path) |
 | budgets | Category budget limits |
 | settings | Key-value app settings |
 | savings_goals | Savings targets with progress |
 | income | Income entries |
 | recurring | Recurring transactions (bills, subscriptions) |
 | debts | Debt and lending tracker |
-| score_history | Daily FHS snapshots |
+| score_history | Daily FHS snapshots + reason column (v13) |
 | scan_history | Barcode scan records |
-| installment_plans | Payment plan tracking |
+| installment_plans | Payment plan tracking (ShopeePayLater, GLoan, HomeCredit) |
 | custom_categories | User-defined categories |
 | category_rules | Auto-categorization keyword rules |
 | mood_log | Daily mood check-ins |
@@ -403,8 +408,15 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | wallets | Cash and e-wallet balances |
 | user_profile | User information |
 | chat_history | AI conversation messages |
-| installments | Installment payment records |
+| installments | Legacy per-item installment records |
 | insurance_policies | Insurance policy tracker |
+| wallet_history | Wallet balance change audit log (v12) |
+| budget_history | Budget amount change audit log (v13) |
+| goal_contribution_history | Savings goal contribution audit log (v13) |
+| income_history | Monthly income setting change log (v13) |
+| paluwagan | Rotating savings group tracker |
+
+**Total: 25 unique tables** (v11 had 20; v12 added wallet_history; v13 added budget_history, goal_contribution_history, income_history + reason column on score_history)
 
 **New settings keys (v2.9.3+):**
 - `income_wallet_mode` — true/false (Lightweight Mode)
@@ -555,9 +567,10 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 - Bangor, A., Kortum, P., & Miller, J. (2009). Determining what individual SUS scores mean: Adding an adjective rating scale. *Journal of Usability Studies, 4*(3), 114–123.
 - Bloomberg. (2026). *How the Philippines' first fintech unicorn is minting financial inclusion*. https://sponsored.bloomberg.com/article/mynt/how-the-philippines-first-fintech-unicorn-is-minting-financial-inclusion
 - Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan et al. (Eds.), *Usability Evaluation in Industry* (pp. 189–194). Taylor & Francis.
-- Commonwealth Bank of Australia & Melbourne Institute. (2018). *Measuring financial resilience*. CBA-MI Financial Resilience in Australia Study. https://www.melbourneinstitute.unimelb.edu.au/
+- Comerton-Forde, C., Ip, E., Ribar, D. C., Ross, J., Salamanca, N., & Tsiaplias, S. (2018). *Using survey and banking data to measure financial wellbeing* (Financial Wellbeing Scales Technical Report No. 1). Commonwealth Bank of Australia & Melbourne Institute. https://www.melbourneinstitute.unimelb.edu.au/
 - Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. *MIS Quarterly, 13*(3), 319–340.
 - Deci, E. L., & Ryan, R. M. (2000). The "what" and "why" of goal pursuits: Human needs and the self-determination of behavior. *Psychological Inquiry, 11*(4), 227–268.
+- Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. *Econometrica, 47*(2), 263–292.
 - Deloitte. (2026). *Agentic AI boosts wealth management*. https://www.deloitte.com/us/en/insights/industry/financial-services/financial-services-industry-predictions/2026/agentic-ai-wealth-management-productivity.html
 - Ernst & Young. (2026). *Nearly half of global consumers now use AI to guide savings and investment decisions*. https://www.ey.com/en_gl/newsroom/2026/04/nearly-half-of-global-consumers-now-use-ai-to-guide-savings-and-investment-decisions
 - Financial Health Network. (2021). *FinHealth Score® Toolkit*. https://finhealthnetwork.org/tools/financial-health-score/
