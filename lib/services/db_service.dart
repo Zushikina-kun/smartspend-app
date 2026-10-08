@@ -269,8 +269,38 @@ class DBService {
                 .execute('ALTER TABLE score_history ADD COLUMN reason TEXT');
           } catch (_) {}
         }
+        if (oldVersion < 14) {
+          // v14 — chat sessions for wayback/archiving
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS chat_sessions(
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                title       TEXT,
+                created_at  TEXT NOT NULL,
+                archived_at TEXT,
+                is_current  INTEGER DEFAULT 0
+              )
+            ''');
+          } catch (_) {}
+          try {
+            await db.execute(
+                'ALTER TABLE chat_history ADD COLUMN session_id INTEGER');
+          } catch (_) {}
+          // Migrate all existing messages to a legacy "Previous chats" session
+          try {
+            final legacyId = await db.insert('chat_sessions', {
+              'title': 'Previous chats',
+              'created_at': DateTime.now().toIso8601String(),
+              'is_current': 0,
+            });
+            await db.execute(
+              'UPDATE chat_history SET session_id = ? WHERE session_id IS NULL',
+              [legacyId],
+            );
+          } catch (_) {}
+        }
       },
-      version: 13,
+      version: 14,
     );
     return _db!;
   }
@@ -698,7 +728,17 @@ class DBService {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         role TEXT NOT NULL,
         message TEXT NOT NULL,
-        timestamp TEXT NOT NULL
+        timestamp TEXT NOT NULL,
+        session_id INTEGER
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE chat_sessions(
+        id          INTEGER PRIMARY KEY AUTOINCREMENT,
+        title       TEXT,
+        created_at  TEXT NOT NULL,
+        archived_at TEXT,
+        is_current  INTEGER DEFAULT 0
       )
     ''');
     await db.execute('''
@@ -1583,13 +1623,138 @@ class DBService {
   static Future<void> saveChatMessage({
     required String role,
     required String message,
+    int? sessionId,
   }) async {
     final db = await getDB();
+    // Resolve session_id — use provided, or look up current session
+    int? resolvedSessionId = sessionId;
+    if (resolvedSessionId == null) {
+      try {
+        final current =
+            await db.query('chat_sessions', where: 'is_current = 1', limit: 1);
+        if (current.isNotEmpty) {
+          resolvedSessionId = current.first['id'] as int?;
+        } else {
+          // No current session — create one
+          resolvedSessionId = await _createSession(db);
+        }
+      } catch (_) {}
+    }
     await db.insert('chat_history', {
       'role': role,
       'message': message,
       'timestamp': DateTime.now().toIso8601String(),
+      if (resolvedSessionId != null) 'session_id': resolvedSessionId,
     });
+  }
+
+  /// Create a new active chat session, marking all others as not current.
+  /// Returns the new session's id.
+  static Future<int> createNewChatSession({String? title}) async {
+    final db = await getDB();
+    return _createSession(db, title: title);
+  }
+
+  static Future<int> _createSession(Database db, {String? title}) async {
+    // Mark all existing sessions as not current
+    await db.update('chat_sessions', {'is_current': 0});
+    final id = await db.insert('chat_sessions', {
+      'title': title,
+      'created_at': DateTime.now().toIso8601String(),
+      'is_current': 1,
+    });
+    return id;
+  }
+
+  /// Returns the current active session id, creating one if needed.
+  static Future<int> getCurrentSessionId() async {
+    final db = await getDB();
+    try {
+      final rows =
+          await db.query('chat_sessions', where: 'is_current = 1', limit: 1);
+      if (rows.isNotEmpty) return rows.first['id'] as int;
+      // No current session — create one
+      return await _createSession(db);
+    } catch (_) {
+      return -1;
+    }
+  }
+
+  /// Returns all sessions ordered by created_at DESC.
+  static Future<List<Map<String, dynamic>>> getChatSessions() async {
+    final db = await getDB();
+    try {
+      // Get sessions with message count
+      return await db.rawQuery('''
+        SELECT s.*,
+               (SELECT COUNT(*) FROM chat_history h WHERE h.session_id = s.id) AS message_count,
+               (SELECT h.message FROM chat_history h WHERE h.session_id = s.id
+                AND h.role = 'user' ORDER BY h.id ASC LIMIT 1) AS first_user_message
+        FROM chat_sessions s
+        ORDER BY s.created_at DESC
+      ''');
+    } catch (_) {
+      return [];
+    }
+  }
+
+  /// Auto-title a session from its first user message.
+  static Future<void> autoTitleSession(int sessionId) async {
+    final db = await getDB();
+    try {
+      final rows = await db.rawQuery(
+        'SELECT message FROM chat_history WHERE session_id = ? AND role = ? ORDER BY id ASC LIMIT 1',
+        [sessionId, 'user'],
+      );
+      if (rows.isEmpty) return;
+      final msg = rows.first['message'] as String? ?? '';
+      final title = msg.length > 40 ? '${msg.substring(0, 40)}…' : msg;
+      await db.update('chat_sessions', {'title': title},
+          where: 'id = ?', whereArgs: [sessionId]);
+    } catch (_) {}
+  }
+
+  /// Rename a session.
+  static Future<void> renameChatSession(int sessionId, String title) async {
+    final db = await getDB();
+    await db.update('chat_sessions', {'title': title},
+        where: 'id = ?', whereArgs: [sessionId]);
+  }
+
+  /// Archive a session (sets archived_at, clears is_current).
+  static Future<void> archiveChatSession(int sessionId) async {
+    final db = await getDB();
+    await db.update(
+        'chat_sessions',
+        {
+          'archived_at': DateTime.now().toIso8601String(),
+          'is_current': 0,
+        },
+        where: 'id = ?',
+        whereArgs: [sessionId]);
+  }
+
+  /// Delete a session and all its messages.
+  static Future<void> deleteChatSession(int sessionId) async {
+    final db = await getDB();
+    await db.delete('chat_history',
+        where: 'session_id = ?', whereArgs: [sessionId]);
+    await db.delete('chat_sessions', where: 'id = ?', whereArgs: [sessionId]);
+  }
+
+  /// Returns messages for a specific session, oldest first.
+  static Future<List<Map<String, dynamic>>> getChatHistoryBySession(
+      int sessionId,
+      {int limit = 200}) async {
+    final db = await getDB();
+    final maps = await db.query(
+      'chat_history',
+      where: 'session_id = ?',
+      whereArgs: [sessionId],
+      orderBy: 'id ASC',
+      limit: limit,
+    );
+    return maps;
   }
 
   static Future<List<Map<String, dynamic>>> getChatHistory(
@@ -2156,6 +2321,9 @@ class DBService {
     await db.delete('score_history');
     await db.delete('scan_history');
     await db.delete('chat_history'); // Clear on logout — chat is per-account
+    try {
+      await db.delete('chat_sessions');
+    } catch (_) {}
     await db.delete('mood_log'); // Clear on logout — mood is per-account
     try {
       await db

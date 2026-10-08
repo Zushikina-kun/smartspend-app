@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '2.9.92';
-  static const _prefKey = 'whats_new_seen_2_9_92';
+  static const _version = '3.0.0';
+  static const _prefKey = 'whats_new_seen_3_0_0';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,35 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🔍',
+      'Transaction Sort & Grouping (v3.0.0)',
+      'Sort transactions by date, logged date, amount, name, or source. '
+          'Group by date, logged date, category, or source — with collapsible '
+          'headers and subtotals. Category filter is now a dropdown. '
+          'Transaction date and logged date are shown separately.',
+    ),
+    (
+      '💬',
+      'Chat Sessions & Wayback (v3.0.0)',
+      'AI chats are now organized into sessions. Tap "New Chat" (+ icon) to '
+          'start fresh — previous conversations are saved. Chat History shows a '
+          'session list; tap any session to read it. Archive or delete anytime.',
+    ),
+    (
+      '🤖',
+      'AI Recovery: Session Summary Card (v3.0.0)',
+      'After the AI logs expenses, a card shows which items were ✅ recorded, '
+          '⚠️ skipped (already in DB), or ❌ failed. Tap "Review & re-log" to '
+          'fix missing items directly — no need to re-describe them.',
+    ),
+    (
+      '📊',
+      'Analytics Quick Jump & Improvements (v3.0.0)',
+      'Four Quick Jump chips let you jump to Overview, Trends, Health, or AI Advice. '
+          'Period chips now have a "More" menu for Payday Cycle / Custom Range. '
+          'Category breakdown has a sort toggle: Amount, Name, or Δ vs last month.',
+    ),
     (
       '🏠',
       'Local AI — Private Mode (v2.9.92)',

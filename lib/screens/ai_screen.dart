@@ -58,6 +58,10 @@ class _AIScreenState extends State<AIScreen> {
   bool _isListening = false;
   String _topSpendingCategory = 'Food'; // dynamic what-if chip
   String? _lastUserMessage; // for retry button
+  // ── SESSION SUMMARY CARD ─────────────────────────────────────────────────
+  // Shows recorded/skipped/failed counts after each AI response with actions.
+  bool _sessionSummaryDismissed = true; // true = hidden; false = shown
+  List<AiSessionResultItem> _sessionSummaryItems = [];
   StreamSubscription? _eventSub;
   ShakeDetector? _shakeDetector;
   Timer? _debounceTimer;
@@ -608,6 +612,7 @@ class _AIScreenState extends State<AIScreen> {
       await DBService.saveChatMessage(role: 'ai', message: reply);
 
       if (mounted) {
+        final resultItems = AIChatService.lastResponseItems;
         setState(() {
           _messages.add({
             "role": "ai",
@@ -615,6 +620,11 @@ class _AIScreenState extends State<AIScreen> {
             "ts": DateTime.now().toIso8601String().substring(0, 10),
           });
           _lastUserMessage = null; // clear retry on success
+          // Show session summary card if any actions were logged/skipped
+          if (resultItems.isNotEmpty) {
+            _sessionSummaryItems = List.from(resultItems);
+            _sessionSummaryDismissed = false;
+          }
         });
         _scrollToBottom();
       }
@@ -908,6 +918,9 @@ class _AIScreenState extends State<AIScreen> {
               'confidence_score': category == 'Others' ? 0.65 : 0.9,
               'is_want': isWant,
             });
+            // Record in per-response result card
+            AIChatService.recordSuccessItem(
+                itemName, amount, expenseDate, category);
             // Record for undo — get the inserted ID
             try {
               final db = await DBService.getDB();
@@ -2049,6 +2062,171 @@ class _AIScreenState extends State<AIScreen> {
     );
   }
 
+  // ── SESSION SUMMARY CARD ──────────────────────────────────────────────────
+  /// Card shown after each AI response that contained log_expense actions.
+  /// Summarises what was recorded, skipped, and failed so the user can take
+  /// action on anything that didn't make it into the DB.
+  Widget _buildSessionSummaryCard() {
+    if (_sessionSummaryDismissed || _sessionSummaryItems.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    final cs = Theme.of(context).colorScheme;
+    final recorded = _sessionSummaryItems
+        .where((i) => i.status == AiItemStatus.recorded)
+        .toList();
+    final skipped = _sessionSummaryItems
+        .where((i) => i.status == AiItemStatus.skipped)
+        .toList();
+    final failed = _sessionSummaryItems
+        .where((i) => i.status == AiItemStatus.failed)
+        .toList();
+    final problematic = [...skipped, ...failed];
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: cs.outline.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row
+          Row(
+            children: [
+              Icon(Icons.receipt_long_outlined, size: 14, color: cs.primary),
+              const SizedBox(width: 6),
+              if (recorded.isNotEmpty)
+                _summaryPill('✅ ${recorded.length} recorded', Colors.green),
+              if (skipped.isNotEmpty) ...[
+                const SizedBox(width: 6),
+                _summaryPill('⚠️ ${skipped.length} skipped', Colors.orange),
+              ],
+              if (failed.isNotEmpty) ...[
+                const SizedBox(width: 6),
+                _summaryPill('❌ ${failed.length} failed', Colors.red),
+              ],
+              const Spacer(),
+              GestureDetector(
+                onTap: () => setState(() => _sessionSummaryDismissed = true),
+                child: Icon(Icons.close,
+                    size: 16, color: cs.onSurface.withValues(alpha: 0.4)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Item rows
+          for (final item in _sessionSummaryItems) ...[
+            _sessionSummaryRow(item),
+            const SizedBox(height: 4),
+          ],
+          // Review button — only if there are skipped/failed items
+          if (problematic.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: () => _showRelogHelper(problematic),
+                icon: const Icon(Icons.edit_note, size: 14),
+                label: const Text('Review & re-log missing items',
+                    style: TextStyle(fontSize: 12)),
+                style: OutlinedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _summaryPill(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Text(label,
+          style: TextStyle(
+              fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+    );
+  }
+
+  Widget _sessionSummaryRow(AiSessionResultItem item) {
+    final cs = Theme.of(context).colorScheme;
+    Color statusColor;
+    String statusIcon;
+    switch (item.status) {
+      case AiItemStatus.recorded:
+        statusColor = Colors.green;
+        statusIcon = '✅';
+        break;
+      case AiItemStatus.skipped:
+        statusColor = Colors.orange;
+        statusIcon = '⚠️';
+        break;
+      case AiItemStatus.failed:
+        statusColor = Colors.red;
+        statusIcon = '❌';
+        break;
+    }
+    final amountStr =
+        item.amount > 0 ? ' · ${CurrencyService.format(item.amount)}' : '';
+    final dateStr =
+        item.date.length >= 10 ? ' · ${item.date.substring(5, 10)}' : '';
+    return Row(
+      children: [
+        Text(statusIcon, style: const TextStyle(fontSize: 12)),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            '${item.itemName}$amountStr$dateStr',
+            style: const TextStyle(fontSize: 12),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        if (item.reason != null)
+          Text(
+            item.reason!,
+            style: TextStyle(
+                fontSize: 10, color: statusColor.withValues(alpha: 0.8)),
+          ),
+      ],
+    );
+  }
+
+  /// Bottom sheet for reviewing and manually re-logging skipped/failed items.
+  void _showRelogHelper(List<AiSessionResultItem> items) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => _RelogHelperSheet(
+        items: items,
+        onLogged: () {
+          setState(() => _sessionSummaryDismissed = true);
+          _loadContext(silent: true);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Items logged successfully'),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.green,
+            ));
+          }
+        },
+      ),
+    );
+  }
+
   void _showActionSnackbar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -2704,6 +2882,46 @@ class _AIScreenState extends State<AIScreen> {
               );
             },
           ),
+          // New Chat button — saves current session, starts fresh
+          IconButton(
+            icon: const Icon(Icons.add_comment_outlined),
+            tooltip: "New chat",
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text("Start a new chat?"),
+                  content: const Text(
+                      "Your current conversation will be saved. You can come back to it anytime via Chat History."),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text("Cancel")),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text("New Chat"),
+                    ),
+                  ],
+                ),
+              );
+              if (confirm != true || !mounted) return;
+              // Auto-title the current session from its first message
+              try {
+                final sessionId = await DBService.getCurrentSessionId();
+                await DBService.autoTitleSession(sessionId);
+              } catch (_) {}
+              // Create a new session
+              await DBService.createNewChatSession();
+              AIChatService.clearHistory();
+              setState(() {
+                _messages.clear();
+                _historyRestored = false;
+                _sessionSummaryDismissed = true;
+                _sessionSummaryItems = [];
+              });
+              _loadContext();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: "Clear chat",
@@ -2733,6 +2951,8 @@ class _AIScreenState extends State<AIScreen> {
               setState(() {
                 _messages.clear();
                 _historyRestored = false;
+                _sessionSummaryDismissed = true;
+                _sessionSummaryItems = [];
               });
               _loadContext();
             },
@@ -3436,6 +3656,11 @@ class _AIScreenState extends State<AIScreen> {
                         },
                       ),
           ),
+          // Session summary card — shown after AI responses with log_expense actions
+          if (!_sessionSummaryDismissed &&
+              _sessionSummaryItems.isNotEmpty &&
+              !_sending)
+            _buildSessionSummaryCard(),
           if (_sending)
             const Padding(
               padding: EdgeInsets.only(bottom: 4),
@@ -3613,4 +3838,257 @@ class _TypingDotsState extends State<_TypingDots>
       },
     );
   }
+}
+
+// ── RE-LOG HELPER SHEET ────────────────────────────────────────────────────
+/// Bottom sheet that lets the user manually log items that the AI skipped or
+/// failed to record. Each item is pre-filled with the AI's parsed values and
+/// the user can edit name, amount, and date before logging.
+class _RelogHelperSheet extends StatefulWidget {
+  final List<AiSessionResultItem> items;
+  final VoidCallback onLogged;
+
+  const _RelogHelperSheet({required this.items, required this.onLogged});
+
+  @override
+  State<_RelogHelperSheet> createState() => _RelogHelperSheetState();
+}
+
+class _RelogHelperSheetState extends State<_RelogHelperSheet> {
+  late final List<_RelogItem> _items;
+
+  @override
+  void initState() {
+    super.initState();
+    _items = widget.items
+        .map((i) => _RelogItem(
+              nameCtrl: TextEditingController(text: i.itemName),
+              amountCtrl: TextEditingController(
+                  text: i.amount > 0 ? i.amount.toStringAsFixed(0) : ''),
+              date: i.date.length >= 10
+                  ? i.date.substring(0, 10)
+                  : DateTime.now().toIso8601String().substring(0, 10),
+              category: i.category.isNotEmpty ? i.category : 'Others',
+              logged: false,
+            ))
+        .toList();
+  }
+
+  @override
+  void dispose() {
+    for (final item in _items) {
+      item.nameCtrl.dispose();
+      item.amountCtrl.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _logItem(int index) async {
+    final item = _items[index];
+    final name = item.nameCtrl.text.trim();
+    final amount = double.tryParse(item.amountCtrl.text) ?? 0;
+    if (name.isEmpty || amount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Enter a valid name and amount'),
+        behavior: SnackBarBehavior.floating,
+      ));
+      return;
+    }
+    await DBService.insertExpense({
+      'item_name': name,
+      'category': item.category,
+      'amount': amount,
+      'date': item.date,
+      'time': '00:00',
+      'payment_method': 'Cash',
+      'notes': 'Manually re-logged',
+      'ai_generated': 0,
+      'confidence_score': 1.0,
+      'is_want': 0,
+    });
+    setState(() => item.logged = true);
+    // If all items logged, auto-close and notify
+    if (_items.every((i) => i.logged)) {
+      Navigator.pop(context);
+      widget.onLogged();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return DraggableScrollableSheet(
+      initialChildSize: 0.6,
+      minChildSize: 0.4,
+      maxChildSize: 0.92,
+      expand: false,
+      builder: (ctx, scrollCtrl) => Column(
+        children: [
+          // Handle
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: cs.onSurface.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                const Text('Re-log missing items',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Spacer(),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Close')),
+              ],
+            ),
+          ),
+          const Divider(),
+          Expanded(
+            child: ListView.builder(
+              controller: scrollCtrl,
+              padding: const EdgeInsets.all(16),
+              itemCount: _items.length,
+              itemBuilder: (_, i) {
+                final item = _items[i];
+                if (item.logged) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.check_circle,
+                            color: Colors.green, size: 18),
+                        const SizedBox(width: 8),
+                        Text(item.nameCtrl.text,
+                            style: const TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500)),
+                        const Text(' — logged',
+                            style:
+                                TextStyle(color: Colors.green, fontSize: 12)),
+                      ],
+                    ),
+                  );
+                }
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.category,
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: cs.onSurface.withValues(alpha: 0.5))),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: TextField(
+                                controller: item.nameCtrl,
+                                decoration: const InputDecoration(
+                                  labelText: 'Item name',
+                                  isDense: true,
+                                  border: OutlineInputBorder(),
+                                ),
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              flex: 2,
+                              child: TextField(
+                                controller: item.amountCtrl,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: 'Amount',
+                                  prefixText: '${CurrencyService.symbol} ',
+                                  isDense: true,
+                                  border: const OutlineInputBorder(),
+                                ),
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(Icons.calendar_today_outlined,
+                                size: 12,
+                                color: cs.onSurface.withValues(alpha: 0.5)),
+                            const SizedBox(width: 4),
+                            Text(item.date,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color:
+                                        cs.onSurface.withValues(alpha: 0.6))),
+                            const SizedBox(width: 6),
+                            GestureDetector(
+                              onTap: () async {
+                                final picked = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.tryParse(item.date) ??
+                                      DateTime.now(),
+                                  firstDate: DateTime(2020),
+                                  lastDate: DateTime.now(),
+                                );
+                                if (picked != null) {
+                                  setState(() => item.date = picked
+                                      .toIso8601String()
+                                      .substring(0, 10));
+                                }
+                              },
+                              child: Text('(change)',
+                                  style: TextStyle(
+                                      fontSize: 11, color: cs.primary)),
+                            ),
+                            const Spacer(),
+                            FilledButton(
+                              onPressed: () => _logItem(i),
+                              style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 6),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact),
+                              child: const Text('Log this',
+                                  style: TextStyle(fontSize: 12)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RelogItem {
+  TextEditingController nameCtrl;
+  TextEditingController amountCtrl;
+  String date;
+  String category;
+  bool logged;
+
+  _RelogItem({
+    required this.nameCtrl,
+    required this.amountCtrl,
+    required this.date,
+    required this.category,
+    required this.logged,
+  });
 }

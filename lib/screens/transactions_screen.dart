@@ -13,6 +13,60 @@ import '../widgets/info_button.dart';
 import 'edit_expense_screen.dart';
 import 'add_expense_screen.dart';
 
+// ── Sort and Group enums ──────────────────────────────────────────────────
+
+enum TxnSortKey {
+  transactionDate,
+  loggedDate,
+  amountDesc,
+  amountAsc,
+  nameAZ,
+  nameZA,
+  source,
+}
+
+enum TxnGroupKey {
+  transactionDate,
+  loggedDate,
+  category,
+  source,
+  none,
+}
+
+String _sortLabel(TxnSortKey k) {
+  switch (k) {
+    case TxnSortKey.transactionDate:
+      return 'Transaction date';
+    case TxnSortKey.loggedDate:
+      return 'Logged date';
+    case TxnSortKey.amountDesc:
+      return 'Amount (high → low)';
+    case TxnSortKey.amountAsc:
+      return 'Amount (low → high)';
+    case TxnSortKey.nameAZ:
+      return 'Name (A → Z)';
+    case TxnSortKey.nameZA:
+      return 'Name (Z → A)';
+    case TxnSortKey.source:
+      return 'Source';
+  }
+}
+
+String _groupLabel(TxnGroupKey k) {
+  switch (k) {
+    case TxnGroupKey.transactionDate:
+      return 'Transaction date';
+    case TxnGroupKey.loggedDate:
+      return 'Logged date';
+    case TxnGroupKey.category:
+      return 'Category';
+    case TxnGroupKey.source:
+      return 'Source';
+    case TxnGroupKey.none:
+      return 'None (flat list)';
+  }
+}
+
 class TransactionsScreen extends StatefulWidget {
   /// Optional: pre-filter to only show these expense IDs on open.
   /// Used by Data Quality screen to show affected expenses.
@@ -38,6 +92,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   // Multi-select
   final Set<int> _selected = {};
   bool get _isSelecting => _selected.isNotEmpty;
+
+  // Sort & Group state
+  TxnSortKey _sortKey = TxnSortKey.transactionDate;
+  TxnGroupKey _groupKey = TxnGroupKey.transactionDate;
+  final Set<String> _collapsedGroups = {};
 
   bool _showLowConfidenceOnly = false;
   bool _showWantsOnly = false;
@@ -75,10 +134,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       final prefs = await SharedPreferences.getInstance();
       final cat = prefs.getString('txn_filter_category') ?? 'All';
       final period = prefs.getString('txn_filter_period') ?? 'all';
+      final sortIdx = prefs.getInt('txn_sort_key') ?? 0;
+      final groupIdx = prefs.getInt('txn_group_key') ?? 0;
       if (mounted) {
         setState(() {
           _selectedCategory = cat;
           _period = period;
+          _sortKey =
+              TxnSortKey.values[sortIdx.clamp(0, TxnSortKey.values.length - 1)];
+          _groupKey = TxnGroupKey
+              .values[groupIdx.clamp(0, TxnGroupKey.values.length - 1)];
         });
       }
     } catch (_) {}
@@ -89,6 +154,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('txn_filter_category', _selectedCategory);
       await prefs.setString('txn_filter_period', _period);
+      await prefs.setInt('txn_sort_key', _sortKey.index);
+      await prefs.setInt('txn_group_key', _groupKey.index);
     } catch (_) {}
   }
 
@@ -184,14 +251,29 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     if (_searchQuery.isNotEmpty) {
       final q = _searchQuery.toLowerCase();
-      result = result
-          .where((e) =>
-              e.itemName.toLowerCase().contains(q) ||
-              e.category.toLowerCase().contains(q) ||
-              (e.shopName?.toLowerCase().contains(q) ?? false) ||
-              (e.notes?.toLowerCase().contains(q) ?? false) ||
-              (e.tags?.toLowerCase().contains(q) ?? false))
+      // Score-based relevance: itemName match > category/shop > notes/tags
+      final scored = result
+          .map((e) {
+            int score = 0;
+            if (e.itemName.toLowerCase().contains(q))
+              score = 3;
+            else if (e.category.toLowerCase().contains(q))
+              score = 2;
+            else if ((e.shopName?.toLowerCase().contains(q) ?? false))
+              score = 2;
+            else if ((e.notes?.toLowerCase().contains(q) ?? false))
+              score = 1;
+            else if ((e.tags?.toLowerCase().contains(q) ?? false)) score = 1;
+            return MapEntry(e, score);
+          })
+          .where((entry) => entry.value > 0)
           .toList();
+      // If search is active, sort by relevance first, then apply sort key within same score
+      scored.sort((a, b) => b.value.compareTo(a.value));
+      result = scored.map((e) => e.key).toList();
+    } else {
+      // Apply sort key
+      result = _sortExpenses(result);
     }
 
     if (_showLowConfidenceOnly) {
@@ -212,6 +294,270 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     _filtered = result;
     _displayCount = _pageSize;
+  }
+
+  /// Sort a list of expenses by the current sort key.
+  List<Expense> _sortExpenses(List<Expense> list) {
+    final sorted = List<Expense>.from(list);
+    switch (_sortKey) {
+      case TxnSortKey.transactionDate:
+        sorted.sort((a, b) => b.date.compareTo(a.date));
+        break;
+      case TxnSortKey.loggedDate:
+        sorted.sort((a, b) {
+          final la = a.updatedAt ?? a.date;
+          final lb = b.updatedAt ?? b.date;
+          return lb.compareTo(la);
+        });
+        break;
+      case TxnSortKey.amountDesc:
+        sorted.sort((a, b) => b.amount.compareTo(a.amount));
+        break;
+      case TxnSortKey.amountAsc:
+        sorted.sort((a, b) => a.amount.compareTo(b.amount));
+        break;
+      case TxnSortKey.nameAZ:
+        sorted.sort((a, b) =>
+            a.itemName.toLowerCase().compareTo(b.itemName.toLowerCase()));
+        break;
+      case TxnSortKey.nameZA:
+        sorted.sort((a, b) =>
+            b.itemName.toLowerCase().compareTo(a.itemName.toLowerCase()));
+        break;
+      case TxnSortKey.source:
+        sorted.sort((a, b) {
+          final sa = _sourceOf(a);
+          final sb = _sourceOf(b);
+          return sa.compareTo(sb);
+        });
+        break;
+    }
+    return sorted;
+  }
+
+  String _sourceOf(Expense e) {
+    final notes = e.notes?.toLowerCase() ?? '';
+    if (notes.startsWith('imported') || notes.contains('[screenshot]'))
+      return 'screenshot';
+    if (e.aiGenerated) return 'ai';
+    return 'manual';
+  }
+
+  String _sourceLabel(Expense e) {
+    switch (_sourceOf(e)) {
+      case 'screenshot':
+        return '📷 Screenshot';
+      case 'ai':
+        return '🤖 AI';
+      default:
+        return '✏️ Manual';
+    }
+  }
+
+  /// Build grouped representation: list of (header label, expenses).
+  List<({String header, double total, List<Expense> items})> _buildGroups() {
+    if (_groupKey == TxnGroupKey.none) {
+      return [
+        (
+          header: '',
+          total: _filtered.fold(0.0, (s, e) => s + e.amount),
+          items: _filtered
+        )
+      ];
+    }
+    final map = <String, List<Expense>>{};
+    for (final e in _filtered) {
+      final key = _groupKeyOf(e);
+      map.putIfAbsent(key, () => []).add(e);
+    }
+    // Sort groups by key descending (dates) or ascending (category/source)
+    final keys = map.keys.toList();
+    switch (_groupKey) {
+      case TxnGroupKey.transactionDate:
+      case TxnGroupKey.loggedDate:
+        keys.sort((a, b) => b.compareTo(a)); // newest first
+        break;
+      case TxnGroupKey.category:
+      case TxnGroupKey.source:
+        keys.sort();
+        break;
+      case TxnGroupKey.none:
+        break;
+    }
+    return keys.map((k) {
+      final items = map[k]!;
+      final total = items.fold(0.0, (s, e) => s + e.amount);
+      return (header: _groupHeaderLabel(k), total: total, items: items);
+    }).toList();
+  }
+
+  String _groupKeyOf(Expense e) {
+    switch (_groupKey) {
+      case TxnGroupKey.transactionDate:
+        return e.date.length >= 10 ? e.date.substring(0, 10) : e.date;
+      case TxnGroupKey.loggedDate:
+        final d = e.updatedAt ?? e.date;
+        return d.length >= 10 ? d.substring(0, 10) : d;
+      case TxnGroupKey.category:
+        return e.category;
+      case TxnGroupKey.source:
+        return _sourceOf(e);
+      case TxnGroupKey.none:
+        return '';
+    }
+  }
+
+  String _groupHeaderLabel(String key) {
+    switch (_groupKey) {
+      case TxnGroupKey.transactionDate:
+        try {
+          return _formatDate(key);
+        } catch (_) {
+          return key;
+        }
+      case TxnGroupKey.loggedDate:
+        try {
+          return 'Logged ${_formatDate(key)}';
+        } catch (_) {
+          return 'Logged $key';
+        }
+      case TxnGroupKey.category:
+        return key;
+      case TxnGroupKey.source:
+        switch (key) {
+          case 'ai':
+            return '🤖 AI';
+          case 'screenshot':
+            return '📷 Screenshot';
+          default:
+            return '✏️ Manual';
+        }
+      case TxnGroupKey.none:
+        return '';
+    }
+  }
+
+  String _formatDate(String isoDate) {
+    final dt = DateTime.parse(isoDate);
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final d = DateTime(dt.year, dt.month, dt.day);
+    final diff = today.difference(d).inDays;
+    if (diff == 0) return 'Today';
+    if (diff == 1) return 'Yesterday';
+    // Show full date for older entries
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
+  }
+
+  /// Show the sort/group bottom sheet.
+  void _showSortGroupSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setSheet) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Handle
+                Center(
+                  child: Container(
+                    width: 36,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2)),
+                  ),
+                ),
+                // Sort by section
+                const Text('Sort by',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: TxnSortKey.values.map((k) {
+                    final selected = _sortKey == k;
+                    return FilterChip(
+                      label: Text(_sortLabel(k),
+                          style: const TextStyle(fontSize: 12)),
+                      selected: selected,
+                      onSelected: (_) {
+                        setSheet(() {});
+                        setState(() {
+                          _sortKey = k;
+                          _applyFilter();
+                          _persistFilter();
+                        });
+                      },
+                      selectedColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.15),
+                      checkmarkColor: Theme.of(context).colorScheme.primary,
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 16),
+                // Group by section
+                const Text('Group by',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 6,
+                  children: TxnGroupKey.values.map((k) {
+                    final selected = _groupKey == k;
+                    return FilterChip(
+                      label: Text(_groupLabel(k),
+                          style: const TextStyle(fontSize: 12)),
+                      selected: selected,
+                      onSelected: (_) {
+                        setSheet(() {});
+                        setState(() {
+                          _groupKey = k;
+                          _collapsedGroups.clear();
+                          _applyFilter();
+                          _persistFilter();
+                        });
+                      },
+                      selectedColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.15),
+                      checkmarkColor: Theme.of(context).colorScheme.primary,
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   double get _filteredTotal => _filtered.fold(0.0, (s, e) => s + e.amount);
@@ -400,9 +746,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   title: "Transactions",
                   body: "This screen shows all your logged expenses.\n\n"
                       "• Search by item name or shop\n"
+                      "• Use Sort / Group to change the order and grouping\n"
                       "• Filter by time period or category\n"
                       "• Long-press any transaction to select multiple, then delete them at once\n"
                       "• Tap the download icon to export the filtered list to CSV",
+                ),
+                // Sort/Group button
+                IconButton(
+                  icon: const Icon(Icons.swap_vert),
+                  tooltip: "Sort & group",
+                  onPressed: _showSortGroupSheet,
                 ),
                 IconButton(
                   icon: const Icon(Icons.download_outlined),
@@ -515,86 +868,113 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   Theme.of(context).colorScheme.primary,
                             ),
                           ),
-                        // CF-1: Low confidence filter
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: const Text("⚠️ Low confidence"),
-                            selected: _showLowConfidenceOnly,
-                            onSelected: (v) => setState(() {
-                              _showLowConfidenceOnly = v;
-                              _applyFilter();
-                            }),
-                            selectedColor:
-                                Colors.orange.withValues(alpha: 0.15),
-                            checkmarkColor: Colors.orange,
-                          ),
-                        ),
+                        // (end of period chips)
                       ],
                     ),
                   ),
 
-                  // Category filter
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+                  // Row 2: Category dropdown + Want/Need + Low confidence
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                     child: Row(
                       children: [
-                        // Want/Need filter
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: const Text("🏷️ Wants only"),
-                            selected: _showWantsOnly,
-                            onSelected: (v) => setState(() {
-                              _showWantsOnly = v;
-                              if (v) _showNeedsOnly = false;
-                              _applyFilter();
-                            }),
-                            selectedColor:
-                                Colors.orange.withValues(alpha: 0.15),
-                            checkmarkColor: Colors.orange,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: FilterChip(
-                            label: const Text("✅ Needs only"),
-                            selected: _showNeedsOnly,
-                            onSelected: (v) => setState(() {
-                              _showNeedsOnly = v;
-                              if (v) _showWantsOnly = false;
-                              _applyFilter();
-                            }),
-                            selectedColor: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.15),
-                            checkmarkColor:
-                                Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        ..._categories
-                            .map((cat) => Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: FilterChip(
-                                    label: Text(cat,
-                                        style: const TextStyle(fontSize: 12)),
-                                    selected: _selectedCategory == cat,
-                                    onSelected: (_) => setState(() {
-                                      _selectedCategory = cat;
+                        // Category dropdown (replaces overflowing chip row)
+                        Expanded(
+                          child: DropdownButtonHideUnderline(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: _selectedCategory != 'All'
+                                        ? cs.primary
+                                        : cs.outline.withValues(alpha: 0.4)),
+                                borderRadius: BorderRadius.circular(20),
+                                color: _selectedCategory != 'All'
+                                    ? cs.primary.withValues(alpha: 0.08)
+                                    : null,
+                              ),
+                              child: DropdownButton<String>(
+                                value: _selectedCategory,
+                                isExpanded: true,
+                                isDense: true,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: _selectedCategory != 'All'
+                                        ? cs.primary
+                                        : cs.onSurface),
+                                icon: Icon(Icons.arrow_drop_down,
+                                    size: 18,
+                                    color: _selectedCategory != 'All'
+                                        ? cs.primary
+                                        : cs.onSurface.withValues(alpha: 0.6)),
+                                items: _categories
+                                    .map((c) => DropdownMenuItem(
+                                          value: c,
+                                          child: Text(c,
+                                              style: const TextStyle(
+                                                  fontSize: 12)),
+                                        ))
+                                    .toList(),
+                                onChanged: (v) {
+                                  if (v != null) {
+                                    setState(() {
+                                      _selectedCategory = v;
                                       _applyFilter();
                                       _persistFilter();
-                                    }),
-                                    selectedColor: Theme.of(context)
-                                        .colorScheme
-                                        .primary
-                                        .withValues(alpha: 0.15),
-                                    checkmarkColor:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                                ))
-                            .toList(),
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Want/Need toggle chips (compact)
+                        FilterChip(
+                          label: const Text("Wants",
+                              style: TextStyle(fontSize: 11)),
+                          selected: _showWantsOnly,
+                          onSelected: (v) => setState(() {
+                            _showWantsOnly = v;
+                            if (v) _showNeedsOnly = false;
+                            _applyFilter();
+                          }),
+                          selectedColor: Colors.orange.withValues(alpha: 0.15),
+                          checkmarkColor: Colors.orange,
+                          visualDensity: VisualDensity.compact,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                        ),
+                        const SizedBox(width: 6),
+                        FilterChip(
+                          label: const Text("Needs",
+                              style: TextStyle(fontSize: 11)),
+                          selected: _showNeedsOnly,
+                          onSelected: (v) => setState(() {
+                            _showNeedsOnly = v;
+                            if (v) _showWantsOnly = false;
+                            _applyFilter();
+                          }),
+                          selectedColor: cs.primary.withValues(alpha: 0.15),
+                          checkmarkColor: cs.primary,
+                          visualDensity: VisualDensity.compact,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                        ),
+                        const SizedBox(width: 6),
+                        FilterChip(
+                          label:
+                              const Text("⚠️", style: TextStyle(fontSize: 12)),
+                          tooltip: "Low confidence only",
+                          selected: _showLowConfidenceOnly,
+                          onSelected: (v) => setState(() {
+                            _showLowConfidenceOnly = v;
+                            _applyFilter();
+                          }),
+                          selectedColor: Colors.orange.withValues(alpha: 0.15),
+                          checkmarkColor: Colors.orange,
+                          visualDensity: VisualDensity.compact,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                        ),
                       ],
                     ),
                   ),
@@ -677,7 +1057,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                   const SizedBox(height: 8),
 
-                  // List
+                  // List — grouped or flat depending on _groupKey
                   Expanded(
                     child: _filtered.isEmpty
                         ? Center(
@@ -703,62 +1083,133 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               ],
                             ),
                           )
-                        : ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            itemCount: _filtered.length > _displayCount
-                                ? _displayCount + 1
-                                : _filtered.length,
-                            itemBuilder: (_, i) {
-                              // Load more button at end
-                              if (i == _displayCount) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: OutlinedButton(
-                                    onPressed: () => setState(
-                                        () => _displayCount += _pageSize),
-                                    child: Text(
-                                        "Load more (${_filtered.length - _displayCount} remaining)"),
-                                  ),
-                                );
-                              }
-                              return ExpenseTile(
-                                expense: _filtered[i],
-                                onEdit: _isSelecting
-                                    ? null
-                                    : () => _edit(_filtered[i]),
-                                onDelete: _isSelecting
-                                    ? null
-                                    : () => _delete(_filtered[i].id!),
-                                isSelected: _selected.contains(_filtered[i].id),
-                                onLongPress: () {
-                                  setState(() {
-                                    final id = _filtered[i].id!;
-                                    if (_selected.contains(id)) {
-                                      _selected.remove(id);
-                                    } else {
-                                      _selected.add(id);
-                                    }
-                                  });
-                                },
-                                onTap: _isSelecting
-                                    ? () {
-                                        setState(() {
-                                          final id = _filtered[i].id!;
-                                          if (_selected.contains(id)) {
-                                            _selected.remove(id);
-                                          } else {
-                                            _selected.add(id);
-                                          }
-                                        });
-                                      }
-                                    : null,
-                              );
-                            },
-                          ),
+                        : _buildGroupedList(cs),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildGroupedList(ColorScheme cs) {
+    final groups = _buildGroups();
+    // For "none" grouping, render flat list with pagination
+    if (_groupKey == TxnGroupKey.none) {
+      final flat = groups.isEmpty ? <Expense>[] : groups.first.items;
+      return ListView.builder(
+        padding: const EdgeInsets.only(bottom: 16),
+        itemCount:
+            flat.length > _displayCount ? _displayCount + 1 : flat.length,
+        itemBuilder: (_, i) {
+          if (i == _displayCount) {
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: OutlinedButton(
+                onPressed: () => setState(() => _displayCount += _pageSize),
+                child: Text(
+                    "Load more (${flat.length - _displayCount} remaining)"),
+              ),
+            );
+          }
+          return _buildTile(flat[i]);
+        },
+      );
+    }
+
+    // Grouped list — build items list including group headers
+    final items = <dynamic>[];
+    for (final g in groups) {
+      items.add(g); // group header
+      if (!_collapsedGroups.contains(g.header)) {
+        items.addAll(g.items);
+      }
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 16),
+      itemCount: items.length,
+      itemBuilder: (_, i) {
+        final item = items[i];
+        if (item is ({String header, double total, List<Expense> items})) {
+          // Group header
+          final collapsed = _collapsedGroups.contains(item.header);
+          return InkWell(
+            onTap: () => setState(() {
+              if (collapsed) {
+                _collapsedGroups.remove(item.header);
+              } else {
+                _collapsedGroups.add(item.header);
+              }
+            }),
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(12, 8, 12, 2),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              decoration: BoxDecoration(
+                color: cs.primary.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: cs.primary.withValues(alpha: 0.12)),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    collapsed ? Icons.chevron_right : Icons.expand_more,
+                    size: 16,
+                    color: cs.primary,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      item.header.isEmpty ? 'All' : item.header,
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: cs.primary),
+                    ),
+                  ),
+                  Text(
+                    '${item.items.length} · ${CurrencyService.format(item.total)}',
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: cs.onSurface.withValues(alpha: 0.6)),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        return _buildTile(item as Expense);
+      },
+    );
+  }
+
+  Widget _buildTile(Expense e) {
+    return ExpenseTile(
+      expense: e,
+      onEdit: _isSelecting ? null : () => _edit(e),
+      onDelete: _isSelecting ? null : () => _delete(e.id!),
+      isSelected: _selected.contains(e.id),
+      onLongPress: () {
+        setState(() {
+          final id = e.id!;
+          if (_selected.contains(id)) {
+            _selected.remove(id);
+          } else {
+            _selected.add(id);
+          }
+        });
+      },
+      onTap: _isSelecting
+          ? () {
+              setState(() {
+                final id = e.id!;
+                if (_selected.contains(id)) {
+                  _selected.remove(id);
+                } else {
+                  _selected.add(id);
+                }
+              });
+            }
+          : null,
     );
   }
 }

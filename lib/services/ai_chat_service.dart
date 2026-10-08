@@ -4,6 +4,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'db_service.dart';
 import 'app_config.dart';
 
+/// Status of an item processed during an AI response.
+enum AiItemStatus { recorded, skipped, failed }
+
+/// Rich record of one item from the most-recent AI response, used by the
+/// session summary card in ai_screen.dart.
+class AiSessionResultItem {
+  final String itemName;
+  final double amount;
+  final String date;
+  final String category;
+  final AiItemStatus status;
+  final String? reason; // for skipped/failed items
+
+  const AiSessionResultItem({
+    required this.itemName,
+    required this.amount,
+    required this.date,
+    required this.category,
+    required this.status,
+    this.reason,
+  });
+}
+
 /// Represents an action the AI wants to perform on the app's data
 class AIAction {
   final String type;
@@ -84,11 +107,45 @@ class AIChatService {
   // here so the AI knows in its next message that the item IS already in DB.
   static final List<String> _sessionSkippedLog = [];
 
+  // ── SESSION RESULT LOG — rich records for the UI summary card ─────────────
+  // Each entry is one item from the most-recent AI response with actions.
+  // Cleared at the start of each sendMessage() and repopulated as actions fire.
+  static final List<AiSessionResultItem> _lastResponseItems = [];
+
+  /// Returns the result items from the most-recent AI response.
+  /// Used by ai_screen to build the session summary card.
+  static List<AiSessionResultItem> get lastResponseItems =>
+      List.unmodifiable(_lastResponseItems);
+
+  /// Clear the last-response result log. Called at the start of each send.
+  static void _clearLastResponseItems() => _lastResponseItems.clear();
+
+  /// Record a successfully inserted item from the current response.
+  static void recordSuccessItem(
+      String itemName, double amount, String date, String category) {
+    _lastResponseItems.add(AiSessionResultItem(
+      itemName: itemName,
+      amount: amount,
+      date: date,
+      category: category,
+      status: AiItemStatus.recorded,
+    ));
+  }
+
   /// Record a skipped duplicate (called by ai_screen when crossSessionDup fires).
   static void recordSkippedDuplicate(String itemName, String date) {
     final key = '${itemName.trim()} ($date)';
     if (!_sessionSkippedLog.contains(key)) _sessionSkippedLog.add(key);
     if (_sessionSkippedLog.length > 10) _sessionSkippedLog.removeAt(0);
+    // Also add to the per-response result card
+    _lastResponseItems.add(AiSessionResultItem(
+      itemName: itemName,
+      amount: 0,
+      date: date,
+      category: '',
+      status: AiItemStatus.skipped,
+      reason: 'Already in DB',
+    ));
   }
 
   /// Record that a log_expense action was fired (called by ai_screen executor).
@@ -1018,6 +1075,8 @@ PH BNPL/Loan Services (2026):
   /// Returns (reply text, list of actions to execute)
   static Future<(String, List<AIAction>)> sendMessage(String message,
       {bool isFallbackRetry = false}) async {
+    // Clear per-response result log at the start of each new send (not retries)
+    if (!isFallbackRetry) _clearLastResponseItems();
     // D2: enforce daily cap before hitting the API — skip on fallback retries
     // to avoid double-counting and prevent the limit check from blocking the
     // fallback chain (a retry should not consume an extra message slot).
@@ -1800,6 +1859,7 @@ PH BNPL/Loan Services (2026):
     _userRules = [];
     _sessionActionLog.clear();
     _sessionSkippedLog.clear();
+    _lastResponseItems.clear();
     // Clear summaries on explicit chat clear
     DBService.clearConversationSummaries().catchError((_) {});
   }

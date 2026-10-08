@@ -19,13 +19,13 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v2.9.92)
+## Part 0 — Authoritative Build Numbers (v3.0.0)
 
 Use these everywhere. Many older docs are stale.
 
-| Metric | v2.9.92 value |
+| Metric | v2.9.98 value |
 |--------|--------------|
-| Version string | **2.9.92** |
+| Version string | **3.0.0** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
@@ -57,6 +57,15 @@ Use these everywhere. Many older docs are stale.
 ### Recent releases
 | Version | Key changes |
 |---------|------------|
+| v3.0.0 | Transaction sort/group (5 sort keys, 5 group-by options, collapsible headers, dual-date display, category dropdown); Chat sessions (DB v14, session list, New Chat button, archive/delete); AI recovery (session summary card ✅/⚠️/❌, re-log helper sheet); Analytics overhaul (Quick Jump anchors, period chip overflow → More menu, category breakdown sort toggle, section anchors). |
+| v2.9.98 | Screenshot import visibility: `[screenshot]` source tag in AI context; `_sessionSkippedLog` → `ALREADY IN DB` guardrail + AI feedback; sort fix for 00:00 imported items. |
+| v2.9.97 | AI backdating fix: `Today/Yesterday` in context header; "yesterday"/"kahapon" date resolution; NOT-RECORDED CHECK before re-log; `date` field marked REQUIRED for past-day mentions. |
+| v2.9.92 | Local LLM private mode (9th provider); Settings Local AI section; LocalAiSetupSheet widget; privacy banner. |
+| v2.9.91 | Source tag completeness; CI AAB fix (APP_CONFIG_DART secret updated); GitHub Pages website. |
+| v2.9.90 | 10-item re-audit fixes: paluwagan/insurance/wallet deletes, archive bug, FHS chart tooltip, Peso empty states, wallet history on home. |
+| v2.9.89 | DB v13 budget/goal/income/score history; setMonthlyIncome wrapper; setBudget/updateGoal all log. |
+| v2.9.88 | Wallet history (wallet_history table v12); WalletsSheet history; App Check debug token. |
+| v2.9.87 | Installment→Plans tab fix; DQ View navigates to TransactionsScreen; Fix All for case_dup/round_amount. |
 | v2.9.53 | Settings refinement: 3 new home toggles (payday countdown, monthly recap, challenges); Lite Mode expanded to 13 sections. |
 | v2.9.52 | Tier 1 features: payday countdown, monthly recap alert, AI chat export, auto-categorization evidence threshold, semester recurring interval. |
 | v2.9.51 | **Critical fix:** AI fallback chain was silently failing — recursive `sendMessage()` re-ran daily limit check on each retry, blocking every provider switch. Added `isFallbackRetry` flag. |
@@ -89,6 +98,24 @@ This section records issues found by direct code inspection after the v2.9.53 Ki
 | 🟡 P2 | Clarify Android share-intent status. | Code inspection found clipboard parsing, but no `ACTION_SEND` receiver or `receive_sharing_intent` package. Do not describe share intent as implemented until wired. | `android/app/src/main/AndroidManifest.xml`, `MainActivity.kt`, `ai_screen.dart` or `bank_import_screen.dart` |
 | 🟡 P2 | Extract or test high-risk monoliths gradually. | `home_screen.dart`, `analytics_screen.dart`, `ai_screen.dart`, `db_service.dart`, and `ai_chat_service.dart` are very large; future changes need smaller helper methods and focused tests. | Same files, `test/` |
 | 🟡 P2 | Replace placeholder tests with focused service tests. | Current widget test only checks `1 + 1`; no guard around FHS, recurring date advancement, category evidence, or backup schema. | `test/` |
+
+---
+
+## Part 0B — v3.0.x Feature Roadmap (planned, not yet implemented)
+
+> Full plan doc: `docs/handsoff/feature-plan-v3.0.0-2026-10-09.md`
+
+| Version | Group | Key deliverable |
+|---------|-------|----------------|
+| **v3.0.0** | AI Recovery (C) | Session summary card (recorded/skipped/failed), Re-log helper bottom sheet, screenshot import result sheet |
+| **v3.0.1** | Chat Wayback (D) | DB v14 `chat_sessions` table; session list screen; "New Chat" button in AI screen; archive/delete sessions |
+| **v3.0.2** | Transaction Sort/Group (A) | Sort bottom sheet (date/logged/amount/name/source); Group by (date/logged/category/source/none); sticky sliver headers; ExpenseTile dual-date display; chip row cleanup |
+| **v3.0.3** | Analytics Overhaul (B) | Quick-jump section anchors; 50/30/20 period fix; category breakdown sort toggle; per-section expand/collapse; period chip overflow fix |
+
+### Open decisions (answer before starting each phase)
+1. Analytics navigation: **Quick Jump chips** (recommended) vs full TabBar?
+2. Re-log helper inserts **directly to DB** (bypasses dup guard) — confirmed?
+3. Chat session title: **auto from first user message**, user can rename — confirmed?
 
 ---
 

@@ -83,6 +83,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   int _currentAdjustedScore = 0;
   StreamSubscription? _eventSub;
 
+  // ── QUICK JUMP SECTION KEYS ──────────────────────────────────────────────
+  final _keyOverview = GlobalKey();
+  final _keyTrends = GlobalKey();
+  final _keyHealth = GlobalKey();
+  final _keyAiAdvice = GlobalKey();
+  final _scrollController = ScrollController();
+
+  // ── CATEGORY BREAKDOWN SORT ──────────────────────────────────────────────
+  // 0 = amount DESC (default), 1 = name ASC, 2 = delta vs last month
+  int _catBreakdownSort = 0;
+
   List<dynamic> _glanceBudgets = []; // full budget list for category breakdown
 
   // CC-1: Custom category assignments for 50/30/20
@@ -106,6 +117,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   void dispose() {
     _eventSub?.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -686,19 +698,54 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           : RefreshIndicator(
               onRefresh: _loadData,
               child: SingleChildScrollView(
+                controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Period filter
+                    // ── QUICK JUMP ANCHORS ────────────────────────────────
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (final item in [
+                            ('Overview', _keyOverview),
+                            ('Trends', _keyTrends),
+                            ('Health', _keyHealth),
+                            ('AI Advice', _keyAiAdvice),
+                          ])
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: ActionChip(
+                                label: Text(item.$1,
+                                    style: const TextStyle(fontSize: 11)),
+                                visualDensity: VisualDensity.compact,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                onPressed: () {
+                                  final ctx = item.$2.currentContext;
+                                  if (ctx != null) {
+                                    Scrollable.ensureVisible(ctx,
+                                        duration:
+                                            const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
+                                        alignment: 0.0);
+                                  }
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    // Period filter — 4 primary chips + "More" popup
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
                           for (final p in [
                             ('all', 'All Time'),
-                            ('weekly', 'This Week'),
                             ('monthly', 'This Month'),
                             ('last_month', 'Last Month'),
                             ('yearly', 'This Year'),
@@ -721,58 +768,21 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                     Theme.of(context).colorScheme.primary,
                               ),
                             ),
-                          // Payday cycle chip — shows expenses from last payday to today
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: FilterChip(
-                              label: Text(
-                                _chartPeriod == 'payday_cycle'
-                                    ? 'Payday Cycle (${_paydayDate}th)'
-                                    : 'Payday Cycle',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              selected: _chartPeriod == 'payday_cycle',
-                              avatar:
-                                  const Icon(Icons.payments_outlined, size: 14),
-                              onSelected: (_) async {
-                                if (_chartPeriod != 'payday_cycle') {
-                                  // First use — prompt for payday date if not set
-                                  if (_paydayDate == 1) {
-                                    await _showPaydaySetupDialog();
-                                  }
-                                  setState(() => _chartPeriod = 'payday_cycle');
-                                  _loadData();
-                                } else {
-                                  // Already selected — tap again to change payday date
+                          // "More" popup for less-used options
+                          PopupMenuButton<String>(
+                            tooltip: 'More periods',
+                            offset: const Offset(0, 32),
+                            onSelected: (val) async {
+                              if (val == 'weekly') {
+                                setState(() => _chartPeriod = 'weekly');
+                                _loadData();
+                              } else if (val == 'payday_cycle') {
+                                if (_paydayDate == 1) {
                                   await _showPaydaySetupDialog();
-                                  _loadData();
                                 }
-                              },
-                              selectedColor: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withValues(alpha: 0.15),
-                              checkmarkColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          // Month picker chip — select any specific month/year
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: FilterChip(
-                              label: Text(
-                                _chartPeriod == 'pick_month' &&
-                                        _pickedMonth != null
-                                    ? DateFormat('MMM yyyy')
-                                        .format(_pickedMonth!)
-                                    : 'Pick Month',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              selected: _chartPeriod == 'pick_month',
-                              avatar:
-                                  const Icon(Icons.calendar_month, size: 14),
-                              onSelected: (_) async {
-                                // Show year + month picker dialog
+                                setState(() => _chartPeriod = 'payday_cycle');
+                                _loadData();
+                              } else if (val == 'pick_month') {
                                 final picked = await _showMonthPicker(context);
                                 if (picked != null) {
                                   setState(() {
@@ -781,30 +791,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   });
                                   _loadData();
                                 }
-                              },
-                              selectedColor: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withValues(alpha: 0.15),
-                              checkmarkColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          // Custom date range picker
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: FilterChip(
-                              label: Text(
-                                _chartPeriod == 'custom' &&
-                                        _customStart != null &&
-                                        _customEnd != null
-                                    ? "${DateFormat('M/d').format(_customStart!)}–${DateFormat('M/d').format(_customEnd!)}"
-                                    : "Custom Range",
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              selected: _chartPeriod == 'custom',
-                              avatar: const Icon(Icons.date_range, size: 14),
-                              onSelected: (_) async {
+                              } else if (val == 'custom') {
                                 final range = await showDateRangePicker(
                                   context: context,
                                   firstDate: DateTime(2020),
@@ -824,14 +811,54 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   });
                                   _loadData();
                                 }
-                              },
-                              selectedColor: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withValues(alpha: 0.15),
-                              checkmarkColor:
-                                  Theme.of(context).colorScheme.primary,
+                              }
+                            },
+                            child: Chip(
+                              label: Text(
+                                _chartPeriod == 'weekly'
+                                    ? 'This Week'
+                                    : _chartPeriod == 'payday_cycle'
+                                        ? 'Payday (${_paydayDate}th)'
+                                        : _chartPeriod == 'pick_month' &&
+                                                _pickedMonth != null
+                                            ? DateFormat('MMM yyyy')
+                                                .format(_pickedMonth!)
+                                            : _chartPeriod == 'custom' &&
+                                                    _customStart != null &&
+                                                    _customEnd != null
+                                                ? '${DateFormat('M/d').format(_customStart!)}–${DateFormat('M/d').format(_customEnd!)}'
+                                                : 'More ▾',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: [
+                                    'weekly',
+                                    'payday_cycle',
+                                    'pick_month',
+                                    'custom'
+                                  ].contains(_chartPeriod)
+                                      ? Theme.of(context).colorScheme.primary
+                                      : null,
+                                ),
+                              ),
                             ),
+                            itemBuilder: (_) => [
+                              const PopupMenuItem(
+                                  value: 'weekly',
+                                  child: Text('This Week',
+                                      style: TextStyle(fontSize: 13))),
+                              const PopupMenuItem(
+                                  value: 'payday_cycle',
+                                  child: Text('Payday Cycle',
+                                      style: TextStyle(fontSize: 13))),
+                              const PopupMenuItem(
+                                  value: 'pick_month',
+                                  child: Text('Pick Month…',
+                                      style: TextStyle(fontSize: 13))),
+                              const PopupMenuItem(
+                                  value: 'custom',
+                                  child: Text('Custom Range…',
+                                      style: TextStyle(fontSize: 13))),
+                            ],
                           ),
                         ],
                       ),
@@ -981,6 +1008,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         ),
                       )
                     else ...[
+                      // ── OVERVIEW SECTION (anchor) ────────────────────
+                      SizedBox(key: _keyOverview, height: 0),
                       // Pie Chart
                       const Text("Spending by Category",
                           style: TextStyle(
@@ -1150,15 +1179,64 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       // ── CATEGORY BREAKDOWN TABLE ──────────────────────────
                       // Simple always-visible table: category, amount, % of total, budget status
                       if (categories.isNotEmpty && _showAdvancedCharts) ...[
-                        const Text("Category Breakdown",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        Row(
+                          children: [
+                            const Expanded(
+                              child: Text("Category Breakdown",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            // Sort toggle
+                            GestureDetector(
+                              onTap: () => setState(() => _catBreakdownSort =
+                                  (_catBreakdownSort + 1) % 3),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outline
+                                          .withValues(alpha: 0.4)),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  _catBreakdownSort == 0
+                                      ? '▼ Amount'
+                                      : _catBreakdownSort == 1
+                                          ? '↑ Name'
+                                          : 'Δ vs last month',
+                                  style: const TextStyle(fontSize: 11),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 8),
                         Builder(builder: (context) {
                           final cs = Theme.of(context).colorScheme;
                           final budgets = _glanceBudgets;
                           final grandTotal =
                               totals.values.fold(0.0, (s, v) => s + v);
+                          // Apply sort
+                          final sortedCats = List<String>.from(categories);
+                          if (_catBreakdownSort == 0) {
+                            sortedCats.sort((a, b) =>
+                                (totals[b] ?? 0).compareTo(totals[a] ?? 0));
+                          } else if (_catBreakdownSort == 1) {
+                            sortedCats.sort();
+                          } else {
+                            // delta vs last month — biggest over-spenders first
+                            sortedCats.sort((a, b) {
+                              final da = (totals[a] ?? 0) -
+                                  (_lastMonthCategoryTotals[a] ?? 0);
+                              final db_ = (totals[b] ?? 0) -
+                                  (_lastMonthCategoryTotals[b] ?? 0);
+                              return db_.compareTo(da);
+                            });
+                          }
                           return Container(
                             decoration: BoxDecoration(
                               color: cs.surfaceContainerHighest
@@ -1166,7 +1244,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Column(
-                              children: categories.asMap().entries.map((entry) {
+                              children: sortedCats.asMap().entries.map((entry) {
                                 final i = entry.key;
                                 final cat = entry.value;
                                 final catTotal = totals[cat] ?? 0;
@@ -1191,7 +1269,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 final budgetRatio = budgetAmt > 0
                                     ? (catTotal / budgetAmt).clamp(0.0, 1.0)
                                     : 0.0;
-
                                 return Column(
                                   children: [
                                     if (i > 0)
@@ -1766,6 +1843,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         const SizedBox(height: 24),
                       ],
 
+                      // ── TRENDS SECTION (anchor) ───────────────────────
+                      SizedBox(key: _keyTrends, height: 0),
+
                       // Daily Spending Trend (last 30 days)
                       if (_cachedDailyTotals.length >= 3 &&
                           _showAdvancedCharts) ...[
@@ -2317,6 +2397,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         }),
                         const SizedBox(height: 8),
                       ],
+
+                      // ── HEALTH SECTION (anchor) ───────────────────────
+                      SizedBox(key: _keyHealth, height: 0),
 
                       // FHS Component Breakdown card
                       if (_currentComponents.isNotEmpty) ...[
@@ -3936,6 +4019,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       const _MarketInsightsCard(),
                       const SizedBox(height: 16),
                     ],
+
+                    // ── AI ADVICE SECTION (anchor) ────────────────────
+                    SizedBox(key: _keyAiAdvice, height: 0),
 
                     // AI Financial Advice
                     if (_loadingAdvice || _aiAdvice != null)
