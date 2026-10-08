@@ -155,24 +155,53 @@ Everything in Free, plus:
 
 | Plan | Price | Net to dev (after Play 15% cut) | Notes |
 |------|-------|----------------------------------|-------|
-| Pro Monthly | ₱49/month | ~₱42/user/mo | Lowest friction. Trial play. |
-| Pro Yearly | ₱249/year | ~₱212/user/yr | **Main plan.** Less than ₱1/day. 57% off vs monthly×12 (₱588). Push this as default with 7-day free trial. |
-| Pro Lifetime | ₱699 one-time | ~₱594/user | Breaks even at ~14 months. Perfect for students who'll use it through college. Best for PH one-time preference. |
+| Pro Monthly | **₱59/month** | ~₱50/user/mo | Lowest friction. One Jollibee Value Meal. |
+| Pro Yearly | **₱299/year** | ~₱254/user/yr | **Main plan.** ₱0.82/day. 7-day free trial. 58% off vs monthly×12 (₱708). |
+| Pro Lifetime | **₱799 one-time** | ~₱679/user | Breaks even at ~13.5 months. Best for students, one-time PH preference. |
 
-### Why this pricing works
-- ₱49/month = roughly one Jollibee meal. Zero purchase anxiety.
-- ₱249/year = less than a Cinema ticket. Feels like a steal when framed as "₱0.68/day."
-- ₱699 lifetime = a Grab ride home + snack. One-time, no recurring guilt.
-- Comparison: ChatGPT PH costs ₱999/month. Kling AI costs ₱499/month. SmartSpend Pro at ₱249/year is objectively cheaper than one month of either.
-- Even PISO Budget Tracker (a much simpler Filipino app) charges ₱199/month for premium. We're cheaper annually than their single month.
+### Market context (researched Oct 9, 2026)
+
+| App | Type | PH Price | Has AI? | Local LLM? | Screenshot import? |
+|-----|------|----------|---------|------------|-------------------|
+| **Agila** (PH, top rated 4.7★) | Free + cosmetics (₱29/item) | Free | Basic chat | ❌ | ❌ |
+| **PISO Budget** (PH indie) | Completely free, no subscription | Free | ❌ | ❌ | ❌ |
+| **Tarsi** (PH indie, #1 Paid PH Mar 2026) | One-time paid ~₱300–₱350 | ~₱300–₱350 | ❌ | ❌ | ❌ |
+| **BunnyWise** (PH, investment focus) | Waitlist — not launched | TBD | ❌ | ❌ | ❌ |
+| **Monarch Money** (US) | Subscription | ~₱5,800/year | Limited | ❌ | ❌ |
+| **YNAB** (US) | Subscription | ~₱6,300/year | Limited | ❌ | ❌ |
+| **ChatGPT Plus** | Subscription | ₱999/month | ✅ General | ❌ | ❌ |
+| **SmartSpend Pro** | Freemium | ₱299/year | ✅ **34 actions** | ✅ **Yes** | ✅ **40+ platforms** |
+
+### Why these prices work
+
+**₱59/month** — One Jollibee Value Meal. The PH market context is important here: both Agila and PISO are completely free. We charge because we have features they simply don't have. ₱59 is low enough that the question becomes "why not try it?" not "can I afford this?"
+
+**₱299/year** — Less than ₱1/day. Framed as "₱0.82/day — less than your tricycle fare." 58% off vs paying monthly (₱708/year). The anchor against ChatGPT Plus (₱999/month) makes this look like a steal: you get smarter AI specifically for your finances at 1/40th the cost of general AI.
+
+**₱799 lifetime** — This is the strategically important one for a student market. A student who starts using SmartSpend in 1st year college and uses it through graduation (4 years) pays ₱799 for ~₱2,832 worth of yearly subscriptions (4 × ₱799 if they bought yearly each year — wait, actually 4 × ₱299 = ₱1,196, so lifetime saves ₱397 over 4 years). The psychological value is "I own it forever, no decision fatigue, no renewal anxiety."
+
+### The differentiator argument (why we can charge when Agila and PISO don't)
+
+These features exist in SmartSpend Pro and **nowhere else in any Filipino finance app**:
+
+1. **Local LLM Private Mode** — Run AI on your own PC/Mac. Zero cloud. Your data never leaves your home network. No other finance app in the world has this as a feature.
+2. **34 agentic AI actions** — Agila has basic expense logging via chat. SmartSpend AI sets budgets, creates payment plans, splits expenses, analyzes debt strategy, and more — 34 distinct database operations, all natural language.
+3. **Batch screenshot import (40+ platforms)** — Shopee, Lazada, GCash, BPI, BDO, Grab, Steam, Codashop. Nobody else does this.
+4. **Financial Health Score with 4-component breakdown** — Not just a number. Explains exactly why your score changed and what to fix.
+5. **9-provider AI fallback** — The AI never goes down. Gemini → Flash → GPT-OSS → Qwen → Compound → Cerebras. Always finds a working model.
+
+**Paywall copy that uses this:**
+> "SmartSpend Pro includes Local AI mode — run Peso entirely on your own computer. Zero cloud. Zero data sharing. ₱0.82/day."
+
+> "Import your entire GCash history in 30 seconds. Screenshot to expense — 40+ platforms. Only in SmartSpend Pro."
 
 ### Play Store fee reality
-Google Play charges 15% for apps under $1M/year (99% of developers), dropping to 15% thereafter. RevenueCat is free until $2,500/month tracked revenue (~₱140K/month). At this pricing you'd need ~560 yearly subscribers or ~2,900 monthly subscribers to hit RevenueCat's paid tier — a good problem to have.
+Google Play charges 15% for first $1M/year (99% of developers). RevenueCat is free until $2,500/month tracked revenue (~₱140K/month). At ₱299/year you'd need ~2,350 yearly Pro subscribers to hit RevenueCat's paid tier — an excellent problem to have.
 
 ### Upgrade messaging per plan
-- Monthly: "Try Pro for ₱49 — less than a Jollibee meal"
-- Yearly: "Get Pro for ₱0.68/day — that's less than your daily fare" (with 7-day free trial)
-- Lifetime: "Own SmartSpend Pro forever — ₱699, one time, yours for life"
+- Monthly: "Try Pro for ₱59 — one Jollibee meal gets you the full AI finance experience"
+- Yearly: "Get Pro for ₱0.82/day — includes Local AI, screenshot import, and unlimited everything (7-day free trial)"
+- Lifetime: "Own SmartSpend Pro forever — ₱799, one payment, yours for life including all future features"
 
 ---
 

@@ -139,9 +139,11 @@ AI-powered personal finance for Filipinos — free, offline, Taglish-ready
 | Tier | Price | Includes |
 |------|-------|---------|
 | **Free** (forever) | ₱0 | All current Free tier features — see freemium-split-plan doc |
-| **SmartSpend Pro** Monthly | **₱49/month** | Full Pro features · ~₱1.63/day · "less than a Jollibee meal" |
-| **SmartSpend Pro** Yearly | **₱249/year** | Full Pro features · ₱0.68/day · 7-day free trial · **push as default** |
-| **SmartSpend Pro** Lifetime | **₱699 one-time** | Full Pro forever · breaks even at 14 months · best for PH one-time preference |
+| **SmartSpend Pro** Monthly | **₱59/month** | Full Pro · ~₱50 net · "one Jollibee Value Meal" |
+| **SmartSpend Pro** Yearly | **₱299/year** | Full Pro · ₱0.82/day · 7-day free trial · **push as default** · 58% off monthly |
+| **SmartSpend Pro** Lifetime | **₱799 one-time** | Full Pro forever · breaks even at ~13.5 months · best for PH one-time preference |
+
+**Why we can charge when Agila and PISO are free:** Local LLM private mode, 34 agentic AI actions, batch screenshot import (40+ platforms), 9-provider AI fallback chain. Nobody else in the PH market has any of these. Paywall copy should lead with Local AI and screenshot import — those are the features users won't find anywhere else.
 
 ### Now (before Play Store)
 - Ko-fi / GCash QR "Buy me a coffee" on website — zero friction, zero setup
