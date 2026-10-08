@@ -1,23 +1,27 @@
-# SmartSpend — Project Status
+# SmartSpend — Project Status & Master To-Do List
 **Version:** 3.0.2 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** October 9, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
-> For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
-> For feature backlog and planning see `docs/guides/FEATURE_BACKLOG.md`
-> For the latest AI handoff see `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
+> Full docs index:
+> - Technical reference → `docs/reference/CAPSTONE_REFERENCE.md`
+> - Feature backlog → `docs/guides/FEATURE_BACKLOG.md`
+> - Latest AI handoff → `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
+> - Freemium plan → `docs/handsoff/freemium-split-plan-2026-10-09.md`
+> - Marketing plan → `docs/handsoff/marketing-and-demo-plan-2026-10-09.md`
+> - Scale & risks → `docs/handsoff/scale-and-commercialization-risks-2026-10-09.md`
 
 ---
 
-## AUTHORITATIVE BUILD NUMBERS (v3.0.0)
+## AUTHORITATIVE BUILD NUMBERS (v3.0.2)
 
 | Metric | Value |
 |--------|-------|
 | Version string | **3.0.2** |
 | pubspec | `3.0.2+100` |
 | GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.2 |
-| APK (arm64) | **~45 MB** — `SmartSpend-v3.0.2-arm64-v8a.apk` |
-| AAB (Play Store) | **~75 MB** — `SmartSpend-v3.0.2.aab` |
+| APK (arm64, demo phone) | **~45 MB** — `SmartSpend-v3.0.2-arm64-v8a.apk` |
+| AAB (Play Store ready) | **~75 MB** — `SmartSpend-v3.0.2.aab` |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | API 21 (Android 5.0) |
 | Target SDK | API 36 (Android 16) |
@@ -31,30 +35,27 @@
 | Achievement badges | **25** |
 | Daily AI message limit | **150** |
 | Color themes | **11** |
-| Daily quests pool | 10 |
 | Batch screenshot platforms | 40+ |
-| Filipino item catalog | 150+ items |
-| PH banks in DB | 20 banks + 5 e-wallets |
-| Log choice sheet options | 7 |
 | Currencies | 57 |
-| Hub tiles | 30+ |
 | Optional home toggles | 14 |
-| Optional analytics toggles | 4 |
+| ProService | Exists — everyone is Pro in v3.x, gates activate in v4.0 |
+| Build flavor | `APP_FLAVOR=dev` local · `APP_FLAVOR=prod` CI |
 
 ---
 
-## FINAL DEFENSE — CHECKLIST
+## PHASE 1 — CAPSTONE DEFENSE (do these first)
 
-### 🔴 Critical — Must be done before defense day
+### 🔴 P0 — Must be done before defense day
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
 | Install **v3.0.2** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.2-arm64-v8a.apk` from GitHub Releases |
 | Verify About screen shows **"Version 3.0.2"** | Brix | ❌ | kAppVersion in debug_service.dart |
+| Load demo data on phone | Brix | ❌ | "Try Demo" on login screen OR Profile → Load Demo Data |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ → Reset Daily Limit |
-| Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
-| Turn on **Normal or Pro** preset | Brix | ❌ | Settings → Quick Presets — shows all features |
-| Charge demo phone to 100%, do NOT re-open until demo | Brix | ❌ | Cold start required |
+| Set AI model to **Auto** | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
+| Set preset to **Normal** or **Pro** | Brix | ❌ | Settings → Quick Presets — Lite Mode must be OFF |
+| Charge phone to 100%, do NOT re-open until demo | Brix | ❌ | Cold start required |
 | Have WiFi ready | Brix | ❌ | AI needs internet; Gemini key fetched from Remote Config on first open |
 | Rehearse demo flow (see script below) | All | ❌ | 10-min run-through the day before |
 | Create **Figure 1.1** — PH financial literacy bar chart | Cyrille | ❌ | BSP CFIS 2025: 50% adults with formal accounts; 74% literacy rate |
@@ -63,16 +64,14 @@
 | Create **Figure 2.2** — Kanban board / development methodology | Cyrille | ❌ | Agile Kanban: Backlog → In Progress → Done |
 | Fill in **Compliance Matrix** | All | ❌ | `docs/capstone/SmartSpend_Master_Bug_Tracker.docx` |
 
-### 🟠 Manuscript Updates (for Cyrille)
-
-Use `docs/reference/CAPSTONE_REFERENCE.md` and the v3.0.0 handoff as the single source of truth.
+### 🟠 P1 — Manuscript Updates (for Cyrille)
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Update version throughout manuscript → **3.0.0** | Cyrille | ❌ | |
+| Update version throughout → **3.0.2** | Cyrille | ❌ | Use CAPSTONE_REFERENCE.md as source of truth |
 | Update SQLite schema → **v14, 26 tables** | Cyrille | ❌ | v14 adds chat_sessions + session_id on chat_history |
-| Update AI section: 9 providers, Gemini 3.5 Flash-Lite primary, AQ. key format, Remote Config, Local AI private mode | Cyrille | ❌ | |
-| Update FHS equations: 4 × 25pt components, soft/hard overspend | Cyrille | ❌ | |
+| Update AI section: 9 providers, Gemini 3.5 Flash-Lite, AQ. key, Remote Config, Local AI private mode | Cyrille | ❌ | |
+| Update FHS: 4 × 25pt components, soft/hard overspend distinction | Cyrille | ❌ | |
 | Update agentic action count → **34** | Cyrille | ❌ | |
 | Update badge count → **25** | Cyrille | ❌ | |
 | Update daily AI limit → **150** | Cyrille | ❌ | |
@@ -80,80 +79,150 @@ Use `docs/reference/CAPSTONE_REFERENCE.md` and the v3.0.0 handoff as the single 
 | Update screens count → **43** | Cyrille | ❌ | |
 | Update APK size → **~45 MB** (arm64, split, obfuscated) | Cyrille | ❌ | |
 | Add to Implemented: Transaction sort/group, Chat sessions, AI recovery card, Analytics quick-jump (v3.0.0) | Cyrille | ❌ | Shipped Oct 9 |
-| Add to Implemented: Peso mascot, Safe-to-Spend, Full audit trail, History viewers, Data Quality, Local AI private mode (v2.9.76–v2.9.92) | Cyrille | ❌ | |
-| Add AI financial advice disclaimer (RA 11765) to Ch.2/Ch.3 | Cyrille | ❌ | One-time dialog before first advice response |
+| Add to Implemented: Peso mascot, Safe-to-Spend, Full audit trail, History viewers, Data Quality, Local AI (v2.9.76–v2.9.92) | Cyrille | ❌ | |
+| Add AI financial advice disclaimer (RA 11765) to Ch.2/Ch.3 | Cyrille | ❌ | |
 | Add Safe-to-Spend to features list | Cyrille | ❌ | BudgetPH differentiator |
-| Add **Agila, PISO, BunnyWise, MayBudget** to competitor table | Cyrille | ❌ | See FEATURE_BACKLOG Part 10 + Part 3 |
+| Add **Agila, PISO, BunnyWise** to competitor table | Cyrille | ❌ | Agila = free, PISO = free, Tarsi = ~₱300 one-time |
 | BSP citation update Ch.1: 2021 → CFIS 2025 | Cyrille | ❌ | |
-| Move **Paluwagan** to Implemented | Cyrille | ✅ | Done |
+| Paluwagan moved to Implemented | Cyrille | ✅ | Done |
 
-### 🟡 Post-Defense (before final submission)
+### 🟡 P2 — Post-Defense (before final submission)
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
 | SUS survey — 30 respondents | Djaunathan | ❌ | 20 parents + 10 young professionals |
-| Google Play Console account ($25) | Brix | ❌ | Required for Play Store submission |
-| AAB ready for Play Store | Brix | ✅ | `SmartSpend-v3.0.0.aab` on GitHub Releases |
-| Privacy Policy hosted page | Cyrille | ✅ | https://zushikina-kun.github.io/smartspend-app/privacy.html |
-| Firebase App Check enforcement | Brix | ❌ | Switch debug provider → Play Integrity before Play Store |
-| Validator signatures — Appendix A | Brix | ❌ | |
 | SUS survey results → manuscript Ch.3 | Cyrille | ❌ | |
+| Validator signatures — Appendix A | Brix | ❌ | |
 | CV section — all three researchers | All | ❌ | |
 
 ---
 
-## DEMO SCRIPT — Final Defense (v3.0.0)
+## PHASE 2 — PRE-LAUNCH (before Play Store + v4.0)
+
+These must be done before any public release. See `docs/handsoff/scale-and-commercialization-risks-2026-10-09.md` for full details.
+
+### 🔴 P0 — Critical infrastructure (blocks launch)
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| **Enable Firebase Blaze billing** with ₱500/month spending cap | Brix | ❌ | App breaks for sync at ~1,000 users on Spark free plan. Blaze costs ~₱55/month at 1,000 users. |
+| **Google Play Console account** ($25 one-time) | Brix | ❌ | Required before any IAP or Play Store listing |
+| **Fill Google Play data safety form** | Cyrille | ❌ | Declare: financial data (local), Firebase Auth (email/name), AI queries (third-party API), no data sold |
+| **Switch App Check → Play Integrity** | Brix | ❌ | Test on Internal Testing track first. Current debug mode won't protect production. |
+| **Add "Use your own Gemini key" setting** | Brix | ❌ | Settings → AI → paste own AQ. key. Fixes shared key exhaustion at scale. One free key per user = 1,000 RPD each. |
+| **Remove Cerebras from shared pool / check trial status** | Brix | ❌ | Cerebras free tier is 30-day trial. Likely expired. Detect on init and log in debug. |
+
+### 🟠 P1 — App Store listing & marketing
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| Set up Google Play Internal Testing track | Brix | ❌ | Required to test real IAP purchases before public release |
+| Create Play Store listing (metadata ready in marketing plan doc) | Cyrille | ❌ | Short desc, full desc, keywords, screenshots, category |
+| Take 8 Play Store screenshots from demo phone | Brix | ❌ | Priority order in `docs/handsoff/marketing-and-demo-plan-2026-10-09.md` |
+| Make screenshot overlays in Canva | Cyrille | ❌ | 1–2 lines caption per screenshot, 1080×1920px |
+| Record 60-second demo video | Brix | ❌ | Script in marketing plan doc. Use Android screen recorder. |
+| Add screenshots + video to website | Cyrille | ❌ | https://zushikina-kun.github.io/smartspend-app/ |
+| Post launch announcement on Facebook + TikTok | All | ❌ | See hashtag list in marketing plan doc |
+| Post in r/PersonalFinancePhilippines | Brix | ❌ | Organic reach, no ad spend needed |
+| Set up Ko-fi page (already linked in app/website) | Brix | ❌ | https://ko-fi.com/zushikina143 — verify it's active |
+| Enable email verification in Firebase Auth | Brix | ❌ | One config toggle in Firebase Console. Prevents fake accounts. |
+
+### 🟡 P2 — Nice to have before launch
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| Export Firestore security rules to `firestore.rules` in repo | Brix | ❌ | Backup in case of accidental wipe |
+| Add Firebase Analytics event tracking | Brix | ❌ | `ai_message_sent`, `pro_paywall_shown`, `pro_purchased`, `screenshot_import_used` |
+| Set up Google Cloud billing budget alerts | Brix | ❌ | Alert at $5/mo and $20/mo — prevents surprise bills |
+| Add Batch Write optimization for Firestore | Brix | ❌ | Group 10–20 writes per batch. Reduces costs + prevents quota spikes. |
+
+---
+
+## PHASE 3 — v4.0 FREEMIUM IMPLEMENTATION (post-defense)
+
+See `docs/handsoff/freemium-split-plan-2026-10-09.md` for full spec.
+
+**Pricing:** ₱59/month · ₱299/year (7-day trial) · ₱799 lifetime
+
+### 🔴 P0 — Infrastructure before any gates
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| Create 3 IAP products in Play Console | Brix | ❌ | `smartspend_pro_monthly`, `smartspend_pro_yearly`, `smartspend_pro_lifetime` |
+| Create RevenueCat project | Brix | ❌ | Free at revenuecat.com. Link Play Console products. |
+| Add `purchases_flutter: ^8.0.0` to pubspec | Brix | ❌ | RevenueCat Flutter SDK |
+| Replace ProService.init() stub with real RevenueCat call | Brix | ❌ | See stub comments in `lib/services/pro_service.dart` |
+| Build `ProPaywallScreen` widget | Brix | ❌ | Monthly / Yearly / Lifetime plans. Restore Purchase link. 7-day trial on yearly. |
+| Build `ProGate` widget | Brix | ❌ | Wraps any Pro-only feature. Shows locked teaser if not Pro. |
+
+### 🟠 P1 — Feature gates (phase by phase)
+
+| Phase | Task | Status |
+|-------|------|--------|
+| v4.0.1 | Gate AI imports: screenshot, voice, barcode, bank paste | ❌ |
+| v4.0.1 | 30 msg/day free vs 150 msg/day Pro | ❌ |
+| v4.0.2 | Gate analytics depth: all period filters, monthly chart, daily trend, heatmap, FHS history | ❌ |
+| v4.0.3 | Gate wallets (1 free vs unlimited Pro); budget/goal/recurring/debt caps (5/3/3/2 free) | ❌ |
+| v4.0.4 | Gate power tools: paluwagan, insurance, installments, PCA, debt payoff, bill calendar | ❌ |
+| v4.0.5 | Gate data: full cloud sync, backup/restore, full CSV export, unlimited custom categories, rules | ❌ |
+| v4.0.6 | Gate UI/gamification: all themes, all badges, weekly/monthly challenges, biometric lock | ❌ |
+
+### 🟡 P2 — Scale hardening for v4.0
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| Build Cloud Functions AI proxy | Brix | ❌ | Server-side Gemini key. Enforces per-user limits. Replaces Remote Config key delivery. |
+| Move daily AI limit counter to Firestore (server-side) | Brix | ❌ | Currently SharedPreferences — resettable by factory reset |
+| Add per-user Gemini key support in Settings | Brix | ❌ | Users paste own free AQ. key. Distributes quota. |
+
+---
+
+## PHASE 4 — GROWTH & MONETIZATION (post v4.0)
+
+These are longer-term items for when the app has real users.
+
+| Task | Owner | Status | Notes |
+|------|-------|--------|-------|
+| Move to paid Gemini API tier | Brix | ❌ | Enable when Pro subscriptions cover the cost (~$135/month at 1,000 Pro users) |
+| App Store submission for iOS (Swift/Kotlin wrapper) | TBD | ❌ | Significant effort — Flutter supports iOS but needs Apple Dev account ($99/year) |
+| Explore BSP Open Finance API integration | Brix | ❌ | Would enable real bank feeds. Requires regulatory compliance (BSP Circular 1105). Not currently feasible. |
+| SmartSpend Teams plan (₱299/month, 5 users) | Brix | ❌ | Shared budgets, family expense view, group goals. Plan documented. |
+| Notification Listener Service | Brix | ❌ | Alternative to READ_SMS (blocked by Play Policy). Captures GCash/bank notification text. Needs user opt-in in Accessibility settings. |
+| Full monthly GitHub-style heatmap (analytics) | Brix | ❌ | 28–31 cell per-date spending grid. Partially built (week heatmap exists). |
+| True net worth chart | Brix | ❌ | Snapshot-based over time (not FHS proxy). |
+| Receipt photo gallery (Hub → Receipts) | Brix | ❌ | photo_path field exists on expenses; just needs a GridView UI. |
+
+---
+
+## DEMO SCRIPT — Final Defense (v3.0.2)
 
 ### Night before
 1. Download `SmartSpend-v3.0.2-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.2
-2. Install on demo phone (allow sideloading in Settings → Install unknown apps)
-3. Open app — let it fully load to home screen (Remote Config fetches Gemini key on first open)
-4. Verify About screen shows **"Version 3.0.0"**
-5. Settings → Quick Presets → **Normal** or **Pro** (Lite Mode must be OFF)
+2. Install on demo phone
+3. Tap **"Try Demo"** on login screen → loads full dataset automatically
+4. Verify Home shows FHS ~80, 3 goals, Safe-to-Spend card
+5. Settings → Quick Presets → **Normal** or **Pro**
 6. Settings → AI MODEL → **Auto (Recommended)**
 7. AI screen → ⋮ → **Reset Daily Limit**
-8. Charge to 100%, do NOT open again until demo
+8. Charge to 100%, do NOT re-open until demo
 
 ### Demo flow (~10 minutes)
 
-**1. Opening (1 min)**
-- Cold-start the app → show Home screen with live data
-- Point to: FHS score, this month's spending, Safe-to-Spend card, AI Insights
+**1. Opening (1 min)** — Cold start → Home screen → FHS 80, Safe-to-Spend, AI Insights, goal timeline
 
-**2. Core feature — AI logging (2 min)**
-- AI chat → type: `"I spent 60 for lunch and 30 for jeep"`
-- Show 2 expenses logged in one message; appear in Recent list
-- Show the session summary card (✅ 2 recorded) — new in v3.0.0
-- Explain: 34 agentic actions, real writes to the local DB
+**2. AI logging (2 min)** — Type `"I spent 65 for lunch and 30 for jeep"` → 2 expenses logged → session summary card (✅ 2 recorded)
 
-**3. Safe-to-Spend (1 min)**
-- Home → 💚 Safe to Spend card
-- Explain: wallet balance minus upcoming bills/goals/debts before next payday — the one number that matters
-- BudgetPH differentiator
+**3. Safe-to-Spend (1 min)** — Home → 💚 card → "wallet minus upcoming bills = what's safe to spend"
 
-**4. Import (2 min)**
-- Log Expense → Batch Screenshots → show 40+ platform support
-- Import a Shopee/GCash screenshot → AI parses the items
-- Explain: OCR + AI, works offline for manual entry
+**4. Screenshot import (2 min)** — Log → Batch Screenshots → pick Shopee/GCash → AI parses → review
 
-**5. Financial Health Score (1 min)**
-- Tap FHS score card → show breakdown dialog
-- Explain 4 components — more meaningful than a simple budget tracker
+**5. FHS breakdown (1 min)** — Tap score → 4-component dialog → explain savings rate, overspend control, etc.
 
-**6. Analytics (1 min)**
-- Analytics tab → Quick Jump chips (new v3.0.0) → pie chart, 50/30/20, DTI
-- Category breakdown sort toggle → show sorting by amount / name / delta
-- Point out: computed locally, no internet needed
+**6. Analytics (1 min)** — Quick Jump → Overview → pie chart → 50/30/20 → category sort toggle
 
-**7. Transactions (1 min)**
-- Transactions tab → tap ⇅ Sort/Group button (new v3.0.0)
-- Group by category → show collapsible group headers with subtotals
-- Show category dropdown (replaces old chip overflow)
+**7. Transactions (1 min)** — ⇅ Sort/Group → Group by category → collapsible headers
 
-**8. Competitive positioning (1 min)**
-- Only free Filipino-English AI finance app with 34 agentic actions
-- Only app with batch screenshot import (40+ platforms)
-- Dual-mode FHS (full + lightweight), Safe-to-Spend, 9-provider AI fallback chain
+**8. Positioning (1 min)** — Only Filipino AI finance app with 34 agentic actions + Local LLM + 40+ platform screenshot import
 
 ---
 
@@ -161,14 +230,15 @@ Use `docs/reference/CAPSTONE_REFERENCE.md` and the v3.0.0 handoff as the single 
 
 | Version | Date | Key changes |
 |---------|------|------------|
-| **v3.0.2** | Oct 9, 2026 | Support links (Buy Me a Coffee, Ko-fi, PayPal, GCash) in About screen + website + README; `ProService` infrastructure for v4.0 freemium (everyone Pro in v3.x); `APP_FLAVOR` dart-define for dev vs prod builds; url_launcher added; demo account overhaul (18 tables seeded, Reset to Demo Defaults button) |
-| **v3.0.0** | Oct 9, 2026 | Transaction sort/group (5 keys, 5 group-by, collapsible headers); Chat sessions (DB v14, New Chat, session list, archive/delete); AI recovery card (✅/⚠️/❌ per item, re-log helper); Analytics quick-jump anchors + period chip overflow fix + category sort toggle |
-| v2.9.98 | Oct 2026 | Screenshot import visibility: `[screenshot]` tag in AI context; skipped-dup feedback loop; sort fix for 00:00 items |
-| v2.9.97 | Oct 2026 | AI backdating fix: Today/Yesterday in context; "yesterday"/"kahapon" resolution; NOT-RECORDED CHECK before re-log |
-| v2.9.92 | Oct 2026 | Local AI private mode (9th provider); Settings Local AI section; privacy banner |
-| v2.9.90 | Oct 2026 | 10-item re-audit fixes: delete confirmations, archive bug, FHS tooltip, Peso empties, wallet history on home |
-| v2.9.89 | Oct 2026 | DB v13 budget/goal/income/score history; full audit trail |
-| v2.9.88 | Oct 2026 | Wallet balance change history; App Check debug token |
-| v2.9.87 | Sep 2026 | Installment→Plans tab fix; DQ View navigates to Transactions; Fix All for case_dup/round_amount |
-| v2.9.84 | Sep 2026 | Achievement celebrations, analytics interpretive labels, AI chat date dividers |
-| v2.9.82 | Sep 2026 | App-wide QoL polish (43 screens): Peso empty states, delete confirmations, FAB fixes |
+| **v3.0.2** | Oct 9, 2026 | ProService infra for freemium (everyone Pro in v3.x); APP_FLAVOR dev/prod; url_launcher + support links (About screen, website, README); demo account overhaul (18 tables seeded, Reset button) |
+| **v3.0.1** | Oct 9, 2026 | Demo account overhaul — full dataset across all screens, Reset to Demo Defaults button |
+| **v3.0.0** | Oct 9, 2026 | Transaction sort/group; Chat sessions (DB v14); AI recovery card; Analytics quick-jump; second-pass audit fixes |
+| v2.9.98 | Oct 2026 | Screenshot import visibility; skipped-dup AI feedback; sort fix |
+| v2.9.97 | Oct 2026 | AI backdating fix: yesterday/kahapon, NOT-RECORDED CHECK |
+| v2.9.92 | Oct 2026 | Local AI private mode (9th provider) |
+| v2.9.90 | Oct 2026 | 10-item re-audit fixes |
+| v2.9.89 | Oct 2026 | DB v13 full audit trail |
+| v2.9.88 | Oct 2026 | Wallet history, App Check debug token |
+| v2.9.87 | Sep 2026 | Installment Plans tab fix, Data Quality fixes |
+| v2.9.84 | Sep 2026 | Achievement celebrations, analytics interpretive labels |
+| v2.9.82 | Sep 2026 | App-wide QoL polish (43 screens) |
