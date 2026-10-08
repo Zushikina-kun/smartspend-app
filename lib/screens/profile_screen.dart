@@ -1060,79 +1060,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _logout() async {
-    // Warn user and give them a chance to cancel
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Log Out"),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Your data will be saved to the cloud before logging out.",
-              style: TextStyle(fontSize: 13),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Local data will be cleared so the next account starts clean — no data mixing between accounts.",
-              style: TextStyle(fontSize: 13),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Your data will be restored from the cloud when you log back in.",
-              style: TextStyle(fontSize: 12, color: Colors.grey),
+    Future<void> _logout() async {
+      final isLocal = await AuthService.isLocalMode();
+      // Warn user and give them a chance to cancel
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(isLocal ? "Leave Local Mode?" : "Log Out"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isLocal) ...[
+                const Text(
+                  "Your data will remain on this device.",
+                  style: TextStyle(fontSize: 13),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  "If you sign in with an account, your local data will be replaced with your account data. Back up first if you want to keep it.",
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ] else ...[
+                const Text(
+                  "Your data will be saved to the cloud before logging out.",
+                  style: TextStyle(fontSize: 13),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Local data will be cleared so the next account starts clean.",
+                  style: TextStyle(fontSize: 13),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Your data will be restored from the cloud when you log back in.",
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("Cancel")),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red, foregroundColor: Colors.white),
+              child: Text(isLocal ? "Go to Login" : "Log Out"),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text("Cancel")),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red, foregroundColor: Colors.white),
-            child: const Text("Log Out"),
-          ),
-        ],
-      ),
-    );
-    if (confirm != true || !mounted) return;
-
-    // Show progress
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Saving your data to cloud..."),
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 30),
-        ),
       );
-    }
+      if (confirm != true || !mounted) return;
 
-    try {
-      // Push all local data to Firestore before clearing
-      await DBService.pushAllToCloud();
-    } catch (_) {
-      // Non-fatal — proceed with logout even if push fails
-      // (data may already be in cloud from real-time pushes)
-    }
+      if (!isLocal) {
+        // Firebase user — push data to cloud first
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Saving your data to cloud..."),
+              behavior: SnackBarBehavior.floating,
+              duration: Duration(seconds: 30),
+            ),
+          );
+        }
+        try {
+          await DBService.pushAllToCloud();
+        } catch (_) {}
+      }
 
-    // Clear local DB so next account doesn't see this account's data
-    await DBService.clearLocalData();
+      // Clear local DB
+      await DBService.clearLocalData();
 
-    // Clear AI context and history so next user doesn't see previous user's data
-    AIChatService.clearHistory();
-    UndoService.clear();
+      // Clear AI context and history
+      AIChatService.clearHistory();
+      UndoService.clear();
 
-    // Sign out of Firebase + Google
-    await AuthService.logout();
+      // Clear mode flags and sign out
+      await AuthService
+          .migrateLocalToFirebase(); // clears local_mode + was_demo_mode
+      if (!isLocal)
+        await AuthService.logout(); // Firebase sign-out only for Firebase users
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()), (_) => false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+            (_) => false);
+      }
     }
   }
 
@@ -2498,11 +2515,97 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     const SizedBox(height: 20),
 
+                    // ── LOCAL MODE: Connect Account banner ────────────────
+                    FutureBuilder<bool>(
+                      future: AuthService.isLocalMode(),
+                      builder: (_, snap) {
+                        final isLocal = snap.data ?? false;
+                        if (!isLocal) return const SizedBox.shrink();
+                        final cs = Theme.of(context).colorScheme;
+                        return Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: cs.primaryContainer.withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                                color: cs.primary.withValues(alpha: 0.2)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(children: [
+                                Icon(Icons.phone_android_outlined,
+                                    size: 16, color: cs.primary),
+                                const SizedBox(width: 8),
+                                Text("Local Account",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: cs.primary,
+                                        fontSize: 13)),
+                              ]),
+                              const SizedBox(height: 6),
+                              const Text(
+                                "Your data is saved on this device only. "
+                                "Connect a free account to sync across devices and back up to the cloud.",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () =>
+                                          Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                const LoginScreen()),
+                                      ),
+                                      style: OutlinedButton.styleFrom(
+                                        visualDensity: VisualDensity.compact,
+                                        side: BorderSide(
+                                            color: cs.primary
+                                                .withValues(alpha: 0.5)),
+                                      ),
+                                      child: const Text("Connect Account",
+                                          style: TextStyle(fontSize: 12)),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () =>
+                                          Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                const LoginScreen()),
+                                      ),
+                                      style: OutlinedButton.styleFrom(
+                                        visualDensity: VisualDensity.compact,
+                                        side: BorderSide(
+                                            color: cs.primary
+                                                .withValues(alpha: 0.5)),
+                                      ),
+                                      child: const Text("Register Free",
+                                          style: TextStyle(fontSize: 12)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.logout),
-                        label: const Text("Logout"),
+                        label: const Text("Logout / Switch Account"),
                         onPressed: _logout,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent,

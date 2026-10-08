@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.2';
-  static const _prefKey = 'whats_new_seen_3_0_2';
+  static const _version = '3.0.3';
+  static const _prefKey = 'whats_new_seen_3_0_3';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,13 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '📱',
+      'Use Without an Account (v3.0.3)',
+      'Tap "Continue Without Account" on the login screen to start tracking your own finances with zero sign-up. '
+          'Your data lives on this device. Back it up anytime with the CSV export or backup feature. '
+          'Connect a free account later from Profile to sync across devices — your data stays intact.',
+    ),
     (
       '☕',
       'Support the Developer (v3.0.2)',

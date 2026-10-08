@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static final _auth = FirebaseAuth.instance;
@@ -127,6 +128,43 @@ class AuthService {
   }
 
   static User? get currentUser => _auth.currentUser;
+
+  // ── LOCAL ACCOUNT MODE ────────────────────────────────────────
+  // A permanent offline-first account. No Firebase required.
+  // User's data lives on-device only. They can connect a Firebase
+  // account later via Profile → Connect Account to start syncing.
+  //
+  // SharedPreferences key: 'local_mode' = 'true'
+  // This is distinct from 'was_demo_mode' (temporary sample data).
+  // local_mode = user's OWN real data, no sample data loaded.
+
+  static const _localModeKey = 'local_mode';
+
+  /// Returns true if the user is in local (offline-first) mode.
+  static Future<bool> isLocalMode() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool(_localModeKey) ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Enter local mode — sets the flag, clears demo flag.
+  /// Call from login screen when user taps "Continue Without Account".
+  static Future<void> enterLocalMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_localModeKey, true);
+    await prefs.setBool('was_demo_mode', false);
+  }
+
+  /// Migrate local account to Firebase after the user registers or logs in.
+  /// Clears the local_mode flag so sync resumes normally.
+  static Future<void> migrateLocalToFirebase() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_localModeKey, false);
+    await prefs.setBool('was_demo_mode', false);
+  }
 }
 
 /// Thrown when Google sign-in finds an existing email/password account

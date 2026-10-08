@@ -51,15 +51,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _syncAfterRegister() async {
     try {
-      // Clear any leftover demo data so the new account starts clean
-      final prefs = await SharedPreferences.getInstance();
-      final wasDemo = prefs.getBool('was_demo_mode') ?? false;
-      if (wasDemo) {
-        await DBService.clearLocalData();
-        await prefs.setBool('was_demo_mode', false);
-      }
-      // No pull needed — brand new account has no cloud data yet.
-      // Setup screen will push everything after the user completes onboarding.
+      // Clear any leftover local/demo data so the new Firebase account starts clean
+      // migrateLocalToFirebase() handles both local_mode and was_demo_mode flags
+      await AuthService.migrateLocalToFirebase();
+      await DBService.clearLocalData();
+      // No cloud pull needed — brand new account has no cloud data yet.
     } catch (_) {}
   }
 
@@ -117,7 +113,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(left: 28, right: 28, top: 28, bottom: 28 + MediaQuery.of(context).viewPadding.bottom),
+          padding: EdgeInsets.only(
+              left: 28,
+              right: 28,
+              top: 28,
+              bottom: 28 + MediaQuery.of(context).viewPadding.bottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

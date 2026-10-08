@@ -60,16 +60,18 @@ class _SplashScreenState extends State<SplashScreen>
         }
       }
     } else {
-      // No Firebase user — check if we're in demo mode
-      // If was_demo_mode is true, go straight to HomeScreen (preserve demo data)
-      // If not, go to LoginScreen
+      // No Firebase user — check mode flags
+      // local_mode = user chose "Continue Without Account" (their own real data)
+      // was_demo_mode = user tapped "Try Demo" (sample data)
+      // Both go to HomeScreen; neither goes to LoginScreen
+      final localMode = prefs.getBool('local_mode') ?? false;
       final wasDemo = prefs.getBool('was_demo_mode') ?? false;
-      if (wasDemo) {
+      if (localMode || wasDemo) {
         final setupDone = await DBService.getSetting('setup_done');
         if (setupDone != null) {
           next = const HomeScreen();
         } else {
-          next = const LoginScreen();
+          next = const SetupScreen();
         }
       } else {
         next = const LoginScreen();

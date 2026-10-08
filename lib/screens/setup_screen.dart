@@ -112,12 +112,10 @@ class _SetupScreenState extends State<SetupScreen> {
       await DBService.setSetting('income_frequency', _incomeFrequency);
 
       if (_hasIncome && _incomeCtrl.text.isNotEmpty) {
-        final amount = double.tryParse(_incomeCtrl.text) ?? 0;
-        // Convert to monthly equivalent for storage
-        // 'manual' = user entered their total balance directly — store as-is
+        double amount = double.tryParse(_incomeCtrl.text) ?? 0;
         double monthly = amount;
         if (_incomeFrequency == 'daily') monthly = amount * 22;
-        if (_incomeFrequency == 'weekly') monthly = amount * 4.33;
+        if (_incomeFrequency == 'weekly') monthly = amount * 4;
         if (_incomeFrequency == 'bimonthly') monthly = amount * 2;
         // manual: monthly = amount (no conversion)
         await DBService.setMonthlyIncome(monthly, source: 'setup');

@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/auth_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:async';
 import 'dart:io';
@@ -77,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
     _screens = [
       Dashboard(onNavigate: (i) => setState(() => _index = i)),
       const AnalyticsScreen(),
@@ -86,6 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkTour();
     _startConnectivityCheck();
     _checkStartupAlerts();
+    // Check local mode on first render
+    AuthService.isLocalMode().then((v) {
+      if (mounted) setState(() => _isLocalMode = v);
+    });
   }
 
   @override
@@ -131,6 +137,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool get _isDemoMode => FirebaseAuth.instance.currentUser == null;
+
+  // Whether user is in local mode (their own data, no Firebase)
+  bool _isLocalMode = false;
 
   Future<void> _checkStartupAlerts() async {
     // Delay slightly so the UI is fully built first
@@ -411,27 +420,57 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-              // Demo mode banner
-              if (_isDemoMode)
-                MaterialBanner(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  content: const Text(
-                    "You're in Demo Mode — sign up to sync data across devices",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  leading: const Icon(Icons.science_outlined, size: 20),
-                  backgroundColor: Colors.orange.withValues(alpha: 0.15),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => LoginScreen()),
-                      ),
-                      child: const Text("Sign Up"),
+              // Offline account banners — local mode or demo mode
+              if (_isDemoMode) ...[
+                if (_isLocalMode)
+                  // Local account mode — their own real data, stays on device
+                  MaterialBanner(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    content: const Text(
+                      "📱 Local Account — your data is saved on this device only.",
+                      style: TextStyle(fontSize: 12),
                     ),
-                  ],
-                ),
+                    leading: const Icon(Icons.phone_android_outlined, size: 20),
+                    backgroundColor: Colors.blue.withValues(alpha: 0.08),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => LoginScreen()),
+                        ),
+                        child: const Text("Connect Account"),
+                      ),
+                      TextButton(
+                        onPressed: () => setState(() => _isLocalMode = false),
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.grey),
+                        child: const Text("Dismiss"),
+                      ),
+                    ],
+                  )
+                else
+                  // Demo mode — sample data, not their real account
+                  MaterialBanner(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    content: const Text(
+                      "🧪 Demo Mode — using sample data. Sign up to start tracking your own finances.",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    leading: const Icon(Icons.science_outlined, size: 20),
+                    backgroundColor: Colors.orange.withValues(alpha: 0.10),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => LoginScreen()),
+                        ),
+                        child: const Text("Sign Up"),
+                      ),
+                    ],
+                  ),
+              ],
               Expanded(
                 child: IndexedStack(index: _index, children: _screens),
               ),

@@ -8,6 +8,7 @@ import '../services/db_service.dart';
 import '../widgets/feature_tour.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
+import 'setup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -109,17 +110,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _syncAfterLogin() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final wasDemo = prefs.getBool('was_demo_mode') ?? false;
-      if (wasDemo) {
-        await DBService.clearLocalData();
-        await prefs.setBool('was_demo_mode', false);
-      }
+      // Migrate local/demo mode — clear flags so cloud sync resumes
+      await AuthService.migrateLocalToFirebase();
+      await DBService.clearLocalData();
       await DBService.syncFromCloud();
       await DBService.pushAllToCloud();
 
       // Save Google profile photo if available and not already set locally.
-      // user.photoURL is a remote HTTPS URL — no Firebase Storage needed.
       final user = FirebaseAuth.instance.currentUser;
       if (user != null && user.photoURL != null && user.photoURL!.isNotEmpty) {
         final existing = await DBService.getProfile(user.uid);
@@ -204,6 +201,34 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  /// Continue without an account — local mode.
+  /// Data lives only on this device. User can connect an account later.
+  Future<void> _continueLocally() async {
+    setState(() => _loading = true);
+    try {
+      await AuthService.enterLocalMode();
+      await FeatureTour.markDone();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('onboarding_done', true);
+      // Check if setup has been done before
+      final setupDone = await DBService.getSetting('setup_done');
+      if (mounted) {
+        if (setupDone != null) {
+          _goHome();
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const SetupScreen()),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) setState(() => _errorMessage = "Could not start: $e");
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
   bool _validate() {
     if (_email.text.trim().isEmpty || _password.text.isEmpty) {
       setState(() => _errorMessage = "Please fill in all fields.");
@@ -237,7 +262,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(left: 28, right: 28, top: 28, bottom: 28 + MediaQuery.of(context).viewPadding.bottom),
+          padding: EdgeInsets.only(
+              left: 28,
+              right: 28,
+              top: 28,
+              bottom: 28 + MediaQuery.of(context).viewPadding.bottom),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -396,23 +425,66 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Text("Don't have an account? Register"),
               ),
 
-              const SizedBox(height: 4),
+              // ── CONTINUE WITHOUT ACCOUNT ───────────────────────────
+              const SizedBox(height: 8),
+              const Row(children: [
+                Expanded(child: Divider()),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text("or use without an account",
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                ),
+                Expanded(child: Divider()),
+              ]),
+              const SizedBox(height: 10),
+
+              // Continue Locally — permanent offline account
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.tonal(
+                  onPressed: _loading ? null : _continueLocally,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.phone_android_outlined, size: 18),
+                      SizedBox(width: 8),
+                      Text("Continue Without Account",
+                          style: TextStyle(fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                "Your data stays on this device. Connect an account anytime to sync across devices.",
+                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 12),
+
+              // Try Demo — sample data for exploration
               OutlinedButton.icon(
                 onPressed: _loading ? null : _tryDemo,
                 icon: const Icon(Icons.science_outlined, size: 18),
-                label: const Text("Try Demo (No Account Needed)"),
+                label: const Text("Try Demo (Sample Data)"),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.grey[600],
                   side: BorderSide(color: Colors.grey[300]!),
                   padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
-                "Demo uses sample data — no real account required",
+                "Demo loads pre-filled sample data — not your real data",
                 style: TextStyle(fontSize: 11, color: Colors.grey[400]),
                 textAlign: TextAlign.center,
               ),
