@@ -343,17 +343,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return 'manual';
   }
 
-  String _sourceLabel(Expense e) {
-    switch (_sourceOf(e)) {
-      case 'screenshot':
-        return '📷 Screenshot';
-      case 'ai':
-        return '🤖 AI';
-      default:
-        return '✏️ Manual';
-    }
-  }
-
   /// Build grouped representation: list of (header label, expenses).
   List<({String header, double total, List<Expense> items})> _buildGroups() {
     if (_groupKey == TxnGroupKey.none) {

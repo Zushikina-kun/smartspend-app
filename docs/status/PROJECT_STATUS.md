@@ -1,11 +1,11 @@
 # SmartSpend — Project Status
-**Version:** 2.9.92 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** October 5, 2026
+**Version:** 3.0.0 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** October 9, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
 > For feature backlog and planning see `docs/guides/FEATURE_BACKLOG.md`
-> For Kiro AI handoff (latest) see `docs/manuscript/reseaches/kiro-to-kiro-handoff-2026-10-05.md`
+> For Kiro AI handoff (latest) see `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
 
 ---
 
@@ -15,8 +15,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v2.9.92** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.92-arm64-v8a.apk` from GitHub Releases |
-| Verify About screen shows **"Version 2.9.92"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
+| Install **v3.0.0** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.0-arm64-v8a.apk` from GitHub Releases |
+| Verify About screen shows **"Version 3.0.0"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
 | Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) — now routes to Gemini |
 | Turn on **Lite Mode OFF** for demo (show all features) | Brix | ❌ | Settings → Quick Presets → Normal or Pro |
@@ -33,7 +33,7 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Update version throughout manuscript → **2.9.92** | Cyrille | ❌ | |
+| Update version throughout manuscript → **3.0.0** | Cyrille | ❌ | |
 | Update AI section: 9 providers (+ custom local), Gemini 3.5 Flash-Lite primary | Cyrille | ❌ | AQ. key format, Remote Config, Local AI private mode |
 | Update FHS equations | Cyrille | ❌ | 4 × 25pt components |
 | Update agentic action count → **34** | Cyrille | ❌ | |
@@ -41,8 +41,9 @@
 | Update daily AI limit → **150** | Cyrille | ❌ | |
 | Update color theme count → **11** | Cyrille | ❌ | |
 | Update screens count → **43** | Cyrille | ❌ | |
-| Update SQLite schema → **v13, 25 tables** | Cyrille | ❌ | |
+| Update SQLite schema → **v14, 26 tables** | Cyrille | ❌ | v14 adds chat_sessions + session_id on chat_history |
 | Update APK size → **~45 MB** (arm64, split, obfuscated) | Cyrille | ❌ | |
+| Add to Implemented: Transaction sort/group, Chat sessions, AI recovery card, Analytics quick-jump (v3.0.0) | Cyrille | ❌ | All shipped Oct 9 |
 | Add to Implemented: Peso mascot, Safe-to-Spend, Full audit trail, History viewers, Data Quality, Local AI private mode | Cyrille | ❌ | All v2.9.76–v2.9.92 |
 | Add AI financial advice disclaimer (RA 11765) to Ch.2/Ch.3 | Cyrille | ❌ | One-time dialog added |
 | Add Safe-to-Spend to features list | Cyrille | ❌ | BudgetPH differentiator |
@@ -56,7 +57,7 @@
 |------|-------|--------|-------|
 | SUS survey — 30 respondents | Djaunathan | ❌ | 20 parents + 10 young professionals |
 | Google Play Console account ($25) | Brix | ❌ | Required for Play Store |
-| Build AAB: already in CI — download from GitHub Releases | Brix | ✅ | `SmartSpend-v2.9.92.aab` |
+| Build AAB: already in CI — download from GitHub Releases | Brix | ✅ | `SmartSpend-v3.0.0.aab` |
 | Privacy Policy hosted page | Cyrille | ✅ | https://zushikina-kun.github.io/smartspend-app/privacy.html |
 | Firebase App Check enforcement | Brix | ❌ | Switch debug → Play Integrity before Play Store |
 | Validator signatures — Appendix A | Brix | ❌ | |

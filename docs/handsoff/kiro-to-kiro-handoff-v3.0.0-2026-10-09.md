@@ -1,0 +1,146 @@
+# SmartSpend — Kiro-to-Kiro Handoff
+## v3.0.0 | October 9, 2026
+
+**From:** Kiro session (Oct 9, 2026)  
+**To:** Next Kiro session (or Claude)  
+**Shipped:** v3.0.0+99  
+**GitHub:** https://github.com/Zushikina-kun/smartspend-app  
+**Previous handoffs in:** `docs/handsoff/`
+
+---
+
+## 1 — What shipped in v3.0.0
+
+All four feature groups from `feature-plan-v3.0.0-2026-10-09.md` were implemented and pushed in a single commit (`112a635`).
+
+### Group A — Transaction Sort & Group (`transactions_screen.dart`)
+- **New enums:** `TxnSortKey` (7 options) and `TxnGroupKey` (5 options) at the top of the file
+- **Sort keys:** Transaction date (default) · Logged date · Amount high→low · Amount low→high · Name A→Z · Name Z→A · Source
+- **Group-by keys:** Transaction date · Logged date · Category (with ₱ subtotal) · Source (manual/AI/screenshot) · None (flat)
+- **Sort/Group sheet:** Tapping ⇅ icon in AppBar opens a `ModalBottomSheet` with `FilterChip` radio-group for each; persisted to `SharedPreferences` (`txn_sort_key`, `txn_group_key`)
+- **Group headers:** Collapsible — tap to expand/collapse; tracks state in `_collapsedGroups Set<String>`; shows item count + subtotal
+- **Category filter:** Replaced the overflowing 20+ chip row with a compact `DropdownButton`; Want/Need/⚠️ chips consolidated into a single Row 2 below the period chips
+- **Relevance search:** When search query is active, matches are ranked: itemName match > category/shop > notes/tags
+- **`_sourceOf()`:** Detects source from expense notes — `'screenshot'` / `'ai'` / `'manual'`
+- **No DB changes** for this group — all sorting/grouping done in-memory
+
+### Group D — Chat Sessions / Wayback (`db_service.dart`, `ai_screen.dart`, `chat_history_screen.dart`)
+- **DB v13 → v14:** New `chat_sessions` table (id, title, created_at, archived_at, is_current); `session_id INTEGER` added to `chat_history`
+- **Migration:** All existing messages migrated to a "Previous chats" legacy session on first run after upgrade
+- **`_ensureColumns`:** Also adds `session_id` column and creates `chat_sessions` table idempotently as a safety net for edge cases
+- **New DB methods:** `createNewChatSession()`, `getCurrentSessionId()`, `_createSession()`, `getChatSessions()`, `autoTitleSession()`, `renameChatSession()`, `archiveChatSession()`, `deleteChatSession()`, `getChatHistoryBySession()`
+- **`saveChatMessage`:** Now auto-resolves `session_id` — looks up current session, creates one if none exists
+- **`ai_screen.dart`:** Added "New Chat" ➕ button in AppBar; on confirm: auto-titles current session, creates new session, clears `_messages` + context. "Clear chat" (🔄) now deletes the current session and creates a fresh one instead of wiping all history. `_loadContext` on screen open now loads messages from current session only (`getChatHistoryBySession`).
+- **`chat_history_screen.dart`:** Completely rewritten. Session list view (Active · Recent · Older · Archived sections) → `_ChatSessionViewScreen` (read-only bubble view). Long-press session for rename/archive/delete sheet. Session title editable by tapping AppBar. Copy-to-clipboard export. Search within session. Day dividers.
+- **Logout:** Both `chat_history` and `chat_sessions` tables cleared on logout
+
+### Group C — AI Recovery (`ai_chat_service.dart`, `ai_screen.dart`)
+- **New types:** `AiItemStatus` enum (recorded/skipped/failed) and `AiSessionResultItem` class — defined at the top of `ai_chat_service.dart` (outside the class)
+- **`_lastResponseItems`:** Static list in `AIChatService`; cleared at start of each `sendMessage()` (non-retry); exposed as read-only via `lastResponseItems` getter
+- **`recordSuccessItem()`:** Called immediately after `DBService.insertExpense()` in the `log_expense` action executor in `ai_screen.dart`
+- **`recordSkippedDuplicate()`:** Already existed; now also appends to `_lastResponseItems` with `status: AiItemStatus.skipped`
+- **Session summary card:** Rendered above the `LinearProgressIndicator` after each AI response. Shows ✅/⚠️/❌ per item with amounts and dates. Has a "Review & re-log" button that opens `_showRelogHelper()`. Dismissed by tapping ✕. State in `_sessionSummaryDismissed` (bool) and `_sessionSummaryItems` (List).
+- **`_RelogHelperSheet`:** New `StatefulWidget` at the end of `ai_screen.dart`. Editable name/amount/date per item. "Log this" calls `DBService.insertExpense()` directly — bypasses AI and dup-guard. Auto-closes when all items are logged.
+
+### Group B — Analytics (`analytics_screen.dart`)
+- **Quick Jump anchors:** `GlobalKey` fields `_keyOverview`, `_keyTrends`, `_keyHealth`, `_keyAiAdvice` + `_scrollController`. A `SingleChildScrollView` chip row at the very top calls `Scrollable.ensureVisible` per key. Zero-height `SizedBox(key: _key*)` widgets mark each section.
+- **Period chip overflow fix:** Replaced 8 raw chips with 4 primary chips (All / This Month / Last Month / This Year) + `PopupMenuButton` ("More ▾") for the less-used options (This Week · Payday Cycle · Pick Month · Custom Range). Active state of the "More" popup is reflected in the chip label.
+- **Category breakdown sort toggle:** `_catBreakdownSort` int (0=Amount, 1=Name, 2=Δ vs last month). Displayed as a tappable pill next to the section header. Delta sort uses `_lastMonthCategoryTotals` (already computed in `_loadData()`). Uses `sortedCats` list derived from `categories`.
+- **`_scrollController`:** Added to `SingleChildScrollView`; disposed in `dispose()`.
+
+---
+
+## 2 — Authoritative build numbers (v3.0.0)
+
+| Metric | Value |
+|--------|-------|
+| Version string | **3.0.0** |
+| pubspec version | `3.0.0+99` |
+| kAppVersion | `'3.0.0'` in `debug_service.dart` |
+| Platform | Android (Flutter/Dart) |
+| Min SDK | Android 5.0 (API 21) |
+| Target SDK | Android 16 (API 36) |
+| SQLite schema | **v14, 26 tables** |
+| New tables in v14 | `chat_sessions` |
+| New columns in v14 | `chat_history.session_id` |
+| AI providers | **9** (8 cloud + 1 custom local) |
+| Primary AI model | Gemini 3.5 Flash-Lite (AQ. key via Remote Config) |
+| Agentic actions | **34** |
+| Input modalities | **7** |
+| Screens | **43** Dart files |
+| Services | **31** Dart files |
+| Achievement badges | **25** |
+| Daily AI message limit | **150** |
+| Color themes | **11** |
+| APK size | ~45 MB (arm64-v8a, split, obfuscated) |
+| AAB size | ~75 MB (Play Store bundle, CI-built) |
+| GitHub | https://github.com/Zushikina-kun/smartspend-app |
+
+---
+
+## 3 — Files changed in v3.0.0
+
+| File | Type of change |
+|------|----------------|
+| `lib/screens/transactions_screen.dart` | Major refactor — sort/group enums, `_applyFilterAndSort`, grouped list builder, category dropdown, chip row 2 consolidation |
+| `lib/screens/analytics_screen.dart` | Quick Jump anchors, period chip "More" menu, category breakdown sort toggle, `_scrollController` |
+| `lib/screens/ai_screen.dart` | Session summary card, Re-log helper sheet (`_RelogHelperSheet` + `_RelogItem`), New Chat button, session-aware `_loadContext`, session-safe Clear Chat |
+| `lib/screens/chat_history_screen.dart` | Complete rewrite — session list + `_ChatSessionViewScreen` |
+| `lib/screens/whats_new_screen.dart` | Version `3.0.0`, new 4 feature entries prepended |
+| `lib/services/ai_chat_service.dart` | `AiItemStatus` enum, `AiSessionResultItem` class, `_lastResponseItems`, `recordSuccessItem()`, `_clearLastResponseItems()` |
+| `lib/services/db_service.dart` | v14 migration, `chat_sessions` in onCreate + `_ensureColumns`, all session methods, updated `saveChatMessage`, logout clear |
+| `lib/services/debug_service.dart` | Chat section now shows session summary (count, title, message count, current/archived flags) |
+| `pubspec.yaml` | `2.9.98+98` → `3.0.0+99` |
+| `docs/guides/FEATURE_BACKLOG.md` | Part 0 updated to v3.0.0, SQLite schema v14/26 tables, v3.0.0 in recent releases |
+| `docs/reference/CAPSTONE_REFERENCE.md` | Version 3.0.0, DB v14/26 tables |
+| `docs/status/PROJECT_STATUS.md` | Version 3.0.0, manuscript update items for v3.0.0 |
+| `docs/handsoff/feature-plan-v3.0.0-2026-10-09.md` | Planning artifact (added) |
+
+---
+
+## 4 — Known gaps / next priorities
+
+### Remaining audit issues
+1. **`_applyFilter` nested setState** — when `initialIds` is set, `_applyFilter()` is called inside `_load`'s `setState`, then calls `setState` again for the `initialIds` branch. Pre-existing bug, low impact (only happens when TransactionsScreen is opened from DataQuality screen).
+2. **Grouped list no pagination** — when a group-by key is active (not "None"), all items in all groups are rendered. For users with very large datasets (1000+ expenses) this could be slow. Acceptable for typical capstone dataset sizes (<300 expenses).
+3. **`_sourceLabel` removed** — was defined but never used; cleaned up. If a future tile needs to display source as a label string, use `_sourceOf()` directly.
+
+### Capstone manuscript updates still needed (for Cyrille)
+- Update DB schema reference: `v13, 25 tables` → `v14, 26 tables`
+- Update version throughout manuscript: `2.9.92` → `3.0.0`
+- Add to Features Implemented: Transaction sort/group, Chat sessions, AI recovery card, Analytics quick-jump
+
+### Feature ideas for future sessions
+- **50/30/20 period-awareness fix** — currently hardcoded to `_thisMonthExpenses` regardless of period filter. Plan doc says to read from `_expenses` (filtered list) + add a caveat note. Medium risk change in a 5,610-line file.
+- **Analytics full tab structure** — plan doc still has TabBar as an option (heavier, but cleaner). Current Quick Jump anchors are the "lighter, safer" choice for capstone timeline.
+- **Screenshot import result sheet** — reuse `ScanReviewScreen` UI to show per-item recorded/skipped/failed after batch imports. The data is already tracked in `_lastResponseItems`; just needs a sheet trigger after `_executeBatchImport`.
+- **Transaction tile dual-date** — `ExpenseTile` already shows `loggedDateStr` when dates differ (existing code from pre-v3.0.0). No change needed.
+- **Grouped list pagination** — if dataset grows, add per-group "Load more" or virtual scrolling.
+
+---
+
+## 5 — Codebase key locations
+
+| What | Where |
+|------|-------|
+| DB migration | `db_service.dart` `onUpgrade` — `if (oldVersion < 14)` block |
+| Session management methods | `db_service.dart` lines ~1650–1780 |
+| AI result tracking | `ai_chat_service.dart` lines ~76–140 (after the class-level vars) |
+| Session summary card | `ai_screen.dart` `_buildSessionSummaryCard()` method |
+| Re-log helper sheet | `ai_screen.dart` `_RelogHelperSheet` class at end of file |
+| Transaction sort/group | `transactions_screen.dart` — `TxnSortKey` enum, `_sortExpenses()`, `_buildGroups()`, `_showSortGroupSheet()` |
+| Analytics Quick Jump | `analytics_screen.dart` — `_keyOverview` etc GlobalKeys + Quick Jump chip row in body |
+| Chat session list | `chat_history_screen.dart` — `ChatHistoryScreen` + `_ChatSessionViewScreen` |
+
+---
+
+## 6 — Verified working (post-build checks)
+- `flutter analyze --no-pub` → **0 errors** (442 info/warnings, pre-existing)
+- `flutter build apk --debug --target-platform android-arm64` → **✅ Built successfully**
+- DB migration is idempotent (all `ALTER TABLE` wrapped in `try/catch`, all `CREATE TABLE IF NOT EXISTS`)
+- `_ensureColumns` adds `session_id` and creates `chat_sessions` as safety net for all migration paths
+
+---
+
+*This document is the current authoritative handoff as of October 9, 2026.*  
+*Previous: `kiro-to-kiro-handoff-2026-10-05.md`, `kiro-to-claude-handoff-2026-10-06.md`, `claude-to-kiro-sync-2026-10-07.md`*

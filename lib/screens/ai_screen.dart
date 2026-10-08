@@ -428,7 +428,14 @@ class _AIScreenState extends State<AIScreen> {
     // (not on silent refreshes — that would reset the conversation)
     if (!silent && !_historyRestored) {
       _historyRestored = true;
-      final savedHistory = await DBService.getChatHistory(limit: 50);
+      // Load only the current session's messages for display
+      int sessionId = -1;
+      try {
+        sessionId = await DBService.getCurrentSessionId();
+      } catch (_) {}
+      final savedHistory = sessionId >= 0
+          ? await DBService.getChatHistoryBySession(sessionId, limit: 50)
+          : await DBService.getChatHistory(limit: 50);
       if (savedHistory.isNotEmpty) {
         AIChatService.restoreHistory(savedHistory);
         if (mounted) {
@@ -2946,8 +2953,13 @@ class _AIScreenState extends State<AIScreen> {
                 ),
               );
               if (confirm != true || !mounted) return;
+              // Clear only the current session's messages, then create a fresh session
+              try {
+                final sessionId = await DBService.getCurrentSessionId();
+                await DBService.deleteChatSession(sessionId);
+              } catch (_) {}
+              await DBService.createNewChatSession();
               AIChatService.clearHistory();
-              await DBService.clearChatHistory();
               setState(() {
                 _messages.clear();
                 _historyRestored = false;

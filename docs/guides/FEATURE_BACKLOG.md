@@ -29,7 +29,7 @@ Use these everywhere. Many older docs are stale.
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
-| SQLite schema | **v13, 25 tables** |
+| SQLite schema | **v14, 26 tables** |
 | AI providers in fallback chain | **9** (8 cloud + 1 custom local) |
 | Primary AI model | **Auto (Gemini 3.5 Flash-Lite default, AQ. key via Remote Config)** |
 | Agentic actions | **34** |

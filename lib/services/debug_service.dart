@@ -259,7 +259,20 @@ class DebugService {
 
     // ── CHAT HISTORY ──────────────────────────────────────
     final chat = await DBService.getChatHistory(limit: 200);
-    buffer.writeln('── AI CHAT HISTORY (${chat.length} messages) ───');
+    final sessions = await DBService.getChatSessions();
+    buffer.writeln(
+        '── AI CHAT HISTORY (${chat.length} messages, ${sessions.length} sessions) ───');
+    // Session summary
+    for (final s in sessions) {
+      final id = s['id'];
+      final title = s['title'] ?? '(untitled)';
+      final count = s['message_count'] ?? 0;
+      final isCurrent = (s['is_current'] as int?) == 1 ? ' [CURRENT]' : '';
+      final isArchived = s['archived_at'] != null ? ' [ARCHIVED]' : '';
+      buffer
+          .writeln('  Session $id: $title — $count msgs$isCurrent$isArchived');
+    }
+    buffer.writeln();
     int errorCount = 0;
     for (final msg in chat) {
       final role = (msg['role'] as String).toUpperCase().padRight(5);

@@ -329,6 +329,8 @@ class DBService {
       "ALTER TABLE budgets ADD COLUMN is_percentage INTEGER DEFAULT 0",
       "ALTER TABLE budgets ADD COLUMN percentage_value REAL DEFAULT 0",
       "ALTER TABLE income ADD COLUMN is_windfall INTEGER DEFAULT 0",
+      // v14 — session_id on chat_history
+      "ALTER TABLE chat_history ADD COLUMN session_id INTEGER",
     ];
     for (final sql in cols) {
       try {
@@ -342,6 +344,18 @@ class DBService {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL UNIQUE,
           icon TEXT
+        )
+      ''');
+    } catch (_) {}
+    // Ensure chat_sessions table exists (v14)
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS chat_sessions(
+          id          INTEGER PRIMARY KEY AUTOINCREMENT,
+          title       TEXT,
+          created_at  TEXT NOT NULL,
+          archived_at TEXT,
+          is_current  INTEGER DEFAULT 0
         )
       ''');
     } catch (_) {}
