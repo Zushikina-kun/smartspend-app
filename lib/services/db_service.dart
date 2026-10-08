@@ -965,8 +965,9 @@ class DBService {
         ? await db.query('expenses',
             where: "date LIKE ?",
             whereArgs: ['$month%'],
-            orderBy: 'date DESC, time DESC, id DESC')
-        : await db.query('expenses', orderBy: 'date DESC, time DESC, id DESC');
+            orderBy: 'date DESC, COALESCE(updated_at, date) DESC, id DESC')
+        : await db.query('expenses',
+            orderBy: 'date DESC, COALESCE(updated_at, date) DESC, id DESC');
     return maps.map((m) => Expense.fromMap(m)).toList();
   }
 

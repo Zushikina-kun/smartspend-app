@@ -79,6 +79,18 @@ class AIChatService {
   // fired this session so the system prompt can warn the model.
   static final List<String> _sessionActionLog = [];
 
+  // ── SESSION SKIPPED LOG — items blocked by cross-session duplicate guard ──
+  // When the DB guard silently skips an item (already exists), we record it
+  // here so the AI knows in its next message that the item IS already in DB.
+  static final List<String> _sessionSkippedLog = [];
+
+  /// Record a skipped duplicate (called by ai_screen when crossSessionDup fires).
+  static void recordSkippedDuplicate(String itemName, String date) {
+    final key = '${itemName.trim()} ($date)';
+    if (!_sessionSkippedLog.contains(key)) _sessionSkippedLog.add(key);
+    if (_sessionSkippedLog.length > 10) _sessionSkippedLog.removeAt(0);
+  }
+
   /// Record that a log_expense action was fired (called by ai_screen executor).
   static void recordFiredAction(String itemName, double amount, String date) {
     final key =
@@ -126,6 +138,12 @@ class AIChatService {
       // "when it happened" from "when it was entered into the app"
       final expDate = (e['date'] as String).substring(5, 10);
       final updatedAt = e['updated_at'] as String?;
+      // Show source for imports so AI knows the item came from screenshot/import
+      final sourceNote = notes.startsWith('Imported')
+          ? ' [screenshot]'
+          : notes.startsWith('Payment plan')
+              ? ' [plan]'
+              : '';
       String loggedNote = '';
       if (updatedAt != null && updatedAt.length >= 10) {
         final loggedDate = updatedAt.substring(5, 10);
@@ -133,7 +151,7 @@ class AIChatService {
           loggedNote = ' [logged $loggedDate]';
         }
       }
-      return "- ${e['item_name'] ?? e['category']}: ₱${e['amount']} $expDate [${isWant ? 'W' : 'N'}]$notesShort$loggedNote";
+      return "- ${e['item_name'] ?? e['category']}: ₱${e['amount']} $expDate [${isWant ? 'W' : 'N'}]$notesShort$sourceNote$loggedNote";
     }).join("\n");
 
     // Older entries — summarized by category only
@@ -1025,8 +1043,13 @@ PH BNPL/Loan Services (2026):
     // into the system prompt so the model knows what was just fired.
     // The full DB-level dedup still runs at action-execution time in ai_screen.
     final recentFingerprints = _buildRecentFingerprints();
-    final guardRailNote = recentFingerprints.isNotEmpty
-        ? '\n[GUARDRAIL — already logged this session (do NOT re-log unless user explicitly asks again): $recentFingerprints]'
+    // Build skipped-items note — items blocked by cross-session duplicate guard
+    final skippedNote = _sessionSkippedLog.isNotEmpty
+        ? '\n[ALREADY IN DB — these items exist in the database, do NOT re-log them, tell the user they ARE recorded: ${_sessionSkippedLog.join(', ')}]'
+        : '';
+    final guardRailNote = (recentFingerprints.isNotEmpty ||
+            skippedNote.isNotEmpty)
+        ? '\n[GUARDRAIL — already logged this session (do NOT re-log unless user explicitly asks again): $recentFingerprints]$skippedNote'
         : '';
 
     // Reduced from 12 to give more token room for multi-item responses
@@ -1047,7 +1070,7 @@ PH BNPL/Loan Services (2026):
         "RULES:\n"
         "1. ALWAYS LOG: When user mentions spending/buying with an amount → fire log_expense ACTION. No exceptions. Multiple items = multiple ACTION lines. Also catch typos like 'spen', 'spe', 'nagastos', 'ginastos'.\n"
         "2. MULTI-ITEM: If user lists several purchases in one message, fire ONE ACTION per item. Example: 'spent 30 jeep, 45 gatorade, 100 lunch' = 3 separate ACTION lines. Also matches: 'spen 30 for transport, 30 for lunch and 45 for super glue' = 3 ACTION lines.\n"
-        "3. DB IS TRUTH: Context below = only truth. Never say 'already logged' from memory.\n"
+        "3. DB IS TRUTH: Context below = only truth. Never say 'already logged' from memory. Items marked [screenshot] in the expense list were imported via batch screenshot — they ARE recorded even if time shows 00:00. If the ALREADY IN DB guardrail lists an item, it IS in the database — tell the user it's recorded instead of re-logging.\n"
         "4. WALLET BALANCE: 'I have X in GCash', 'cash on hand is X', 'my cash is X' → ALWAYS use set_wallet_balance. NEVER log as income, NEVER log as expense. This is a balance update only.\n"
         "5. DUPLICATES — GUARDRAIL: If the GUARDRAIL note above lists an item with the same name+amount that the user JUST mentioned in the SAME message, do NOT fire another ACTION for it. If the user is logging something for a DIFFERENT day or a genuinely new purchase, always log it. When in doubt: log it.\n"
         "6. LOGGING TONE: When logging expenses, be warm and natural — not robotic. Instead of just 'Logged: X ₱Y', add a brief friendly comment. Examples: 'Got it, logged your jeepney fare 🚌', 'Noted! Lunch for ₱100 — hope it was good 😄', 'Logged your Sting — staying energized! ⚡'. Keep it short (1 line max), then the ACTION.\n"
@@ -1776,6 +1799,7 @@ PH BNPL/Loan Services (2026):
     _fullContext = "";
     _userRules = [];
     _sessionActionLog.clear();
+    _sessionSkippedLog.clear();
     // Clear summaries on explicit chat clear
     DBService.clearConversationSummaries().catchError((_) {});
   }

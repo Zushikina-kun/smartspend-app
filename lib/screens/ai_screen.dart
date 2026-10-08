@@ -836,6 +836,8 @@ class _AIScreenState extends State<AIScreen> {
                 [itemName, amount, expenseDate, fiveMinAgo],
               );
               if (crossSessionDup.isNotEmpty) {
+                // Record in session skipped log so AI knows this item exists in DB
+                AIChatService.recordSkippedDuplicate(itemName, expenseDate);
                 // Show a brief toast so the user knows we skipped it, not
                 // an error — this is expected when re-importing the same data.
                 if (mounted) {
