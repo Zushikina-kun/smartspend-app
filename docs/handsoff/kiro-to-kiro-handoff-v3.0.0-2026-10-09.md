@@ -144,3 +144,17 @@ All four feature groups from `feature-plan-v3.0.0-2026-10-09.md` were implemente
 
 *This document is the current authoritative handoff as of October 9, 2026.*  
 *Previous: `kiro-to-kiro-handoff-2026-10-05.md`, `kiro-to-claude-handoff-2026-10-06.md`, `claude-to-kiro-sync-2026-10-07.md`*
+
+---
+
+## 7 — Second-pass audit fixes (commit `07c9371`)
+
+Three issues found and fixed after the initial ship:
+
+| # | File | Issue | Fix |
+|---|------|-------|-----|
+| 1 | `ai_screen.dart` | The **fallback retry path** (silent provider switch on timeout/auth error) executed actions but never updated `_sessionSummaryItems` — summary card would stay hidden even if a retry succeeded with log_expense actions | Added `retryResultItems = AIChatService.lastResponseItems` capture + setState update in the fallback success block |
+| 2 | `ai_screen.dart` (`_RelogHelperSheet`) | `_logItem()` called `DBService.insertExpense()` directly but never fired `AppEvent.expenseChanged` — home screen, transactions screen, and analytics would NOT auto-refresh after a re-log | Added `fireEvent(AppEvent.expenseChanged)` after the insert |
+| 3 | `analytics_screen.dart` | Category breakdown sort toggle used `sortedCats.asMap().entries` index `i` for color dots — when sorted by Name or Delta, the dot colors in the breakdown table didn't match the pie chart legend colors | Changed color lookup to `categories.indexOf(cat)` (original unsorted index) so colors always match the pie chart |
+
+*All three were logic/UX gaps not caught by the analyzer. Second-pass audit complete. No further issues found.*
