@@ -698,7 +698,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (_) => AlertDialog(
         title: const Text("Load Demo Data"),
         content: const Text(
-            "This will replace all your current expenses, budgets, and goals with sample data. "
+            "This replaces all your current data with a full demo dataset — "
+            "realistic Filipino student expenses, budgets, goals, debts, wallets, "
+            "income, installment plans, and more.\n\n"
+            "You can still add, edit, or delete data after loading. "
             "Your account and profile will not be affected.\n\nContinue?"),
         actions: [
           TextButton(
@@ -717,9 +720,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text("Demo data loaded! Pull to refresh."),
+            content: Text("Demo data loaded! Pull to refresh screens."),
             behavior: SnackBarBehavior.floating,
             backgroundColor: Colors.green),
+      );
+      _loadStats();
+    }
+  }
+
+  Future<void> _resetDemoDefaults() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Reset to Demo Defaults"),
+        content: const Text(
+            "This wipes all current data and reloads the full demo dataset fresh — "
+            "useful after editing demo data and wanting a clean slate.\n\n"
+            "This cannot be undone. Continue?"),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange, foregroundColor: Colors.white),
+            child: const Text("Reset to Defaults"),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true) return;
+    await DemoService.loadSampleData();
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("Demo data reset to defaults!"),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.orange),
       );
       _loadStats();
     }
@@ -2219,6 +2257,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   style: TextStyle(fontSize: 11)),
                               trailing: const Icon(Icons.chevron_right),
                               onTap: _loadDemo,
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.restart_alt,
+                                  color: Colors.orange),
+                              title: const Text("Reset to Demo Defaults",
+                                  style: TextStyle(color: Colors.orange)),
+                              subtitle: const Text(
+                                  "Wipe current data and reload full demo dataset",
+                                  style: TextStyle(fontSize: 11)),
+                              trailing: const Icon(Icons.chevron_right,
+                                  color: Colors.orange),
+                              onTap: _resetDemoDefaults,
                             ),
                             const Divider(height: 1),
                             ListTile(
