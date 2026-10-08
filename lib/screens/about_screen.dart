@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/debug_service.dart' show kAppVersion;
 
 class AboutScreen extends StatelessWidget {
@@ -385,19 +387,17 @@ class AboutScreen extends StatelessWidget {
 
             _infoCard(context, [
               "Framework: Flutter (Dart)",
-              "AI Engine: Multi-model LLM with 8-provider auto-failover — Gemini 3.5 Flash-Lite (primary), Gemini 3.5 Flash, GPT-OSS 120B (Groq), Qwen3.6 27B (Groq), Qwen3.8 27B (Groq), GPT-OSS 20B (Groq), Compound Mini (Groq), GPT-OSS 120B (Cerebras) — 34 agentic actions",
-              "Local Database: SQLite (sqflite)",
+              "AI Engine: Multi-model LLM with 9-provider auto-failover — Gemini 3.5 Flash-Lite (primary), Gemini 3.5 Flash, GPT-OSS 120B (Groq), Qwen3.6 27B (Groq), Qwen3.8 27B (Groq), GPT-OSS 20B (Groq), Compound Mini (Groq), GPT-OSS 120B (Cerebras), Custom Local LLM — 34 agentic actions",
+              "Local Database: SQLite v14, 26 tables",
               "Cloud Auth & Sync: Firebase Auth + Firestore",
               "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules, insurance_policies",
               "OCR: Google ML Kit Text Recognition",
               "Charts: fl_chart",
-              "Backup & Restore: Full data backup exported as a JSON file via the system share sheet — covers expenses, budgets, goals, income, recurring, debts, payment plans, categories, rules, mood log, wallets, and insurance policies",
+              "Backup & Restore: Full data backup exported as a JSON file via the system share sheet",
               "App Lock: local_auth (PIN + biometric, per-account)",
               "Exchange Rates: open.er-api.com",
               "Crash Reporting: Firebase Crashlytics",
-              "API Config: AppConfig (centralized, .gitignore protected)",
-              "GCash / Bank Share Intent: android.intent.action.SEND (text/plain) — SmartSpend appears in Android share sheet; transaction text routed to AI chat via MethodChannel",
-              "OFxPERA Readiness: Architecture is BSP Open Finance-compatible — SQLite schema, Firebase Auth identity layer, and paste-to-import UX are designed for future replacement with a consent-gated bank API call when BSP's Open Finance API is available to third-party developers (per BSP Circular 1105)",
+              "API Config: Firebase Remote Config (keys never in APK binary)",
             ]),
 
             const SizedBox(height: 20),
@@ -405,6 +405,12 @@ class AboutScreen extends StatelessWidget {
             const SizedBox(height: 12),
 
             _teamCard(context),
+
+            const SizedBox(height: 20),
+            _dividerLabel("Support the Project"),
+            const SizedBox(height: 12),
+
+            _supportCard(context),
 
             const SizedBox(height: 20),
             _dividerLabel("Academic Information"),
@@ -653,6 +659,143 @@ class AboutScreen extends StatelessWidget {
               ],
             );
           }),
+        ],
+      ),
+    );
+  }
+
+  Widget _supportCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    Future<void> open(String url) async {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    }
+
+    final links = [
+      (
+        '☕',
+        'Buy Me a Coffee',
+        'Support via coffee donation',
+        'https://buymeacoffee.com/zushikina_kuroh143',
+        const Color(0xFFFFDD00),
+        Colors.black,
+      ),
+      (
+        '🍵',
+        'Ko-fi',
+        'Support on Ko-fi',
+        'https://ko-fi.com/zushikina143',
+        const Color(0xFF29ABE0),
+        Colors.white,
+      ),
+      (
+        '🅿️',
+        'PayPal',
+        'Donate via PayPal',
+        'https://paypal.me/BrixDirecto',
+        const Color(0xFF003087),
+        Colors.white,
+      ),
+      (
+        '📱',
+        'GCash / PayMaya',
+        '09953583040',
+        null, // no URL — just copy
+        const Color(0xFF007DFF),
+        Colors.white,
+      ),
+    ];
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cs.outline.withValues(alpha: 0.12)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'SmartSpend is free and open-source. If it helped you, '
+            'consider buying the dev a coffee ☕ — it keeps the project alive!',
+            style: TextStyle(fontSize: 13, height: 1.5),
+          ),
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: links.map((link) {
+              return GestureDetector(
+                onTap: () {
+                  if (link.$4 != null) {
+                    open(link.$4!);
+                  } else {
+                    // GCash — copy number to clipboard
+                    Clipboard.setData(const ClipboardData(text: '09953583040'));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('GCash/PayMaya number copied!'),
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: link.$5,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(link.$1, style: const TextStyle(fontSize: 16)),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(link.$2,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: link.$6)),
+                          Text(link.$3,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: link.$6.withValues(alpha: 0.7))),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              const Icon(Icons.code, size: 14),
+              const SizedBox(width: 6),
+              GestureDetector(
+                onTap: () =>
+                    open('https://github.com/Zushikina-kun/smartspend-app'),
+                child: Text(
+                  'View source on GitHub →',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: cs.primary,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

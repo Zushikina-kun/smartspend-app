@@ -1,13 +1,29 @@
-# Smart Spend
+# SmartSpend
 
-**AI-Assisted Financial Tracking & Advisory**
-Version 2.9.67 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+**AI-Assisted Financial Tracking & Advisory for Filipinos**  
+Version 3.0.1 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+
+[![Download](https://img.shields.io/badge/Download-v3.0.1-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
+
+---
+
+## Support the Project
+
+SmartSpend is free and open-source. If it helped you, consider supporting the dev:
+
+| Platform | Link |
+|----------|------|
+| ☕ Buy Me a Coffee | https://buymeacoffee.com/zushikina_kuroh143 |
+| 🍵 Ko-fi | https://ko-fi.com/zushikina143 |
+| 🅿️ PayPal | https://paypal.me/BrixDirecto |
+| 📱 GCash / PayMaya | 09953583040 |
 
 ---
 
 ## About
 
-Smart Spend is an AI-powered personal finance tracker for Android, built for everyday Filipino users. It helps you record, analyze, and manage your spending with minimal effort — using voice, camera, or just typing naturally.
+SmartSpend is a free AI-powered personal finance tracker for Android, built for everyday Filipino users. It helps you record, analyze, and manage your spending with minimal effort — using voice, camera, or just typing naturally in Taglish or English.
 
 **Developed by Lucid Frame:**
 - Brix A. Directo — Lead Developer
@@ -57,17 +73,15 @@ Smart Spend is an AI-powered personal finance tracker for Android, built for eve
 | Component | Technology |
 |-----------|-----------|
 | Framework | Flutter (Dart) |
-| AI Engine | Multi-Model LLM: Gemini 3.1 Flash-Lite (primary), Gemini 3.5 Flash, LLaMA 4 Scout (Groq), LLaMA 3.3 70B (Groq), LLaMA 3.1 8B (Groq), GPT-OSS 120B (Cerebras) — 6-provider auto-fallback, task-based routing |
-| Local DB | SQLite (sqflite v11) |
-| Cloud | Firebase Auth + Firestore |
+| AI Engine | Multi-model LLM with **9-provider** auto-failover — Gemini 3.5 Flash-Lite (primary, AQ. key via Remote Config), Gemini 3.5 Flash, GPT-OSS 120B (Groq), Qwen3.6 27B, Qwen3.8 27B, GPT-OSS 20B, Compound Mini, GPT-OSS 120B (Cerebras), Custom Local LLM — **34 agentic actions** |
+| Local DB | SQLite via sqflite (**v14 schema, 26 tables**) |
+| Cloud | Firebase Auth + Firestore + Remote Config + Crashlytics + App Check |
 | OCR | Google ML Kit Text Recognition |
 | Barcode | Google ML Kit Barcode Scanning + MobileScanner |
 | Charts | fl_chart |
 | Backup | System share sheet (JSON, v9 format) |
 | App Lock | local_auth (PIN + biometric) |
 | Exchange Rates | open.er-api.com |
-| Crash Reporting | Firebase Crashlytics |
-| App Check | Firebase App Check (Play Integrity, monitoring mode) |
 
 **Architecture:** Serverless/client-side only. No backend server. All logic runs on-device + Firebase + third-party APIs (Groq, open.er-api.com). Zero hosting costs.
 
