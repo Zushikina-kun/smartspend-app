@@ -1251,8 +1251,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 final pct = grandTotal > 0
                                     ? catTotal / grandTotal * 100
                                     : 0.0;
-                                final color =
-                                    _sectionColors[i % _sectionColors.length];
+                                // Use the original categories index for color
+                                // so the color matches the pie chart legend
+                                final colorIdx = categories.indexOf(cat);
+                                final color = _sectionColors[
+                                    (colorIdx >= 0 ? colorIdx : i) %
+                                        _sectionColors.length];
                                 // Budget for this category
                                 double budgetAmt = 0.0;
                                 try {

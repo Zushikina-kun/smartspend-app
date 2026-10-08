@@ -674,6 +674,7 @@ class _AIScreenState extends State<AIScreen> {
             if (filteredActions.isNotEmpty) await _loadContext(silent: true);
             await DBService.saveChatMessage(role: 'ai', message: reply);
             if (mounted) {
+              final retryResultItems = AIChatService.lastResponseItems;
               setState(() {
                 _messages.add({
                   "role": "ai",
@@ -681,6 +682,10 @@ class _AIScreenState extends State<AIScreen> {
                   "ts": DateTime.now().toIso8601String().substring(0, 10),
                 });
                 _lastUserMessage = null;
+                if (retryResultItems.isNotEmpty) {
+                  _sessionSummaryItems = List.from(retryResultItems);
+                  _sessionSummaryDismissed = false;
+                }
               });
               _scrollToBottom();
             }
@@ -3918,6 +3923,8 @@ class _RelogHelperSheetState extends State<_RelogHelperSheet> {
       'confidence_score': 1.0,
       'is_want': 0,
     });
+    // Notify all screens that an expense was added
+    fireEvent(AppEvent.expenseChanged);
     setState(() => item.logged = true);
     // If all items logged, auto-close and notify
     if (_items.every((i) => i.logged)) {
