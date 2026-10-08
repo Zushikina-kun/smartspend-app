@@ -376,8 +376,15 @@ class AIChatService {
                 .map((r) => '"${r['keyword']}"→${r['category']}')
                 .join(', ');
 
+    final now = DateTime.now();
+    final todayStr = now.toIso8601String().substring(0, 10);
+    final yesterdayStr = now
+        .subtract(const Duration(days: 1))
+        .toIso8601String()
+        .substring(0, 10);
+
     _fullContext = """
-Account type: $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
+Today: $todayStr | Yesterday: $yesterdayStr | Account type: $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
 This month spent: ₱${totalSpent.toStringAsFixed(0)}$wantNeedSummary
 ${allTimeTotal > 0 ? 'All-time: ₱${allTimeTotal.toStringAsFixed(0)}' : ''}$monthlyTotalsSummary
 ${quizChallenge.isNotEmpty ? 'Challenge: $quizChallenge' : ''}
@@ -412,6 +419,10 @@ PH BNPL/Loan Services (2026):
 - UnaCash / PeraAgad / Digido / JuanHand: small personal loans ₱500–₱50K, 0.77–9%/mo. Use add_debt for these.
 - Credit cards (BDO/BPI/Metrobank/UnionBank/RCBC/Security/EastWest/Eastwest/Citibank): revolving credit, 2–3.5%/mo. Track balance as debt, monthly minimum as recurring bill.
 - BSP Circular 1133 cap: small loans ≤₱10K, ≤4 months → max 15% effective monthly rate.
+- PH Credit Cards (BSP-regulated, cap 2% monthly / 24% annually effective Sep 2022): BDO (Lite/Classic/Gold/Platinum), BPI (Amore/Blue/Gold/Platinum), Metrobank (M Free/Travel/World), Security Bank (Complete Cashback/Platinum), RCBC (Gold/Platinum), EastWest (Practical/Gold), UnionBank (PlayEverywhere/Gold), HSBC Philippines, Citibank PH (now merged with UnionBank), Landbank, China Bank. Track credit card charges as expenses, track outstanding balance as debt. Monthly statement balance = use add_debt or recurring. Minimum payment due = Bills category recurring. When user says 'credit card bill', 'CC bayad', 'minimum payment' → Bills category, suggest add_recurring if monthly.
+- When user mentions a credit card purchase → log as expense with payment_method matching the card (e.g. 'BDO', 'BPI', 'Metrobank'). If they ask about interest → reference 2%/mo or 24%/yr cap.
+- When to use add_debt vs add_installment_plan: revolving credit (GCredit, Maya Credit, credit cards) → add_debt. Fixed installment plan (GLoan, HomeCredit, BillEase, SPaylater in months) → add_installment_plan.
+- When user says 'nagka-utang sa credit card' → add_debt with type='owe', suggest tracking monthly minimum as recurring Bill.
 - When user mentions 'SPayLater', 'SPL', 'GCredit', 'GGives', 'GLoan', 'LazPayLater', 'HomeCredit', 'BillEase', 'Skyro', 'Akulaku', 'Atome' → auto-classify payment as Bills and suggest add_installment_plan if multiple payments remain.""";
   }
 
@@ -1043,7 +1054,11 @@ PH BNPL/Loan Services (2026):
         "7. SOCIAL: 'thanks/ok/yes/salamat/sige/oo' → short reply, no actions. Use Filipino terms naturally when the user uses them: paluwagan, utang, bayad, pang-araw-araw, piso, laman ng bulsa, ipon, gastos, singil.\n"
         "8. SELF-CHECK: Before sending your response, verify: does each item the user mentioned have exactly ONE ACTION line? If an item appears twice in your ACTION list, remove the duplicate.\n"
         "9. ITEM NAMES: item_name must be the real item — NEVER use generic filler like 'your X for', 'the X for', 'my X'. Use the actual item: 'Jeepney fare', 'Lunch', 'Snack', 'Breakfast', 'Tricycle fare'. If the user calls it 'jeep' log it as 'Jeepney fare'. If unsure, use the noun the user said.\n"
-        "10. DATE/TIME: Expense entries use format '- item: ₱amount MM-DD [W/N] [logged MM-DD]'. The first date = WHEN the expense happened (transaction date). 'logged MM-DD' (when shown) = WHEN the user entered it into the app (these are different for backdated entries). When the user asks 'what did I log recently/just now/today', use the LOGGED date. When they ask 'what did I spend on [date]', use the EXPENSE date. When the user says 'that was on [date]', 'change date to', 'put it on [date]' → fire update_expense ACTION with corrected date. No ACTION = no fix. Example: 'the lunch I logged was actually on July 3' → ACTION:{\"type\":\"update_expense\",\"item_name\":\"Lunch\",\"date\":\"2026-07-03\"}.\n"
+        "10. DATE/TIME: Expense entries use format '- item: ₱amount MM-DD [W/N] [logged MM-DD]'. The first date = WHEN the expense happened (transaction date). 'logged MM-DD' (when shown) = WHEN the user entered it into the app (these are different for backdated entries). When the user asks 'what did I log recently/just now/today', use the LOGGED date. When they ask 'what did I spend on [date]', use the EXPENSE date.\n"
+        "   DATE KEYWORDS: 'yesterday'/'kahapon' = use the Yesterday date shown in context header. 'today' = today's date. 'last night' = yesterday. '2 days ago' = today minus 2. ALWAYS put the resolved ISO date in the ACTION: {\"date\":\"YYYY-MM-DD\"}. Never omit the date field when user explicitly mentions a past day.\n"
+        "   BACKDATED LOG RULE: When user says 'I forgot to log', 'nakalimutan ko', 'for yesterday', 'last night I spent' — ALWAYS include the correct past date in every log_expense ACTION.\n"
+        "   NOT-RECORDED CHECK: When user says 'it wasn't recorded' or 'hindi pa nalo-log' — FIRST scan the expense list in context. If the item is already there (same name+amount+date), do NOT re-log it — tell the user it IS recorded. Only re-log if it's genuinely missing.\n"
+        "   DATE CORRECTION: When user says 'change date to', 'that was on [date]' about an EXISTING expense → fire update_expense ACTION. No ACTION = no fix.\n"
         "11. TAGLISH ACTIONS — non-expense actions also work in Filipino/Taglish:\n"
         "   SET BUDGET: 'budget ko sa pagkain 3000', 'itakda ang food budget sa 3000', 'pag-ibayuhin ang budget sa Transportation' → set_budget\n"
         "   SET INCOME: 'sweldo ko 25000', 'kita ko kada buwan 18000', 'allowance ko 3000 bawat linggo' → set_income\n"
@@ -1056,7 +1071,7 @@ PH BNPL/Loan Services (2026):
         "12. LANGUAGE: Default language is ENGLISH. Reply in English unless the user has clearly written multiple sentences in Filipino/Tagalog. Single ambiguous words like 'hello', 'ok', 'yes', 'thanks', 'sige', 'oo' do NOT count as Filipino — stay in English. If the user explicitly asks to switch ('speak English', 'mag-Tagalog ka'), honor that for the rest of the conversation.\n\n"
         "$guardRailNote"
         "ACTIONS (append after reply text, one per line, format: ACTION:{json}):\n"
-        "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\",\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"
+        "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\" (REQUIRED when user says yesterday/kahapon/past day — use Yesterday date from context),\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"
         "• set_budget: {\"type\":\"set_budget\",\"category\":\"Food\",\"amount\":3000}\n"
         "• set_income: {\"type\":\"set_income\",\"amount\":25000}\n"
         "• add_income: {\"type\":\"add_income\",\"title\":\"X\",\"amount\":600,\"category\":\"Allowance\"}\n"
