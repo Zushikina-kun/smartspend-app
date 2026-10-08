@@ -5,7 +5,41 @@
 
 > For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
 > For feature backlog and planning see `docs/guides/FEATURE_BACKLOG.md`
-> For Kiro AI handoff (latest) see `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
+> For the latest AI handoff see `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
+
+---
+
+## AUTHORITATIVE BUILD NUMBERS (v3.0.0)
+
+| Metric | Value |
+|--------|-------|
+| Version string | **3.0.0** |
+| pubspec | `3.0.0+99` |
+| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.0 |
+| APK (arm64) | **45.68 MB** — `SmartSpend-v3.0.0-arm64-v8a.apk` |
+| AAB (Play Store) | **75.02 MB** — `SmartSpend-v3.0.0.aab` |
+| Platform | Android (Flutter/Dart) |
+| Min SDK | API 21 (Android 5.0) |
+| Target SDK | API 36 (Android 16) |
+| SQLite schema | **v14, 26 tables** |
+| AI providers | **9** (8 cloud + 1 custom local) |
+| Primary AI model | Gemini 3.5 Flash-Lite (AQ. key via Firebase Remote Config) |
+| Agentic actions | **34** |
+| Input modalities | **7** |
+| Screens | **43** Dart files |
+| Services | **31** Dart files |
+| Achievement badges | **25** |
+| Daily AI message limit | **150** |
+| Color themes | **11** |
+| Daily quests pool | 10 |
+| Batch screenshot platforms | 40+ |
+| Filipino item catalog | 150+ items |
+| PH banks in DB | 20 banks + 5 e-wallets |
+| Log choice sheet options | 7 |
+| Currencies | 57 |
+| Hub tiles | 30+ |
+| Optional home toggles | 14 |
+| Optional analytics toggles | 4 |
 
 ---
 
@@ -16,294 +50,124 @@
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
 | Install **v3.0.0** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.0-arm64-v8a.apk` from GitHub Releases |
-| Verify About screen shows **"Version 3.0.0"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
-| Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
-| Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) — now routes to Gemini |
-| Turn on **Lite Mode OFF** for demo (show all features) | Brix | ❌ | Settings → Quick Presets → Normal or Pro |
-| Charge demo phone to 100% the night before — do NOT open app | Brix | ❌ | Cold start required for the demo |
-| Have WiFi ready for demo | Brix | ❌ | AI needs internet; Gemini key loads from Remote Config on first open |
-| Rehearse demo flow (see script below) | All | ❌ | 10-minute run-through the day before |
-| Create **Figure 1.1** — PH financial literacy bar chart | Cyrille | ❌ | BSP CFIS 2025: 50% adults formal accounts; 74% literacy rate |
-| Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output |
+| Verify About screen shows **"Version 3.0.0"** | Brix | ❌ | kAppVersion in debug_service.dart |
+| Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ → Reset Daily Limit |
+| Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
+| Turn on **Normal or Pro** preset | Brix | ❌ | Settings → Quick Presets — shows all features |
+| Charge demo phone to 100%, do NOT re-open until demo | Brix | ❌ | Cold start required |
+| Have WiFi ready | Brix | ❌ | AI needs internet; Gemini key fetched from Remote Config on first open |
+| Rehearse demo flow (see script below) | All | ❌ | 10-min run-through the day before |
+| Create **Figure 1.1** — PH financial literacy bar chart | Cyrille | ❌ | BSP CFIS 2025: 50% adults with formal accounts; 74% literacy rate |
+| Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input → Process → Output |
 | Create **Figure 2.1** — SUS score interpretation chart | Cyrille | ❌ | Bangor et al. (2009) adjective scale; target ≥80 = Good |
 | Create **Figure 2.2** — Kanban board / development methodology | Cyrille | ❌ | Agile Kanban: Backlog → In Progress → Done |
 | Fill in **Compliance Matrix** | All | ❌ | `docs/capstone/SmartSpend_Master_Bug_Tracker.docx` |
 
 ### 🟠 Manuscript Updates (for Cyrille)
 
+Use `docs/reference/CAPSTONE_REFERENCE.md` and the v3.0.0 handoff as the single source of truth.
+
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
 | Update version throughout manuscript → **3.0.0** | Cyrille | ❌ | |
-| Update AI section: 9 providers (+ custom local), Gemini 3.5 Flash-Lite primary | Cyrille | ❌ | AQ. key format, Remote Config, Local AI private mode |
-| Update FHS equations | Cyrille | ❌ | 4 × 25pt components |
+| Update SQLite schema → **v14, 26 tables** | Cyrille | ❌ | v14 adds chat_sessions + session_id on chat_history |
+| Update AI section: 9 providers, Gemini 3.5 Flash-Lite primary, AQ. key format, Remote Config, Local AI private mode | Cyrille | ❌ | |
+| Update FHS equations: 4 × 25pt components, soft/hard overspend | Cyrille | ❌ | |
 | Update agentic action count → **34** | Cyrille | ❌ | |
 | Update badge count → **25** | Cyrille | ❌ | |
 | Update daily AI limit → **150** | Cyrille | ❌ | |
 | Update color theme count → **11** | Cyrille | ❌ | |
 | Update screens count → **43** | Cyrille | ❌ | |
-| Update SQLite schema → **v14, 26 tables** | Cyrille | ❌ | v14 adds chat_sessions + session_id on chat_history |
 | Update APK size → **~45 MB** (arm64, split, obfuscated) | Cyrille | ❌ | |
-| Add to Implemented: Transaction sort/group, Chat sessions, AI recovery card, Analytics quick-jump (v3.0.0) | Cyrille | ❌ | All shipped Oct 9 |
-| Add to Implemented: Peso mascot, Safe-to-Spend, Full audit trail, History viewers, Data Quality, Local AI private mode | Cyrille | ❌ | All v2.9.76–v2.9.92 |
-| Add AI financial advice disclaimer (RA 11765) to Ch.2/Ch.3 | Cyrille | ❌ | One-time dialog added |
+| Add to Implemented: Transaction sort/group, Chat sessions, AI recovery card, Analytics quick-jump (v3.0.0) | Cyrille | ❌ | Shipped Oct 9 |
+| Add to Implemented: Peso mascot, Safe-to-Spend, Full audit trail, History viewers, Data Quality, Local AI private mode (v2.9.76–v2.9.92) | Cyrille | ❌ | |
+| Add AI financial advice disclaimer (RA 11765) to Ch.2/Ch.3 | Cyrille | ❌ | One-time dialog before first advice response |
 | Add Safe-to-Spend to features list | Cyrille | ❌ | BudgetPH differentiator |
 | Add **Agila, PISO, BunnyWise, MayBudget** to competitor table | Cyrille | ❌ | See FEATURE_BACKLOG Part 10 + Part 3 |
 | BSP citation update Ch.1: 2021 → CFIS 2025 | Cyrille | ❌ | |
 | Move **Paluwagan** to Implemented | Cyrille | ✅ | Done |
 
-### 🟡 Post-Defense (before final)
+### 🟡 Post-Defense (before final submission)
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
 | SUS survey — 30 respondents | Djaunathan | ❌ | 20 parents + 10 young professionals |
-| Google Play Console account ($25) | Brix | ❌ | Required for Play Store |
-| Build AAB: already in CI — download from GitHub Releases | Brix | ✅ | `SmartSpend-v3.0.0.aab` |
+| Google Play Console account ($25) | Brix | ❌ | Required for Play Store submission |
+| AAB ready for Play Store | Brix | ✅ | `SmartSpend-v3.0.0.aab` on GitHub Releases |
 | Privacy Policy hosted page | Cyrille | ✅ | https://zushikina-kun.github.io/smartspend-app/privacy.html |
-| Firebase App Check enforcement | Brix | ❌ | Switch debug → Play Integrity before Play Store |
+| Firebase App Check enforcement | Brix | ❌ | Switch debug provider → Play Integrity before Play Store |
 | Validator signatures — Appendix A | Brix | ❌ | |
 | SUS survey results → manuscript Ch.3 | Cyrille | ❌ | |
-| CV section all three researchers | All | ❌ | |
+| CV section — all three researchers | All | ❌ | |
 
 ---
 
-## DEMO SCRIPT — Final Defense (v2.9.92)
+## DEMO SCRIPT — Final Defense (v3.0.0)
 
 ### Night before
-1. Download `SmartSpend-v2.9.92-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases
-2. Install on demo phone
+1. Download `SmartSpend-v3.0.0-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.0
+2. Install on demo phone (allow sideloading in Settings → Install unknown apps)
 3. Open app — let it fully load to home screen (Remote Config fetches Gemini key on first open)
-4. Verify About screen shows **"Version 2.9.92"**
-5. Settings → Quick Presets → **Normal or Pro** (Lite Mode OFF)
+4. Verify About screen shows **"Version 3.0.0"**
+5. Settings → Quick Presets → **Normal** or **Pro** (Lite Mode must be OFF)
 6. Settings → AI MODEL → **Auto (Recommended)**
 7. AI screen → ⋮ → **Reset Daily Limit**
-8. Charge to 100%, do NOT open the app again until demo
-**Last Updated:** October 5, 2026
-**Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
-
-> For full technical documentation see `docs/reference/CAPSTONE_REFERENCE.md`
-> For feature backlog and planning see `docs/guides/FEATURE_BACKLOG.md`
-> For Kiro AI handoff (latest) see `docs/manuscript/reseaches/kiro-to-kiro-handoff-2026-10-05.md`
-
----
-
-## FINAL DEFENSE — CHECKLIST
-
-### 🔴 Critical — Must be done before defense day
-
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| Install **v2.9.87** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.87-release.apk` from GitHub releases |
-| Verify About screen shows **"Version 2.9.87"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
-| Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
-| Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) — now routes to Gemini |
-| Turn on **Lite Mode OFF** for demo (show all features) | Brix | ❌ | Settings → Quick Presets → Lite Mode = OFF |
-| Charge demo phone to 100% the night before — do NOT open app | Brix | ❌ | Cold start required for the demo |
-| Have WiFi ready for demo | Brix | ❌ | AI needs internet; Gemini key loads from Remote Config on first open |
-| Rehearse demo flow (see script below) | All | ❌ | 10-minute run-through the day before |
-| Create **Figure 1.1** — PH financial literacy bar chart | Cyrille | ❌ | BSP CFIS 2025: 50% adults formal accounts; 74% literacy rate |
-| Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output |
-| Create **Figure 2.1** — SUS score interpretation chart | Cyrille | ❌ | Bangor et al. (2009) adjective scale; target ≥80 = Good |
-| Create **Figure 2.2** — Kanban board / development methodology | Cyrille | ❌ | Agile Kanban: Backlog → In Progress → Done |
-| Fill in **Compliance Matrix** | All | ❌ | `docs/capstone/SmartSpend_Master_Bug_Tracker.docx` |
-
-### 🟠 Manuscript Updates (for Cyrille — use handoff doc as reference)
-
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| Update version throughout manuscript → **2.9.87** | Cyrille | ❌ | |
-| Update manuscript **AI model section**: Gemini 3.5 Flash-Lite as primary, 8-provider fallback chain | Cyrille | ❌ | AQ. key format, Remote Config delivery, Auto mode routing |
-| Update manuscript **FHS equations** | Cyrille | ❌ | 4 × 25pt components; overspend nuance; category exemptions |
-| Update manuscript **agentic action count** → 34 | Cyrille | ❌ | Was 31 in some sections |
-| Update manuscript **badge count** → 25 | Cyrille | ❌ | |
-| Update manuscript **daily AI limit** → 150 | Cyrille | ❌ | Was 60 |
-| Update manuscript **color theme count** → 11 | Cyrille | ❌ | Slate is default for new installs |
-| Update manuscript **screens count** → 43 | Cyrille | ❌ | |
-| Update **settings toggles** → 10 home, 4 analytics, 14 Lite Mode | Cyrille | ❌ | |
-| Add to Implemented: Peso mascot, Safe-to-Spend, achievement celebration, analytics labels, AI date dividers, Data Quality fixes | Cyrille | ❌ | v2.9.76–2.9.87 |
-| Add **AI financial advice disclaimer** to Ch.2/Ch.3 | Cyrille | ❌ | RA 11765 — one-time dialog |
-| Add **Safe-to-Spend** to features list | Cyrille | ❌ | BudgetPH differentiator |
-| Add **Agila, PISO, BunnyWise, MayBudget** to competitor table | Cyrille | ❌ | See FEATURE_BACKLOG Part 10 + Part 3 |
-| BSP citation update Ch.1: 2021 → CFIS 2025 | Cyrille | ❌ | |
-| Move **Paluwagan** to Implemented | Cyrille | ✅ | Done |
-
-### 🟡 Post-Defense (before final)
-
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| SUS survey — 30 respondents | Djaunathan | ❌ | 20 parents + 10 young professionals |
-| Google Play Console account ($25) | Brix | ❌ | Required for Play Store |
-| Build AAB: `flutter build appbundle --release --obfuscate` | Brix | ❌ | For Play Store submission |
-| Privacy Policy hosted page | Cyrille | ❌ | Required by Play Store |
-| Firebase App Check enforcement | Brix | ❌ | Switch debug provider → Play Integrity |
-| Register App Check debug token in Firebase Console | Brix | ❌ | Logcat → FirebaseAppCheck debug token UUID |
-| Validator signatures — Appendix A | Brix | ❌ | |
-| SUS survey results → manuscript Ch.3 | Cyrille | ❌ | |
-| CV section all three researchers | All | ❌ | |
-
----
-
-## DEMO SCRIPT — Final Defense (v2.9.87)
-
-### Night before
-1. Download `SmartSpend-v2.9.87-release.apk` from https://github.com/Zushikina-kun/smartspend-app/releases
-2. Install on demo phone
-3. Open app → let it fully load (Remote Config fetches Gemini key on first open)
-4. Verify About screen shows **"Version 2.9.87"**
-5. Settings → Quick Presets → **Lite Mode OFF**
-6. Settings → AI MODEL → **Auto (Recommended)**
-7. AI screen → ⋮ → **Reset Daily Limit**
-8. Charge to 100%, do NOT open the app again until demo
-
-### 🔴 Critical — Must be done before defense day
-
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| Install **v2.9.67** on demo phone | Brix | ❌ | Download `SmartSpend-v2.9.67-arm64-v8a.apk` from GitHub releases |
-| Verify About screen shows **"Version 2.9.67"** | Brix | ❌ | kAppVersion auto-syncs from debug_service.dart |
-| Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ menu → Reset Daily Limit |
-| Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
-| Turn on **Lite Mode OFF** for demo (show all features) | Brix | ❌ | Settings → Quick Presets → Lite Mode = OFF |
-| Charge demo phone to 100% the night before — do NOT open app | Brix | ❌ | Cold start required for the demo |
-| Have WiFi ready for demo | Brix | ❌ | AI needs internet for first message |
-| Rehearse demo flow (see script below) | All | ❌ | 10-minute run-through the day before |
-| Create **Figure 1.1** — PH financial literacy bar chart | Cyrille | ❌ | BSP CFIS 2025: 50% adults formal accounts; 74% literacy rate |
-| Create **Figure 1.2** — IPO conceptual framework diagram | Cyrille | ❌ | Input→Process→Output |
-| Create **Figure 2.1** — SUS score interpretation chart | Cyrille | ❌ | Bangor et al. (2009) adjective scale; target ≥80 = Good |
-| Create **Figure 2.2** — Kanban board / development methodology | Cyrille | ❌ | Agile Kanban: Backlog → In Progress → Done |
-| Fill in **Compliance Matrix** | All | ❌ | `docs/capstone/SmartSpend_Master_Bug_Tracker.docx` |
-
-### 🟠 Manuscript Updates (for Cyrille — use handoff v3 as reference)
-
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| Update version throughout manuscript → **2.9.67** | Cyrille | ❌ | |
-| Update manuscript **AI model section**: remove LLaMA, add Auto mode + 8-provider chain | Cyrille | ❌ | See handoff v3 §3a — GPT-OSS/Qwen/Compound/Cerebras |
-| Update manuscript **FHS equations** (v2.9.67 changes) | Cyrille | ❌ | 4 × 25pt components; overspend nuance; category exemptions |
-| Update manuscript **agentic action count** → 34 | Cyrille | ❌ | Was 31 in some sections |
-| Update manuscript **badge count** → 25 | Cyrille | ❌ | +No-Spend Day + No-Spend Streak |
-| Update manuscript **daily AI limit** → 150 | Cyrille | ❌ | Was 60 |
-| Update manuscript **color theme count** → 10 | Cyrille | ❌ | +5 new themes v2.9.67 |
-| Update manuscript **hub tile count** → 26 | Cyrille | ❌ | Expanded v2.9.67 |
-| Update **settings toggles** → 10 home, 4 analytics, 14 Lite Mode | Cyrille | ❌ | New in v2.9.67–59: payday countdown, monthly recap, challenges, safe-to-spend |
-| Add to Implemented: savings rate chart, quick budget slider, analytics cache | Cyrille | ❌ | All v2.9.67 |
-| Add to Implemented: nav bar fix, Auto AI, chat export, payday countdown, monthly recap, semester interval, auto-cat evidence, safe-to-spend, share intent, AI disclaimer | Cyrille | ❌ | v2.9.67–2.9.67 — see handoff v3 §6 |
-| Add **RA 10173 PII redaction** to Ch.2/Ch.3 | Cyrille | ❌ | Mobile numbers stripped before LLM — v2.9.67 |
-| Add **AI financial advice disclaimer** to Ch.2/Ch.3 | Cyrille | ❌ | RA 11765 — one-time dialog added v2.9.67 |
-| Add **Safe-to-Spend** to features list | Cyrille | ❌ | BudgetPH differentiator — implemented v2.9.67 |
-| Add **Agila, PISO, BunnyWise, MayBudget** to competitor table | Cyrille | ❌ | See FEATURE_BACKLOG Part 10 + Part 3 |
-| BSP citation update Ch.1: 2021 → CFIS 2025 | Cyrille | ❌ | |
-| Move **Paluwagan** to Implemented | Cyrille | ✅ | Done |
-
-### 🟡 Post-Defense (before final)
-
-| Task | Owner | Status | Notes |
-|------|-------|--------|-------|
-| SUS survey — 30 respondents | Djaunathan | ❌ | 20 parents + 10 young professionals |
-| Google Play Console account ($25) | Brix | ❌ | Required for Play Store |
-| Build AAB: `flutter build appbundle --release --obfuscate` | Brix | ❌ | For Play Store submission |
-| Privacy Policy hosted page | Cyrille | ❌ | Required by Play Store |
-| Firebase App Check enforcement | Brix | ❌ | Switch from monitoring to enforcement |
-| Validator signatures — Appendix A | Brix | ❌ | |
-| SUS survey results → manuscript Ch.3 | Cyrille | ❌ | |
-| CV section all three researchers | All | ❌ | |
-
----
-
-## DEMO SCRIPT — Pre-Final Defense (v2.9.67)
-
-### Night before
-1. Download `SmartSpend-v2.9.67-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases
-2. Install on demo phone
-3. Open app → verify About screen shows **"Version 2.9.67"**
-4. Settings → Quick Presets → **Lite Mode OFF** (show all features)
-5. Settings → AI MODEL → **Auto (Recommended)**
-6. AI screen → ⋮ → **Reset Daily Limit**
-7. Charge to 100%, do NOT open the app again until demo
+8. Charge to 100%, do NOT open again until demo
 
 ### Demo flow (~10 minutes)
 
 **1. Opening (1 min)**
-- Open app cold → show Home screen with live data
-- Point out: FHS score, this month's spending, Safe-to-Spend card, AI Insights
+- Cold-start the app → show Home screen with live data
+- Point to: FHS score, this month's spending, Safe-to-Spend card, AI Insights
 
 **2. Core feature — AI logging (2 min)**
-- Tap AI chat → type: `"I spent 60 for lunch and 30 for jeep"`
-- Show AI logging 2 expenses in one message
-- Show the expenses appear in Recent list
-- Explain: 34 agentic actions, not just chat
+- AI chat → type: `"I spent 60 for lunch and 30 for jeep"`
+- Show 2 expenses logged in one message; appear in Recent list
+- Show the session summary card (✅ 2 recorded) — new in v3.0.0
+- Explain: 34 agentic actions, real writes to the local DB
 
-**3. Safe-to-Spend card (1 min)**
-- Go back to Home → point to the 💚 Safe to Spend card
-- Explain: wallet balance minus upcoming bills/goals/debts before next payday
-- BudgetPH differentiator — the one number that matters
+**3. Safe-to-Spend (1 min)**
+- Home → 💚 Safe to Spend card
+- Explain: wallet balance minus upcoming bills/goals/debts before next payday — the one number that matters
+- BudgetPH differentiator
 
-**4. Import feature (2 min)**
-- Tap Log Expense → Batch Screenshots → show the 40+ platform support
-- Import a Shopee screenshot → show AI parsing the items
+**4. Import (2 min)**
+- Log Expense → Batch Screenshots → show 40+ platform support
+- Import a Shopee/GCash screenshot → AI parses the items
 - Explain: OCR + AI, works offline for manual entry
 
 **5. Financial Health Score (1 min)**
-- Tap the FHS score card → show breakdown dialog
-- Explain the 4 components and why it's more meaningful than a simple budget tracker
+- Tap FHS score card → show breakdown dialog
+- Explain 4 components — more meaningful than a simple budget tracker
 
 **6. Analytics (1 min)**
-- Tap Analytics tab → show pie chart, 50/30/20, DTI, Want vs Need
-- Point out: these are computed locally, no internet needed
+- Analytics tab → Quick Jump chips (new v3.0.0) → pie chart, 50/30/20, DTI
+- Category breakdown sort toggle → show sorting by amount / name / delta
+- Point out: computed locally, no internet needed
 
-**7. Competitive positioning (1 min)**
+**7. Transactions (1 min)**
+- Transactions tab → tap ⇅ Sort/Group button (new v3.0.0)
+- Group by category → show collapsible group headers with subtotals
+- Show category dropdown (replaces old chip overflow)
+
+**8. Competitive positioning (1 min)**
 - Only free Filipino-English AI finance app with 34 agentic actions
 - Only app with batch screenshot import (40+ platforms)
-- Only dual-mode FHS (full + lightweight)
-- Safe-to-Spend closes the BudgetPH gap
-
-**8. Settings / user control (1 min)**
-- Settings → Quick Presets → show Lite Mode (hides 14 optional sections)
-- Explain: designed for new users — not overwhelming
+- Dual-mode FHS (full + lightweight), Safe-to-Spend, 9-provider AI fallback chain
 
 ---
 
-## AUTHORITATIVE BUILD NUMBERS (v2.9.67)
+## RECENT RELEASE HISTORY
 
-| Metric | Value |
-|--------|-------|
-| Version | **2.9.67+59** |
-| APK sizes | arm64-v8a ~46.7 MB, armeabi-v7a ~39.4 MB, x86_64 ~49.7 MB |
-| SQLite schema | v11, 20 tables |
-| AI providers | **8** (Gemini Flash, Flash-Lite, GPT-OSS 120B Groq, Qwen3.6, Qwen3.8, Compound, Compound Mini, Cerebras) |
-| Default AI model | **Auto** (task-based routing) |
-| Agentic actions | **34** |
-| Input modalities | **7** (voice, text, camera, screenshots, barcode, OCR, share intent) |
-| Screens | 43 Dart files |
-| Services | 31 Dart files |
-| Achievement badges | **25** |
-| Daily AI limit | **150 messages/day** |
-| Color themes | **11** |
-| Daily quests | **10** |
-| Hub tiles | **26** |
-| Currencies | **57** |
-| Batch platforms | **40+** |
-| Filipino item catalog | **150+ items** |
-| Optional home toggles | **10** |
-| Optional analytics toggles | **4** |
-| Lite Mode coverage | **14 sections** |
-| PH banks in DB | 20 banks + 5 e-wallets |
-| Log choice options | **7** |
-| Min Android SDK | API 21 (Android 5.0) |
-| Target Android SDK | API 36 |
-
----
-
-## RECENT RELEASE HISTORY (for reference)
-
-| Version | Key changes |
-|---------|------------|
-| v2.9.67 | Safe-to-Spend card, AI advice disclaimer, confidence badge, GCash share intent, action allowlist |
-| v2.9.67 | Empty state overflow fixes (insurance, paluwagan); FAB list clipping (5 screens); rollover bug |
-| v2.9.67 | AI chat chips overlapping input fixed; viewPadding on AI screen |
-| v2.9.67 | AI fail-fast when Remote Config keys not loaded |
-| v2.9.67 | Keys moved to Firebase Remote Config — no secrets in git |
-| v2.9.67 | Groq API key rotated after exposure |
-| v2.9.67 | 3 new home screen toggles; Lite Mode → 13 sections |
-| v2.9.67 | Tier 1: payday countdown, monthly recap, chat export, auto-cat evidence, semester interval |
-| v2.9.67 | Critical: AI fallback chain silently failing |
-| v2.9.67 | Nav bar overlap all 8 screens; Auto AI model; smarter failover |
+| Version | Date | Key changes |
+|---------|------|------------|
+| **v3.0.0** | Oct 9, 2026 | Transaction sort/group (5 keys, 5 group-by, collapsible headers); Chat sessions (DB v14, New Chat, session list, archive/delete); AI recovery card (✅/⚠️/❌ per item, re-log helper); Analytics quick-jump anchors + period chip overflow fix + category sort toggle |
+| v2.9.98 | Oct 2026 | Screenshot import visibility: `[screenshot]` tag in AI context; skipped-dup feedback loop; sort fix for 00:00 items |
+| v2.9.97 | Oct 2026 | AI backdating fix: Today/Yesterday in context; "yesterday"/"kahapon" resolution; NOT-RECORDED CHECK before re-log |
+| v2.9.92 | Oct 2026 | Local AI private mode (9th provider); Settings Local AI section; privacy banner |
+| v2.9.90 | Oct 2026 | 10-item re-audit fixes: delete confirmations, archive bug, FHS tooltip, Peso empties, wallet history on home |
+| v2.9.89 | Oct 2026 | DB v13 budget/goal/income/score history; full audit trail |
+| v2.9.88 | Oct 2026 | Wallet balance change history; App Check debug token |
+| v2.9.87 | Sep 2026 | Installment→Plans tab fix; DQ View navigates to Transactions; Fix All for case_dup/round_amount |
+| v2.9.84 | Sep 2026 | Achievement celebrations, analytics interpretive labels, AI chat date dividers |
+| v2.9.82 | Sep 2026 | App-wide QoL polish (43 screens): Peso empty states, delete confirmations, FAB fixes |
