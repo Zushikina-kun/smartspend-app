@@ -11,6 +11,7 @@ import 'services/notification_service.dart';
 import 'services/proactive_nudge_service.dart';
 import 'services/app_config.dart';
 import 'services/db_service.dart';
+import 'services/pro_service.dart';
 
 final themeService = ThemeService();
 
@@ -50,6 +51,9 @@ void main() async {
           'rc_last_fetch_status', 'ERROR: ${e.toString().substring(0, 120)}');
     } catch (_) {}
   }
+
+  // Initialize Pro entitlement (v3.x: always Pro; v4.0: RevenueCat check)
+  await ProService.init();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 

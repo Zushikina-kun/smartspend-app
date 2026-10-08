@@ -1,5 +1,5 @@
 # SmartSpend — Project Status
-**Version:** 3.0.0 | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 3.0.2 | **Academic Year:** 2026–2027, 1st Semester
 **Last Updated:** October 9, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
@@ -13,11 +13,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Version string | **3.0.0** |
-| pubspec | `3.0.0+99` |
-| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.0 |
-| APK (arm64) | **45.68 MB** — `SmartSpend-v3.0.0-arm64-v8a.apk` |
-| AAB (Play Store) | **75.02 MB** — `SmartSpend-v3.0.0.aab` |
+| Version string | **3.0.2** |
+| pubspec | `3.0.2+100` |
+| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.2 |
+| APK (arm64) | **~45 MB** — `SmartSpend-v3.0.2-arm64-v8a.apk` |
+| AAB (Play Store) | **~75 MB** — `SmartSpend-v3.0.2.aab` |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | API 21 (Android 5.0) |
 | Target SDK | API 36 (Android 16) |
@@ -49,8 +49,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v3.0.0** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.0-arm64-v8a.apk` from GitHub Releases |
-| Verify About screen shows **"Version 3.0.0"** | Brix | ❌ | kAppVersion in debug_service.dart |
+| Install **v3.0.2** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.2-arm64-v8a.apk` from GitHub Releases |
+| Verify About screen shows **"Version 3.0.2"** | Brix | ❌ | kAppVersion in debug_service.dart |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ → Reset Daily Limit |
 | Set AI model to **Auto** before demo | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
 | Turn on **Normal or Pro** preset | Brix | ❌ | Settings → Quick Presets — shows all features |
@@ -105,7 +105,7 @@ Use `docs/reference/CAPSTONE_REFERENCE.md` and the v3.0.0 handoff as the single 
 ## DEMO SCRIPT — Final Defense (v3.0.0)
 
 ### Night before
-1. Download `SmartSpend-v3.0.0-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.0
+1. Download `SmartSpend-v3.0.2-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.2
 2. Install on demo phone (allow sideloading in Settings → Install unknown apps)
 3. Open app — let it fully load to home screen (Remote Config fetches Gemini key on first open)
 4. Verify About screen shows **"Version 3.0.0"**
@@ -161,6 +161,7 @@ Use `docs/reference/CAPSTONE_REFERENCE.md` and the v3.0.0 handoff as the single 
 
 | Version | Date | Key changes |
 |---------|------|------------|
+| **v3.0.2** | Oct 9, 2026 | Support links (Buy Me a Coffee, Ko-fi, PayPal, GCash) in About screen + website + README; `ProService` infrastructure for v4.0 freemium (everyone Pro in v3.x); `APP_FLAVOR` dart-define for dev vs prod builds; url_launcher added; demo account overhaul (18 tables seeded, Reset to Demo Defaults button) |
 | **v3.0.0** | Oct 9, 2026 | Transaction sort/group (5 keys, 5 group-by, collapsible headers); Chat sessions (DB v14, New Chat, session list, archive/delete); AI recovery card (✅/⚠️/❌ per item, re-log helper); Analytics quick-jump anchors + period chip overflow fix + category sort toggle |
 | v2.9.98 | Oct 2026 | Screenshot import visibility: `[screenshot]` tag in AI context; skipped-dup feedback loop; sort fix for 00:00 items |
 | v2.9.97 | Oct 2026 | AI backdating fix: Today/Yesterday in context; "yesterday"/"kahapon" resolution; NOT-RECORDED CHECK before re-log |

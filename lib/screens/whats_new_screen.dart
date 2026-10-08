@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.0';
-  static const _prefKey = 'whats_new_seen_3_0_0';
+  static const _version = '3.0.2';
+  static const _prefKey = 'whats_new_seen_3_0_2';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,13 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '☕',
+      'Support the Developer (v3.0.2)',
+      'About screen now has a "Support the Project" section — tap Buy Me a Coffee, Ko-fi, or PayPal to support. '
+          'GCash/PayMaya number copies to clipboard with one tap. '
+          'Free forever — support is optional and always appreciated.',
+    ),
     (
       '🔍',
       'Transaction Sort & Grouping (v3.0.0)',

@@ -104,18 +104,36 @@ This section records issues found by direct code inspection after the v2.9.53 Ki
 ## Part 0B — v3.0.x Feature Roadmap (planned, not yet implemented)
 
 > Full plan doc: `docs/handsoff/feature-plan-v3.0.0-2026-10-09.md`
+> Freemium split plan: `docs/handsoff/freemium-split-plan-2026-10-09.md`
+> Marketing plan: `docs/handsoff/marketing-and-demo-plan-2026-10-09.md`
 
+### Shipped
 | Version | Group | Key deliverable |
 |---------|-------|----------------|
 | **v3.0.0** | AI Recovery (C) | Session summary card (recorded/skipped/failed), Re-log helper bottom sheet, screenshot import result sheet |
 | **v3.0.1** | Chat Wayback (D) | DB v14 `chat_sessions` table; session list screen; "New Chat" button in AI screen; archive/delete sessions |
-| **v3.0.2** | Transaction Sort/Group (A) | Sort bottom sheet (date/logged/amount/name/source); Group by (date/logged/category/source/none); sticky sliver headers; ExpenseTile dual-date display; chip row cleanup |
-| **v3.0.3** | Analytics Overhaul (B) | Quick-jump section anchors; 50/30/20 period fix; category breakdown sort toggle; per-section expand/collapse; period chip overflow fix |
+| **v3.0.1** | Demo Account | Full demo dataset — 18 tables seeded; Reset to Demo Defaults button |
+| **v3.0.2** | Transaction Sort/Group (A) | Sort bottom sheet (7 keys); Group by (5 options); sticky headers; ExpenseTile dual-date; chip row cleanup |
+| **v3.0.2** | Analytics Overhaul (B) | Quick-jump section anchors; 50/30/20 period fix; category breakdown sort toggle; period chip overflow fix |
+| **v3.0.2** | Support links | About screen (Buy Me a Coffee, Ko-fi, PayPal, GCash copy); website footer; README support table |
+| **v3.0.2** | ProService infra | `pro_service.dart` — foundation for v4.0 freemium gates; everyone is Pro in v3.x; `APP_FLAVOR` dart-define |
 
-### Open decisions (answer before starting each phase)
-1. Analytics navigation: **Quick Jump chips** (recommended) vs full TabBar?
-2. Re-log helper inserts **directly to DB** (bypasses dup guard) — confirmed?
-3. Chat session title: **auto from first user message**, user can rename — confirmed?
+### Planned (post-capstone defense)
+| Version | Work |
+|---------|------|
+| **v4.0.0** | RevenueCat integration; `ProGate` widget; `ProPaywallScreen` (₱59/mo · ₱299/yr · ₱799 lifetime) |
+| **v4.0.1** | Gate AI imports (voice, screenshot, batch, barcode, bank paste); 150 vs 30 msg/day |
+| **v4.0.2** | Gate analytics depth (period filters, chart history, period comparison) |
+| **v4.0.3** | Gate wallets (multi-wallet), tracking limits (5 budgets, 3 goals, 3 recurring, 2 debts) |
+| **v4.0.4** | Gate power tools (paluwagan, insurance, installments, PCA, debt payoff) |
+| **v4.0.5** | Gate data tools (full cloud sync, backup, full export, categories, rules) |
+| **v4.0.6** | Gate gamification, themes, UI power features |
+
+### Open decisions (before v4.0 implementation)
+1. **Google Play Console account** ($25) — required before any IAP
+2. **RevenueCat project** — free at revenuecat.com, link Play Console products
+3. **Firebase App Check** — switch debug → Play Integrity for production
+4. **7-day free trial** on yearly plan — standard, reduces purchase friction
 
 ---
 

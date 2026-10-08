@@ -158,3 +158,73 @@ Three issues found and fixed after the initial ship:
 | 3 | `analytics_screen.dart` | Category breakdown sort toggle used `sortedCats.asMap().entries` index `i` for color dots — when sorted by Name or Delta, the dot colors in the breakdown table didn't match the pie chart legend colors | Changed color lookup to `categories.indexOf(cat)` (original unsorted index) so colors always match the pie chart |
 
 *All three were logic/UX gaps not caught by the analyzer. Second-pass audit complete. No further issues found.*
+
+---
+
+## 8 — Post-v3.0.0 work (v3.0.1 / v3.0.2 / freemium planning)
+
+### v3.0.1 — Demo account overhaul
+`demo_service.dart` completely rewritten. 18 tables seeded:
+- Profile (Brix Angelo S. Directo, Lorma email, green avatar URL)
+- 3 wallets (Cash ₱547, GCash ₱1,312.50, BDO ₱4,250) + wallet_history
+- 35 expenses across 3 months, 9 categories
+- 9 budgets, 3 goals, 4 recurring, 3 debts
+- 2 installment plans (HomeCredit + ShopeePay Later)
+- 4 insurance/contributions (SSS, PhilHealth, Pag-IBIG, Sun Life)
+- 2 paluwagan groups
+- 30-day score history, 14-day mood log
+- 25 category rules, 5 scan history entries
+- Chat seed (demo session with 5 messages so Chat History isn't empty)
+- All settings pre-configured (account_type: student, payday_date: 1, etc.)
+- `_clearAll()` wipes ALL 18 tables including wallet_history, chat_sessions, paluwagan
+
+`profile_screen.dart`: new `_resetDemoDefaults()` method + orange "Reset to Demo Defaults" ListTile below the existing "Load Demo Data" tile.
+
+### v3.0.2 — Support links + url_launcher
+- `pubspec.yaml`: added `url_launcher: ^6.3.1`
+- `AndroidManifest.xml`: `<queries>` block for https/http URL intents (Android 11+)
+- `about_screen.dart`: "Support the Project" section — Buy Me a Coffee, Ko-fi, PayPal buttons (open browser), GCash/PayMaya tile (copies 09953583040 to clipboard)
+- `index.html`: version v3.0.1, 9 AI providers, download links updated, support row in footer
+- `README.md`: version 3.0.1, support table at top, tech stack corrected
+
+### Freemium planning (v4.0 target — post-capstone defense)
+Full plan in `docs/handsoff/freemium-split-plan-2026-10-09.md`.
+
+**Pricing:** ₱59/month · ₱299/year (7-day free trial, push as default) · ₱799 lifetime  
+**Infrastructure:** `pro_service.dart` created — everyone is Pro in v3.x, full ProFeature enum documented  
+**Build flavors:** `APP_FLAVOR=dev` (local, always Pro) / `APP_FLAVOR=prod` (CI/release)  
+**CI updated:** `--dart-define=APP_FLAVOR=prod` added to both APK and AAB build steps  
+**HOWTORUN.md:** updated with `flutter run --dart-define=APP_FLAVOR=dev` + flavor explanation  
+
+**Key freemium decisions made:**
+- Free tier: manual logging + AI text chat (30/day) + FHS score (always free) + current-month pie chart + 5 budgets/3 goals/3 recurring/2 debts/1 wallet + **basic cloud sync** (expenses + budgets + goals — free data is never at risk)
+- Pro gates: screenshot/voice/barcode imports, 150 AI msg/day, all analytics depth, multi-wallet, all Filipino features (paluwagan/insurance/installments), full cloud sync, backup/restore, unlimited everything
+- AI text logging ("I spent 65 for lunch") **always stays free** — this is the core feature
+- Local LLM private mode is Pro — our unique differentiator, justifies the price
+- Competitor research: Agila (free), PISO (free), Tarsi (~₱300–350 one-time) — we charge more but have features they don't
+
+**Support links (live across app + website + README):**
+- Buy Me a Coffee: https://buymeacoffee.com/zushikina_kuroh143
+- Ko-fi: https://ko-fi.com/zushikina143
+- PayPal: https://paypal.me/BrixDirecto
+- GCash/PayMaya: 09953583040
+
+### Files changed since v3.0.0
+| File | Change |
+|------|--------|
+| `lib/services/demo_service.dart` | Complete rewrite — 18 tables, full demo dataset |
+| `lib/screens/profile_screen.dart` | `_resetDemoDefaults()` + orange reset tile |
+| `pubspec.yaml` | Added `url_launcher: ^6.3.1`; version bumped to `3.0.2+99` |
+| `android/app/src/main/AndroidManifest.xml` | `<queries>` for https/http intents |
+| `lib/screens/about_screen.dart` | Support links section (url_launcher + Clipboard) |
+| `lib/services/pro_service.dart` | New — ProService + ProFeature enum (everyone Pro in v3.x) |
+| `lib/main.dart` | `import pro_service.dart` + `ProService.init()` call after AppConfig.init() |
+| `.github/workflows/release.yml` | `--dart-define=APP_FLAVOR=prod` on build steps |
+| `HOWTORUN.md` | Version 3.0.2; `flutter run --dart-define=APP_FLAVOR=dev` |
+| `index.html` | v3.0.1, 9 providers, updated download links, support footer |
+| `README.md` | v3.0.1, support table at top, corrected tech stack |
+| `docs/guides/FEATURE_BACKLOG.md` | Part 0B expanded with shipped v3.0.x + v4.0 roadmap |
+| `docs/handsoff/freemium-split-plan-2026-10-09.md` | Created — full freemium spec with pricing |
+| `docs/handsoff/marketing-and-demo-plan-2026-10-09.md` | Updated pricing ₱59/299/799 |
+
+*Appended October 9, 2026 — current shipped version v3.0.2+99*

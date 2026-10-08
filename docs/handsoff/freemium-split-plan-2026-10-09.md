@@ -42,8 +42,8 @@ Research: only 2–5% of freemium finance app users ever upgrade (Arbisoft). The
 | **Themes** | 3 (Emerald, Slate, Light) |
 | **Badges** | First 10 |
 | **Daily quests** | 3/day |
-| **Sync** | Local only (no cloud sync) |
-| **Backup** | None |
+| **Sync** | ✅ Basic cloud sync — expenses + budgets + goals (free user data is safe) |
+| **Backup** | None (full backup/restore → Pro) |
 
 ---
 
@@ -113,8 +113,8 @@ Everything in Free, plus:
 - Merchant Merge screen
 - Batch manual entry
 - Full CSV export (all time, all filters)
-- Backup & restore
-- Cloud sync (Firestore)
+- **Full backup & restore** (free gets no backup)
+- **Full cloud sync** — all tables: wallets, income, installments, chat history, insurance, paluwagan, category rules (free gets expenses + budgets + goals only)
 - Full Chat History (all sessions, wayback)
 
 ### UI & Gamification
@@ -146,7 +146,7 @@ Everything in Free, plus:
 | Chat History | Last 7 days | All sessions |
 | Themes | 3 | 11 |
 | Badges | 10 | 25 |
-| Cloud sync | ❌ | ✅ |
+| Cloud sync | ✅ Basic (expenses + budgets + goals) | ✅ Full (all tables, wallets, income, chat) |
 | Backup/restore | ❌ | ✅ |
 
 ---
@@ -206,6 +206,17 @@ Google Play charges 15% for first $1M/year (99% of developers). RevenueCat is fr
 ---
 
 ## Implementation Architecture
+
+### Current state (v3.x)
+`ProService` exists in `lib/services/pro_service.dart`. It:
+- Returns `isPro = true` for everyone — **no gates are active**
+- Contains the full `ProFeature` enum documenting every gateable feature
+- Has a compile-time `APP_FLAVOR` flag (dev/prod) via `--dart-define`
+- Dev builds (`APP_FLAVOR=dev`) always return `isPro=true` — never blocked
+- Prod builds (`APP_FLAVOR=prod`) also return `isPro=true` in v3.x — gates not implemented yet
+- `ProService.init()` is called in `main.dart` — ready for RevenueCat in v4.0
+
+**Bottom line: the app today works identically to before.** ProService is infrastructure only.
 
 ### Package: `purchases_flutter` (RevenueCat)
 ```yaml

@@ -1,6 +1,6 @@
 # Smart Spend — How to Run & Build
 
-**Version:** 2.9.67 | **Platform:** Android (Flutter)
+**Version:** 3.0.2 | **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
 
 ---
@@ -87,15 +87,23 @@ flutter pub get
 3. Connect via USB
 4. Run:
 ```bash
-flutter run
+flutter run --dart-define=APP_FLAVOR=dev
 ```
 
 ### On an emulator
 1. Open Android Studio → Device Manager → Start an emulator (API 33+)
 2. Run:
 ```bash
-flutter run
+flutter run --dart-define=APP_FLAVOR=dev
 ```
+
+> **`APP_FLAVOR=dev` explained:** This tells the app it's a development build.
+> In v4.0+ when Pro gates are active, dev builds always have full access —
+> no gates, no paywalls, everything unlocked. This way you can test all
+> features locally without needing a real purchase.
+> 
+> Omitting `--dart-define=APP_FLAVOR=dev` defaults to dev behavior (safe).
+> CI/release builds use `--dart-define=APP_FLAVOR=prod` automatically.
 
 ### Hot reload
 While running, press `r` in the terminal for hot reload, `R` for hot restart.
@@ -145,7 +153,7 @@ All are registered in Firebase Console → Project Settings → Android app → 
 
 ### Recommended build (all ABIs — covers all phones)
 ```bash
-flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
+flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info --dart-define=APP_FLAVOR=prod
 ```
 
 **Output — 3 APKs, one per CPU architecture:**
