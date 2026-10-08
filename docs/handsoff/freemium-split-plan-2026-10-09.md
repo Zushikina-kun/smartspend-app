@@ -153,13 +153,26 @@ Everything in Free, plus:
 
 ## Pricing
 
-| Plan | Price | Notes |
-|------|-------|-------|
-| Pro Monthly | ₱99/month | Low barrier to try |
-| Pro Yearly | ₱799/year | Save 33% — push as default. 7-day free trial. |
-| Pro Lifetime | ₱1,499 one-time | Best for PH market — no recurring friction |
+| Plan | Price | Net to dev (after Play 15% cut) | Notes |
+|------|-------|----------------------------------|-------|
+| Pro Monthly | ₱49/month | ~₱42/user/mo | Lowest friction. Trial play. |
+| Pro Yearly | ₱249/year | ~₱212/user/yr | **Main plan.** Less than ₱1/day. 57% off vs monthly×12 (₱588). Push this as default with 7-day free trial. |
+| Pro Lifetime | ₱699 one-time | ~₱594/user | Breaks even at ~14 months. Perfect for students who'll use it through college. Best for PH one-time preference. |
 
-Comparison: YNAB charges ~₱6,000/year. SmartSpend Pro at ₱799/year is dramatically cheaper with more PH-specific features.
+### Why this pricing works
+- ₱49/month = roughly one Jollibee meal. Zero purchase anxiety.
+- ₱249/year = less than a Cinema ticket. Feels like a steal when framed as "₱0.68/day."
+- ₱699 lifetime = a Grab ride home + snack. One-time, no recurring guilt.
+- Comparison: ChatGPT PH costs ₱999/month. Kling AI costs ₱499/month. SmartSpend Pro at ₱249/year is objectively cheaper than one month of either.
+- Even PISO Budget Tracker (a much simpler Filipino app) charges ₱199/month for premium. We're cheaper annually than their single month.
+
+### Play Store fee reality
+Google Play charges 15% for apps under $1M/year (99% of developers), dropping to 15% thereafter. RevenueCat is free until $2,500/month tracked revenue (~₱140K/month). At this pricing you'd need ~560 yearly subscribers or ~2,900 monthly subscribers to hit RevenueCat's paid tier — a good problem to have.
+
+### Upgrade messaging per plan
+- Monthly: "Try Pro for ₱49 — less than a Jollibee meal"
+- Yearly: "Get Pro for ₱0.68/day — that's less than your daily fare" (with 7-day free trial)
+- Lifetime: "Own SmartSpend Pro forever — ₱699, one time, yours for life"
 
 ---
 

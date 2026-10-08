@@ -138,9 +138,10 @@ AI-powered personal finance for Filipinos — free, offline, Taglish-ready
 
 | Tier | Price | Includes |
 |------|-------|---------|
-| **Free** (forever) | ₱0 | All current features, 150 AI messages/day |
-| **SmartSpend Pro** | ₱99/mo or ₱799/year | Unlimited AI · Cloud backup priority · Premium themes · Gemini Flash (not Lite) |
-| **SmartSpend Teams** | ₱299/mo (5 users) | Shared budgets · Family expense view · Group goals |
+| **Free** (forever) | ₱0 | All current Free tier features — see freemium-split-plan doc |
+| **SmartSpend Pro** Monthly | **₱49/month** | Full Pro features · ~₱1.63/day · "less than a Jollibee meal" |
+| **SmartSpend Pro** Yearly | **₱249/year** | Full Pro features · ₱0.68/day · 7-day free trial · **push as default** |
+| **SmartSpend Pro** Lifetime | **₱699 one-time** | Full Pro forever · breaks even at 14 months · best for PH one-time preference |
 
 ### Now (before Play Store)
 - Ko-fi / GCash QR "Buy me a coffee" on website — zero friction, zero setup
