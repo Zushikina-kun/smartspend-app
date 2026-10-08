@@ -152,6 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       UserProfile? profile;
       if (user != null) {
+        // Firebase user — load from local DB, fall back to cloud
         profile = await DBService.getProfile(user.uid);
         if (profile == null) {
           try {
@@ -161,6 +162,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           } catch (_) {}
         }
         profile ??= UserProfile(uid: user.uid, email: user.email);
+      } else {
+        // Local/demo mode — try loading local profile using 'local_user' uid
+        profile = await DBService.getProfile('local_user');
+        if (profile == null) {
+          // Check was_demo_mode profile (demo_service seeds with 'demo_user')
+          profile = await DBService.getProfile('demo_user');
+        }
+        // If still null, use a blank local profile
+        profile ??= UserProfile(uid: 'local_user');
       }
 
       if (mounted) {
@@ -238,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
           _profile = user != null
               ? UserProfile(uid: user.uid, email: user.email)
-              : null;
+              : UserProfile(uid: 'local_user'); // local/demo mode
           _loading = false;
         });
       }

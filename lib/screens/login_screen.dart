@@ -112,6 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       // Migrate local/demo mode — clear flags so cloud sync resumes
       await AuthService.migrateLocalToFirebase();
+      // Always wipe local data on login — cloud data takes over.
+      // Note: for local mode users who LOGIN (not register), their local data
+      // is intentionally replaced by their Firebase account's cloud data.
+      // If they had local data they wanted to keep, they should have used Register.
       await DBService.clearLocalData();
       await DBService.syncFromCloud();
       await DBService.pushAllToCloud();

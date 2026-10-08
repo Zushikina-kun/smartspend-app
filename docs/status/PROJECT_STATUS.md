@@ -17,11 +17,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Version string | **3.0.2** |
-| pubspec | `3.0.2+100` |
-| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.2 |
-| APK (arm64, demo phone) | **~45 MB** — `SmartSpend-v3.0.2-arm64-v8a.apk` |
-| AAB (Play Store ready) | **~75 MB** — `SmartSpend-v3.0.2.aab` |
+| Version string | **3.0.3** |
+| pubspec | `3.0.3+101` |
+| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.3 |
+| APK (arm64, demo phone) | **~45 MB** — `SmartSpend-v3.0.3-arm64-v8a.apk` |
+| AAB (Play Store ready) | **~75 MB** — `SmartSpend-v3.0.3.aab` |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | API 21 (Android 5.0) |
 | Target SDK | API 36 (Android 16) |
@@ -49,8 +49,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v3.0.2** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.2-arm64-v8a.apk` from GitHub Releases |
-| Verify About screen shows **"Version 3.0.2"** | Brix | ❌ | kAppVersion in debug_service.dart |
+| Install **v3.0.3** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.3-arm64-v8a.apk` from GitHub Releases |
+| Verify About screen shows **"Version 3.0.3"** | Brix | ❌ | kAppVersion in debug_service.dart |
 | Load demo data on phone | Brix | ❌ | "Try Demo" on login screen OR Profile → Load Demo Data |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ → Reset Daily Limit |
 | Set AI model to **Auto** | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
@@ -186,6 +186,8 @@ These are longer-term items for when the app has real users.
 | Move to paid Gemini API tier | Brix | ❌ | Enable when Pro subscriptions cover the cost (~$135/month at 1,000 Pro users) |
 | App Store submission for iOS (Swift/Kotlin wrapper) | TBD | ❌ | Significant effort — Flutter supports iOS but needs Apple Dev account ($99/year) |
 | Explore BSP Open Finance API integration | Brix | ❌ | Would enable real bank feeds. Requires regulatory compliance (BSP Circular 1105). Not currently feasible. |
+| **Firebase AI Logic hybrid inference** | Brix | ❌ | When stable (experimental Oct 2026): SDK auto-routes to Gemini Nano on-device for supported phones, cloud fallback for others. Zero code change for users. See `on-device-llm-research-2026-10-09.md` |
+| **Opt-in On-Device AI download** | Brix | ❌ | Gemma 4 E2B INT4 (~2.6 GB) via LiteRT LM SDK. Settings → AI → "Download AI to phone". Viable when 6 GB RAM phones are majority of PH market (~2028). See research doc. |
 | SmartSpend Teams plan (₱299/month, 5 users) | Brix | ❌ | Shared budgets, family expense view, group goals. Plan documented. |
 | Notification Listener Service | Brix | ❌ | Alternative to READ_SMS (blocked by Play Policy). Captures GCash/bank notification text. Needs user opt-in in Accessibility settings. |
 | Full monthly GitHub-style heatmap (analytics) | Brix | ❌ | 28–31 cell per-date spending grid. Partially built (week heatmap exists). |
@@ -230,9 +232,9 @@ These are longer-term items for when the app has real users.
 
 | Version | Date | Key changes |
 |---------|------|------------|
-| **v3.0.2** | Oct 9, 2026 | ProService infra for freemium (everyone Pro in v3.x); APP_FLAVOR dev/prod; url_launcher + support links (About screen, website, README); demo account overhaul (18 tables seeded, Reset button) |
+| **v3.0.3** | Oct 9, 2026 | Local Account mode (continue without Firebase account, data stays on device, connect later); profile screen loads for local users; local→Firebase migration preserves data on register |
 | **v3.0.1** | Oct 9, 2026 | Demo account overhaul — full dataset across all screens, Reset to Demo Defaults button |
-| **v3.0.0** | Oct 9, 2026 | Transaction sort/group; Chat sessions (DB v14); AI recovery card; Analytics quick-jump; second-pass audit fixes |
+| **v3.0.2** | Oct 9, 2026 | ProService infra for freemium; APP_FLAVOR dev/prod; url_launcher + support links; demo account overhaul (18 tables, Reset button) |
 | v2.9.98 | Oct 2026 | Screenshot import visibility; skipped-dup AI feedback; sort fix |
 | v2.9.97 | Oct 2026 | AI backdating fix: yesterday/kahapon, NOT-RECORDED CHECK |
 | v2.9.92 | Oct 2026 | Local AI private mode (9th provider) |

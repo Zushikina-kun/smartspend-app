@@ -51,11 +51,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> _syncAfterRegister() async {
     try {
-      // Clear any leftover local/demo data so the new Firebase account starts clean
-      // migrateLocalToFirebase() handles both local_mode and was_demo_mode flags
+      // For local mode users: push their local data to the new Firebase account
+      // before clearing. This preserves their expenses, budgets, goals etc.
+      // For demo mode users: just wipe (sample data, not worth keeping).
+      final prefs = await SharedPreferences.getInstance();
+      final isLocal = prefs.getBool('local_mode') ?? false;
+      if (isLocal) {
+        // Push local data to Firestore first so the new account inherits it
+        try {
+          await DBService.pushAllToCloud();
+        } catch (_) {}
+      }
+      // Migrate mode flags (clear local_mode + was_demo_mode)
       await AuthService.migrateLocalToFirebase();
-      await DBService.clearLocalData();
-      // No cloud pull needed — brand new account has no cloud data yet.
+      if (!isLocal) {
+        // Demo mode — wipe sample data
+        await DBService.clearLocalData();
+      }
+      // No cloud pull needed — brand new account; data was just pushed above (if local mode)
+      // or it's a fresh start (if demo mode).
     } catch (_) {}
   }
 
