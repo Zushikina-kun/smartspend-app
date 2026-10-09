@@ -231,9 +231,18 @@ const _sections = [
             "Student with ₱6,600/month allowance → AI suggests food budget of ₱1,980 (30%).",
       ),
       _HelpItem(
+        title: "Use Without an Account",
+        body:
+            "Tap 'Continue Without Account' on the login screen to start using SmartSpend immediately — no sign-up needed. Your data is saved on this device only.\n\n"
+            "You can export your data anytime via Transactions → ⬇ CSV or Profile → Backup.\n\n"
+            "When you're ready to sync across devices, go to Profile → Connect Account and register or log in. If you register, your local data is uploaded to your new account automatically.",
+      ),
+      _HelpItem(
         title: "Demo Mode",
         body:
-            "Don't have an account yet? Tap 'Try Demo' on the login screen. It loads realistic sample data so you can explore all features without signing up. Demo data is automatically cleared when you log in with a real account.",
+            "Tap 'Try Demo (Sample Data)' on the login screen to explore SmartSpend with pre-filled data — no account needed. This loads realistic sample Filipino student finances so you can see all features in action.\n\n"
+            "Demo data is separate from your real data. When you log in with a real account, the demo data is cleared.\n\n"
+            "To reload demo data anytime: Profile → Load Demo Data. To reset to fresh demo defaults: Profile → Reset to Demo Defaults.",
       ),
     ],
   ),
@@ -302,12 +311,28 @@ const _sections = [
       _HelpItem(
         title: "Daily message limit",
         body:
-            "SmartSpend allows up to 150 AI messages per day across all 8 providers. Each provider has its own 60-message daily quota — when one is reached, the app automatically switches to the next available model. The remaining count is shown in the top bar and resets at midnight UTC. You can also reset it manually via the ⋮ menu → Reset Daily Limit.",
+            "SmartSpend allows up to 150 AI messages per day across all 9 providers. When one provider reaches its limit, the app automatically switches to the next available model — you won't usually notice.\n\n"
+            "The remaining count resets at midnight UTC. You can reset it manually via the ⋮ menu → Reset Daily Limit.",
       ),
       _HelpItem(
         title: "Language",
         body:
             "The AI defaults to English. It switches to Filipino only if you write full Filipino sentences or explicitly ask it to. To switch back: 'Please respond in English only.'",
+      ),
+      _HelpItem(
+        title: "Local AI — Private Mode",
+        body:
+            "You can run AI on your own computer so your financial data never leaves your home network.\n\n"
+            "Go to Settings → AI MODEL → Local AI (Your Computer) and enter your server URL and model name.\n\n"
+            "Supported: Ollama, LM Studio, Jan. Tap 'Setup Guide' for step-by-step instructions.\n\n"
+            "Enable 'Local-only mode' in the same section to guarantee the AI never falls back to cloud if your home server is unreachable.",
+      ),
+      _HelpItem(
+        title: "Chat History & Sessions",
+        body:
+            "All AI conversations are organized into sessions. Tap 'Chat History' (clock icon in the AI screen app bar) to browse previous sessions.\n\n"
+            "Tap ➕ 'New Chat' to start a fresh conversation — your previous session is saved automatically.\n\n"
+            "Long-press any session to rename, archive, or delete it.",
       ),
     ],
   ),

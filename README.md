@@ -1,9 +1,9 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.0.1 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 3.0.4 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.0.1-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.0.4-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
 ---
@@ -36,7 +36,8 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 - 🎙️ Voice, OCR, Barcode, and Manual expense input
 - 📷 **Unified Smart Import** — one camera button opens: Live Camera (barcode/QR/receipt), Single Photo (auto-detects barcode/screenshot/receipt), Batch Screenshots (40+ platforms), Paste Text
-- 🤖 AI Chat Assistant — **34 agentic action types** via natural language (Gemini 3.1 Flash-Lite primary, 6-provider auto-fallback chain with task-based routing: fast/smart/financial_advice tiers)
+- 🤖 AI Chat Assistant — **34 agentic action types** via natural language (Gemini 3.5 Flash-Lite primary, **9-provider** auto-fallback chain with task-based routing: fast/smart/financial_advice tiers)
+- 📱 **Use Without Account** — "Continue Without Account" on login screen; data stays on device; connect a Firebase account anytime to sync across devices
 - ⚖️ **Lightweight Mode** — disable income/wallet tracking; FHS recalculates using spending habits (Spending Restraint, Consistency, Category Balance, Habit Streak)
 - 🎯 **Multi-Period Spending Limits** — set daily/weekly/monthly/yearly caps independently; progress bars + alerts
 - 📅 **Logging Gap Detection** — startup check for unlogged days; confirm spending (penalty) or clean days (bonus) for accurate FHS
@@ -117,8 +118,8 @@ build/app/outputs/flutter-apk/
 **CI/CD — Automated Release Pipeline:**
 Pushing a version tag automatically builds and publishes all 3 signed APKs to GitHub Releases via GitHub Actions:
 ```bash
-git tag v2.9.X
-git push origin v2.9.X
+git tag v3.0.X
+git push origin v3.0.X
 ```
 Workflow: `.github/workflows/release.yml` — uses stored secrets for keystore signing.
 

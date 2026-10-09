@@ -63,7 +63,7 @@ class AboutScreen extends StatelessWidget {
               ("✏️ Manual Entry", "Type expenses in plain language"),
               (
                 "🤖 Peso (AI Chat)",
-                "Powered by Gemini 3.5 Flash-Lite (8-provider auto-failover)"
+                "Powered by Gemini 3.5 Flash-Lite (9-provider auto-failover + Local LLM)"
               ),
               (
                 "🧾 AI Expense Logging",
