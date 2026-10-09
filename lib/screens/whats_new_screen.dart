@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.3';
-  static const _prefKey = 'whats_new_seen_3_0_3';
+  static const _version = '3.0.4';
+  static const _prefKey = 'whats_new_seen_3_0_4';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,15 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🔒',
+      'Local-Only Mode + Login Warning (v3.0.4)',
+      'Settings → AI → Local AI now has a "Local-only mode" toggle. '
+          'When ON, the AI will never fall back to cloud if your home server is unreachable — '
+          'your financial data stays on your network, guaranteed. '
+          'Also: if you have local account data and tap Login, you now see a clear warning '
+          'that logging in will replace your local data with the account\'s cloud data.',
+    ),
     (
       '📱',
       'Use Without an Account (v3.0.3)',

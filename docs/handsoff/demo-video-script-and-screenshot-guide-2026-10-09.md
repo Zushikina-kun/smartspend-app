@@ -274,7 +274,7 @@ We built a FREE AI finance app for Filipinos 🇵🇭
 🏆 Get a Financial Health Score that actually explains itself
 🔒 Use WITHOUT an account — your data stays on your phone
 
-✅ Free forever
+✅ Free to download — no account required
 ✅ Works offline
 ✅ 40+ platforms (Shopee, GCash, BDO, Lazada...)
 

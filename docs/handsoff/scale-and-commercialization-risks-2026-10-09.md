@@ -82,9 +82,11 @@ Each app open fetches Remote Config (the Gemini API key). We cache for 1 hour mi
 | Gemini 2.5 Flash | 10 | **250** | - |
 
 **This is the #1 problem.**  
-1,000 requests/day on a **single key** shared across all users.  
-- 30 free AI messages/user/day × users = exhausted at **~33 concurrent AI users** in a day.  
-- 150 Pro messages/day × Pro users = exhausted at **~6 Pro users** in a day.
+The exact free quota depends on your specific API key and project. **Verify in AI Studio → API Keys → Usage.** Third-party sources report Flash-Lite free tier anywhere from 500–1,000 RPD; the current numbers in this document may be out of date.  
+- At 500 RPD: exhausted at ~16 users/day × 30 messages = **~16 daily AI users**
+- At 1,000 RPD: exhausted at ~33 daily AI users (30 msg/day) or ~6 Pro users (150 msg/day)
+
+**Privacy note (critical for launch):** Google's free Gemini API terms state that content submitted under the free (unpaid) quota **may be used to improve Google's products** and **may be reviewed by human reviewers**. Google explicitly advises developers not to submit sensitive, personal, or confidential information under the free tier. This means SmartSpend's default Cloud AI tier sends financial data to a service that may use it for product improvement. Paying for the Gemini API (Blaze plan) switches to the paid terms, which do not include this data-use policy. **Enabling Blaze billing is therefore both a quota fix AND a privacy fix.** This should be disclosed in the app's privacy policy and the Play Store data safety form.
 
 The current architecture puts the AQ. key in Firebase Remote Config. Every user who sends an AI message shares from this pool.
 
@@ -208,8 +210,11 @@ When we release v4.0 with Pro gates and RevenueCat, the DB migration from v14 to
 | Above $2,500 MTR | 1% of MTR |
 
 **When we hit the paid tier:**  
-$2,500 MTR ÷ $4.27 (₱249/year = ~$4.27) = **585 active yearly Pro subscribers.**  
-At that point we're paying $25/month to RevenueCat on $2,500 revenue. That's 1% — very reasonable.
+RevenueCat charges 1% of MTR above $2,500/month. At ₱299/year (~$5.27/year):
+- ~474 yearly purchases in a single month = $2,500 MTR (RevenueCat counts the full purchase amount in the purchase month)
+- At that point: $25/month to RevenueCat on $2,500 revenue. That's 1% — very reasonable.
+
+**Basis:** ₱299 ÷ ₱56.7/USD = $5.27. $2,500 / $5.27 = ~474 yearly purchases in one month.
 
 **Not a concern. RevenueCat scales gracefully.**
 
@@ -251,13 +256,18 @@ The AQ. Gemini key is in Remote Config, not the APK binary. But the APK does con
 | Firestore | ~$1.00 | 1M reads + 600K writes |
 | Remote Config | $0 | ~120K fetches (1,000 DAU × 4 fetches avg) |
 | Firebase Storage | $0 | Profile photos — tiny |
-| Gemini API (paid) | ~$135 | 500 Pro × 150 msg × 30 days × $0.0003/msg |
-| Gemini API (free users) | $0 | 500 Free × 30 msg/day = 450K msg — use per-user keys |
+| Gemini API (Pro users, 30 msg/day avg) | ~$135 | 500 Pro × 30 msg × 30 days × $0.0003/msg |
+| Gemini API (Pro users, 150 msg/day cap) | ~$675 | 500 Pro × 150 msg × 30 days × $0.0003/msg |
+| Gemini API (free users, per-user keys) | $0 | 500 Free use their own free-tier key |
 | RevenueCat | $0 | Under $2,500 MTR |
 | Cloud Functions proxy | ~$0.50 | 450K invocations × $0.40/M |
-| **Total infrastructure** | **~$137/month** | |
-| **Revenue (500 Pro × ₱249/yr ÷ 12)** | **~$1,082/month** | |
-| **Margin** | **87%** | |
+| **Total (30 msg/day avg)** | **~$137/month** | |
+| **Total (150 msg/day cap)** | **~$677/month** | |
+| **Revenue (500 Pro × ₱299/yr ÷ 12)** | **~$220/month** | At ₱56.7 per USD |
+
+⚠️ **Note:** At ₱299/year, the **break-even point depends heavily on average AI usage**. At 30 messages/day average the margin is ~38%; at the 150/day cap the AI cost exceeds revenue. The 150 msg/day limit for Pro users should be treated as a hard ceiling, not an expected average. Actual usage from expense-tracking users is likely 10–30 messages/day — well within margin.
+
+⚠️ **Verify Gemini quotas against your actual AI Studio project dashboard before publishing.** Third-party sources vary — some report Flash-Lite free tier as 500/day, some as 1,000/day. The exact number for your key is visible in AI Studio → API Keys → Usage.
 
 **The math works well at 1,000 MAUs. Infrastructure is ~13% of revenue.**
 
@@ -286,7 +296,7 @@ Early stage is completely free as long as per-user Gemini keys are used.
 | Key extraction from APK (Groq key) | 🟡 Medium | Possible | Any time | Move to Cloud Functions proxy in v4.0 |
 | Firebase Auth rate limit (100/hr per IP) | 🟡 Medium | Low | Only viral school-sharing scenarios | Demo mode mitigates (no account required) |
 | SQLite migration failure | 🟡 Medium | Low | Each major version | Auto-backup before migration (existing). All ALTER TABLEs in try/catch. |
-| RevenueCat costs | 🟢 Low | N/A until 585 Pro subs | ~1,000+ Pro users | 1% of revenue — acceptable |
+| RevenueCat costs | 🟢 Low | N/A until ~474 yearly purchases/month | ~500+ Pro users | 1% of revenue — acceptable |
 | Firebase Auth MAU limits | 🟢 Low | N/A until 50,000 users | Far future | Not a concern |
 | Groq model retirement | 🟢 Low | Ongoing | Models retire periodically | 9-provider chain provides redundancy |
 | Google AI Studio policy change | 🟢 Low | Possible | Any time | Per-user keys distribute risk. Gemini paid tier as backup. |

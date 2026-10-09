@@ -178,7 +178,7 @@ Everything in Free, plus:
 
 **₱299/year** — Less than ₱1/day. Framed as "₱0.82/day — less than your tricycle fare." 58% off vs paying monthly (₱708/year). The anchor against ChatGPT Plus (₱999/month) makes this look like a steal: you get smarter AI specifically for your finances at 1/40th the cost of general AI.
 
-**₱799 lifetime** — This is the strategically important one for a student market. A student who starts using SmartSpend in 1st year college and uses it through graduation (4 years) pays ₱799 for ~₱2,832 worth of yearly subscriptions (4 × ₱799 if they bought yearly each year — wait, actually 4 × ₱299 = ₱1,196, so lifetime saves ₱397 over 4 years). The psychological value is "I own it forever, no decision fatigue, no renewal anxiety."
+**₱799 lifetime** — This is the strategically important one for a student market. A student who starts using SmartSpend in 1st year college and uses it through graduation (4 years) pays ₱799 vs 4 × ₱299 = ₱1,196 in yearly subscriptions — saves ₱397 over 4 years. The psychological value is "I own it forever, no decision fatigue, no renewal anxiety."
 
 ### The differentiator argument (why we can charge when Agila and PISO don't)
 
@@ -196,7 +196,7 @@ These features exist in SmartSpend Pro and **nowhere else in any Filipino financ
 > "Import your entire GCash history in 30 seconds. Screenshot to expense — 40+ platforms. Only in SmartSpend Pro."
 
 ### Play Store fee reality
-Google Play charges 15% for first $1M/year (99% of developers). RevenueCat is free until $2,500/month tracked revenue (~₱140K/month). At ₱299/year you'd need ~2,350 yearly Pro subscribers to hit RevenueCat's paid tier — an excellent problem to have.
+Google Play charges 15% for first $1M/year (99% of developers). RevenueCat is free until $2,500/month tracked revenue (~₱140K/month). At ₱299/year (~$5.27) you'd need ~474 yearly purchases in a single month to hit RevenueCat's paid tier (1% of MTR). An excellent problem to have.
 
 ### Upgrade messaging per plan
 - Monthly: "Try Pro for ₱59 — one Jollibee meal gets you the full AI finance experience"
@@ -288,7 +288,7 @@ Deploy one phase at a time, measure conversion, adjust gates before the next.
 5. **Month 1** — tries to add a 2nd wallet → paywall
 6. **Month 2** — wants to see FHS trend chart → paywall
 
-Each paywall: shows what they were trying to do + concrete Pro benefit + ₱99/mo CTA + dismiss option. Never blocks the app.
+Each paywall: shows what they were trying to do + concrete Pro benefit + ₱59/mo or ₱299/yr CTA + dismiss option. Never blocks the app.
 
 ---
 

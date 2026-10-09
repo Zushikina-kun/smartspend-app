@@ -88,9 +88,9 @@ This is the most relevant technology for SmartSpend's architecture. One SDK, aut
 Google released the **LiteRT LM SDK** in July 2026 — a higher-level API specifically for LLM inference on Android that abstracts MediaPipe complexity.
 
 - Download and run Gemma 4 E2B (~2.6 GB) on-device
-- Kotlin/Java native SDK; Flutter interop via platform channels
+- Kotlin/Java native SDK with Flutter APIs now available (check https://ai.google.dev/edge/litert for current Flutter support status — was listed as experimental/preview as of Oct 2026)
 - Works on Android 10+ with 6 GB RAM
-- Gemma 4 on Pixel 9 (Snapdragon 8 Gen 3): ~55 tokens/second — fast enough for real use
+- Gemma 4 E2B benchmark on Samsung Galaxy S26 Ultra: ~47 tok/sec CPU, ~52 tok/sec GPU (Google AI Edge, 2026) — fast enough for real use
 
 ---
 
@@ -103,11 +103,6 @@ Most SmartSpend users are students with **mid-range phones**:
 - Typical RAM: 4–8 GB
 - Typical chip: Dimensity 6100, Snapdragon 695 (no NPU for Nano v3)
 - Typical storage: 128–256 GB (2.6 GB model = ~1–2% of storage, acceptable)
-
-**Gemini Nano v3 requirement** knocks out 95%+ of the Filipino student market.
-**MediaPipe with Gemma 2B (INT4, ~1.3 GB)** would run on more phones but with poor performance.
-
-**Gemma 4 E2B INT4 (~2.6 GB)** with LiteRT LM SDK is the most promising option but needs 6 GB RAM and Android 10+.
 
 ---
 

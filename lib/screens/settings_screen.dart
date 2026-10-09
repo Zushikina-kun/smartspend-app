@@ -1105,12 +1105,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ]),
                   const SizedBox(height: 4),
                   Text(
-                    'After saving, go to AI Model above and select "Local AI (Your Computer)" to activate it. Cloud AI remains as automatic fallback.',
+                    'After saving, go to AI Model above and select "Local AI (Your Computer)" to activate it.',
                     style: TextStyle(
                         fontSize: 11,
                         color:
                             theme.colorScheme.onSurface.withValues(alpha: 0.45),
                         height: 1.4),
+                  ),
+                  const SizedBox(height: 12),
+                  // ── LOCAL ONLY MODE ──────────────────────────────────────────
+                  // When ON: if local server is unreachable the AI fails hard —
+                  // no cloud fallback. This is the ONLY way to guarantee that
+                  // financial data NEVER reaches a third-party server.
+                  // When OFF (default): falls back to cloud silently on failure.
+                  SwitchListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('🔒 Local-only mode',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500)),
+                    subtitle: Text(
+                      AppConfig.localOnlyMode
+                          ? 'ON — AI will NOT fall back to cloud if local server is unreachable. Your data never leaves your network.'
+                          : 'OFF — Falls back to cloud AI if local server is unreachable (default, more convenient).',
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.55),
+                          height: 1.4),
+                    ),
+                    value: AppConfig.localOnlyMode,
+                    onChanged: (v) async {
+                      await AppConfig.setLocalOnlyMode(v);
+                      setState(() {});
+                    },
                   ),
                 ]),
 

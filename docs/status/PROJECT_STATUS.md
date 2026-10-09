@@ -17,11 +17,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Version string | **3.0.3** |
-| pubspec | `3.0.3+101` |
-| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.3 |
-| APK (arm64, demo phone) | **~45 MB** — `SmartSpend-v3.0.3-arm64-v8a.apk` |
-| AAB (Play Store ready) | **~75 MB** — `SmartSpend-v3.0.3.aab` |
+| Version string | **3.0.4** |
+| pubspec | `3.0.4+102` |
+| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.4 |
+| APK (arm64, demo phone) | **~45 MB** — `SmartSpend-v3.0.4-arm64-v8a.apk` |
+| AAB (Play Store ready) | **~75 MB** — `SmartSpend-v3.0.4.aab` |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | API 21 (Android 5.0) |
 | Target SDK | API 36 (Android 16) |
@@ -49,8 +49,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v3.0.3** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.3-arm64-v8a.apk` from GitHub Releases |
-| Verify About screen shows **"Version 3.0.3"** | Brix | ❌ | kAppVersion in debug_service.dart |
+| Install **v3.0.4** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.4-arm64-v8a.apk` from GitHub Releases |
+| Verify About screen shows **"Version 3.0.4"** | Brix | ❌ | kAppVersion in debug_service.dart |
 | Load demo data on phone | Brix | ❌ | "Try Demo" on login screen OR Profile → Load Demo Data |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ → Reset Daily Limit |
 | Set AI model to **Auto** | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
@@ -236,6 +236,7 @@ These are longer-term items for when the app has real users.
 
 | Version | Date | Key changes |
 |---------|------|------------|
+| **v3.0.4** | Oct 10, 2026 | Local-only mode toggle (Settings → AI → Local AI); login warning dialog for local account users; doc fixes from Claude sync (pricing math, Gemini quota warning, RA 10173 overclaim, Pixel 9/Snapdragon attribution, "free forever" removed) |
 | **v3.0.3** | Oct 9, 2026 | Local Account mode (continue without Firebase account, data stays on device, connect later); profile screen loads for local users; local→Firebase migration preserves data on register |
 | **v3.0.1** | Oct 9, 2026 | Demo account overhaul — full dataset across all screens, Reset to Demo Defaults button |
 | **v3.0.2** | Oct 9, 2026 | ProService infra for freemium; APP_FLAVOR dev/prod; url_launcher + support links; demo account overhaul (18 tables, Reset button) |

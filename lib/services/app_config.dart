@@ -86,6 +86,20 @@ class AppConfig {
   static String? _customLocalModel;
   static String? _customLocalKey; // usually blank for Ollama
 
+  // When true: never fall back to cloud if local server is unreachable.
+  // The "data never leaves your network" promise requires this to be true.
+  // Default: false (falls back to cloud on failure — more convenient but breaks the privacy guarantee).
+  static bool _localOnlyMode = false;
+
+  static bool get localOnlyMode => _localOnlyMode;
+
+  static Future<void> setLocalOnlyMode(bool value) async {
+    _localOnlyMode = value;
+    try {
+      await DBService.setSetting('local_only_mode', value ? 'true' : 'false');
+    } catch (_) {}
+  }
+
   /// Whether the user has configured a local LLM endpoint.
   static bool get hasCustomLocal =>
       _customLocalUrl != null && _customLocalUrl!.isNotEmpty;
@@ -374,7 +388,13 @@ class AppConfig {
     //                   Cerebras GPT-OSS 120B
     switch (_activeModelId) {
       case 'custom_local':
-        // Local LLM failed/unreachable — fall back to Gemini or Groq
+        // Local LLM failed/unreachable.
+        // If local-only mode is on, do NOT fall back to cloud — fail hard.
+        // This preserves the "data never leaves your network" guarantee.
+        if (_localOnlyMode) {
+          return false; // signal: all providers exhausted, show error
+        }
+        // Default: fall back to cloud (convenient but data leaves device)
         _activeModelId = hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
         _saveActiveModel();
         return true;
@@ -487,9 +507,11 @@ class AppConfig {
       final url = await DBService.getSetting('custom_local_url');
       final model = await DBService.getSetting('custom_local_model');
       final key = await DBService.getSetting('custom_local_key');
+      final localOnly = await DBService.getSetting('local_only_mode');
       if (url != null && url.isNotEmpty) _customLocalUrl = url;
       if (model != null && model.isNotEmpty) _customLocalModel = model;
       if (key != null && key.isNotEmpty) _customLocalKey = key;
+      if (localOnly == 'true') _localOnlyMode = true;
     } catch (_) {}
 
     // 4. Load keys from Firebase Remote Config.

@@ -89,8 +89,44 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  /// Warns local-mode users that logging in will replace their local data.
+  /// Returns true to proceed, false to cancel.
+  Future<bool> _warnLocalModeIfNeeded() async {
+    final isLocal = await AuthService.isLocalMode();
+    if (!isLocal)
+      return true; // demo mode or no flag — no special warning needed
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Replace local data?"),
+        content: const Text(
+          "You're currently using a Local Account with your own data on this device.\n\n"
+          "Logging in will replace all your local data with this account's cloud data. "
+          "This cannot be undone.\n\n"
+          "If you want to keep your local data, go back and tap "
+          '"Register" instead — your local data will be uploaded to the new account.',
+          style: TextStyle(fontSize: 13, height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange, foregroundColor: Colors.white),
+            child: const Text("Log In & Replace"),
+          ),
+        ],
+      ),
+    );
+    return confirmed == true;
+  }
+
   Future<void> _login() async {
     if (!_validate()) return;
+    if (!await _warnLocalModeIfNeeded()) return; // local mode data-loss warning
     setState(() {
       _loading = true;
       _errorMessage = null;
@@ -137,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginWithGoogle() async {
+    if (!await _warnLocalModeIfNeeded()) return; // local mode data-loss warning
     setState(() {
       _googleLoading = true;
       _errorMessage = null;
