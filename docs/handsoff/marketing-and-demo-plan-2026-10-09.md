@@ -1,10 +1,10 @@
 # SmartSpend — Demo, Marketing & Monetization Masterplan
-**Version:** v3.0.1 | **Date:** October 9, 2026
+**Version:** v3.0.3 | **Date:** October 9, 2026
 **Audience:** Lucid Frame team — for capstone defense, website, social media, and future app growth
 
 ---
 
-## Part 1 — Demo Account (v3.0.1 — shipped)
+## Part 1 — Demo Account (v3.0.3 — shipped)
 
 ### What's seeded in the demo dataset
 
@@ -29,7 +29,7 @@
 | **Category Rules** | 25 auto-categorization rules |
 | **Settings** | account_type: student, payday_date: 1, income_wallet_mode: on, 50/30/20 categories mapped |
 
-### Reset flow
+| **Local Account mode** (v3.0.3) | Continue Without Account button on login; data stays on device; connect later from Profile |
 - **Profile → Load Demo Data** — loads full seed
 - **Profile → Reset to Demo Defaults** (orange) — wipes all 18 tables + reloads fresh
 - Data persists across app restarts (normal SQLite — not cleared on exit)
@@ -93,7 +93,7 @@ AI-powered personal finance for Filipinos — free, offline, Taglish-ready
 **Current:** https://zushikina-kun.github.io/smartspend-app/
 
 ### What to add
-1. **"Download v3.0.1"** hero button → GitHub Releases link
+1. **"Download v3.0.3"** hero button → GitHub Releases link
 2. **8 screenshots** in HTML carousel (Swiper.js — free)
 3. **Comparison table** — SmartSpend vs BudgetPH vs Agila vs PISO
 4. **60-second demo video** — YouTube embed

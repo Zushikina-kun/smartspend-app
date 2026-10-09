@@ -84,6 +84,7 @@
 | Add Safe-to-Spend to features list | Cyrille | ❌ | BudgetPH differentiator |
 | Add **Agila, PISO, BunnyWise** to competitor table | Cyrille | ❌ | Agila = free, PISO = free, Tarsi = ~₱300 one-time |
 | BSP citation update Ch.1: 2021 → CFIS 2025 | Cyrille | ❌ | |
+| **Add Local LLM + on-device AI to manuscript** | Cyrille | ❌ | Copy-paste blocks in `manuscript-local-llm-sections-2026-10-09.md` — Blocks A–E for Ch.2, Ch.3, Ch.5 |
 | Paluwagan moved to Implemented | Cyrille | ✅ | Done |
 
 ### 🟡 P2 — Post-Defense (before final submission)
@@ -118,12 +119,15 @@ These must be done before any public release. See `docs/handsoff/scale-and-comme
 |------|-------|--------|-------|
 | Set up Google Play Internal Testing track | Brix | ❌ | Required to test real IAP purchases before public release |
 | Create Play Store listing (metadata ready in marketing plan doc) | Cyrille | ❌ | Short desc, full desc, keywords, screenshots, category |
-| Take 8 Play Store screenshots from demo phone | Brix | ❌ | Priority order in `docs/handsoff/marketing-and-demo-plan-2026-10-09.md` |
-| Make screenshot overlays in Canva | Cyrille | ❌ | 1–2 lines caption per screenshot, 1080×1920px |
-| Record 60-second demo video | Brix | ❌ | Script in marketing plan doc. Use Android screen recorder. |
-| Add screenshots + video to website | Cyrille | ❌ | https://zushikina-kun.github.io/smartspend-app/ |
-| Post launch announcement on Facebook + TikTok | All | ❌ | See hashtag list in marketing plan doc |
-| Post in r/PersonalFinancePhilippines | Brix | ❌ | Organic reach, no ad spend needed |
+| Take 8 Play Store screenshots from demo phone | Brix | ❌ | Priority order + shot-by-shot guide in `demo-video-script-and-screenshot-guide-2026-10-09.md` |
+| Make screenshot overlays in Canva | Cyrille | ❌ | Design specs (1080×1920, dark bg, Emerald accent) in guide doc |
+| Record 60-second demo video | Brix | ❌ | Full 8-shot script with timing + recording tips in guide doc |
+| Edit video in CapCut | Brix / Cyrille | ❌ | Editing steps in guide doc. Export 1080p MP4. |
+| Upload video to YouTube (unlisted first) | Brix | ❌ | Review before making public |
+| Add screenshots + video to website | Cyrille | ❌ | Website update checklist in guide doc |
+| Post launch announcement on Facebook + TikTok | All | ❌ | Captions + TikTok script in guide doc |
+| Post in r/PersonalFinancePhilippines | Brix | ❌ | Reddit post template in guide doc |
+| Twitter/X launch thread | Brix | ❌ | 7-tweet thread template in guide doc |
 | Set up Ko-fi page (already linked in app/website) | Brix | ❌ | https://ko-fi.com/zushikina143 — verify it's active |
 | Enable email verification in Firebase Auth | Brix | ❌ | One config toggle in Firebase Console. Prevents fake accounts. |
 

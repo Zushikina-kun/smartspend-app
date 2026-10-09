@@ -228,3 +228,21 @@ Full plan in `docs/handsoff/freemium-split-plan-2026-10-09.md`.
 | `docs/handsoff/marketing-and-demo-plan-2026-10-09.md` | Updated pricing ₱59/299/799 |
 
 *Appended October 9, 2026 — current shipped version v3.0.2+99*
+
+---
+
+## 9 — Post-v3.0.3 additions (Oct 9, 2026 — same session)
+
+### New handoff docs added
+| File | Contents |
+|------|---------|
+| `kiro-to-claude-handoff-2026-10-09.md` | Full Claude sync v2.9.96 → v3.0.3 — use this when resuming with Claude |
+| `on-device-llm-research-2026-10-09.md` | On-device LLM research: Gemini Nano, MediaPipe, Firebase AI Logic hybrid, PH device landscape, 3-phase roadmap |
+| `manuscript-local-llm-sections-2026-10-09.md` | Copy-paste manuscript blocks for Cyrille (Blocks A–E: Ch.2 RRL, Ch.3 Methodology, Ch.5 Future Work) |
+| `demo-video-script-and-screenshot-guide-2026-10-09.md` | 60-second trailer script, 8-shot screenshot guide, social media caption templates |
+
+### Current version
+v3.0.3+101 — all features complete for capstone defense. CI built and tagged.
+
+### What's still todo
+See `docs/status/PROJECT_STATUS.md` — master to-do list with all 4 phases.
