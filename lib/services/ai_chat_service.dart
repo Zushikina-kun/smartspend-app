@@ -177,7 +177,7 @@ class AIChatService {
   }
 
   /// Build expense summary — recent 10 detailed + older summarized by category
-  /// Kept compact to stay within the 8192 token limit of llama-3.1-8b-instant
+  /// Kept compact to stay within model context window limits
   static String _buildExpenseSummary(List<Map<String, dynamic>> expenses) {
     if (expenses.isEmpty) return "No expenses recorded yet.";
 

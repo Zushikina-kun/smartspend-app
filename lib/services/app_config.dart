@@ -348,7 +348,7 @@ class AppConfig {
         // Best reasoning model available
         if (hasGemini)
           return 'gemini_flash'; // Gemini 3.5 Flash: frontier reasoning
-        return 'groq_llama4_scout'; // LLaMA 4 Scout: best open-source
+        return 'groq_llama4_scout'; // GPT-OSS 120B (Groq): best reasoning fallback
       case 'smart':
         if (hasGemini && _activeModelId.startsWith('gemini'))
           return _activeModelId;
@@ -383,8 +383,8 @@ class AppConfig {
       return true;
     }
 
-    // 8-provider chain: Gemini Flash → Flash-Lite → LLaMA 4 Scout →
-    //                   Kimi K2 → Qwen3 32B → LLaMA 3.3 70B → LLaMA 3.1 8B →
+    // 9-provider chain: Custom Local → Gemini Flash → Flash-Lite → GPT-OSS 120B (Groq) →
+    //                   Qwen3.6 27B → Qwen3.8 27B → Compound → Compound Mini →
     //                   Cerebras GPT-OSS 120B
     switch (_activeModelId) {
       case 'custom_local':

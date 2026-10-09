@@ -40,7 +40,7 @@ class WhatsNewScreen extends StatelessWidget {
       'Support the Developer (v3.0.2)',
       'About screen now has a "Support the Project" section — tap Buy Me a Coffee, Ko-fi, or PayPal to support. '
           'GCash/PayMaya number copies to clipboard with one tap. '
-          'Free forever — support is optional and always appreciated.',
+          'SmartSpend is free to download — support is optional and always appreciated.',
     ),
     (
       '🔍',

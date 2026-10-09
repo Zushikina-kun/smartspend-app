@@ -2822,7 +2822,7 @@ class _AIScreenState extends State<AIScreen> {
           const InfoButton(
             title: "Peso — Your Money Buddy",
             body:
-                "I'm Peso, SmartSpend's AI — powered by Gemini 3.5 Flash-Lite (primary) with 8-provider auto-failover.\n\n"
+                "I'm Peso, SmartSpend's AI — powered by Gemini 3.5 Flash-Lite (primary) with 9-provider auto-failover (including Local LLM).\n\n"
                 "The AI knows your expenses, budgets, goals, income, debts, and mood.\n\n"
                 "💡 Try asking:\n"
                 "• \"Spent 30 for jeepney\" — logs instantly\n"
@@ -2838,7 +2838,7 @@ class _AIScreenState extends State<AIScreen> {
                 "• \"How do I apply for SSS loan?\"\n"
                 "• \"Is ₱12,000 a good price for a ref?\"\n\n"
                 "34 action types: log/update/delete expenses, set budgets, set spending limits, manage goals, debts, recurring, payment plans, insurance/contributions, wallet balances, transfers, salary splits, subscription detection, idle money suggestions, expense cuts, what-if simulation, debt payment plan, split bills, and more.\n\n"
-                "Daily message limit: 150/day across 8 providers — when one model's limit is reached, the app automatically switches to the next available model.",
+                "Daily message limit: 150/day across 9 providers — when one model's limit is reached, the app automatically switches to the next available model.",
           ),
           // Model selector — shows current model + remaining messages, compact
           FutureBuilder<int>(
