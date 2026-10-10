@@ -19,9 +19,14 @@ class DemoService {
   static bool _isDemoLoading = false;
   static bool get isDemoLoading => _isDemoLoading;
 
-  // ── Demo "user" identity ───────────────────────────────────────────────────
-  // Used as the UID key for the local profile row.
+  // Demo "user" identity — kept separate from 'local_user' so local mode
+  // users never accidentally see the demo profile.
   static const _demoUid = 'demo_user';
+
+  // Name/email for the demo profile — generic, not a real person's info
+  static const _demoFirstName = 'Demo';
+  static const _demoLastName = 'User';
+  static const _demoEmail = 'demo@smartspend.app';
 
   static Future<void> loadSampleData() async {
     final now = DateTime.now();
@@ -36,21 +41,18 @@ class DemoService {
 
     // ── 2. PROFILE ───────────────────────────────────────────────────────────
     // Uses a publicly available placeholder avatar so no local asset is needed.
-    // In a real capstone demo, replace photoUrl with a bundled asset path or
-    // a stable URL pointing to the presenter's own photo.
-    final demoUid = FirebaseAuth.instance.currentUser?.uid ?? _demoUid;
+    // Demo profile — always uses 'demo_user' uid regardless of Firebase auth.
+    // This ensures demo data never gets pushed to a real Firebase account.
     final profile = UserProfile(
-      uid: demoUid,
-      firstName: 'Brix Angelo',
-      lastName: 'Directo',
-      middleName: 'Santos',
-      email: 'brix.directo@lorma.edu',
-      birthdate: '2002-05-15',
-      address: 'San Fernando City, La Union, Philippines',
-      phone: '09XX-XXX-XXXX',
-      // Generic avatar — works offline, no Firebase Storage needed for demo
+      uid: _demoUid,
+      firstName: _demoFirstName,
+      lastName: _demoLastName,
+      email: _demoEmail,
+      birthdate: '2000-01-01',
+      address: 'Philippines',
+      phone: '',
       photoUrl:
-          'https://ui-avatars.com/api/?name=Brix+Directo&size=256&background=00C896&color=fff&bold=true',
+          'https://ui-avatars.com/api/?name=Demo+User&size=256&background=00C896&color=fff&bold=true',
     );
     await DBService.saveProfile(profile);
 
@@ -151,9 +153,16 @@ class DemoService {
         'days': 3
       },
     ];
+    // Wallet name lookup — needed for wallet_history NOT NULL constraint
+    final _walletNames = {
+      cashId: 'Cash on Hand',
+      gcashId: 'GCash',
+      bdoId: 'BDO Savings',
+    };
     for (final h in _wh) {
       await db.insert('wallet_history', {
         'wallet_id': h['wallet_id'],
+        'wallet_name': _walletNames[h['wallet_id']] ?? '',
         'old_balance': h['old'],
         'new_balance': h['new'],
         'delta': h['delta'],

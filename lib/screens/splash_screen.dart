@@ -69,7 +69,14 @@ class _SplashScreenState extends State<SplashScreen>
       if (localMode || wasDemo) {
         final setupDone = await DBService.getSetting('setup_done');
         if (setupDone != null) {
-          next = const HomeScreen();
+          // Also check app lock for local/demo users
+          final lockEnabled = await AppLockService.isEnabled();
+          final hasPin = await AppLockService.hasPin();
+          if (lockEnabled && hasPin) {
+            next = AppLockScreen(destination: const HomeScreen());
+          } else {
+            next = const HomeScreen();
+          }
         } else {
           next = const SetupScreen();
         }

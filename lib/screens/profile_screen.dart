@@ -165,11 +165,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         // Local/demo mode — try loading local profile using 'local_user' uid
         profile = await DBService.getProfile('local_user');
+        // For demo mode, try 'demo_user' uid (set by demo_service)
         if (profile == null) {
-          // Check was_demo_mode profile (demo_service seeds with 'demo_user')
-          profile = await DBService.getProfile('demo_user');
+          final prefs = await SharedPreferences.getInstance();
+          final wasDemo = prefs.getBool('was_demo_mode') ?? false;
+          if (wasDemo) profile = await DBService.getProfile('demo_user');
         }
-        // If still null, use a blank local profile
+        // If still null, start blank — local user hasn't filled in their profile yet
         profile ??= UserProfile(uid: 'local_user');
       }
 

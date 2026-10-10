@@ -93,8 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
   /// Returns true to proceed, false to cancel.
   Future<bool> _warnLocalModeIfNeeded() async {
     final isLocal = await AuthService.isLocalMode();
-    if (!isLocal)
-      return true; // demo mode or no flag — no special warning needed
+    if (!isLocal) return true;
+    if (!mounted) return false;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
