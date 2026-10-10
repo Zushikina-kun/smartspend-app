@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -75,6 +76,74 @@ class BackupService {
   }
 
   // ── PUBLIC API ────────────────────────────────────────────
+
+  /// The SmartSpend folder name written to device storage.
+  static const _folderName = 'SmartSpend';
+
+  /// Silently save backup JSON + CSV to a permanent, accessible folder on
+  /// the device. Used during local-mode logout so data isn't lost.
+  ///
+  /// Writes to: Android/data/<package>/files/SmartSpend/
+  /// Accessible via: Files app → Internal Storage → Android → data → ... → SmartSpend
+  ///
+  /// Returns the folder path on success, null on failure.
+  static Future<String?> saveToDeviceStorage(List<dynamic> expenses) async {
+    try {
+      final now = DateTime.now();
+      final fileFmt = DateFormat('yyyyMMdd_HHmmss');
+      final stamp = fileFmt.format(now);
+
+      // Use app-specific external storage — no permission needed on Android 10+
+      final extDir = await getExternalStorageDirectory();
+      if (extDir == null) return null;
+
+      // Create SmartSpend subfolder
+      final folder = Directory('${extDir.path}/$_folderName');
+      if (!await folder.exists()) await folder.create(recursive: true);
+
+      // 1. Write full JSON backup
+      final data = await _exportData();
+      final jsonStr = const JsonEncoder.withIndent('  ').convert(data);
+      final jsonFile = File('${folder.path}/SmartSpend_Backup_$stamp.json');
+      await jsonFile.writeAsString(jsonStr);
+
+      // 2. Write CSV of expenses only (human-readable)
+      if (expenses.isNotEmpty) {
+        final rows = <List<dynamic>>[
+          [
+            'Date',
+            'Item Name',
+            'Category',
+            'Amount (PHP)',
+            'Want/Need',
+            'Payment Method',
+            'Shop',
+            'Notes'
+          ],
+          ...expenses.map((e) {
+            final exp = e as Map<String, dynamic>;
+            return [
+              exp['date'] ?? '',
+              exp['item_name'] ?? '',
+              exp['category'] ?? '',
+              (exp['amount'] as num?)?.toStringAsFixed(2) ?? '0.00',
+              (exp['is_want'] as int?) == 1 ? 'Want' : 'Need',
+              exp['payment_method'] ?? 'Cash',
+              exp['shop_name'] ?? '',
+              exp['notes'] ?? '',
+            ];
+          }),
+        ];
+        final csv = const ListToCsvConverter().convert(rows);
+        final csvFile = File('${folder.path}/SmartSpend_Expenses_$stamp.csv');
+        await csvFile.writeAsString(csv);
+      }
+
+      return folder.path;
+    } catch (_) {
+      return null;
+    }
+  }
 
   /// Export backup as JSON and share via system share sheet.
   /// User can save to phone, email, Drive, Dropbox, etc.

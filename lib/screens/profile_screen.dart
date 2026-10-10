@@ -1073,41 +1073,194 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _logout() async {
     final isLocal = await AuthService.isLocalMode();
-    // Warn user and give them a chance to cancel
+
+    if (isLocal) {
+      // ── LOCAL MODE LOGOUT ───────────────────────────────────────────────
+      // Step 1: Warn the user and explain what will happen
+      if (!mounted) return;
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Save data before leaving?"),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "You're using a Local Account. Your data only exists on this device.",
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "If you continue, SmartSpend will automatically save:",
+                style: TextStyle(fontSize: 13),
+              ),
+              SizedBox(height: 6),
+              Text("  📄  Backup file (.json) — all your data",
+                  style: TextStyle(fontSize: 13)),
+              Text("  📊  Expenses file (.csv) — spreadsheet-ready",
+                  style: TextStyle(fontSize: 13)),
+              SizedBox(height: 10),
+              Text(
+                "Both files will be saved to your phone storage so you can access them from the Files app.",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              SizedBox(height: 8),
+              Text(
+                "After saving, all local data will be cleared.",
+                style: TextStyle(fontSize: 12, color: Colors.orange),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.white),
+              child: const Text("Save & Exit"),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !mounted) return;
+
+      // Step 2: Auto-save to device storage
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Saving your data to phone storage..."),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 30),
+          ),
+        );
+      }
+
+      final expenses = await DBService.getExpenses();
+      final expenseMaps = expenses
+          .map((e) => {
+                'date': e.date,
+                'item_name': e.itemName,
+                'category': e.category,
+                'amount': e.amount,
+                'is_want': e.isWant == true ? 1 : 0,
+                'payment_method': e.paymentMethod ?? 'Cash',
+                'shop_name': e.shopName,
+                'notes': e.notes,
+              })
+          .toList();
+
+      final savedPath = await BackupService.saveToDeviceStorage(expenseMaps);
+
+      if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
+
+      if (!mounted) return;
+
+      // Step 3: Show where the files were saved
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+          title: Text(
+            savedPath != null ? "✅ Data saved!" : "⚠️ Could not save files",
+          ),
+          content: savedPath != null
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Your data was saved to:",
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        savedPath.replaceAll(
+                            '/storage/emulated/0', 'Internal Storage'),
+                        style: const TextStyle(
+                            fontSize: 11, fontFamily: 'monospace'),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "How to find your files:",
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "1. Open the Files or My Files app\n"
+                      "2. Go to Internal Storage → Android → data\n"
+                      "3. Find com.lucidframe.smartspend_app\n"
+                      "4. Open files → SmartSpend\n\n"
+                      "You'll find a .json backup and a .csv spreadsheet.",
+                      style: TextStyle(fontSize: 12, height: 1.5),
+                    ),
+                  ],
+                )
+              : const Text(
+                  "Files could not be saved to phone storage. You can still export your data manually from Profile → Export to CSV or Backup before logging out.",
+                  style: TextStyle(fontSize: 13),
+                ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("OK, clear my data"),
+            ),
+          ],
+        ),
+      );
+
+      if (!mounted) return;
+
+      // Step 4: Clear and go to login
+      await DBService.clearLocalData();
+      AIChatService.clearHistory();
+      UndoService.clear();
+      await AuthService.migrateLocalToFirebase();
+
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+            (_) => false);
+      }
+      return;
+    }
+
+    // ── FIREBASE USER LOGOUT ────────────────────────────────────────────────
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(isLocal ? "Leave Local Mode?" : "Log Out"),
-        content: Column(
+        title: const Text("Log Out"),
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (isLocal) ...[
-              const Text(
-                "Your data will remain on this device.",
-                style: TextStyle(fontSize: 13),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                "If you sign in with an account, your local data will be replaced with your account data. Back up first if you want to keep it.",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-            ] else ...[
-              const Text(
-                "Your data will be saved to the cloud before logging out.",
-                style: TextStyle(fontSize: 13),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Local data will be cleared so the next account starts clean.",
-                style: TextStyle(fontSize: 13),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Your data will be restored from the cloud when you log back in.",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-            ],
+            Text(
+              "Your data will be saved to the cloud before logging out.",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Local data will be cleared so the next account starts clean.",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Your data will be restored from the cloud when you log back in.",
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
           ],
         ),
         actions: [
@@ -1118,28 +1271,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red, foregroundColor: Colors.white),
-            child: Text(isLocal ? "Go to Login" : "Log Out"),
+            child: const Text("Log Out"),
           ),
         ],
       ),
     );
     if (confirm != true || !mounted) return;
 
-    if (!isLocal) {
-      // Firebase user — push data to cloud first
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Saving your data to cloud..."),
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 30),
-          ),
-        );
-      }
-      try {
-        await DBService.pushAllToCloud();
-      } catch (_) {}
+    // Firebase user — push data to cloud first
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Saving your data to cloud..."),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 30),
+        ),
+      );
     }
+    try {
+      await DBService.pushAllToCloud();
+    } catch (_) {}
 
     // Clear local DB
     await DBService.clearLocalData();
@@ -1148,11 +1299,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AIChatService.clearHistory();
     UndoService.clear();
 
-    // Clear mode flags and sign out
-    await AuthService
-        .migrateLocalToFirebase(); // clears local_mode + was_demo_mode
-    if (!isLocal)
-      await AuthService.logout(); // Firebase sign-out only for Firebase users
+    // Sign out of Firebase + Google
+    await AuthService.migrateLocalToFirebase();
+    await AuthService.logout();
 
     if (mounted) {
       ScaffoldMessenger.of(context).clearSnackBars();
