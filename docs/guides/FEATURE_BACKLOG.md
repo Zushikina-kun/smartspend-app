@@ -19,13 +19,13 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v3.0.0)
+## Part 0 — Authoritative Build Numbers (v3.0.4)
 
 Use these everywhere. Many older docs are stale.
 
-| Metric | v2.9.98 value |
+| Metric | v3.0.4 value |
 |--------|--------------|
-| Version string | **3.0.0** |
+| Version string | **3.0.4** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
@@ -57,8 +57,14 @@ Use these everywhere. Many older docs are stale.
 ### Recent releases
 | Version | Key changes |
 |---------|------------|
-| v3.0.0 | Transaction sort/group (5 sort keys, 5 group-by options, collapsible headers, dual-date display, category dropdown); Chat sessions (DB v14, session list, New Chat button, archive/delete); AI recovery (session summary card ✅/⚠️/❌, re-log helper sheet); Analytics overhaul (Quick Jump anchors, period chip overflow → More menu, category breakdown sort toggle, section anchors). |
-| v2.9.98 | Screenshot import visibility: `[screenshot]` source tag in AI context; `_sessionSkippedLog` → `ALREADY IN DB` guardrail + AI feedback; sort fix for 00:00 imported items. |
+| v3.0.4 | Logout button fix (nested function bug); demo crash fix (wallet_history NOT NULL); demo → "Demo User / demo@smartspend.app"; profile overlap fix (local ≠ demo); app lock on splash for local/demo; auto-save JSON+CSV on local mode logout with guided instructions; login warning dialog for local users; local-only AI mode toggle (no cloud fallback); all in-app text updated to 9-provider |
+| v3.0.3 | Local Account mode — "Continue Without Account" on login screen; data on device; `uid='local_user'`; connect Firebase later from Profile |
+| v3.0.2 | ProService + ProFeature enum (freemium infra, v4.0); support links in About/website; APP_FLAVOR dev/prod |
+| v3.0.1 | Demo account overhaul — 18 tables seeded, Reset to Demo Defaults button |
+| v3.0.0 | Transaction sort/group (7 keys, 5 group-by, collapsible headers, category dropdown); Chat sessions (DB v14); AI recovery card (✅/⚠️/❌, re-log helper); Analytics Quick Jump + period chip fix + category sort toggle |
+| v2.9.98 | Screenshot import visibility: `[screenshot]` tag; skipped-dup AI feedback; 00:00 sort fix |
+| v2.9.97 | AI backdating fix: Today/Yesterday in context; "kahapon" resolution; NOT-RECORDED CHECK |
+| v2.9.92 | Local LLM private mode (9th provider); Settings Local AI section; LocalAiSetupSheet widget |
 | v2.9.97 | AI backdating fix: `Today/Yesterday` in context header; "yesterday"/"kahapon" date resolution; NOT-RECORDED CHECK before re-log; `date` field marked REQUIRED for past-day mentions. |
 | v2.9.92 | Local LLM private mode (9th provider); Settings Local AI section; LocalAiSetupSheet widget; privacy banner. |
 | v2.9.91 | Source tag completeness; CI AAB fix (APP_CONFIG_DART secret updated); GitHub Pages website. |
@@ -107,16 +113,17 @@ This section records issues found by direct code inspection after the v2.9.53 Ki
 > Freemium split plan: `docs/handsoff/freemium-split-plan-2026-10-09.md`
 > Marketing plan: `docs/handsoff/marketing-and-demo-plan-2026-10-09.md`
 
-### Shipped
+### Shipped (v3.0.x — all Oct 9–10, 2026)
 | Version | Group | Key deliverable |
 |---------|-------|----------------|
-| **v3.0.0** | AI Recovery (C) | Session summary card (recorded/skipped/failed), Re-log helper bottom sheet, screenshot import result sheet |
-| **v3.0.1** | Chat Wayback (D) | DB v14 `chat_sessions` table; session list screen; "New Chat" button in AI screen; archive/delete sessions |
-| **v3.0.1** | Demo Account | Full demo dataset — 18 tables seeded; Reset to Demo Defaults button |
-| **v3.0.2** | Transaction Sort/Group (A) | Sort bottom sheet (7 keys); Group by (5 options); sticky headers; ExpenseTile dual-date; chip row cleanup |
-| **v3.0.2** | Analytics Overhaul (B) | Quick-jump section anchors; 50/30/20 period fix; category breakdown sort toggle; period chip overflow fix |
-| **v3.0.2** | Support links | About screen (Buy Me a Coffee, Ko-fi, PayPal, GCash copy); website footer; README support table |
-| **v3.0.2** | ProService infra | `pro_service.dart` — foundation for v4.0 freemium gates; everyone is Pro in v3.x; `APP_FLAVOR` dart-define |
+| **v3.0.0** | AI Recovery (C) | Session summary card, re-log helper sheet |
+| **v3.0.0** | Chat Wayback (D) | DB v14, chat_sessions, New Chat button, session list |
+| **v3.0.0** | Transaction Sort/Group (A) | 7 sort keys, 5 group-by, collapsible headers |
+| **v3.0.0** | Analytics (B) | Quick Jump, period chip overflow fix, category sort |
+| **v3.0.1** | Demo Account | 18 tables seeded, Reset to Demo Defaults |
+| **v3.0.2** | ProService infra | ProFeature enum, APP_FLAVOR, support links |
+| **v3.0.3** | Local Account | "Continue Without Account", uid='local_user' |
+| **v3.0.4** | Bug fixes + UX | Logout fix, demo crash, profile overlap, auto-save on logout, local-only mode, login warning, app lock on splash |
 
 ### Planned (post-capstone defense)
 | Version | Work |

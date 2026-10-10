@@ -246,3 +246,37 @@ v3.0.3+101 — all features complete for capstone defense. CI built and tagged.
 
 ### What's still todo
 See `docs/status/PROJECT_STATUS.md` — master to-do list with all 4 phases.
+
+---
+
+## 10 — Final v3.0.4 fixes (Oct 10, 2026 — same session continued)
+
+### Bugs fixed (all in profile_screen.dart, login_screen.dart, demo_service.dart, splash_screen.dart)
+
+| Bug | Root cause | Fix |
+|-----|-----------|-----|
+| Logout button did nothing | Nested `Future<void> _logout()` inside outer `_logout()` — button called empty outer shell | Removed outer wrapper, kept correct inner implementation |
+| Demo crash on "Try Demo" | `wallet_history.wallet_name TEXT NOT NULL` — demo_service inserts rows without `wallet_name` | Added `_walletNames` lookup map in the for-loop |
+| Demo shows real person's name | Demo profile seeded as "Brix Angelo Directo / brix.directo@lorma.edu" | Changed to generic "Demo User / demo@smartspend.app", always uses `uid='demo_user'` |
+| Local mode shows demo profile | Profile screen fallback loaded `demo_user` for ALL non-Firebase users | Now only loads `demo_user` when `was_demo_mode=true`; local users get blank `uid='local_user'` |
+| App lock bypassed for local/demo users | Splash skipped `AppLockService` check for non-Firebase paths | Added lock check for all paths |
+| `_warnLocalModeIfNeeded` possible crash | Missing `!mounted` check before `showDialog` after async | Added `if (!mounted) return false` |
+
+### New feature: Auto-save on local mode logout
+- `backup_service.dart` — new `saveToDeviceStorage()`: writes JSON + CSV to `Android/data/<pkg>/files/SmartSpend/` using `getExternalStorageDirectory()` (no permission needed API 29+)
+- `profile_screen.dart` — local mode logout is now 3 steps: Warning dialog → auto-save → result dialog with path + step-by-step Files app instructions
+- Firebase logout cleaned up: removed stale `isLocal` branches (was causing confusion)
+
+### Files changed in v3.0.4 (Oct 10 additions)
+| File | Change |
+|------|--------|
+| `lib/screens/profile_screen.dart` | Logout bug fix + local mode 3-step logout + Firebase logout cleanup |
+| `lib/services/demo_service.dart` | `wallet_name` in wallet_history; "Demo User" generic profile; `_demoUid='demo_user'` always |
+| `lib/screens/login_screen.dart` | `!mounted` check in `_warnLocalModeIfNeeded` |
+| `lib/screens/splash_screen.dart` | App lock check for local/demo mode paths |
+| `lib/services/backup_service.dart` | `saveToDeviceStorage()` method + csv import |
+| `docs/reference/CAPSTONE_REFERENCE.md` | v3.0.4, 26 tables, 9-provider, v3.0.x release history |
+| `docs/status/PROJECT_STATUS.md` | v3.0.4, updated releases, correct handoff links |
+| `docs/handsoff/kiro-to-claude-handoff-2026-10-10.md` | §3 resolved items + §5 shipping history updated |
+
+*Final v3.0.4 — October 10, 2026. All known bugs fixed. CI passed.*

@@ -74,6 +74,13 @@ These were issues Claude flagged. All resolved:
 | Block A "no data transmitted" without condition | **Fixed:** "while the local server is reachable" added. |
 | Weak blog/Gist citations in manuscript blocks | **Replaced** with official Google documentation URLs. |
 | Insurance screen — stores SSS/PhilHealth ID numbers? | **Confirmed NO** — schema has only name, provider, premium, dates, notes. Safe. |
+| Logout button not working | **Fixed (v3.0.4):** nested `Future<void> _logout()` definition inside outer `_logout()` — button called empty outer shell. Removed nesting. |
+| Demo crash on "Try Demo" | **Fixed (v3.0.4):** `wallet_history.wallet_name TEXT NOT NULL` — demo was inserting rows without `wallet_name`. Added wallet name lookup map. |
+| Demo profile showed real person's name | **Fixed (v3.0.4):** Changed to generic "Demo User / demo@smartspend.app". Demo always uses `uid='demo_user'`, never attached to Firebase account. |
+| "Continue Without Account" showed demo profile | **Fixed (v3.0.4):** Profile screen fallback was loading `demo_user` profile for all non-Firebase users. Now only loads `demo_user` when `was_demo_mode=true`. Local users get blank `uid='local_user'` profile. |
+| App lock skipped for local/demo users on splash | **Fixed (v3.0.4):** Added `AppLockService.isEnabled()` + `hasPin()` check for local/demo mode paths on splash, same as Firebase path. |
+| `_warnLocalModeIfNeeded` missing mounted check | **Fixed (v3.0.4):** Added `if (!mounted) return false` before `showDialog` after the async `isLocalMode()` call. |
+| Local mode logout wiped data with no warning or backup | **Fixed (v3.0.4):** 3-step flow: (1) Warning dialog explaining auto-save + data clear, (2) Silent save of JSON backup + CSV to `Android/data/.../SmartSpend/`, (3) Result dialog with exact path + step-by-step instructions for Files app. |
 
 ---
 
@@ -122,16 +129,19 @@ LLM comparison table in Chapter III still has `TBD` for speed and Filipino-langu
 **v3.0.1:** Demo account overhaul — 18 tables seeded, Reset to Demo Defaults button  
 **v3.0.2:** ProService freemium infrastructure (everyone Pro in v3.x); Support links in app/website; APP_FLAVOR build system  
 **v3.0.3:** Local Account mode — "Continue Without Account"; data stays on device; Connect Account from Profile  
-**v3.0.4:** Login warning dialog for local account users; Local-only mode toggle (Settings → AI → LOCAL AI) — when ON, AI never falls back to cloud if home server unreachable
+**v3.0.4:** Login warning dialog for local account users; Local-only mode toggle (Settings → AI → LOCAL AI) — when ON, AI never falls back to cloud if home server unreachable; **Demo crash fix** — `wallet_history.wallet_name NOT NULL` constraint; **Demo profile** changed to "Demo User / demo@smartspend.app" (was real person's name); **Profile overlap fix** — local mode users no longer see demo profile; **App lock check** added for local/demo mode in splash (was missing); **Logout button bug fix** — nested function definition made button do nothing; **Auto-save on local mode logout** — silently writes JSON backup + CSV to `Android/data/.../SmartSpend/` folder, shows guided instructions on where to find files; In-app text: all "8-provider" references updated to "9-provider"
 
 ### Architecture additions (for Chapter III methodology)
 
 - `lib/services/pro_service.dart` — ProService + ProFeature enum (freemium infrastructure)
 - `lib/services/auth_service.dart` — `enterLocalMode()`, `isLocalMode()`, `migrateLocalToFirebase()`
 - `lib/services/app_config.dart` — `_localOnlyMode` flag + `setLocalOnlyMode()` + `localOnlyMode` getter
+- `lib/services/backup_service.dart` — `saveToDeviceStorage()` — silently writes JSON + CSV to `Android/data/<pkg>/files/SmartSpend/` (no permission needed, API 29+)
 - SQLite v14: `chat_sessions` table + `session_id` on `chat_history`
 - SharedPreferences keys: `local_mode`, `local_only_mode`, `is_pro_cached` (v4.0)
 - `APP_FLAVOR=dev` (never blocks features) / `APP_FLAVOR=prod` (CI/release)
+- Demo profile: `uid='demo_user'`, name="Demo User", email="demo@smartspend.app" (generic)
+- Local profile: `uid='local_user'`, blank by default, editable + persists across restarts
 
 ---
 

@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 3.0.2 | **Date:** October 2026
+**Version:** 3.0.4 | **Date:** October 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v2.9.92).
+> All figures are accurate to the final build (v3.0.4).
 
 ---
 
@@ -15,7 +15,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 3.0.2
+**Version:** 3.0.4
 **Build date:** October 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -209,7 +209,7 @@ The FHS and all associated alerts are **current-period aware**:
 | App Check | Firebase App Check | Debug mode (monitoring); Play Integrity for Play Store |
 | AI — Primary | **Gemini 3.5 Flash-Lite** (Google) | ~500 req/day free, 1M context — GA stable, replaced shut-down gemini-3.1-flash-lite |
 | AI — Fallback 1 | Gemini 3.5 Flash / GPT-OSS 120B (Groq) | Auto-failover when primary limit hit |
-| AI — Fallback 2–7 | Qwen3.6 27B / Qwen3.8 27B / GPT-OSS 20B / Compound Mini (Groq) / GPT-OSS 120B (Cerebras) | 8-provider chain, total ~6,750/day capacity |
+| AI — Fallback 2–8 | Qwen3.6 27B / Qwen3.8 27B / GPT-OSS 20B / Compound Mini (Groq) / GPT-OSS 120B (Cerebras) / Custom Local LLM | **9-provider chain**, total ~6,750/day cloud capacity + unlimited local |
 | OCR | Google ML Kit Text Recognition | Latin script, EXIF-corrected |
 | Barcode | ML Kit Barcode Scanning + MobileScanner | Live + gallery detection |
 | Charts | fl_chart | Pie, bar, line, scatter |
@@ -386,7 +386,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 
 ## 8. DATABASE SCHEMA
 
-**SQLite v13** — 25 tables:
+**SQLite v14** — 26 tables:
 
 | Table | Purpose |
 |-------|---------|
@@ -414,9 +414,10 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | budget_history | Budget amount change audit log (v13) |
 | goal_contribution_history | Savings goal contribution audit log (v13) |
 | income_history | Monthly income setting change log (v13) |
+| chat_sessions | Chat session metadata — title, created_at, archived_at, is_current (v14) |
 | paluwagan | Rotating savings group tracker |
 
-**Total: 25 unique tables** (v11 had 20; v12 added wallet_history; v13 added budget_history, goal_contribution_history, income_history + reason column on score_history)
+**Total: 26 unique tables** (v11 had 20; v12 added wallet_history; v13 added budget_history, goal_contribution_history, income_history + reason column on score_history; v14 added chat_sessions + session_id column on chat_history)
 
 **New settings keys (v2.9.3+):**
 - `income_wallet_mode` — true/false (Lightweight Mode)
@@ -510,7 +511,7 @@ A: SmartSpend's AI executes 34 autonomous financial management actions — from 
 A: RAG is for large knowledge bases (thousands of documents). A typical user has 20-50 expenses, 5-10 budgets, 3-5 goals — small enough for full context injection. Our approach gives faster, always-current data access without vector search overhead.
 
 **Q: "What if the API goes down?"**
-A: 8-provider automatic fallback: Gemini 3.5 Flash-Lite → Gemini 3.5 Flash → GPT-OSS 120B (Groq) → Qwen3.6 27B (Groq) → Qwen3.8 27B (Groq) → GPT-OSS 20B (Groq) → Compound Mini (Groq) → GPT-OSS 120B (Cerebras). Manual expense entry, Batch Add, and all catalog/autocomplete features work fully offline without AI.
+A: **9-provider automatic fallback**: Custom Local LLM → Gemini 3.5 Flash-Lite → Gemini 3.5 Flash → GPT-OSS 120B (Groq) → Qwen3.6 27B (Groq) → Qwen3.8 27B (Groq) → GPT-OSS 20B (Groq) → Compound Mini (Groq) → GPT-OSS 120B (Cerebras). Manual expense entry, Batch Add, and all catalog/autocomplete features work fully offline without AI.
 
 **Q: "Why no bank integration?"**
 A: Philippine open banking (BSP Open Finance) only launched in pilot in July 2025 with UnionBank as the first participant. SmartSpend is architecturally ready for integration as the framework matures. Currently, users import via GCash/bank history text paste or batch screenshot import (40+ platforms).
@@ -637,10 +638,17 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 | 2.9.86–2.9.87 | Oct 2026 | Home priority banner; chat history search; bank import feedback; Installment/Debt overlap fix (Plans tab routing); Data Quality View→Transactions navigation; Fix All for case_dup + round_amount; Remote Config fetch fix (Gemini key now loading, rc_last_fetch_status in debug log) |
 | 2.9.88–2.9.89 | Oct 2026 | Wallet balance history (wallet_history table v12); full audit trail: budget_history, goal_contribution_history, income_history, score_history.reason (DB v13); GitHub Pages website + Privacy Policy; AAB in CI; App Check debug token registered (MuMu Player) |
 | **2.9.92** | **Oct 2026** | **Local LLM support (Private Mode): custom_local provider in AppConfig, Settings → Local AI section with URL/model/key fields + Test Connection button, LocalAiSetupSheet widget (step-by-step guide for Ollama/LM Studio/Jan with hardware picker), 🏠 privacy indicator in AI chat when local is active, autoFallback chain updated, APP_CONFIG_DART secret updated** |
+| 2.9.97 | Oct 2026 | AI backdating fix: Today/Yesterday dates in AI context; "yesterday"/"kahapon" resolves to correct date; NOT-RECORDED CHECK before re-log |
+| 2.9.98 | Oct 2026 | Screenshot import visibility: `[screenshot]` source tag in AI context; skipped-dup feedback loop to AI; sort fix for 00:00 imported items |
+| **3.0.0** | **Oct 2026** | **Transaction sort/group (7 sort keys, 5 group-by, collapsible headers, category dropdown); Chat sessions (DB v14, chat_sessions table, New Chat button, session list with archive/delete); AI recovery card (✅/⚠️/❌ per item, re-log helper sheet); Analytics Quick Jump anchors + period chip overflow fix + category breakdown sort toggle** |
+| 3.0.1 | Oct 2026 | Demo account overhaul: 18 tables seeded with realistic Filipino student data (wallets, paluwagan, installments, insurance, score history, mood log, chat seed); Reset to Demo Defaults button |
+| 3.0.2 | Oct 2026 | ProService + ProFeature enum (freemium infrastructure, everyone Pro in v3.x); Support links in About screen (Buy Me a Coffee, Ko-fi, PayPal, GCash); APP_FLAVOR=dev/prod build system |
+| 3.0.3 | Oct 2026 | Local Account mode: "Continue Without Account" on login screen; data stays on device; profile with uid='local_user'; connect Firebase account later from Profile |
+| **3.0.4** | **Oct 2026** | **Login warning dialog for local account users (prevents silent data loss on login); Local-only mode toggle in Settings → AI → LOCAL AI (prevents cloud fallback when home server is unreachable); Demo profile → "Demo User / demo@smartspend.app" (was real person's name); Demo crash fix (wallet_history NOT NULL); Profile overlap fix (local mode no longer shows demo profile); App lock check added for local/demo mode on splash; Auto-save to device storage on local mode logout (JSON + CSV → SmartSpend/ folder with guided instructions)** |
 | **2.9.90–2.9.91** | **Oct 2026** | **Full re-audit: delete confirmations everywhere (paluwagan, insurance, wallet, single expense); archive≠delete fix; history viewers for budget/goal/income (HistorySheet widget); FHS score reason on chart tap; Peso empty states (insurance, chat history, bill calendar); wallet history on home screen long-press; data quality spinner fix; source tags complete on all audit trail callers** |
 
 ---
 
-*SmartSpend v2.9.92 — Lucid Frame*
+*SmartSpend v3.0.4 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
-*Last updated: October 5, 2026*
+*Last updated: October 10, 2026*

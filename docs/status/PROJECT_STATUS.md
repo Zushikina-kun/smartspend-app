@@ -1,19 +1,22 @@
 # SmartSpend — Project Status & Master To-Do List
-**Version:** 3.0.2 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** October 9, 2026
+**Version:** 3.0.4 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** October 10, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > Full docs index:
 > - Technical reference → `docs/reference/CAPSTONE_REFERENCE.md`
 > - Feature backlog → `docs/guides/FEATURE_BACKLOG.md`
-> - Latest AI handoff → `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
+> - Latest Kiro→Claude handoff → `docs/handsoff/kiro-to-claude-handoff-2026-10-10.md`
+> - Latest Kiro→Kiro handoff → `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
 > - Freemium plan → `docs/handsoff/freemium-split-plan-2026-10-09.md`
 > - Marketing plan → `docs/handsoff/marketing-and-demo-plan-2026-10-09.md`
 > - Scale & risks → `docs/handsoff/scale-and-commercialization-risks-2026-10-09.md`
+> - On-device LLM → `docs/handsoff/on-device-llm-research-2026-10-09.md`
+> - Manuscript LLM blocks → `docs/handsoff/manuscript-local-llm-sections-2026-10-09.md`
 
 ---
 
-## AUTHORITATIVE BUILD NUMBERS (v3.0.2)
+## AUTHORITATIVE BUILD NUMBERS (v3.0.4)
 
 | Metric | Value |
 |--------|-------|
@@ -68,7 +71,7 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Update version throughout → **3.0.2** | Cyrille | ❌ | Use CAPSTONE_REFERENCE.md as source of truth |
+| Update version throughout → **3.0.4** | Cyrille | ❌ | Use CAPSTONE_REFERENCE.md as source of truth |
 | Update SQLite schema → **v14, 26 tables** | Cyrille | ❌ | v14 adds chat_sessions + session_id on chat_history |
 | Update AI section: 9 providers, Gemini 3.5 Flash-Lite, AQ. key, Remote Config, Local AI private mode | Cyrille | ❌ | |
 | Update FHS: 4 × 25pt components, soft/hard overspend distinction | Cyrille | ❌ | |
@@ -78,7 +81,7 @@
 | Update color theme count → **11** | Cyrille | ❌ | |
 | Update screens count → **43** | Cyrille | ❌ | |
 | Update APK size → **~45 MB** (arm64, split, obfuscated) | Cyrille | ❌ | |
-| Add to Implemented: Transaction sort/group, Chat sessions, AI recovery card, Analytics quick-jump (v3.0.0) | Cyrille | ❌ | Shipped Oct 9 |
+| Add to Implemented: v3.0.0–v3.0.4 features (Transaction sort/group, Chat sessions, AI recovery, Analytics, Local Account mode, Demo overhaul, auto-save on logout) | Cyrille | ❌ | All shipped Oct 9–10 |
 | Add to Implemented: Peso mascot, Safe-to-Spend, Full audit trail, History viewers, Data Quality, Local AI (v2.9.76–v2.9.92) | Cyrille | ❌ | |
 | Add AI financial advice disclaimer (RA 11765) to Ch.2/Ch.3 | Cyrille | ❌ | |
 | Add Safe-to-Spend to features list | Cyrille | ❌ | BudgetPH differentiator |
@@ -200,10 +203,10 @@ These are longer-term items for when the app has real users.
 
 ---
 
-## DEMO SCRIPT — Final Defense (v3.0.2)
+## DEMO SCRIPT — Final Defense (v3.0.4)
 
 ### Night before
-1. Download `SmartSpend-v3.0.2-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.2
+1. Download `SmartSpend-v3.0.4-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.4
 2. Install on demo phone
 3. Tap **"Try Demo"** on login screen → loads full dataset automatically
 4. Verify Home shows FHS ~80, 3 goals, Safe-to-Spend card
@@ -236,10 +239,10 @@ These are longer-term items for when the app has real users.
 
 | Version | Date | Key changes |
 |---------|------|------------|
-| **v3.0.4** | Oct 10, 2026 | Local-only mode toggle (Settings → AI → Local AI); login warning dialog for local account users; doc fixes from Claude sync (pricing math, Gemini quota warning, RA 10173 overclaim, Pixel 9/Snapdragon attribution, "free forever" removed) |
-| **v3.0.3** | Oct 9, 2026 | Local Account mode (continue without Firebase account, data stays on device, connect later); profile screen loads for local users; local→Firebase migration preserves data on register |
-| **v3.0.1** | Oct 9, 2026 | Demo account overhaul — full dataset across all screens, Reset to Demo Defaults button |
-| **v3.0.2** | Oct 9, 2026 | ProService infra for freemium; APP_FLAVOR dev/prod; url_launcher + support links; demo account overhaul (18 tables, Reset button) |
+| **v3.0.4** | Oct 10, 2026 | Local-only mode toggle (AI never falls back to cloud when ON); login warning dialog (local data-loss prevention); Demo → "Demo User" generic profile; wallet_history NOT NULL crash fix; profile overlap fix (local mode ≠ demo profile); app lock on splash for local/demo; auto-save JSON+CSV to SmartSpend/ folder on local logout with guided instructions; logout button nested-function bug fix; all in-app text updated to 9 providers |
+| **v3.0.3** | Oct 9, 2026 | Local Account mode — "Continue Without Account" button; data stays on device; profile persists as 'local_user'; connect Firebase account from Profile later |
+| **v3.0.2** | Oct 9, 2026 | ProService + ProFeature enum (freemium infra, everyone Pro in v3.x); support links in About; APP_FLAVOR dev/prod CI build separation |
+| **v3.0.1** | Oct 9, 2026 | Demo account overhaul — 18 tables seeded, Reset to Demo Defaults button |
 | v2.9.98 | Oct 2026 | Screenshot import visibility; skipped-dup AI feedback; sort fix |
 | v2.9.97 | Oct 2026 | AI backdating fix: yesterday/kahapon, NOT-RECORDED CHECK |
 | v2.9.92 | Oct 2026 | Local AI private mode (9th provider) |
