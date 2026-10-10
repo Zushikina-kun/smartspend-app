@@ -106,13 +106,116 @@
     footer a:hover { color: var(--text); }
     .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
 
+    /* SCREENSHOTS CAROUSEL */
+    .screenshots-section { max-width: 1000px; margin: 0 auto 70px; padding: 0 24px; }
+    .screenshots-section .section-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
+    .screenshots-section .section-sub { color: var(--text-muted); margin-bottom: 36px; }
+
+    .swiper { width: 100%; padding-bottom: 48px !important; }
+    .swiper-slide {
+      width: 220px !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .phone-frame {
+      width: 220px;
+      background: #111;
+      border-radius: 32px;
+      border: 3px solid #333;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+      position: relative;
+      aspect-ratio: 9/19.5;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .phone-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .slide-caption {
+      margin-top: 14px;
+      text-align: center;
+      padding: 0 4px;
+    }
+    .slide-caption strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .slide-caption span {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .tag-ai     { background: rgba(0,200,150,0.15); color: #00C896; }
+    .tag-core   { background: rgba(99,179,237,0.15); color: #63B3ED; }
+    .tag-ph     { background: rgba(236,201,75,0.15); color: #ECC94B; }
+    .tag-tools  { background: rgba(159,122,234,0.15); color: #9F7AEA; }
+    .tag-gamify { background: rgba(245,101,101,0.15); color: #F56565; }
+
+    .swiper-pagination-bullet { background: var(--text-muted) !important; opacity: 0.5; }
+    .swiper-pagination-bullet-active { background: var(--primary) !important; opacity: 1; }
+    .swiper-button-next, .swiper-button-prev { color: var(--primary) !important; }
+    .swiper-button-next::after, .swiper-button-prev::after { font-size: 18px !important; }
+
+    /* screenshot section tabs */
+    .ss-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+    .ss-tab {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      transition: all .2s;
+      user-select: none;
+    }
+    .ss-tab.active, .ss-tab:hover {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+    }
+
     @media (max-width: 600px) {
       .nav-links { display: none; }
       .about-section { grid-template-columns: 1fr; }
       .hero { padding: 60px 20px 40px; }
       .ai-section, .download-section { margin: 0 16px 40px; }
+      .swiper-slide { width: 180px !important; }
+      .phone-frame { width: 180px; }
     }
   </style>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
 
@@ -125,6 +228,7 @@
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#ai">AI</a>
+    <a href="#screenshots">Screenshots</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
     <a href="privacy.html">Privacy</a>
@@ -215,6 +319,9 @@
       <div class="feature-title">Sort, Group & Filter</div>
       <div class="feature-desc">Sort transactions by date, logged date, amount, name, or source. Group by category (with subtotals), date, or source. Collapsible group headers. Search with relevance ranking.</div>
     </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <div class="feature-title">Recurring Transactions</div>
       <div class="feature-desc">Auto-detect subscriptions (Netflix, Spotify, GCash) and recurring bills. One-tap to log all due bills. Semester interval for students.</div>
     </div>
     <div class="feature-card">
@@ -271,6 +378,295 @@
     </div>
   </div>
   <p style="margin-top:18px;font-size:13px;">8-provider fallback chain: <strong>Gemini 3.5 Flash-Lite</strong> → Flash → GPT-OSS 120B → Qwen3.6 → Qwen3.8 → Compound → Compound Mini → Cerebras — always finds a working model.</p>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="screenshots-section" id="screenshots">
+  <div class="section-title">See it in action</div>
+  <div class="section-sub">Real screenshots from the app — no mockups, no marketing fluff.</div>
+
+  <div class="ss-tabs">
+    <div class="ss-tab active" onclick="filterSlides('all', this)">All</div>
+    <div class="ss-tab" onclick="filterSlides('ai', this)">🤖 AI & Chat</div>
+    <div class="ss-tab" onclick="filterSlides('core', this)">🏠 Home & Analytics</div>
+    <div class="ss-tab" onclick="filterSlides('ph', this)">🇵🇭 Filipino Features</div>
+    <div class="ss-tab" onclick="filterSlides('tools', this)">🛠️ Tools</div>
+    <div class="ss-tab" onclick="filterSlides('gamify', this)">🏅 Gamification</div>
+  </div>
+
+  <div class="swiper screenshotsSwiper">
+    <div class="swiper-wrapper" id="screenshotsWrapper">
+
+      <!-- 1. Splash Screen -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/9b456c96-6f95-4b08-88ec-74085695f620.jpg" alt="SmartSpend splash screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Core</span>
+          <strong>Welcome Screen</strong>
+          <span>Clean splash with the SmartSpend brand and tagline — "Your AI Financial Assistant."</span>
+        </div>
+      </div>
+
+      <!-- 2. Login Screen -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/cb4a010b-adfc-4618-9d65-166d413ce9a1.jpg" alt="Login screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Core</span>
+          <strong>Login / Sign Up</strong>
+          <span>Email, Google sign-in, or tap "Continue Without Account" — start tracking in seconds, no account needed.</span>
+        </div>
+      </div>
+
+      <!-- 3. Home Screen top -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/60d2d050-b090-417d-bea2-1d71fa2df2dd.jpg" alt="Home screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Core</span>
+          <strong>Home Dashboard</strong>
+          <span>Monthly spending ₱1,234, My Wallets (Cash/GCash/BDO ₱6,110), upcoming debts and payment reminders — all at a glance.</span>
+        </div>
+      </div>
+
+      <!-- 4. Home screen — FHS + challenges -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/addc7634-25fd-44e4-9819-c70a07359641.jpg" alt="Financial Health Score and challenges" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Core</span>
+          <strong>Financial Health Score</strong>
+          <span>FHS 94/100 Excellent, Cash Flow overview (₱6,600 income, ₱1,234 spent), Weekly Challenge progress 6/7 days.</span>
+        </div>
+      </div>
+
+      <!-- 5. Home lower — Quick Access + Goals Timeline -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/ed07a92b-11ea-4f2a-8773-bd3b0d044aba.jpg" alt="Quick Access grid and Goals Timeline" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Core</span>
+          <strong>Quick Access Hub</strong>
+          <span>9-icon grid: Analytics, Bill Calendar, Goals, Debts, Wallets, Budgets, Import, Recurring, Achievements — plus live Goals Timeline donuts.</span>
+        </div>
+      </div>
+
+      <!-- 6. Peso AI welcome -->
+      <div class="swiper-slide" data-tag="ai">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/b4fd81d1-b0c0-4ab1-bde4-63c3058d4562.jpg" alt="Peso AI assistant welcome screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ai">AI</span>
+          <strong>Meet Peso 🤖</strong>
+          <span>"Magandang umaga! Ako si Peso — your money buddy!" Greeted in Filipino with smart suggestion chips and GCash clipboard detection.</span>
+        </div>
+      </div>
+
+      <!-- 7. AI multi-log result -->
+      <div class="swiper-slide" data-tag="ai">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/b88c141c-7371-4716-bd92-e04164021fa7.jpg" alt="AI multi-logging 3 expenses at once" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ai">AI</span>
+          <strong>Log Multiple Expenses at Once</strong>
+          <span>One message: "add 100 for gas, 100 for snack, 100 for beer" → ✅ 3 recorded instantly. Wallet deducted automatically.</span>
+        </div>
+      </div>
+
+      <!-- 8. AI Insights on Home -->
+      <div class="swiper-slide" data-tag="ai">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/ade0bc2c-bbf8-41a5-b430-701b567ef423.jpg" alt="AI Insights on Home screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ai">AI</span>
+          <strong>AI Insights on Home</strong>
+          <span>Peso surfaces personalized insights: "Food makes up a big chunk… Transportation is steady… Jollibee, Mang Inasal, canteen." Real data, real advice.</span>
+        </div>
+      </div>
+
+      <!-- 9. AI Financial Advice in Analytics -->
+      <div class="swiper-slide" data-tag="ai">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/d4c4c411-ba37-4e58-ac0c-f87e6ea160dd.jpg" alt="AI Financial Advice in Analytics" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ai">AI</span>
+          <strong>AI Financial Advice</strong>
+          <span>Actionable tips based on your actual data: 40% savings rate goal, pack lunch twice a week, 48-hour cooling-off for impulse buys.</span>
+        </div>
+      </div>
+
+      <!-- 10. Batch Screenshot Import — grid view -->
+      <div class="swiper-slide" data-tag="tools">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/3ac80354-bac0-4d1a-9f77-8f678c51536a.jpg" alt="Batch screenshot import grid" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-tools">Tools</span>
+          <strong>Batch Screenshot Import</strong>
+          <span>Select 10 Shopee/GCash/Steam screenshots → 12 expenses extracted automatically at ₱19,587 total. Tap "Import 12 Items" — done.</span>
+        </div>
+      </div>
+
+      <!-- 11. Batch Screenshot Import — extracted list -->
+      <div class="swiper-slide" data-tag="tools">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/56e414a0-4ba9-4af6-a2a4-8a839162526c.jpg" alt="Batch import extracted items list" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-tools">Tools</span>
+          <strong>Smart Item Extraction</strong>
+          <span>Every item from your Shopee orders and receipts listed with name, category, amount, merchant, and date — all auto-filled.</span>
+        </div>
+      </div>
+
+      <!-- 12. Analytics — Spending by Category donut -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/3bcda1fe-9bea-4134-9c91-37e815f21589.jpg" alt="Analytics spending by category pie chart" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Analytics</span>
+          <strong>Spending by Category</strong>
+          <span>Color-coded donut chart showing all spending: Food 33%, Bills 25%, School 22% and more — with peso amounts per category.</span>
+        </div>
+      </div>
+
+      <!-- 13. Savings Goals -->
+      <div class="swiper-slide" data-tag="tools">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/34016713-5441-449f-8dde-f4e4f3bb38fd.jpg" alt="Savings Goals screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-tools">Tools</span>
+          <strong>Savings Goals</strong>
+          <span>Track multiple goals with deadlines: New Laptop ₱12k/₱35k, Emergency Fund ₱3.5k/₱10k, Graduation Trip to Baguio. Monthly target calculated automatically.</span>
+        </div>
+      </div>
+
+      <!-- 14. Achievements -->
+      <div class="swiper-slide" data-tag="gamify">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/f27ab11a-d3c1-4fd7-a872-df013192d1e4.jpg" alt="Achievements badges screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-gamify">Gamification</span>
+          <strong>Achievements & Badges</strong>
+          <span>13/25 badges earned: First Step, App Explorer, 3-Day Streak, Week Warrior, Month Master, Saver, Goal Getter, Budget Boss and more.</span>
+        </div>
+      </div>
+
+      <!-- 15. Home — gamification section (Quick Log + streak + mood + Daily Quests) -->
+      <div class="swiper-slide" data-tag="gamify">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/cb5674e6-1a1d-45e2-ad36-35140666b961.jpg" alt="Home gamification section with streak and daily quests" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-gamify">Gamification</span>
+          <strong>Daily Quests & Streaks</strong>
+          <span>Quick Log chips, 🔥 31-day streak badge, mood check-in, Daily Quests 4/4 complete, and a Weekly Challenge tracker — all on the home screen.</span>
+        </div>
+      </div>
+
+      <!-- 16. Debts — I Owe tab (Filipino context: capstone materials, group snacks) -->
+      <div class="swiper-slide" data-tag="ph">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/dd8cbe7e-46c5-4e0c-b2c0-161e3974a569.jpg" alt="Debts I Owe screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ph">🇵🇭 Filipino</span>
+          <strong>Debts & Lending — I Owe</strong>
+          <span>Track what you owe classmates and friends: "Capstone materials 3D printing — Kuya Mark" ₱1,000, "Group snacks — Djaunathan" ₱350.</span>
+        </div>
+      </div>
+
+      <!-- 17. Installment Plans — HomeCredit, ShopeePay -->
+      <div class="swiper-slide" data-tag="ph">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/119c30b1-6755-4454-af93-b9d95db7e73a.jpg" alt="Installment plans screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ph">🇵🇭 Filipino</span>
+          <strong>Installment Plans</strong>
+          <span>Track HomeCredit (Poco F8 Ultra, ₱4,104/mo, 3/18 months paid) and ShopeePay Later (Mechanical Keyboard, ₱560/mo) with due date countdown.</span>
+        </div>
+      </div>
+
+      <!-- 18. Insurance & Contributions — SSS, PhilHealth, Pag-IBIG -->
+      <div class="swiper-slide" data-tag="ph">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/b88af03a-44a9-4a08-b3fb-74670d0f1633.jpg" alt="Insurance and government contributions" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ph">🇵🇭 Filipino</span>
+          <strong>Insurance & Gov't Contributions</strong>
+          <span>Track Pag-IBIG MP2, PhilHealth, SSS, and insurance premiums with due dates. ₱2,517/month total premiums — always know what's coming up.</span>
+        </div>
+      </div>
+
+      <!-- 19. PH Banks — E-Wallets (GCash, Maya, GrabPay, ShopeePay) -->
+      <div class="swiper-slide" data-tag="ph">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/93402e3b-e526-4f97-87fd-222171de3478.jpg" alt="PH E-Wallets reference screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ph">🇵🇭 Filipino</span>
+          <strong>PH Banks & E-Wallets Guide</strong>
+          <span>Built-in reference for GCash, Maya, GrabPay, ShopeePay, Coins.ph — with limits, cash-in methods, and features. No need to Google it.</span>
+        </div>
+      </div>
+
+      <!-- 20. Paluwagan Tracker -->
+      <div class="swiper-slide" data-tag="ph">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/9b985886-8ee5-4489-ad76-61d803db3ec7.jpg" alt="Paluwagan Tracker" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-ph">🇵🇭 Filipino</span>
+          <strong>Paluwagan Tracker</strong>
+          <span>Track your rotating savings group — group name, contribution per round, members, and current round. A uniquely Filipino financial tradition, now digitized.</span>
+        </div>
+      </div>
+
+      <!-- 21. System Notifications panel -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/de27de2b-cc11-4361-9b83-15f7db10c81d.jpg" alt="SmartSpend push notifications panel" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Alerts</span>
+          <strong>Proactive Notifications</strong>
+          <span>Gaming at 50%, Shopping at 70%, Daily limit exceeded, FHS Level Up to 90/100 — SmartSpend watches your money so you don't have to.</span>
+        </div>
+      </div>
+
+      <!-- 22. Profile — Demo User with FHS certificate -->
+      <div class="swiper-slide" data-tag="core">
+        <div class="phone-frame">
+          <img src="docs/tools/image_converter/Kiro_Ready/a0a445c8-1d10-44cb-8739-89f1697c39c2.jpg" alt="Profile screen" loading="lazy" />
+        </div>
+        <div class="slide-caption">
+          <span class="slide-tag tag-core">Profile</span>
+          <strong>Your Financial Profile</strong>
+          <span>47 expenses, ₱49,074 total tracked, FHS 94/100, Wallet ₱6,110, Daily Allowance ₱6,600, Net Worth ₱21,760. All in one place.</span>
+        </div>
+      </div>
+
+    </div><!-- /swiper-wrapper -->
+
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
 </section>
 
 <!-- DOWNLOAD -->
@@ -377,5 +773,41 @@
   <p style="margin-top:6px;">SmartSpend is a capstone research project. Not affiliated with any financial institution.</p>
 </footer>
 
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper('.screenshotsSwiper', {
+    slidesPerView: 'auto',
+    spaceBetween: 20,
+    centeredSlides: false,
+    grabCursor: true,
+    loop: false,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+    breakpoints: {
+      320:  { spaceBetween: 12 },
+      640:  { spaceBetween: 16 },
+      1024: { spaceBetween: 20 }
+    }
+  });
+
+  function filterSlides(tag, el) {
+    // Update active tab
+    document.querySelectorAll('.ss-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+
+    // Show/hide slides
+    document.querySelectorAll('.swiper-slide').forEach(slide => {
+      if (tag === 'all' || slide.dataset.tag === tag) {
+        slide.style.display = '';
+      } else {
+        slide.style.display = 'none';
+      }
+    });
+
+    swiper.update();
+    swiper.slideTo(0);
+  }
+</script>
 </body>
 </html>
