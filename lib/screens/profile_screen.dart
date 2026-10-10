@@ -1070,96 +1070,92 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _logout() async {
-    Future<void> _logout() async {
-      final isLocal = await AuthService.isLocalMode();
-      // Warn user and give them a chance to cancel
-      final confirm = await showDialog<bool>(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: Text(isLocal ? "Leave Local Mode?" : "Log Out"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isLocal) ...[
-                const Text(
-                  "Your data will remain on this device.",
-                  style: TextStyle(fontSize: 13),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  "If you sign in with an account, your local data will be replaced with your account data. Back up first if you want to keep it.",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ] else ...[
-                const Text(
-                  "Your data will be saved to the cloud before logging out.",
-                  style: TextStyle(fontSize: 13),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Local data will be cleared so the next account starts clean.",
-                  style: TextStyle(fontSize: 13),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Your data will be restored from the cloud when you log back in.",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ],
+    final isLocal = await AuthService.isLocalMode();
+    // Warn user and give them a chance to cancel
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(isLocal ? "Leave Local Mode?" : "Log Out"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (isLocal) ...[
+              const Text(
+                "Your data will remain on this device.",
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "If you sign in with an account, your local data will be replaced with your account data. Back up first if you want to keep it.",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ] else ...[
+              const Text(
+                "Your data will be saved to the cloud before logging out.",
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Local data will be cleared so the next account starts clean.",
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Your data will be restored from the cloud when you log back in.",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
             ],
-          ),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text("Cancel")),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red, foregroundColor: Colors.white),
-              child: Text(isLocal ? "Go to Login" : "Log Out"),
-            ),
           ],
         ),
-      );
-      if (confirm != true || !mounted) return;
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Cancel")),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, foregroundColor: Colors.white),
+            child: Text(isLocal ? "Go to Login" : "Log Out"),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true || !mounted) return;
 
-      if (!isLocal) {
-        // Firebase user — push data to cloud first
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Saving your data to cloud..."),
-              behavior: SnackBarBehavior.floating,
-              duration: Duration(seconds: 30),
-            ),
-          );
-        }
-        try {
-          await DBService.pushAllToCloud();
-        } catch (_) {}
-      }
-
-      // Clear local DB
-      await DBService.clearLocalData();
-
-      // Clear AI context and history
-      AIChatService.clearHistory();
-      UndoService.clear();
-
-      // Clear mode flags and sign out
-      await AuthService
-          .migrateLocalToFirebase(); // clears local_mode + was_demo_mode
-      if (!isLocal)
-        await AuthService.logout(); // Firebase sign-out only for Firebase users
-
+    if (!isLocal) {
+      // Firebase user — push data to cloud first
       if (mounted) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
-            (_) => false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Saving your data to cloud..."),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 30),
+          ),
+        );
       }
+      try {
+        await DBService.pushAllToCloud();
+      } catch (_) {}
+    }
+
+    // Clear local DB
+    await DBService.clearLocalData();
+
+    // Clear AI context and history
+    AIChatService.clearHistory();
+    UndoService.clear();
+
+    // Clear mode flags and sign out
+    await AuthService
+        .migrateLocalToFirebase(); // clears local_mode + was_demo_mode
+    if (!isLocal)
+      await AuthService.logout(); // Firebase sign-out only for Firebase users
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => const LoginScreen()), (_) => false);
     }
   }
 
