@@ -1015,7 +1015,7 @@
                 <div class="demo-cat-pill">➕ Other</div>
               </div>
               <input class="demo-amount-input" id="demo-amount-input" type="number" min="0" step="0.01" placeholder="₱ 0.00" />
-              <input class="demo-desc-input" type="text" placeholder="Description (optional)" />
+              <input class="demo-desc-input" id="demo-desc-input" type="text" placeholder="Description (optional)" />
               <select class="demo-wallet-select" id="demo-wallet-select">
                 <option>💵 Cash on Hand ₱6,610</option>
                 <option>📱 GCash ₱4,573</option>
@@ -1385,14 +1385,20 @@ var demoReplies = [
 var demoFallback = "I'm running in demo mode, so I can only answer pre-scripted questions for now. Download the real app to chat with the full AI Peso! 📲";
 
 function demoGetReply(msg) {
-  var lower = msg.toLowerCase();
+  var lower = msg.toLowerCase().replace(/[^a-z0-9\u20b1\s]/g,' ');
+  var tokens = lower.split(/\s+/);
+  var best = null, bestScore = 0;
   for (var i = 0; i < demoReplies.length; i++) {
     var r = demoReplies[i];
+    var score = 0;
     for (var j = 0; j < r.keys.length; j++) {
-      if (lower.indexOf(r.keys[j]) !== -1) return r.text;
+      var k = r.keys[j].toLowerCase();
+      if (tokens.indexOf(k) !== -1) score += 2;
+      else if (lower.indexOf(k) !== -1) score += 1;
     }
+    if (score > bestScore) { bestScore = score; best = r.text; }
   }
-  return demoFallback;
+  return bestScore > 0 ? best : demoFallback;
 }
 
 function demoTypewriter(el, text, speed) {
@@ -1499,11 +1505,13 @@ if (demoLogBtn) {
     var catName = catEl ? catEl.textContent.trim() : 'Other';
     var walletEl = document.getElementById('demo-wallet-select');
     var wallet = walletEl ? walletEl.options[walletEl.selectedIndex].text : 'Cash';
+    var descEl = document.getElementById('demo-desc-input');
+    var desc = descEl ? descEl.value.trim() : '';
     var successEl = document.getElementById('demo-log-success');
     var formEls = document.getElementById('demo-log-form');
     if (formEls) formEls.style.display = 'none';
     if (successEl) {
-      successEl.textContent = '✅ Expense logged! ' + catName + ' ₱' + amt.toFixed(2) + ' • ' + wallet;
+      successEl.textContent = '✅ Expense logged! ' + (desc ? desc + ' · ' : '') + catName + ' ₱' + amt.toFixed(2) + ' • ' + wallet;
       successEl.classList.add('show');
     }
     /* Prepend to home transactions */
@@ -1518,6 +1526,7 @@ if (demoLogBtn) {
       if (successEl) successEl.classList.remove('show');
       if (formEls) formEls.style.display = '';
       if (amtEl) amtEl.value = '';
+      if (descEl) descEl.value = '';
       var catPills = document.querySelectorAll('.demo-cat-pill');
       catPills.forEach(function(p){p.classList.remove('selected');});
       if (catPills[0]) catPills[0].classList.add('selected');
