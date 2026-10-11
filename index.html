@@ -166,84 +166,7 @@
     .lb-prev:hover, .lb-next:hover { background: rgba(0,200,150,0.4); }
     .lb-prev { left: 16px; }
     .lb-next { right: 16px; }
-    .lb-counter { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.6); font-size: 13px; }    #demo { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; }
-    #demo .section-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
-    #demo .section-sub { color: var(--text-muted); margin-bottom: 32px; }
-    .demo-wrapper { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-    .demo-badge { background: rgba(0,200,150,0.15); border: 1px solid rgba(0,200,150,0.4); color: var(--primary); font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px; letter-spacing: 0.5px; }
-    .demo-phone { width: 280px; background: #0f1117; border-radius: 32px; border: 3px solid #333; overflow: hidden; aspect-ratio: 9/19.5; position: relative; box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05); display: flex; flex-direction: column; }
-    .demo-phone::before { content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 80px; height: 8px; background: #1a1d27; border-radius: 4px; z-index: 10; }
-    .demo-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; padding-top: 28px; }
-    .demo-screen { display: none; flex-direction: column; flex: 1; overflow-y: auto; padding: 12px; font-size: 12px; color: #f0f0f4; }
-    .demo-screen.active { display: flex; }
-    .demo-screen::-webkit-scrollbar { width: 3px; }
-    .demo-screen::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
-    .demo-tabbar { display: flex; background: #1a1d27; border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
-    .demo-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 2px; background: none; border: none; color: #9099b2; font-size: 9px; cursor: pointer; gap: 2px; transition: color 0.2s; }
-    .demo-tab span { font-size: 7px; line-height: 1; }
-    .demo-tab.active, .demo-tab:hover { color: #00C896; }
-    .demo-greeting { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #f0f0f4; }
-    .demo-fhs-widget { background: #1a1d27; border-radius: 12px; padding: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-    .demo-fhs-circle { width: 50px; height: 50px; flex-shrink: 0; }
-    .demo-fhs-info { font-size: 10px; color: #9099b2; }
-    .demo-fhs-info strong { font-size: 13px; color: #00C896; display: block; }
-    .demo-section-label { font-size: 10px; font-weight: 700; color: #9099b2; text-transform: uppercase; letter-spacing: 0.5px; margin: 8px 0 4px; }
-    .demo-wallet-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
-    .demo-wallet-row:last-child { border-bottom: none; }
-    .demo-wallet-name { color: #9099b2; }
-    .demo-wallet-bal { color: #f0f0f4; font-weight: 600; }
-    .demo-txn { display: flex; align-items: center; gap: 6px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .demo-txn:last-child { border-bottom: none; }
-    .demo-txn-icon { font-size: 14px; flex-shrink: 0; }
-    .demo-txn-info { flex: 1; }
-    .demo-txn-name { font-size: 10px; font-weight: 600; color: #f0f0f4; }
-    .demo-txn-cat { font-size: 9px; color: #9099b2; }
-    .demo-txn-amt { font-size: 11px; font-weight: 700; color: #F56565; flex-shrink: 0; }
-    .demo-peso-header { display: flex; flex-direction: column; align-items: center; padding: 8px 0 12px; flex-shrink: 0; }
-    .demo-peso-avatar { width: 40px; height: 40px; background: rgba(0,200,150,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 4px; border: 2px solid #00C896; }
-    .demo-peso-name { font-size: 12px; font-weight: 700; color: #f0f0f4; text-align: center; }
-    .demo-peso-sub { font-size: 9px; color: #9099b2; }
-    .demo-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; flex-shrink: 0; }
-    .demo-chip { background: rgba(0,200,150,0.12); border: 1px solid rgba(0,200,150,0.3); color: #00C896; font-size: 9px; padding: 3px 8px; border-radius: 10px; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
-    .demo-chip:hover { background: rgba(0,200,150,0.25); }
-    .demo-chat-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; min-height: 0; padding-bottom: 4px; }
-    .demo-chat-area::-webkit-scrollbar { width: 2px; }
-    .demo-chat-area::-webkit-scrollbar-thumb { background: #333; }
-    .demo-msg { max-width: 85%; border-radius: 10px; padding: 6px 8px; font-size: 10px; line-height: 1.4; }
-    .demo-msg.user { background: rgba(0,200,150,0.2); color: #f0f0f4; align-self: flex-end; }
-    .demo-msg.peso-msg { background: #1a1d27; color: #f0f0f4; align-self: flex-start; }
-    .demo-input-row { display: flex; gap: 4px; flex-shrink: 0; padding-top: 4px; }
-    .demo-input { flex: 1; background: #1a1d27; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 5px 8px; font-size: 10px; color: #f0f0f4; outline: none; }
-    .demo-input::placeholder { color: #9099b2; }
-    .demo-send { background: #00C896; color: #000; border: none; border-radius: 8px; padding: 5px 8px; font-size: 10px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
-    .demo-send:hover { background: #009e78; }
-    .demo-chart-container { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .demo-legend { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-    .demo-legend-row { display: flex; align-items: center; gap: 6px; font-size: 10px; }
-    .demo-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .demo-legend-label { flex: 1; color: #9099b2; }
-    .demo-legend-pct { color: #f0f0f4; font-weight: 600; }
-    .demo-goal-card { background: #1a1d27; border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; }
-    .demo-goal-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-    .demo-goal-emoji { font-size: 14px; }
-    .demo-goal-info { flex: 1; }
-    .demo-goal-name { font-size: 10px; font-weight: 700; color: #f0f0f4; }
-    .demo-goal-amounts { font-size: 9px; color: #9099b2; }
-    .demo-goal-pct { font-size: 10px; font-weight: 700; color: #00C896; }
-    .demo-goal-bar-bg { background: rgba(255,255,255,0.08); border-radius: 4px; height: 4px; margin-top: 4px; overflow: hidden; }
-    .demo-goal-bar-fill { height: 100%; background: #00C896; border-radius: 4px; }
-    .demo-log-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #f0f0f4; }
-    .demo-cat-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
-    .demo-cat-pill { background: #1a1d27; border: 1px solid rgba(255,255,255,0.1); color: #9099b2; font-size: 9px; padding: 4px 8px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
-    .demo-cat-pill.selected { background: rgba(0,200,150,0.2); border-color: #00C896; color: #00C896; }
-    .demo-field { background: #1a1d27; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px 8px; font-size: 10px; color: #f0f0f4; width: 100%; margin-bottom: 8px; outline: none; }
-    .demo-field::placeholder { color: #9099b2; }
-    .demo-field.shake { animation: shakeField 0.4s ease; border-color: #F56565 !important; }
-    @keyframes shakeField { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
-    .demo-log-btn { background: #00C896; color: #000; border: none; border-radius: 8px; padding: 8px; font-size: 11px; font-weight: 700; cursor: pointer; width: 100%; }
-    .demo-log-btn:hover { background: #009e78; }
-    .demo-toast { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); background: #00C896; color: #000; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 20px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 20; }
-    .demo-toast.show { opacity: 1; }
+    .lb-counter { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.6); font-size: 13px; }
     .download-section { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; max-width: 900px; margin: 0 auto 60px; padding: 40px 32px; transition: background-color 0.3s ease, border-color 0.3s ease; }
     .download-section h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
     .download-section p { color: var(--text-muted); margin-bottom: 28px; }
@@ -291,7 +214,6 @@
     <a href="#features">Features</a>
     <a href="#ai">AI</a>
     <a href="#screenshots">Screenshots</a>
-    <a href="#demo">Demo</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
     <a href="privacy.html">Privacy</a>
@@ -307,7 +229,6 @@
     <a href="#features" onclick="closeMobileMenu()">Features</a>
     <a href="#ai" onclick="closeMobileMenu()">AI</a>
     <a href="#screenshots" onclick="closeMobileMenu()">Screenshots</a>
-    <a href="#demo" onclick="closeMobileMenu()">Demo</a>
     <a href="#download" onclick="closeMobileMenu()">Download</a>
     <a href="#about" onclick="closeMobileMenu()">About</a>
     <a href="privacy.html" onclick="closeMobileMenu()">Privacy</a>
@@ -460,115 +381,6 @@
   <button class="lb-next" id="lbNext" aria-label="Next screenshot">&#x203a;</button>
   <div class="lb-counter" id="lbCounter"></div>
 </div>
-<section id="demo">
-  <div class="section-title">&#x1F4F1; Try the App &#x2014; Interactive Demo</div>
-  <div class="section-sub">A toy prototype of SmartSpend. Not connected to real data.</div>
-  <div class="demo-wrapper">
-    <div class="demo-badge">&#x2728; DEMO</div>
-    <div class="demo-phone">
-      <div class="demo-container" id="demoContainer">
-        <div class="demo-screen active" id="demo-home">
-          <div class="demo-greeting">Good Evening &#x1F44B;</div>
-          <div class="demo-fhs-widget">
-            <svg class="demo-fhs-circle" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="8"/>
-              <circle cx="50" cy="50" r="42" fill="none" stroke="#00C896" stroke-width="8" stroke-dasharray="263.9" stroke-dashoffset="15.8" stroke-linecap="round" transform="rotate(-90 50 50)"/>
-              <text x="50" y="47" text-anchor="middle" fill="#f0f0f4" font-size="14" font-weight="700">94</text>
-              <text x="50" y="58" text-anchor="middle" fill="#9099b2" font-size="7">/100</text>
-            </svg>
-            <div class="demo-fhs-info"><strong>FHS Score</strong>Excellent &#x1F31F;<br/>Consistent Saver</div>
-          </div>
-          <div class="demo-section-label">My Wallets</div>
-          <div class="demo-wallet-row"><span class="demo-wallet-name">&#x1F4B5; Cash</span><span class="demo-wallet-bal">&#x20B1;547</span></div>
-          <div class="demo-wallet-row"><span class="demo-wallet-name">&#x1F4F1; GCash</span><span class="demo-wallet-bal">&#x20B1;1,313</span></div>
-          <div class="demo-wallet-row"><span class="demo-wallet-name">&#x1F3E6; BDO</span><span class="demo-wallet-bal">&#x20B1;4,250</span></div>
-          <div class="demo-section-label">Recent Transactions</div>
-          <div class="demo-txn"><span class="demo-txn-icon">&#x1F37D;&#xFE0F;</span><div class="demo-txn-info"><div class="demo-txn-name">Canteen Lunch</div><div class="demo-txn-cat">Food</div></div><span class="demo-txn-amt">-&#x20B1;65</span></div>
-          <div class="demo-txn"><span class="demo-txn-icon">&#x1F68C;</span><div class="demo-txn-info"><div class="demo-txn-name">Jeepney Fare</div><div class="demo-txn-cat">Transport</div></div><span class="demo-txn-amt">-&#x20B1;13</span></div>
-          <div class="demo-txn"><span class="demo-txn-icon">&#x1F357;</span><div class="demo-txn-info"><div class="demo-txn-name">Jollibee</div><div class="demo-txn-cat">Food</div></div><span class="demo-txn-amt">-&#x20B1;149</span></div>
-        </div>
-        <div class="demo-screen" id="demo-peso" style="padding:8px;">
-          <div class="demo-peso-header">
-            <div class="demo-peso-avatar">&#x1F916;</div>
-            <div class="demo-peso-name">Magandang umaga! Ako si Peso &#x1F49A;</div>
-            <div class="demo-peso-sub">Your AI money buddy</div>
-          </div>
-          <div class="demo-chips" id="demoChips">
-            <button class="demo-chip" onclick="sendDemoChip('How am I doing?')">How am I doing?</button>
-            <button class="demo-chip" onclick="sendDemoChip('Log Jollibee')">Log Jollibee</button>
-            <button class="demo-chip" onclick="sendDemoChip('Laptop goal?')">Laptop goal?</button>
-          </div>
-          <div class="demo-chat-area" id="demoChatArea">
-            <div class="demo-msg peso-msg">Kumusta! I'm Peso, your AI money buddy. Ask me anything about your finances! &#x1F49A;</div>
-          </div>
-          <div class="demo-input-row">
-            <input class="demo-input" id="demoInput" type="text" placeholder="Ask Peso..." onkeydown="if(event.key==='Enter')sendDemoMsg()" />
-            <button class="demo-send" onclick="sendDemoMsg()">Send</button>
-          </div>
-        </div>
-        <div class="demo-screen" id="demo-analytics">
-          <div style="font-size:11px;color:#f0f0f4;font-weight:700;margin:4px 0 10px;">Spending Breakdown</div>
-          <div class="demo-chart-container">
-            <svg viewBox="0 0 128 128" width="120" height="120">
-              <circle cx="64" cy="64" r="54" fill="none" stroke="#F56565" stroke-width="14" stroke-dasharray="111.97 339.3" stroke-dashoffset="0" transform="rotate(-90 64 64)"/>
-              <circle cx="64" cy="64" r="54" fill="none" stroke="#63B3ED" stroke-width="14" stroke-dasharray="84.82 339.3" stroke-dashoffset="-111.97" transform="rotate(-90 64 64)"/>
-              <circle cx="64" cy="64" r="54" fill="none" stroke="#ECC94B" stroke-width="14" stroke-dasharray="74.65 339.3" stroke-dashoffset="-196.79" transform="rotate(-90 64 64)"/>
-              <circle cx="64" cy="64" r="54" fill="none" stroke="#9F7AEA" stroke-width="14" stroke-dasharray="40.71 339.3" stroke-dashoffset="-271.44" transform="rotate(-90 64 64)"/>
-              <circle cx="64" cy="64" r="54" fill="none" stroke="#00C896" stroke-width="14" stroke-dasharray="27.14 339.3" stroke-dashoffset="-312.15" transform="rotate(-90 64 64)"/>
-              <text x="64" y="60" text-anchor="middle" fill="#f0f0f4" font-size="11" font-weight="700">This</text>
-              <text x="64" y="73" text-anchor="middle" fill="#f0f0f4" font-size="11" font-weight="700">Month</text>
-            </svg>
-            <div class="demo-legend">
-              <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#F56565"></div><span class="demo-legend-label">Food</span><span class="demo-legend-pct">33%</span></div>
-              <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#63B3ED"></div><span class="demo-legend-label">Bills</span><span class="demo-legend-pct">25%</span></div>
-              <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#ECC94B"></div><span class="demo-legend-label">School</span><span class="demo-legend-pct">22%</span></div>
-              <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#9F7AEA"></div><span class="demo-legend-label">Shopping</span><span class="demo-legend-pct">12%</span></div>
-              <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#00C896"></div><span class="demo-legend-label">Other</span><span class="demo-legend-pct">8%</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="demo-screen" id="demo-goals">
-          <div style="font-size:11px;color:#f0f0f4;font-weight:700;margin-bottom:10px;">My Goals</div>
-          <div class="demo-goal-card">
-            <div class="demo-goal-header"><span class="demo-goal-emoji">&#x1F4BB;</span><div class="demo-goal-info"><div class="demo-goal-name">New Laptop</div><div class="demo-goal-amounts">&#x20B1;12,000 / &#x20B1;35,000</div></div><span class="demo-goal-pct">34%</span></div>
-            <div class="demo-goal-bar-bg"><div class="demo-goal-bar-fill" style="width:34%"></div></div>
-          </div>
-          <div class="demo-goal-card">
-            <div class="demo-goal-header"><span class="demo-goal-emoji">&#x1F198;</span><div class="demo-goal-info"><div class="demo-goal-name">Emergency Fund</div><div class="demo-goal-amounts">&#x20B1;3,500 / &#x20B1;10,000</div></div><span class="demo-goal-pct">35%</span></div>
-            <div class="demo-goal-bar-bg"><div class="demo-goal-bar-fill" style="width:35%"></div></div>
-          </div>
-          <div class="demo-goal-card">
-            <div class="demo-goal-header"><span class="demo-goal-emoji">&#x2708;&#xFE0F;</span><div class="demo-goal-info"><div class="demo-goal-name">Graduation Trip</div><div class="demo-goal-amounts">&#x20B1;3,800 / &#x20B1;20,000</div></div><span class="demo-goal-pct">19%</span></div>
-            <div class="demo-goal-bar-bg"><div class="demo-goal-bar-fill" style="width:19%;background:#ECC94B"></div></div>
-          </div>
-        </div>
-        <div class="demo-screen" id="demo-log">
-          <div class="demo-log-title">Log Expense</div>
-          <div class="demo-cat-pills" id="demoCatPills">
-            <button class="demo-cat-pill" onclick="selectDemoCat(this,'Food')">Food</button>
-            <button class="demo-cat-pill" onclick="selectDemoCat(this,'Transport')">Transport</button>
-            <button class="demo-cat-pill" onclick="selectDemoCat(this,'Bills')">Bills</button>
-            <button class="demo-cat-pill" onclick="selectDemoCat(this,'Shopping')">Shopping</button>
-            <button class="demo-cat-pill" onclick="selectDemoCat(this,'School')">School</button>
-            <button class="demo-cat-pill" onclick="selectDemoCat(this,'Health')">Health</button>
-          </div>
-          <input class="demo-field" id="demoAmount" type="number" placeholder="&#x20B1; Amount" />
-          <input class="demo-field" id="demoDesc" type="text" placeholder="What was it for?" />
-          <button class="demo-log-btn" onclick="submitDemoLog()">Log it! &#x2705;</button>
-          <div class="demo-toast" id="demoToast">&#x2705; Expense logged!</div>
-        </div>
-        <div class="demo-tabbar">
-          <button class="demo-tab active" onclick="switchDemoTab('home',this)" aria-label="Home tab">&#x1F3E0;<span>Home</span></button>
-          <button class="demo-tab" onclick="switchDemoTab('peso',this)" aria-label="Peso AI tab">&#x1F916;<span>Peso</span></button>
-          <button class="demo-tab" onclick="switchDemoTab('analytics',this)" aria-label="Analytics tab">&#x1F4CA;<span>Analytics</span></button>
-          <button class="demo-tab" onclick="switchDemoTab('goals',this)" aria-label="Goals tab">&#x1F3AF;<span>Goals</span></button>
-          <button class="demo-tab" onclick="switchDemoTab('log',this)" aria-label="Log expense tab">&#x2795;<span>Log</span></button>
-        </div>
-      </div>
-    </div>
-    <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Interactive demo &#x2014; not connected to real data.</div>
-  </div>
-</section>
 <section class="download-section" id="download">
   <h2>&#x1F4E5; Download SmartSpend</h2>
   <p>Free to download and use. No account required for offline use. Android 5.0 (API 21) and above.</p>
@@ -775,84 +587,6 @@ document.querySelectorAll('.phone-frame').forEach(function(frame, i) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); }
   });
 });
-/* ===== DEMO ===== */
-var demoCat = '';
-function switchDemoTab(tab, btn) {
-  document.querySelectorAll('.demo-screen').forEach(function(s) { s.classList.remove('active'); });
-  document.querySelectorAll('.demo-tab').forEach(function(t) { t.classList.remove('active'); });
-  var screen = document.getElementById('demo-' + tab);
-  if (screen) screen.classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (tab === 'peso') {
-    setTimeout(function() {
-      var ca = document.getElementById('demoChatArea');
-      if (ca) ca.scrollTop = ca.scrollHeight;
-    }, 50);
-  }
-}
-
-function selectDemoCat(el, cat) {
-  demoCat = cat;
-  document.querySelectorAll('.demo-cat-pill').forEach(function(p) { p.classList.remove('selected'); });
-  el.classList.add('selected');
-}
-
-function submitDemoLog() {
-  var amtEl = document.getElementById('demoAmount');
-  var descEl = document.getElementById('demoDesc');
-  var valid = true;
-  if (!amtEl.value || parseFloat(amtEl.value) <= 0) {
-    amtEl.classList.add('shake');
-    setTimeout(function() { amtEl.classList.remove('shake'); }, 500);
-    valid = false;
-  }
-  if (!demoCat) {
-    document.querySelectorAll('.demo-cat-pill').forEach(function(p) { p.classList.add('shake'); });
-    setTimeout(function() { document.querySelectorAll('.demo-cat-pill').forEach(function(p) { p.classList.remove('shake'); }); }, 500);
-    valid = false;
-  }
-  if (!valid) return;
-  var toast = document.getElementById('demoToast');
-  toast.classList.add('show');
-  setTimeout(function() { toast.classList.remove('show'); amtEl.value = ''; descEl.value = ''; demoCat = ''; document.querySelectorAll('.demo-cat-pill').forEach(function(p) { p.classList.remove('selected'); }); }, 2000);
-}
-
-function sendDemoChip(text) {
-  var input = document.getElementById('demoInput');
-  if (input) { input.value = text; sendDemoMsg(); }
-}
-
-function sendDemoMsg() {
-  var input = document.getElementById('demoInput');
-  var chatArea = document.getElementById('demoChatArea');
-  if (!input || !chatArea) return;
-  var text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  var userMsg = document.createElement('div');
-  userMsg.className = 'demo-msg user';
-  userMsg.textContent = text;
-  chatArea.appendChild(userMsg);
-  var lower = text.toLowerCase();
-  var reply = '';
-  if (lower.indexOf('jollibee') >= 0 || lower.indexOf('food') >= 0 || lower.indexOf('kain') >= 0) {
-    reply = 'Logged \u20B1149 for Jollibee Chickenjoy under Food! \uD83C\uDF57 Wallet deducted from Cash.';
-  } else if (lower.indexOf('how') >= 0 || lower.indexOf('budget') >= 0 || lower.indexOf('doing') >= 0) {
-    reply = "You've spent \u20B11,234 this month \u2014 81% savings rate! You're on track. Safe to spend: \u20B11,737 until payday. \uD83D\uDC9A";
-  } else if (lower.indexOf('goal') >= 0 || lower.indexOf('laptop') >= 0) {
-    reply = 'Your New Laptop goal is 34% funded \u2014 \u20B112,000 of \u20B135,000. Save \u20B17,753/month to hit it by deadline! \uD83C\uDFAF';
-  } else {
-    reply = "I'm a demo \u2014 but the real Peso can answer that! Download the app to chat with the full AI. \uD83D\uDE0A";
-  }
-  setTimeout(function() {
-    var pesoMsg = document.createElement('div');
-    pesoMsg.className = 'demo-msg peso-msg';
-    pesoMsg.textContent = reply;
-    chatArea.appendChild(pesoMsg);
-    chatArea.scrollTop = chatArea.scrollHeight;
-  }, 400);
-  chatArea.scrollTop = chatArea.scrollHeight;
-}
 /* ===== AI EXAMPLE COPY ===== */
 document.querySelectorAll('.ai-example').forEach(function(ex) {
   var youSpan = ex.querySelector('.you');
