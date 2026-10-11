@@ -203,6 +203,436 @@
       .phone-frame { width: 180px; }
       .swiper-button-next, .swiper-button-prev { background: rgba(0,200,150,0.2); border-radius: 50%; width: 36px !important; height: 36px !important; display: flex !important; align-items: center; justify-content: center; }
     }
+
+    /* ===== DEMO LITE ===== */
+    .demo-wrapper { display:flex; justify-content:center; padding:16px 0; }
+    .demo-phone-wrap { display:flex; flex-direction:column; align-items:center; gap:12px; }
+    .demo-phone-frame {
+      width:280px !important;
+      height:560px !important;
+      border-radius:32px;
+      border:3px solid #333;
+      background:#0f1117;
+      overflow:hidden;
+      position:relative;
+      cursor:default;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+      display:flex;
+      flex-direction:column;
+    }
+    .demo-phone-frame::before {
+      content:'';
+      position:absolute;
+      top:10px; left:50%; transform:translateX(-50%);
+      width:80px; height:8px;
+      background:#222; border-radius:4px; z-index:10;
+      pointer-events:none;
+    }
+    .demo-screens {
+      flex:1;
+      overflow-y:auto;
+      overflow-x:hidden;
+      position:relative;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
+      background:#0f1117;
+      color:#f0f0f4;
+    }
+    .demo-screens::-webkit-scrollbar { width:0; }
+    .demo-screen {
+      display:none;
+      padding:40px 12px 12px;
+      min-height:100%;
+      background:#0f1117;
+      color:#f0f0f4;
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    }
+    .demo-screen.active { display:block; }
+    .demo-tab-bar {
+      display:flex;
+      background:#1a1d27;
+      border-top:1px solid rgba(255,255,255,0.08);
+      padding:4px 0;
+      flex-shrink:0;
+    }
+    .demo-tab {
+      flex:1;
+      background:none;
+      border:none;
+      color:#9099b2;
+      font-size:9px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:2px;
+      padding:6px 0;
+      cursor:pointer;
+      transition:color .2s;
+    }
+    .demo-tab span { font-size:8px; }
+    .demo-tab.active { color:#00C896; }
+    .demo-tab:hover { color:#00C896; }
+    .demo-disclaimer {
+      font-size:12px;
+      color:var(--text-muted);
+      text-align:center;
+      padding:4px 0;
+    }
+
+    /* ---- HOME screen ---- */
+    .demo-greeting { font-size:11px; color:#9099b2; margin-top:4px; }
+    .demo-username { font-size:15px; font-weight:700; color:#f0f0f4; }
+    .demo-fhs-badge {
+      background:rgba(0,200,150,0.1);
+      border:1px solid rgba(0,200,150,0.25);
+      border-radius:14px;
+      padding:10px 14px;
+      margin:10px 0;
+      text-align:center;
+      cursor:pointer;
+      position:relative;
+      transition:background .2s;
+    }
+    .demo-fhs-badge:hover { background:rgba(0,200,150,0.18); }
+    .demo-fhs-score { font-size:26px; font-weight:800; color:#00C896; }
+    .demo-fhs-label { font-size:10px; color:#9099b2; }
+    .demo-fhs-tooltip {
+      display:none;
+      position:absolute;
+      bottom:calc(100% + 6px);
+      left:50%;
+      transform:translateX(-50%);
+      background:#22263a;
+      border:1px solid rgba(0,200,150,0.3);
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:10px;
+      color:#f0f0f4;
+      white-space:nowrap;
+      z-index:20;
+      pointer-events:none;
+      line-height:1.6;
+    }
+    .demo-fhs-tooltip.show { display:block; }
+    .demo-wallets-title { font-size:11px; color:#9099b2; margin-bottom:4px; }
+    .demo-wallets-total { font-size:13px; font-weight:700; color:#f0f0f4; margin-bottom:6px; }
+    .demo-wallet-chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+    .demo-wallet-chip {
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      padding:4px 8px;
+      font-size:9px;
+      color:#f0f0f4;
+    }
+    .demo-sts {
+      background:rgba(0,200,150,0.1);
+      border-radius:10px;
+      padding:8px 10px;
+      margin-bottom:10px;
+    }
+    .demo-sts-amount { font-size:15px; font-weight:800; color:#00C896; }
+    .demo-sts-sub { font-size:9px; color:#9099b2; }
+    .demo-txn-title { font-size:11px; color:#9099b2; margin-bottom:6px; font-weight:600; }
+    .demo-txn-list { display:flex; flex-direction:column; gap:4px; }
+    .demo-txn-row {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#1a1d27;
+      border-radius:8px;
+      padding:7px 8px;
+      cursor:pointer;
+      transition:background .15s;
+      position:relative;
+    }
+    .demo-txn-row:hover { background:#22263a; }
+    .demo-txn-icon { font-size:16px; flex-shrink:0; }
+    .demo-txn-info { flex:1; min-width:0; }
+    .demo-txn-name { font-size:11px; font-weight:600; color:#f0f0f4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .demo-txn-meta { font-size:9px; color:#9099b2; }
+    .demo-txn-amt { font-size:11px; font-weight:700; color:#f0f0f4; flex-shrink:0; }
+    .demo-txn-want { background:rgba(245,101,101,0.15); color:#F56565; font-size:8px; padding:1px 5px; border-radius:4px; flex-shrink:0; }
+    .demo-txn-detail {
+      display:none;
+      position:absolute;
+      left:4px; right:4px;
+      bottom:calc(100% + 4px);
+      background:#22263a;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:8px;
+      padding:8px;
+      font-size:10px;
+      color:#f0f0f4;
+      z-index:30;
+      line-height:1.7;
+      pointer-events:none;
+    }
+    .demo-txn-detail.show { display:block; }
+
+    /* ---- PESO screen ---- */
+    .demo-peso-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:8px;
+    }
+    .demo-peso-title { font-size:14px; font-weight:700; color:#f0f0f4; }
+    .demo-peso-chip {
+      background:rgba(0,200,150,0.1);
+      border:1px solid rgba(0,200,150,0.3);
+      border-radius:20px;
+      padding:3px 8px;
+      font-size:9px;
+      color:#00C896;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+    .demo-peso-chip::before { content:''; width:6px; height:6px; background:#00C896; border-radius:50%; display:inline-block; }
+    .demo-peso-mascot {
+      text-align:center;
+      font-size:32px;
+      margin:4px 0 6px;
+    }
+    .demo-chat-area {
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-bottom:8px;
+      max-height:200px;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    .demo-chat-area::-webkit-scrollbar { width:0; }
+    .demo-bubble {
+      max-width:88%;
+      border-radius:12px;
+      padding:7px 10px;
+      font-size:11px;
+      line-height:1.5;
+      animation:demoBubbleIn .2s ease;
+    }
+    @keyframes demoBubbleIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    .demo-bubble-peso {
+      background:#1a1d27;
+      color:#f0f0f4;
+      align-self:flex-start;
+      border-bottom-left-radius:4px;
+    }
+    .demo-bubble-user {
+      background:rgba(0,200,150,0.15);
+      color:#f0f0f4;
+      align-self:flex-end;
+      border-bottom-right-radius:4px;
+      margin-left:auto;
+    }
+    .demo-typing {
+      display:none;
+      background:#1a1d27;
+      border-radius:12px;
+      border-bottom-left-radius:4px;
+      padding:8px 12px;
+      align-self:flex-start;
+    }
+    .demo-typing.show { display:block; }
+    .demo-typing-dots { display:inline-flex; gap:3px; }
+    .demo-typing-dots span {
+      width:5px; height:5px;
+      background:#9099b2;
+      border-radius:50%;
+      animation:demoDot 1.2s infinite;
+      display:inline-block;
+    }
+    .demo-typing-dots span:nth-child(2) { animation-delay:.2s; }
+    .demo-typing-dots span:nth-child(3) { animation-delay:.4s; }
+    @keyframes demoDot { 0%,80%,100%{transform:scale(0.6);opacity:.5} 40%{transform:scale(1);opacity:1} }
+    .demo-chips { display:flex; gap:5px; overflow-x:auto; padding-bottom:4px; margin-bottom:6px; -webkit-overflow-scrolling:touch; }
+    .demo-chips::-webkit-scrollbar { height:0; }
+    .demo-chip-btn {
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.1);
+      color:#9099b2;
+      border-radius:20px;
+      padding:5px 9px;
+      font-size:9px;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:background .15s,color .15s;
+      flex-shrink:0;
+    }
+    .demo-chip-btn:hover { background:rgba(0,200,150,0.15); color:#00C896; border-color:rgba(0,200,150,0.4); }
+    .demo-input-row { display:flex; gap:5px; }
+    .demo-input-row input {
+      flex:1;
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:20px;
+      padding:6px 10px;
+      font-size:10px;
+      color:#f0f0f4;
+      outline:none;
+    }
+    .demo-input-row input::placeholder { color:#9099b2; }
+    .demo-send-btn {
+      background:#00C896;
+      border:none;
+      border-radius:50%;
+      width:28px;
+      height:28px;
+      color:#000;
+      font-size:12px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:background .15s;
+      flex-shrink:0;
+    }
+    .demo-send-btn:hover { background:#009e78; }
+
+    /* ---- ANALYTICS screen ---- */
+    .demo-analytics-heading { font-size:14px; font-weight:700; color:#f0f0f4; margin-bottom:2px; }
+    .demo-analytics-chip {
+      display:inline-block;
+      background:rgba(0,200,150,0.15);
+      color:#00C896;
+      border-radius:20px;
+      padding:2px 8px;
+      font-size:9px;
+      margin-bottom:10px;
+    }
+    .demo-donut-wrap { display:flex; gap:10px; align-items:center; margin-bottom:12px; }
+    .demo-legend { flex:1; }
+    .demo-legend-row { display:flex; align-items:center; gap:5px; margin-bottom:4px; font-size:9px; color:#f0f0f4; }
+    .demo-legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .demo-legend-name { flex:1; color:#9099b2; }
+    .demo-legend-amt { font-weight:700; }
+    .demo-budget-title { font-size:11px; font-weight:600; color:#9099b2; margin-bottom:6px; }
+    .demo-budget-row { margin-bottom:8px; }
+    .demo-budget-label { display:flex; justify-content:space-between; font-size:9px; margin-bottom:3px; }
+    .demo-budget-name { color:#f0f0f4; }
+    .demo-budget-vals { color:#9099b2; }
+    .demo-budget-bar-bg { background:#22263a; border-radius:4px; height:6px; overflow:hidden; }
+    .demo-budget-bar-fill { height:100%; border-radius:4px; transition:width .6s ease; }
+
+    /* ---- GOALS screen ---- */
+    .demo-goals-heading { font-size:14px; font-weight:700; color:#f0f0f4; margin-bottom:10px; }
+    .demo-goal-card {
+      background:#1a1d27;
+      border-radius:12px;
+      padding:10px 12px;
+      margin-bottom:8px;
+    }
+    .demo-goal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+    .demo-goal-name { font-size:12px; font-weight:700; color:#f0f0f4; }
+    .demo-goal-days { font-size:9px; color:#9099b2; background:#22263a; border-radius:10px; padding:2px 6px; }
+    .demo-goal-desc { font-size:9px; color:#9099b2; font-style:italic; margin-bottom:6px; }
+    .demo-goal-bar-bg { background:#22263a; border-radius:4px; height:7px; overflow:hidden; margin-bottom:4px; }
+    .demo-goal-bar-fill { height:100%; background:#00C896; border-radius:4px; width:0; transition:width .8s ease; }
+    .demo-goal-stats { display:flex; justify-content:space-between; font-size:9px; }
+    .demo-goal-amounts { color:#f0f0f4; font-weight:600; }
+    .demo-goal-pct { color:#00C896; font-weight:700; }
+    .demo-goal-hint { font-size:9px; color:#9099b2; margin-top:3px; }
+
+    /* ---- LOG screen ---- */
+    .demo-log-heading { font-size:14px; font-weight:700; color:#f0f0f4; margin-bottom:10px; }
+    .demo-cat-pills { display:flex; gap:5px; overflow-x:auto; padding-bottom:5px; -webkit-overflow-scrolling:touch; margin-bottom:10px; }
+    .demo-cat-pills::-webkit-scrollbar { height:0; }
+    .demo-cat-pill {
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:20px;
+      padding:5px 9px;
+      font-size:10px;
+      color:#9099b2;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:all .15s;
+      flex-shrink:0;
+    }
+    .demo-cat-pill.selected,
+    .demo-cat-pill:hover { background:rgba(0,200,150,0.15); color:#00C896; border-color:rgba(0,200,150,0.4); }
+    .demo-amount-input {
+      width:100%;
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px;
+      padding:10px;
+      font-size:20px;
+      font-weight:700;
+      color:#00C896;
+      text-align:center;
+      outline:none;
+      margin-bottom:8px;
+    }
+    .demo-amount-input:focus { border-color:rgba(0,200,150,0.4); }
+    .demo-desc-input {
+      width:100%;
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:11px;
+      color:#f0f0f4;
+      outline:none;
+      margin-bottom:8px;
+    }
+    .demo-desc-input:focus { border-color:rgba(0,200,150,0.4); }
+    .demo-wallet-select {
+      width:100%;
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:10px;
+      padding:8px 10px;
+      font-size:11px;
+      color:#f0f0f4;
+      outline:none;
+      margin-bottom:8px;
+      cursor:pointer;
+    }
+    .demo-wn-row { display:flex; gap:6px; margin-bottom:10px; }
+    .demo-wn-btn {
+      flex:1;
+      background:#1a1d27;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:8px;
+      padding:6px;
+      font-size:11px;
+      color:#9099b2;
+      cursor:pointer;
+      transition:all .15s;
+    }
+    .demo-wn-btn.selected { background:rgba(0,200,150,0.15); color:#00C896; border-color:rgba(0,200,150,0.4); }
+    .demo-log-btn {
+      width:100%;
+      background:#00C896;
+      border:none;
+      border-radius:12px;
+      padding:10px;
+      font-size:13px;
+      font-weight:700;
+      color:#000;
+      cursor:pointer;
+      transition:background .15s;
+    }
+    .demo-log-btn:hover { background:#009e78; }
+    .demo-log-success {
+      display:none;
+      text-align:center;
+      padding:16px;
+      font-size:13px;
+      color:#00C896;
+      font-weight:700;
+      animation:demoBubbleIn .3s ease;
+    }
+    .demo-log-success.show { display:block; }
+    @keyframes demoShake {
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-5px)}
+      40%{transform:translateX(5px)}
+      60%{transform:translateX(-5px)}
+      80%{transform:translateX(5px)}
+    }
+    .demo-shake { animation:demoShake .4s ease; }
   </style></head>
 <body>
 <nav id="mainNav">
@@ -214,6 +644,7 @@
     <a href="#features">Features</a>
     <a href="#ai">AI</a>
     <a href="#screenshots">Screenshots</a>
+    <a href="#demo">Demo</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
     <a href="privacy.html">Privacy</a>
@@ -229,6 +660,7 @@
     <a href="#features" onclick="closeMobileMenu()">Features</a>
     <a href="#ai" onclick="closeMobileMenu()">AI</a>
     <a href="#screenshots" onclick="closeMobileMenu()">Screenshots</a>
+    <a href="#demo" onclick="closeMobileMenu()">Demo</a>
     <a href="#download" onclick="closeMobileMenu()">Download</a>
     <a href="#about" onclick="closeMobileMenu()">About</a>
     <a href="privacy.html" onclick="closeMobileMenu()">Privacy</a>
@@ -381,6 +813,237 @@
   <button class="lb-next" id="lbNext" aria-label="Next screenshot">&#x203a;</button>
   <div class="lb-counter" id="lbCounter"></div>
 </div>
+<section id="demo" style="max-width:900px;margin:0 auto 70px;padding:0 24px;">
+  <div class="section-title">📱 Try it — Interactive Demo</div>
+  <div class="section-sub">A simplified prototype. Not connected to real data.</div>
+  <div class="demo-wrapper">
+    <div class="demo-phone-wrap">
+      <div class="demo-phone-frame">
+        <!-- Tab screens rendered by JS -->
+        <div class="demo-screens">
+          <!-- HOME screen -->
+          <div id="demo-screen-home" class="demo-screen active">
+            <div class="demo-greeting">Good Evening 👋</div>
+            <div class="demo-username">Demo User</div>
+            <div class="demo-fhs-badge" id="demo-fhs-badge">
+              <div class="demo-fhs-score">94 / 100</div>
+              <div class="demo-fhs-label">Excellent • Financial Health Score</div>
+              <div class="demo-fhs-tooltip" id="demo-fhs-tooltip">
+                Savings Rate +25pts<br>Budget Adherence +24pts<br>Budget Setup +25pts<br>Logging +20pts
+              </div>
+            </div>
+            <div class="demo-wallets-title">My Wallets</div>
+            <div class="demo-wallets-total">₱14,672.50 total</div>
+            <div class="demo-wallet-chips">
+              <div class="demo-wallet-chip">💵 Cash ₱6,610</div>
+              <div class="demo-wallet-chip">📱 GCash ₱4,573</div>
+              <div class="demo-wallet-chip">🏦 Landbank ₱3,489</div>
+            </div>
+            <div class="demo-sts">
+              <div class="demo-sts-amount">Safe to Spend ₱2,341</div>
+              <div class="demo-sts-sub">after bills &amp; goals</div>
+            </div>
+            <div class="demo-txn-title">Recent Transactions</div>
+            <div class="demo-txn-list" id="demo-txn-list">
+              <div class="demo-txn-row">
+                <span class="demo-txn-icon">🍿</span>
+                <div class="demo-txn-info"><div class="demo-txn-name">Snack</div><div class="demo-txn-meta">Food · Oct 10 · Cash</div></div>
+                <span class="demo-txn-amt">₱10</span>
+                <span class="demo-txn-want">Want</span>
+                <div class="demo-txn-detail">Amount: ₱10 · Category: Food · Oct 10 · Cash on Hand · 🤖 AI-logged</div>
+              </div>
+              <div class="demo-txn-row">
+                <span class="demo-txn-icon">🚌</span>
+                <div class="demo-txn-info"><div class="demo-txn-name">Jeepney fare</div><div class="demo-txn-meta">Transportation · Oct 9 · Cash</div></div>
+                <span class="demo-txn-amt">₱30</span>
+                <div class="demo-txn-detail">Amount: ₱30 · Category: Transportation · Oct 9 · Cash on Hand · 🤖 AI-logged</div>
+              </div>
+              <div class="demo-txn-row">
+                <span class="demo-txn-icon">🎮</span>
+                <div class="demo-txn-info"><div class="demo-txn-name">8bitdo Retro Receiver</div><div class="demo-txn-meta">Gaming · Oct 8 · ShopeePay</div></div>
+                <span class="demo-txn-amt">₱995</span>
+                <span class="demo-txn-want">Want</span>
+                <div class="demo-txn-detail">Amount: ₱995 · Category: Gaming · Oct 8 · ShopeePay · 🤖 AI-logged</div>
+              </div>
+              <div class="demo-txn-row">
+                <span class="demo-txn-icon">🍱</span>
+                <div class="demo-txn-info"><div class="demo-txn-name">Lunch</div><div class="demo-txn-meta">Food · Oct 7 · Cash</div></div>
+                <span class="demo-txn-amt">₱65</span>
+                <div class="demo-txn-detail">Amount: ₱65 · Category: Food · Oct 7 · Cash on Hand · 🤖 AI-logged</div>
+              </div>
+              <div class="demo-txn-row">
+                <span class="demo-txn-icon">🚌</span>
+                <div class="demo-txn-info"><div class="demo-txn-name">Jeepney fare</div><div class="demo-txn-meta">Transportation · Oct 7 · Cash</div></div>
+                <span class="demo-txn-amt">₱30</span>
+                <div class="demo-txn-detail">Amount: ₱30 · Category: Transportation · Oct 7 · Cash on Hand · 🤖 AI-logged</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PESO screen -->
+          <div id="demo-screen-peso" class="demo-screen">
+            <div class="demo-peso-header">
+              <div class="demo-peso-title">Peso 🤖</div>
+              <div class="demo-peso-chip">Auto · 150 left</div>
+            </div>
+            <div class="demo-peso-mascot">🤖</div>
+            <div class="demo-chat-area" id="demo-chat-area">
+              <div class="demo-bubble demo-bubble-peso">Magandang umaga! ☀️ Ako si Peso — your money buddy! Ask me anything or just say what you spent.</div>
+              <div class="demo-typing" id="demo-typing"><div class="demo-typing-dots"><span></span><span></span><span></span></div></div>
+            </div>
+            <div class="demo-chips">
+              <button class="demo-chip-btn" type="button">How am I doing this month?</button>
+              <button class="demo-chip-btn" type="button">Where am I overspending?</button>
+              <button class="demo-chip-btn" type="button">Log ₱65 lunch</button>
+              <button class="demo-chip-btn" type="button">Am I on track?</button>
+              <button class="demo-chip-btn" type="button">What if I cut Shopping by ₱500?</button>
+            </div>
+            <div class="demo-input-row">
+              <input id="demo-chat-input" type="text" placeholder="Ask Peso anything..." autocomplete="off" />
+              <button class="demo-send-btn" id="demo-send-btn" type="button" aria-label="Send">➤</button>
+            </div>
+          </div>
+
+          <!-- ANALYTICS screen -->
+          <div id="demo-screen-analytics" class="demo-screen">
+            <div class="demo-analytics-heading">Analytics</div>
+            <div class="demo-analytics-chip">All Time</div>
+            <div class="demo-donut-wrap">
+              <svg width="120" height="120" viewBox="0 0 120 120" class="demo-donut">
+                <circle cx="60" cy="60" r="40" fill="none" stroke="#9F7AEA" stroke-width="18"
+                  stroke-dasharray="106.0 145.2" stroke-dashoffset="62.8"
+                  transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="40" fill="none" stroke="#F56565" stroke-width="18"
+                  stroke-dasharray="92.2 159.0" stroke-dashoffset="-43.2"
+                  transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="40" fill="none" stroke="#63B3ED" stroke-width="18"
+                  stroke-dasharray="32.4 218.8" stroke-dashoffset="-135.4"
+                  transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="40" fill="none" stroke="#00C896" stroke-width="18"
+                  stroke-dasharray="5.8 245.4" stroke-dashoffset="-167.8"
+                  transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="40" fill="none" stroke="#ECC94B" stroke-width="18"
+                  stroke-dasharray="4.3 246.9" stroke-dashoffset="-173.6"
+                  transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="40" fill="none" stroke="#9099b2" stroke-width="18"
+                  stroke-dasharray="10.8 240.4" stroke-dashoffset="-177.9"
+                  transform="rotate(-90 60 60)" />
+                <circle cx="60" cy="60" r="29" fill="#0f1117" />
+                <text x="60" y="56" text-anchor="middle" fill="#f0f0f4" font-size="9" font-weight="700">₱7,056</text>
+                <text x="60" y="67" text-anchor="middle" fill="#9099b2" font-size="7">total</text>
+              </svg>
+              <div class="demo-legend">
+                <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#9F7AEA"></div><span class="demo-legend-name">Shopping</span><span class="demo-legend-amt">₱2,974</span></div>
+                <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#F56565"></div><span class="demo-legend-name">Gaming</span><span class="demo-legend-amt">₱2,590</span></div>
+                <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#63B3ED"></div><span class="demo-legend-name">Bills</span><span class="demo-legend-amt">₱907</span></div>
+                <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#ECC94B"></div><span class="demo-legend-name">Transport</span><span class="demo-legend-amt">₱120</span></div>
+                <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#00C896"></div><span class="demo-legend-name">Food</span><span class="demo-legend-amt">₱165</span></div>
+                <div class="demo-legend-row"><div class="demo-legend-dot" style="background:#9099b2"></div><span class="demo-legend-name">Other</span><span class="demo-legend-amt">₱300</span></div>
+              </div>
+            </div>
+            <div class="demo-budget-title">Budget Status</div>
+            <div class="demo-budget-row">
+              <div class="demo-budget-label"><span class="demo-budget-name">Gaming</span><span class="demo-budget-vals">₱2,590 / ₱1,299</span></div>
+              <div class="demo-budget-bar-bg"><div class="demo-budget-bar-fill" id="demo-bar-gaming" style="width:0%"></div></div>
+            </div>
+            <div class="demo-budget-row">
+              <div class="demo-budget-label"><span class="demo-budget-name">Food</span><span class="demo-budget-vals">₱165 / ₱5,000</span></div>
+              <div class="demo-budget-bar-bg"><div class="demo-budget-bar-fill" id="demo-bar-food" style="width:0%"></div></div>
+            </div>
+            <div class="demo-budget-row">
+              <div class="demo-budget-label"><span class="demo-budget-name">Shopping</span><span class="demo-budget-vals">₱1,000 / ₱990</span></div>
+              <div class="demo-budget-bar-bg"><div class="demo-budget-bar-fill" id="demo-bar-shopping" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <!-- GOALS screen -->
+          <div id="demo-screen-goals" class="demo-screen">
+            <div class="demo-goals-heading">🎯 Savings Goals</div>
+            <div class="demo-goal-card">
+              <div class="demo-goal-header">
+                <div class="demo-goal-name">💻 New Laptop</div>
+                <div class="demo-goal-days">89 days left</div>
+              </div>
+              <div class="demo-goal-desc">For capstone project and school work</div>
+              <div class="demo-goal-bar-bg"><div class="demo-goal-bar-fill" id="demo-goal-bar-laptop"></div></div>
+              <div class="demo-goal-stats">
+                <span class="demo-goal-amounts">₱12,000 / ₱35,000</span>
+                <span class="demo-goal-pct">34%</span>
+              </div>
+              <div class="demo-goal-hint">💡 Save ₱3,000/month to reach goal</div>
+            </div>
+            <div class="demo-goal-card">
+              <div class="demo-goal-header">
+                <div class="demo-goal-name">🛡️ Emergency Fund</div>
+                <div class="demo-goal-days">179 days left</div>
+              </div>
+              <div class="demo-goal-desc">For unexpected expenses</div>
+              <div class="demo-goal-bar-bg"><div class="demo-goal-bar-fill" id="demo-goal-bar-emergency"></div></div>
+              <div class="demo-goal-stats">
+                <span class="demo-goal-amounts">₱3,500 / ₱10,000</span>
+                <span class="demo-goal-pct">35%</span>
+              </div>
+              <div class="demo-goal-hint">💡 Save ₱1,200/month to reach goal</div>
+            </div>
+            <div class="demo-goal-card">
+              <div class="demo-goal-header">
+                <div class="demo-goal-name">✈️ Graduation Trip</div>
+                <div class="demo-goal-days">245 days left</div>
+              </div>
+              <div class="demo-goal-desc">Baguio trip after graduation</div>
+              <div class="demo-goal-bar-bg"><div class="demo-goal-bar-fill" id="demo-goal-bar-graduation"></div></div>
+              <div class="demo-goal-stats">
+                <span class="demo-goal-amounts">₱3,800 / ₱20,000</span>
+                <span class="demo-goal-pct">19%</span>
+              </div>
+              <div class="demo-goal-hint">💡 Save ₱2,500/month to reach goal</div>
+            </div>
+          </div>
+
+          <!-- LOG screen -->
+          <div id="demo-screen-log" class="demo-screen">
+            <div class="demo-log-heading">Log Expense</div>
+            <div id="demo-log-form">
+              <div class="demo-cat-pills">
+                <div class="demo-cat-pill selected">🍔 Food</div>
+                <div class="demo-cat-pill">🚗 Transport</div>
+                <div class="demo-cat-pill">💡 Bills</div>
+                <div class="demo-cat-pill">🛒 Shopping</div>
+                <div class="demo-cat-pill">🎓 School</div>
+                <div class="demo-cat-pill">🎮 Gaming</div>
+                <div class="demo-cat-pill">❤️ Health</div>
+                <div class="demo-cat-pill">➕ Other</div>
+              </div>
+              <input class="demo-amount-input" id="demo-amount-input" type="number" min="0" step="0.01" placeholder="₱ 0.00" />
+              <input class="demo-desc-input" type="text" placeholder="Description (optional)" />
+              <select class="demo-wallet-select" id="demo-wallet-select">
+                <option>💵 Cash on Hand ₱6,610</option>
+                <option>📱 GCash ₱4,573</option>
+                <option>🏦 Landbank ₱3,489</option>
+              </select>
+              <div class="demo-wn-row">
+                <button class="demo-wn-btn" type="button">Need</button>
+                <button class="demo-wn-btn selected" type="button">Want</button>
+              </div>
+              <button class="demo-log-btn" id="demo-log-btn" type="button">Log Expense</button>
+            </div>
+            <div class="demo-log-success" id="demo-log-success"></div>
+          </div>
+        </div>
+        <!-- Bottom tab bar -->
+        <div class="demo-tab-bar">
+          <button class="demo-tab active" data-screen="home" onclick="demoTab('home',this)">🏠<span>Home</span></button>
+          <button class="demo-tab" data-screen="peso" onclick="demoTab('peso',this)">🤖<span>Peso</span></button>
+          <button class="demo-tab" data-screen="analytics" onclick="demoTab('analytics',this)">📊<span>Analytics</span></button>
+          <button class="demo-tab" data-screen="goals" onclick="demoTab('goals',this)">🎯<span>Goals</span></button>
+          <button class="demo-tab" data-screen="log" onclick="demoTab('log',this)">➕<span>Log</span></button>
+        </div>
+      </div>
+      <div class="demo-disclaimer">✨ Demo mode — tap around to explore</div>
+    </div>
+  </div>
+</section>
+
 <section class="download-section" id="download">
   <h2>&#x1F4E5; Download SmartSpend</h2>
   <p>Free to download and use. No account required for offline use. Android 5.0 (API 21) and above.</p>
@@ -670,6 +1333,209 @@ window.addEventListener('scroll', function() {
 });
 btt.addEventListener('click', function() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ===== DEMO LITE ===== */
+function demoTab(screen, el) {
+  document.querySelectorAll('.demo-tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  document.querySelectorAll('.demo-screen').forEach(function(s){s.classList.remove('active');});
+  var target = document.getElementById('demo-screen-' + screen);
+  if (target) target.classList.add('active');
+  if (screen === 'goals') demoAnimateGoalBars();
+  if (screen === 'analytics') demoAnimateBudgetBars();
+}
+
+/* FHS tooltip */
+var demFhsBadge = document.getElementById('demo-fhs-badge');
+var demoFhsTip = document.getElementById('demo-fhs-tooltip');
+if (demFhsBadge) {
+  demFhsBadge.addEventListener('click', function(e) {
+    e.stopPropagation();
+    demoFhsTip.classList.toggle('show');
+  });
+  document.addEventListener('click', function() {
+    demoFhsTip.classList.remove('show');
+  });
+}
+
+/* Transaction popovers */
+document.querySelectorAll('.demo-txn-row').forEach(function(row) {
+  row.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var detail = this.querySelector('.demo-txn-detail');
+    if (!detail) return;
+    var wasShown = detail.classList.contains('show');
+    document.querySelectorAll('.demo-txn-detail.show').forEach(function(d){d.classList.remove('show');});
+    if (!wasShown) detail.classList.add('show');
+  });
+});
+document.addEventListener('click', function() {
+  document.querySelectorAll('.demo-txn-detail.show').forEach(function(d){d.classList.remove('show');});
+});
+
+/* Peso AI chat */
+var demoReplies = [
+  { keys: ['how','doing','month'], text: "You've spent ₱1,485 this month across 12 expenses. Your savings rate is 81% — well above the 20% target. Safe to spend: ₱2,341 until your next allowance. Keep it up! 🎉" },
+  { keys: ['overspend','where'], text: "Your top categories this month: Gaming ₱2,590 (⚠️ 199% of budget), Shopping ₱1,000 (101% of budget). Food ₱165 is well within budget at 3%. Consider cooling off on Shopee for a few days. 😅" },
+  { keys: ['lunch','₱65','kain','food'], text: "✅ Got it! Logged Lunch ₱65 under Food • Cash on Hand. Running total today: ₱95. You're 1.3% into your ₱5,000 Food budget." },
+  { keys: ['track','budget'], text: "9 of 9 budgets active! Gaming is at ₱2,590/₱1,299 (⚠️ over). Food ₱165/₱5,000 ✅. Shopping ₱1,000/₱990 (barely over). Bills ₱907/₱990 ✅. Education ₱0/₱1,650 ✅." },
+  { keys: ['shopping','cut','₱500'], text: "If you cut Shopping by ₱500/month, you'd save an extra ₱6,000/year. That could fund 17% of your New Laptop goal in one year. Want me to adjust your budget? (Demo can't save — but the real app can! 😊)" }
+];
+var demoFallback = "I'm running in demo mode, so I can only answer pre-scripted questions for now. Download the real app to chat with the full AI Peso! 📲";
+
+function demoGetReply(msg) {
+  var lower = msg.toLowerCase();
+  for (var i = 0; i < demoReplies.length; i++) {
+    var r = demoReplies[i];
+    for (var j = 0; j < r.keys.length; j++) {
+      if (lower.indexOf(r.keys[j]) !== -1) return r.text;
+    }
+  }
+  return demoFallback;
+}
+
+function demoTypewriter(el, text, speed) {
+  el.textContent = '';
+  var i = 0;
+  function next() {
+    if (i < text.length) {
+      el.textContent += text[i++];
+      setTimeout(next, speed || 30);
+    }
+  }
+  next();
+}
+
+function demoAddBubble(chatArea, text, isUser) {
+  var div = document.createElement('div');
+  div.className = 'demo-bubble ' + (isUser ? 'demo-bubble-user' : 'demo-bubble-peso');
+  div.textContent = text;
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+  return div;
+}
+
+function demoSend(msg) {
+  var chatArea = document.getElementById('demo-chat-area');
+  var typing = document.getElementById('demo-typing');
+  if (!chatArea || !msg.trim()) return;
+  demoAddBubble(chatArea, msg, true);
+  typing.classList.add('show');
+  chatArea.scrollTop = chatArea.scrollHeight;
+  setTimeout(function() {
+    typing.classList.remove('show');
+    var reply = demoGetReply(msg);
+    var bubble = demoAddBubble(chatArea, '', false);
+    demoTypewriter(bubble, reply, 30);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }, 600);
+}
+
+var demoChatInput = document.getElementById('demo-chat-input');
+var demoSendBtn = document.getElementById('demo-send-btn');
+if (demoSendBtn && demoChatInput) {
+  demoSendBtn.addEventListener('click', function() {
+    var msg = demoChatInput.value.trim();
+    if (!msg) return;
+    demoChatInput.value = '';
+    demoSend(msg);
+  });
+  demoChatInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      var msg = demoChatInput.value.trim();
+      if (!msg) return;
+      demoChatInput.value = '';
+      demoSend(msg);
+    }
+  });
+}
+document.querySelectorAll('.demo-chip-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    demoSend(this.textContent);
+  });
+});
+
+/* Analytics bar animation */
+function demoAnimateBudgetBars() {
+  var bars = [
+    { id: 'demo-bar-gaming', pct: 100, color: '#F56565' },
+    { id: 'demo-bar-food', pct: 3, color: '#00C896' },
+    { id: 'demo-bar-shopping', pct: 101, color: '#ECC94B' }
+  ];
+  bars.forEach(function(b) {
+    var el = document.getElementById(b.id);
+    if (el) { el.style.width = '0'; setTimeout(function(){el.style.width = Math.min(b.pct,100)+'%'; el.style.background = b.color;}, 50); }
+  });
+}
+
+/* Goals bar animation */
+function demoAnimateGoalBars() {
+  var goals = [
+    { id: 'demo-goal-bar-laptop', pct: 34 },
+    { id: 'demo-goal-bar-emergency', pct: 35 },
+    { id: 'demo-goal-bar-graduation', pct: 19 }
+  ];
+  goals.forEach(function(g) {
+    var el = document.getElementById(g.id);
+    if (el) { el.style.width = '0'; setTimeout(function(){el.style.width = g.pct+'%';}, 50); }
+  });
+}
+
+/* Log Expense submit */
+var demoLogBtn = document.getElementById('demo-log-btn');
+if (demoLogBtn) {
+  demoLogBtn.addEventListener('click', function() {
+    var amtEl = document.getElementById('demo-amount-input');
+    var amt = parseFloat(amtEl ? amtEl.value : 0);
+    if (!amt || amt <= 0) {
+      if (amtEl) {
+        amtEl.classList.add('demo-shake');
+        setTimeout(function(){amtEl.classList.remove('demo-shake');}, 400);
+      }
+      return;
+    }
+    var catEl = document.querySelector('.demo-cat-pill.selected');
+    var catName = catEl ? catEl.textContent.trim() : 'Other';
+    var walletEl = document.getElementById('demo-wallet-select');
+    var wallet = walletEl ? walletEl.options[walletEl.selectedIndex].text : 'Cash';
+    var successEl = document.getElementById('demo-log-success');
+    var formEls = document.getElementById('demo-log-form');
+    if (formEls) formEls.style.display = 'none';
+    if (successEl) {
+      successEl.textContent = '✅ Expense logged! ' + catName + ' ₱' + amt.toFixed(2) + ' • ' + wallet;
+      successEl.classList.add('show');
+    }
+    /* Prepend to home transactions */
+    var txnList = document.getElementById('demo-txn-list');
+    if (txnList) {
+      var newRow = document.createElement('div');
+      newRow.className = 'demo-txn-row';
+      newRow.innerHTML = '<span class="demo-txn-icon">💸</span><div class="demo-txn-info"><div class="demo-txn-name">'+catName+'</div><div class="demo-txn-meta">Just now · '+wallet+'</div></div><span class="demo-txn-amt">₱'+amt.toFixed(2)+'</span>';
+      txnList.insertBefore(newRow, txnList.firstChild);
+    }
+    setTimeout(function() {
+      if (successEl) successEl.classList.remove('show');
+      if (formEls) formEls.style.display = '';
+      if (amtEl) amtEl.value = '';
+      var catPills = document.querySelectorAll('.demo-cat-pill');
+      catPills.forEach(function(p){p.classList.remove('selected');});
+      if (catPills[0]) catPills[0].classList.add('selected');
+    }, 2000);
+  });
+}
+document.querySelectorAll('.demo-cat-pill').forEach(function(pill) {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('.demo-cat-pill').forEach(function(p){p.classList.remove('selected');});
+    this.classList.add('selected');
+  });
+});
+var demoWnBtns = document.querySelectorAll('.demo-wn-btn');
+demoWnBtns.forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    demoWnBtns.forEach(function(b){b.classList.remove('selected');});
+    this.classList.add('selected');
+  });
 });
 </script>
 </body>
