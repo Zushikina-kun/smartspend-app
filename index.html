@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f1117" id="theme-meta" />
+  <meta name="theme-color" content="#0d1a0f" id="theme-meta" />
   <title>SmartSpend — AI-Powered Filipino Finance App</title>
   <meta name="description" content="SmartSpend is a free AI-assisted personal finance app for Filipino users. Log expenses by voice, OCR, or chat. Get a Financial Health Score. Fully offline." />
   <meta property="og:title" content="SmartSpend — AI-Powered Filipino Finance App" />
@@ -11,52 +11,74 @@
   <meta property="og:image" content="https://zushikina-kun.github.io/smartspend-app/assets/icon.png" />
   <meta property="og:url" content="https://zushikina-kun.github.io/smartspend-app/" />
   <link rel="icon" href="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <style>
     /* ===== CSS VARIABLES ===== */
-    :root {
+    :root, [data-theme="dark"] {
+      --bg: #0d1a0f;
+      --bg-deep: #080f09;
+      --surface: #152218;
+      --surface2: #1a2e1a;
+      --surface3: #1f3520;
+      --surface-elevated: #243d24;
+      --text: #eef2ee;
+      --text-muted: #8aaa8a;
+      --text-dim: #5a7a5a;
       --primary: #00C896;
       --primary-dark: #009e78;
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #22263a;
-      --text: #f0f0f4;
-      --text-muted: #9099b2;
-      --border: rgba(255,255,255,0.08);
-      --radius: 16px;
-      --nav-bg: rgba(15,17,23,0.92);
+      --primary-glow: rgba(0,200,150,0.15);
+      --border: rgba(0,200,150,0.12);
+      --border-strong: rgba(0,200,150,0.25);
+      --brand-blue: #2563EB;
+      --peso-green: #2D9E6B;
+      --radius: 18px;
+      --nav-bg: rgba(13,26,15,0.95);
       --shadow: rgba(0,0,0,0.5);
     }
     [data-theme="light"] {
-      --bg: #f8f9fa;
-      --surface: #ffffff;
-      --surface2: #f0f2f5;
-      --text: #1a1a2e;
-      --text-muted: #6b7280;
-      --border: rgba(0,0,0,0.1);
-      --nav-bg: rgba(248,249,250,0.92);
+      --bg: #f4f0e6;
+      --bg-deep: #ede8db;
+      --surface: #eaf0ea;
+      --surface2: #dceadc;
+      --surface3: #f0f7f0;
+      --surface-elevated: #ffffff;
+      --text: #1a2e1a;
+      --text-muted: #4a6a4a;
+      --text-dim: #7a9a7a;
+      --primary: #00a876;
+      --primary-dark: #007a56;
+      --primary-glow: rgba(0,168,118,0.12);
+      --border: rgba(26,92,42,0.15);
+      --border-strong: rgba(26,92,42,0.3);
+      --brand-blue: #1d4ed8;
+      --peso-green: #2D9E6B;
+      --nav-bg: rgba(244,240,230,0.96);
       --shadow: rgba(0,0,0,0.12);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg); color: var(--text); line-height: 1.6;
       transition: background-color 0.3s ease, color 0.3s ease;
     }
+    h1, h2, h3, .section-title, .hero h1 { font-family: 'Plus Jakarta Sans', sans-serif; }
     a { color: var(--primary); text-decoration: none; }
     a:hover { text-decoration: underline; }
     nav {
       position: sticky; top: 0; z-index: 200;
-      background: var(--nav-bg); backdrop-filter: blur(12px);
+      background: var(--nav-bg); backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
       transition: background-color 0.3s ease, border-color 0.3s ease;
     }
-    .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--text); text-decoration: none; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; color: var(--brand-blue); font-family: 'Plus Jakarta Sans', sans-serif; text-decoration: none; }
     .nav-brand img { width: 32px; height: 32px; border-radius: 8px; }
     .nav-links { display: flex; gap: 24px; }
-    .nav-links a { color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a { color: var(--text-muted); font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif; transition: color .2s; }
     .nav-links a:hover, .nav-links a.active { color: var(--primary); text-decoration: none; }
     .nav-right { display: flex; align-items: center; gap: 12px; }
     .theme-toggle {
@@ -67,8 +89,8 @@
       transition: background 0.2s, border-color 0.2s, transform 0.2s;
     }
     .theme-toggle:hover { transform: scale(1.1); background: var(--surface2); }
-    .nav-cta { background: var(--primary); color: #000 !important; padding: 8px 18px; border-radius: 20px; font-weight: 600; font-size: 14px; transition: background .2s; white-space: nowrap; }
-    .nav-cta:hover { background: var(--primary-dark); color: #000 !important; text-decoration: none; }
+    .nav-cta { background: linear-gradient(135deg, #00C896, #009e78); color: #000 !important; padding: 8px 20px; border-radius: 24px; font-weight: 700; font-size: 14px; transition: opacity .2s; white-space: nowrap; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .nav-cta:hover { opacity: 0.85; color: #000 !important; text-decoration: none; }
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
     .hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; display: block; transition: all 0.3s; }
     .mobile-menu {
@@ -79,45 +101,50 @@
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a { color: var(--text); font-size: 15px; font-weight: 500; padding: 8px 0; border-bottom: 1px solid var(--border); }
-    .mobile-menu a:last-child { border-bottom: none; }    .hero-wrapper { position: relative; overflow: hidden; }
-    .hero-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; animation: floatOrb 10s ease-in-out infinite; }
-    .hero-orb-1 { width: 500px; height: 500px; background: rgba(0,200,150,0.07); top: -100px; right: -100px; animation-duration: 12s; }
-    .hero-orb-2 { width: 350px; height: 350px; background: rgba(0,200,150,0.05); bottom: 0; left: -80px; animation-duration: 9s; animation-delay: -3s; }
-    .hero-orb-3 { width: 250px; height: 250px; background: rgba(99,179,237,0.04); top: 30%; left: 30%; animation-duration: 14s; animation-delay: -6s; }
-    @keyframes floatOrb { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-30px) scale(1.05)} }
-    .hero { max-width: 900px; margin: 0 auto; padding: 80px 24px 60px; text-align: center; position: relative; z-index: 1; }
-    @keyframes heroGradient { 0%{background-position:0% 50%} 100%{background-position:100% 50%} }
-    .hero-badge { display: inline-block; background: rgba(0,200,150,0.12); border: 1px solid rgba(0,200,150,0.3); color: var(--primary); font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 20px; margin-bottom: 24px; }
+    .mobile-menu a:last-child { border-bottom: none; }    .hero-wrapper { position: relative; overflow: hidden; background: radial-gradient(ellipse at 80% 20%, rgba(37,99,235,0.08) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(0,200,150,0.08) 0%, transparent 50%), var(--bg); }
+    .hero { max-width: 960px; margin: 0 auto; padding: 80px 24px 60px; position: relative; z-index: 1; display: flex; align-items: center; gap: 48px; }
+    .hero-left { flex: 1; }
+    .hero-right { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .hero-app-icon { width: 96px; height: 96px; border-radius: 20px; filter: drop-shadow(0 8px 24px rgba(0,200,150,0.3)); transform: rotate(-3deg); }
+    .peso-mascot { width: var(--peso-size, 48px); height: auto; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+    .hero-badge { display: inline-block; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.3); color: var(--brand-blue); font-size: 13px; font-weight: 600; padding: 4px 14px; border-radius: 20px; margin-bottom: 24px; }
     .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
     .hero h1 span { color: var(--primary); }
-    .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 36px; }
-    .hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 560px; margin: 0 0 36px; }
+    .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
     .btn-primary { background: var(--primary); color: #000; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; transition: background .2s, transform .15s; }
     .btn-primary:hover { background: var(--primary-dark); text-decoration: none; transform: translateY(-1px); color: #000; }
     .btn-secondary { background: var(--surface); color: var(--text); font-weight: 600; font-size: 15px; padding: 14px 28px; border-radius: 12px; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px; transition: background .2s, border-color 0.3s; }
     .btn-secondary:hover { background: var(--surface2); text-decoration: none; }
     .hero-meta { margin-top: 20px; color: var(--text-muted); font-size: 13px; }
-    .stats { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
-    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
+    .stats-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; max-width: 900px; margin: 0 auto 60px; }
+    .stats-card .stats { margin: 0; padding: 0; }
+    .stats { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0; }
+    .stat { background: transparent; border: none; border-right: 1px solid var(--border); border-radius: 0; padding: 20px; text-align: center; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
+    .stat:last-child { border-right: none; }
     .stat.visible { opacity: 1; transform: translateY(0); }
-    .stat-number { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+    .stat-number { font-size: 1.8rem; font-weight: 800; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif; }
     .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
     .section { max-width: 900px; margin: 0 auto; padding: 20px 24px 60px; }
     .section-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
     .section-sub { color: var(--text-muted); margin-bottom: 32px; }
     .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
-    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s ease, border-color 0.3s ease, opacity 0.5s ease; opacity: 0; transform: translateY(20px); }
+    .feature-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; transition: transform 0.2s, box-shadow 0.2s, background 0.2s, border-color 0.2s, opacity 0.5s ease; opacity: 0; transform: translateY(20px); }
     .feature-card.visible { opacity: 1; transform: translateY(0); }
-    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,200,150,0.15); }
-    .feature-icon { font-size: 2rem; margin-bottom: 12px; }
+    .feature-card:hover { transform: translateY(-3px); background: var(--surface3); border-color: var(--border-strong); box-shadow: 0 0 24px var(--primary-glow); }
+    .feature-icon-wrap { background: var(--primary-glow); border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 14px; }
     .feature-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
     .feature-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-    .ai-section { background: linear-gradient(135deg, rgba(0,200,150,0.08), rgba(0,200,150,0.03)); border: 1px solid rgba(0,200,150,0.2); border-radius: 20px; max-width: 900px; margin: 0 auto 60px; padding: 40px 32px; }
-    .ai-section h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
-    .ai-section p { color: var(--text-muted); margin-bottom: 24px; }
+    .ai-section { background: var(--surface); border-left: 4px solid var(--primary); border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); border-radius: var(--radius); max-width: 900px; margin: 0 auto 60px; padding: 32px; }
+    .ai-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .ai-heading h2 { font-size: 1.5rem; font-weight: 800; margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .ai-section > p { color: var(--text-muted); margin-bottom: 24px; }
     .ai-examples { display: flex; flex-direction: column; gap: 10px; }
-    .ai-example { background: var(--surface); border-radius: 10px; padding: 10px 16px; font-size: 13px; display: flex; align-items: center; gap: 10px; transition: background-color 0.3s ease, opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); cursor: pointer; }
+    .ai-example { border-radius: 12px 12px 4px 12px; padding: 10px 14px; font-size: 13px; display: flex; align-items: flex-start; gap: 10px; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); cursor: pointer; border: 1px solid var(--border); }
     .ai-example.visible { opacity: 1; transform: translateY(0); }
+    .bubble-you { background: var(--surface-elevated); border: 1px solid var(--border); border-radius: 12px 12px 4px 12px; margin-left: 8px; }
+    .bubble-peso { background: var(--primary-glow); border: 1px solid var(--border-strong); border-radius: 12px 12px 12px 4px; margin-right: 8px; }
+    .ai-peso-avatar { flex-shrink: 0; margin-top: 2px; }
     .ai-example .you { background: rgba(0,200,150,0.15); color: var(--primary); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
     .ai-example .peso { background: rgba(255,255,255,0.08); border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
     .copy-tooltip { font-size: 11px; color: var(--primary); margin-left: auto; opacity: 0; transition: opacity 0.2s; white-space: nowrap; }
@@ -179,9 +206,9 @@
     .apk-dl-btn:hover { background: var(--primary-dark); text-decoration: none; color: #000; }
     .version-note { margin-top: 16px; font-size: 12px; color: var(--text-muted); }
     .about-section { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .about-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
+    .about-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
     .about-card.visible { opacity: 1; transform: translateY(0); }
-    .about-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary); }
+    .about-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif; }
     .about-card p, .about-card li { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .about-card ul { padding-left: 16px; }
     .about-card li { margin-bottom: 4px; }
@@ -194,6 +221,12 @@
     #backToTop.visible { opacity: 1; pointer-events: auto; }
     #backToTop:hover { transform: scale(1.1); }
     @media (max-width: 700px) { .about-section { grid-template-columns: 1fr; } }
+    @media (max-width: 767px) {
+      .hero { flex-direction: column; text-align: center; }
+      .hero-left { text-align: center; }
+      .hero-buttons { justify-content: center; }
+      .hero-right { order: -1; }
+    }
     @media (max-width: 600px) {
       .nav-links { display: none; }
       .hamburger { display: flex; }
@@ -633,8 +666,95 @@
       80%{transform:translateX(5px)}
     }
     .demo-shake { animation:demoShake .4s ease; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #1a2e1a; }
+    ::-webkit-scrollbar-thumb { background: #2D9E6B; border-radius: 4px; }
+    [data-theme="light"] ::-webkit-scrollbar-track { background: #dceadc; }
+    [data-theme="light"] ::-webkit-scrollbar-thumb { background: #2D9E6B; border-radius: 4px; }
+
+    /* ===== PRIVACY-AI SECTION ===== */
+    .privacy-ai-section { max-width: 900px; margin: 0 auto 70px; padding: 0 24px; }
+    .privacy-ai-section .section-title { margin-bottom: 8px; }
+    .privacy-ai-section .section-sub { color: var(--text-muted); margin-bottom: 36px; }
+    .pai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+    @media (max-width: 700px) { .pai-grid { grid-template-columns: 1fr; } }
+    .pai-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 16px; }
+    .pai-badge-green { background: rgba(0,200,150,0.15); color: var(--primary); border: 1px solid var(--border-strong); }
+    .pai-badge-blue  { background: rgba(37,99,235,0.12); color: var(--brand-blue); border: 1px solid rgba(37,99,235,0.3); }
+    .pai-left h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .pai-left p  { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+    .pai-points { display: flex; flex-direction: column; gap: 14px; }
+    .pai-point { display: flex; align-items: flex-start; gap: 10px; }
+    .pai-point-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .pai-point-body strong { font-size: 14px; font-weight: 700; display: block; margin-bottom: 3px; }
+    .pai-point-body span  { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .arch-diagram { background: #080f09; border: 1px solid rgba(0,200,150,0.25); border-radius: 14px; padding: 24px 20px; font-family: 'Courier New', monospace; font-size: 12px; color: #8aaa8a; line-height: 1.9; position: relative; overflow: hidden; }
+    [data-theme="light"] .arch-diagram { background: #1a2e1a; color: #8aaa8a; }
+    .arch-diagram .arch-box { display: inline-block; background: rgba(0,200,150,0.08); border: 1px solid rgba(0,200,150,0.3); border-radius: 6px; padding: 4px 10px; color: #eef2ee; font-weight: 700; white-space: nowrap; }
+    .arch-diagram .arch-arrow { color: #00C896; }
+    .arch-diagram .arch-label { font-size: 11px; color: #5a7a5a; }
+    .arch-diagram .arch-highlight { color: #00C896; font-weight: 700; }
+    .roadmap-card { background: linear-gradient(135deg, var(--surface2), var(--surface3)); border: 2px dashed var(--border-strong); border-radius: var(--radius); padding: 32px; margin-top: 8px; }
+    .roadmap-card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 16px; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .roadmap-card p  { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+    .roadmap-card p strong { color: var(--text); }
+    .roadmap-card ul { padding-left: 20px; margin-bottom: 16px; }
+    .roadmap-card li { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 4px; }
+    .roadmap-card li strong { color: var(--text); }
+    .model-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .model-chip { background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.25); color: var(--brand-blue); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 600; }
+    .roadmap-note { font-size: 11px; color: var(--text-dim); margin-top: 20px; border-top: 1px solid var(--border); padding-top: 12px; }
+
+    /* ===== ABOUT REDESIGN ===== */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+    @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-info-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .about-info-card strong { font-size: 1rem; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 600px) { .team-grid { grid-template-columns: 1fr; } }
+    .team-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
+    .team-card.visible { opacity: 1; transform: translateY(0); }
+    .team-photo { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin: 0 auto 10px; display: block; }
+    .team-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .team-role { color: var(--primary); font-size: 0.8rem; font-weight: 600; }
+    .institution-row { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 32px; }
+    .institution-card { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .institution-label { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    .institution-divider { width: 1px; height: 60px; background: var(--border); }
+
+    /* ===== FOOTER REDESIGN ===== */
+    .footer-brand { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 12px; font-weight: 800; font-size: 18px; color: var(--brand-blue); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .footer-lucid { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 12px 0; }
+    .footer-lucid-label { font-size: 12px; color: var(--text-dim); }
   </style></head>
 <body>
+<!-- SVG sprite — Peso mascot -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="peso-sprite">
+  <symbol id="peso-face" viewBox="0 0 100 110">
+    <circle cx="50" cy="55" r="38" fill="#2D9E6B"/>
+    <circle cx="50" cy="55" r="38" fill="url(#pesoGradS)" opacity="0.4"/>
+    <ellipse cx="36" cy="40" rx="10" ry="7" fill="rgba(255,255,255,0.25)" transform="rotate(-20,36,40)"/>
+    <circle cx="37" cy="50" r="8" fill="white"/>
+    <circle cx="39" cy="51" r="4.5" fill="#1a2e1a"/>
+    <circle cx="41" cy="49" r="1.5" fill="white"/>
+    <circle cx="63" cy="50" r="8" fill="white"/>
+    <circle cx="65" cy="51" r="4.5" fill="#1a2e1a"/>
+    <circle cx="67" cy="49" r="1.5" fill="white"/>
+    <path d="M 38 64 Q 50 74 62 64" stroke="#1a2e1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="16" cy="52" rx="7" ry="5" fill="#2D9E6B" transform="rotate(-30,16,52)"/>
+    <ellipse cx="84" cy="52" rx="7" ry="5" fill="#2D9E6B" transform="rotate(30,84,52)"/>
+    <circle cx="50" cy="17" r="4" fill="#00C896"/>
+    <line x1="50" y1="17" x2="50" y2="25" stroke="#2D9E6B" stroke-width="2.5"/>
+    <defs>
+      <radialGradient id="pesoGradS" cx="40%" cy="35%">
+        <stop offset="0%" stop-color="white"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+    </defs>
+  </symbol>
+</svg>
 <nav id="mainNav">
   <a class="nav-brand" href="#">
     <img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="SmartSpend icon" onerror="this.style.display='none'" />
@@ -643,11 +763,12 @@
   <div class="nav-links" id="navLinks">
     <a href="#features">Features</a>
     <a href="#ai">AI</a>
+    <a href="#privacy-ai">Privacy</a>
     <a href="#screenshots">Screenshots</a>
     <a href="#demo">Demo</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
-    <a href="privacy.html">Privacy</a>
+    <a href="privacy.html">Privacy Policy</a>
   </div>
   <div class="nav-right">
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">🌙</button>
@@ -659,36 +780,41 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#features" onclick="closeMobileMenu()">Features</a>
     <a href="#ai" onclick="closeMobileMenu()">AI</a>
+    <a href="#privacy-ai" onclick="closeMobileMenu()">Privacy</a>
     <a href="#screenshots" onclick="closeMobileMenu()">Screenshots</a>
     <a href="#demo" onclick="closeMobileMenu()">Demo</a>
     <a href="#download" onclick="closeMobileMenu()">Download</a>
     <a href="#about" onclick="closeMobileMenu()">About</a>
-    <a href="privacy.html" onclick="closeMobileMenu()">Privacy</a>
+    <a href="privacy.html" onclick="closeMobileMenu()">Privacy Policy</a>
   </div>
 </nav>
 
 <div class="hero-wrapper">
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
-  <div class="hero-orb hero-orb-3"></div>
   <section class="hero">
-    <div class="hero-badge">🇵🇭 Made for Filipinos · Free to Download · No Account Required</div>
-    <h1>Your <span>AI-Powered</span><br/>Finance Companion</h1>
-    <p>Log expenses by voice, photo, or chat in Filipino or English. Get a real-time Financial Health Score. Works offline.</p>
-    <div class="hero-buttons">
-      <a class="btn-primary" href="#download">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4v-2h14v2H5z"/></svg>
-        Download APK
-      </a>
-      <a class="btn-secondary" href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
-        View on GitHub
-      </a>
+    <div class="hero-left">
+      <div class="hero-badge">🤖 AI-Powered · 🇵🇭 Made for Filipinos · Free</div>
+      <h1>Smart<span style="color:var(--primary)">Spend</span> —<br/>Your AI Finance<br/>Companion</h1>
+      <p>Log expenses by voice, photo, or chat in Taglish or English. Get a real-time Financial Health Score. Works offline.</p>
+      <div class="hero-buttons">
+        <a class="btn-primary" href="#download">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4v-2h14v2H5z"/></svg>
+          Download APK
+        </a>
+        <a class="btn-secondary" href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+      <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.0.4 · Free</div>
     </div>
-    <div class="hero-meta">v3.0.4 · Android 5.0+ · Free to use · No account required</div>
+    <div class="hero-right">
+      <svg class="peso-mascot" style="--peso-size:120px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
+      <img class="hero-app-icon" src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="SmartSpend app icon" onerror="this.style.display='none'" />
+    </div>
   </section>
 </div>
 
+<div class="stats-card">
 <div class="stats">
   <div class="stat"><div class="stat-number" data-target="34">0</div><div class="stat-label">AI Agentic Actions</div></div>
   <div class="stat"><div class="stat-number" data-target="7">0</div><div class="stat-label">Input Modalities</div></div>
@@ -697,23 +823,34 @@
   <div class="stat"><div class="stat-number" data-target="25">0</div><div class="stat-label">Achievement Badges</div></div>
   <div class="stat"><div class="stat-number" data-target="57">0</div><div class="stat-label">Currencies</div></div>
 </div>
+</div>
 <section class="section" id="features">
   <div class="section-title">Everything you need to manage money</div>
   <div class="section-sub">Built specifically for Filipino spending habits, income cycles, and financial products.</div>
   <div class="features-grid">
-    <div class="feature-card"><div class="feature-icon">🏆</div><div class="feature-title">Financial Health Score</div><div class="feature-desc">A real-time 0–100 score based on your savings rate, budget adherence, debt load, and spending control. Dual-mode: full or lightweight.</div></div>
-    <div class="feature-card"><div class="feature-icon">🧾</div><div class="feature-title">OCR Receipt Scanner</div><div class="feature-desc">Point your camera at any receipt or screenshot — SmartSpend reads it and logs all items automatically. Supports 40+ platforms including GCash, Shopee, Lazada.</div></div>
-    <div class="feature-card"><div class="feature-icon">🎯</div><div class="feature-title">Savings Goals</div><div class="feature-desc">Set goals with deadlines and track progress. Auto-calculate monthly contributions. Peso celebrates every milestone from 25% to 100%.</div></div>
-    <div class="feature-card"><div class="feature-icon">💚</div><div class="feature-title">Safe to Spend</div><div class="feature-desc">Know exactly how much you can freely spend before your next payday after reserving upcoming bills, goal contributions, and debt payments.</div></div>
-    <div class="feature-card"><div class="feature-icon">💳</div><div class="feature-title">Installment Plans</div><div class="feature-desc">Track ShopeePayLater, GCash GLoan, HomeCredit and any fixed monthly payment. See remaining balance, due dates, and total interest.</div></div>
-    <div class="feature-card"><div class="feature-icon">🏦</div><div class="feature-title">PH Government Contributions</div><div class="feature-desc">Calculate exact SSS, PhilHealth, and Pag-IBIG contributions based on your income. BIR TRAIN Law tax estimates included.</div></div>
-    <div class="feature-card"><div class="feature-icon">📱</div><div class="feature-title">Use Without an Account</div><div class="feature-desc">Tap "Continue Without Account" to start immediately — no sign-up, no email. Your data lives on your device. Connect a free account anytime when you're ready to sync.</div></div>
-    <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title">Local AI — Private Mode</div><div class="feature-desc">Run the AI on your own PC with Ollama, LM Studio, or Jan. Your financial data never leaves your home network. Enable "local-only mode" so it never falls back to cloud.</div></div>
-    <div class="feature-card"><div class="feature-icon">💬</div><div class="feature-title">Chat Sessions &amp; History</div><div class="feature-desc">AI conversations are saved as sessions. Start a new chat anytime — your old session is archived. Browse, rename, search, or delete sessions from Chat History.</div></div>
-    <div class="feature-card"><div class="feature-icon">🔍</div><div class="feature-title">Sort, Group &amp; Filter</div><div class="feature-desc">Sort transactions by date, logged date, amount, name, or source. Group by category (with subtotals), date, or source. Collapsible group headers. Search with relevance ranking.</div></div>
-    <div class="feature-card"><div class="feature-icon">🔔</div><div class="feature-title">Recurring Transactions</div><div class="feature-desc">Auto-detect subscriptions (Netflix, Spotify, GCash) and recurring bills. One-tap to log all due bills. Semester interval for students.</div></div>
-    <div class="feature-card"><div class="feature-icon">🏵️</div><div class="feature-title">Paluwagan Tracker</div><div class="feature-desc">Track your rotating savings group — who paid, whose turn is next, total pot, and payout schedule. Uniquely Filipino.</div></div>
-    <div class="feature-card"><div class="feature-icon">📊</div><div class="feature-title">Analytics &amp; Charts</div><div class="feature-desc">Spending by category (pie), monthly trend (bar), savings rate vs 20% target (line), FHS history, mood-spending correlation, and more.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🏆</div><div class="feature-title">Financial Health Score</div><div class="feature-desc">A real-time 0–100 score based on your savings rate, budget adherence, debt load, and spending control. Dual-mode: full or lightweight.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🧾</div><div class="feature-title">OCR Receipt Scanner</div><div class="feature-desc">Point your camera at any receipt or screenshot — SmartSpend reads it and logs all items automatically. Supports 40+ platforms including GCash, Shopee, Lazada.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🎯</div><div class="feature-title">Savings Goals</div><div class="feature-desc">Set goals with deadlines and track progress. Auto-calculate monthly contributions. Peso celebrates every milestone from 25% to 100%.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">💚</div><div class="feature-title">Safe to Spend</div><div class="feature-desc">Know exactly how much you can freely spend before your next payday after reserving upcoming bills, goal contributions, and debt payments.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">💳</div><div class="feature-title">Installment Plans</div><div class="feature-desc">Track ShopeePayLater, GCash GLoan, HomeCredit and any fixed monthly payment. See remaining balance, due dates, and total interest.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🏦</div><div class="feature-title">PH Government Contributions</div><div class="feature-desc">Calculate exact SSS, PhilHealth, and Pag-IBIG contributions based on your income. BIR TRAIN Law tax estimates included.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">📱</div><div class="feature-title">Use Without an Account</div><div class="feature-desc">Tap "Continue Without Account" to start immediately — no sign-up, no email. Your data lives on your device. Connect a free account anytime when you're ready to sync.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🔒</div><div class="feature-title">Local AI — Private Mode</div><div class="feature-desc">Connect to Ollama, LM Studio, or Jan running on your PC. Your financial data never touches a cloud server. Enable "local-only mode" — Peso refuses to fall back to cloud if your server is unreachable.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">💬</div><div class="feature-title">Chat Sessions &amp; History</div><div class="feature-desc">AI conversations are saved as sessions. Start a new chat anytime — your old session is archived. Browse, rename, search, or delete sessions from Chat History.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🔍</div><div class="feature-title">Sort, Group &amp; Filter</div><div class="feature-desc">Sort transactions by date, logged date, amount, name, or source. Group by category (with subtotals), date, or source. Collapsible group headers. Search with relevance ranking.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🔔</div><div class="feature-title">Recurring Transactions</div><div class="feature-desc">Auto-detect subscriptions (Netflix, Spotify, GCash) and recurring bills. One-tap to log all due bills. Semester interval for students.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🏵️</div><div class="feature-title">Paluwagan Tracker</div><div class="feature-desc">Track your rotating savings group — who paid, whose turn is next, total pot, and payout schedule. Uniquely Filipino.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">📊</div><div class="feature-title">Analytics &amp; Charts</div><div class="feature-desc">Spending by category (pie), monthly trend (bar), savings rate vs 20% target (line), FHS history, mood-spending correlation, and more.</div></div>
+    <div class="feature-card">
+      <div class="feature-icon-wrap">📴</div>
+      <div class="feature-title">Full Offline Mode</div>
+      <div class="feature-desc">All core features work with zero internet. Log expenses, view analytics, manage budgets, track goals — everything runs on-device. Internet only needed for AI chat and market data.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon-wrap">🗂️</div>
+      <div class="feature-title">Smart Export &amp; Backup</div>
+      <div class="feature-desc">Export to CSV, JSON backup, or restore from backup. Full data portability — your data is yours.</div>
+    </div>
   </div>
 </section>
 
@@ -732,33 +869,112 @@
 </section>
 
 <section class="ai-section" id="ai">
-  <h2>🤖 Meet Peso — Your AI Finance Coach</h2>
+  <div class="ai-heading">
+    <svg class="peso-mascot" style="--peso-size:48px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
+    <h2>Meet Peso — Your AI Finance Coach</h2>
+  </div>
   <p>Ask Peso anything about your finances in Filipino or English. It reads your actual data before answering — not generic advice.</p>
   <div class="ai-examples">
-    <div class="ai-example" title="Click to copy">
+    <div class="ai-example bubble-you" title="Click to copy">
       <span class="you">You</span>
       Nag-gastos ako ng 250 sa jollibee kanina gamit GCash
       <span style="color:var(--text-muted);font-size:12px;margin-left:auto">→ Logged + wallet deducted</span>
       <span class="copy-tooltip">Copied!</span>
     </div>
-    <div class="ai-example" title="Click to copy">
+    <div class="ai-example bubble-you" title="Click to copy">
       <span class="you">You</span>
       How am I doing this month? Pwede pa ba akong gumasta?
       <span style="color:var(--text-muted);font-size:12px;margin-left:auto">→ Safe-to-Spend analysis</span>
       <span class="copy-tooltip">Copied!</span>
     </div>
-    <div class="ai-example" title="Click to copy">
+    <div class="ai-example bubble-you" title="Click to copy">
       <span class="you">You</span>
       Split the bill 3 ways for 1,500 dinner
       <span style="color:var(--text-muted);font-size:12px;margin-left:auto">→ Splits + logs ₱500 expense</span>
       <span class="copy-tooltip">Copied!</span>
     </div>
-    <div class="ai-example">
+    <div class="ai-example bubble-peso">
+      <svg class="ai-peso-avatar peso-mascot" style="--peso-size:20px" aria-label="Peso"><use href="#peso-face"/></svg>
       <span class="peso">Peso</span>
       Based on your 6-month trend, your Food spending is 23% above average this month. You still have ₱1,240 safe to spend until payday on Oct 30.
     </div>
   </div>
   <p style="margin-top:18px;font-size:13px;">8-provider fallback chain: <strong>Gemini 3.5 Flash-Lite</strong> → Flash → GPT-OSS 120B → Qwen3.6 → Qwen3.8 → Compound → Compound Mini → Cerebras — always finds a working model.</p>
+</section>
+<section class="privacy-ai-section" id="privacy-ai">
+  <div class="section-title">🔒 Privacy-First AI</div>
+  <div class="section-sub">SmartSpend gives you full control over where your financial data goes.</div>
+  <div class="pai-grid">
+    <div class="pai-left">
+      <div class="pai-badge pai-badge-green">🔒 Available Now</div>
+      <h3>Your Finances, Your Device</h3>
+      <p>SmartSpend is the only Filipino finance app with a built-in local AI mode. Connect to a local LLM server on your PC — Peso runs entirely on your hardware.</p>
+      <div class="pai-points">
+        <div class="pai-point">
+          <span class="pai-point-icon">🏠</span>
+          <div class="pai-point-body">
+            <strong>Runs on your PC</strong>
+            <span>Supports Ollama, LM Studio, and Jan. Any OpenAI-compatible endpoint works. Set your base URL, model name, and optional API key.</span>
+          </div>
+        </div>
+        <div class="pai-point">
+          <span class="pai-point-icon">🔒</span>
+          <div class="pai-point-body">
+            <strong>Zero cloud exposure</strong>
+            <span>Financial data stays on your local network. No API keys sent to third parties. No training on your data.</span>
+          </div>
+        </div>
+        <div class="pai-point">
+          <span class="pai-point-icon">📴</span>
+          <div class="pai-point-body">
+            <strong>Local-only mode</strong>
+            <span>Enable the toggle and Peso will refuse to fall back to cloud models even if your local server is unreachable. You decide.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pai-right">
+      <div class="arch-diagram" role="img" aria-label="Architecture: phone connects via local WiFi to PC running Ollama">
+        <div style="margin-bottom:10px;">
+          <span class="arch-box">Your Phone</span>
+          <span class="arch-arrow"> ──── WiFi ──── </span>
+          <span class="arch-box">Your PC</span>
+        </div>
+        <div class="arch-label" style="padding-left:4px;">SmartSpend</div>
+        <div class="arch-label" style="padding-left:4px;">Peso chat</div>
+        <div style="margin:10px 0;padding-left:4px;">
+          <span class="arch-arrow">↓ sends question</span>
+        </div>
+        <div style="margin-bottom:6px;">
+          <span class="arch-highlight">Ollama / LM Studio / Jan</span>
+        </div>
+        <div class="arch-label">Llama 3.2 · Qwen3 · Phi-4 · any model</div>
+        <div style="margin:10px 0;border-top:1px dashed rgba(0,200,150,0.3);padding-top:10px;">
+          <span class="arch-highlight">Your financial data never leaves this network.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="roadmap-card">
+    <div class="pai-badge pai-badge-blue" style="margin-bottom:20px;">🚀 On the Roadmap</div>
+    <h3>The Next Step: AI That Lives on Your Phone</h3>
+    <p>On-device LLM inference on Android has crossed a meaningful threshold in 2026. Flagship phones with Snapdragon 8 Gen 5 and Tensor G6 chips deliver 45–60 TOPS of NPU performance — enough to run 1B–4B parameter models at 20–50 tokens per second, faster than most people read.</p>
+    <p><strong>What this means for SmartSpend:</strong><br/>We're actively researching full on-device AI for a future release. When stable enough for financial use, Peso would run entirely on your phone — no PC, no WiFi, no server.</p>
+    <p><strong>Candidate models we're evaluating:</strong></p>
+    <div class="model-chips">
+      <span class="model-chip">Gemma 3 1B/4B</span>
+      <span class="model-chip">Phi-4 Mini (3.8B)</span>
+      <span class="model-chip">Qwen 3 1.7B</span>
+    </div>
+    <ul>
+      <li><strong>Gemma 3 1B/4B</strong> (Google) — runs at 30–40 tok/s on mid-range devices, multilingual including Filipino</li>
+      <li><strong>Phi-4 Mini</strong> (Microsoft, 3.8B) — ~3 GB at Q4 quantization, strong reasoning for its size</li>
+      <li><strong>Qwen 3 1.7B</strong> — fast, compact, good at structured financial tasks</li>
+    </ul>
+    <p><strong>What we're waiting for:</strong><br/>The bottleneck isn't hardware — it's reliability. Financial AI needs to be accurate on peso amounts, dates, and categories every time, not 90% of the time. We're monitoring llama.cpp, MediaPipe, and MLC-LLM maturation on Android before committing to a release date.</p>
+    <p><strong>What it would mean for you:</strong><br/>Zero cloud dependency. Zero API costs. Peso answers your budget questions even on airplane mode. Your entire financial life — conversations, analysis, advice — processed entirely on the glass in your pocket.</p>
+    <p class="roadmap-note">* On-device AI availability depends on device hardware and model stability. Mid-range devices (6GB+ RAM) are the target minimum.</p>
+  </div>
 </section>
 <section class="screenshots-section" id="screenshots">
   <div class="section-title">See it in action</div>
@@ -814,8 +1030,12 @@
   <div class="lb-counter" id="lbCounter"></div>
 </div>
 <section id="demo" style="max-width:900px;margin:0 auto 70px;padding:0 24px;">
-  <div class="section-title">📱 Try it — Interactive Demo</div>
+  <div class="section-title" style="display:flex;align-items:center;gap:10px;">
+    <svg class="peso-mascot" style="--peso-size:40px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
+    📱 Try it — Interactive Demo
+  </div>
   <div class="section-sub">A simplified prototype. Not connected to real data.</div>
+  <p style="text-align:center;color:var(--text-dim);font-size:12px;margin-top:-16px;margin-bottom:20px">The real app supports light mode too — this demo runs dark like the app default</p>
   <div class="demo-wrapper">
     <div class="demo-phone-wrap">
       <div class="demo-phone-frame">
@@ -1077,38 +1297,84 @@
   </div>
 </section>
 
-<div class="about-section" id="about">
-  <div class="about-card">
-    <h3>About the Project</h3>
-    <p>SmartSpend is a capstone thesis project developed by <strong>Lucid Frame</strong> at <strong>Lorma Colleges, College of Computer Studies and Engineering (CCSE)</strong>, Bachelor of Science in Information Technology &#x2014; 4th Year, Academic Year 2026&#x2013;2027.</p>
-    <br/>
-    <p><strong>Researchers:</strong></p>
-    <ul>
-      <li>Brix A. Directo &#x2014; Lead Developer</li>
-      <li>Cyrille John M. Rubis &#x2014; UI/UX &amp; Documentation</li>
-      <li>Djaunathan Albert S. Madayag &#x2014; Project Manager &amp; QA</li>
-    </ul>
+<section class="section" id="about">
+  <div class="section-title">About SmartSpend</div>
+  <p class="section-sub">A free, open-source capstone project built by Filipino CS students for Filipino users.</p>
+  <div class="about-grid">
+    <div class="about-info">
+      <div class="about-info-card">
+        <div style="font-size:1.5rem;margin-bottom:8px">🎓</div>
+        <strong>Built by Students</strong>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Capstone project by 3rd-year Computer Science students at Lorma Colleges, La Union, Philippines.</p>
+      </div>
+      <div class="about-info-card">
+        <div style="font-size:1.5rem;margin-bottom:8px">🔓</div>
+        <strong>Open Source</strong>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Free to use, free to inspect. No subscriptions, no ads, no data sales. Your financial data stays on your device.</p>
+      </div>
+      <div class="about-info-card">
+        <div style="font-size:1.5rem;margin-bottom:8px">🇵🇭</div>
+        <strong>Made for Filipinos</strong>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Philippine Peso, Taglish AI, local payment categories. Built with Filipino financial habits in mind.</p>
+      </div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <img src="assets/Devs/BRIX A. DIRECTO.png" alt="BRIX A. DIRECTO" class="team-photo" onerror="this.style.display='none'">
+        <div class="team-name">Brix A. Directo</div>
+        <div class="team-role">Lead Developer</div>
+      </div>
+      <div class="team-card">
+        <img src="assets/Devs/CYRILLE JOHN M. RUBIS.png" alt="CYRILLE JOHN M. RUBIS" class="team-photo" onerror="this.style.display='none'">
+        <div class="team-name">Cyrille John M. Rubis</div>
+        <div class="team-role">UI/UX &amp; Docs</div>
+      </div>
+      <div class="team-card">
+        <img src="assets/Devs/DJAUNATHAN ALBERT S. MADAYAG.png" alt="DJAUNATHAN ALBERT S. MADAYAG" class="team-photo" onerror="this.style.display='none'">
+        <div class="team-name">Djaunathan Albert S. Madayag</div>
+        <div class="team-role">PM &amp; QA</div>
+      </div>
+    </div>
   </div>
-  <div class="about-card">
-    <h3>Technical Highlights</h3>
-    <ul>
-      <li>Flutter / Dart &#x2014; Android (API 21&#x2013;36)</li>
-      <li>SQLite local database (v14, 26 tables)</li>
-      <li>Firebase Auth, Firestore, Remote Config, Crashlytics</li>
-      <li>Gemini 3.5 Flash-Lite as primary AI (API key via Remote Config)</li>
-      <li>9-provider AI fallback chain &#x2014; never fails</li>
-      <li>Fully offline &#x2014; all core features work without internet</li>
-      <li>Open source &#x2014; <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">MIT Non-Commercial License</a></li>
-    </ul>
+  <div class="institution-row">
+    <div class="institution-card">
+      <img src="assets/LucidFrameLogo.png" alt="LucidFrame" style="width:120px;height:auto;" onerror="this.style.display='none'">
+      <span class="institution-label">LucidFrame</span>
+    </div>
+    <div class="institution-divider"></div>
+    <div class="institution-card">
+      <img src="assets/LormaLogo.jpg" alt="Lorma Colleges" style="width:80px;height:auto;" onerror="this.style.display='none'">
+      <span class="institution-label">Lorma Colleges</span>
+    </div>
+    <div class="institution-divider"></div>
+    <div style="text-align:center">
+      <p style="font-size:0.9rem;color:var(--text-muted)">Advised by <strong style="color:var(--text)">Ellen F. Mangaoang, MIT</strong></p>
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:4px">Panel: Shekiro R. Raposas · Mary-Ann Mzana</p>
+      <p style="font-size:0.8rem;color:var(--text-dim);margin-top:2px">Capstone Project 2026</p>
+    </div>
   </div>
-</div>
+</section>
 
 <footer>
+  <div class="footer-brand">
+    <svg class="peso-mascot" style="--peso-size:32px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
+    SmartSpend
+  </div>
   <div class="footer-links">
+    <a href="#features">Features</a>
+    <a href="#ai">AI</a>
+    <a href="#privacy-ai">Privacy</a>
+    <a href="#screenshots">Screenshots</a>
+    <a href="#download">Download</a>
+    <a href="#about">About</a>
     <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">GitHub</a>
     <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">Releases</a>
     <a href="privacy.html">Privacy Policy</a>
     <a href="https://github.com/Zushikina-kun/smartspend-app/issues" target="_blank" rel="noopener noreferrer">Report a Bug</a>
+  </div>
+  <div class="footer-lucid">
+    <img src="assets/LucidFrameLogo.png" alt="LucidFrame" style="width:60px;height:auto;" onerror="this.style.display='none'">
+    <span class="footer-lucid-label">Built by LucidFrame</span>
   </div>
   <div class="footer-support">
     <a href="https://buymeacoffee.com/zushikina_kuroh143" target="_blank" rel="noopener noreferrer" style="background:#FFDD00;color:#000;font-weight:700;font-size:13px;padding:8px 16px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">&#x2615; Buy Me a Coffee</a>
@@ -1116,9 +1382,9 @@
     <a href="https://paypal.me/BrixDirecto" target="_blank" rel="noopener noreferrer" style="background:#003087;color:#fff;font-weight:700;font-size:13px;padding:8px 16px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">&#x1F17F;&#xFE0F; PayPal</a>
     <span style="background:rgba(255,255,255,0.08);color:#9099b2;font-size:13px;padding:8px 16px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,0.1);">&#x1F4F1; GCash / PayMaya: <strong style="color:#fff;">09953583040</strong></span>
   </div>
-  <p style="font-size:12px;color:#555;margin-bottom:12px;">SmartSpend is free and open-source. If it helped you, any support keeps it alive. &#x1F64F;</p>
-  <p>SmartSpend v3.0.4 &#x00B7; Lucid Frame &#x00B7; Lorma Colleges CCSE BSIT 2026&#x2013;2027</p>
-  <p style="margin-top:6px;">SmartSpend is a capstone research project. Not affiliated with any financial institution.</p>
+  <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">SmartSpend is free and open-source. If it helped you, any support keeps it alive. &#x1F64F;</p>
+  <p>© 2026 LucidFrame. SmartSpend is a free, open-source capstone project.</p>
+  <p style="margin-top:6px;font-size:12px;color:var(--text-dim);">SmartSpend is a capstone research project. Not affiliated with any financial institution.</p>
 </footer>
 
 <button id="backToTop" aria-label="Back to top">&#x2303;</button>
@@ -1129,7 +1395,7 @@
   var saved = localStorage.getItem('ss-theme') || 'dark';
   document.documentElement.setAttribute('data-theme', saved);
   var meta = document.getElementById('theme-meta');
-  if (meta) meta.content = saved === 'dark' ? '#0f1117' : '#f8f9fa';
+  if (meta) meta.content = saved === 'dark' ? '#0d1a0f' : '#f4f0e6';
 })();
 var themeToggle = document.getElementById('themeToggle');
 function updateThemeIcon() {
@@ -1144,7 +1410,7 @@ themeToggle.addEventListener('click', function() {
   localStorage.setItem('ss-theme', next);
   updateThemeIcon();
   var meta = document.getElementById('theme-meta');
-  if (meta) meta.content = next === 'dark' ? '#0f1117' : '#f8f9fa';
+  if (meta) meta.content = next === 'dark' ? '#0d1a0f' : '#f4f0e6';
 });
 
 /* ===== HAMBURGER ===== */
@@ -1276,7 +1542,7 @@ var fadeIO = new IntersectionObserver(function(entries) {
     if (entry.isIntersecting) { entry.target.classList.add('visible'); fadeIO.unobserve(entry.target); }
   });
 }, ioOptions);
-document.querySelectorAll('.feature-card, .stat, .about-card, .ai-example, .modality-chip').forEach(function(el, i) {
+document.querySelectorAll('.feature-card, .stat, .about-card, .team-card, .ai-example, .modality-chip').forEach(function(el, i) {
   el.style.transitionDelay = (Math.min(i % 4, 3) * 80) + 'ms';
   fadeIO.observe(el);
 });
@@ -1304,11 +1570,12 @@ var statIO = new IntersectionObserver(function(entries) {
     }
   });
 }, { threshold: 0.4 });
-var statsEl = document.querySelector('.stats');
+var statsEl = document.querySelector('.stats-card');
+if (!statsEl) statsEl = document.querySelector('.stats');
 if (statsEl) statIO.observe(statsEl);
 
 /* ===== STICKY NAV ACTIVE ===== */
-var navSections = ['features', 'ai', 'screenshots', 'demo', 'download', 'about'];
+var navSections = ['features', 'ai', 'privacy-ai', 'screenshots', 'demo', 'download', 'about'];
 var sectionIO = new IntersectionObserver(function(entries) {
   entries.forEach(function(entry) {
     if (entry.isIntersecting) {
