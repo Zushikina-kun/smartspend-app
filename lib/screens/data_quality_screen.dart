@@ -146,7 +146,8 @@ class _DataQualityScreenState extends State<DataQualityScreen> {
             // ignore: prefer_const_constructors
             PesoMascot(
               size: 64,
-              mood: PesoMood.proud,
+              mood: PesoMood
+                  .proud, // "all clean" = proud; no numeric score available in this screen
             ),
             const SizedBox(height: 8),
             const SizedBox(height: 16),

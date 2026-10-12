@@ -785,7 +785,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     _checkTour();
                   }),
                   _navItem(Icons.bar_chart, "Analytics", 1),
-                  _navItem(Icons.smart_toy, "Peso", 2),
+                  _navItem(Icons.smart_toy, "Peso",
+                      2), // icon ignored — AI tab uses PesoMascot directly
                   _navItem(Icons.grid_view_rounded, "Tools", -1,
                       onTap: () => _showQuickAccessHub(context)),
                   _navItem(Icons.person, "Profile", 3),
