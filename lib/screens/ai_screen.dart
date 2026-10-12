@@ -206,7 +206,13 @@ class _AIScreenState extends State<AIScreen> {
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () async {
+                    // Mark seen even if user taps "Switch to Local AI" —
+                    // they've acknowledged the disclosure either way.
+                    setState(() => _privacyDisclaimerShown = true);
+                    await DBService.setSetting('ai_privacy_disclosed', 'true');
+                    if (context.mounted) Navigator.pop(context);
+                  },
                   child: const Text('Switch to Local AI — go to Settings'),
                 ),
               ),
