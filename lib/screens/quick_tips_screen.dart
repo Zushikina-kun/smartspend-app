@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/peso_mascot.dart';
 
 /// Shown once after the first app launch — teaches 4 essential tips.
 class QuickTipsScreen extends StatelessWidget {
@@ -65,6 +66,10 @@ class QuickTipsScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const Center(
+              child: PesoMascot(size: 72, mood: PesoMood.winking),
+            ),
+            const SizedBox(height: 8),
             const SizedBox(height: 20),
             Text(
               'Quick Tips 💡',

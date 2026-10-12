@@ -16,6 +16,7 @@ import '../services/currency_service.dart';
 import '../services/score_service.dart';
 import '../services/behavioral_feedback_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import 'transactions_screen.dart';
 import 'savings_goals_screen.dart';
 import 'debt_screen.dart';
@@ -4047,6 +4048,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               children: [
                                 Row(
                                   children: [
+                                    const PesoMascot(
+                                        size: 24, mood: PesoMood.winking),
+                                    const SizedBox(width: 6),
                                     Icon(Icons.auto_awesome,
                                         color: Theme.of(context)
                                             .colorScheme

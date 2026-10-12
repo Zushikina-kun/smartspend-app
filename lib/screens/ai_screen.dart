@@ -29,6 +29,7 @@ import '../models/expense.dart';
 import '../widgets/info_button.dart';
 import 'chat_history_screen.dart';
 import 'smart_camera_screen.dart';
+import 'feedback_screen.dart';
 import 'scan_review_screen.dart';
 import 'add_expense_screen.dart';
 import 'batch_manual_entry_screen.dart';
@@ -68,6 +69,7 @@ class _AIScreenState extends State<AIScreen> {
   // ── AI ADVICE DISCLAIMER ─────────────────────────────────────────────────
   // One-time dialog shown before the first financial advice response.
   // Satisfies RA 11765 responsible-AI positioning: "not a licensed adviser".
+  PesoMood _pesoChatMood = PesoMood.happy;
   bool _adviceDisclaimerShown = false;
   bool _privacyDisclaimerShown = false;
 
@@ -122,6 +124,50 @@ class _AIScreenState extends State<AIScreen> {
   }
 
   /// Checks clipboard for GCash/bank transaction text on screen open.
+  void _setPesoChatMood(PesoMood mood, {int revertMs = 0}) {
+    if (!mounted) return;
+    setState(() => _pesoChatMood = mood);
+    if (revertMs > 0) {
+      Future.delayed(Duration(milliseconds: revertMs), () {
+        if (mounted) setState(() => _pesoChatMood = PesoMood.happy);
+      });
+    }
+  }
+
+  PesoMood _moodFromReply(String reply) {
+    final t = reply.toLowerCase();
+    if (t.contains('🎉') ||
+        t.contains('congratulations') ||
+        t.contains('nabayaran') ||
+        t.contains('goal reached') ||
+        t.contains('badge') ||
+        t.contains('unlocked')) {
+      return PesoMood.celebrating;
+    }
+    if (t.contains('error') ||
+        t.contains('sorry') ||
+        t.contains('hindi ko') ||
+        t.contains('failed') ||
+        t.contains('unavailable')) {
+      return PesoMood.sad;
+    }
+    if (t.contains('over budget') ||
+        t.contains('nag-overspend') ||
+        t.contains('lampas') ||
+        t.contains('warning') ||
+        t.contains('malapit na')) {
+      return PesoMood.worried;
+    }
+    if (t.contains('great job') ||
+        t.contains('galing') ||
+        t.contains('consistent') ||
+        t.contains('savings rate') ||
+        t.contains('well done')) {
+      return PesoMood.proud;
+    }
+    return PesoMood.happy;
+  }
+
   /// Load the one-time advice disclaimer flag from DB.
   Future<void> _loadAdviceDisclaimerState() async {
     try {
@@ -700,7 +746,9 @@ class _AIScreenState extends State<AIScreen> {
       // Always refresh context from live DB before sending — fixes stale data
       await _loadContext(silent: true);
 
+      _setPesoChatMood(PesoMood.thinking);
       final (reply, actions) = await AIChatService.sendMessage(text);
+      _setPesoChatMood(_moodFromReply(reply), revertMs: 2500);
 
       // Apply action allowlist — chat context allows all 34 actions.
       // Import/OCR contexts (when routed here) only allow expense logging.
@@ -836,6 +884,7 @@ class _AIScreenState extends State<AIScreen> {
       }
 
       if (mounted) {
+        _setPesoChatMood(PesoMood.sad, revertMs: 2000);
         setState(() => _messages.add({
               "role": "ai",
               "text": errorText,
@@ -2911,7 +2960,7 @@ class _AIScreenState extends State<AIScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            const PesoMascot(size: 28, mood: PesoMood.happy),
+            PesoMascot(size: 28, mood: _pesoChatMood),
             const SizedBox(width: 8),
             const Text("Peso"),
           ],
@@ -3179,6 +3228,9 @@ class _AIScreenState extends State<AIScreen> {
                     ));
                   }
                 }
+              } else if (val == 'feedback') {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const FeedbackScreen()));
               }
             },
             itemBuilder: (_) => [
@@ -3233,6 +3285,14 @@ class _AIScreenState extends State<AIScreen> {
                     Text("Export Chat History"),
                   ],
                 ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'feedback',
+                child: Row(children: [
+                  Icon(Icons.feedback_outlined, size: 18),
+                  SizedBox(width: 10),
+                  Text('Send Feedback'),
+                ]),
               ),
             ],
           ),

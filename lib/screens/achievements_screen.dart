@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/db_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 /// GM-2: Achievements screen showing all badges — earned and locked.
 /// Locked badges shown as silhouettes so users know what to aim for.
@@ -352,64 +353,90 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: () async => _computeEarned(),
-              child: GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.4,
-                ),
-                itemCount: _allBadges.length,
-                itemBuilder: (_, i) {
-                  final badge = _allBadges[i];
-                  final isEarned = _earned.contains(badge.id);
-                  return Card(
-                    elevation: 2,
-                    shadowColor: Colors.black.withValues(alpha: 0.08),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    color: isEarned
-                        ? cs.primaryContainer.withValues(alpha: 0.5)
-                        : cs.surfaceContainerHighest.withValues(alpha: 0.3),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            isEarned ? badge.emoji : '🔒',
-                            style: TextStyle(
-                                fontSize: 28,
-                                color: isEarned ? null : Colors.grey[400]),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            badge.name,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: isEarned ? cs.onSurface : Colors.grey[400],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            badge.description,
-                            style: TextStyle(
-                                fontSize: 10,
-                                color: isEarned
-                                    ? cs.onSurface.withValues(alpha: 0.6)
-                                    : Colors.grey[400]),
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+              child: CustomScrollView(
+                slivers: [
+                  // Motivational header shown when no badges earned yet
+                  if (earnedCount == 0)
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+                        child: PesoMascot.withSpeech(
+                          size: 72,
+                          mood: PesoMood.winking,
+                          text: 'Kumita tayo ng mga badges!\nSimulan tayo! 🏅',
+                        ),
                       ),
                     ),
-                  );
-                },
+                  SliverPadding(
+                    padding: const EdgeInsets.all(16),
+                    sliver: SliverGrid(
+                      delegate: SliverChildBuilderDelegate(
+                        (_, i) {
+                          final badge = _allBadges[i];
+                          final isEarned = _earned.contains(badge.id);
+                          return Card(
+                            elevation: 2,
+                            shadowColor: Colors.black.withValues(alpha: 0.08),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                            color: isEarned
+                                ? cs.primaryContainer.withValues(alpha: 0.5)
+                                : cs.surfaceContainerHighest
+                                    .withValues(alpha: 0.3),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    isEarned ? badge.emoji : '🔒',
+                                    style: TextStyle(
+                                        fontSize: 28,
+                                        color:
+                                            isEarned ? null : Colors.grey[400]),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    badge.name,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: isEarned
+                                          ? cs.onSurface
+                                          : Colors.grey[400],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    badge.description,
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color: isEarned
+                                            ? cs.onSurface
+                                                .withValues(alpha: 0.6)
+                                            : Colors.grey[400]),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        childCount: _allBadges.length,
+                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
     );
