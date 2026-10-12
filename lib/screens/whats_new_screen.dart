@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.4';
-  static const _prefKey = 'whats_new_seen_3_0_4';
+  static const _version = '3.0.5';
+  static const _prefKey = 'whats_new_seen_3_0_5';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,33 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🤖',
+      'Peso is alive! (v3.0.5)',
+      'Peso the mascot now animates — idle breathing bob, eye blinks every few seconds, '
+          'and a pop-in animation when he appears. He also reacts to your conversations: '
+          'he thinks while waiting for a reply, celebrates when you hit a milestone, '
+          'looks worried when a budget is tight, and more. 12 moods total.',
+    ),
+    (
+      '💬',
+      'Send Feedback directly from the app (v3.0.5)',
+      'Found a bug? Have a feature idea? Go to Profile → Send Feedback (also in Settings, '
+          'the Peso ⋮ menu, and the About screen). Your message opens a pre-filled GitHub '
+          'issue — no account needed on your end.',
+    ),
+    (
+      '🛡️',
+      'Privacy disclosure on first AI message (v3.0.5)',
+      'The first time you send a message to Peso, a brief info sheet explains what data '
+          'is sent to the AI provider and reminds you about Local AI mode for full privacy.',
+    ),
+    (
+      '💡',
+      'Quick Tips on first launch (v3.0.5)',
+      'New users now see a Quick Tips sheet on first launch: Taglish input, '
+          'the Financial Health Score, how to import GCash screenshots, and offline mode.',
+    ),
     (
       '🔒',
       'Local-Only Mode + Login Warning (v3.0.4)',
