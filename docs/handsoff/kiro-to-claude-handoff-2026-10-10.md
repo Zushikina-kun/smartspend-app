@@ -260,3 +260,43 @@ Manuscript blocks: `docs/handsoff/manuscript-local-llm-sections-2026-10-09.md` (
 ---
 
 *This handoff supersedes all previous Kiro→Claude handoffs. Use v3.0.4 numbers throughout.*
+
+
+---
+
+## ADDENDUM — October 12, 2026 — Website Overhaul Complete
+
+> Full details: `docs/handsoff/kiro-to-kiro-handoff-2026-10-12-website.md`
+
+The landing page at https://zushikina-kun.github.io/smartspend-app/ was completely rebuilt this session. Key facts for the next session:
+
+### Website state (12 commits, now at `12d8088`)
+- **149.8 KB** single-file `index.html`
+- Visual identity matches the actual app (forest green dark, parchment light, brand blue splash color)
+- Peso SVG mascot (inline SVG, 5 placements) — round green blob with raised arms, proper eyes
+- **23 labeled screenshots** in carousel (all UUID filenames renamed to descriptive names)
+- **Interactive Demo Lite** — 5 screens: Home, Peso AI chat, Analytics donut, Goals, Log Expense
+- **Animated canvas background** — floating ₱ signs
+
+### New sections added (in order on page)
+1. What is SmartSpend? (problem/solution, target audience)
+2. How it works (3-step flow)
+3. Privacy-First AI (Local AI now + on-device roadmap)
+4. Research & Surveys ← **SURVEY LINKS ARE HERE — critical for capstone**
+5. FAQ (10 questions, accordion — now actually works)
+6. Changelog (v3.0.4 + v3.0.0)
+7. Share strip (Facebook, Twitter/X, copy link)
+8. Team section with dev photos + institution logos
+
+### Survey links (both visible prominently on site)
+- SUS: `https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform`
+- Research: `https://docs.google.com/forms/d/e/1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ/viewform`
+
+### App improvements identified during website work
+1. **Privacy disclosure on first Peso AI chat** — website is more transparent than app about what data is sent. App should show one-time disclosure: "Your message goes to [provider]. No expense history is shared."
+2. **Quick Tips after first launch** — FAQ content (FHS, GCash import, input methods) would help new users
+3. **In-app What's New sheet** — website has changelog, app doesn't show update notes
+4. **Offline mode indicator** — app works offline but never tells the user explicitly
+5. **Export/Backup in Quick Access** — currently buried in Profile
+
+None of these are blocking for the defense — all low/medium priority.
