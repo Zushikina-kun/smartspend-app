@@ -1498,6 +1498,10 @@ function closeLightbox() {
   document.body.style.overflow = '';
 }
 
+// Aliases required by checklist — lbOpen / lbClose
+function lbOpen(idx) { openLightbox(idx); }
+function lbClose() { closeLightbox(); }
+
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lbPrev').addEventListener('click', function() { setLbSlide(lbIndex - 1); });
 document.getElementById('lbNext').addEventListener('click', function() { setLbSlide(lbIndex + 1); });
