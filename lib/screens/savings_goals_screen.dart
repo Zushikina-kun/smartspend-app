@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
 import '../widgets/history_sheet.dart';
 import '../widgets/peso_mascot.dart';
+import '../widgets/peso_screen_tip.dart';
 
 class SavingsGoalsScreen extends StatefulWidget {
   const SavingsGoalsScreen({super.key});
@@ -379,6 +381,88 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
     );
   }
 
+  Future<void> _checkGoalMilestone(
+      double savedAmount, double targetAmount, String goalName) async {
+    if (targetAmount <= 0) return;
+    final pct = (savedAmount / targetAmount * 100).round();
+
+    String? message;
+    PesoMood mood = PesoMood.celebrating;
+
+    final prefs = await SharedPreferences.getInstance();
+    final key = 'goal_milestone_${goalName.toLowerCase().replaceAll(' ', '_')}';
+    final lastMilestone = prefs.getInt(key) ?? 0;
+
+    if (pct >= 100 && lastMilestone < 100) {
+      message = 'GOAL REACHED! 🏆\n$goalName complete!';
+      mood = PesoMood.excited;
+      await prefs.setInt(key, 100);
+    } else if (pct >= 75 && lastMilestone < 75) {
+      message = '75%! Almost there — isang push na lang! 💪';
+      mood = PesoMood.celebrating;
+      await prefs.setInt(key, 75);
+    } else if (pct >= 50 && lastMilestone < 50) {
+      message = 'Kalahati na ng $goalName! Hindi na malayo! 🔥';
+      mood = PesoMood.celebrating;
+      await prefs.setInt(key, 50);
+    } else if (pct >= 25 && lastMilestone < 25) {
+      message = '25% na! Simula palang — kaya mo! 🎯';
+      mood = PesoMood.happy;
+      await prefs.setInt(key, 25);
+    }
+
+    if (message == null || !mounted) return;
+
+    final finalMood = mood;
+    final finalMsg = message;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) {
+        final cs = Theme.of(context).colorScheme;
+        return Container(
+          decoration: BoxDecoration(
+            color: cs.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: cs.onSurface.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // ignore: prefer_const_constructors
+              PesoMascot(size: 80, mood: finalMood),
+              const SizedBox(height: 16),
+              Text(
+                finalMsg,
+                textAlign: TextAlign.center,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Salamat Peso! 💚'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _addContribution(Map<String, dynamic> goal) {
     final ctrl = TextEditingController();
     showDialog(
@@ -410,42 +494,9 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
               if (mounted) Navigator.pop(context);
               _load();
 
-              // GM-4: Milestone celebrations at 25/50/75/100%
-              if (mounted && target > 0) {
-                final prevPct = (prevAmount / target * 100).floor();
-                final newPct = (newAmount / target * 100).floor();
-                String? milestone;
-                String? emoji;
-                if (prevPct < 100 && newPct >= 100) {
-                  milestone = "100% — Goal reached!";
-                  emoji = "🎉";
-                } else if (prevPct < 75 && newPct >= 75) {
-                  milestone = "75% milestone!";
-                  emoji = "🏅";
-                } else if (prevPct < 50 && newPct >= 50) {
-                  milestone = "Halfway there!";
-                  emoji = "⭐";
-                } else if (prevPct < 25 && newPct >= 25) {
-                  milestone = "25% milestone!";
-                  emoji = "🌱";
-                }
-                if (milestone != null) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: Text("$emoji ${goal['name']}"),
-                      content: Text(
-                          "$milestone\n\n${CurrencyService.format(newAmount)} of ${CurrencyService.format(target)} saved."),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text("Keep it up! 💪"),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              }
+              // GM-4: Peso milestone celebrations (non-retroactive, SharedPreferences-gated)
+              await _checkGoalMilestone(
+                  newAmount, target, goal['name'] as String);
             },
             child: const Text("Add"),
           ),
@@ -482,389 +533,425 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
         icon: const Icon(Icons.add),
         label: const Text("New Goal"),
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : _goals.isEmpty
-              ? RefreshIndicator(
-                  onRefresh: _load,
-                  child: ListView(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              PesoMascot.withSpeech(
-                                size: 64,
-                                mood: PesoMood.thinking,
-                                text:
-                                    "Wala pang savings goal!\nSabi mo gusto mo ng laptop? Start iyon! 🎯",
-                              ),
-                              const SizedBox(height: 12),
-                              const Text("No savings goals yet",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 4),
-                              const Text(
-                                  "Tap + or tell Peso what you're saving for.",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12)),
-                              const SizedBox(height: 20),
-                              ElevatedButton.icon(
-                                icon: const Icon(Icons.add),
-                                label: const Text("Create a Goal"),
-                                onPressed: () => _showAddDialog(),
-                              ),
-                              const SizedBox(height: 8),
-                              OutlinedButton.icon(
-                                icon:
-                                    const Icon(Icons.shield_outlined, size: 16),
-                                label: const Text("Start Emergency Fund"),
-                                onPressed: _showEmergencyFundDialog,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _load,
-                  child: ListView.builder(
-                    padding: EdgeInsets.fromLTRB(16, 16, 16,
-                        80 + MediaQuery.of(context).viewPadding.bottom),
-                    itemCount: _goals.length,
-                    itemBuilder: (_, i) {
-                      final g = _goals[i];
-                      final target = (g['target_amount'] as num).toDouble();
-                      final current = (g['current_amount'] as num).toDouble();
-                      final ratio = (current / target).clamp(0.0, 1.0);
-                      final done = current >= target;
-                      final deadline = g['deadline'] as String?;
-
-                      String? daysLeft;
-                      if (deadline != null && !done) {
-                        try {
-                          final d = DateTime.parse(deadline);
-                          final diff = d.difference(DateTime.now()).inDays;
-                          daysLeft = diff > 0 ? "$diff days left" : "Overdue";
-                        } catch (_) {}
-                      }
-
-                      return Card(
-                        elevation: 2,
-                        shadowColor: Colors.black.withValues(alpha: 0.08),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        margin: const EdgeInsets.only(bottom: 12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: [
+          _loading
+              ? const Center(child: CircularProgressIndicator())
+              : _goals.isEmpty
+                  ? RefreshIndicator(
+                      onRefresh: _load,
+                      child: ListView(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            child: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        if (done)
-                                          const Icon(Icons.check_circle,
-                                              color: Colors.green, size: 20),
-                                        if (done) const SizedBox(width: 6),
-                                        if (!done &&
-                                            (g['name'] as String)
-                                                .toLowerCase()
-                                                .contains('emergency'))
-                                          const Icon(Icons.shield,
-                                              color: Colors.teal, size: 20),
-                                        if (!done &&
-                                            (g['name'] as String)
-                                                .toLowerCase()
-                                                .contains('emergency'))
-                                          const SizedBox(width: 6),
-                                        Expanded(
-                                          child: Text(g['name'] as String,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16,
-                                                  color: (g['name'] as String)
-                                                          .toLowerCase()
-                                                          .contains('emergency')
-                                                      ? Colors.teal
-                                                      : null)),
+                                  PesoMascot.withSpeech(
+                                    size: 64,
+                                    mood: PesoMood.thinking,
+                                    text:
+                                        "Wala pang savings goal!\nSabi mo gusto mo ng laptop? Start iyon! 🎯",
+                                  ),
+                                  const SizedBox(height: 12),
+                                  const Text("No savings goals yet",
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w500)),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                      "Tap + or tell Peso what you're saving for.",
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12)),
+                                  const SizedBox(height: 20),
+                                  ElevatedButton.icon(
+                                    icon: const Icon(Icons.add),
+                                    label: const Text("Create a Goal"),
+                                    onPressed: () => _showAddDialog(),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  OutlinedButton.icon(
+                                    icon: const Icon(Icons.shield_outlined,
+                                        size: 16),
+                                    label: const Text("Start Emergency Fund"),
+                                    onPressed: _showEmergencyFundDialog,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: _load,
+                      child: ListView.builder(
+                        padding: EdgeInsets.fromLTRB(16, 16, 16,
+                            80 + MediaQuery.of(context).viewPadding.bottom),
+                        itemCount: _goals.length,
+                        itemBuilder: (_, i) {
+                          final g = _goals[i];
+                          final target = (g['target_amount'] as num).toDouble();
+                          final current =
+                              (g['current_amount'] as num).toDouble();
+                          final ratio = (current / target).clamp(0.0, 1.0);
+                          final done = current >= target;
+                          final deadline = g['deadline'] as String?;
+
+                          String? daysLeft;
+                          if (deadline != null && !done) {
+                            try {
+                              final d = DateTime.parse(deadline);
+                              final diff = d.difference(DateTime.now()).inDays;
+                              daysLeft =
+                                  diff > 0 ? "$diff days left" : "Overdue";
+                            } catch (_) {}
+                          }
+
+                          return Card(
+                            elevation: 2,
+                            shadowColor: Colors.black.withValues(alpha: 0.08),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16)),
+                            margin: const EdgeInsets.only(bottom: 12),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            if (done)
+                                              const Icon(Icons.check_circle,
+                                                  color: Colors.green,
+                                                  size: 20),
+                                            if (done) const SizedBox(width: 6),
+                                            if (!done &&
+                                                (g['name'] as String)
+                                                    .toLowerCase()
+                                                    .contains('emergency'))
+                                              const Icon(Icons.shield,
+                                                  color: Colors.teal, size: 20),
+                                            if (!done &&
+                                                (g['name'] as String)
+                                                    .toLowerCase()
+                                                    .contains('emergency'))
+                                              const SizedBox(width: 6),
+                                            Expanded(
+                                              child: Text(g['name'] as String,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                      color: (g['name']
+                                                                  as String)
+                                                              .toLowerCase()
+                                                              .contains(
+                                                                  'emergency')
+                                                          ? Colors.teal
+                                                          : null)),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.add_circle_outline,
+                                                size: 20),
+                                            onPressed: done
+                                                ? null
+                                                : () => _addContribution(g),
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            tooltip: "Add contribution",
+                                          ),
+                                          const SizedBox(width: 4),
+                                          IconButton(
+                                            icon: const Icon(Icons.history,
+                                                size: 18,
+                                                color: Colors.blueGrey),
+                                            onPressed: () async {
+                                              final h = await DBService
+                                                  .getGoalContributionHistory(
+                                                      g['id'] as int);
+                                              if (context.mounted) {
+                                                HistorySheet.show(
+                                                  context,
+                                                  title:
+                                                      '${g['name']} — Contributions',
+                                                  subtitle:
+                                                      '${h.length} contribution${h.length == 1 ? '' : 's'}',
+                                                  titleIcon:
+                                                      Icons.savings_outlined,
+                                                  history: h,
+                                                );
+                                              }
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            tooltip:
+                                                "View contribution history",
+                                          ),
+                                          const SizedBox(width: 4),
+                                          IconButton(
+                                            icon: const Icon(Icons.edit,
+                                                size: 18),
+                                            onPressed: () =>
+                                                _showAddDialog(existing: g),
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.delete_outline,
+                                                size: 18,
+                                                color: Colors.grey),
+                                            onPressed: () async {
+                                              final confirm =
+                                                  await showDialog<bool>(
+                                                context: context,
+                                                builder: (ctx) => AlertDialog(
+                                                  title:
+                                                      const Text("Delete Goal"),
+                                                  content: Text(
+                                                      "Delete \"${g['name']}\"? This cannot be undone."),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              ctx, false),
+                                                      child:
+                                                          const Text("Cancel"),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(
+                                                              ctx, true),
+                                                      child: const Text(
+                                                          "Delete",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                              if (confirm == true) {
+                                                await DBService.deleteGoal(
+                                                    g['id'] as int);
+                                                _load();
+                                              }
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // Show purpose if set
+                                  if (g['purpose'] != null &&
+                                      (g['purpose'] as String).isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 8),
+                                      child: Text(
+                                        g['purpose'] as String,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: cs.onSurface
+                                                .withValues(alpha: 0.55),
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(6),
+                                    child: LinearProgressIndicator(
+                                      value: ratio,
+                                      minHeight: 10,
+                                      backgroundColor:
+                                          cs.surfaceContainerHighest,
+                                      valueColor: AlwaysStoppedAnimation(done
+                                          ? Colors.green
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary),
                                     ),
                                   ),
+                                  const SizedBox(height: 8),
                                   Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                            Icons.add_circle_outline,
-                                            size: 20),
-                                        onPressed: done
-                                            ? null
-                                            : () => _addContribution(g),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        tooltip: "Add contribution",
-                                      ),
-                                      const SizedBox(width: 4),
-                                      IconButton(
-                                        icon: const Icon(Icons.history,
-                                            size: 18, color: Colors.blueGrey),
-                                        onPressed: () async {
-                                          final h = await DBService
-                                              .getGoalContributionHistory(
-                                                  g['id'] as int);
-                                          if (context.mounted) {
-                                            HistorySheet.show(
-                                              context,
-                                              title:
-                                                  '${g['name']} — Contributions',
-                                              subtitle:
-                                                  '${h.length} contribution${h.length == 1 ? '' : 's'}',
-                                              titleIcon: Icons.savings_outlined,
-                                              history: h,
-                                            );
-                                          }
-                                        },
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        tooltip: "View contribution history",
-                                      ),
-                                      const SizedBox(width: 4),
-                                      IconButton(
-                                        icon: const Icon(Icons.edit, size: 18),
-                                        onPressed: () =>
-                                            _showAddDialog(existing: g),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete_outline,
-                                            size: 18, color: Colors.grey),
-                                        onPressed: () async {
-                                          final confirm =
-                                              await showDialog<bool>(
-                                            context: context,
-                                            builder: (ctx) => AlertDialog(
-                                              title: const Text("Delete Goal"),
-                                              content: Text(
-                                                  "Delete \"${g['name']}\"? This cannot be undone."),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(ctx, false),
-                                                  child: const Text("Cancel"),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(ctx, true),
-                                                  child: const Text("Delete",
-                                                      style: TextStyle(
-                                                          color: Colors.red)),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                          if (confirm == true) {
-                                            await DBService.deleteGoal(
-                                                g['id'] as int);
-                                            _load();
-                                          }
-                                        },
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              // Show purpose if set
-                              if (g['purpose'] != null &&
-                                  (g['purpose'] as String).isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: Text(
-                                    g['purpose'] as String,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: cs.onSurface
-                                            .withValues(alpha: 0.55),
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: LinearProgressIndicator(
-                                  value: ratio,
-                                  minHeight: 10,
-                                  backgroundColor: cs.surfaceContainerHighest,
-                                  valueColor: AlwaysStoppedAnimation(done
-                                      ? Colors.green
-                                      : Theme.of(context).colorScheme.primary),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${CurrencyService.format(current)} / ${CurrencyService.format(target)}",
-                                    style: TextStyle(
-                                        color:
-                                            cs.onSurface.withValues(alpha: 0.7),
-                                        fontSize: 13),
-                                  ),
-                                  Row(
-                                    children: [
-                                      if (daysLeft != null)
-                                        Text(daysLeft,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: daysLeft == "Overdue"
-                                                    ? Colors.red
-                                                    : cs.onSurface.withValues(
-                                                        alpha: 0.5))),
-                                      if (done)
-                                        const Text("Goal reached! 🎉",
-                                            style: TextStyle(
-                                                color: Colors.green,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 12)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              if (!done)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "${(ratio * 100).toStringAsFixed(0)}% — ${CurrencyService.format(target - current)} to go",
+                                        "${CurrencyService.format(current)} / ${CurrencyService.format(target)}",
                                         style: TextStyle(
-                                            fontSize: 11,
                                             color: cs.onSurface
-                                                .withValues(alpha: 0.5)),
+                                                .withValues(alpha: 0.7),
+                                            fontSize: 13),
                                       ),
-                                      if (g['start_date'] != null)
-                                        Text(
-                                          "Since ${g['start_date']}",
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              color: cs.onSurface
-                                                  .withValues(alpha: 0.4)),
-                                        ),
+                                      Row(
+                                        children: [
+                                          if (daysLeft != null)
+                                            Text(daysLeft,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: daysLeft == "Overdue"
+                                                        ? Colors.red
+                                                        : cs.onSurface
+                                                            .withValues(
+                                                                alpha: 0.5))),
+                                          if (done)
+                                            const Text("Goal reached! 🎉",
+                                                style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12)),
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ),
-                              if (!done)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: SizedBox(
-                                    width: double.infinity,
-                                    child: OutlinedButton.icon(
-                                      onPressed: () => _addContribution(g),
-                                      icon: const Icon(Icons.add, size: 16),
-                                      label: const Text("Add Contribution",
-                                          style: TextStyle(fontSize: 13)),
-                                      style: OutlinedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 8),
-                                        visualDensity: VisualDensity.compact,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              // NI-2: Goal pace indicator (only when deadline set)
-                              if (!done && deadline != null)
-                                Builder(
-                                  builder: (ctx) {
-                                    try {
-                                      final deadlineDate =
-                                          DateTime.parse(deadline);
-                                      final monthsLeft = deadlineDate
-                                              .difference(DateTime.now())
-                                              .inDays /
-                                          30;
-                                      if (monthsLeft <= 0)
-                                        return const SizedBox.shrink();
-                                      final needed =
-                                          (target - current) / monthsLeft;
-                                      // Estimate monthly contribution from income
-                                      // We don't have income here, so just show the needed amount
-                                      return Padding(
-                                        padding: const EdgeInsets.only(top: 3),
-                                        child: Text(
-                                          "💡 Save ${CurrencyService.format(needed)}/month to reach goal by deadline",
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              color: cs.primary
-                                                  .withValues(alpha: 0.7),
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      );
-                                    } catch (_) {
-                                      return const SizedBox.shrink();
-                                    }
-                                  },
-                                ),
-                              // Deadline nudge — tapping opens edit dialog to set deadline
-                              if (!done &&
-                                  deadline == null &&
-                                  current < target * 0.05)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 6),
-                                  child: GestureDetector(
-                                    onTap: () => _showAddDialog(existing: g),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 6),
-                                      decoration: BoxDecoration(
-                                        color: Colors.amber
-                                            .withValues(alpha: 0.09),
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                            color: Colors.amber
-                                                .withValues(alpha: 0.3)),
-                                      ),
-                                      child: Row(children: [
-                                        const Icon(Icons.flag_outlined,
-                                            size: 13, color: Colors.amber),
-                                        const SizedBox(width: 6),
-                                        const Expanded(
-                                          child: Text(
-                                            "Tap to set a deadline — unlocks monthly contribution suggestions",
+                                  if (!done)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "${(ratio * 100).toStringAsFixed(0)}% — ${CurrencyService.format(target - current)} to go",
                                             style: TextStyle(
                                                 fontSize: 11,
-                                                color: Colors.amber),
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.5)),
+                                          ),
+                                          if (g['start_date'] != null)
+                                            Text(
+                                              "Since ${g['start_date']}",
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: cs.onSurface
+                                                      .withValues(alpha: 0.4)),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  if (!done)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: OutlinedButton.icon(
+                                          onPressed: () => _addContribution(g),
+                                          icon: const Icon(Icons.add, size: 16),
+                                          label: const Text("Add Contribution",
+                                              style: TextStyle(fontSize: 13)),
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8),
+                                            visualDensity:
+                                                VisualDensity.compact,
                                           ),
                                         ),
-                                        const Icon(Icons.chevron_right,
-                                            size: 14, color: Colors.amber),
-                                      ]),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                            ], // closes Column children
-                          ), // closes Column
-                        ), // closes Card Padding
-                      ); // closes Card
-                    }, // closes itemBuilder
-                  ), // closes ListView.builder
-                ), // closes outer widget
+                                  // NI-2: Goal pace indicator (only when deadline set)
+                                  if (!done && deadline != null)
+                                    Builder(
+                                      builder: (ctx) {
+                                        try {
+                                          final deadlineDate =
+                                              DateTime.parse(deadline);
+                                          final monthsLeft = deadlineDate
+                                                  .difference(DateTime.now())
+                                                  .inDays /
+                                              30;
+                                          if (monthsLeft <= 0)
+                                            return const SizedBox.shrink();
+                                          final needed =
+                                              (target - current) / monthsLeft;
+                                          // Estimate monthly contribution from income
+                                          // We don't have income here, so just show the needed amount
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 3),
+                                            child: Text(
+                                              "💡 Save ${CurrencyService.format(needed)}/month to reach goal by deadline",
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: cs.primary
+                                                      .withValues(alpha: 0.7),
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          );
+                                        } catch (_) {
+                                          return const SizedBox.shrink();
+                                        }
+                                      },
+                                    ),
+                                  // Deadline nudge — tapping opens edit dialog to set deadline
+                                  if (!done &&
+                                      deadline == null &&
+                                      current < target * 0.05)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 6),
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            _showAddDialog(existing: g),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber
+                                                .withValues(alpha: 0.09),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: Colors.amber
+                                                    .withValues(alpha: 0.3)),
+                                          ),
+                                          child: Row(children: [
+                                            const Icon(Icons.flag_outlined,
+                                                size: 13, color: Colors.amber),
+                                            const SizedBox(width: 6),
+                                            const Expanded(
+                                              child: Text(
+                                                "Tap to set a deadline — unlocks monthly contribution suggestions",
+                                                style: TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.amber),
+                                              ),
+                                            ),
+                                            const Icon(Icons.chevron_right,
+                                                size: 14, color: Colors.amber),
+                                          ]),
+                                        ),
+                                      ),
+                                    ),
+                                ], // closes Column children
+                              ), // closes Column
+                            ), // closes Card Padding
+                          ); // closes Card
+                        }, // closes itemBuilder
+                      ), // closes ListView.builder
+                    ), // closes outer widget
+          PesoScreenTip(
+            screenKey: 'tip_goals',
+            tipText:
+                'Set goals with deadlines — I\'ll track your monthly contribution needed! 🎯',
+            mood: PesoMood.excited,
+          ),
+        ],
+      ),
     );
   }
 }
