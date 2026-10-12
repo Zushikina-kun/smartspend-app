@@ -38,6 +38,7 @@ import 'bill_calendar_screen.dart';
 import 'manage_categories_screen.dart';
 import 'manage_rules_screen.dart';
 import 'whats_new_screen.dart';
+import 'quick_tips_screen.dart';
 import 'achievements_screen.dart';
 import 'bank_import_screen.dart';
 import 'insurance_screen.dart';
@@ -131,6 +132,19 @@ class _HomeScreenState extends State<HomeScreen> {
         if (mounted) {
           Navigator.push(context,
               MaterialPageRoute(builder: (_) => const WhatsNewScreen()));
+        }
+      }
+      // Show Quick Tips once on very first launch
+      final shouldShowTips = await QuickTipsScreen.shouldShow();
+      if (shouldShowTips && mounted) {
+        await Future.delayed(const Duration(milliseconds: 800));
+        if (mounted) {
+          await showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (_) => const QuickTipsScreen(),
+          );
         }
       }
     }
@@ -403,21 +417,37 @@ class _HomeScreenState extends State<HomeScreen> {
         Scaffold(
           body: Column(
             children: [
-              // Offline indicator — Peso looking sad
+              // Offline indicator — tappable for more info
               if (_isOffline)
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                  color: const Color(0xFF1C1C1E),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Text("😟 Peso can't connect — AI unavailable offline",
+                GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Core features (logging, analytics, budgets, goals) work offline. '
+                          'Peso AI and market data need internet.',
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 4),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    color: const Color(0xFF1C1C1E),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 8),
+                        Text(
+                          '📴 Offline — core features work. Peso AI needs internet.',
                           style:
-                              TextStyle(color: Colors.white70, fontSize: 11.5)),
-                    ],
+                              TextStyle(color: Colors.white70, fontSize: 11.5),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               // Offline account banners — local mode or demo mode
@@ -1043,6 +1073,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
               await Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const BankImportScreen()));
             }
+          ),
+          (
+            Icons.save_alt_rounded,
+            'Export & Backup',
+            'CSV export · JSON backup · Restore',
+            Colors.brown,
+            () => _go(const ProfileScreen()),
           ),
           (
             Icons.photo_library_outlined,

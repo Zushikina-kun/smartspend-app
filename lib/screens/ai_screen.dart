@@ -69,6 +69,7 @@ class _AIScreenState extends State<AIScreen> {
   // One-time dialog shown before the first financial advice response.
   // Satisfies RA 11765 responsible-AI positioning: "not a licensed adviser".
   bool _adviceDisclaimerShown = false;
+  bool _privacyDisclaimerShown = false;
 
   @override
   void initState() {
@@ -76,6 +77,7 @@ class _AIScreenState extends State<AIScreen> {
     _loadContext();
     _checkClipboardForTransaction(); // nudge if GCash/bank text detected
     _loadAdviceDisclaimerState(); // restore one-time advice disclaimer flag
+    _loadPrivacyDisclaimerState(); // restore privacy disclosure flag
     _checkShareIntent(); // check if app was opened via Android share intent
     // Silently refresh AI context when data changes elsewhere (debounced)
     _eventSub = AppEventBus.instance.stream.listen((event) {
@@ -128,6 +130,91 @@ class _AIScreenState extends State<AIScreen> {
         setState(() => _adviceDisclaimerShown = true);
       }
     } catch (_) {}
+  }
+
+  /// Load the one-time privacy disclosure flag from DB.
+  Future<void> _loadPrivacyDisclaimerState() async {
+    try {
+      final seen = await DBService.getSetting('ai_privacy_disclosed');
+      if (seen == 'true' && mounted) {
+        setState(() => _privacyDisclaimerShown = true);
+      }
+    } catch (_) {}
+  }
+
+  /// Show the one-time privacy disclosure bottom sheet.
+  /// Does NOT block sending — just informs the user, then returns.
+  Future<void> _showPrivacyDisclaimer() async {
+    final cs = Theme.of(context).colorScheme;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        decoration: BoxDecoration(
+          color: cs.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: cs.onSurface.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text('🔒 About Peso AI',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              Text(
+                'When you send a message to Peso, your text is processed by an AI '
+                'provider (Gemini, Groq, or your local server in Local AI mode).\n\n'
+                'Your expense data and history are summarized locally and included '
+                'as context — this helps Peso give you personalized answers.\n\n'
+                'No data is sold or used for advertising. In Local AI mode, '
+                'nothing leaves your device.\n\n'
+                'You can change your AI provider anytime in Settings → AI Model.',
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.5,
+                  color: cs.onSurface.withValues(alpha: 0.85),
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () async {
+                    setState(() => _privacyDisclaimerShown = true);
+                    await DBService.setSetting('ai_privacy_disclosed', 'true');
+                    if (context.mounted) Navigator.pop(context);
+                  },
+                  child: const Text('Got it'),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Switch to Local AI — go to Settings'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   /// Show the one-time financial advice disclaimer dialog.
@@ -572,6 +659,11 @@ class _AIScreenState extends State<AIScreen> {
   Future<void> _send({String? retryText}) async {
     final text = retryText ?? _controller.text.trim();
     if (text.isEmpty || _sending) return;
+
+    // ── PRIVACY DISCLAIMER — show once on first ever AI message sent ──
+    if (!_privacyDisclaimerShown) {
+      await _showPrivacyDisclaimer();
+    }
 
     // ── ADVICE DISCLAIMER — show once before first financial advice query ──
     // Detects advice-type queries before sending; shows dialog only once ever.
