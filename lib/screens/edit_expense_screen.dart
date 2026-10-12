@@ -7,6 +7,7 @@ import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import 'package:image_picker/image_picker.dart';
 
 const _paymentMethods = [
@@ -178,7 +179,15 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Expense"),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 22, mood: PesoMood.neutral),
+            const SizedBox(width: 8),
+            const Text('Edit Expense'),
+          ],
+        ),
         actions: const [
           InfoButton(
             title: "Edit Expense",

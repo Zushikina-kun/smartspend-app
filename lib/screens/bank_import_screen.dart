@@ -8,6 +8,7 @@ import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import 'smart_camera_screen.dart';
 
 /// Import transactions from any bank or e-wallet transaction history.
@@ -280,6 +281,15 @@ class _BankImportScreenState extends State<BankImportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Center(
+                    child: PesoMascot.withSpeech(
+                      size: 56,
+                      mood: PesoMood.winking,
+                      text:
+                          'Paste GCash, BPI, BDO, or Maya text —\nI\'ll parse everything automatically! 📋',
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   // Source selector
                   const Text("Source",
                       style:

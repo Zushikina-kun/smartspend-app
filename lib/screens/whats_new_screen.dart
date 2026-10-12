@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/peso_mascot.dart';
 
 /// UX-5: What's New screen — shown once after each version update.
 class WhatsNewScreen extends StatelessWidget {
@@ -557,8 +558,8 @@ class WhatsNewScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.new_releases_outlined,
-                      size: 40, color: cs.primary),
+                  // ignore: prefer_const_constructors
+                  PesoMascot(size: 80, mood: PesoMood.excited),
                   const SizedBox(height: 8),
                   Text(
                     "SmartSpend v$_version",

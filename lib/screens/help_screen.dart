@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/peso_mascot.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});
@@ -77,9 +78,22 @@ class _HelpScreenState extends State<HelpScreen> {
             )
           : ListView.builder(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-              itemCount: filtered.length,
+              itemCount: filtered.length + 1,
               itemBuilder: (_, si) {
-                final section = filtered[si];
+                if (si == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: PesoMascot.withSpeech(
+                        size: 64,
+                        mood: PesoMood.winking,
+                        text:
+                            'Need help? I\'m here!\nCan\'t find it? Ask me in the Peso AI tab! 💬',
+                      ),
+                    ),
+                  );
+                }
+                final section = filtered[si - 1];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

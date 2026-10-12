@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 class BankComparisonScreen extends StatefulWidget {
   const BankComparisonScreen({super.key});
@@ -92,10 +93,23 @@ class _BankComparisonScreenState extends State<BankComparisonScreen>
         .toList();
     return ListView.builder(
       padding: const EdgeInsets.all(12),
-      itemCount: banks.length + 1,
+      itemCount: banks.length + 2,
       itemBuilder: (_, i) {
-        if (i == 0) return _buildBankHeader();
-        final bank = banks[i - 1] as Map<String, dynamic>;
+        if (i == 0) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Center(
+              child: PesoMascot.withSpeech(
+                size: 52,
+                mood: PesoMood.winking,
+                text:
+                    'Compare PH banks & digital banks!\nRates, minimums, features — all here. 🏦',
+              ),
+            ),
+          );
+        }
+        if (i == 1) return _buildBankHeader();
+        final bank = banks[i - 2] as Map<String, dynamic>;
         return _buildBankCard(bank);
       },
     );

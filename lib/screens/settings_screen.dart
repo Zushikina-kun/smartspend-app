@@ -6,6 +6,7 @@ import '../services/event_bus.dart';
 import '../services/theme_service.dart';
 import '../main.dart';
 import '../widgets/local_ai_setup_sheet.dart';
+import '../widgets/peso_mascot.dart';
 import 'home_screen.dart' show SpendingLimitsSheet;
 import 'pin_setup_screen.dart';
 import 'currency_screen.dart';
@@ -842,7 +843,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── AI MODEL ─────────────────────────────────────────────────
-                _sectionLabel('AI MODEL'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 22, bottom: 4),
+                  child: Row(
+                    children: [
+                      // ignore: prefer_const_constructors
+                      PesoMascot(size: 18, mood: PesoMood.thinking),
+                      const SizedBox(width: 6),
+                      Text('AI MODEL',
+                          style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.grey[500],
+                              letterSpacing: 0.8)),
+                    ],
+                  ),
+                ),
                 _sectionHint(
                     'Switch the AI model. Auto-fallback still applies when limits are reached.'),
                 ...AppConfig.availableModels.map((m) {
@@ -1305,7 +1321,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _sectionLabel('FEEDBACK'),
                 _sectionCard([
                   ListTile(
-                    leading: const Icon(Icons.feedback_outlined),
+                    leading: SizedBox(
+                      width: 24, height: 24,
+                      // ignore: prefer_const_constructors
+                      child: PesoMascot(size: 22, mood: PesoMood.winking),
+                    ),
                     title: const Text('Send Feedback'),
                     subtitle: const Text('Report a bug or suggest a feature'),
                     trailing: const Icon(Icons.chevron_right, size: 18),

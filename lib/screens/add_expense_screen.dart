@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../widgets/peso_mascot.dart';
 import '../services/db_service.dart';
 import '../services/llm_service.dart';
 import '../services/voice_service.dart';
@@ -909,6 +910,22 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // ignore: prefer_const_constructors
+                  PesoMascot(size: 32, mood: PesoMood.winking),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Tell me what you spent — in Filipino or English! 💬',
+                    style: TextStyle(fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
             const Text("Describe your expense in plain language",
                 style: TextStyle(color: Colors.grey, fontSize: 13)),
             const SizedBox(height: 10),

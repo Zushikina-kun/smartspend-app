@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/debug_service.dart' show kAppVersion;
+import '../widgets/peso_mascot.dart';
 import 'feedback_screen.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -42,6 +43,11 @@ class AboutScreen extends StatelessWidget {
               style: TextStyle(fontSize: 14),
               textAlign: TextAlign.center,
             ),
+
+            const SizedBox(height: 8),
+            // ignore: prefer_const_constructors
+            Center(child: PesoMascot(size: 72, mood: PesoMood.happy)),
+            const SizedBox(height: 8),
 
             const SizedBox(height: 28),
             _dividerLabel("About the App"),
