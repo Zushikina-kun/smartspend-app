@@ -488,7 +488,11 @@ class _BankImportScreenState extends State<BankImportScreen> {
                                 height: 16,
                                 child: CircularProgressIndicator(
                                     strokeWidth: 2, color: Colors.white))
-                            : const Icon(Icons.smart_toy, size: 18),
+                            : SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: PesoMascot(
+                                    size: 18, mood: PesoMood.thinking)),
                         label: Text(
                             _parsing ? "Parsing with AI..." : "Parse with AI"),
                         style: ElevatedButton.styleFrom(

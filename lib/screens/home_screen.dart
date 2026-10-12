@@ -6539,7 +6539,12 @@ class _DashboardState extends State<Dashboard> {
                                 textAlign: TextAlign.center),
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
-                              icon: const Icon(Icons.smart_toy, size: 16),
+                              // ignore: prefer_const_constructors
+                              icon: SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: PesoMascot(
+                                      size: 16, mood: PesoMood.happy)),
                               label: const Text("Talk to Peso"),
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
