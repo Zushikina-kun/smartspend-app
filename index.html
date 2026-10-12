@@ -728,6 +728,46 @@
     .footer-brand { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 12px; font-weight: 800; font-size: 18px; color: var(--brand-blue); font-family: 'Plus Jakarta Sans', sans-serif; }
     .footer-lucid { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 12px 0; }
     .footer-lucid-label { font-size: 12px; color: var(--text-dim); }
+      /* WHAT IS SMARTSPEND */
+    .section-eyebrow { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--primary); margin-bottom:10px; }
+    .what-is-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
+    .what-is-pills { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+    .wi-pill { background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:13px; color:var(--text-muted); }
+    .what-is-problem { display:flex; flex-direction:column; gap:16px; }
+    .problem-card, .solution-card { border-radius:var(--radius); padding:20px 24px; }
+    .problem-card { background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.2); }
+    .solution-card { background:var(--primary-glow); border:1px solid var(--border-strong); }
+    .problem-header, .solution-header { font-weight:700; font-size:14px; margin-bottom:12px; font-family:'Plus Jakarta Sans',sans-serif; }
+    .problem-header { color:#f87171; }
+    .solution-header { color:var(--primary); }
+    .problem-list, .solution-list { padding-left:18px; display:flex; flex-direction:column; gap:8px; }
+    .problem-list li, .solution-list li { font-size:13px; color:var(--text-muted); line-height:1.5; }
+    .solution-list li { color:var(--text); }
+    @media(max-width:700px) { .what-is-grid { grid-template-columns:1fr; } }
+
+    /* HOW IT WORKS */
+    .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:20px; }
+    .step-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:24px 20px; position:relative; }
+    .step-number { position:absolute; top:-14px; left:20px; background:var(--primary); color:#000; font-weight:800; font-size:13px; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; }
+    .step-icon { font-size:2rem; margin-bottom:10px; }
+    .step-title { font-weight:700; font-size:15px; margin-bottom:8px; font-family:'Plus Jakarta Sans',sans-serif; }
+    .step-desc { font-size:13px; color:var(--text-muted); line-height:1.6; }
+    .how-it-note { background:var(--primary-glow); border:1px solid var(--border-strong); border-radius:10px; padding:12px 18px; font-size:13px; color:var(--text-muted); text-align:center; }
+    @media(max-width:700px) { .steps-grid { grid-template-columns:1fr; } }
+
+    /* FAQ */
+    .faq-grid { display:flex; flex-direction:column; gap:8px; }
+    .faq-item { background:var(--surface2); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .faq-q { width:100%; background:none; border:none; text-align:left; padding:16px 20px; font-size:14px; font-weight:600; color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:12px; font-family:'Plus Jakarta Sans',sans-serif; transition:background 0.2s; }
+    .faq-q:hover { background:var(--surface3); }
+    .faq-q[aria-expanded="true"] { color:var(--primary); border-bottom:1px solid var(--border); }
+    .faq-arrow { transition:transform 0.25s; font-size:16px; flex-shrink:0; }
+    .faq-q[aria-expanded="true"] .faq-arrow { transform:rotate(180deg); }
+    .faq-a { display:none; padding:14px 20px 16px; }
+    .faq-a.open { display:block; }
+    .faq-a p { font-size:13px; color:var(--text-muted); line-height:1.7; }
+    .faq-a a { color:var(--primary); }
+    .faq-a a:hover { text-decoration:underline; }
   </style></head>
 <body>
 <!-- SVG sprite — Peso mascot -->
@@ -761,11 +801,16 @@
     SmartSpend
   </a>
   <div class="nav-links" id="navLinks">
+    <a href="#what-is">About</a>
+    <a href="#what-is">About</a>
     <a href="#features">Features</a>
+    <a href="#how-it-works">How it Works</a>
+    <a href="#how-it-works">How it Works</a>
     <a href="#ai">AI</a>
     <a href="#privacy-ai">Privacy</a>
     <a href="#screenshots">Screenshots</a>
     <a href="#demo">Demo</a>
+    <a href="#faq">FAQ</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
     <a href="privacy.html">Privacy Policy</a>
@@ -778,11 +823,14 @@
     </button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
+    <a href="#what-is" onclick="closeMobileMenu()">About</a>
     <a href="#features" onclick="closeMobileMenu()">Features</a>
+    <a href="#how-it-works" onclick="closeMobileMenu()">How it Works</a>
     <a href="#ai" onclick="closeMobileMenu()">AI</a>
     <a href="#privacy-ai" onclick="closeMobileMenu()">Privacy</a>
     <a href="#screenshots" onclick="closeMobileMenu()">Screenshots</a>
     <a href="#demo" onclick="closeMobileMenu()">Demo</a>
+    <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
     <a href="#download" onclick="closeMobileMenu()">Download</a>
     <a href="#about" onclick="closeMobileMenu()">About</a>
     <a href="privacy.html" onclick="closeMobileMenu()">Privacy Policy</a>
@@ -824,6 +872,46 @@
   <div class="stat"><div class="stat-number" data-target="57">0</div><div class="stat-label">Currencies</div></div>
 </div>
 </div>
+<!-- WHAT IS SMARTSPEND -->
+<section class="section" id="what-is">
+  <div class="what-is-grid">
+    <div class="what-is-text">
+      <div class="section-eyebrow">🇵🇭 Built for Filipinos</div>
+      <div class="section-title">What is SmartSpend?</div>
+      <p class="section-sub" style="margin-bottom:20px">SmartSpend is a free, AI-powered personal finance app built specifically for Filipino spending habits — students, young professionals, and anyone trying to take control of their money without a finance degree.</p>
+      <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.75;margin-bottom:16px">Most finance apps are built for Western users — they don't understand GCash, Paluwagan, ShopeePay Later, Pag-IBIG, or the reality of living on a daily allowance. SmartSpend does.</p>
+      <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.75;margin-bottom:24px">You can talk to Peso — the AI — in Taglish. Log "nag-gastos ako ng 65 sa kainan" and it logs the expense, picks the category, and deducts it from your wallet. No forms, no friction.</p>
+      <div class="what-is-pills">
+        <span class="wi-pill">👩‍🎓 Students</span>
+        <span class="wi-pill">💼 Young Professionals</span>
+        <span class="wi-pill">🏠 Household Managers</span>
+        <span class="wi-pill">🔧 Freelancers</span>
+      </div>
+    </div>
+    <div class="what-is-problem">
+      <div class="problem-card">
+        <div class="problem-header">😤 The Problem</div>
+        <ul class="problem-list">
+          <li>Filipino financial apps are generic — no Taglish, no GCash, no Paluwagan</li>
+          <li>Manual expense logging takes too long — people give up after a week</li>
+          <li>No one knows their actual Financial Health Score</li>
+          <li>Installment plans (ShopeePayLater, HomeCredit) are hard to track</li>
+          <li>Cloud-based AI means your financial conversations are stored on foreign servers</li>
+        </ul>
+      </div>
+      <div class="solution-card">
+        <div class="solution-header">✅ SmartSpend solves this</div>
+        <ul class="solution-list">
+          <li>Chat in Taglish — Peso understands Filipino context</li>
+          <li>7 ways to log: chat, voice, camera, batch import, barcode, CSV, manual</li>
+          <li>Real-time FHS from 0–100 with a breakdown you can act on</li>
+          <li>Built-in installment, Paluwagan, and debt trackers</li>
+          <li>Local AI mode — your data never leaves your network</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="section" id="features">
   <div class="section-title">Everything you need to manage money</div>
   <div class="section-sub">Built specifically for Filipino spending habits, income cycles, and financial products.</div>
@@ -868,6 +956,34 @@
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
+<section class="section" id="how-it-works">
+  <div class="section-title">How it works</div>
+  <div class="section-sub">From download to daily use in 3 steps.</div>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <div class="step-icon">📲</div>
+      <div class="step-title">Download &amp; Set Up</div>
+      <p class="step-desc">Install the APK, choose your account type (Student, Employed, Freelancer, etc.), set your daily allowance or income, and add your wallets (Cash, GCash, bank). Takes 2 minutes. No account required.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <div class="step-icon">💬</div>
+      <div class="step-title">Log Your Expenses</div>
+      <p class="step-desc">Just tell Peso what you spent — in Filipino, English, or Taglish. Or snap a photo of your receipt. Or paste your GCash transaction history. SmartSpend handles the rest: category, wallet deduction, tags.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <div class="step-icon">📊</div>
+      <div class="step-title">Understand Your Money</div>
+      <p class="step-desc">Check your Financial Health Score, see where your money goes, set savings goals, and ask Peso for personalized advice. "Saan ako nag-o-overspend?" — Peso knows, because it's read your actual data.</p>
+    </div>
+  </div>
+  <div class="how-it-note">
+    <span>🔒 Everything works offline. Internet only needed for Peso AI chat and live exchange rates.</span>
+  </div>
+</section>
 <section class="ai-section" id="ai">
   <div class="ai-heading">
     <svg class="peso-mascot" style="--peso-size:48px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
@@ -1297,6 +1413,104 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-title">Common Questions</div>
+  <div class="section-sub">Everything you need to know before downloading.</div>
+  <div class="faq-grid">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        Is SmartSpend really free? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Yes — completely free, forever. No subscriptions, no premium tier, no ads. It's a capstone project built by CS students at Lorma Colleges. All features are available from day one. If it's useful to you, there's an optional support link at the bottom of this page.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        Do I need to create an account? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>No. Tap "Continue Without Account" on the login screen and you're in immediately. Your data is stored locally on your device. You can optionally connect a Google account later if you want cloud backup — but it's never required.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        Does it work without internet? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Yes. All core features — logging expenses, viewing analytics, managing budgets, tracking goals, checking your FHS — work fully offline. Internet is only needed for Peso AI chat responses and the live currency/market data feed. If you use Local AI mode (connecting to your own PC), even AI chat is offline.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        Is my financial data safe? Who can see it? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Your expense data lives on your device — not on our servers. When you use AI chat, the conversation text (not your full expense history) is sent to an AI provider to generate a response. If you use Local AI mode, nothing leaves your home network at all. We don't sell data, don't run ads, and don't have a business model that depends on your information.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        What Android version do I need? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Android 5.0 (API 21) or higher — which covers virtually every Android phone made after 2014. Install the arm64-v8a APK for any phone from 2018 onwards (this is 99% of phones in use today). If that doesn't install, try armeabi-v7a.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        Is it available on iPhone / iOS? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Not yet — SmartSpend is Android-only for now. An iOS version is something we'd love to build, but as a student capstone project with limited resources, we focused on Android first (where most Filipino users are). The app is built with Flutter, so an iOS port is technically feasible in a future version.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        What is the Financial Health Score (FHS)? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>FHS is a 0–100 score calculated from 4 pillars: Savings Rate (are you saving ≥20% of income?), Budget Adherence (are you staying within your category budgets?), Budget Setup (have you configured budgets?), and Logging Consistency (are you tracking regularly?). Each pillar contributes 25 points. The score updates in real time as you log expenses.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        What is "Local AI mode"? Do I need a PC? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Local AI mode lets Peso run on a local LLM server on your own PC instead of sending messages to cloud providers. You need to install <a href="https://ollama.com" target="_blank" rel="noopener noreferrer">Ollama</a>, LM Studio, or Jan on a PC connected to the same WiFi network as your phone. Once set up, go to App Settings → AI Model → Local AI, enter your PC's IP address, and Peso runs entirely on your hardware. This is optional — the app works great with the default cloud AI too.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        Does Peso understand Filipino / Taglish? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Yes. You can talk to Peso in Filipino, English, or Taglish — mix them freely. "Nag-gastos ako ng 65 sa Jollibee" works the same as "I spent 65 at Jollibee". Peso parses amounts, merchants, categories, and payment methods from natural language, including common Filipino shorthand (like "fare" for jeepney fare, "load" for prepaid data/calls).</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+        Can I import my GCash / bank transactions? <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <p>Yes, in several ways: paste the transaction SMS/text from GCash, BPI, BDO, or Maya directly into Peso chat and it extracts the expenses automatically. You can also import a CSV export or take batch screenshots of your GCash history — SmartSpend reads them via OCR and logs everything at once. Supports 40+ platforms including Shopee, Lazada, and Steam.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
 <section class="section" id="about">
   <div class="section-title">About SmartSpend</div>
   <p class="section-sub">A free, open-source capstone project built by Filipino CS students for Filipino users.</p>
@@ -1361,10 +1575,15 @@
     SmartSpend
   </div>
   <div class="footer-links">
+    <a href="#what-is">About</a>
+    <a href="#what-is">About</a>
     <a href="#features">Features</a>
+    <a href="#how-it-works">How it Works</a>
+    <a href="#how-it-works">How it Works</a>
     <a href="#ai">AI</a>
     <a href="#privacy-ai">Privacy</a>
     <a href="#screenshots">Screenshots</a>
+    <a href="#faq">FAQ</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
     <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">GitHub</a>
