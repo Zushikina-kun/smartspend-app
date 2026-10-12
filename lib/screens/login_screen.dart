@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/peso_mascot.dart';
 import '../models/user_profile.dart';
 import '../services/auth_service.dart';
 import '../services/demo_service.dart';
@@ -326,7 +327,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const Text("Your AI financial assistant",
                   style: TextStyle(color: Colors.grey)),
-              const SizedBox(height: 36),
+              const SizedBox(height: 16),
+              PesoMascot.withSpeech(
+                size: 64,
+                mood: PesoMood.happy,
+                text: 'Kumusta! Ako si Peso — your money buddy! 💚',
+              ),
+              const SizedBox(height: 20),
               TextField(
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,

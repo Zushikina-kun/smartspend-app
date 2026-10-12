@@ -90,6 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _startConnectivityCheck();
     _checkStartupAlerts();
     _checkDailyPesoNudge();
+    _checkNoSpendDay();
+    _checkBudgetPesoReaction();
     // Check local mode on first render
     AuthService.isLocalMode().then((v) {
       if (mounted) setState(() => _isLocalMode = v);
@@ -213,6 +215,146 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _checkBudgetPesoReaction() async {
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final prefs = await SharedPreferences.getInstance();
+
+    // Only once per day
+    final shown = prefs.getString('peso_budget_reaction') == today;
+    if (shown) return;
+
+    // Small delay so screen loads first
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (!mounted) return;
+
+    try {
+      final budgets = await DBService.getBudgets();
+      if (budgets.isEmpty) return;
+
+      final expenses = await DBService.getExpenses();
+      final now = DateTime.now();
+      final monthStart =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
+
+      // Calculate spending per category this month
+      final monthlySpending = <String, double>{};
+      for (final e in expenses) {
+        if (e.date.compareTo(monthStart) >= 0) {
+          monthlySpending[e.category] =
+              (monthlySpending[e.category] ?? 0) + e.amount;
+        }
+      }
+
+      // Check for over-budget categories
+      String? overCategory;
+      String? warningCategory;
+      double overPct = 0;
+      double warningPct = 0;
+
+      for (final b in budgets) {
+        final cat = b.category;
+        final limit = b.amount;
+        if (limit <= 0) continue;
+        final spent = monthlySpending[cat] ?? 0;
+        final pct = spent / limit * 100;
+        if (pct >= 100 && pct > overPct) {
+          overCategory = cat;
+          overPct = pct;
+        } else if (pct >= 80 && pct > warningPct && overCategory == null) {
+          warningCategory = cat;
+          warningPct = pct;
+        }
+      }
+
+      if (!mounted) return;
+      await prefs.setString('peso_budget_reaction', today);
+
+      if (overCategory != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
+          content: Row(children: [
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 28, mood: PesoMood.embarrassed),
+            const SizedBox(width: 10),
+            Expanded(
+                child: Text(
+                    '$overCategory over budget... 😬 But we can adjust!',
+                    style: const TextStyle(fontSize: 13))),
+          ]),
+        ));
+      } else if (warningCategory != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
+          content: Row(children: [
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 28, mood: PesoMood.worried),
+            const SizedBox(width: 10),
+            Expanded(
+                child: Text(
+                    '$warningCategory is at ${warningPct.round()}% — ingat tayo! ⚠️',
+                    style: const TextStyle(fontSize: 13))),
+          ]),
+        ));
+      } else {
+        // All budgets good — positive nudge
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          content: Row(children: [
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 28, mood: PesoMood.proud),
+            const SizedBox(width: 10),
+            const Expanded(
+                child: Text('All budgets on track! Peso is satisfied. 😌',
+                    style: TextStyle(fontSize: 13))),
+          ]),
+        ));
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _checkNoSpendDay() async {
+    final prefs = await SharedPreferences.getInstance();
+    final yesterday = DateTime.now()
+        .subtract(const Duration(days: 1))
+        .toIso8601String()
+        .substring(0, 10);
+
+    // Only show once per no-spend day
+    final shownFor = prefs.getString('peso_no_spend_shown');
+    if (shownFor == yesterday) return;
+
+    try {
+      final expenses = await DBService.getExpenses();
+      final yesterdayExpenses =
+          expenses.where((e) => e.date.startsWith(yesterday)).toList();
+      if (yesterdayExpenses.isNotEmpty) return; // yesterday had expenses
+
+      // Check there's at least one expense in history (not a brand new user)
+      if (expenses.isEmpty) return;
+
+      await prefs.setString('peso_no_spend_shown', yesterday);
+
+      await Future.delayed(const Duration(milliseconds: 1500));
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 4),
+        behavior: SnackBarBehavior.floating,
+        content: Row(children: [
+          // ignore: prefer_const_constructors
+          PesoMascot(size: 28, mood: PesoMood.proud),
+          const SizedBox(width: 10),
+          const Expanded(
+              child: Text('Yesterday — zero spending! No-Spend Day! 💚',
+                  style: TextStyle(fontSize: 13))),
+        ]),
+      ));
+    } catch (_) {}
   }
 
   Future<void> _checkStartupAlerts() async {
@@ -411,6 +553,41 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           );
+        }
+      } catch (_) {}
+      // Milestone expense count reactions (10, 50, 100)
+      try {
+        final allExp = await DBService.getExpenses();
+        final totalCount = allExp.length;
+        final prefs = await SharedPreferences.getInstance();
+
+        String? milestoneMsg;
+        if (totalCount == 10 && prefs.getString('peso_milestone_10') == null) {
+          milestoneMsg = '10 expenses logged! Getting into the habit! 🌱';
+          await prefs.setString('peso_milestone_10', 'done');
+        } else if (totalCount == 50 &&
+            prefs.getString('peso_milestone_50') == null) {
+          milestoneMsg = '50 expenses! Consistent ka talaga! 💪';
+          await prefs.setString('peso_milestone_50', 'done');
+        } else if (totalCount == 100 &&
+            prefs.getString('peso_milestone_100') == null) {
+          milestoneMsg = '100 EXPENSES! 🎉 Century Club — real tracker na! 🏆';
+          await prefs.setString('peso_milestone_100', 'done');
+        }
+
+        if (milestoneMsg != null && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 4),
+            behavior: SnackBarBehavior.floating,
+            content: Row(children: [
+              // ignore: prefer_const_constructors
+              PesoMascot(size: 28, mood: PesoMood.excited),
+              const SizedBox(width: 10),
+              Expanded(
+                  child:
+                      Text(milestoneMsg, style: const TextStyle(fontSize: 13))),
+            ]),
+          ));
         }
       } catch (_) {}
     } catch (e) {

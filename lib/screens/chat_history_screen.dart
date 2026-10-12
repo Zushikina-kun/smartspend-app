@@ -212,9 +212,9 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           : _sessions.isEmpty
               ? Center(
                   child: PesoMascot.withSpeech(
-                    mood: PesoMood.thinking,
+                    mood: PesoMood.winking,
                     text:
-                        'Wala pa tayong chat history!\nMag-usap tayo sa AI para magsimula.',
+                        'No chat history yet! 💬\nStart a conversation with me — ask anything about your finances!',
                   ),
                 )
               : RefreshIndicator(

@@ -497,9 +497,9 @@ class _RecurringScreenState extends State<RecurringScreen> {
                             children: [
                               PesoMascot.withSpeech(
                                 size: 64,
-                                mood: PesoMood.thinking,
+                                mood: PesoMood.winking,
                                 text:
-                                    "Wala pang recurring bills!\nTell me: 'Add Netflix ₱299 monthly' 📋",
+                                    'No recurring bills yet! 🔁\nAdd Netflix, GCash load, Meralco — I\'ll remind you before they\'re due!',
                               ),
                               const SizedBox(height: 12),
                               const Text("No recurring transactions yet",
