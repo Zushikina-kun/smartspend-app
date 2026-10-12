@@ -201,3 +201,35 @@ The defense script (`smartspend-thesis-defense-script.md`) likely doesn't mentio
 | D-3: Defense script update | Medium | 1h | 📋 Task |
 
 *Last updated: October 12, 2026*
+
+
+---
+
+## ADDENDUM — Peso Companion Phase 2 Status (Oct 12 late)
+
+### Completed (all committed)
+- ✅ Tappable PesoMascot (bounce + tapMood)
+- ✅ Peso-powered InfoButton (all 30+ ❓ buttons)
+- ✅ Daily no-log nudge
+- ✅ Budget status reaction (over/warning/all-green)
+- ✅ No-spend day celebration
+- ✅ First-log-of-day celebration
+- ✅ Expense count milestones (10/50/100)
+- ✅ Goal milestone celebrations (25/50/75/100%)
+- ✅ PesoVoice service (31 contexts)
+- ✅ 11 new badges (36 total) + Peso badge celebration
+- ✅ PesoScreenTip on budget/debt/savings goal screens
+- ✅ Peso on login screen
+- ✅ Improved empty states (recurring, chat history)
+- ✅ Quick Access heading Peso tip
+
+### Still remaining from Peso companion list
+| Task | File | Est. |
+|------|------|------|
+| FHS tier change announcement | home_screen.dart | 1h |
+| Streak milestone (7/14/21/30 days) | home_screen.dart | 1h |
+| PesoScreenTip on analytics, transactions, insurance | 3 files | 1h |
+| Wire PesoVoice to more Peso.withSpeech() calls | multiple | 1h |
+| Seasonal/holiday messages | startup_alerts_service.dart | 1h |
+| Floating Peso help button | multiple screens | 2h |
+| Peso in AppBar titles (5 screens) | multiple | 1h |

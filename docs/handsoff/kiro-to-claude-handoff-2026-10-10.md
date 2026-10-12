@@ -339,3 +339,44 @@ See `docs/handsoff/remaining-tasks-2026-10-12.md` for full list. Priority items:
 1. **D-1/D-2/D-3** — Update thesis Chapter 4, verification report, defense script (~4h writing)
 2. **L-1** — Language preference setting in Settings (~1h)
 3. **A-5/A-12/A-13** — FHS change reaction, budget card moods, streak bubbles (~4h)
+
+
+---
+
+## ADDENDUM 4 — October 12, 2026 (late) — Peso Companion System Complete
+
+> **Full record:** `docs/handsoff/kiro-to-kiro-handoff-2026-10-12-peso-companion.md`
+
+### What changed since Addendum 3
+Peso went from decorative mascot → active daily companion. All commits are on `master`.
+
+**New files:**
+- `lib/services/peso_voice_service.dart` — 31 Taglish speech contexts, random variants
+- `lib/widgets/peso_screen_tip.dart` — one-time first-visit tip overlay widget
+
+**Key behavior changes:**
+- All 30+ ❓ InfoButton dialogs → Peso bottom sheet (one file change, universal upgrade)
+- PesoMascot is now tappable: bounce + mood change on tap
+- Home screen: 5 staggered daily Peso checks (no-log nudge, no-spend day, budget status, FHS tier, streak milestone)
+- Goal milestones: 25/50/75/100% show Peso bottom sheet
+- Login screen: Peso welcomes user every time
+- 11 new badges (36 total) — all unlock with Peso celebration
+- First-visit tips on budget, debt, savings goal screens
+
+**Numbers updated:**
+| Metric | Old | New |
+|--------|-----|-----|
+| Achievement badges | 25 | **36** |
+| New widgets | — | peso_screen_tip.dart |
+| New services | — | peso_voice_service.dart |
+| PesoMood values | 12 | 12 (unchanged) |
+
+### Remaining Peso tasks (for next session)
+- FHS tier change announcement (`_checkFhsTierChange()` in home_screen) 
+- Streak milestone celebrations (7/14/21/30 days)
+- PesoScreenTip on 3 more screens (analytics, transactions, insurance)
+- Wire PesoVoice to more existing Peso speech locations
+- Seasonal/holiday messages
+
+### App still at v3.0.5 — these companion changes are post-release improvements
+The v3.0.5 APKs are the released version. All companion changes since are on `master` and will be part of v3.0.6 whenever that's tagged.
