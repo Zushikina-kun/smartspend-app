@@ -184,7 +184,7 @@
     .ss-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
     .ss-tab { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); transition: all .2s; user-select: none; }
     .ss-tab.active, .ss-tab:hover { background: var(--primary); color: #000; border-color: var(--primary); }
-    #lightbox { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,0.92); backdrop-filter: blur(8px); align-items: center; justify-content: center; animation: lbFadeIn 0.25s ease; }
+    #lightbox { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(0,0,0,0.92); backdrop-filter: blur(6px); justify-content: center; align-items: center; }
     #lightbox.open { display: flex; }
     @keyframes lbFadeIn { from{opacity:0} to{opacity:1} }
     .lb-inner { display: flex; flex-direction: column; align-items: center; animation: lbScaleIn 0.25s ease; max-width: 90vw; }
@@ -822,7 +822,9 @@
     /* CANVAS BACKGROUND */
     #bgCanvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.4; }
     [data-theme="light"] #bgCanvas { opacity:0.18; }
-    nav, .hero-wrapper, section, footer, #lightbox, #backToTop, .share-strip { position:relative; z-index:1; }
+    nav, .hero-wrapper, section, footer, .share-strip { position:relative; z-index:1; }
+    #backToTop { z-index:500; }
+    #lightbox { z-index:9000; }
     /* SECTION DIVIDERS */
     .section-divider { max-width:900px; margin:0 auto; height:1px; background:linear-gradient(to right,transparent,var(--border-strong),transparent); }
     /* SCROLL FADE-IN */
@@ -833,7 +835,35 @@
     .share-strip-text { font-size:14px; color:var(--text-muted); }
     .share-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; border:1px solid var(--border); background:var(--surface3); color:var(--text); cursor:pointer; transition:background 0.2s,transform 0.15s; }
     .share-btn:hover { background:var(--surface-elevated); transform:translateY(-1px); text-decoration:none; }
-    /* CHANGELOG */
+    /* FEEDBACK SECTION */
+    .feedback-banner { background:rgba(255,165,0,0.1); border:1px solid rgba(255,165,0,0.3); border-radius:12px; padding:16px 20px; margin-bottom:24px; display:flex; align-items:center; gap:14px; }
+    .feedback-banner-icon { font-size:1.8rem; flex-shrink:0; }
+    .feedback-banner strong { display:block; margin-bottom:4px; font-family:'Plus Jakarta Sans',sans-serif; }
+    .feedback-banner p { font-size:13px; color:var(--text-muted); margin:0; }
+    .feedback-grid { display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start; }
+    @media(max-width:800px) { .feedback-grid { grid-template-columns:1fr; } }
+    .feedback-form-panel { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:24px; }
+    .feedback-type-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .fb-type { background:var(--surface3); border:1px solid var(--border); border-radius:20px; padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer; color:var(--text-muted); transition:all .2s; }
+    .fb-type.active { background:var(--primary); color:#000; border-color:var(--primary); }
+    .feedback-field { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+    .feedback-field label { font-size:12px; font-weight:600; color:var(--text-muted); }
+    .feedback-field input, .feedback-field textarea { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:13px; color:var(--text); font-family:inherit; resize:vertical; transition:border-color .2s; }
+    .feedback-field input:focus, .feedback-field textarea:focus { outline:none; border-color:var(--primary); }
+    .fb-charcount { font-size:11px; color:var(--text-dim); text-align:right; margin-top:2px; }
+    .feedback-submit { width:100%; background:var(--primary); color:#000; border:none; border-radius:10px; padding:12px; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:background .2s,transform .15s; font-family:'Plus Jakarta Sans',sans-serif; }
+    .feedback-submit:hover { background:var(--primary-dark); transform:translateY(-1px); }
+    .feedback-submit:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+    .feedback-success { text-align:center; padding:32px 16px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .feedback-success strong { font-size:1.1rem; font-family:'Plus Jakarta Sans',sans-serif; }
+    .feedback-success p { font-size:13px; color:var(--text-muted); }
+    .feedback-reset-btn { background:var(--surface3); border:1px solid var(--border); border-radius:8px; padding:8px 16px; font-size:13px; cursor:pointer; color:var(--text); }
+    .feedback-info-panel { display:flex; flex-direction:column; gap:12px; }
+    .feedback-info-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+    .feedback-info-card strong { display:block; font-size:14px; margin-bottom:4px; font-family:'Plus Jakarta Sans',sans-serif; }
+    .feedback-info-card p { font-size:13px; color:var(--text-muted); margin:0; line-height:1.5; }
+    .feedback-info-card a { color:var(--primary); }
+
     .changelog-block { border-left:3px solid var(--primary); border-radius:0 12px 12px 0; background:var(--surface2); padding:16px 20px; margin-bottom:12px; }
     .changelog-ver { font-weight:800; color:var(--primary); font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; margin-bottom:10px; }
     .changelog-items { display:flex; flex-direction:column; gap:5px; }
@@ -939,6 +969,7 @@
     <a href="#privacy-ai">Privacy</a>
     <a href="#screenshots">Screenshots</a>
     <a href="#demo">Demo</a>
+    <a href="#feedback">Feedback</a>
     <a href="#faq">FAQ</a>
     <a href="#research">Research</a>
     
@@ -1243,29 +1274,29 @@
   </div>
   <div class="swiper screenshotsSwiper">
     <div class="swiper-wrapper" id="screenshotsWrapper">
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(0)" role="button" tabindex="0" aria-label="View startup screen full size"><img src="docs/tools/image_converter/Kiro_Ready/startup screen.jpg" alt="SmartSpend splash screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Welcome Screen</strong><span>Clean splash with the SmartSpend brand and tagline &mdash; &ldquo;Your AI Financial Assistant.&rdquo;</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(1)" role="button" tabindex="0" aria-label="View login screen full size"><img src="docs/tools/image_converter/Kiro_Ready/login screen.jpg" alt="Login screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Login / Sign Up</strong><span>Email, Google sign-in, or tap &ldquo;Continue Without Account&rdquo; &mdash; start tracking in seconds, no account required.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(2)" role="button" tabindex="0" aria-label="View home screen full size"><img src="docs/tools/image_converter/Kiro_Ready/home screen.jpg" alt="Home screen dark mode" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Home Dashboard</strong><span>Good Evening &mdash; &#8369;1,234 spent this month, My Wallets &#8369;6,110 (Cash/GCash/BDO), and a &ldquo;Score improved!&rdquo; toast after logging.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(3)" role="button" tabindex="0" aria-label="View FHS screen full size"><img src="docs/tools/image_converter/Kiro_Ready/fhs.jpg" alt="Financial Health Score breakdown" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Financial Health Score</strong><span>96/100 Excellent &mdash; broken into 4 pillars: Savings Rate, Budget Adherence, Budget Setup, and Logging Consistency. Tap any to see why.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(4)" role="button" tabindex="0" aria-label="View light mode screen full size"><img src="docs/tools/image_converter/Kiro_Ready/light mode.jpg" alt="Home light mode with FHS and cash flow" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Cash Flow Overview</strong><span>FHS 94/100 Excellent, Income &#8369;6,600, Spent &#8369;1,234, Bills Due &#8369;3,629, Remaining &#8369;1,737. Management Score 95/100 &mdash; Consistent Saver badge earned.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(5)" role="button" tabindex="0" aria-label="View quick access screen full size"><img src="docs/tools/image_converter/Kiro_Ready/quick access light.jpg" alt="Quick Access 9-icon grid" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Quick Access Hub</strong><span>9-icon grid: Analytics, Bill Calendar, Goals, Debts &amp; Plans, My Wallets, Budgets, Import, Recurring, Achievements &mdash; plus Goals Timeline (34%, 35%, 19%).</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(6)" role="button" tabindex="0" aria-label="View recent transactions screen full size"><img src="docs/tools/image_converter/Kiro_Ready/recent transactions light.jpg" alt="Recent Transactions list" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Recent Transactions</strong><span>Canteen Lunch &#8369;65, Jeepney Fare &#8369;13, Jollibee Chickenjoy &#8369;149 (tagged Want), Globe Load &#8369;99 via GCash, Grab Ride &#8369;85 &mdash; every peso accounted for.</span></div></div>
-      <div class="swiper-slide" data-tag="gamify"><div class="phone-frame" onclick="openLightbox(7)" role="button" tabindex="0" aria-label="View quick log screen full size"><img src="docs/tools/image_converter/Kiro_Ready/quick log light.jpg" alt="Quick Log chips and Daily Quests" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-gamify">Gamification</span><strong>Quick Log &amp; Daily Quests</strong><span>One-tap Quick Log chips (Tuition &#8369;3,500, Poco F8 Ultra &#8369;4,104, Grocery &#8369;540), 31-day streak, mood check-in, Daily Quests 4/4 complete, Weekly Challenge 6/7 days.</span></div></div>
-      <div class="swiper-slide" data-tag="gamify"><div class="phone-frame" onclick="openLightbox(8)" role="button" tabindex="0" aria-label="View achievements screen full size"><img src="docs/tools/image_converter/Kiro_Ready/achievements.jpg" alt="Achievements badges screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-gamify">Gamification</span><strong>Achievements &amp; Badges</strong><span>13/25 badges earned: First Step, App Explorer, 3-Day Streak, Week Warrior, Month Master, Saver, Goal Getter, Budget Boss, AI Power User and more.</span></div></div>
-      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightbox(9)" role="button" tabindex="0" aria-label="View AI chat screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai chat light.jpg" alt="Peso AI assistant welcome screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>Meet Peso</strong><span>&ldquo;Magandang umaga! Ako si Peso &mdash; your money buddy!&rdquo; Greeted in Filipino with smart suggestion chips and automatic GCash clipboard detection.</span></div></div>
-      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightbox(10)" role="button" tabindex="0" aria-label="View smart import screen full size"><img src="docs/tools/image_converter/Kiro_Ready/smart import options.jpg" alt="Smart Import options" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>Smart Import &mdash; 4 Ways to Log</strong><span>Live Camera (scan receipt/barcode), Single Photo (one screenshot), Batch Screenshots (Shopee/GCash/Steam), or Paste Text (GCash/BPI/Maya export). Your choice.</span></div></div>
-      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightbox(11)" role="button" tabindex="0" aria-label="View AI chat result screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai chat result.jpg" alt="AI chat logging 3 expenses at once" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>Log Multiple Expenses at Once</strong><span>&ldquo;Add 100 for gas, 100 for snack, 100 for beer&rdquo; &rarr; 3 expenses recorded instantly. Peso asks which wallet to deduct from &mdash; then it&apos;s done.</span></div></div>
-      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightbox(12)" role="button" tabindex="0" aria-label="View AI insights screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai insights.jpg" alt="AI Insights on Home" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>AI Insights on Home</strong><span>Peso surfaces real insights: spending breakdown by day, &ldquo;Consistent Saver&rdquo; badge, and a personalized paragraph calling out Jollibee, Mang Inasal, and canteen trends.</span></div></div>
-      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightbox(13)" role="button" tabindex="0" aria-label="View AI financial advice screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai financial advice.jpg" alt="AI Financial Advice in Analytics" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>AI Financial Advice</strong><span>Actionable tips from your actual data: raise savings rate to 40%, pack lunch twice a week, 48-hour cooling-off for impulse buys, switch to cheaper commute options.</span></div></div>
-      <div class="swiper-slide" data-tag="tools"><div class="phone-frame" onclick="openLightbox(14)" role="button" tabindex="0" aria-label="View batch screenshot import screen full size"><img src="docs/tools/image_converter/Kiro_Ready/batch screenshot import.jpg" alt="Batch screenshot import 10 images" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-tools">Tools</span><strong>Batch Screenshot Import</strong><span>Select 10 Shopee/GCash/Steam screenshots &rarr; 12 expenses extracted automatically, &#8369;19,587 total. Preview every item, then tap &ldquo;Import 12 Items.&rdquo;</span></div></div>
-      <div class="swiper-slide" data-tag="tools"><div class="phone-frame" onclick="openLightbox(15)" role="button" tabindex="0" aria-label="View batch import extraction screen full size"><img src="docs/tools/image_converter/Kiro_Ready/batch screenshot import 2.jpg" alt="Batch import extracted items list" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-tools">Tools</span><strong>Smart Item Extraction</strong><span>ATKGEAR VXE Mouse, USB-C Cable, Vention Audio, MI WiFi, AMD RX 6600 XT &#8369;13,758, Persona 3 Steam &#8369;1,329 &mdash; all auto-filled with name, amount, and merchant.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(16)" role="button" tabindex="0" aria-label="View spending category chart full size"><img src="docs/tools/image_converter/Kiro_Ready/spending category chart.jpg" alt="Analytics spending by category donut" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Analytics</span><strong>Spending by Category</strong><span>Color-coded donut: Food 33% &#8369;2,592, Bills 25% &#8369;12,510, School 22% &#8369;10,695, Shopping 12% &#8369;5,823 &mdash; with a This Month vs Last Month comparison table.</span></div></div>
-      <div class="swiper-slide" data-tag="tools"><div class="phone-frame" onclick="openLightbox(17)" role="button" tabindex="0" aria-label="View savings goals screen full size"><img src="docs/tools/image_converter/Kiro_Ready/new savings goals.jpg" alt="Savings Goals with New Goal sheet open" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-tools">Tools</span><strong>Savings Goals</strong><span>New Laptop &#8369;12k/&#8369;35k (89 days left), Emergency Fund &#8369;3.5k/&#8369;10k (179 days left) &mdash; add a new goal with name, target, deadline, and already-saved amount.</span></div></div>
-      <div class="swiper-slide" data-tag="ph"><div class="phone-frame" onclick="openLightbox(18)" role="button" tabindex="0" aria-label="View insurance screen full size"><img src="docs/tools/image_converter/Kiro_Ready/insurance and contributions.jpg" alt="Insurance and government contributions" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ph">Filipino</span><strong>Insurance &amp; Gov&apos;t Contributions</strong><span>Track Pag-IBIG MP2 (overdue!), PhilHealth, SSS &#8369;1,400/mo, and Sun Life Student Term Plan &mdash; &#8369;2,517/month total. Never miss a due date again.</span></div></div>
-      <div class="swiper-slide" data-tag="ph"><div class="phone-frame" onclick="openLightbox(19)" role="button" tabindex="0" aria-label="View PH banks screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ph banks and investment screen.jpg" alt="PH Banks reference screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ph">Filipino</span><strong>PH Banks Guide</strong><span>12 traditional banks sorted by min balance: BDO &#8369;2,000/0.25%, BPI &#8369;3,000/0.25%, Landbank &#8369;500/0.25%, RCBC &#8369;5,000/0.5% &mdash; branch counts and online access included.</span></div></div>
-      <div class="swiper-slide" data-tag="ph"><div class="phone-frame" onclick="openLightbox(20)" role="button" tabindex="0" aria-label="View PH investments screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ph banks and investment 2.jpg" alt="PH Investments reference screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ph">Filipino</span><strong>PH Investments Guide</strong><span>Pag-IBIG MP2 (6-7% VERY LOW risk, Min &#8369;500), T-Bills (5-6%, Min &#8369;10,000), RTBs (5-7%), UITF Bond Funds (3-5%) &mdash; built-in reference, no app-switching needed.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(21)" role="button" tabindex="0" aria-label="View notifications screen full size"><img src="docs/tools/image_converter/Kiro_Ready/notifications.jpg" alt="SmartSpend push notifications" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Alerts</span><strong>Proactive Notifications</strong><span>Gaming at 50%, Shopping at 70%, Daily limit exceeded (&#8369;128 over budget), Expected payment in 6 days, FHS Level Up to 90/100 &mdash; SmartSpend watches so you don&apos;t have to.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightbox(22)" role="button" tabindex="0" aria-label="View profile screen full size"><img src="docs/tools/image_converter/Kiro_Ready/profile light.jpg" alt="Profile screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Profile</span><strong>Your Financial Profile</strong><span>Demo User &mdash; 47 expenses, &#8369;49,074 total tracked, FHS 94/100, Wallet Balance +&#8369;6,110, Daily Allowance &#8369;6,600, Net Worth &#8369;21,760. Everything in one place.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View startup screen full size"><img src="docs/tools/image_converter/Kiro_Ready/startup screen.jpg" alt="SmartSpend splash screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Welcome Screen</strong><span>Clean splash with the SmartSpend brand and tagline &mdash; &ldquo;Your AI Financial Assistant.&rdquo;</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View login screen full size"><img src="docs/tools/image_converter/Kiro_Ready/login screen.jpg" alt="Login screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Login / Sign Up</strong><span>Email, Google sign-in, or tap &ldquo;Continue Without Account&rdquo; &mdash; start tracking in seconds, no account required.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View home screen full size"><img src="docs/tools/image_converter/Kiro_Ready/home screen.jpg" alt="Home screen dark mode" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Home Dashboard</strong><span>Good Evening &mdash; &#8369;1,234 spent this month, My Wallets &#8369;6,110 (Cash/GCash/BDO), and a &ldquo;Score improved!&rdquo; toast after logging.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View FHS screen full size"><img src="docs/tools/image_converter/Kiro_Ready/fhs.jpg" alt="Financial Health Score breakdown" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Financial Health Score</strong><span>96/100 Excellent &mdash; broken into 4 pillars: Savings Rate, Budget Adherence, Budget Setup, and Logging Consistency. Tap any to see why.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View light mode screen full size"><img src="docs/tools/image_converter/Kiro_Ready/light mode.jpg" alt="Home light mode with FHS and cash flow" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Cash Flow Overview</strong><span>FHS 94/100 Excellent, Income &#8369;6,600, Spent &#8369;1,234, Bills Due &#8369;3,629, Remaining &#8369;1,737. Management Score 95/100 &mdash; Consistent Saver badge earned.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View quick access screen full size"><img src="docs/tools/image_converter/Kiro_Ready/quick access light.jpg" alt="Quick Access 9-icon grid" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Quick Access Hub</strong><span>9-icon grid: Analytics, Bill Calendar, Goals, Debts &amp; Plans, My Wallets, Budgets, Import, Recurring, Achievements &mdash; plus Goals Timeline (34%, 35%, 19%).</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View recent transactions screen full size"><img src="docs/tools/image_converter/Kiro_Ready/recent transactions light.jpg" alt="Recent Transactions list" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Recent Transactions</strong><span>Canteen Lunch &#8369;65, Jeepney Fare &#8369;13, Jollibee Chickenjoy &#8369;149 (tagged Want), Globe Load &#8369;99 via GCash, Grab Ride &#8369;85 &mdash; every peso accounted for.</span></div></div>
+      <div class="swiper-slide" data-tag="gamify"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View quick log screen full size"><img src="docs/tools/image_converter/Kiro_Ready/quick log light.jpg" alt="Quick Log chips and Daily Quests" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-gamify">Gamification</span><strong>Quick Log &amp; Daily Quests</strong><span>One-tap Quick Log chips (Tuition &#8369;3,500, Poco F8 Ultra &#8369;4,104, Grocery &#8369;540), 31-day streak, mood check-in, Daily Quests 4/4 complete, Weekly Challenge 6/7 days.</span></div></div>
+      <div class="swiper-slide" data-tag="gamify"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View achievements screen full size"><img src="docs/tools/image_converter/Kiro_Ready/achievements.jpg" alt="Achievements badges screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-gamify">Gamification</span><strong>Achievements &amp; Badges</strong><span>13/25 badges earned: First Step, App Explorer, 3-Day Streak, Week Warrior, Month Master, Saver, Goal Getter, Budget Boss, AI Power User and more.</span></div></div>
+      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View AI chat screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai chat light.jpg" alt="Peso AI assistant welcome screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>Meet Peso</strong><span>&ldquo;Magandang umaga! Ako si Peso &mdash; your money buddy!&rdquo; Greeted in Filipino with smart suggestion chips and automatic GCash clipboard detection.</span></div></div>
+      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View smart import screen full size"><img src="docs/tools/image_converter/Kiro_Ready/smart import options.jpg" alt="Smart Import options" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>Smart Import &mdash; 4 Ways to Log</strong><span>Live Camera (scan receipt/barcode), Single Photo (one screenshot), Batch Screenshots (Shopee/GCash/Steam), or Paste Text (GCash/BPI/Maya export). Your choice.</span></div></div>
+      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View AI chat result screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai chat result.jpg" alt="AI chat logging 3 expenses at once" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>Log Multiple Expenses at Once</strong><span>&ldquo;Add 100 for gas, 100 for snack, 100 for beer&rdquo; &rarr; 3 expenses recorded instantly. Peso asks which wallet to deduct from &mdash; then it&apos;s done.</span></div></div>
+      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View AI insights screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai insights.jpg" alt="AI Insights on Home" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>AI Insights on Home</strong><span>Peso surfaces real insights: spending breakdown by day, &ldquo;Consistent Saver&rdquo; badge, and a personalized paragraph calling out Jollibee, Mang Inasal, and canteen trends.</span></div></div>
+      <div class="swiper-slide" data-tag="ai"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View AI financial advice screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ai financial advice.jpg" alt="AI Financial Advice in Analytics" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ai">AI</span><strong>AI Financial Advice</strong><span>Actionable tips from your actual data: raise savings rate to 40%, pack lunch twice a week, 48-hour cooling-off for impulse buys, switch to cheaper commute options.</span></div></div>
+      <div class="swiper-slide" data-tag="tools"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View batch screenshot import screen full size"><img src="docs/tools/image_converter/Kiro_Ready/batch screenshot import.jpg" alt="Batch screenshot import 10 images" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-tools">Tools</span><strong>Batch Screenshot Import</strong><span>Select 10 Shopee/GCash/Steam screenshots &rarr; 12 expenses extracted automatically, &#8369;19,587 total. Preview every item, then tap &ldquo;Import 12 Items.&rdquo;</span></div></div>
+      <div class="swiper-slide" data-tag="tools"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View batch import extraction screen full size"><img src="docs/tools/image_converter/Kiro_Ready/batch screenshot import 2.jpg" alt="Batch import extracted items list" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-tools">Tools</span><strong>Smart Item Extraction</strong><span>ATKGEAR VXE Mouse, USB-C Cable, Vention Audio, MI WiFi, AMD RX 6600 XT &#8369;13,758, Persona 3 Steam &#8369;1,329 &mdash; all auto-filled with name, amount, and merchant.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View spending category chart full size"><img src="docs/tools/image_converter/Kiro_Ready/spending category chart.jpg" alt="Analytics spending by category donut" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Analytics</span><strong>Spending by Category</strong><span>Color-coded donut: Food 33% &#8369;2,592, Bills 25% &#8369;12,510, School 22% &#8369;10,695, Shopping 12% &#8369;5,823 &mdash; with a This Month vs Last Month comparison table.</span></div></div>
+      <div class="swiper-slide" data-tag="tools"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View savings goals screen full size"><img src="docs/tools/image_converter/Kiro_Ready/new savings goals.jpg" alt="Savings Goals with New Goal sheet open" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-tools">Tools</span><strong>Savings Goals</strong><span>New Laptop &#8369;12k/&#8369;35k (89 days left), Emergency Fund &#8369;3.5k/&#8369;10k (179 days left) &mdash; add a new goal with name, target, deadline, and already-saved amount.</span></div></div>
+      <div class="swiper-slide" data-tag="ph"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View insurance screen full size"><img src="docs/tools/image_converter/Kiro_Ready/insurance and contributions.jpg" alt="Insurance and government contributions" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ph">Filipino</span><strong>Insurance &amp; Gov&apos;t Contributions</strong><span>Track Pag-IBIG MP2 (overdue!), PhilHealth, SSS &#8369;1,400/mo, and Sun Life Student Term Plan &mdash; &#8369;2,517/month total. Never miss a due date again.</span></div></div>
+      <div class="swiper-slide" data-tag="ph"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View PH banks screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ph banks and investment screen.jpg" alt="PH Banks reference screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ph">Filipino</span><strong>PH Banks Guide</strong><span>12 traditional banks sorted by min balance: BDO &#8369;2,000/0.25%, BPI &#8369;3,000/0.25%, Landbank &#8369;500/0.25%, RCBC &#8369;5,000/0.5% &mdash; branch counts and online access included.</span></div></div>
+      <div class="swiper-slide" data-tag="ph"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View PH investments screen full size"><img src="docs/tools/image_converter/Kiro_Ready/ph banks and investment 2.jpg" alt="PH Investments reference screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-ph">Filipino</span><strong>PH Investments Guide</strong><span>Pag-IBIG MP2 (6-7% VERY LOW risk, Min &#8369;500), T-Bills (5-6%, Min &#8369;10,000), RTBs (5-7%), UITF Bond Funds (3-5%) &mdash; built-in reference, no app-switching needed.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View notifications screen full size"><img src="docs/tools/image_converter/Kiro_Ready/notifications.jpg" alt="SmartSpend push notifications" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Alerts</span><strong>Proactive Notifications</strong><span>Gaming at 50%, Shopping at 70%, Daily limit exceeded (&#8369;128 over budget), Expected payment in 6 days, FHS Level Up to 90/100 &mdash; SmartSpend watches so you don&apos;t have to.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View profile screen full size"><img src="docs/tools/image_converter/Kiro_Ready/profile light.jpg" alt="Profile screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Profile</span><strong>Your Financial Profile</strong><span>Demo User &mdash; 47 expenses, &#8369;49,074 total tracked, FHS 94/100, Wallet Balance +&#8369;6,110, Daily Allowance &#8369;6,600, Net Worth &#8369;21,760. Everything in one place.</span></div></div>
     </div>
     <div class="swiper-pagination"></div>
     <div class="swiper-button-prev"></div>
@@ -1571,6 +1602,90 @@
     Both surveys are hosted on Google Forms. Your responses help validate SmartSpend as a capstone study and directly shape future improvements to the app. Salamat! 🙏 You can also find these surveys linked in the nav bar above.<br><small style="opacity:0.7">All responses are for academic research only — Lorma Colleges CCSE Capstone 2026.</small>`n  </div>
 </section>
 <!-- FAQ -->
+<div class="section-divider"></div>
+<!-- FEEDBACK / SUGGESTIONS -->
+<section class="section" id="feedback">
+  <div class="section-title">💬 Suggestions & Feedback</div>
+  <p class="section-sub">SmartSpend is actively being developed. Bug reports, feature ideas, and suggestions go directly to the team — every message is read.</p>
+
+  <div class="feedback-banner">
+    <div class="feedback-banner-icon">🚧</div>
+    <div>
+      <strong>Still in active development</strong>
+      <p>We ship updates regularly. If something's broken, missing, or could be better — tell us. You don't need a GitHub account.</p>
+    </div>
+  </div>
+
+  <div class="feedback-grid">
+    <!-- Form panel -->
+    <div class="feedback-form-panel">
+      <div id="feedbackSuccess" class="feedback-success" style="display:none">
+        <span style="font-size:2rem">🎉</span>
+        <strong>Sent! Salamat!</strong>
+        <p>Your feedback has been submitted. We'll review it and reply if you left an email.</p>
+        <button onclick="document.getElementById('feedbackSuccess').style.display='none';document.getElementById('feedbackFormEl').style.display=''" class="feedback-reset-btn">Send another</button>
+      </div>
+      <form id="feedbackFormEl" class="feedback-form" onsubmit="submitFeedback(event)">
+        <div class="feedback-type-row">
+          <button type="button" class="fb-type active" data-type="suggestion" onclick="setFbType(this)">💡 Suggestion</button>
+          <button type="button" class="fb-type" data-type="bug" onclick="setFbType(this)">🐛 Bug Report</button>
+          <button type="button" class="fb-type" data-type="question" onclick="setFbType(this)">❓ Question</button>
+          <button type="button" class="fb-type" data-type="other" onclick="setFbType(this)">💬 Other</button>
+        </div>
+        <div class="feedback-field">
+          <label for="fbTitle">Title / Topic <span style="color:var(--primary)">*</span></label>
+          <input type="text" id="fbTitle" placeholder="e.g. Add dark mode toggle, Crash on import screen" required maxlength="120" />
+        </div>
+        <div class="feedback-field">
+          <label for="fbDetails">Details <span style="color:var(--primary)">*</span></label>
+          <textarea id="fbDetails" placeholder="Describe the feature, bug, or idea. The more detail the better — steps to reproduce, what you expected vs what happened, your phone model if it's a crash." required rows="5" maxlength="2000"></textarea>
+          <div class="fb-charcount"><span id="fbChars">0</span> / 2000</div>
+        </div>
+        <div class="feedback-field">
+          <label for="fbEmail">Your Email <span style="color:var(--text-muted);font-size:12px">(optional — only if you want a reply)</span></label>
+          <input type="email" id="fbEmail" placeholder="you@example.com" maxlength="120" />
+        </div>
+        <div class="feedback-field" style="flex-direction:row;align-items:center;gap:10px">
+          <input type="checkbox" id="fbGhConsent" style="width:auto;accent-color:var(--primary)" />
+          <label for="fbGhConsent" style="font-size:12px;color:var(--text-muted);cursor:pointer">I understand this may be posted as a public GitHub issue (no personal info will be included)</label>
+        </div>
+        <button type="submit" class="feedback-submit" id="fbSubmitBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          Send Feedback
+        </button>
+        <p style="font-size:11px;color:var(--text-dim);margin-top:8px;text-align:center">
+          Alternatively: <a href="https://github.com/Zushikina-kun/smartspend-app/issues/new/choose" target="_blank" rel="noopener noreferrer">open a GitHub issue directly →</a>
+        </p>
+      </form>
+    </div>
+
+    <!-- Info panel -->
+    <div class="feedback-info-panel">
+      <div class="feedback-info-card">
+        <div style="font-size:1.5rem;margin-bottom:8px">🐛</div>
+        <strong>Bug Reports</strong>
+        <p>App crashes, wrong calculations, features not working. Include your phone model and Android version if possible.</p>
+      </div>
+      <div class="feedback-info-card">
+        <div style="font-size:1.5rem;margin-bottom:8px">💡</div>
+        <strong>Feature Ideas</strong>
+        <p>Something missing? A better way to do something? Filipino-specific features welcome — this app is built for you.</p>
+      </div>
+      <div class="feedback-info-card">
+        <div style="font-size:1.5rem;margin-bottom:8px">🌐</div>
+        <strong>See all open issues</strong>
+        <p><a href="https://github.com/Zushikina-kun/smartspend-app/issues" target="_blank" rel="noopener noreferrer">github.com/Zushikina-kun/smartspend-app/issues →</a></p>
+      </div>
+      <div class="feedback-info-card" style="background:var(--primary-glow);border-color:var(--border-strong)">
+        <div style="font-size:1.5rem;margin-bottom:8px">⭐</div>
+        <strong>Rate on Google Play</strong>
+        <p style="color:var(--text-muted)">Coming soon — SmartSpend will be on the Play Store. A rating helps it reach more Filipinos!</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"></div>
+<!-- FAQ -->
 <section class="section" id="faq">
   <div class="section-title">Common Questions</div>
   <div class="section-sub">Everything you need to know before downloading.</div>
@@ -1819,7 +1934,8 @@
         <a href="#ai">AI</a>
         <a href="#privacy-ai">Privacy</a>
         <a href="#screenshots">Screenshots</a>
-        <a href="#faq">FAQ</a>
+        <a href="#feedback">Feedback</a>
+    <a href="#faq">FAQ</a>
         <a href="#research">Research</a>
         <a href="#download">Download</a>
         <a href="#about">About</a>
@@ -1921,19 +2037,30 @@ function buildLbSlides() {
   });
 }
 
-function openLightbox(slideIdx) {
+function openLightboxEl(el) {
+  var slide = el.closest('.swiper-slide');
   buildLbSlides();
-  var visibleSlides = document.querySelectorAll('#screenshotsWrapper .swiper-slide:not([style*="display: none"])');
-  var mapped = 0;
-  for (var i = 0; i < visibleSlides.length; i++) {
-    var allSlides = document.querySelectorAll('#screenshotsWrapper .swiper-slide');
-    var originalIndex = Array.from(allSlides).indexOf(visibleSlides[i]);
-    if (originalIndex === slideIdx) { lbIndex = mapped; break; }
-    mapped++;
-  }
+  var allVisible = Array.from(document.querySelectorAll('#screenshotsWrapper .swiper-slide')).filter(function(s) {
+    return s.style.display !== 'none';
+  });
+  var idx = allVisible.indexOf(slide);
+  if (idx === -1) idx = 0;
+  lbIndex = idx;
   if (lbSlides.length === 0) return;
   setLbSlide(lbIndex);
-  document.getElementById('lightbox').classList.add('open');
+  var lb = document.getElementById('lightbox');
+  lb.style.display = 'flex';
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function openLightbox(slideIdx) {
+  buildLbSlides();
+  if (lbSlides.length === 0) return;
+  lbIndex = Math.max(0, Math.min(slideIdx, lbSlides.length - 1));
+  setLbSlide(lbIndex);
+  var lb = document.getElementById('lightbox');
+  lb.style.display = 'flex';
+  lb.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
@@ -1950,7 +2077,9 @@ function setLbSlide(idx) {
 }
 
 function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
+  var lb = document.getElementById('lightbox');
+  lb.classList.remove('open');
+  lb.style.display = '';
   document.body.style.overflow = '';
 }
 
@@ -2035,7 +2164,7 @@ if (!statsEl) statsEl = document.querySelector('.stats');
 if (statsEl) statIO.observe(statsEl);
 
 /* ===== STICKY NAV ACTIVE ===== */
-var navSections = ['what-is','how-it-works','features','ai','privacy-ai','screenshots','demo','research','faq','download','changelog','about'];
+var navSections = ['what-is','how-it-works','features','ai','privacy-ai','screenshots','demo','research','feedback','faq','download','changelog','about'];
 var sectionIO = new IntersectionObserver(function(entries) {
   entries.forEach(function(entry) {
     if (entry.isIntersecting) {
@@ -2274,7 +2403,65 @@ demoWnBtns.forEach(function(btn) {
   });
 });
 
-/* ===== FAQ ACCORDION ===== */
+
+/* ===== FEEDBACK FORM ===== */
+var _fbType = 'suggestion';
+function setFbType(btn) {
+  document.querySelectorAll('.fb-type').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  _fbType = btn.dataset.type;
+}
+var fbDetails = document.getElementById('fbDetails');
+if (fbDetails) {
+  fbDetails.addEventListener('input', function() {
+    var el = document.getElementById('fbChars');
+    if (el) el.textContent = this.value.length;
+  });
+}
+function submitFeedback(e) {
+  e.preventDefault();
+  var title   = document.getElementById('fbTitle').value.trim();
+  var details = document.getElementById('fbDetails').value.trim();
+  var email   = document.getElementById('fbEmail').value.trim();
+  var consent = document.getElementById('fbGhConsent').checked;
+  var btn     = document.getElementById('fbSubmitBtn');
+  if (!title || !details) return;
+
+  // Build GitHub new-issue URL with prefilled title and body
+  // No token needed — opens GitHub with fields pre-filled, user submits themselves
+  // OR if consent given, we direct them straight to GitHub
+  var typeLabel = { suggestion:'[Suggestion]', bug:'[Bug]', question:'[Question]', other:'[Feedback]' }[_fbType] || '[Feedback]';
+  var ghTitle = encodeURIComponent(typeLabel + ' ' + title);
+  var ghBody = encodeURIComponent(
+    (email ? 'Submitted by: ' + email + '\n\n' : '') +
+    '**Type:** ' + _fbType + '\n\n' +
+    '**Details:**\n' + details + '\n\n' +
+    '---\n*Submitted via SmartSpend website feedback form*'
+  );
+  var ghUrl = 'https://github.com/Zushikina-kun/smartspend-app/issues/new?title=' + ghTitle + '&body=' + ghBody + '&labels=' + encodeURIComponent(_fbType);
+
+  btn.disabled = true;
+  btn.textContent = 'Opening GitHub…';
+
+  // Open GitHub pre-filled issue in new tab
+  window.open(ghUrl, '_blank', 'noopener,noreferrer');
+
+  // Show success state after short delay
+  setTimeout(function() {
+    document.getElementById('feedbackFormEl').style.display = 'none';
+    document.getElementById('feedbackSuccess').style.display = '';
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> Send Feedback';
+    // Reset form
+    document.getElementById('fbTitle').value = '';
+    document.getElementById('fbDetails').value = '';
+    document.getElementById('fbEmail').value = '';
+    document.getElementById('fbGhConsent').checked = false;
+    document.getElementById('fbChars').textContent = '0';
+  }, 800);
+}
+
+
 function toggleFaq(btn) {
   var isOpen = btn.getAttribute('aria-expanded') === 'true';
   document.querySelectorAll('.faq-q').forEach(function(b) {
