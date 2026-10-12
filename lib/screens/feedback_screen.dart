@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/peso_mascot.dart';
+import '../services/debug_service.dart' show kAppVersion;
 
 class FeedbackScreen extends StatefulWidget {
   final String? prefillType;
@@ -32,10 +33,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.prefillType != null) _selectedType = widget.prefillType!;
-    if (widget.prefillTitle != null) _titleCtrl.text = widget.prefillTitle!;
-    if (widget.prefillDetails != null)
+    if (widget.prefillType != null) {
+      _selectedType = widget.prefillType!;
+    }
+    if (widget.prefillTitle != null) {
+      _titleCtrl.text = widget.prefillTitle!;
+    }
+    if (widget.prefillDetails != null) {
       _detailsCtrl.text = widget.prefillDetails!;
+    }
   }
 
   @override
@@ -71,10 +77,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         deviceInfo = 'Platform: Android\n';
       } catch (_) {}
       final body = StringBuffer();
-      if (_emailCtrl.text.trim().isNotEmpty)
+      if (_emailCtrl.text.trim().isNotEmpty) {
         body.writeln('Submitted by: ${_emailCtrl.text.trim()}\n');
+      }
       body.writeln('**Type:** $_selectedType');
-      body.writeln('**App version:** 3.0.4');
+      body.writeln('**App version:** $kAppVersion');
       body.writeln(deviceInfo);
       body.writeln('**Details:**\n${_detailsCtrl.text.trim()}');
       body.writeln('\n---\n*Submitted via SmartSpend in-app feedback*');
@@ -102,10 +109,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     if (_submitted) {
       return Scaffold(
         appBar: AppBar(
-          title: Row(children: [
+          title: const Row(children: [
             PesoMascot(size: 28, mood: PesoMood.happy),
-            const SizedBox(width: 8),
-            const Text('Send Feedback'),
+            SizedBox(width: 8),
+            Text('Send Feedback'),
           ]),
         ),
         body: Center(
@@ -133,10 +140,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(children: [
+        title: const Row(children: [
           PesoMascot(size: 28, mood: PesoMood.happy),
-          const SizedBox(width: 8),
-          const Text('Send Feedback'),
+          SizedBox(width: 8),
+          Text('Send Feedback'),
         ]),
       ),
       body: SingleChildScrollView(
@@ -169,8 +176,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   border: OutlineInputBorder(),
                 ),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty)
+                  if (v == null || v.trim().isEmpty) {
                     return 'Please enter a title';
+                  }
                   return null;
                 },
               ),
@@ -186,8 +194,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   border: OutlineInputBorder(),
                 ),
                 validator: (v) {
-                  if (v == null || v.trim().isEmpty)
+                  if (v == null || v.trim().isEmpty) {
                     return 'Please enter some details';
+                  }
                   return null;
                 },
               ),

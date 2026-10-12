@@ -2379,6 +2379,7 @@ class _DashboardState extends State<Dashboard> {
       SnackBar(
         content: Row(
           children: [
+            // TODO: show PesoMood.celebrating here when score improves
             Text(event.emoji, style: const TextStyle(fontSize: 20)),
             const SizedBox(width: 10),
             Expanded(
@@ -5833,6 +5834,21 @@ class _DashboardState extends State<Dashboard> {
                               },
                             ),
                             const SizedBox(height: 6),
+                            // Peso mascot — mood reflects current FHS score
+                            if (_score > 0)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 4),
+                                child: PesoMascot(
+                                  size: 40,
+                                  mood: _score >= 90
+                                      ? PesoMood.proud
+                                      : _score >= 70
+                                          ? PesoMood.happy
+                                          : _score >= 50
+                                              ? PesoMood.neutral
+                                              : PesoMood.worried,
+                                ),
+                              ),
                             // BF-2: Plain-language score narrative
                             if (_scoreNarrative.isNotEmpty)
                               Padding(

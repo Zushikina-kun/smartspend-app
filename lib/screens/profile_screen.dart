@@ -40,6 +40,7 @@ import 'manage_rules_screen.dart';
 import 'settings_screen.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import 'achievements_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -1624,6 +1625,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           const SizedBox(height: 14),
+                          // Peso mascot — decorative, greets the user on profile
+                          PesoMascot(size: 40, mood: PesoMood.happy),
+                          const SizedBox(height: 6),
                           if (displayName.isNotEmpty)
                             Text(displayName,
                                 style: TextStyle(
