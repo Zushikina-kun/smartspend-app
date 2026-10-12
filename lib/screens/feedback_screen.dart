@@ -109,10 +109,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     if (_submitted) {
       return Scaffold(
         appBar: AppBar(
-          title: const Row(children: [
-            PesoMascot(size: 28, mood: PesoMood.happy),
-            SizedBox(width: 8),
-            Text('Send Feedback'),
+          // ignore: prefer_const_constructors, prefer_const_literals_to_create_immutables
+          title: Row(children: [
+            const PesoMascot(size: 28, mood: PesoMood.happy),
+            const SizedBox(width: 8),
+            const Text('Send Feedback — Done'),
           ]),
         ),
         body: Center(
@@ -140,10 +141,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Row(children: [
-          PesoMascot(size: 28, mood: PesoMood.happy),
-          SizedBox(width: 8),
-          Text('Send Feedback'),
+        // ignore: prefer_const_constructors, prefer_const_literals_to_create_immutables
+        title: Row(children: [
+          const PesoMascot(size: 28, mood: PesoMood.happy),
+          const SizedBox(width: 8),
+          const Text('Send Feedback'),
         ]),
       ),
       body: SingleChildScrollView(
