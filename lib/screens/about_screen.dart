@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/debug_service.dart' show kAppVersion;
+import 'feedback_screen.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -795,6 +796,16 @@ class AboutScreen extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              icon: const Icon(Icons.feedback_outlined),
+              label: const Text('Send Feedback to the Team'),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const FeedbackScreen())),
+            ),
           ),
         ],
       ),

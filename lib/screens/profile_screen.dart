@@ -30,6 +30,7 @@ import '../services/behavioral_feedback_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'login_screen.dart';
 import 'about_screen.dart';
+import 'feedback_screen.dart';
 import 'bank_import_screen.dart';
 import 'batch_image_import_screen.dart';
 import 'help_screen.dart';
@@ -2375,6 +2376,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   style: TextStyle(fontSize: 11)),
                               trailing: const Icon(Icons.chevron_right),
                               onTap: _restoreFromDrive,
+                            ),
+                            const Divider(height: 1),
+                            ListTile(
+                              leading: const Icon(Icons.feedback_outlined),
+                              title: const Text('Send Feedback'),
+                              subtitle: const Text(
+                                  'Bug reports · Feature ideas · Suggestions'),
+                              trailing:
+                                  const Icon(Icons.chevron_right, size: 18),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const FeedbackScreen())),
                             ),
                             const Divider(height: 1),
                             ListTile(

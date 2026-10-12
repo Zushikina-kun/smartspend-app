@@ -9,6 +9,7 @@ import '../widgets/local_ai_setup_sheet.dart';
 import 'home_screen.dart' show SpendingLimitsSheet;
 import 'pin_setup_screen.dart';
 import 'currency_screen.dart';
+import 'feedback_screen.dart';
 
 /// Full-screen App Settings — replaces the old bottom sheet.
 /// All toggles are always interactive (no grayed-out states).
@@ -1297,6 +1298,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() => showMarketInsights = v);
                       _saveAndRefresh('show_market_insights', v);
                     },
+                  ),
+                ]),
+
+                // ── FEEDBACK ─────────────────────────────────────────────────
+                _sectionLabel('FEEDBACK'),
+                _sectionCard([
+                  ListTile(
+                    leading: const Icon(Icons.feedback_outlined),
+                    title: const Text('Send Feedback'),
+                    subtitle: const Text('Report a bug or suggest a feature'),
+                    trailing: const Icon(Icons.chevron_right, size: 18),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const FeedbackScreen())),
                   ),
                 ]),
 
