@@ -112,3 +112,25 @@ Committed as: `feat: privacy disclosure on AI chat, Quick Tips screen, export in
 ---
 
 *Compiled by Kiro — October 12, 2026*
+
+
+---
+
+## Final Status — All Items Shipped
+
+| Commit | Contents |
+|--------|----------|
+| `c7d5ff8` | All 4 app improvements (workflow) |
+| `9c32346` | Fix reviewer finding: privacy 'Switch to Local AI' now marks seen |
+
+### Reviewer findings resolved
+- **Finding 1 (blocking):** "Switch to Local AI" button dismissed without marking `ai_privacy_disclosed = true` → **fixed in `9c32346`** — both buttons in the sheet now persist the seen state before popping
+- **Finding 2 (non-blocking):** Export & Backup routes to ProfileScreen rather than a dedicated screen → **documented as future work** in mascot task doc and backlog
+
+### Complete app changes shipped this session
+1. `lib/screens/ai_screen.dart` — privacy disclosure bottom sheet
+2. `lib/screens/home_screen.dart` — Quick Tips trigger, Export & Backup tile, offline banner text
+3. `lib/screens/quick_tips_screen.dart` — new file (first-launch tips)
+4. Fix for privacy sheet secondary button
+
+All changes: 0 errors, 15 pre-existing info/warning notes (unchanged from before).
