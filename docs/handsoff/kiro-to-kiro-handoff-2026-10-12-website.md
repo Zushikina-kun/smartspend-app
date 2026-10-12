@@ -206,3 +206,45 @@ The survey URLs are in 4 places in the HTML. Search for `FAIpQLScs24mL` (SUS) an
 
 *Compiled by Kiro — October 12, 2026*
 *Session: Vibe — Website redesign, content, and improvements*
+
+
+---
+
+## ADDENDUM 2 — October 12, 2026 — Mascot Animation + Feedback Session Complete
+
+All remaining tasks from the task lists have been implemented. Final commit log for this full session:
+
+| Commit | What |
+|--------|------|
+| `fa26e3f` | Website: Peso SVG animated (bob, blink, wave, pop-in, speech bubble, demo moods) |
+| `a50d64e` | App: PesoMascot → 12 moods + idle/blink/pop-in animation |
+| `548d516` | App: Reactive AI chat mood, Peso on Analytics/QuickTips/Achievements |
+| `dedd148` | App: FeedbackScreen + 4 entry points (Profile/Settings/AI menu/About) |
+| `59ea0cf` | Docs: mascot task planning, in-app feedback planning, website feedback section |
+| `b2072ac` | Website: lightbox fix, feedback/suggestions section |
+
+### What's live
+
+**Website (https://zushikina-kun.github.io/smartspend-app/):**
+- Peso bobs up/down continuously on all 5 placements
+- Eyes blink every ~5 seconds (realistic lifelike blink)
+- Right arm waves on hover
+- All Peso instances pop-in with elastic bounce when scrolled into view
+- Hero Peso shows speech bubble "Magandang araw! Ako si Peso 👋" on hover
+- Demo Lite Peso switches moods during chat (thinking while typing, celebrating/sad based on reply)
+
+**App (v3.0.4 codebase):**
+- `PesoMood` has 12 values: happy, neutral, thinking, sad, celebrating, excited, surprised, proud, embarrassed, winking, sleepy, worried
+- Every PesoMascot instance animates: idle bob + eye blink + mood pop-in
+- AI chat header Peso reacts to message content in real time
+- Winking Peso on AI Financial Advice, Quick Tips, Achievements empty state
+- `FeedbackScreen` accessible from Profile, Settings, AI ⋮ menu, About screen
+
+### Remaining for future (not blocking)
+- A-5/A-11/A-12/A-13: FHS/budget/streak-reactive Peso moods on home screen
+- A-15: Profile screen decorative Peso beside avatar  
+- A-6: Android notification icon (white silhouette PNG asset needed)
+- Rive migration: post-capstone only
+
+### App analyze status
+`feedback_screen.dart` + `peso_mascot.dart`: 0 errors, 10 pre-existing info/style notes
