@@ -1,10 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_screen_tip.dart';
+import '../widgets/peso_mascot.dart';
 
 class DebtScreen extends StatefulWidget {
   /// 0 = I Owe, 1 = Owed to Me, 2 = Plans
@@ -1410,16 +1412,26 @@ class _DebtScreenState extends State<DebtScreen>
         icon: const Icon(Icons.add),
         label: const Text("Add"),
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : TabBarView(
-              controller: _tabs,
-              children: [
-                _buildList(_owe, "Nothing owed yet.", Colors.redAccent),
-                _buildList(_lent, "Nothing lent out yet.", Colors.green),
-                _buildPlansTab(),
-              ],
-            ),
+      body: Stack(
+        children: [
+          _loading
+              ? const Center(child: CircularProgressIndicator())
+              : TabBarView(
+                  controller: _tabs,
+                  children: [
+                    _buildList(_owe, "Nothing owed yet.", Colors.redAccent),
+                    _buildList(_lent, "Nothing lent out yet.", Colors.green),
+                    _buildPlansTab(),
+                  ],
+                ),
+          PesoScreenTip(
+            screenKey: 'tip_debts',
+            tipText:
+                'Track what you owe AND what\'s owed to you — I\'ll remind you before due dates! 💳',
+            mood: PesoMood.winking,
+          ),
+        ],
+      ),
     );
   }
 }

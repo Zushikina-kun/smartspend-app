@@ -62,6 +62,23 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     _Badge('⭐', 'Score Star', 'Reach FHS score of 80+', 'score_80'),
     _Badge('🎓', 'Financial Literate', 'Ask AI 5 financial advice questions',
         'advice_5'),
+    // Peso Companion badges
+    _Badge('🤜', 'Peso Pal', 'Tap Peso 10 times in the app', 'peso_tap_10'),
+    _Badge('💬', 'Chatterbox', 'Send 50 AI messages total', 'ai_50'),
+    _Badge('🌅', 'Morning Logger', 'Log before 9 AM on 7 different days',
+        'morning_7'),
+    _Badge('📆', 'Perfect Week',
+        'Log expenses every day for 7 consecutive days', 'log_7'),
+    _Badge('💚', 'Generous Soul', 'Record lending money 3 times', 'lent_3'),
+    _Badge('⭐', 'App Veteran', 'Use SmartSpend for 30 days since first expense',
+        'veteran_30'),
+    _Badge('🏅', 'Collector', 'Earn 15 badges total', 'badges_15'),
+    _Badge('☀️', 'Early Bird Pro', 'Log before 8 AM on 5 different days',
+        'early_pro'),
+    _Badge('🌙', 'Night Owl Pro', 'Log after 10 PM on 5 different days',
+        'night_pro'),
+    _Badge('🎤', 'Peso Fan', 'Have a 10-message chat session with Peso',
+        'chat_session_10'),
   ];
 
   @override
@@ -276,6 +293,129 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         _loading = false;
       });
 
+    // ── NEW PESO COMPANION BADGES ──────────────────────────────────────────────
+
+    // Peso tap count
+    try {
+      final prefs2 = await SharedPreferences.getInstance();
+      final tapCount = prefs2.getInt('peso_tap_count') ?? 0;
+      if (tapCount >= 10) earned.add('peso_tap_10');
+    } catch (_) {}
+
+    // AI messages total (count all chat history entries with role='user')
+    try {
+      final allChats = await DBService.getChatHistory(limit: 9999);
+      final userMsgs = allChats.where((m) => m['role'] == 'user').length;
+      if (userMsgs >= 50) earned.add('ai_50');
+    } catch (_) {}
+
+    // Morning logger — 7 days with expense before 9 AM
+    try {
+      final allExp = await DBService.getExpenses();
+      final morningDates = allExp
+          .where((e) {
+            final t = e.time ?? '';
+            if (t.isEmpty) return false;
+            final parts = t.split(':');
+            if (parts.isEmpty) return false;
+            final h = int.tryParse(parts[0]) ?? 12;
+            return h < 9;
+          })
+          .map((e) => e.date.substring(0, 10))
+          .toSet();
+      if (morningDates.length >= 7) earned.add('morning_7');
+    } catch (_) {}
+
+    // Early Bird Pro — 5 days with expense before 8 AM
+    try {
+      final allExp = await DBService.getExpenses();
+      final earlyDates = allExp
+          .where((e) {
+            final t = e.time ?? '';
+            if (t.isEmpty) return false;
+            final parts = t.split(':');
+            final h = int.tryParse(parts[0]) ?? 12;
+            return h < 8;
+          })
+          .map((e) => e.date.substring(0, 10))
+          .toSet();
+      if (earlyDates.length >= 5) earned.add('early_pro');
+    } catch (_) {}
+
+    // Night Owl Pro — 5 days with expense after 10 PM
+    try {
+      final allExp = await DBService.getExpenses();
+      final nightDates = allExp
+          .where((e) {
+            final t = e.time ?? '';
+            if (t.isEmpty) return false;
+            final parts = t.split(':');
+            final h = int.tryParse(parts[0]) ?? 12;
+            return h >= 22;
+          })
+          .map((e) => e.date.substring(0, 10))
+          .toSet();
+      if (nightDates.length >= 5) earned.add('night_pro');
+    } catch (_) {}
+
+    // Perfect Week — 7 consecutive daily logging streak
+    try {
+      final allExp = await DBService.getExpenses();
+      final nowPw = DateTime.now();
+      final recentDates = allExp
+          .where((e) {
+            final d = DateTime.tryParse(e.date.substring(0, 10));
+            return d != null && nowPw.difference(d).inDays <= 30;
+          })
+          .map((e) => e.date.substring(0, 10))
+          .toSet();
+      int consecutive = 0;
+      for (int d = 0; d < 30; d++) {
+        final check = DateTime(nowPw.year, nowPw.month, nowPw.day - d)
+            .toIso8601String()
+            .substring(0, 10);
+        if (recentDates.contains(check)) {
+          consecutive++;
+        } else {
+          break;
+        }
+      }
+      if (consecutive >= 7) earned.add('log_7');
+    } catch (_) {}
+
+    // Generous Soul — lent money 3+ times
+    try {
+      final allDebts = await DBService.getDebts();
+      final lentCount = allDebts
+          .where((d) => (d['type'] as String? ?? 'owe') == 'lent')
+          .length;
+      if (lentCount >= 3) earned.add('lent_3');
+    } catch (_) {}
+
+    // App Veteran — 30 days since first expense
+    try {
+      final allExp = await DBService.getExpenses();
+      if (allExp.isNotEmpty) {
+        final sorted = List.from(allExp)
+          ..sort((a, b) => a.date.compareTo(b.date));
+        final firstDate = DateTime.tryParse(sorted.first.date.substring(0, 10));
+        if (firstDate != null &&
+            DateTime.now().difference(firstDate).inDays >= 30) {
+          earned.add('veteran_30');
+        }
+      }
+    } catch (_) {}
+
+    // Collector — 15+ badges earned (must be last among Peso badges)
+    if (earned.length >= 15) earned.add('badges_15');
+
+    // Chat session 10 — check prefs for today's session message count
+    try {
+      final prefs2 = await SharedPreferences.getInstance();
+      final sessionCount = prefs2.getInt('peso_session_msg_count') ?? 0;
+      if (sessionCount >= 10) earned.add('chat_session_10');
+    } catch (_) {}
+
     // Celebrate newly unlocked badges — diff against previously stored set
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -287,34 +427,77 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
         for (final id in newlyEarned) {
           final badge = _allBadges.where((b) => b.id == id).firstOrNull;
           if (badge == null) continue;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Text(badge.emoji, style: const TextStyle(fontSize: 22)),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('Badge unlocked: ${badge.name}!',
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        Text(badge.description,
-                            style: const TextStyle(fontSize: 12)),
-                      ],
+          if (!mounted) break;
+
+          PesoMood mood = PesoMood.celebrating;
+          if (id.contains('streak') ||
+              id.contains('log_7') ||
+              id.contains('log_14')) {
+            mood = PesoMood.excited;
+          } else if (id.contains('saver') ||
+              id.contains('budget') ||
+              id.contains('goal')) {
+            mood = PesoMood.proud;
+          } else if (id.contains('peso') ||
+              id.contains('chat') ||
+              id.contains('ai')) {
+            mood = PesoMood.winking;
+          }
+
+          await showModalBottomSheet<void>(
+            context: context,
+            backgroundColor: Colors.transparent,
+            builder: (_) {
+              final cs = Theme.of(context).colorScheme;
+              return Container(
+                decoration: BoxDecoration(
+                  color: cs.surface,
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        width: 36,
+                        height: 4,
+                        decoration: BoxDecoration(
+                            color: cs.onSurface.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(2))),
+                    const SizedBox(height: 20),
+                    Text('🎉 Badge Unlocked!',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: cs.primary,
+                            fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 12),
+                    PesoMascot(size: 80, mood: mood),
+                    const SizedBox(height: 8),
+                    Text(badge.emoji, style: const TextStyle(fontSize: 40)),
+                    const SizedBox(height: 8),
+                    Text(badge.name,
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text(badge.description,
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: cs.onSurface.withValues(alpha: 0.6))),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Nice! 💪'),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              backgroundColor: Colors.amber[700],
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 4),
-            ),
+                  ],
+                ),
+              );
+            },
           );
-          // Small delay between multiple unlocks so snackbars stack nicely
-          await Future.delayed(const Duration(milliseconds: 300));
+          await Future.delayed(const Duration(milliseconds: 200));
         }
       }
     } catch (_) {}

@@ -14,6 +14,7 @@ import '../services/ai_chat_service.dart';
 import '../services/db_service.dart';
 import '../services/llm_service.dart';
 import '../services/ocr_service.dart';
+import '../services/peso_voice_service.dart';
 import '../services/score_service.dart';
 import '../services/barcode_lookup_service.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
@@ -740,6 +741,13 @@ class _AIScreenState extends State<AIScreen> {
     _scrollToBottom();
 
     try {
+      // Track session message count for chat_session_10 badge
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final count = (prefs.getInt('peso_session_msg_count') ?? 0) + 1;
+        await prefs.setInt('peso_session_msg_count', count);
+      } catch (_) {}
+
       // Save user message to DB immediately — so it persists even if AI fails
       await DBService.saveChatMessage(role: 'user', message: text);
 
@@ -3071,6 +3079,10 @@ class _AIScreenState extends State<AIScreen> {
               // Create a new session
               await DBService.createNewChatSession();
               AIChatService.clearHistory();
+              try {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setInt('peso_session_msg_count', 0);
+              } catch (_) {}
               setState(() {
                 _messages.clear();
                 _historyRestored = false;
@@ -3111,6 +3123,10 @@ class _AIScreenState extends State<AIScreen> {
               } catch (_) {}
               await DBService.createNewChatSession();
               AIChatService.clearHistory();
+              try {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setInt('peso_session_msg_count', 0);
+              } catch (_) {}
               setState(() {
                 _messages.clear();
                 _historyRestored = false;
@@ -3150,6 +3166,10 @@ class _AIScreenState extends State<AIScreen> {
                 AppConfig
                     .resetLimits(); // resets to Auto + clears failure counter
                 AIChatService.clearHistory(); // clear in-memory history
+                try {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setInt('peso_session_msg_count', 0);
+                } catch (_) {}
                 if (mounted) {
                   setState(() {
                     _messages.clear();
@@ -3481,20 +3501,26 @@ class _AIScreenState extends State<AIScreen> {
                             // Peso mascot with personalized greeting
                             Builder(builder: (ctx) {
                               final hour = DateTime.now().hour;
-                              final greeting = hour < 12
-                                  ? "Magandang umaga! ☀️"
-                                  : hour < 18
-                                      ? "Kumain ka na ba? 😄"
-                                      : "Good evening! 🌙";
+                              PesoContext greetingCtx;
+                              if (hour < 5) {
+                                greetingCtx = PesoContext.midnightGreeting;
+                              } else if (hour < 12) {
+                                greetingCtx = PesoContext.morningGreeting;
+                              } else if (hour < 18) {
+                                greetingCtx = PesoContext.afternoonGreeting;
+                              } else {
+                                greetingCtx = PesoContext.eveningGreeting;
+                              }
+                              final greeting =
+                                  PesoVoiceService.get(greetingCtx);
                               return GestureDetector(
                                 onTap: () {
                                   if (_messages.isEmpty) {
                                     setState(() {
                                       _messages.add({
                                         'role': 'assistant',
-                                        'content': 'Kumusta! 👋 I\'m Peso, your AI money buddy! '
-                                            'You can talk to me in English or Filipino — just tell me what you spent, '
-                                            'ask how your budget\'s doing, or say "how am I doing this month?" to start! 😊',
+                                        'content': PesoVoiceService.get(
+                                            PesoContext.firstLogin),
                                       });
                                     });
                                   }
