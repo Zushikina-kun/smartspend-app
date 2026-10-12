@@ -10,6 +10,14 @@
   <meta property="og:description" content="Free AI personal finance tracker for Filipinos. Voice input, OCR receipts, Taglish AI, Financial Health Score." />
   <meta property="og:image" content="https://zushikina-kun.github.io/smartspend-app/assets/icon.png" />
   <meta property="og:url" content="https://zushikina-kun.github.io/smartspend-app/" />
+  <meta name="keywords" content="SmartSpend, Filipino finance app, expense tracker Philippines, GCash expense tracker, Taglish AI finance, Financial Health Score, free budget app Philippines, Peso AI assistant, local LLM finance, capstone project Lorma Colleges" />
+  <meta name="author" content="LucidFrame — Lorma Colleges CCSE" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SmartSpend" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SmartSpend — AI-Powered Filipino Finance App" />
+  <meta name="twitter:description" content="Free AI expense tracker for Filipinos. Log in Taglish, get a Financial Health Score, track GCash and installments. Works offline." />
   <link rel="icon" href="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -811,6 +819,39 @@
     .btn-sus-quick { background: var(--primary); color: #000; }
     .btn-survey-quick { background: var(--brand-blue); color: #fff; }
     @media(max-width:600px) { .research-banner-inner { flex-direction: column; } .research-banner-btns { flex-direction: row; flex-wrap: wrap; } }
+    /* CANVAS BACKGROUND */
+    #bgCanvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; opacity:0.4; }
+    [data-theme="light"] #bgCanvas { opacity:0.18; }
+    nav, .hero-wrapper, section, footer, #lightbox, #backToTop, .share-strip { position:relative; z-index:1; }
+    /* SECTION DIVIDERS */
+    .section-divider { max-width:900px; margin:0 auto; height:1px; background:linear-gradient(to right,transparent,var(--border-strong),transparent); }
+    /* SCROLL FADE-IN */
+    .fade-in { opacity:0; transform:translateY(22px); transition:opacity 0.55s ease,transform 0.55s ease; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+    /* SHARE STRIP */
+    .share-strip { background:var(--surface2); border-top:1px solid var(--border); padding:18px 24px; display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap; text-align:center; }
+    .share-strip-text { font-size:14px; color:var(--text-muted); }
+    .share-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; border:1px solid var(--border); background:var(--surface3); color:var(--text); cursor:pointer; transition:background 0.2s,transform 0.15s; }
+    .share-btn:hover { background:var(--surface-elevated); transform:translateY(-1px); text-decoration:none; }
+    /* CHANGELOG */
+    .changelog-block { border-left:3px solid var(--primary); border-radius:0 12px 12px 0; background:var(--surface2); padding:16px 20px; margin-bottom:12px; }
+    .changelog-ver { font-weight:800; color:var(--primary); font-family:'Plus Jakarta Sans',sans-serif; font-size:15px; margin-bottom:10px; }
+    .changelog-items { display:flex; flex-direction:column; gap:5px; }
+    .changelog-items li { font-size:13px; list-style:none; line-height:1.5; }
+    .cl-new { color:var(--text); } .cl-fix { color:var(--text-muted); } .cl-bug { color:var(--text-dim); }
+    /* DOWNLOAD CTA CARD */
+    .dl-cta-card { background:linear-gradient(135deg,var(--surface2),var(--surface3)); border:1px solid var(--border-strong); border-radius:var(--radius); padding:28px 28px 24px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+    .dl-cta-text h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.2rem; font-weight:800; margin-bottom:6px; }
+    .dl-cta-text p { font-size:13px; color:var(--text-muted); }
+    .dl-cta-btn { background:var(--primary); color:#000; font-weight:800; font-size:15px; padding:14px 28px; border-radius:12px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; white-space:nowrap; transition:background 0.2s,transform 0.15s; flex-shrink:0; }
+    .dl-cta-btn:hover { background:var(--primary-dark); transform:translateY(-1px); text-decoration:none; }
+    .dl-after { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin-top:16px; }
+    .dl-after-title { font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:10px; letter-spacing:0.3px; }
+    .dl-steps { display:flex; flex-direction:column; gap:8px; }
+    .dl-step { font-size:13px; color:var(--text-muted); display:flex; gap:10px; }
+    .dl-step-num { background:var(--primary); color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:1px; }
+    .dl-sysreq { margin-top:12px; font-size:12px; color:var(--text-dim); display:flex; gap:14px; flex-wrap:wrap; }
+    .dl-sysreq span::before { content:"✓ "; color:var(--primary); }
   </style></head>
 <body>
 <!-- SVG sprite — Peso mascot -->
@@ -873,6 +914,7 @@
     <a href="#research">Research</a>
     
     <a href="#download">Download</a>
+    <a href="#changelog">Changelog</a>
     <a href="#about">Team</a>
     <a href="privacy.html">Privacy Policy</a>
   </div>
@@ -1499,39 +1541,6 @@
   <div class="research-note">
     Both surveys are hosted on Google Forms. Your responses help validate SmartSpend as a capstone study and directly shape future improvements to the app. Salamat! 🙏 You can also find these surveys linked in the nav bar above.<br><small style="opacity:0.7">All responses are for academic research only — Lorma Colleges CCSE Capstone 2026.</small>`n  </div>
 </section>
-<section class="download-section" id="download">
-  <h2>&#x1F4E5; Download SmartSpend</h2>
-  <p>Free to download and use. No account required for offline use. Android 5.0 (API 21) and above.</p>
-  <table class="apk-table">
-    <thead><tr><th>Device</th><th>APK</th><th>Size</th><th></th></tr></thead>
-    <tbody>
-      <tr>
-        <td>Modern phones (2018+) <span class="recommended">Recommended</span></td>
-        <td>arm64-v8a</td><td>~45 MB</td>
-        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.0.4-arm64-v8a.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
-      </tr>
-      <tr>
-        <td>Older / 32-bit phones</td>
-        <td>armeabi-v7a</td><td>~38 MB</td>
-        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.0.4-armeabi-v7a.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
-      </tr>
-      <tr>
-        <td>Emulator / x86 device</td>
-        <td>x86_64</td><td>~48 MB</td>
-        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.0.4-x86_64.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="version-note">
-    Current version: <strong>v3.0.4</strong> &#x00B7;
-    <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">All releases &#x2192;</a> &#x00B7;
-    Not sure which APK? Install the arm64-v8a version first.
-  </div>
-  <div style="margin-top:16px;font-size:13px;color:var(--text-muted);background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 16px;border:1px solid var(--border);">
-    &#x26A0;&#xFE0F; <strong>Installing from outside the Play Store:</strong> Android will ask to allow "Install unknown apps" &#x2014; this is normal for sideloaded APKs. Enable it for your browser or file manager when prompted.
-  </div>
-</section>
-
 <!-- FAQ -->
 <section class="section" id="faq">
   <div class="section-title">Common Questions</div>
@@ -1630,6 +1639,82 @@
 
   </div>
 </section>
+<div class="section-divider"></div>
+<section class="download-section" id="download">
+  <h2>&#x1F4E5; Download SmartSpend</h2>
+  <p>Free to download and use. No account required for offline use. Android 5.0 (API 21) and above.</p>
+  <table class="apk-table">
+    <thead><tr><th>Device</th><th>APK</th><th>Size</th><th></th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Modern phones (2018+) <span class="recommended">Recommended</span></td>
+        <td>arm64-v8a</td><td>~45 MB</td>
+        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.0.4-arm64-v8a.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
+      </tr>
+      <tr>
+        <td>Older / 32-bit phones</td>
+        <td>armeabi-v7a</td><td>~38 MB</td>
+        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.0.4-armeabi-v7a.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
+      </tr>
+      <tr>
+        <td>Emulator / x86 device</td>
+        <td>x86_64</td><td>~48 MB</td>
+        <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.0.4-x86_64.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="version-note">
+    Current version: <strong>v3.0.4</strong> &#x00B7;
+    <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">All releases &#x2192;</a> &#x00B7;
+    Not sure which APK? Install the arm64-v8a version first.
+  </div>
+  <div style="margin-top:16px;font-size:13px;color:var(--text-muted);background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 16px;border:1px solid var(--border);">
+    &#x26A0;&#xFE0F; <strong>Installing from outside the Play Store:</strong> Android will ask to allow "Install unknown apps" &#x2014; this is normal for sideloaded APKs. Enable it for your browser or file manager when prompted.
+  </div>
+</section>
+
+
+<div class="section-divider"></div>
+<section class="section" id="changelog">
+  <div class="section-title">📋 What's New</div>
+  <p class="section-sub">SmartSpend is actively developed. Here's what changed recently.</p>
+
+  <div class="changelog-block">
+    <div class="changelog-ver">v3.0.4 — October 2026</div>
+    <ul class="changelog-items">
+      <li class="cl-new">✨ New: Financial Health Certificate (shareable card)</li>
+      <li class="cl-new">✨ New: Market Insights — live PHP exchange rates (USD, EUR, GBP, JPY, SGD)</li>
+      <li class="cl-new">✨ New: AI Model Selector — switch between 9 providers in Settings</li>
+      <li class="cl-new">✨ New: Long-Range Forecast (3/6/12 month projection) in Analytics</li>
+      <li class="cl-new">✨ New: Net Worth tracker (Wallets + Savings − Debts) with history chart</li>
+      <li class="cl-fix">🔧 Improved: Batch screenshot import now supports 40+ platforms</li>
+      <li class="cl-fix">🔧 Improved: Peso AI retains conversation context within a session</li>
+      <li class="cl-fix">🔧 Improved: Financial Calendar with color-coded bill/goal/debt overlays</li>
+      <li class="cl-bug">🐛 Fixed: Daily limit notification timing off by one day</li>
+      <li class="cl-bug">🐛 Fixed: Goal progress bar not updating after manual contribution</li>
+    </ul>
+  </div>
+
+  <div class="changelog-block">
+    <div class="changelog-ver">v3.0.0 — September 2026 · Major Release</div>
+    <ul class="changelog-items">
+      <li class="cl-new">✨ New: Local AI mode — connect Ollama, LM Studio, or Jan on your PC</li>
+      <li class="cl-new">✨ New: Paluwagan Tracker — rotating savings group management</li>
+      <li class="cl-new">✨ New: Insurance &amp; Contributions tracker (Pag-IBIG, PhilHealth, SSS)</li>
+      <li class="cl-new">✨ New: PH Banks &amp; Investments reference guide (Banks, Digital, E-Wallets, Investments tabs)</li>
+      <li class="cl-new">✨ New: Achievements system — 25 badges across 5 categories</li>
+      <li class="cl-new">✨ New: Daily Quests &amp; Weekly Challenges with streak tracking</li>
+      <li class="cl-new">✨ New: Mood tracker &amp; mood-spending correlation in Analytics</li>
+      <li class="cl-new">✨ New: Debt-to-Income ratio, Emergency Fund, and Financial Milestones in Analytics</li>
+      <li class="cl-fix">🔧 Improved: Complete UI overhaul — forest green dark mode, warm parchment light mode</li>
+      <li class="cl-fix">🔧 Improved: 8-provider AI fallback chain for maximum uptime</li>
+    </ul>
+  </div>
+
+  <p style="font-size:12px;color:var(--text-dim);margin-top:8px">
+    <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer" style="color:var(--primary)">Full release history on GitHub →</a>
+  </p>
+</section>
 <section class="section" id="about">
   <div class="section-title">About SmartSpend</div>
   <p class="section-sub">A free, open-source capstone project built by Filipino CS students for Filipino users.</p>
@@ -1688,29 +1773,31 @@
   </div>
 </section>
 
-<footer>
-  <div class="footer-brand">
-    <svg class="peso-mascot" style="--peso-size:32px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
-    SmartSpend
+<div class="share-strip">
+  <span class="share-strip-text">Found SmartSpend useful? Share it! 🙏</span>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+    <a class="share-btn" href="https://twitter.com/intent/tweet?text=Check+out+SmartSpend+%E2%80%94+free+AI+finance+app+for+Filipinos!+Log+expenses+in+Taglish%2C+get+a+Financial+Health+Score.+%F0%9F%87%B5%F0%9F%87%AD&url=https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" target="_blank" rel="noopener noreferrer">🐦 Twitter/X</a>
+    <button class="share-btn" onclick="copyPageUrl()" id="copyUrlBtn">🔗 Copy Link</button>
   </div>
+</div>
+<footer>
+  <div class="footer-brand"><img src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="SmartSpend" style="width:36px;height:36px;border-radius:10px;object-fit:cover;" onerror="this.style.display='none'" /><span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;color:var(--brand-blue)">SmartSpend</span></div>
   <div class="footer-links">
-    <a href="#what-is">About</a>
-    
-    <a href="#features">Features</a>
-    <a href="#how-it-works">How it Works</a>
-    
-    <a href="#ai">AI</a>
-    <a href="#privacy-ai">Privacy</a>
-    <a href="#screenshots">Screenshots</a>
-    <a href="#faq">FAQ</a>
-    <a href="#research">Research</a>
-    
-    <a href="#download">Download</a>
-    <a href="#about">About</a>
-    <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">GitHub</a>
-    <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">Releases</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="https://github.com/Zushikina-kun/smartspend-app/issues" target="_blank" rel="noopener noreferrer">Report a Bug</a>
+        <a href="#what-is">About</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it Works</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy-ai">Privacy</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#faq">FAQ</a>
+        <a href="#research">Research</a>
+        <a href="#download">Download</a>
+        <a href="#about">About</a>
+        <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">Releases</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="https://github.com/Zushikina-kun/smartspend-app/issues" target="_blank" rel="noopener noreferrer">Report a Bug</a>
   </div>
   <div class="footer-lucid">
     <div class="lucid-logo-wrap" style="padding:8px 14px;"><img src="assets/LucidFrameLogo.png" alt="LucidFrame" style="width:56px;height:auto;" onerror="this.style.display='none'"></div>
@@ -1919,7 +2006,7 @@ if (!statsEl) statsEl = document.querySelector('.stats');
 if (statsEl) statIO.observe(statsEl);
 
 /* ===== STICKY NAV ACTIVE ===== */
-var navSections = ['what-is','how-it-works','features','ai','privacy-ai','screenshots','demo','faq','research','download','about'];
+var navSections = ['what-is','how-it-works','features','ai','privacy-ai','screenshots','demo','research','faq','download','changelog','about'];
 var sectionIO = new IntersectionObserver(function(entries) {
   entries.forEach(function(entry) {
     if (entry.isIntersecting) {
@@ -2172,6 +2259,80 @@ function toggleFaq(btn) {
     if (ans && ans.classList.contains('faq-a')) ans.classList.add('open');
     btn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
+}
+
+/* ===== BACKGROUND CANVAS ===== */
+(function() {
+  var canvas = document.getElementById('bgCanvas');
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+  var W, H, particles = [];
+  var SYMBOLS = ['₱','₱','₱','·','·','✦','◦','◦'];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function mkP(startTop) {
+    return {
+      x: Math.random() * W,
+      y: startTop ? Math.random() * H : H + 20 + Math.random() * 40,
+      sz: Math.random() * 12 + 5,
+      spd: Math.random() * 0.32 + 0.07,
+      drift: (Math.random() - 0.5) * 0.25,
+      op: Math.random() * 0.28 + 0.06,
+      sym: SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
+      rot: Math.random() * Math.PI * 2,
+      rotSpd: (Math.random() - 0.5) * 0.007
+    };
+  }
+
+  for (var i = 0; i < 60; i++) particles.push(mkP(true));
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var dark = document.documentElement.getAttribute('data-theme') !== 'light';
+    var r = dark ? 0 : 26, g = dark ? 200 : 92, b = dark ? 150 : 42;
+    particles.forEach(function(p) {
+      ctx.save();
+      ctx.globalAlpha = p.op;
+      ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')';
+      ctx.font = 'bold ' + p.sz + 'px sans-serif';
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillText(p.sym, 0, 0);
+      ctx.restore();
+      p.y -= p.spd; p.x += p.drift; p.rot += p.rotSpd;
+      if (p.y < -30) { var np = mkP(false); Object.assign(p, np); }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ===== SCROLL FADE-IN ===== */
+var fadeEls = document.querySelectorAll('.feature-card,.step-card,.team-card,.about-info-card,.research-card,.faq-item,.changelog-block,.section-title,.stat');
+fadeEls.forEach(function(el, i) {
+  el.classList.add('fade-in');
+  el.style.transitionDelay = (i % 5) * 0.065 + 's';
+  fadeIO.observe(el);
+});
+
+/* ===== COPY PAGE URL ===== */
+function copyPageUrl() {
+  var btn = document.getElementById('copyUrlBtn');
+  if (!btn) return;
+  navigator.clipboard.writeText(window.location.href).then(function() {
+    var orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    setTimeout(function() { btn.textContent = orig; }, 2000);
+  }).catch(function() {
+    btn.textContent = '📋 ' + window.location.href;
+    setTimeout(function() { btn.textContent = '🔗 Copy Link'; }, 3000);
+  });
 }
 </script>
 </body>
