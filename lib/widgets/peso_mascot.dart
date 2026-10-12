@@ -229,7 +229,9 @@ class _PesoCoinPainter extends CustomPainter {
     final r = size / 2; // coin radius
 
     // ── IDLE BOB & MOOD POP-IN ────────────────────────────────────────────────
-    final bobOffset = sin(idleT * pi) * 2.0;
+    // Bob offset scales with mascot size so tiny instances (20px) don't clip
+    final bobScale = (size / 72.0).clamp(0.15, 1.0);
+    final bobOffset = sin(idleT * pi) * 2.0 * bobScale;
     canvas.save();
     canvas.translate(w / 2, h / 2 + bobOffset);
     canvas.scale(1.0 - 0.012 * sin(idleT * pi));

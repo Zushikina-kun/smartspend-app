@@ -32,7 +32,7 @@ class QuickTipsScreen extends StatelessWidget {
     (
       '📷',
       'Import GCash & Shopee screenshots',
-      'Tap Peso → 📷 camera icon → "Batch Screenshots". Select multiple GCash, Shopee, or Steam screenshots — SmartSpend reads them and logs everything at once.',
+      'In the Peso chat screen, tap the 📷 camera icon in the input bar → select "Batch Screenshots". Pick multiple GCash, Shopee, or Steam screenshots — SmartSpend reads them all and logs every item at once.',
     ),
     (
       '🔒',
