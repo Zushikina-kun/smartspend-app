@@ -300,3 +300,42 @@ The landing page at https://zushikina-kun.github.io/smartspend-app/ was complete
 5. **Export/Backup in Quick Access** — currently buried in Profile
 
 None of these are blocking for the defense — all low/medium priority.
+
+
+---
+
+## ADDENDUM 3 — October 12, 2026 — v3.0.5 Released
+
+> **Full session record:** `docs/handsoff/kiro-to-kiro-handoff-2026-10-12-final.md`
+
+### App is now v3.0.5+103
+- Git tag `v3.0.5` pushed — GitHub Actions building release APKs
+- Release will be at: https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.5
+
+### Key app changes since v3.0.4
+1. **PesoMascot**: 12 moods (was 5), fully animated (idle bob, eye blink, mood pop-in). Reacts live in AI chat.
+2. **FeedbackScreen**: In-app feedback → prefills GitHub issue. Entry points: Profile, Settings, AI ⋮ menu, About.
+3. **Privacy disclosure**: One-time bottom sheet before first AI message.
+4. **QuickTipsScreen**: First-launch tips (Taglish, FHS, screenshot import, offline).
+5. **FHS-reactive Peso**: Home screen score card shows proud/happy/neutral/worried based on score.
+6. **Export & Backup** in Quick Access Hub (was buried in Profile only).
+
+### Numbers that changed (update CAPSTONE_REFERENCE.md)
+| Metric | Old | New |
+|--------|-----|-----|
+| Version | 3.0.4+102 | **3.0.5+103** |
+| PesoMood values | 5 | **12** |
+| New screens | — | quick_tips_screen.dart, feedback_screen.dart |
+
+### Website: https://zushikina-kun.github.io/smartspend-app/
+The landing page was completely rebuilt this session (167.6 KB). Key sections: What is SmartSpend, How it works, Privacy-First AI (Local AI + on-device roadmap), Research & Surveys (both Google Forms), Interactive Demo, FAQ, Changelog, Feedback form.
+
+### Survey links — still active, share widely before defense
+- SUS (2 min): `https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform`
+- Research survey (5 min): `https://docs.google.com/forms/d/e/1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ/viewform`
+
+### Remaining work before defense
+See `docs/handsoff/remaining-tasks-2026-10-12.md` for full list. Priority items:
+1. **D-1/D-2/D-3** — Update thesis Chapter 4, verification report, defense script (~4h writing)
+2. **L-1** — Language preference setting in Settings (~1h)
+3. **A-5/A-12/A-13** — FHS change reaction, budget card moods, streak bubbles (~4h)
