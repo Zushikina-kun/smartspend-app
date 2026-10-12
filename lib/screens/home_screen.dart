@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -2643,8 +2643,8 @@ class _DashboardState extends State<Dashboard> {
       SnackBar(
         content: Row(
           children: [
-            // TODO: show PesoMood.celebrating here when score improves
-            Text(event.emoji, style: const TextStyle(fontSize: 20)),
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 28, mood: PesoMood.celebrating),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
