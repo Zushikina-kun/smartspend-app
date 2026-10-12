@@ -882,6 +882,44 @@
     .dl-step-num { background:var(--primary); color:#000; font-weight:800; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; margin-top:1px; }
     .dl-sysreq { margin-top:12px; font-size:12px; color:var(--text-dim); display:flex; gap:14px; flex-wrap:wrap; }
     .dl-sysreq span::before { content:"✓ "; color:var(--primary); }
+
+/* ===== PESO MASCOT ANIMATIONS ===== */
+@keyframes pesoBob {
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-5px) scale(1.01);}
+}
+@keyframes pesoBlink {
+  0%,88%,100%{transform:scaleY(1);}
+  91%{transform:scaleY(0.08);}
+  94%{transform:scaleY(1);}
+}
+@keyframes pesoArmWave {
+  0%,100%{transform:rotate(0deg);}
+  30%{transform:rotate(-22deg);}
+  70%{transform:rotate(14deg);}
+}
+@keyframes pesoPopIn {
+  0%{transform:scale(0.3) rotate(-12deg);opacity:0;}
+  60%{transform:scale(1.12) rotate(4deg);opacity:1;}
+  100%{transform:scale(1) rotate(0deg);opacity:1;}
+}
+.peso-mascot{animation:pesoBob 2.6s ease-in-out infinite;transform-origin:center bottom;}
+.peso-eye-l,.peso-eye-r{animation:pesoBlink 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+.peso-pupil-l,.peso-pupil-r{animation:pesoBlink 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
+.peso-eye-r,.peso-pupil-r{animation-delay:0.06s;}
+.peso-shine{animation:pesoBlink 5s ease-in-out infinite;animation-delay:0.03s;transform-box:fill-box;transform-origin:center;}
+.peso-mascot:hover .peso-arm-r{animation:pesoArmWave 0.55s ease-in-out 2 forwards;transform-box:fill-box;transform-origin:50% 100%;}
+.peso-mascot.peso-pop{animation:pesoPopIn 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+.hero-right .peso-mascot{animation:pesoBob 3s ease-in-out infinite;}
+/* Demo mood classes */
+.peso-mascot.peso-thinking .peso-body{filter:hue-rotate(200deg) saturate(0.7);}
+.peso-mascot.peso-celebrating .peso-body{fill:#FF8C00;}
+.peso-mascot.peso-sad .peso-body{fill:#8AABB8;}
+/* Hero speech bubble */
+.hero-peso-wrap{position:relative;display:inline-block;}
+.peso-speech{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) scale(0.85);opacity:0;background:var(--surface-elevated,var(--surface2));border:1px solid var(--border-strong);border-radius:14px 14px 14px 4px;padding:8px 14px;font-size:13px;color:var(--text);white-space:nowrap;pointer-events:none;transition:opacity .25s,transform .25s;z-index:10;}
+.hero-peso-wrap:hover .peso-speech{opacity:1;transform:translateX(-50%) scale(1);}
+@media(prefers-reduced-motion:reduce){.peso-mascot,.peso-mascot *,.peso-eye-l,.peso-eye-r,.peso-pupil-l,.peso-pupil-r,.peso-shine,.peso-arm-r{animation:none!important;transition:none!important;}}
   </style></head>
 <body>
 <!-- SVG sprite — Peso mascot -->
@@ -903,7 +941,7 @@
     <!-- drop shadow -->
     <circle cx="60" cy="64" r="42" fill="#00A86B" opacity="0.18" transform="translate(0,4)"/>
     <!-- outer coin rim -->
-    <circle cx="60" cy="62" r="42" fill="url(#pgBody)"/>
+    <circle class="peso-body" cx="60" cy="62" r="42" fill="url(#pgBody)"/>
     <!-- inner rim ring (coin edge detail) -->
     <circle cx="60" cy="62" r="38" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
     <!-- face inner surface -->
@@ -911,30 +949,30 @@
     <!-- ₱ forehead symbol -->
     <text x="60" y="38" text-anchor="middle" dominant-baseline="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="11" fill="#00A86B" opacity="0.85">₱</text>
     <!-- left arm raised up-left (line + 3-blob hand) -->
-    <line x1="22" y1="58" x2="8" y2="42" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+    <line class="peso-arm-l" x1="22" y1="58" x2="8" y2="42" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
     <circle cx="5" cy="38" r="5.5" fill="#00C896"/>
     <circle cx="10" cy="33" r="4.5" fill="#00C896"/>
     <circle cx="1" cy="33" r="4" fill="#00C896"/>
     <!-- right arm raised up-right (line + 3-blob hand) -->
-    <line x1="98" y1="58" x2="112" y2="42" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+    <line class="peso-arm-r" x1="98" y1="58" x2="112" y2="42" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
     <circle cx="115" cy="38" r="5.5" fill="#00C896"/>
     <circle cx="110" cy="33" r="4.5" fill="#00C896"/>
     <circle cx="119" cy="33" r="4" fill="#00C896"/>
     <!-- eyebrows (friendly arch) -->
-    <path d="M 37 43 Q 42 40 47 43" stroke="#00A86B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
-    <path d="M 73 43 Q 78 40 83 43" stroke="#00A86B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path class="peso-brow-l" d="M 37 43 Q 42 40 47 43" stroke="#00A86B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <path class="peso-brow-r" d="M 73 43 Q 78 40 83 43" stroke="#00A86B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
     <!-- eye whites -->
-    <circle cx="42" cy="54" r="12" fill="white"/>
-    <circle cx="78" cy="54" r="12" fill="white"/>
+    <circle class="peso-eye-l" cx="42" cy="54" r="12" fill="white"/>
+    <circle class="peso-eye-r" cx="78" cy="54" r="12" fill="white"/>
     <!-- eye outline (subtle rim) -->
     <circle cx="42" cy="54" r="12" fill="none" stroke="rgba(0,168,107,0.15)" stroke-width="1.2"/>
     <circle cx="78" cy="54" r="12" fill="none" stroke="rgba(0,168,107,0.15)" stroke-width="1.2"/>
     <!-- pupils -->
-    <circle cx="44" cy="56" r="7" fill="#0D2B1A"/>
-    <circle cx="80" cy="56" r="7" fill="#0D2B1A"/>
+    <circle class="peso-pupil-l" cx="44" cy="56" r="7" fill="#0D2B1A"/>
+    <circle class="peso-pupil-r" cx="80" cy="56" r="7" fill="#0D2B1A"/>
     <!-- eye shine main -->
-    <circle cx="47" cy="52" r="3" fill="white"/>
-    <circle cx="83" cy="52" r="3" fill="white"/>
+    <circle class="peso-shine" cx="47" cy="52" r="3" fill="white"/>
+    <circle class="peso-shine" cx="83" cy="52" r="3" fill="white"/>
     <!-- eye shine secondary -->
     <circle cx="41" cy="58" r="1.4" fill="rgba(255,255,255,0.5)"/>
     <circle cx="77" cy="58" r="1.4" fill="rgba(255,255,255,0.5)"/>
@@ -943,11 +981,11 @@
     <ellipse cx="92" cy="68" rx="9" ry="5.5" fill="rgba(255,100,100,0.18)"/>
     <!-- smile with tooth fill -->
     <path d="M 38 74 Q 60 90 82 74 L 79 76 Q 60 90 41 76 Z" fill="rgba(255,255,255,0.80)"/>
-    <path d="M 38 74 Q 60 90 82 74" stroke="#0D2B1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path class="peso-smile" d="M 38 74 Q 60 90 82 74" stroke="#0D2B1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
     <!-- left leg -->
-    <line x1="50" y1="103" x2="44" y2="122" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+    <line class="peso-leg-l" x1="50" y1="103" x2="44" y2="122" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
     <!-- right leg -->
-    <line x1="70" y1="103" x2="76" y2="122" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+    <line class="peso-leg-r" x1="70" y1="103" x2="76" y2="122" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
     <!-- left foot (oval) -->
     <ellipse cx="40" cy="126" rx="11" ry="5.5" fill="#00C896"/>
     <!-- right foot (oval) -->
@@ -1026,7 +1064,10 @@
       <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.0.4 · Free</div>
     </div>
     <div class="hero-right">
-      <svg class="peso-mascot" style="--peso-size:120px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
+      <div class="hero-peso-wrap">
+  <svg class="peso-mascot" style="--peso-size:120px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
+  <div class="peso-speech">Magandang araw! Ako si Peso 👋</div>
+</div>
       <img class="hero-app-icon" src="android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="SmartSpend app icon" onerror="this.style.display='none'" />
     </div>
   </section>
@@ -2550,6 +2591,39 @@ function copyPageUrl() {
     btn.textContent = '📋 ' + window.location.href;
     setTimeout(function() { btn.textContent = '🔗 Copy Link'; }, 3000);
   });
+}
+/* ===== PESO POP-IN ===== */
+(function(){
+  var po = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting) e.target.classList.add('peso-pop');
+    });
+  },{threshold:0.3});
+  document.querySelectorAll('.peso-mascot').forEach(function(el){ po.observe(el); });
+})();
+/* ===== DEMO PESO MOOD ===== */
+function setPesoMood(mood){
+  var el = document.querySelector('#demo-screen-peso .peso-mascot');
+  if(!el) return;
+  el.classList.remove('peso-thinking','peso-celebrating','peso-sad');
+  if(mood && mood!=='happy') el.classList.add('peso-'+mood);
+}
+var _dmChat = document.getElementById('demo-chat-area');
+if(_dmChat){
+  new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes.forEach(function(n){
+        if(!n.classList) return;
+        if(n.classList.contains('user')){ setPesoMood('thinking'); return; }
+        if(!n.classList.contains('user')){
+          var t=(n.textContent||'').toLowerCase();
+          if(t.includes('logged')||t.includes('noted')){ setPesoMood('celebrating'); setTimeout(function(){setPesoMood('happy');},1800); }
+          else if(t.includes('error')||t.includes('demo')){ setPesoMood('sad'); setTimeout(function(){setPesoMood('happy');},1800); }
+          else{ setPesoMood('happy'); }
+        }
+      });
+    });
+  }).observe(_dmChat,{childList:true});
 }
 </script>
 </body>
