@@ -2485,3 +2485,37 @@ These were already in the backlog but now promoted to P1 given adviser feedback.
 
 *Part 19 added October 1, 2026.*
 *Research sources: g-co.agency UX practices (2026), forasoft.com Android distribution (2026), agiletech.vn Play Store alternatives (2026), moneycoach.ai app vs spreadsheet (2026). Content paraphrased for compliance.*
+
+
+---
+
+## Peso Mascot Personality & Reactivity — Added October 12, 2026
+
+> Full planning doc: `docs/handsoff/peso-mascot-personality-tasks-2026-10-12.md`
+> **Status: TO-DO — no code yet**
+
+### Current state
+The `PesoMascot` widget exists with 5 moods (happy, neutral, thinking, sad, celebrating) and is used in 14+ screens. However it's **static** — no animations, no mood reactions during AI chat, not in notifications, and the website only has a static SVG.
+
+### Backlog items (priority order)
+
+| ID | Task | Where | Priority | Est. |
+|----|------|--------|----------|------|
+| A-4 | Reactive mood during AI chat (thinking → happy → celebrating → sad) | `ai_screen.dart` | 🔴 High | ~2h |
+| A-1 | Idle breathing animation (scale pulse + vertical bob) | `peso_mascot.dart` | 🟡 Medium | ~2h |
+| A-6 | Peso notification icon (white silhouette PNG for Android push) | `notification_service.dart` + drawable | 🟡 Medium | ~1h |
+| A-9 | Bob/float animation on AI welcome screen | `ai_screen.dart` | 🟡 Medium | ~1h |
+| A-5 | Peso mood tied to FHS score change | `home_screen.dart` | 🟡 Medium | ~1h |
+| A-2 | Animated mood transitions (cross-fade body color + arm swing) | `peso_mascot.dart` | 🟢 Low | ~3h |
+| A-3 | Entry pop-in animation for empty state appearances | `peso_mascot.dart` | 🟢 Low | ~1h |
+| A-7 | Peso `celebrating` in achievement unlock SnackBar | `home_screen.dart` | 🟢 Low | ~30min |
+| A-8 | Add Peso to analytics/profile/achievements empty states | multiple screens | 🟢 Low | ~1h |
+| W-1 | CSS keyframe animations for website Peso (bob, blink, hover wave) | `index.html` | 🟡 Medium | ~1h |
+| W-2 | Demo Lite Peso mood switching via CSS classes | `index.html` | 🟢 Low | ~1h |
+| W-3 | Hero Peso hover → speech bubble tooltip | `index.html` | 🟢 Low | ~30min |
+
+### Key prerequisite for website animation (W-1/W-2/W-3)
+The SVG `<symbol id="peso-face">` needs class attributes added to each animatable element (`.peso-eye-left`, `.peso-arm-right`, etc.) before CSS can target individual parts. This refactor is a ~30min task but blocks all SVG animation work.
+
+### Accessibility requirement (all tasks)
+All looping animations must respect `prefers-reduced-motion` — both in CSS (`@media (prefers-reduced-motion: reduce)`) and Flutter (`MediaQuery.of(context).disableAnimations`).
