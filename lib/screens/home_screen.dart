@@ -616,7 +616,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
-          Icon(Icons.smart_toy_outlined, size: 18, color: cs.primary),
+          // ignore: prefer_const_constructors
+          PesoMascot(size: 20, mood: PesoMood.happy),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -827,12 +828,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           .primary
                           .withValues(alpha: 0.12),
                 ),
-                child: Icon(
-                  icon,
-                  color: selected
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(context).colorScheme.primary,
-                  size: 22,
+                // ignore: prefer_const_constructors
+                child: PesoMascot(
+                  size: 28,
+                  mood: selected ? PesoMood.happy : PesoMood.neutral,
                 ),
               ),
               const SizedBox(height: 2),
@@ -3004,9 +3003,8 @@ class _DashboardState extends State<Dashboard> {
                             .primary
                             .withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(10)),
-                    child: Icon(Icons.smart_toy_outlined,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 20)),
+                    child: // ignore: prefer_const_constructors
+                        PesoMascot(size: 20, mood: PesoMood.happy)),
                 title: const Text("Ask Peso (AI)",
                     style:
                         TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),

@@ -2967,9 +2967,26 @@ class _AIScreenState extends State<AIScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            PesoMascot(size: 28, mood: _pesoChatMood),
-            const SizedBox(width: 8),
-            const Text("Peso"),
+            // ignore: prefer_const_constructors
+            PesoMascot(
+                size: 32, mood: _pesoChatMood, tapMood: PesoMood.excited),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Peso',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text('Your money buddy 💚',
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6))),
+              ],
+            ),
           ],
         ),
         actions: [
@@ -3621,13 +3638,14 @@ class _AIScreenState extends State<AIScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      "Peso",
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey[600],
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                                    // ignore: prefer_const_constructors
+                                    PesoMascot(
+                                        size: 24, mood: PesoMood.thinking),
+                                    const SizedBox(width: 8),
+                                    const Text('Peso is thinking...',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontStyle: FontStyle.italic)),
                                     const SizedBox(width: 4),
                                     _TypingDots(),
                                   ],
@@ -3860,13 +3878,30 @@ class _AIScreenState extends State<AIScreen> {
                             ),
                           );
                           // Wrap bubble with optional date divider above it
+                          // For AI messages, add Peso avatar to the left
+                          Widget displayBubble = bubble;
+                          if (!isUser) {
+                            displayBubble = Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 4, right: 4),
+                                  // ignore: prefer_const_constructors
+                                  child:
+                                      PesoMascot(size: 22, mood: _pesoChatMood),
+                                ),
+                                Expanded(child: bubble),
+                              ],
+                            );
+                          }
                           if (dateDivider != null) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [dateDivider, bubble],
+                              children: [dateDivider, displayBubble],
                             );
                           }
-                          return bubble;
+                          return displayBubble;
                         },
                       ),
           ),

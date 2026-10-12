@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
@@ -139,6 +140,15 @@ class _LogDueBillsScreenState extends State<LogDueBillsScreen> {
       appBar: AppBar(
         title: const Text("Log Due Bills"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            // ignore: prefer_const_constructors
+            child: PesoMascot(
+              size: 28,
+              mood: PesoMood.thinking,
+              tapMood: PesoMood.happy,
+            ),
+          ),
           const InfoButton(
             title: "Log Due Bills",
             body:
@@ -164,8 +174,12 @@ class _LogDueBillsScreenState extends State<LogDueBillsScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.check_circle_outline,
-                            size: 56, color: Colors.green[400]),
+                        // ignore: prefer_const_constructors
+                        PesoMascot.withSpeech(
+                          size: 56,
+                          mood: PesoMood.celebrating,
+                          text: 'No bills due! Peso is happy! 🎉',
+                        ),
                         const SizedBox(height: 16),
                         const Text("No bills due right now! 🎉",
                             style: TextStyle(

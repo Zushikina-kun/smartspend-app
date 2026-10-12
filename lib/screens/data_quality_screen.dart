@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/data_quality_service.dart';
 import '../services/db_service.dart';
 import '../services/event_bus.dart';
+import '../widgets/peso_mascot.dart';
 import 'transactions_screen.dart';
 
 /// Hub → Data Quality — surfaces expense data issues with one-tap fixes.
@@ -142,8 +143,12 @@ class _DataQualityScreenState extends State<DataQualityScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle_outline,
-                size: 64, color: Colors.green[400]),
+            // ignore: prefer_const_constructors
+            PesoMascot(
+              size: 64,
+              mood: PesoMood.proud,
+            ),
+            const SizedBox(height: 8),
             const SizedBox(height: 16),
             const Text('All clean!',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),

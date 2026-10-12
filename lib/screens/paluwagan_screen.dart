@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
@@ -177,6 +178,15 @@ class _PalawaganScreenState extends State<PalawaganScreen> {
       appBar: AppBar(
         title: const Text("Paluwagan Tracker"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            // ignore: prefer_const_constructors
+            child: PesoMascot(
+              size: 28,
+              mood: PesoMood.happy,
+              tapMood: PesoMood.excited,
+            ),
+          ),
           const InfoButton(
             title: "Paluwagan Tracker",
             body:
@@ -202,7 +212,13 @@ class _PalawaganScreenState extends State<PalawaganScreen> {
               ? SingleChildScrollView(
                   padding: const EdgeInsets.all(32),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    const Text("🏦", style: TextStyle(fontSize: 48)),
+                    // ignore: prefer_const_constructors
+                    PesoMascot.withSpeech(
+                      size: 64,
+                      mood: PesoMood.winking,
+                      text:
+                          'Track your rotating savings group here! 🤝\nWho\'s next, how much, and when.',
+                    ),
                     const SizedBox(height: 12),
                     const Text("No paluwagan groups yet",
                         style: TextStyle(

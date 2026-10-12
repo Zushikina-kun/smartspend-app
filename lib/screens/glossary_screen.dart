@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 /// Financial Glossary — explains key financial terms in plain Filipino-English
 class GlossaryScreen extends StatefulWidget {
@@ -146,6 +147,15 @@ class _GlossaryScreenState extends State<GlossaryScreen> {
       appBar: AppBar(
         title: const Text("Financial Glossary"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            // ignore: prefer_const_constructors
+            child: PesoMascot(
+              size: 28,
+              mood: PesoMood.thinking,
+              tapMood: PesoMood.winking,
+            ),
+          ),
           const InfoButton(
             title: "Financial Glossary",
             body:

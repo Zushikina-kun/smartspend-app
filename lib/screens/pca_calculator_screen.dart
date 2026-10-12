@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 /// Peso Cost Averaging Calculator
 /// Helps users plan regular investments over time
@@ -78,8 +79,17 @@ class _PCACalculatorScreenState extends State<PCACalculatorScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Peso Cost Averaging"),
-        actions: const [
-          InfoButton(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            // ignore: prefer_const_constructors
+            child: PesoMascot(
+              size: 28,
+              mood: PesoMood.proud,
+              tapMood: PesoMood.excited,
+            ),
+          ),
+          const InfoButton(
             title: "Peso Cost Averaging (PCA)",
             body: "PCA is a strategy where you invest a fixed amount regularly "
                 "regardless of market price.\n\n"
@@ -97,6 +107,16 @@ class _PCACalculatorScreenState extends State<PCACalculatorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+              // ignore: prefer_const_constructors
+              child: PesoMascot.withSpeech(
+                size: 56,
+                mood: PesoMood.winking,
+                text:
+                    'Peso Cost Averaging — the investor\'s weapon! 📈\nInvest a fixed amount regularly to smooth out market volatility.',
+              ),
+            ),
             // Input Card
             Card(
               elevation: 2,
