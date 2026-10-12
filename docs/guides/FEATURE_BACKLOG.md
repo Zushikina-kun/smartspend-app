@@ -2519,3 +2519,51 @@ The SVG `<symbol id="peso-face">` needs class attributes added to each animatabl
 
 ### Accessibility requirement (all tasks)
 All looping animations must respect `prefers-reduced-motion` — both in CSS (`@media (prefers-reduced-motion: reduce)`) and Flutter (`MediaQuery.of(context).disableAnimations`).
+
+
+---
+
+## In-App Feedback & Suggestions — Added October 12, 2026
+
+> Full planning doc: `docs/handsoff/in-app-feedback-task-2026-10-12.md`
+> **Status: TO-DO — no code yet**
+
+A `FeedbackScreen` that lets users submit bug reports, feature ideas, and questions directly from the app. Opens a pre-filled GitHub new-issue URL via `url_launcher` — no server, no API key, no token needed.
+
+| Item | Priority | Est. |
+|------|----------|------|
+| Create `feedback_screen.dart` with type picker, title, details, email, consent | 🔴 High | ~2h |
+| Add to Profile screen "Send Feedback" tile | 🔴 High | ~15min |
+| Add to Settings screen Help section | 🟡 Medium | ~10min |
+| Add to AI screen overflow menu | 🟡 Medium | ~10min |
+| Add to About screen | 🟢 Low | ~10min |
+| Add to Quick Access Hub | 🟢 Low | ~15min |
+| Auto-fill bug context from AI error SnackBar | 🟢 Low | ~30min |
+
+**Prerequisite:** `PesoMood.winking` (Task A-7 in mascot doc) — for the FeedbackScreen header Peso.
+
+---
+
+## Peso Mascot — Expanded Expressions — Added October 12, 2026 (revision)
+
+> Full planning doc: `docs/handsoff/peso-mascot-personality-tasks-2026-10-12.md` (REPLACED/EXPANDED)
+> **Status: TO-DO — no code yet**
+
+Expanded from 5 moods to 12 moods. Key additions:
+
+| New Mood | Body Color | Use Case |
+|----------|-----------|----------|
+| `excited` | Gold `#FF8C00` | First streak milestone, new badge, FHS new tier |
+| `surprised` | Yellow flash `#FFD700` | Large expense flagged, "Did you know?" tips |
+| `proud` | Emerald + glow | FHS ≥ 90, all budgets on track, 20%+ savings rate |
+| `embarrassed` | Desaturated pink | Impulse buy > daily limit, budget 150% over |
+| `winking` | Normal green | Tips, hints, suggestion chips, Quick Tips screen |
+| `sleepy` | Slate blue `#6B8E9F` | No logging 3+ days, late-night greeting |
+| `worried` | Slightly desaturated | Bill due <3 days, Safe-to-Spend < ₱100 |
+
+**Key research finding (Duolingo/Rive):** This is a **state machine problem**, not just an animation problem. Peso must represent: idle/waiting → listening → thinking → responding → emotional feedback. The `CustomPainter` approach can approximate this with `AnimationController` + coordinate `Tween<double>` interpolation — no Rive needed for capstone timeline.
+
+**Filipino personality traits encoded:**
+- Makulit (playful) · Supportive (never judges) · Expressive (reacts to everything) · Filipino (Taglish speech bubbles) · Curious (pupils dart during thinking) · Loyal (more expressive for long-streak users)
+
+**Website tasks:** CSS bob+blink (W-1), hover wave (W-2), pop-in scroll (W-3), Demo Lite mood switching (W-4), hero speech bubble tooltip (W-5). Prerequisite: add `class` attributes to SVG elements (W-0, ~30min).

@@ -1,24 +1,24 @@
-# Peso Mascot — Personality, Reactivity & Website Animation Tasks
+# Peso Mascot — Personality, Reactivity & Expression Tasks
 **Date:** October 12, 2026
 **Status:** Planning / To-Do — NO CODE YET
-**Context:** Raised during website overhaul session. The mascot widget already exists and is used across the app, but its reactivity is inconsistent and the website has no animated version at all.
+**Context:** Raised during website overhaul session. Research conducted on Duolingo (Rive animation system), Miss Minutes (Loki/Marvel rubber-hose anthropomorphic object), Notion AI mascot, ChatGPT animated dots, and general mascot personality design.
 
 ---
 
 ## Current State Audit
 
-### What already exists in the app (peso_mascot.dart)
+### What already exists in `peso_mascot.dart`
 The `PesoMascot` Flutter widget is a full `CustomPainter`-based coin character with:
 - **5 moods:** `happy`, `neutral`, `thinking`, `sad`, `celebrating`
 - **Per-mood visuals:** body color changes, eyebrow angle, eye shape, mouth shape, arm positions, blush, confetti, thought bubble
 - **`withSpeech()` factory:** Peso + speech bubble above him
-- **Static widget** — no animation, no transitions between moods
+- **STATIC widget** — no animation, no transitions between moods
 
 ### Where it's already used (14+ screens)
 | Screen | Usage | Mood |
 |--------|-------|------|
 | `ai_screen.dart` | Welcome/greeting when chat is empty | `happy` |
-| `ai_screen.dart` | AppBar title row | `happy` |
+| `ai_screen.dart` | AppBar title row | `happy` — always, even during errors |
 | `setup_screen.dart` | Onboarding step 1 (greeting) | `happy` |
 | `setup_screen.dart` | Onboarding income step | `thinking` |
 | `home_screen.dart` | Empty state hints | `thinking` |
@@ -36,220 +36,364 @@ The `PesoMascot` Flutter widget is a full `CustomPainter`-based coin character w
 | `savings_goals_screen.dart` | No goals | `thinking` |
 | `transactions_screen.dart` | No transactions | `thinking` |
 
-### What's missing / gaps
-1. **No animation** — moods switch instantly, no bounce/wiggle/blink
-2. **No reactive mood in AI chat** — Peso is always `happy` in the header regardless of what the user is asking; he should react to message content
-3. **Not present in notifications** — push notifications don't use Peso at all
-4. **Not on the website** — website has a static SVG; no animation
-5. **No idle animation** — Peso just sits there; Duolingo's Duo bobs/breathes
-6. **Under-used screens** — analytics, profile, achievements, FHS breakdown don't use Peso despite being natural places for encouragement
+### Key Gaps
+1. **No animation whatsoever** — every instance is completely static
+2. **Only 2 of 5 moods are used regularly** — `happy` and `thinking` dominate; `sad`, `neutral`, `celebrating` are rare
+3. **Not reactive to context** — Peso is `happy` in the AI header even when there's an error or the user is upset
+4. **Missing moods** for many real scenarios — confused, excited, proud, embarrassed, sleepy, winking
+5. **No idle personality** — Duolingo's Duo bobs, blinks, looks around; Peso just sits there
+6. **Not in notifications** — push notifications use generic app icon
+7. **Website SVG is static** — no CSS animations at all
+8. **Under-used on key screens** — Analytics, Profile, Achievements, FHS breakdown don't have Peso
 
 ---
 
-## Task List
+## Research Findings
 
-### PRIORITY 1 — App: Animate the existing widget
+### Duolingo's Approach (industry gold standard)
+Duolingo uses **Rive** (formerly Flare) for character animation — a state machine approach where each state (idle, listening, thinking, talking, celebrating, sad) has its own animation loop, and transitions between states are defined as smooth blend animations. Key insight from their engineering: *"This is a state problem, not an animation problem."* The character must represent: idle/waiting, listening, thinking, talking, emotional feedback.
 
-**Task A-1: Add idle "breathing" animation to PesoMascot**
-- `PesoMascot` is currently a `StatelessWidget` — convert to `StatefulWidget` with `SingleTickerProviderStateMixin`
-- Add a looping `AnimationController` (duration ~2s, repeat with reverse)
-- Apply a subtle scale pulse: `0.97 → 1.00 → 0.97` on the whole widget
-- Apply a subtle vertical bob: `+0` → `-2px` → `+0` on the Y position
-- Should work at any size (24px nav icon should still breathe, just barely)
-- **Reference:** Duolingo Duo's idle bounce
+For SmartSpend without Rive: we can approximate this with Flutter `AnimationController` + `CustomPainter` by interpolating the coordinate values between two states using `Tween<double>`.
 
-**Task A-2: Add mood transition animation**
-- When `mood` prop changes, animate the face elements (eyebrows, mouth, blush) over ~300ms
-- Use `AnimatedBuilder` + `Tween` on a single controller
-- The body color change (`#00C896` → `#8AABB8` for sad, `#FF8C00` for celebrating) should cross-fade
-- Arms should swing to new position over ~400ms
-- **Research needed:** Tweening between two `CustomPainter` states — one approach is interpolating all the coordinates directly with a `Tween<double>` multiplier
+### Miss Minutes Design Lessons (Loki/Marvel)
+Miss Minutes is an anthropomorphic clock with rubber-hose animation style — simple, flat, iconic shape, big expressive face, exaggerated reactions. The design lesson: **object identity + face = character**. For Peso: the ₱ coin shape IS his identity. The face makes him alive. Every expression should amplify both.
 
-**Task A-3: Add entry animation ("pop in")**
-- When Peso first appears on screen (empty state, etc.), animate a scale from `0.6 → 1.05 → 1.0` over ~500ms with an elastic curve
-- Use `AnimatedScale` wrapper or custom controller in `initState`
+### Notion AI Mascot
+Notion's mascot transitions "seamlessly between any state, adapting to user interactions in real time" — listening → thinking → writing within seconds, each transition organic. Key: **transitions must feel earned, not jarring**. A sudden mood switch (happy → sad) without a transition animation looks broken.
+
+### ChatGPT Animated Dots
+Even without a face, animated dots can convey state (idle pulse, thinking spiral, speaking bounce). For Peso: the body itself can pulsate, the eyes can look around during `thinking`, the arms can react during `celebrating`.
 
 ---
 
-### PRIORITY 2 — App: Reactive mood in AI chat
+## Expanded Expression System
 
-**Task A-4: Mood-reactive Peso header in ai_screen.dart**
-- The `AppBar` title row has `PesoMascot(size: 28, mood: PesoMood.happy)` — always happy
-- Add a `ValueNotifier<PesoMood> _pesoChatMood` in `_AiScreenState`
-- React to the CURRENT message context:
-  - User sends a message → `thinking` (while waiting for reply)
-  - Reply arrives normally → `happy`
-  - Reply is a celebration (badge unlocked, goal hit, debt cleared) → `celebrating` for 3s then back to `happy`
-  - Error / all providers exhausted → `sad` for 3s then `neutral`
-  - Financial advice query detected → `thinking`
-- Detection: scan the reply text for keywords: `"🎉"`, `"congratulations"`, `"nabayaran"`, `"nadaan"`, etc. → `celebrating`; scan for `"error"`, `"sorry"`, `"hindi ko"` → `sad`
-- **This is the highest-impact change** — makes Peso feel alive during the conversation
+### Current 5 moods → Proposed 12 moods
 
-**Task A-5: Peso reacts to user's financial health**
-- When FHS changes, show Peso with the appropriate mood as part of the "Score improved!" / "Score dropped" snackbar or card on home screen
-- FHS ≥ 90 → `celebrating`
-- FHS 70–89 → `happy`
-- FHS 50–69 → `neutral`
-- FHS < 50 → `sad`
-- Currently the snackbar has an emoji but not the actual Peso widget
+| Mood | When to Use | Visual Signature |
+|------|-------------|-----------------|
+| `happy` | Default, after logging, good FHS | Arms up-angled, wide smile, cheek blush |
+| `neutral` | Idle, awaiting input | Arms at sides, slight smile |
+| `thinking` | AI processing, empty states | One brow raised, flat mouth, thought bubble, pupils shifted right |
+| `sad` | Error, low FHS (<50), overbudget warning | Arms drooping, frown, half-lidded eyes, blue-tinted body |
+| `celebrating` | Milestone, badge unlock, goal reached, zero debt | Arms high, O-mouth, legs spread, confetti burst |
+| **`excited`** *(new)* | Big achievement, streak milestone, first login | Both arms straight UP, huge smile, body bouncing, stars around head |
+| **`surprised`** *(new)* | Unexpected insight, "did you know?" tip, large expense flagged | Eyes extra wide (bigger than normal), eyebrows high, mouth O, arms spread wide |
+| **`proud`** *(new)* | Consistent savings, all budgets on track, FHS ≥ 90 | One arm on hip (akimbo), chest slightly puffed, satisfied smile, subtle glow |
+| **`embarrassed`** *(new)* | User missed a logging streak, budget way over, impulse buy detected | Cheeks bright red, eyes looking down, arms covering face or one hand behind head |
+| **`winking`** *(new)* | Tips, hints, "did you know" cards, suggestion chips | One eye closed/wink, slight smirk, one arm pointing |
+| **`sleepy`** *(new)* | Inactive/no logging for 3+ days, app idle screen, night-time greeting | Half-lidded droopy eyes, Zzzz floating above, arms slack |
+| **`worried`** *(new)* | Upcoming bill due, debt overdue, Safe-to-Spend very low | Eyebrows close together and low (concerned), slight frown, one hand on cheek |
 
----
-
-### PRIORITY 3 — App: Peso in more places
-
-**Task A-6: Peso in push notifications (notification icon)**
-- Android push notifications currently use the app icon
-- Add a Peso coin face as a custom small notification icon (white silhouette on transparent background, ~24dp)
-- Requires: creating a `peso_notif_icon.png` in `res/drawable/` — a simplified flat version of the coin face (just the circle outline + two dots for eyes + curve for smile, all white)
-- Update `notification_service.dart` to use `androidIcon: 'peso_notif_icon'`
-- **Note:** Android notification icons MUST be white on transparent — no color fills allowed
-
-**Task A-7: Peso in achievement unlocks**
-- When a badge is unlocked, the current SnackBar has an emoji
-- Replace with a small Peso (`celebrating` mood) + badge name
-- Either a custom SnackBar widget or a brief overlay
-
-**Task A-8: Peso in more empty states**
-- `analytics_screen.dart` — no Peso when there's no data
-- `profile_screen.dart` — no Peso
-- `achievements_screen.dart` — no Peso on first open (all locked badges)
-- Add `PesoMascot.withSpeech()` to each empty state with contextual Taglish hint text
-
-**Task A-9: Peso idle animations on the AI welcome screen**
-- The AI screen's welcome state already shows `PesoMascot.withSpeech()` at 80px
-- Add a gentle floating/bobbing animation here (this is the most visible placement)
-- Could also add a slow blink animation (briefly close eyes) every ~4s
+### Body Color by Mood
+| Mood | Body Rim Color | Body Tint |
+|------|---------------|-----------|
+| `happy`, `neutral`, `winking`, `proud` | `#00C896` (emerald) | Normal |
+| `thinking`, `worried` | `#7C5CFC` (purple) | Slight purple tint |
+| `sad`, `embarrassed` | `#8AABB8` (muted blue-gray) | Desaturated |
+| `celebrating`, `excited` | `#FF8C00` (warm orange-gold) | Gold shimmer |
+| `surprised` | `#FFD700` (bright yellow) | Brief flash |
+| `sleepy` | `#6B8E9F` (slate blue) | Dim |
 
 ---
 
-### PRIORITY 4 — Website: Animated Peso SVG
+## Personality Traits to Encode (Character Bible)
 
-**Task W-1: CSS keyframe animations for website Peso**
-The website has a static SVG `<symbol id="peso-face">`. Add CSS animations:
+Peso is a **Filipino Gen Z coin mascot** — think friendly, a bit playful, genuinely helpful but not corporate. His personality traits:
 
-**Idle bob:**
+| Trait | Expression |
+|-------|-----------|
+| **Makulit** (playful/persistent) | Wiggles when ignored, waves arms for attention |
+| **Supportive** | Never judges spending — celebrates improvement, not perfection |
+| **Expressive** | Reacts to EVERY user action with a micro-expression |
+| **Filipino** | Uses Taglish phrases in speech bubbles ("Grabe!", "Ay nako!", "Sige!") |
+| **Curious** | Pupils dart around when `thinking`, peeks at new data |
+| **Loyal** | More expressive reactions for users with long streaks |
+
+### Taglish Speech Bubble Phrases (per context)
+| Context | Phrase |
+|---------|--------|
+| Good morning greeting | "Magandang umaga! ☀️ Kumain ka na?" |
+| After logging expense | "Noted! ✅ Maayos tayo." |
+| Budget warning | "Ay, malapit na tayo sa limit! 😬" |
+| Goal milestone (50%) | "Kalahati na! 🎯 Keep it up!" |
+| FHS drops | "Huwag mag-alala — pwede nating ayusin 'to! 💪" |
+| FHS improves | "Grabe ka! Gumaling pa ang score mo! 🎉" |
+| No logging for 3 days | "Hoy! 3 days na wala akong balita... 👀" |
+| Zero debt celebration | "WALANG UTANG! Peso is SO proud of you! 🥹" |
+| First app open | "Kumusta! Ako si Peso — your money buddy! ₱" |
+| Offline mode | "Walang internet pero okay lang — nandito pa rin ako! 📴" |
+
+---
+
+## Task List (expanded + reprioritized)
+
+### PRIORITY 1 — Foundations (enables everything else)
+
+**Task A-0: Convert PesoMascot to AnimatedWidget** *(prerequisite for all animation)*
+- Change from `StatelessWidget` → `StatefulWidget` with `TickerProviderStateMixin`
+- Add `AnimationController _idleCtrl` (looping, 2.4s) and `AnimationController _moodCtrl` (one-shot, 400ms)
+- `_idleCtrl` drives the breathing bob: `scale 0.97→1.0→0.97` + `translateY 0→-2px→0`
+- `_moodCtrl` drives mood transitions: interpolates all coordinate groups between old and new mood
+- Export `AnimatedPesoMascot` as the primary widget; keep `PesoMascot` as a static fallback
+- **Must support `prefers-reduced-motion`** — check `MediaQuery.of(context).disableAnimations`
+
+**Task A-1: Idle breathing + eye blink**
+- Scale pulse: `0.97 → 1.00 → 0.97` (2.4s loop)
+- Vertical bob: `+0 → -2px → +0` synchronized with scale
+- Eye blink: every 3–5 seconds, `eyeR` briefly collapses to 20% height over 120ms then reopens — creates lifelike blink
+- During `thinking` mood: pupils drift left–right slowly (curiosity)
+- During `sleepy` mood: blink rate slows to every 1.5s, eyes stay 60% closed
+
+**Task A-2: Mood entry animations**
+- Pop-in: new mood starts at `scale 0.7` → `scale 1.08` → `scale 1.0` (elastic curve, 350ms)
+- Body color cross-fade: interpolate `_rimColor` over 300ms using `ColorTween`
+- Arms swing to new position over 400ms using coordinate `Tween<double>`
+- Eyebrow angle transitions over 250ms
+- Mouth path transitions over 250ms (interpolate quadratic bezier control points)
+
+### PRIORITY 2 — New Expressions
+
+**Task A-3: Add `excited` mood**
+- Both arms straight upward (higher than celebrating)  
+- Body slightly taller/stretched (scale Y 1.05)
+- Stars or sparkles around the head (4-6 small star shapes that twinkle)
+- Mouth: extra-wide smile, wider than `happy`
+- Eyes: slightly bigger than normal
+- Body color: gold/orange `#FF8C00`
+- Use when: first streak milestone, badge newly unlocked, FHS reaches new tier
+
+**Task A-4: Add `surprised` mood**
+- Eyes: noticeably larger whites (r × 1.3), pupils centered and small
+- Eyebrows: both raised high and arched sharply  
+- Mouth: perfect O shape (small circle)
+- Arms: spread wide horizontally, not raised
+- Body: brief yellow flash `#FFD700` then back to normal green
+- Use when: AI detects a notably large expense, "Did you know?" tip cards
+
+**Task A-5: Add `proud` mood**
+- Right arm on hip (drawn as a bent L-shape at the side)
+- Left arm slightly raised
+- Chin slightly raised (body tilts +3°)
+- Subtle glow ring around the coin body (emerald radial gradient at 15% opacity)
+- Mouth: satisfied closed-mouth smile (no teeth)
+- Use when: FHS ≥ 90, all budgets on track, savings rate ≥ 20% for the month
+
+**Task A-6: Add `embarrassed` mood**
+- Cheeks: much brighter red blush `rgba(255,60,60,0.35)` (more intense than happy blush)
+- Eyes: looking downward (pupils shifted to bottom of eye whites)
+- One hand raised to cover part of face, or one hand behind head
+- Mouth: closed, slight grimace
+- Body: slightly desaturated pink-tinted
+- Use when: impulse buy tagged "Want" > daily limit, budget ≥ 150% overspent
+
+**Task A-7: Add `winking` mood**
+- Left eye: fully closed (eye white becomes a curved arc `^` shape)
+- Right eye: normal open with shine
+- Left eyebrow: slightly raised
+- Mouth: smirk (asymmetric — one side higher)
+- Right arm: pointing outward (index finger extended — drawn as a small circle)
+- Use when: tips, hints, "Try this" suggestion chips, Quick Tips screen
+
+**Task A-8: Add `sleepy` mood**
+- Eyes: heavily drooped (eye whites compressed to 40% height, pupils not visible)  
+- Eyebrows: both slightly furrowed inward-down
+- Mouth: small neutral line
+- Arms: hanging low at sides, slightly drooping
+- Body color: muted slate-blue `#6B8E9F`
+- Zzz animation: 3 small "Z" text bubbles floating up from the top of the coin, fading out at different heights (staggered delays)
+- Use when: no logging for 3+ days, late-night (after midnight) greeting
+
+**Task A-9: Add `worried` mood**
+- Eyebrows: both angled down toward center (classic worried/concerned)
+- Eyes: slightly narrowed, looking forward
+- Mouth: small downward curve (not full frown — more "uncertain")
+- One hand on chin or cheek (thinking-but-worried pose)
+- Body color: stays green but slightly desaturated
+- Use when: bill due in <3 days, Safe-to-Spend < ₱100, debt overdue
+
+### PRIORITY 3 — Reactive AI Chat Integration
+
+**Task A-10: Dynamic mood in AI screen header**
+Add `ValueNotifier<PesoMood> _pesoChatMood` to `_AiScreenState`:
+- **Sending message** → `thinking` (immediately, while waiting for reply)
+- **Reply arrives (normal)** → `happy` after 300ms delay
+- **Reply contains celebration keywords** ("congratulations", "nabayaran", "goal reached", "🎉", "badge") → `celebrating` for 2s then `happy`
+- **Reply contains error/apology** ("error", "hindi ko", "sorry", "failed") → `sad` for 2s then `neutral`
+- **Reply contains financial advice warning** ("over budget", "nag-overspend", "lampas na") → `worried` for 3s then `neutral`
+- **Reply contains encouragement/compliment** ("great job", "galing mo", "consistent") → `proud` for 2s then `happy`
+- **Large expense logged (>₱1000)** → `surprised` for 1.5s then `happy`
+- **Daily limit reached** → `sad` for 3s then `neutral`
+- **New badge unlocked** → `excited` for 3s with confetti then `happy`
+
+**Task A-11: Peso reacts to FHS changes**
+In `home_screen.dart` when FHS score is recalculated:
+- Score went UP → `celebrating` for 2s
+- Score went DOWN → `sad` for 2s
+- FHS ≥ 90 on load → `proud`
+- FHS < 50 on load → `worried`
+- FHS 50–89 → `happy` or `neutral` based on direction of change
+
+**Task A-12: Peso reacts to budget status**
+In `home_screen.dart` budget cards and `analytics_screen.dart`:
+- All budgets ≤ 80% used → `happy`
+- Any budget 80–100% → `worried` on that card
+- Any budget > 100% → `embarrassed` on that card (with bright blush)
+
+**Task A-13: Streak-aware expressions**
+- 1-day streak: `happy`
+- 7-day streak: `excited` with "Week Warrior!" speech bubble
+- 31-day streak: `celebrating` with "GRABE! 31 days! Month Master!" speech bubble
+- Streak broken: `sad` + "Ay... nawala ang streak natin. Simulan ulit tayo!" speech bubble
+
+### PRIORITY 4 — Screen-Specific Placements
+
+**Task A-14: Peso on Analytics screen**
+- When no data: `thinking` + "Wala pa tayong data! Mag-log tayo para makita ang charts."
+- When FHS is displayed: mood matches FHS range (see A-11)
+- "AI Financial Advice" section: `winking` Peso in header with "Heto ang tips ko para sa iyo! 💡"
+
+**Task A-15: Peso on Profile screen**
+- Top of profile: small `happy` Peso (48px) beside the avatar/name
+- When Financial Health Certificate is viewed: `celebrating`
+- When backup is completed: `proud` + "Safe na ang data mo! 🔒"
+
+**Task A-16: Peso on Achievements screen**
+- First open (no badges): `winking` + "Kumita tayo ng mga badges! Magsimula tayo!"
+- Badge just unlocked: `excited` with confetti filling the screen briefly
+- All 25 badges earned: `celebrating` + "COMPLETE! Ikaw ang pinakamahusay! 🏆"
+
+**Task A-17: Peso on Quick Tips screen (new screen)**
+- Show `winking` Peso at the top with "Heto ang ilang tips bago magsimula! 😉"
+
+**Task A-18: Peso on Feedback/Report screen (when built)**
+- `happy` Peso with "Salamat sa feedback! 🙏 Your input helps us improve."
+- After submit: `celebrating` Peso
+
+### PRIORITY 5 — Website Animations
+
+**Prerequisite W-0: Add class attributes to SVG elements**
+Before any CSS animation can target individual parts, the `<symbol id="peso-face">` needs class names on each animatable element:
+- `.peso-body` — main coin circle
+- `.peso-eye-l`, `.peso-eye-r` — eye white circles  
+- `.peso-pupil-l`, `.peso-pupil-r` — pupils
+- `.peso-arm-l`, `.peso-arm-r` — arm lines
+- `.peso-smile` — mouth path
+- `.peso-brow-l`, `.peso-brow-r` — eyebrow paths
+- `.peso-leg-l`, `.peso-leg-r` — leg lines
+
+**Task W-1: CSS idle animation (bob + blink)**
 ```css
 @keyframes pesoBob {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-4px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-4px) scale(1.01); }
 }
-.peso-mascot { animation: pesoBob 2.2s ease-in-out infinite; }
-```
+.peso-mascot { animation: pesoBob 2.4s ease-in-out infinite; }
 
-**Blink (close and reopen eyes):**
-- Tricky in SVG — can animate `ry` on the eye white ellipses to briefly collapse to 0
-- OR use `scaleY(0)` transform on the eye white groups
-- Trigger: every ~4 seconds, blink duration ~200ms
-
-```css
 @keyframes pesoBlink {
-  0%, 94%, 100% { transform: scaleY(1); }
-  96%           { transform: scaleY(0.1); }
-  98%           { transform: scaleY(1); }
+  0%, 90%, 100% { transform: scaleY(1); transform-origin: center; }
+  93%           { transform: scaleY(0.1); }
+  96%           { transform: scaleY(1); }
 }
+.peso-eye-l, .peso-eye-r, .peso-pupil-l, .peso-pupil-r {
+  animation: pesoBlink 4s ease-in-out infinite;
+}
+/* Stagger right eye blink slightly */
+.peso-eye-r, .peso-pupil-r { animation-delay: 0.05s; }
 ```
-Apply to `.peso-eye-left, .peso-eye-right` — needs the SVG elements to have those class names.
+Accessibility: `@media (prefers-reduced-motion: reduce) { .peso-mascot, .peso-mascot * { animation: none !important; } }`
 
-**Wave arm (on hover):**
+**Task W-2: Hover wave animation**
 ```css
 @keyframes pesoWave {
   0%, 100% { transform: rotate(0deg); }
-  25%      { transform: rotate(-15deg); }
-  75%      { transform: rotate(10deg); }
+  25%       { transform: rotate(-20deg); }
+  75%       { transform: rotate(12deg); }
 }
-.peso-mascot:hover .peso-arm-right { 
-  animation: pesoWave 0.6s ease-in-out 2; 
-  transform-origin: 98px 58px; /* right arm base */
+.peso-mascot:hover .peso-arm-r {
+  animation: pesoWave 0.5s ease-in-out 2;
+  transform-origin: 98px 58px; /* right arm shoulder joint */
 }
 ```
 
-**Entry pop-in (when first scrolled into view via IntersectionObserver):**
+**Task W-3: Pop-in on scroll into view**
+JS: `IntersectionObserver` adds `.peso-visible` class when mascot enters viewport.
 ```css
 @keyframes pesoPopIn {
-  0%   { transform: scale(0.5); opacity: 0; }
-  70%  { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(1.0); opacity: 1; }
+  0%   { transform: scale(0.4) rotate(-10deg); opacity: 0; }
+  65%  { transform: scale(1.1) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
-.peso-mascot.pop-in { animation: pesoPopIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.peso-mascot.peso-visible {
+  animation: pesoPopIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
 ```
-JS: `IntersectionObserver` adds `.pop-in` class when Peso enters viewport.
 
-**Task W-2: Mood-switching in Demo Lite**
-The Demo Lite phone frame has Peso. Currently just `🤖` emoji.
-- Replace the demo Peso screen with the actual SVG coin character
-- When user sends a message → change Peso SVG body/face to "thinking" state (add `.peso-thinking` class)
-- When reply arrives → back to "happy"
-- When certain keywords hit (zero debt, goal achieved, etc.) → "celebrating" class briefly
-- Implementation: add CSS classes for each mood that override the SVG path attributes via CSS
+**Task W-4: Demo Lite mood switching via CSS classes**
+Add CSS classes `.peso-thinking`, `.peso-celebrating`, `.peso-sad` to the SVG that override fill colors and transform arm/eye elements. JS switches classes based on demo state.
 
-**Task W-3: Peso on hover shows speech bubble**
-On the hero section, when user hovers over the Peso mascot:
-- Show a small speech bubble that says "Magandang araw! Ako si Peso 👋"
-- CSS-only tooltip via `::after` pseudo-element or a hidden `<div>` that shows on `.peso-mascot:hover`
-- Animate in with a `fadeInUp` keyframe
+**Task W-5: Hero hover speech bubble**
+```css
+.peso-mascot::after {
+  content: "Magandang araw! 👋";
+  position: absolute; bottom: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%) scale(0.8); opacity: 0;
+  background: var(--primary-glow); border: 1px solid var(--border-strong);
+  border-radius: 12px; padding: 6px 12px; font-size: 12px; white-space: nowrap;
+  transition: opacity 0.2s, transform 0.2s; pointer-events: none;
+}
+.peso-mascot:hover::after { opacity: 1; transform: translateX(-50%) scale(1); }
+```
 
----
+### PRIORITY 6 — Rive Migration (future, post-capstone)
 
-### PRIORITY 5 — Research Tasks (before implementing)
+**Task A-Future-1: Migrate to Rive animation system**
+Duolingo uses Rive for fluid state-machine-based animation. Once the capstone is done:
+- Design Peso character in Rive (or hire a UI animator)
+- Define state machine: idle, listening, thinking, talking, celebrating, sad, excited, winking
+- Each state has its own animation loop with entry/exit transitions
+- Export as `.riv` file, use `rive` Flutter package
+- The result: fully fluid, professional-grade animations with zero code for new expressions
 
-**Task R-1: Research Flutter CustomPainter animation patterns**
-- How to tween between two sets of canvas coordinates
-- `AnimatedBuilder` + `CurvedAnimation` approach vs `TweenAnimationBuilder`
-- Reference: [Flutter CustomPainter animation guide]
-
-**Task R-2: Research SVG CSS animation best practices for mascots**
-- How popular apps (Duolingo, Grammarly, Headspace) animate their mascots in web
-- SVG SMIL vs CSS keyframes (CSS preferred for modern browsers)
-- Performance: will-change, requestAnimationFrame for idle loops
-- Accessibility: `prefers-reduced-motion` media query — all idle animations should pause
-
-**Task R-3: Android notification icon design rules**
-- White-on-transparent silhouette requirements
-- Minimum size (24dp, mdpi baseline)
-- Adaptive icon vs legacy icon for notifications
-- Test on Android 5.0 (API 21) — notification icon behavior differs from newer Android
+**Why not now:** Rive requires a designer with animation skills + significant time investment. For the capstone timeline, the `CustomPainter` approach (Tasks A-0 through A-18) is achievable without a designer.
 
 ---
 
-## Implementation Notes for Future Session
+## Implementation Order (if doing in one session)
 
-### App priority order (if implementing):
-1. A-4 (reactive mood in AI chat) — highest user-visible impact, relatively isolated change
-2. A-1 (idle breathing) — makes every existing Peso instance feel alive
-3. A-6 (notification icon) — requires a graphic asset, then one-line code change
-4. A-9 (AI welcome screen bob) — specific to the most-used Peso placement
-5. A-5 (FHS mood) — integrates with existing score card
-6. A-2 (mood transitions) — more complex animation work
-7. A-3 (entry pop-in) — polish
-8. A-7, A-8 (more placements) — low effort once animation infrastructure exists
-
-### Website priority order:
-1. W-1: CSS bob + blink + hover wave — pure CSS, no JS needed, quick win
-2. W-2: Demo Lite mood switching — needs SVG class system
-3. W-3: Hero hover speech bubble — CSS tooltip
-
-### Prerequisite for SVG animations (W-1, W-2, W-3):
-The current `<symbol id="peso-face">` in `index.html` draws everything as flat SVG shapes without class attributes. To animate individual parts, each major element needs a class name:
-- `.peso-eye-left`, `.peso-eye-right` — eye white circles
-- `.peso-pupil-left`, `.peso-pupil-right` — pupils
-- `.peso-arm-left`, `.peso-arm-right` — arm line + hand group
-- `.peso-body` — main coin circle
-- `.peso-smile` — mouth path
-
-This means the SVG symbol needs to be refactored to add `class` attributes to each element before CSS animations can target them.
+```
+W-0 (add SVG classes) → W-1 (CSS bob+blink) → W-3 (pop-in)     [website, 2h]
+A-0 (AnimatedWidget)  → A-1 (idle breathing) → A-10 (AI chat)  [app, 4h]
+A-3–A-9 (new moods)                                              [app, 3h]
+A-11–A-13 (FHS/budget/streak reactions)                          [app, 2h]
+A-14–A-18 (more screen placements)                               [app, 2h]
+W-2,W-4,W-5 (hover, demo mood, speech bubble)                   [website, 1h]
+```
+Total estimate: ~14h. Can be split over 2–3 sessions.
 
 ---
 
-## Accessibility Note (important for all animation tasks)
-All idle/looping animations MUST respect `prefers-reduced-motion`:
+## Accessibility Requirements (all tasks)
+
+**Flutter app:**
+```dart
+if (!MediaQuery.of(context).disableAnimations) {
+  _idleCtrl.repeat(reverse: true);
+}
+```
+
+**Website CSS:**
 ```css
 @media (prefers-reduced-motion: reduce) {
-  .peso-mascot, .peso-mascot * { animation: none !important; transition: none !important; }
+  .peso-mascot, .peso-mascot * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 ```
-In Flutter: check `MediaQuery.of(context).disableAnimations` before starting animation controllers.
+
+Both are required before shipping any animation task.
 
 ---
 
-*Added to backlog by Kiro — October 12, 2026*
-*No code changes made — planning only.*
+*Last updated: October 12, 2026 — expanded with research on Duolingo/Rive, Miss Minutes, Notion AI mascot, ChatGPT dots. No code changes made.*
