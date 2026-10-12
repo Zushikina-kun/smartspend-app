@@ -3270,6 +3270,26 @@ class _DashboardState extends State<Dashboard> {
                   "All features are also in the Tools screen (grid icon in the bottom bar).",
               size: 13,
             ),
+            const SizedBox(width: 4),
+            PesoMascot(
+              size: 32,
+              mood: PesoMood.winking,
+              tapMood: PesoMood.excited,
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(children: [
+                      const PesoMascot(size: 28, mood: PesoMood.happy),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                          child: Text(
+                              'Tap any card to go there directly! Long press for more options. 💡')),
+                    ]),
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+              },
+            ),
           ],
         ),
         const SizedBox(height: 10),

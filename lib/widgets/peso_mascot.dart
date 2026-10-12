@@ -40,11 +40,17 @@ const kPesoGreenLight = Color(0xFFB3F5E6);
 class PesoMascot extends StatefulWidget {
   final double size;
   final PesoMood mood;
+  final VoidCallback? onTap;
+  final PesoMood? tapMood;
+  final String? tapSpeech;
 
   const PesoMascot({
     super.key,
     this.size = 72,
     this.mood = PesoMood.happy,
+    this.onTap,
+    this.tapMood,
+    this.tapSpeech,
   });
 
   /// Peso with a speech bubble above him
@@ -72,6 +78,8 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
   late AnimationController _idleCtrl;
   late AnimationController _moodCtrl;
   late AnimationController _blinkCtrl;
+  late AnimationController _tapCtrl;
+  PesoMood? _currentMood;
 
   @override
   void initState() {
@@ -88,6 +96,10 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
+    _tapCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 120),
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (!MediaQuery.of(context).disableAnimations) {
@@ -95,6 +107,17 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
         _scheduleBlink();
       }
     });
+  }
+
+  void _handleTap() {
+    _tapCtrl.forward(from: 0).then((_) => _tapCtrl.reverse());
+    if (widget.tapMood != null) {
+      setState(() => _currentMood = widget.tapMood);
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        if (mounted) setState(() => _currentMood = null);
+      });
+    }
+    widget.onTap?.call();
   }
 
   void _scheduleBlink() {
@@ -128,29 +151,40 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
     _idleCtrl.dispose();
     _moodCtrl.dispose();
     _blinkCtrl.dispose();
+    _tapCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: Listenable.merge([_idleCtrl, _moodCtrl, _blinkCtrl]),
+    final effectiveMood = _currentMood ?? widget.mood;
+    final core = AnimatedBuilder(
+      animation: Listenable.merge([_idleCtrl, _moodCtrl, _blinkCtrl, _tapCtrl]),
       builder: (context, child) {
-        return SizedBox(
-          width: widget.size * 1.35,
-          height: widget.size * 1.25,
-          child: CustomPaint(
-            painter: _PesoCoinPainter(
-              mood: widget.mood,
-              size: widget.size,
-              idleT: _idleCtrl.value,
-              moodT: _moodCtrl.value,
-              blinkT: _blinkCtrl.value,
+        final scale = 1.0 + 0.18 * _tapCtrl.value;
+        return Transform.scale(
+          scale: scale,
+          child: SizedBox(
+            width: widget.size * 1.35,
+            height: widget.size * 1.25,
+            child: CustomPaint(
+              painter: _PesoCoinPainter(
+                mood: effectiveMood,
+                size: widget.size,
+                idleT: _idleCtrl.value,
+                moodT: _moodCtrl.value,
+                blinkT: _blinkCtrl.value,
+              ),
             ),
           ),
         );
       },
     );
+
+    if (widget.onTap != null || widget.tapMood != null) {
+      return GestureDetector(onTap: _handleTap, child: core);
+    }
+    return core;
   }
 }
 

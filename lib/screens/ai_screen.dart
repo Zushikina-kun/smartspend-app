@@ -2320,7 +2320,6 @@ class _AIScreenState extends State<AIScreen> {
   }
 
   Widget _sessionSummaryRow(AiSessionResultItem item) {
-    final cs = Theme.of(context).colorScheme;
     Color statusColor;
     String statusIcon;
     switch (item.status) {
@@ -3487,11 +3486,25 @@ class _AIScreenState extends State<AIScreen> {
                                   : hour < 18
                                       ? "Kumain ka na ba? 😄"
                                       : "Good evening! 🌙";
-                              return PesoMascot.withSpeech(
-                                size: 80,
-                                mood: PesoMood.happy,
-                                text:
-                                    "$greeting\nAko si Peso — your money buddy!\nAsk me anything or just say what you spent.",
+                              return GestureDetector(
+                                onTap: () {
+                                  if (_messages.isEmpty) {
+                                    setState(() {
+                                      _messages.add({
+                                        'role': 'assistant',
+                                        'content': 'Kumusta! 👋 I\'m Peso, your AI money buddy! '
+                                            'You can talk to me in English or Filipino — just tell me what you spent, '
+                                            'ask how your budget\'s doing, or say "how am I doing this month?" to start! 😊',
+                                      });
+                                    });
+                                  }
+                                },
+                                child: PesoMascot.withSpeech(
+                                  size: 80,
+                                  mood: PesoMood.happy,
+                                  text:
+                                      "$greeting\nAko si Peso — your money buddy!\nAsk me anything or just say what you spent.",
+                                ),
                               );
                             }),
                             const SizedBox(height: 20),
