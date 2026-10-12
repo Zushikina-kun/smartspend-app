@@ -89,6 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkTour();
     _startConnectivityCheck();
     _checkStartupAlerts();
+    _checkDailyPesoNudge();
     // Check local mode on first render
     AuthService.isLocalMode().then((v) {
       if (mounted) setState(() => _isLocalMode = v);
@@ -154,6 +155,65 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Whether user is in local mode (their own data, no Firebase)
   bool _isLocalMode = false;
+
+  Future<void> _checkDailyPesoNudge() async {
+    // Only show after 2 PM
+    if (DateTime.now().hour < 14) return;
+
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final prefs = await SharedPreferences.getInstance();
+
+    // Check if already dismissed today
+    final dismissed = prefs.getString('peso_no_log_nudge') == today;
+    if (dismissed) return;
+
+    // Check if user has any expenses today
+    try {
+      final expenses = await DBService.getExpenses();
+      final todayExpenses =
+          expenses.where((e) => e.date.startsWith(today)).toList();
+      if (todayExpenses.isNotEmpty) return; // already logged today — no nudge
+    } catch (_) {
+      return;
+    }
+
+    // Show the nudge as an overlay
+    if (!mounted) return;
+
+    // Mark as shown for today immediately
+    await prefs.setString('peso_no_log_nudge', today);
+
+    // Small delay so home screen renders first
+    await Future.delayed(const Duration(milliseconds: 1200));
+    if (!mounted) return;
+
+    // Show as SnackBar with Peso
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        content: Row(
+          children: [
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 32, mood: PesoMood.thinking),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Text(
+                'Wala pa akong records ngayon... may gastos ka ba? 👀',
+                style: TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+        action: SnackBarAction(
+          label: 'Log now',
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ),
+    );
+  }
 
   Future<void> _checkStartupAlerts() async {
     // Delay slightly so the UI is fully built first
@@ -326,6 +386,33 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
+      // After successful expense log — check if first of the day
+      try {
+        final today = DateTime.now().toIso8601String().substring(0, 10);
+        final expenses = await DBService.getExpenses();
+        final todayCount =
+            expenses.where((e) => e.date.startsWith(today)).length;
+        if (todayCount == 1 && mounted) {
+          // First expense of the day!
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+              content: Row(
+                children: [
+                  // ignore: prefer_const_constructors
+                  PesoMascot(size: 28, mood: PesoMood.happy),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Text('First log of the day! ✅',
+                        style: TextStyle(fontSize: 13)),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      } catch (_) {}
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

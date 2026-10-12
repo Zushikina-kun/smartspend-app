@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Peso — SmartSpend's mascot.
 ///
@@ -117,6 +118,11 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
         if (mounted) setState(() => _currentMood = null);
       });
     }
+    // Increment global Peso tap count for 'Peso Pal' badge
+    SharedPreferences.getInstance().then((prefs) {
+      final count = (prefs.getInt('peso_tap_count') ?? 0) + 1;
+      prefs.setInt('peso_tap_count', count);
+    }).catchError((_) {});
     widget.onTap?.call();
   }
 
