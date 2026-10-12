@@ -768,6 +768,24 @@
     .faq-a p { font-size:13px; color:var(--text-muted); line-height:1.7; }
     .faq-a a { color:var(--primary); }
     .faq-a a:hover { text-decoration:underline; }
+      /* RESEARCH / SURVEY SECTION */
+    .research-section { max-width:900px; margin:0 auto 70px; padding:0 24px; }
+    .research-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:32px; }
+    .research-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:28px 24px; display:flex; flex-direction:column; gap:14px; transition:border-color 0.2s, box-shadow 0.2s; }
+    .research-card:hover { border-color:var(--border-strong); box-shadow:0 0 20px var(--primary-glow); }
+    .research-card-badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; padding:4px 10px; border-radius:20px; width:fit-content; }
+    .badge-sus { background:rgba(0,200,150,0.12); color:var(--primary); border:1px solid var(--border-strong); }
+    .badge-survey { background:rgba(37,99,235,0.12); color:var(--brand-blue); border:1px solid rgba(37,99,235,0.3); }
+    .research-card h3 { font-size:1.05rem; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif; margin:0; }
+    .research-card p { font-size:13px; color:var(--text-muted); line-height:1.65; margin:0; flex:1; }
+    .research-card-meta { font-size:12px; color:var(--text-dim); display:flex; gap:12px; flex-wrap:wrap; }
+    .research-card-meta span { display:flex; align-items:center; gap:4px; }
+    .research-btn { display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:10px; font-weight:700; font-size:13px; text-decoration:none; transition:opacity 0.2s, transform 0.15s; margin-top:4px; }
+    .research-btn:hover { opacity:0.88; transform:translateY(-1px); text-decoration:none; }
+    .research-btn-sus { background:var(--primary); color:#000; }
+    .research-btn-survey { background:var(--brand-blue); color:#fff; }
+    .research-note { margin-top:24px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 18px; font-size:13px; color:var(--text-muted); text-align:center; line-height:1.6; }
+    @media(max-width:600px) { .research-grid { grid-template-columns:1fr; } }
   </style></head>
 <body>
 <!-- SVG sprite — Peso mascot -->
@@ -811,6 +829,8 @@
     <a href="#screenshots">Screenshots</a>
     <a href="#demo">Demo</a>
     <a href="#faq">FAQ</a>
+    <a href="#research">Research</a>
+    <a href="#research">Research</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
     <a href="privacy.html">Privacy Policy</a>
@@ -831,6 +851,7 @@
     <a href="#screenshots" onclick="closeMobileMenu()">Screenshots</a>
     <a href="#demo" onclick="closeMobileMenu()">Demo</a>
     <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+    <a href="#research" onclick="closeMobileMenu()">Research</a>
     <a href="#download" onclick="closeMobileMenu()">Download</a>
     <a href="#about" onclick="closeMobileMenu()">About</a>
     <a href="privacy.html" onclick="closeMobileMenu()">Privacy Policy</a>
@@ -1380,6 +1401,47 @@
   </div>
 </section>
 
+<!-- RESEARCH & SURVEYS -->
+<section class="research-section" id="research">
+  <div class="section-title">🎓 Help Our Research</div>
+  <p class="section-sub">SmartSpend is a capstone research project at Lorma Colleges. Your feedback directly contributes to the study — it only takes a few minutes and helps improve the app.</p>
+  <div class="research-grid">
+
+    <div class="research-card">
+      <span class="research-card-badge badge-sus">⭐ Usability Test</span>
+      <h3>SUS Usability Evaluation</h3>
+      <p>Rate your experience using SmartSpend with the System Usability Scale (SUS) — a standard 10-question survey used in academic usability research. No right or wrong answers. Answer based on your first impression.</p>
+      <div class="research-card-meta">
+        <span>⏱ ~2 minutes</span>
+        <span>📋 10 questions</span>
+        <span>🔒 Anonymous</span>
+      </div>
+      <a class="research-btn research-btn-sus" href="https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform" target="_blank" rel="noopener noreferrer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2H5v14h14v-9h2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h9zm7-1v6h-2V5.414l-8.293 8.293-1.414-1.414L17.586 4H15V2h6z"/></svg>
+        Take the SUS Survey
+      </a>
+    </div>
+
+    <div class="research-card">
+      <span class="research-card-badge badge-survey">📊 Research Survey</span>
+      <h3>Financial Management Practices</h3>
+      <p>Help us understand how Filipinos currently manage their finances. This survey is part of our capstone research study at Lorma Colleges CCSE. Responses are confidential and used for academic purposes only.</p>
+      <div class="research-card-meta">
+        <span>⏱ ~3–5 minutes</span>
+        <span>🎓 Academic research</span>
+        <span>🔒 Confidential</span>
+      </div>
+      <a class="research-btn research-btn-survey" href="https://docs.google.com/forms/d/e/1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ/viewform" target="_blank" rel="noopener noreferrer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2H5v14h14v-9h2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h9zm7-1v6h-2V5.414l-8.293 8.293-1.414-1.414L17.586 4H15V2h6z"/></svg>
+        Take the Research Survey
+      </a>
+    </div>
+
+  </div>
+  <div class="research-note">
+    Both surveys are hosted on Google Forms. Your responses help validate SmartSpend as a capstone study and directly shape future improvements to the app. Salamat! 🙏
+  </div>
+</section>
 <section class="download-section" id="download">
   <h2>&#x1F4E5; Download SmartSpend</h2>
   <p>Free to download and use. No account required for offline use. Android 5.0 (API 21) and above.</p>
@@ -1584,6 +1646,8 @@
     <a href="#privacy-ai">Privacy</a>
     <a href="#screenshots">Screenshots</a>
     <a href="#faq">FAQ</a>
+    <a href="#research">Research</a>
+    <a href="#research">Research</a>
     <a href="#download">Download</a>
     <a href="#about">About</a>
     <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">GitHub</a>
