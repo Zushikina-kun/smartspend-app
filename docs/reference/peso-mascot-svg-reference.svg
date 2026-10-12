@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Peso Mascot — SmartSpend SVG Reference
+  
+  Design principles (from peso_mascot.dart):
+  - Inspired by Duolingo's Duo and Miss Minutes (Loki/Marvel)
+  - One strong color = the character (emerald green = Peso)
+  - Huge expressive eyes at any size
+  - Minimal detail = readable at 24px or 240px
+  - Round coin body = approachable, friendly
+  - ₱ symbol on forehead = identity marker
+  - Arms raised in happy greeting pose
+  - Legs + oval feet for full character
+  
+  Colors:
+  - Body outer rim: #00C896 (kPesoGreen)
+  - Body dark:      #00A86B (kPesoGreenDark)
+  - Body light:     #B3F5E6 (kPesoGreenLight)
+  - Pupil/outline:  #0D2B1A
+  - Face surface:   white radial gradient
+  
+  Moods available in Flutter app (peso_mascot.dart):
+  happy, neutral, thinking, sad, celebrating
+  
+  Last updated: October 12, 2026
+-->
+<svg viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg" width="240" height="280">
+  <defs>
+    <radialGradient id="pgBody" cx="38%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#2ECC88"/>
+      <stop offset="100%" stop-color="#00A86B"/>
+    </radialGradient>
+    <radialGradient id="pgFace" cx="38%" cy="28%" r="70%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.92)"/>
+      <stop offset="100%" stop-color="rgba(0,200,150,0.08)"/>
+    </radialGradient>
+  </defs>
+  <!-- drop shadow -->
+  <circle cx="60" cy="64" r="42" fill="#00A86B" opacity="0.18" transform="translate(0,4)"/>
+  <!-- outer coin rim -->
+  <circle cx="60" cy="62" r="42" fill="url(#pgBody)"/>
+  <!-- inner rim ring (coin edge detail) -->
+  <circle cx="60" cy="62" r="38" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+  <!-- face inner surface -->
+  <circle cx="60" cy="62" r="37" fill="url(#pgFace)"/>
+  <!-- ₱ forehead symbol -->
+  <text x="60" y="38" text-anchor="middle" dominant-baseline="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="11" fill="#00A86B" opacity="0.85">₱</text>
+  <!-- left arm raised up-left -->
+  <line x1="22" y1="58" x2="8" y2="42" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="5" cy="38" r="5.5" fill="#00C896"/>
+  <circle cx="10" cy="33" r="4.5" fill="#00C896"/>
+  <circle cx="1" cy="33" r="4" fill="#00C896"/>
+  <!-- right arm raised up-right -->
+  <line x1="98" y1="58" x2="112" y2="42" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="115" cy="38" r="5.5" fill="#00C896"/>
+  <circle cx="110" cy="33" r="4.5" fill="#00C896"/>
+  <circle cx="119" cy="33" r="4" fill="#00C896"/>
+  <!-- eyebrows (friendly arch) -->
+  <path d="M 37 43 Q 42 40 47 43" stroke="#00A86B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <path d="M 73 43 Q 78 40 83 43" stroke="#00A86B" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+  <!-- eye whites -->
+  <circle cx="42" cy="54" r="12" fill="white"/>
+  <circle cx="78" cy="54" r="12" fill="white"/>
+  <!-- pupils -->
+  <circle cx="44" cy="56" r="7" fill="#0D2B1A"/>
+  <circle cx="80" cy="56" r="7" fill="#0D2B1A"/>
+  <!-- eye shine main -->
+  <circle cx="47" cy="52" r="3" fill="white"/>
+  <circle cx="83" cy="52" r="3" fill="white"/>
+  <!-- eye shine secondary -->
+  <circle cx="41" cy="58" r="1.4" fill="rgba(255,255,255,0.5)"/>
+  <circle cx="77" cy="58" r="1.4" fill="rgba(255,255,255,0.5)"/>
+  <!-- cheek blush -->
+  <ellipse cx="28" cy="68" rx="9" ry="5.5" fill="rgba(255,100,100,0.18)"/>
+  <ellipse cx="92" cy="68" rx="9" ry="5.5" fill="rgba(255,100,100,0.18)"/>
+  <!-- smile with tooth fill -->
+  <path d="M 38 74 Q 60 90 82 74 L 79 76 Q 60 90 41 76 Z" fill="rgba(255,255,255,0.80)"/>
+  <path d="M 38 74 Q 60 90 82 74" stroke="#0D2B1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- left leg -->
+  <line x1="50" y1="103" x2="44" y2="122" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+  <!-- right leg -->
+  <line x1="70" y1="103" x2="76" y2="122" stroke="#00C896" stroke-width="7" stroke-linecap="round"/>
+  <!-- left foot -->
+  <ellipse cx="40" cy="126" rx="11" ry="5.5" fill="#00C896"/>
+  <!-- right foot -->
+  <ellipse cx="80" cy="126" rx="11" ry="5.5" fill="#00C896"/>
+</svg>
