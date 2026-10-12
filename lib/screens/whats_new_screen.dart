@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// UX-5: What's New screen — shown once after each version update.
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.5';
-  static const _prefKey = 'whats_new_seen_3_0_5';
+  static const _version = '3.0.6';
+  static const _prefKey = 'whats_new_seen_3_0_6';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,6 +19,26 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🤜',
+      'Tap Peso! (v3.0.6)',
+      'Peso now bounces when you tap him anywhere in the app. '
+          'Every ❓ info button now opens a Peso bottom sheet — no more boring dialogs. '
+          'Tap him on Login, Quick Access, or AI chat for a reaction!',
+    ),
+    (
+      '📅',
+      'Daily Companion (v3.0.6)',
+      'Peso checks in every day: nudge if you haven\'t logged by 2 PM, '
+          'budget status reaction, no-spend day celebration, goal milestone bottom sheets. '
+          'All one-time-per-day and always dismissable.',
+    ),
+    (
+      '🏅',
+      '36 Achievement Badges (v3.0.6)',
+      '11 new Peso-themed badges — Peso Pal, Chatterbox, Morning Logger, Perfect Week, '
+          'App Veteran, and more. Badge unlocks now show a Peso celebration bottom sheet.',
+    ),
     (
       '🤖',
       'Peso is alive! (v3.0.5)',
