@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.9';
-  static const _prefKey = 'whats_new_seen_3_0_9';
+  static const _version = '3.1.0';
+  static const _prefKey = 'whats_new_seen_3_1_0';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,6 +21,32 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
+      '📊',
+      'FHS Tier Change Announcements (v3.1.0)',
+      'When your Financial Health Score crosses a tier boundary (e.g. Fair → Good), '
+          'Peso reacts with a Taglish celebration or encouragement — once per day. '
+          'Positive tier-ups get excited Peso; drops get supportive Peso.',
+    ),
+    (
+      '🔥',
+      'Logging Streak Milestones (v3.1.0)',
+      'Log expenses 7, 14, 21, or 30 days in a row and Peso throws a party! '
+          'Each milestone is celebrated once with a special Peso snackbar and haptic burst. '
+          '30 days earns the "Month Master" title.',
+    ),
+    (
+      '🔔',
+      'Notification Tap Reaction (v3.1.0)',
+      'When you open the app by tapping a Peso notification, Peso greets you with a '
+          'context-aware reaction — budget reminders, bill alerts, weekly recap, and more.',
+    ),
+    (
+      '💡',
+      'Screen-Aware Session Tips (v3.1.0)',
+      'Peso now shows a contextual tip the first time you visit each screen per session. '
+          'Tips reset every app launch so they stay fresh without repeating mid-session.',
+    ),
+    (
       '👈',
       'Swipe to delete transactions (v3.0.9)',
       'Swipe left on any transaction in the Transactions screen to delete it. '
@@ -29,14 +55,17 @@ class WhatsNewScreen extends StatelessWidget {
     (
       '↩️',
       'Quick Undo after AI logging (v3.0.9)',
-      'When Peso logs an expense, a 5-second ''Undo'' button appears. '
+      'When Peso logs an expense, a 5-second '
+          'Undo'
+          ' button appears. '
           'Tap it to immediately reverse the log. Shake still works too.',
     ),
     (
       '🔔',
       'Peso-voiced notifications (v3.0.8)',
       'All push notifications now sound like Peso — budget alerts, daily limits, '
-          'weekly summaries, debt reminders, FHS level ups — all with Peso''s warm Taglish voice.',
+          'weekly summaries, debt reminders, FHS level ups — all with Peso'
+          's warm Taglish voice.',
     ),
     (
       '👆',
