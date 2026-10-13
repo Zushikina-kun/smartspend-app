@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.8';
-  static const _prefKey = 'whats_new_seen_3_0_8';
+  static const _version = '3.0.9';
+  static const _prefKey = 'whats_new_seen_3_0_9';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,6 +20,18 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '👈',
+      'Swipe to delete transactions (v3.0.9)',
+      'Swipe left on any transaction in the Transactions screen to delete it. '
+          'A confirmation dialog appears first — no accidental deletes.',
+    ),
+    (
+      '↩️',
+      'Quick Undo after AI logging (v3.0.9)',
+      'When Peso logs an expense, a 5-second ''Undo'' button appears. '
+          'Tap it to immediately reverse the log. Shake still works too.',
+    ),
     (
       '🔔',
       'Peso-voiced notifications (v3.0.8)',
