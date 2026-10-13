@@ -1,7 +1,8 @@
-import 'dart:math';
+﻿import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/peso_sound_service.dart';
 
 /// Peso — SmartSpend's mascot.
 ///
@@ -112,6 +113,7 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
 
   void _handleTap() {
     _tapCtrl.forward(from: 0).then((_) => _tapCtrl.reverse());
+    PesoSoundService.playTap();
     if (widget.tapMood != null) {
       setState(() => _currentMood = widget.tapMood);
       Future.delayed(const Duration(milliseconds: 1500), () {
@@ -149,6 +151,8 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
       if (!MediaQuery.of(context).disableAnimations) {
         _moodCtrl.forward(from: 0);
       }
+      // Haptic feedback on mood change (fire-and-forget)
+      PesoSoundService.playMoodChange(widget.mood);
     }
   }
 
@@ -276,6 +280,15 @@ class _PesoCoinPainter extends CustomPainter {
     canvas.translate(w / 2, h / 2 + bobOffset);
     canvas.scale(1.0 - 0.012 * sin(idleT * pi));
     canvas.translate(-w / 2, -h / 2);
+
+    // ── EXCITED/CELEBRATING BODY SQUISH ──────────────────────────────────────
+    // Squish compresses Y and expands X slightly, synced with idle beat
+    if (mood == PesoMood.excited || mood == PesoMood.celebrating) {
+      final squish = sin(idleT * pi * 2.5) * 0.055 * bobScale;
+      canvas.translate(cx, cy + r);
+      canvas.scale(1.0 + squish * 0.4, 1.0 - squish);
+      canvas.translate(-cx, -(cy + r));
+    }
 
     if (moodT > 0.0 && moodT < 1.0) {
       final elastic = 1.0 - pow(2, -10 * moodT) * cos(moodT * pi * 4.5);
@@ -479,11 +492,17 @@ class _PesoCoinPainter extends CustomPainter {
             lid);
         break;
       case PesoMood.thinking:
+        // Look-around animation: pupils drift left/right with idle cycle
         canvas.drawCircle(Offset(cx - eyeOffX, eyeY), pupilR, pupil);
         canvas.drawCircle(Offset(cx + eyeOffX, eyeY), pupilR, pupil);
         final p2 = Paint()..color = const Color(0xFF1a2060);
-        canvas.drawCircle(Offset(cx - eyeOffX + eyeR * 0.18, eyeY), pupilR, p2);
-        canvas.drawCircle(Offset(cx + eyeOffX + eyeR * 0.18, eyeY), pupilR, p2);
+        // idleT 0→0.5 = pupils drift left, 0.5→1.0 = drift right
+        final lookDrift = (idleT < 0.5
+                ? -eyeR * 0.22 * (idleT * 2)
+                : -eyeR * 0.22 + eyeR * 0.44 * ((idleT - 0.5) * 2))
+            .toDouble();
+        canvas.drawCircle(Offset(cx - eyeOffX + lookDrift, eyeY), pupilR, p2);
+        canvas.drawCircle(Offset(cx + eyeOffX + lookDrift, eyeY), pupilR, p2);
         break;
       case PesoMood.excited:
         final excitedWhite = Paint()..color = Colors.white;
@@ -965,18 +984,21 @@ class _PesoCoinPainter extends CustomPainter {
             Offset(cx + r * 1.18, cy - r * 0.1), armPaint);
         break;
       default:
-        // Arms slightly raised — friendly wave (happy, neutral)
+        // Arms slightly raised — right arm waves with idle cycle (happy, neutral)
+        final armWave = sin(idleT * pi * 2) * 0.10; // gentle wave oscillation
+        // (idleT drives the 2.4s bob cycle, armWave adds a secondary faster wave)
         canvas.drawLine(Offset(cx - r * 0.88, cy + r * 0.1),
             Offset(cx - r * 1.18, cy - r * 0.28), armPaint);
+        // Right arm tip oscillates up/down
         canvas.drawLine(Offset(cx + r * 0.88, cy + r * 0.1),
-            Offset(cx + r * 1.18, cy - r * 0.28), armPaint);
+            Offset(cx + r * 1.18, cy - r * (0.28 + armWave)), armPaint);
         for (final dx in [-1, 0, 1]) {
           canvas.drawCircle(
               Offset(cx - r * 1.18 + dx * r * 0.08, cy - r * 0.35),
               r * 0.12,
               handPaint);
           canvas.drawCircle(
-              Offset(cx + r * 1.18 + dx * r * 0.08, cy - r * 0.35),
+              Offset(cx + r * 1.18 + dx * r * 0.08, cy - r * (0.35 + armWave)),
               r * 0.12,
               handPaint);
         }

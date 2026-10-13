@@ -57,6 +57,7 @@ import 'data_quality_screen.dart';
 import 'help_screen.dart';
 import 'debt_payoff_screen.dart';
 import '../services/startup_alerts_service.dart';
+import '../services/peso_sound_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -92,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkDailyPesoNudge();
     _checkNoSpendDay();
     _checkBudgetPesoReaction();
+    _showPesoNavTip();
     // Check local mode on first render
     AuthService.isLocalMode().then((v) {
       if (mounted) setState(() => _isLocalMode = v);
@@ -355,6 +357,31 @@ class _HomeScreenState extends State<HomeScreen> {
         ]),
       ));
     } catch (_) {}
+  }
+
+  /// Shows a one-time floating tip bubble above the nav AI button
+  /// 8 seconds after launch — introduces Peso to new users gently.
+  void _showPesoNavTip() {
+    Future.delayed(const Duration(seconds: 8), () {
+      if (!mounted || _index == 2) return; // skip if already on AI tab
+      PesoSoundService.playTalk();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 4),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
+        content: Row(children: [
+          // ignore: prefer_const_constructors
+          PesoMascot(
+              size: 32, mood: PesoMood.winking, tapMood: PesoMood.excited),
+          const SizedBox(width: 10),
+          const Expanded(
+              child: Text(
+            'Tap me anytime to chat! Ask anything about your money 💬',
+            style: TextStyle(fontSize: 13),
+          )),
+        ]),
+      ));
+    });
   }
 
   Future<void> _checkStartupAlerts() async {
@@ -808,9 +835,17 @@ class _HomeScreenState extends State<HomeScreen> {
     final isAI = idx == 2;
 
     if (isAI) {
-      // AI button gets a special circular styled look
+      // AI button — Peso mascot, bigger (40px) so expressions are visible
+      final cs = Theme.of(context).colorScheme;
       return InkWell(
-        onTap: onTap ?? () => setState(() => _index = idx),
+        onTap: () {
+          PesoSoundService.playTap();
+          if (onTap != null) {
+            onTap();
+          } else {
+            setState(() => _index = idx);
+          }
+        },
         borderRadius: BorderRadius.circular(20),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -818,30 +853,40 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 44,
-                height: 44,
+                width: 52,
+                height: 52,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: selected
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withValues(alpha: 0.12),
+                      ? cs.primary
+                      : cs.primary.withValues(alpha: 0.12),
+                  boxShadow: selected
+                      ? [
+                          BoxShadow(
+                              color: cs.primary.withValues(alpha: 0.4),
+                              blurRadius: 14,
+                              spreadRadius: 2)
+                        ]
+                      : null,
                 ),
-                // ignore: prefer_const_constructors
-                child: PesoMascot(
-                  size: 28,
-                  mood: selected ? PesoMood.happy : PesoMood.neutral,
+                child: Center(
+                  // ignore: prefer_const_constructors
+                  child: PesoMascot(
+                    size: 40,
+                    mood: selected ? PesoMood.happy : PesoMood.neutral,
+                    tapMood: PesoMood.excited,
+                    onTap: () {
+                      PesoSoundService.playTap();
+                      setState(() => _index = 2);
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 2),
               Text(label,
                   style: TextStyle(
                       fontSize: 11,
-                      color: selected
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.grey,
+                      color: selected ? cs.primary : Colors.grey,
                       fontWeight:
                           selected ? FontWeight.w600 : FontWeight.normal)),
             ],
