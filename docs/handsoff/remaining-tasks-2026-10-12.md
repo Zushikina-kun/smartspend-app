@@ -233,3 +233,31 @@ The defense script (`smartspend-thesis-defense-script.md`) likely doesn't mentio
 | Seasonal/holiday messages | startup_alerts_service.dart | 1h |
 | Floating Peso help button | multiple screens | 2h |
 | Peso in AppBar titles (5 screens) | multiple | 1h |
+
+
+---
+
+## Peso Sound & Animation Expansion — Added Oct 12 (late)
+
+### Being implemented now (workflow wf_62f19f22f1dc6c72)
+- Nav Peso: 28px → 40px inside 52px circle, selected glow
+- `PesoSoundService` — haptic feedback: tap=medium, celebrate=heavy triple, talk=double-click
+- Look-around animation: pupils drift left/right during `thinking` idle cycle
+- Arm wave: right arm oscillates on `happy`/`excited`
+- Body squish: compress/expand on `excited`/`celebrating`  
+- Wink flash: periodic re-wink during `winking` mood
+- `_PesoNavBubble` — floating speech bubble above nav bar, fires every 45s with context-aware messages
+- `_showPesoNavTip()` — single tip 8s after launch
+
+### Future: Real audio (Animal Crossing style)
+When ready to add actual audio:
+- **Package:** `audioplayers: ^6.1.0`
+- **Approach:** Generate ~100ms WAV files programmatically (sine wave chirps at different frequencies per mood)
+  - Happy/tap: 880Hz chirp
+  - Celebrate: ascending 440→660→880Hz
+  - Sad: 440→330Hz descending
+  - Thinking: 550Hz steady hum
+- **Store as:** `assets/sounds/peso_tap.wav`, `peso_celebrate.wav`, `peso_sad.wav`, `peso_think.wav`
+- **Animal Crossing "animalese":** Play random pitched chirps rapidly as text is displayed — each character triggers a random note from a C major pentatonic scale
+- **Estimated effort:** ~3h (audio generation + service + wiring)
+- **Gate:** Only ship if audio can be disabled in Settings (accessibility concern)
