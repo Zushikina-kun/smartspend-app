@@ -58,6 +58,7 @@ import 'help_screen.dart';
 import 'debt_payoff_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
+import '../services/peso_context_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -370,20 +371,25 @@ class _HomeScreenState extends State<HomeScreen> {
       if (!mounted || _index == 2) return;
       PesoSoundService.playTalk();
       setState(() => _pesoNavBubbleActive = true);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        duration: const Duration(seconds: 4),
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
-        content: Row(children: [
-          // ignore: prefer_const_constructors
-          PesoMascot(size: 32, mood: PesoMood.winking, tapMood: PesoMood.excited),
-          const SizedBox(width: 10),
-          const Expanded(child: Text(
-            'Tap me anytime to chat! Ask anything about your money 💬',
-            style: TextStyle(fontSize: 13),
-          )),
-        ]),
-      )).closed.then((_) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(
+            duration: const Duration(seconds: 4),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
+            content: Row(children: [
+              // ignore: prefer_const_constructors
+              PesoMascot(
+                  size: 32, mood: PesoMood.winking, tapMood: PesoMood.excited),
+              const SizedBox(width: 10),
+              const Expanded(
+                  child: Text(
+                'Tap me anytime to chat! Ask anything about your money 💬',
+                style: TextStyle(fontSize: 13),
+              )),
+            ]),
+          ))
+          .closed
+          .then((_) {
         if (mounted) setState(() => _pesoNavBubbleActive = false);
       });
     });
@@ -392,26 +398,54 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Screen-aware context tips per tab index
   static const Map<int, List<String>> _pesoScreenTips = {
     0: [
+      // Home
       'Kamusta ang budget mo ngayon? Tap me to ask! 💬',
       'I can log expenses, check FHS, or answer any money question! 😊',
       'Tip: Tell me what you spent in Taglish — I understand both! 🇵🇭',
+      'Say "how am I doing this month?" and I'
+          'll give you a full breakdown! 📊',
+      'Tap the 💚 FHS score card to see exactly why your score is what it is! 🏆',
     ],
     1: [
+      // Analytics
       'Want me to explain any chart here? Just ask! 📊',
-      'Ask me ''where am I overspending?'' for a detailed breakdown! 💡',
+      'Ask me "where am I overspending?" for a detailed breakdown! 💡',
       'I can see all your data — ask me to compare months or categories! 📈',
+      'Tip: Try "what if I cut Shopping by ₱500?" — I'
+          'll show you the impact! 💹',
+      'Your FHS score history is in the Health tab — tap the chart dots for details! 🎯',
     ],
     3: [
+      // Profile
       'Your Financial Health Certificate is shareable from here! 🏆',
       'Tip: Export your data any time from Profile → Export CSV! 📋',
       'I can explain your FHS breakdown — just tap the score card! 💚',
+      'Send Feedback is here if you find any bugs or have feature ideas! 🐛',
+    ],
+    // -1 is Tools / Quick Access Hub
+    -1: [
+      'The Tools hub has everything — Budgets, Goals, Debts, Calendar, Import! 🛠️',
+      'Tip: Bank Import lets you paste GCash or BPI texts — I'
+          'll parse everything! 📋',
+      'Set a Budget first, then I can warn you before you hit the limit! 💳',
     ],
   };
 
+  /// Gets a context-aware tip based on current tab OR provided screen key
+  String _getContextTip({String? screenKey}) {
+    if (screenKey != null) {
+      final tips = PesoContextService.getTipsForScreen(screenKey);
+      if (tips.isNotEmpty) {
+        return tips[DateTime.now().millisecondsSinceEpoch % tips.length];
+      }
+    }
+    final tips = _pesoScreenTips[_index] ?? _pesoScreenTips[0]!;
+    return tips[DateTime.now().millisecondsSinceEpoch % tips.length];
+  }
+
   /// Shows a context-aware Peso tip based on current tab
   void _showContextualPesoTip() {
-    final tips = _pesoScreenTips[_index] ?? _pesoScreenTips[0]!;
-    final tip = tips[DateTime.now().millisecondsSinceEpoch % tips.length];
+    final tip = _getContextTip();
     PesoSoundService.playTalk();
     setState(() => _pesoNavBubbleActive = true);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
