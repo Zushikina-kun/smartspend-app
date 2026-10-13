@@ -1,12 +1,13 @@
 # SmartSpend — Project Status & Master To-Do List
-**Version:** 3.0.4 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** October 10, 2026
+**Version:** 3.1.0 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** October 13, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > Full docs index:
 > - Technical reference → `docs/reference/CAPSTONE_REFERENCE.md`
 > - Feature backlog → `docs/guides/FEATURE_BACKLOG.md`
 > - Latest Kiro→Claude handoff → `docs/handsoff/kiro-to-claude-handoff-2026-10-10.md`
+> - Latest session handoff → `docs/handsoff/kiro-session-final-2026-10-13-v2.md`
 > - Latest Kiro→Kiro handoff → `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
 > - Freemium plan → `docs/handsoff/freemium-split-plan-2026-10-09.md`
 > - Marketing plan → `docs/handsoff/marketing-and-demo-plan-2026-10-09.md`
@@ -16,15 +17,16 @@
 
 ---
 
-## AUTHORITATIVE BUILD NUMBERS (v3.0.4)
+## AUTHORITATIVE BUILD NUMBERS (v3.1.0)
 
 | Metric | Value |
 |--------|-------|
-| Version string | **3.0.4** |
-| pubspec | `3.0.4+102` |
-| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.4 |
-| APK (arm64, demo phone) | **~45 MB** — `SmartSpend-v3.0.4-arm64-v8a.apk` |
-| AAB (Play Store ready) | **~75 MB** — `SmartSpend-v3.0.4.aab` |
+| Version string | **3.1.0** |
+| pubspec | `3.1.0+108` |
+| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.0 |
+| APK (arm64, demo phone) | **~47.5 MB** — `SmartSpend-v3.1.0-arm64-v8a.apk` |
+| APK (armeabi-v7a) | **~40.3 MB** — `SmartSpend-v3.1.0-armeabi-v7a.apk` |
+| APK (x86_64) | **~50.5 MB** — `SmartSpend-v3.1.0-x86_64.apk` |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | API 21 (Android 5.0) |
 | Target SDK | API 36 (Android 16) |
@@ -33,9 +35,9 @@
 | Primary AI model | Gemini 3.5 Flash-Lite (AQ. key via Firebase Remote Config) |
 | Agentic actions | **34** |
 | Input modalities | **7** |
-| Screens | **43** Dart files |
-| Services | **31** Dart files |
-| Achievement badges | **25** |
+| Screens | **45** Dart files |
+| Services | **33** Dart files |
+| Achievement badges | **36** |
 | Daily AI message limit | **150** |
 | Color themes | **11** |
 | Batch screenshot platforms | 40+ |
@@ -52,8 +54,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v3.0.4** on demo phone | Brix | ❌ | Download `SmartSpend-v3.0.4-arm64-v8a.apk` from GitHub Releases |
-| Verify About screen shows **"Version 3.0.4"** | Brix | ❌ | kAppVersion in debug_service.dart |
+| Install **v3.1.0** on demo phone | Brix | ❌ | Download `SmartSpend-v3.1.0-arm64-v8a.apk` from GitHub Releases |
+| Verify About screen shows **"Version 3.1.0"** | Brix | ❌ | kAppVersion in debug_service.dart |
 | Load demo data on phone | Brix | ❌ | "Try Demo" on login screen OR Profile → Load Demo Data |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ → Reset Daily Limit |
 | Set AI model to **Auto** | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
@@ -71,17 +73,17 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Update version throughout → **3.0.4** | Cyrille | ❌ | Use CAPSTONE_REFERENCE.md as source of truth |
+| Update version throughout → **3.1.0** | Cyrille | ❌ | Use CAPSTONE_REFERENCE.md as source of truth |
 | Update SQLite schema → **v14, 26 tables** | Cyrille | ❌ | v14 adds chat_sessions + session_id on chat_history |
 | Update AI section: 9 providers, Gemini 3.5 Flash-Lite, AQ. key, Remote Config, Local AI private mode | Cyrille | ❌ | |
 | Update FHS: 4 × 25pt components, soft/hard overspend distinction | Cyrille | ❌ | |
 | Update agentic action count → **34** | Cyrille | ❌ | |
-| Update badge count → **25** | Cyrille | ❌ | |
+| Update badge count → **36** | Cyrille | ❌ | |
 | Update daily AI limit → **150** | Cyrille | ❌ | |
 | Update color theme count → **11** | Cyrille | ❌ | |
-| Update screens count → **43** | Cyrille | ❌ | |
-| Update APK size → **~45 MB** (arm64, split, obfuscated) | Cyrille | ❌ | |
-| Add to Implemented: v3.0.0–v3.0.4 features (Transaction sort/group, Chat sessions, AI recovery, Analytics, Local Account mode, Demo overhaul, auto-save on logout) | Cyrille | ❌ | All shipped Oct 9–10 |
+| Update screens count → **45** | Cyrille | ❌ | |
+| Update APK size → **~47.5 MB** (arm64, split, obfuscated) | Cyrille | ❌ | |
+| Add to Implemented: v3.0.0–v3.1.0 features (Transaction sort/group, Chat sessions, AI recovery, Analytics, Local Account mode, Demo overhaul, auto-save on logout, Peso mascot, badges, FHS milestones, streak announcements) | Cyrille | ❌ | All shipped Oct 9–13 |
 | Add to Implemented: Peso mascot, Safe-to-Spend, Full audit trail, History viewers, Data Quality, Local AI (v2.9.76–v2.9.92) | Cyrille | ❌ | |
 | Add AI financial advice disclaimer (RA 11765) to Ch.2/Ch.3 | Cyrille | ❌ | |
 | Add Safe-to-Spend to features list | Cyrille | ❌ | BudgetPH differentiator |
@@ -203,10 +205,10 @@ These are longer-term items for when the app has real users.
 
 ---
 
-## DEMO SCRIPT — Final Defense (v3.0.4)
+## DEMO SCRIPT — Final Defense (v3.1.0)
 
 ### Night before
-1. Download `SmartSpend-v3.0.4-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.0.4
+1. Download `SmartSpend-v3.1.0-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.0
 2. Install on demo phone
 3. Tap **"Try Demo"** on login screen → loads full dataset automatically
 4. Verify Home shows FHS ~80, 3 goals, Safe-to-Spend card
@@ -239,6 +241,12 @@ These are longer-term items for when the app has real users.
 
 | Version | Date | Key changes |
 |---------|------|------------|
+| **v3.1.0** | Oct 13, 2026 | FHS tier announcements, streak milestones (7/14/21/30-day), SA-6 notification tap, SA-3 session tips |
+| v3.0.9 | Oct 12, 2026 | Swipe-to-delete, Quick Undo snackbar, PesoContextService wired to 6 screens, SA-7 nudge |
+| v3.0.8 | Oct 11, 2026 | 20+ push notifications Peso-voiced (Taglish), PesoContextService (17 screens) |
+| v3.0.7 | Oct 11, 2026 | Peso on all major screens, nav AI button → PesoMascot, AI chat Peso avatar |
+| v3.0.6 | Oct 10, 2026 | Peso daily check-in, 36 badges, PesoVoiceService (31 contexts), first-log celebration |
+| v3.0.5 | Oct 10, 2026 | Peso mascot fully animated (12 moods), send feedback screen |
 | **v3.0.4** | Oct 10, 2026 | Local-only mode toggle (AI never falls back to cloud when ON); login warning dialog (local data-loss prevention); Demo → "Demo User" generic profile; wallet_history NOT NULL crash fix; profile overlap fix (local mode ≠ demo profile); app lock on splash for local/demo; auto-save JSON+CSV to SmartSpend/ folder on local logout with guided instructions; logout button nested-function bug fix; all in-app text updated to 9 providers |
 | **v3.0.3** | Oct 9, 2026 | Local Account mode — "Continue Without Account" button; data stays on device; profile persists as 'local_user'; connect Firebase account from Profile later |
 | **v3.0.2** | Oct 9, 2026 | ProService + ProFeature enum (freemium infra, everyone Pro in v3.x); support links in About; APP_FLAVOR dev/prod CI build separation |

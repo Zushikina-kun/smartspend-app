@@ -1,6 +1,6 @@
 # SmartSpend — System Overview
 ## How the Application Works
-**Version:** 2.9.71 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
+**Version:** 3.1.0 | **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 **Prepared for:** Adviser Introduction & Panel Defense Reference
 
 ---
@@ -51,7 +51,7 @@ Most Filipinos do not track finances because:
 ║  • Understands Filipino-English natural language                 ║
 ║  • Extracts: amount, category, date, merchant, want/need         ║
 ║  • Routes to correct action (log, update, analyze, advise)       ║
-║  • 31 autonomous action types                                    ║
+║  • 34 autonomous action types                                    ║
 ║  • Falls back to 4 other providers if rate limit hit             ║
 ╚══════════════════════╦═══════════════════════════════════════════╝
                        ║
@@ -214,6 +214,17 @@ The AI doesn't just answer questions — it takes real actions directly on the u
 | API security | Firebase Remote Config | API key never stored in the APK |
 
 **Architecture:** Fully serverless — no backend server. All logic runs on the phone + Firebase + third-party APIs. Zero hosting costs.
+
+---
+
+## PESO COMPANION SYSTEM
+
+The **Peso Companion System** adds an emotional, context-aware layer to SmartSpend:
+- **PesoMascot** (`lib/widgets/peso_mascot.dart`) — animated widget with 12 moods, appears on all major screens. The navigation AI button is now PesoMascot.
+- **PesoVoiceService** (`lib/services/peso_voice_service.dart`) — 31 Taglish voice contexts, powers all push notification copy and companion messages
+- **PesoContextService** (`lib/services/peso_context_service.dart`) — 17 registered screens, session-based screen tips (SA-3), screen-aware Peso dialogue
+- **PesoSoundService** (`lib/services/peso_sound_service.dart`) — audio feedback for celebrations
+- **Behaviors:** daily check-in nudge (2 PM), budget reactions, no-spend day celebration, goal milestone bottom sheets, FHS tier announcements, 7/14/21/30-day streak milestones, notification tap greeting (SA-6)
 
 ---
 

@@ -1,11 +1,11 @@
 # Smart Spend — Application Documentation
 
-**Version:** 2.9.71
+**Version:** 3.1.0
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** September 12, 2026 (v2.9.67 — full audit, all Phase 1 tasks, full-app UI polish)
-**Build:** app-arm64-v8a-release.apk — 45.1 MB (September 12, 2026)
+**Last Updated:** October 13, 2026 (v3.1.0 — Peso Companion System complete, FHS tier announcements, streak milestones, session tips)
+**Build:** SmartSpend-v3.1.0-arm64-v8a.apk — ~47.5 MB (October 13, 2026)
 
 ---
 
@@ -1075,6 +1075,20 @@ Accessible via the Hub tab in the bottom nav bar. Lists all features:
 
 ---
 
+### 🤖 Peso Companion System
+- **PesoMascot** — animated Flutter widget with 12 moods (happy, sad, excited, surprised, proud, embarrassed, winking, sleepy, worried, neutral, thinking, celebrating), idle bob + eye blink + mood pop-in animations
+- **PesoVoiceService** — 31 Taglish voice contexts, powers all push notification copy
+- **PesoContextService** — 17 registered screens, session-based tips (SA-3, resets each launch)
+- **PesoSoundService** — audio feedback for celebrations and interactions
+- **Daily check-in** — 2 PM nudge if no log, budget reactions, no-spend day celebration
+- **Goal & badge milestones** — bottom sheets at goal progress milestones; 36 achievement badges
+- **FHS tier announcements** (v3.1.0) — Peso reacts at tier boundary crossings, once per day
+- **Logging streak milestones** (v3.1.0) — 7/14/21/30-day consecutive streak one-time celebrations
+- **Notification tap reaction SA-6** (v3.1.0) — Peso greeting on notification-opened app launch
+- **Session-based screen tips SA-3** (v3.1.0) — `getSessionTip()` cycles tips per session
+
+---
+
 ## 🗄️ Database Schema (SQLite — version 11)
 
 > All amounts stored in PHP internally. `updated_at` on expenses enables last-write-wins cloud sync. `time` uses HH:mm:ss for AI-logged entries (prevents batch duplicate blocking) and HH:mm for manual entries. `photo_path` is local file path only (not synced to Firestore). `is_want` defaults to 0 (Need). New tables added via `_ensureColumns()` — no version bump required (CREATE TABLE IF NOT EXISTS).
@@ -1930,7 +1944,7 @@ All rights reserved by **Lucid Frame**, 2026.
 - **Settings grouped section cards** — each section wrapped in soft-shadow card (v2.9.67)
 - **Hub search bar + 4 category groups** — FINANCES / TRANSACTIONS & DATA / TOOLS / HELP (v2.9.67)
 - **Full-app soft-UI polish** — 30 files updated, consistent shadow/radius/fill across all 37 screens (v2.9.67)
-- **25 achievement badges** — No-Spend Day + No-Spend Streak added (v2.9.67)
+- **25 achievement badges** — No-Spend Day + No-Spend Streak added (v2.9.67); expanded to **36** badges in v3.1.0
 - **Hub tiles: 26** — expanded from 22 in v2.9.67
 - **AI PII redaction** — RA 10173 compliance, strips mobile numbers + ref numbers before LLM (v2.9.67)
 - **FHS improvements** — Overspend one-off penalty (0.5×), Category Balance exempts Bills/Health/Education, Warning Decay skips essential categories (v2.9.67)
@@ -2006,6 +2020,6 @@ These are intentional design decisions or platform constraints — not bugs.
 
 ---
 
-*SmartSpend v2.9.67 — Lucid Frame*
+*SmartSpend v3.1.0 — Lucid Frame*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2026–2027 (1st Semester)*

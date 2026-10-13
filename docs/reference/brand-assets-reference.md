@@ -1,5 +1,5 @@
  # SmartSpend Brand Assets Reference
-**Last updated:** October 12, 2026
+**Last updated:** October 13, 2026
 
 ---
 
@@ -46,9 +46,16 @@
 
 ### Moods (Flutter app)
 - `PesoMood.happy` — Arms up, big smile, cheek blush (default)
+- `PesoMood.sad` — Drooping arms, frown, half-lidded eyes, blue-tinted
+- `PesoMood.excited` — Arms spread wide, wide grin, energetic pose
+- `PesoMood.surprised` — Raised eyebrows, open-circle mouth, arms up
+- `PesoMood.proud` — Chest out, confident smile, one hand on hip
+- `PesoMood.embarrassed` — Arms inward, downward glance, blush cheeks
+- `PesoMood.winking` — One eye closed, slight smirk
+- `PesoMood.sleepy` — Half-lidded eyes, droopy arms, Zzz bubble
+- `PesoMood.worried` — Furrowed brows, small sweat drop, arms close
 - `PesoMood.neutral` — Arms slightly lower, small smile
 - `PesoMood.thinking` — One eyebrow raised, tilted mouth, thought bubble
-- `PesoMood.sad` — Drooping arms, frown, half-lidded eyes, blue-tinted
 - `PesoMood.celebrating` — Arms high, open O-mouth, legs spread, confetti
 
 ### Website Usage (5 placements in index.html)
@@ -137,7 +144,7 @@ An AI mascot for the Time Variance Authority — anthropomorphic clock with rubb
 
 ## Update Log
 
-### October 12, 2026 — v3.0.7 (Peso Everywhere)
+### October 13, 2026 — v3.1.0 (Peso Everywhere)
 - PesoMascot now appears on 34 of 45 screens
 - Nav AI button uses PesoMascot instead of Icons.smart_toy
 - AI chat reply bubbles show 22px Peso avatar on left
@@ -149,5 +156,5 @@ An AI mascot for the Time Variance Authority — anthropomorphic clock with rubb
 - 36 achievement badges (was 25), all unlock with Peso celebration
 - Tappable Peso: onTap bounce + tapMood override
 
-### Current app version: 3.0.7+105
+### Current app version: v3.1.0
 ### Current website: https://zushikina-kun.github.io/smartspend-app/ (167.5 KB)

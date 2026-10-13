@@ -1,5 +1,5 @@
 # SmartSpend — Master Feature Backlog & Planning
-**Version:** 2.9.59 | **Updated:** September 2026 — Codex code-audit pass
+**Version:** 3.1.0 | **Updated:** October 2026 — v3.1.0 Peso Companion System complete
 **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 
 > **Single consolidated planning document.** Fuses inputs from:
@@ -19,13 +19,13 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v3.0.4)
+## Part 0 — Authoritative Build Numbers (v3.1.0)
 
 Use these everywhere. Many older docs are stale.
 
-| Metric | v3.0.4 value |
+| Metric | v3.1.0 value |
 |--------|--------------|
-| Version string | **3.0.4** |
+| Version string | **3.1.0** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
@@ -34,9 +34,9 @@ Use these everywhere. Many older docs are stale.
 | Primary AI model | **Auto (Gemini 3.5 Flash-Lite default, AQ. key via Remote Config)** |
 | Agentic actions | **34** |
 | Input modalities | **7** |
-| Screens | **43** Dart files |
-| Services | **31** Dart files |
-| Achievement badges | **25** |
+| Screens | **45** Dart files |
+| Services | **33** Dart files |
+| Achievement badges | **36** |
 | Daily quests pool | 10 |
 | Batch screenshot platforms | 40+ |
 | Filipino item catalog | 150+ items |
@@ -46,7 +46,7 @@ Use these everywhere. Many older docs are stale.
 | PH banks in DB | 20 banks + 5 e-wallets |
 | Daily AI message limit | **150** |
 | Color themes | **11** (Emerald is new default for new installs) |
-| APK size | **~45 MB** (arm64-v8a, split, obfuscated) |
+| APK size | **~47.5 MB** (arm64-v8a, split, obfuscated) |
 | AAB size | **~75 MB** (Play Store bundle, CI-built) |
 | Optional home toggles | **14** (managed by Experience Presets) |
 | Optional analytics toggles | **4** |
@@ -55,28 +55,34 @@ Use these everywhere. Many older docs are stale.
 | GitHub releases | https://github.com/Zushikina-kun/smartspend-app/releases |
 
 ### Recent releases
-| Version | Key changes |
-|---------|------------|
-| v3.0.4 | Logout button fix (nested function bug); demo crash fix (wallet_history NOT NULL); demo → "Demo User / demo@smartspend.app"; profile overlap fix (local ≠ demo); app lock on splash for local/demo; auto-save JSON+CSV on local mode logout with guided instructions; login warning dialog for local users; local-only AI mode toggle (no cloud fallback); all in-app text updated to 9-provider |
-| v3.0.3 | Local Account mode — "Continue Without Account" on login screen; data on device; `uid='local_user'`; connect Firebase later from Profile |
-| v3.0.2 | ProService + ProFeature enum (freemium infra, v4.0); support links in About/website; APP_FLAVOR dev/prod |
-| v3.0.1 | Demo account overhaul — 18 tables seeded, Reset to Demo Defaults button |
-| v3.0.0 | Transaction sort/group (7 keys, 5 group-by, collapsible headers, category dropdown); Chat sessions (DB v14); AI recovery card (✅/⚠️/❌, re-log helper); Analytics Quick Jump + period chip fix + category sort toggle |
-| v2.9.98 | Screenshot import visibility: `[screenshot]` tag; skipped-dup AI feedback; 00:00 sort fix |
-| v2.9.97 | AI backdating fix: Today/Yesterday in context; "kahapon" resolution; NOT-RECORDED CHECK |
-| v2.9.92 | Local LLM private mode (9th provider); Settings Local AI section; LocalAiSetupSheet widget |
-| v2.9.97 | AI backdating fix: `Today/Yesterday` in context header; "yesterday"/"kahapon" date resolution; NOT-RECORDED CHECK before re-log; `date` field marked REQUIRED for past-day mentions. |
-| v2.9.92 | Local LLM private mode (9th provider); Settings Local AI section; LocalAiSetupSheet widget; privacy banner. |
-| v2.9.91 | Source tag completeness; CI AAB fix (APP_CONFIG_DART secret updated); GitHub Pages website. |
-| v2.9.90 | 10-item re-audit fixes: paluwagan/insurance/wallet deletes, archive bug, FHS chart tooltip, Peso empty states, wallet history on home. |
-| v2.9.89 | DB v13 budget/goal/income/score history; setMonthlyIncome wrapper; setBudget/updateGoal all log. |
-| v2.9.88 | Wallet history (wallet_history table v12); WalletsSheet history; App Check debug token. |
-| v2.9.87 | Installment→Plans tab fix; DQ View navigates to TransactionsScreen; Fix All for case_dup/round_amount. |
-| v2.9.53 | Settings refinement: 3 new home toggles (payday countdown, monthly recap, challenges); Lite Mode expanded to 13 sections. |
-| v2.9.52 | Tier 1 features: payday countdown, monthly recap alert, AI chat export, auto-categorization evidence threshold, semester recurring interval. |
-| v2.9.51 | **Critical fix:** AI fallback chain was silently failing — recursive `sendMessage()` re-ran daily limit check on each retry, blocking every provider switch. Added `isFallbackRetry` flag. |
-| v2.9.50 | Nav bar overlap fixed on all 8 screens (viewPadding.bottom); Auto model mode with task-based routing; 500ms grace delay on auth failures; distinct error messages |
-| v2.9.49 | (previous baseline) |
+| Version | Date | Key changes |
+|---------|------|------------|
+| v3.0.4 | Oct 9, 2026 | Logout button fix (nested function bug); demo crash fix (wallet_history NOT NULL); demo → "Demo User / demo@smartspend.app"; profile overlap fix (local ≠ demo); app lock on splash for local/demo; auto-save JSON+CSV on local mode logout with guided instructions; login warning dialog for local users; local-only AI mode toggle (no cloud fallback); all in-app text updated to 9-provider |
+| v3.0.5 | Oct 10, 2026 | Peso mascot fully animated (12 moods, idle bob, eye blink, mood pop-in); send feedback screen |
+| v3.0.6 | Oct 10, 2026 | Peso daily check-in, 36 achievement badges, PesoVoiceService (31 contexts), first-log celebration |
+| v3.0.7 | Oct 11, 2026 | Peso on all major screens; nav AI button → PesoMascot widget; AI chat Peso avatar + typing indicator |
+| v3.0.8 | Oct 11, 2026 | All 20+ push notifications Peso-voiced in Taglish; PesoContextService (17 screens); screen-aware tips |
+| v3.0.9 | Oct 12, 2026 | Swipe-to-delete transactions, Quick Undo snackbar (5s), PesoContextService wired to 6 screens, SA-7 nudge |
+| v3.1.0 | Oct 13, 2026 | FHS tier change announcements, logging streak milestones (7/14/21/30-day), SA-6 notification tap reaction, SA-3 session-based tips |
+| v3.0.3 | Oct 9, 2026 | Local Account mode — "Continue Without Account" on login screen; data on device; `uid='local_user'`; connect Firebase later from Profile |
+| v3.0.2 | Oct 9, 2026 | ProService + ProFeature enum (freemium infra, v4.0); support links in About/website; APP_FLAVOR dev/prod |
+| v3.0.1 | Oct 9, 2026 | Demo account overhaul — 18 tables seeded, Reset to Demo Defaults button |
+| v3.0.0 | Oct 9, 2026 | Transaction sort/group (7 keys, 5 group-by, collapsible headers, category dropdown); Chat sessions (DB v14); AI recovery card (✅/⚠️/❌, re-log helper); Analytics Quick Jump + period chip fix + category sort toggle |
+| v2.9.98 | — | Screenshot import visibility: `[screenshot]` tag; skipped-dup AI feedback; 00:00 sort fix |
+| v2.9.97 | — | AI backdating fix: Today/Yesterday in context; "kahapon" resolution; NOT-RECORDED CHECK |
+| v2.9.92 | — | Local LLM private mode (9th provider); Settings Local AI section; LocalAiSetupSheet widget |
+| v2.9.97 | — | AI backdating fix: `Today/Yesterday` in context header; "yesterday"/"kahapon" date resolution; NOT-RECORDED CHECK before re-log; `date` field marked REQUIRED for past-day mentions. |
+| v2.9.92 | — | Local LLM private mode (9th provider); Settings Local AI section; LocalAiSetupSheet widget; privacy banner. |
+| v2.9.91 | — | Source tag completeness; CI AAB fix (APP_CONFIG_DART secret updated); GitHub Pages website. |
+| v2.9.90 | — | 10-item re-audit fixes: paluwagan/insurance/wallet deletes, archive bug, FHS chart tooltip, Peso empty states, wallet history on home. |
+| v2.9.89 | — | DB v13 budget/goal/income/score history; setMonthlyIncome wrapper; setBudget/updateGoal all log. |
+| v2.9.88 | — | Wallet history (wallet_history table v12); WalletsSheet history; App Check debug token. |
+| v2.9.87 | — | Installment→Plans tab fix; DQ View navigates to TransactionsScreen; Fix All for case_dup/round_amount. |
+| v2.9.53 | — | Settings refinement: 3 new home toggles (payday countdown, monthly recap, challenges); Lite Mode expanded to 13 sections. |
+| v2.9.52 | — | Tier 1 features: payday countdown, monthly recap alert, AI chat export, auto-categorization evidence threshold, semester recurring interval. |
+| v2.9.51 | — | **Critical fix:** AI fallback chain was silently failing — recursive `sendMessage()` re-ran daily limit check on each retry, blocking every provider switch. Added `isFallbackRetry` flag. |
+| v2.9.50 | — | Nav bar overlap fixed on all 8 screens (viewPadding.bottom); Auto model mode with task-based routing; 500ms grace delay on auth failures; distinct error messages |
+| v2.9.49 | — | (previous baseline) |
 
 ---
 

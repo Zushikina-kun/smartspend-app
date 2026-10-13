@@ -1,0 +1,114 @@
+# SmartSpend — Kiro Session Handoff
+**Session Date:** October 13, 2026
+**Version Released:** 3.1.0+108
+**Handoff Type:** Final session handoff — defense-ready build
+**Prepared by:** Kiro (AI Development Environment)
+
+---
+
+## Session Summary
+
+This session completed the final batch of SmartSpend Peso Companion features (v3.0.9 → v3.1.0), fixed a critical PowerShell bug in home_screen.dart, and updated all thesis and reference documentation.
+
+---
+
+## What Was Fixed
+
+### home_screen.dart — PowerShell $var mangling bug
+- **Problem:** `_checkFHSTierChange()` and `_checkStreakMilestone()` methods were broken. PowerShell had mangled Dart variable names containing `$` (e.g., `$currentTier`) during a previous file-write operation, corrupting the code.
+- **Fix:** Rewrote the affected methods directly using Kiro file tools (bypassing PowerShell string interpolation). Both methods now compile and function correctly.
+- **Affected file:** `lib/screens/home_screen.dart`
+
+---
+
+## What Was Implemented
+
+### SA-6 — Notification Tap Reaction
+- When the user taps a push notification to open SmartSpend, Peso displays a context-aware greeting
+- Implementation: `notification_service.dart` passes a launch-via-notification flag; `home_screen.dart` detects it on init and triggers a Peso mood + voice line
+- Key files: `lib/services/notification_service.dart`, `lib/screens/home_screen.dart`
+
+### SA-3 — Session-Based Screen Tips
+- `PesoContextService.getSessionTip()` now returns tips that cycle per session rather than always returning the same static tip
+- Tips reset each app launch so users see different contextual Peso messages on each session
+- Key file: `lib/services/peso_context_service.dart`
+
+### FHS Tier Change Announcements (v3.1.0)
+- `_checkFHSTierChange()` in `home_screen.dart` detects when the user's Financial Health Score crosses a tier boundary
+- Peso reacts with a tier-specific animation and Taglish message
+- Triggered at most once per day (guarded by SharedPreferences date key)
+
+### Logging Streak Milestones (v3.1.0)
+- `_checkStreakMilestone()` in `home_screen.dart` fires one-time celebrations at 7, 14, 21, and 30-day consecutive logging streaks
+- Each milestone triggers a unique Peso animation and congratulatory message
+- One-time guard stored in SharedPreferences per milestone
+
+---
+
+## Thesis Docs Updated
+
+- **Chapter 4, Section 4** — Added v3.0.x Peso Companion System subsection covering PesoMascot, PesoVoiceService, PesoContextService, PesoSoundService, behaviors, and v3.1.0 features
+- **Defense Script, Slide 14** — Updated to reference Peso Companion System and v3.1.0 features
+
+---
+
+## Version Bump & Release
+
+| Item | Value |
+|------|-------|
+| pubspec version | `3.1.0+108` |
+| Git tag | `v3.1.0` |
+| Git HEAD | `7fd2448` |
+| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.0 |
+| APKs released | arm64-v8a (~47.5 MB), armeabi-v7a (~40.3 MB), x86_64 (~50.5 MB) |
+
+---
+
+## App State at Handoff
+
+- **Errors:** 0
+- **Warnings/Info:** ~492 (pre-existing, non-blocking)
+- **Build status:** Clean release APKs produced for all 3 ABIs
+- **All features:** Functional and tested on demo device
+
+---
+
+## Key Files Changed This Session
+
+| File | Change |
+|------|--------|
+| `lib/screens/home_screen.dart` | Fixed $var mangling; implemented FHS tier announcements + streak milestones + SA-6 |
+| `lib/services/notification_service.dart` | SA-6: passes notification launch flag |
+| `lib/services/peso_context_service.dart` | SA-3: session-based getSessionTip() |
+| `lib/screens/whats_new_screen.dart` | Updated v3.1.0 changelog entry |
+| `pubspec.yaml` | Bumped version to 3.1.0+108 |
+| `lib/services/debug_service.dart` | Minor debug logging updates |
+| `index.html` | Minor PWA metadata update |
+| `docs/thesis/` | Chapter 4 Section 4 + defense script Slide 14 |
+
+---
+
+## What Remains (Next Session or Handoff)
+
+| Task | Priority | Notes |
+|------|----------|-------|
+| Build AAB for Play Store | HIGH | Use `flutter build appbundle --release`; upload to Play Console |
+| Play Store submission prep | HIGH | Screenshots (40+ platforms via Batch), listing copy, privacy policy URL |
+| SUS Survey — 30 respondents | HIGH | System Usability Scale; required for thesis methodology |
+| Manuscript Chapter 3 updates | MEDIUM | Update methodology section to reflect v3.1.0 features |
+| Compliance matrix | MEDIUM | Map all SRS requirements to implemented features |
+| Play Store internal testing track | MEDIUM | Submit AAB to internal testing before public release |
+| Debug APK for panel demo | LOW | Confirm latest arm64 APK is loaded on demo device |
+
+---
+
+## Previous Handoffs
+
+- `docs/handsoff/kiro-to-claude-handoff-2026-10-10.md` — previous Claude session (v3.0.4)
+- `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md` — v3.0.0 architecture handoff
+- `docs/handsoff/freemium-split-plan-2026-10-09.md`
+- `docs/handsoff/marketing-and-demo-plan-2026-10-09.md`
+
+---
+
+*This handoff was generated by Kiro on October 13, 2026. For questions, reference the git log starting from commit `7fd2448`.*

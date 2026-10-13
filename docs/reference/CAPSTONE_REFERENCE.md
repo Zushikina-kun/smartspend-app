@@ -1,12 +1,12 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 3.0.4 | **Date:** October 2026
+**Version:** 3.1.0 | **Date:** October 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v3.0.4).
+> All figures are accurate to the final build (v3.1.0).
 
 ---
 
@@ -15,12 +15,12 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 3.0.4
+**Version:** 3.1.0
 **Build date:** October 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
 **Target SDK:** Android 16 (API 36)
-**APK size:** ~45 MB (arm64-v8a release, split, obfuscated)
+**APK size:** ~47.5 MB (arm64-v8a release, split, obfuscated)
 **AAB size:** ~75 MB (Play Store bundle)
 
 **Development team:** Lucid Frame
@@ -340,12 +340,12 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 |-----------|-----------|----------------------|
 | **Nudge Theory** (Thaler & Sunstein, 2008) | Subtle choice architecture guides behavior without restricting freedom | Warning Decay, Impulse Pause, budget alert framing, startup gap prompts |
 | **Prospect Theory / Loss Aversion** (Kahneman & Tversky, 1979) | Losses feel ~2× more painful than equivalent gains | Warning Decay: score drops −5 pts/day for ignored budget overruns, making consequences concrete |
-| **Self-Determination Theory (SDT)** (Deci & Ryan, 2000) | Intrinsic motivation sustained by Autonomy, Competence, and Relatedness | *Competence* → 25 badges + streaks reward skill growth; *Autonomy* → non-prescriptive budgets + customizable goals; *Relatedness* → Filipino-first framing and local financial context |
+| **Self-Determination Theory (SDT)** (Deci & Ryan, 2000) | Intrinsic motivation sustained by Autonomy, Competence, and Relatedness | *Competence* → 36 badges + streaks reward skill growth; *Autonomy* → non-prescriptive budgets + customizable goals; *Relatedness* → Filipino-first framing and local financial context |
 | **Technology Acceptance Model (TAM)** (Davis, 1989) | Adoption driven by Perceived Usefulness + Perceived Ease of Use | Multi-modal input reduces friction (PEOU); FHS gives actionable insight (PU); Demo Mode lowers onboarding barrier |
 | **Atlantis Press PLS-SEM** (Sharma, Gaba & Sharma, 2026; N=656) | Empirical structural model: nudges + gamification → financial intention → well-being, moderated by algorithm transparency | Validates SmartSpend's nudge + gamification design with exact path coefficients: Budget Feedback Nudge β=0.28 (t=6.21), Gamified Rewards β=0.25 (t=5.89). Perceived Algorithm Transparency moderates the well-being path (β=0.14, t=2.95, p<0.001, R²DFWB=0.56) |
 - Spending Streaks & Challenges
 - Daily Quests (10 rotating, 4 shown per day)
-- **25** Achievement Badges
+- **36** Achievement Badges
 - Daily Mood Check-In with spending correlation
 - Weekly Behavioral Summary notification
 
@@ -445,7 +445,7 @@ The batch screenshot import auto-detects the source platform from OCR text and u
 | PH Gov (SSS/PhilHealth/Pag-IBIG) | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Records | ❌ | ❌ |
 | Paluwagan tracker | ✅ Basic | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ Full | ❌ | ❌ |
 | 15th & 30th payday cycle | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
-| Gamification (badges/quests) | ✅ **25 badges** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ |
+| Gamification (badges/quests) | ✅ **36 badges** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ XP/levels | ❌ | ❌ |
 | Free (no subscription) | ✅ Always | ❌ $14.99/mo | ❌ $9.99/mo | ❌ $10.99/mo | ⚠️ Limited | ✅ | ✅ | ⚠️ Limited | ✅ (GCash required) |
 | Spending Limits (multi-period) | ✅ Daily/Wk/Mo/Yr | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
 | Logging Gap Detection | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -527,7 +527,59 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-## 12. SUS EVALUATION (for Chapter 3 & 4)
+## 12. PESO COMPANION SYSTEM
+
+**Peso** is SmartSpend's animated mascot and emotional companion, designed to make personal finance engaging and approachable for Filipino users.
+
+### PesoMascot Widget
+- Flutter widget: `lib/widgets/peso_mascot.dart` — `PesoMascot(size: 80, mood: PesoMood.happy)`
+- **12 moods:** happy, sad, excited, surprised, proud, embarrassed, winking, sleepy, worried, neutral, thinking, celebrating
+- Animations: idle bob, eye blink, mood pop-in transitions
+- Appears on: Home, Add/Edit Expense, Bank Import, PH Banks, About, Settings, Help, AI Chat, and all major screens
+- Nav bar AI button replaced with PesoMascot; AI chat bubbles show Peso avatar; typing indicator shows Peso "thinking" animation
+
+### PesoVoiceService
+- `lib/services/peso_voice_service.dart`
+- **31 voice contexts** — Peso speaks Taglish contextual messages for: first log, budget reactions, no-spend day, goal milestones, badges, daily nudges, and more
+- Powers all 20+ push notification messages (Taglish tone)
+
+### PesoContextService
+- `lib/services/peso_context_service.dart`
+- **17 registered screens** — provides screen-aware tip text for Peso to display
+- Wired to 6 primary screens as of v3.0.9
+- Session-based tips (SA-3): `getSessionTip()` resets each app launch so tips cycle naturally
+
+### PesoSoundService
+- `lib/services/peso_sound_service.dart`
+- Manages Peso audio feedback (celebration sounds, interaction sounds)
+
+### Daily Check-In & Companion Behaviors
+- **Daily nudge:** If user has not logged by 2 PM, Peso prompts them
+- **Budget reaction:** Peso reacts when spending approaches or exceeds budget
+- **No-spend day celebration:** Peso celebrates days with zero spending
+- **Goal milestone sheets:** Bottom sheets appear at goal progress milestones
+- **First-log celebration:** One-time Peso celebration on user's very first expense log
+- **Tap count tracking:** Tracks how many times user taps Peso for interaction analytics
+
+### FHS Tier Announcements (v3.1.0)
+- Peso reacts with a special animation and message when user's Financial Health Score crosses a tier boundary (e.g., Poor → Fair → Good → Excellent)
+- Triggered at most once per day per direction (upgrade/downgrade)
+
+### Logging Streak Milestones (v3.1.0)
+- One-time celebrations at 7, 14, 21, and 30-day consecutive logging streaks
+- Each milestone triggers a unique Peso animation and congratulatory message
+
+### Notification Tap Reaction — SA-6 (v3.1.0)
+- When user taps a push notification to open the app, Peso greets them with a context-aware welcome message
+- Detects notification-opened launch via `notification_service.dart`
+
+### Session-Based Screen Tips — SA-3 (v3.1.0)
+- `getSessionTip()` in PesoContextService returns tips that cycle per session (reset each launch)
+- Ensures users see different tips across sessions rather than the same static tip every time
+
+---
+
+## 13. SUS EVALUATION (for Chapter 3 & 4)
 
 **Target:** ≥80 (Good classification per Bangor et al., 2009)
 
@@ -547,7 +599,7 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-## 13. FINANCIAL ADVICE DISCLAIMER
+## 14. FINANCIAL ADVICE DISCLAIMER
 
 *Must appear in the paper and the app:*
 
@@ -561,7 +613,7 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-## 14. KEY REFERENCES (APA Format)
+## 15. KEY REFERENCES (APA Format)
 
 - Bangko Sentral ng Pilipinas. (2021). *2021 Financial Inclusion Survey*. BSP.
 - Bangko Sentral ng Pilipinas. (2025). *Consumer Finance and Inclusion Survey (CFIS) 2025*. BSP.
@@ -596,7 +648,7 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-## 15. VERSION HISTORY (for paper)
+## 16. VERSION HISTORY (for paper)
 
 | Version | Date | Key Additions |
 |---------|------|--------------|
@@ -649,6 +701,6 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-*SmartSpend v3.0.4 — Lucid Frame*
+*SmartSpend v3.1.0 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
 *Last updated: October 10, 2026*
