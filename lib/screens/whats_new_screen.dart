@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.6';
-  static const _prefKey = 'whats_new_seen_3_0_6';
+  static const _version = '3.0.7';
+  static const _prefKey = 'whats_new_seen_3_0_7';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,6 +20,21 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🔍',
+      'Peso is everywhere (v3.0.7)',
+      'Peso now appears on every major screen in the app — Add Expense, Edit Expense, '
+          'Bank Import, PH Banks Guide, About, Settings, Help, and more. '
+          'Every ❓ info button shows Peso explaining the feature. '
+          'The nav AI button and all AI-related buttons now show Peso instead of a robot icon.',
+    ),
+    (
+      '💬',
+      'Peso in AI chat (v3.0.7)',
+      'Every AI reply bubble now has a small Peso avatar on the left — it\'s clearly Peso speaking, '
+          'not a generic AI. The typing indicator shows Peso thinking. '
+          'The AI screen AppBar now shows your current Peso mood with his subtitle.',
+    ),
     (
       '🤜',
       'Tap Peso! (v3.0.6)',
