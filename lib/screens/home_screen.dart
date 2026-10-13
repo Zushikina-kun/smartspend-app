@@ -97,6 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkNoSpendDay();
     _checkBudgetPesoReaction();
     _checkUnfinishedTasks();
+    _checkFhsTierChange();
+    _checkStreakMilestone();
     _showPesoNavTip();
     // Check local mode on first render
     AuthService.isLocalMode().then((v) {
@@ -383,6 +385,124 @@ class _HomeScreenState extends State<HomeScreen> {
             )),
           ]),
         ));
+      }
+    } catch (_) {}
+  }
+
+  // ── FHS TIER CHANGE ANNOUNCEMENT ────────────────────────────────────────────
+  /// Peso reacts when FHS score crosses a tier boundary (once per day).
+  Future<void> _checkFhsTierChange() async {
+    await Future.delayed(const Duration(milliseconds: 4000));
+    if (!mounted) return;
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('peso_fhs_tier_check') == today) return;
+    try {
+      final scoreHistory = await DBService.getScoreHistory(days: 2);
+      if (scoreHistory.length < 2) return;
+      final todayScore = scoreHistory.first['score'] as int? ?? 0;
+      final yestScore = scoreHistory.last['score'] as int? ?? 0;
+      if (todayScore == 0) return;
+      int tier(int s) => s >= 90
+          ? 3
+          : s >= 70
+              ? 2
+              : s >= 50
+                  ? 1
+                  : 0;
+      if (tier(todayScore) == tier(yestScore)) return;
+      await prefs.setString('peso_fhs_tier_check', today);
+      String msg;
+      PesoMood mood;
+      if (tier(todayScore) > tier(yestScore)) {
+        if (tier(todayScore) == 3) {
+          msg = 'EXCELLENT! $todayScore/100! Peso is SO proud! 🏆';
+          mood = PesoMood.celebrating;
+        } else if (tier(todayScore) == 2) {
+          msg = 'Level up! $todayScore — Good tier na! Keep going! 🌟';
+          mood = PesoMood.excited;
+        } else {
+          msg = 'Score up to $todayScore! Moving in the right direction! 📈';
+          mood = PesoMood.happy;
+        }
+      } else {
+        msg = 'Score at $todayScore. Huwag mag-alala — ayusin natin! 💪';
+        mood = PesoMood.worried;
+      }
+      if (!mounted) return;
+      PesoSoundService.playMoodChange(mood);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        content: Row(children: [
+          // ignore: prefer_const_constructors
+          PesoMascot(size: 28, mood: mood),
+          const SizedBox(width: 10),
+          Expanded(child: Text(msg, style: const TextStyle(fontSize: 13))),
+        ]),
+      ));
+    } catch (_) {}
+  }
+
+  // ── STREAK MILESTONE CELEBRATION ─────────────────────────────────────────────
+  /// Peso celebrates logging streak milestones (once per milestone, forever).
+  Future<void> _checkStreakMilestone() async {
+    await Future.delayed(const Duration(milliseconds: 5500));
+    if (!mounted) return;
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      final expenses = await DBService.getExpenses();
+      final now3 = DateTime.now();
+      final recentDates = expenses
+          .where((e) {
+            final d = DateTime.tryParse(e.date.substring(0, 10));
+            return d != null && now3.difference(d).inDays <= 35;
+          })
+          .map((e) => e.date.substring(0, 10))
+          .toSet();
+      int streak = 0;
+      for (int d = 0; d < 35; d++) {
+        final check = DateTime(now3.year, now3.month, now3.day - d)
+            .toIso8601String()
+            .substring(0, 10);
+        if (recentDates.contains(check)) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+      if (streak < 7) return;
+      for (final milestone in [30, 21, 14, 7]) {
+        if (streak >= milestone) {
+          final key = 'peso_streak_milestone_$milestone';
+          if (prefs.getString(key) != null) break;
+          await prefs.setString(key, 'done');
+          if (!mounted) return;
+          final msg = milestone == 30
+              ? '30-day streak! 🏆 GRABE — Month Master! Peso bows. 🫡'
+              : milestone == 21
+                  ? '21 days! Tatlong linggo ng consistency! 🔥 Incredible!'
+                  : milestone == 14
+                      ? '14-day streak! Half a month! Real habit mode! 💪'
+                      : '7-day streak! 💯 Week Warrior! Consistent ka talaga!';
+          final mood = milestone >= 30
+              ? PesoMood.celebrating
+              : milestone >= 14
+                  ? PesoMood.excited
+                  : PesoMood.happy;
+          PesoSoundService.playCelebrate();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 5),
+            behavior: SnackBarBehavior.floating,
+            content: Row(children: [
+              // ignore: prefer_const_constructors
+              PesoMascot(size: 28, mood: mood),
+              const SizedBox(width: 10),
+              Expanded(child: Text(msg, style: const TextStyle(fontSize: 13))),
+            ]),
+          ));
+          break;
+        }
       }
     } catch (_) {}
   }
