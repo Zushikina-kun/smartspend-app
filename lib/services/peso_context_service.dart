@@ -22,6 +22,17 @@ class PesoContextService {
     return _tips[screen] ?? _tips['home']!;
   }
 
+  // Session-level tracking — reset each launch (in-memory only)
+  static final Set<String> _shownThisSession = {};
+
+  /// Returns a tip only if this screen hasn't been visited this session yet.
+  /// Returns null if already shown this session.
+  static String? getSessionTip(String screenKey) {
+    if (_shownThisSession.contains(screenKey)) return null;
+    _shownThisSession.add(screenKey);
+    return getTip(screen: screenKey);
+  }
+
   /// Returns a single tip interpolated with any live data.
   static String getTip({String? screen}) {
     final key = screen ?? _currentScreen;

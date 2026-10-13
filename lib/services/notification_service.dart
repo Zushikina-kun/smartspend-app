@@ -1,5 +1,6 @@
 ﻿import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'db_service.dart';
 import 'currency_service.dart';
 
@@ -14,7 +15,18 @@ class NotificationService {
     if (_initialized) return;
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
     const settings = InitializationSettings(android: android);
-    await _plugin.initialize(settings);
+    await _plugin.initialize(
+      settings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) async {
+        try {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString(
+            'peso_notification_tap_payload',
+            response.payload ?? response.notificationResponseType.name,
+          );
+        } catch (_) {}
+      },
+    );
 
     // Request notification permission on Android 13+ (API 33+)
     final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
@@ -69,7 +81,7 @@ class NotificationService {
 
     await _plugin.show(
       1,
-      '💚 Peso''s Weekly Recap',
+      '💚 Peso' 's Weekly Recap',
       'You spent \ this week. \ ang pinaka! Kamusta? 😊',
       const NotificationDetails(android: android),
     );
@@ -299,7 +311,9 @@ class NotificationService {
     final isOver = spent >= limit;
     await _plugin.show(
       9999,
-      isOver ? '🚨 Peso: Daily limit exceeded!' : '⚠️ Peso: Daily limit warning',
+      isOver
+          ? '🚨 Peso: Daily limit exceeded!'
+          : '⚠️ Peso: Daily limit warning',
       isOver
           ? 'You\'ve spent ₱${spent.toStringAsFixed(0)} today — ₱${(spent - limit).toStringAsFixed(0)} over your ₱${limit.toStringAsFixed(0)} limit'
           : 'You\'ve used ${(spent / limit * 100).toStringAsFixed(0)}% of your ₱${limit.toStringAsFixed(0)} daily limit',
@@ -505,7 +519,9 @@ class NotificationService {
         } else if (diff == 0) {
           await _plugin.show(
             ('debt_${d['id']}').hashCode,
-            isOwe ? '💳 Peso: Payment due today!' : '💰 Peso: Payment expected today',
+            isOwe
+                ? '💳 Peso: Payment due today!'
+                : '💰 Peso: Payment expected today',
             '$title — $amtStr to ${isOwe ? person : 'receive from $person'}',
             const NotificationDetails(
               android: AndroidNotificationDetails(

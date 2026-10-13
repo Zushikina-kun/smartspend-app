@@ -99,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkUnfinishedTasks();
     _checkFhsTierChange();
     _checkStreakMilestone();
+    _checkNotificationTap();
     _showPesoNavTip();
     // Check local mode on first render
     AuthService.isLocalMode().then((v) {
@@ -504,6 +505,48 @@ class _HomeScreenState extends State<HomeScreen> {
           break;
         }
       }
+    } catch (_) {}
+  }
+
+  Future<void> _checkNotificationTap() async {
+    await Future.delayed(const Duration(milliseconds: 1500));
+    if (!mounted) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final payload = prefs.getString('peso_notification_tap_payload');
+      if (payload == null) return;
+      await prefs.remove('peso_notification_tap_payload');
+      // Pick a reaction message
+      String msg;
+      PesoMood mood;
+      if (payload.contains('budget')) {
+        msg = 'Peso reminded you about your budget! Let\'s check it! 💰';
+        mood = PesoMood.thinking;
+      } else if (payload.contains('bill') || payload.contains('due')) {
+        msg = 'Bills due! Peso\'s got your back. Let\'s get them sorted! 📋';
+        mood = PesoMood.worried;
+      } else if (payload.contains('weekly') || payload.contains('summary')) {
+        msg = 'Weekly recap time! Let\'s see how you did this week! 📊';
+        mood = PesoMood.excited;
+      } else if (payload.contains('streak') || payload.contains('log')) {
+        msg = 'Logging streak on the line! Quick — add today\'s expenses! 🔥';
+        mood = PesoMood.surprised;
+      } else {
+        msg = 'Salamat sa balik! Peso missed you! 🤗';
+        mood = PesoMood.happy;
+      }
+      if (!mounted) return;
+      PesoSoundService.playNudge();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        content: Row(children: [
+          // ignore: prefer_const_constructors
+          PesoMascot(size: 28, mood: mood),
+          const SizedBox(width: 10),
+          Expanded(child: Text(msg, style: const TextStyle(fontSize: 13))),
+        ]),
+      ));
     } catch (_) {}
   }
 
