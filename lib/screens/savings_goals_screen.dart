@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/db_service.dart';
+import '../services/peso_context_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
@@ -24,6 +25,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
   @override
   void initState() {
     super.initState();
+    PesoContextService.setScreen('goals');
     _load();
     // Auto-refresh when AI actions add/update/delete goals
     _eventSub = AppEventBus.instance.stream.listen((event) {

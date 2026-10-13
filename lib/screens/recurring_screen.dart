@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import '../services/db_service.dart';
+import '../services/peso_context_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
 import '../widgets/peso_mascot.dart';
@@ -26,6 +27,7 @@ class _RecurringScreenState extends State<RecurringScreen> {
   @override
   void initState() {
     super.initState();
+    PesoContextService.setScreen('recurring');
     _load();
     // Auto-refresh when AI actions add/remove recurring transactions
     _eventSub = AppEventBus.instance.stream.listen((event) {

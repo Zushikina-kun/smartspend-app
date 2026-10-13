@@ -1,4 +1,4 @@
-/// Tracks which screen Peso is currently on and provides
+﻿/// Tracks which screen Peso is currently on and provides
 /// screen-aware contextual tips. Any screen can call setScreen()
 /// in initState so Peso knows where he is.
 ///

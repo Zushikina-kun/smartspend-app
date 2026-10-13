@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
+import '../services/peso_context_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
@@ -29,6 +30,7 @@ class _DebtScreenState extends State<DebtScreen>
   @override
   void initState() {
     super.initState();
+    PesoContextService.setScreen('debts');
     _tabs =
         TabController(length: 3, vsync: this, initialIndex: widget.initialTab);
     _load();

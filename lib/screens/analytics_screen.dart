@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/expense.dart';
 import '../services/db_service.dart';
+import '../services/peso_context_service.dart';
 import '../services/tax_service.dart';
 import '../services/predict_service.dart';
 import '../services/llm_service.dart';
@@ -104,6 +105,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   void initState() {
     super.initState();
+    PesoContextService.setScreen('analytics');
     _loadData();
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
@@ -5545,6 +5547,7 @@ class _MarketInsightsCardState extends State<_MarketInsightsCard> {
   @override
   void initState() {
     super.initState();
+    PesoContextService.setScreen('analytics');
     _loadRates();
   }
 

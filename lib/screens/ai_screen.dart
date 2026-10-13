@@ -786,6 +786,32 @@ class _AIScreenState extends State<AIScreen> {
             _sessionSummaryItems = List.from(resultItems);
             _sessionSummaryDismissed = false;
           }
+          // Show quick undo snackbar if something was logged (shake also works)
+          if (filteredActions.any((a) =>
+                  a.type == 'log_expense' ||
+                  a.type == 'log_multiple_expenses') &&
+              UndoService.canUndo) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: const Duration(seconds: 5),
+              behavior: SnackBarBehavior.floating,
+              content: const Text('Expense logged ✅'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () async {
+                  final undone = await UndoService.undo();
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      duration: const Duration(seconds: 2),
+                      behavior: SnackBarBehavior.floating,
+                      content:
+                          Text(undone ? 'Undone ✓' : 'Undo window expired'),
+                    ));
+                    if (undone) _loadContext(silent: true);
+                  }
+                },
+              ),
+            ));
+          }
         });
         _scrollToBottom();
       }

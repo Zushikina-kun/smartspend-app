@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/expense.dart';
 import '../services/db_service.dart';
+import '../services/peso_context_service.dart';
 import '../services/currency_service.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/export_service.dart';
@@ -115,6 +116,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   void initState() {
     super.initState();
+    PesoContextService.setScreen('transactions');
     _restoreFilter();
     _load();
     // Re-sort and reload whenever an expense is added, updated, or deleted
@@ -1172,7 +1174,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   Widget _buildTile(Expense e) {
-    return ExpenseTile(
+    final tile = ExpenseTile(
       expense: e,
       onEdit: _isSelecting ? null : () => _edit(e),
       onDelete: _isSelecting ? null : () => _delete(e.id!),
@@ -1199,6 +1201,64 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               });
             }
           : null,
+    );
+
+    // Swipe left to delete (only when not in multi-select mode)
+    if (_isSelecting) return tile;
+    return Dismissible(
+      key: Key('txn_${e.id}'),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        color: Colors.red.shade400,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.delete_outline, color: Colors.white, size: 20),
+            SizedBox(width: 6),
+            Text('Delete',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
+      confirmDismiss: (_) async {
+        return await showDialog<bool>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Delete expense?'),
+            content: Text(
+                'Delete "${e.itemName}" (₱${e.amount.toStringAsFixed(0)})?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        );
+      },
+      onDismissed: (_) async {
+        await DBService.deleteExpense(e.id!);
+        fireEvent(AppEvent.expenseChanged);
+        if (mounted) {
+          setState(() => _filtered.removeWhere((exp) => exp.id == e.id));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+            content: Text('Deleted "${e.itemName}"'),
+          ));
+        }
+      },
+      child: tile,
     );
   }
 }

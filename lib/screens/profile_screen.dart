@@ -1,4 +1,4 @@
-import 'home_screen.dart' show SpendingLimitsSheet;
+﻿import 'home_screen.dart' show SpendingLimitsSheet;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
@@ -2341,6 +2341,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       }
                                     },
                             ),
+                            // ── Data section header ──
+                            _sectionHeader('Data'),
                             const Divider(height: 1),
                             ListTile(
                               leading: const Icon(Icons.download_outlined),
@@ -2382,6 +2384,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onTap: _restoreFromDrive,
                             ),
                             const Divider(height: 1),
+                            // ── Support section header ──
+                            _sectionHeader('Support'),
                             ListTile(
                               leading: const Icon(Icons.feedback_outlined),
                               title: const Text('Send Feedback'),
@@ -2813,6 +2817,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: TextStyle(
                 color: cs.onSurface.withValues(alpha: 0.6), fontSize: 12)),
       ],
+    );
+  }
+
+  Widget _sectionHeader(String title) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 6),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.2,
+          color: cs.primary,
+        ),
+      ),
     );
   }
 }
@@ -3800,4 +3820,5 @@ class _NetWorthCardState extends State<_NetWorthCard> {
       ),
     );
   }
+
 }

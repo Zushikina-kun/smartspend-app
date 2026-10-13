@@ -2,6 +2,7 @@
 import 'package:intl/intl.dart';
 import '../models/budget.dart';
 import '../services/db_service.dart';
+import '../services/peso_context_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
 import '../widgets/history_sheet.dart';
@@ -30,6 +31,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   @override
   void initState() {
     super.initState();
+    PesoContextService.setScreen('budget');
     _loadData();
   }
 

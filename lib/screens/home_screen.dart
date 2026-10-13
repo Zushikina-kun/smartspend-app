@@ -96,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkDailyPesoNudge();
     _checkNoSpendDay();
     _checkBudgetPesoReaction();
+    _checkUnfinishedTasks();
     _showPesoNavTip();
     // Check local mode on first render
     AuthService.isLocalMode().then((v) {
@@ -322,6 +323,70 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (_) {}
   }
 
+  /// SA-7: Gentle reminder for unfinished tasks — due bills, missing budgets.
+  /// Fires at most once per day and only mentions ONE thing (least pushy).
+  Future<void> _checkUnfinishedTasks() async {
+    await Future.delayed(const Duration(milliseconds: 3500));
+    if (!mounted) return;
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('peso_tasks_nudge') == today) return;
+    try {
+      // Check 1: recurring bills due within 3 days
+      final recurring = await DBService.getRecurring();
+      final now = DateTime.now();
+      for (final r in recurring) {
+        final dueDay = (r['due_day'] as int?) ?? 1;
+        final daysUntilDue = dueDay - now.day;
+        if (daysUntilDue >= 0 && daysUntilDue <= 2) {
+          await prefs.setString('peso_tasks_nudge', today);
+          if (!mounted) return;
+          PesoSoundService.playNudge();
+          final rTitle = r['title'] as String? ?? '';
+          final rAmt = (r['amount'] as num).toStringAsFixed(0);
+          final dueStr = daysUntilDue == 0 ? 'today' : 'in $daysUntilDue days';
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            duration: const Duration(seconds: 4),
+            behavior: SnackBarBehavior.floating,
+            content: Row(children: [
+              // ignore: prefer_const_constructors
+              PesoMascot(size: 28, mood: PesoMood.thinking),
+              const SizedBox(width: 10),
+              Expanded(
+                  child: Text(
+                'Reminder: $rTitle due $dueStr! ₱$rAmt',
+                style: const TextStyle(fontSize: 13),
+              )),
+            ]),
+          ));
+          return;
+        }
+      }
+      // Check 2: no budgets set at all
+      final budgets = await DBService.getBudgets();
+      if (budgets.isEmpty) {
+        await prefs.setString('peso_tasks_nudge', today);
+        if (!mounted) return;
+        PesoSoundService.playNudge();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 4),
+          behavior: SnackBarBehavior.floating,
+          content: Row(children: [
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 28, mood: PesoMood.winking),
+            const SizedBox(width: 10),
+            const Expanded(
+                child: Text(
+              'Tip: Set budgets per category — I'
+              'll warn you before you hit the limit! 💡',
+              style: TextStyle(fontSize: 13),
+            )),
+          ]),
+        ));
+      }
+    } catch (_) {}
+  }
+
   Future<void> _checkNoSpendDay() async {
     final prefs = await SharedPreferences.getInstance();
     final yesterday = DateTime.now()
@@ -448,17 +513,20 @@ class _HomeScreenState extends State<HomeScreen> {
     final tip = _getContextTip();
     PesoSoundService.playTalk();
     setState(() => _pesoNavBubbleActive = true);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      duration: const Duration(seconds: 3),
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
-      content: Row(children: [
-        // ignore: prefer_const_constructors
-        PesoMascot(size: 28, mood: PesoMood.winking),
-        const SizedBox(width: 10),
-        Expanded(child: Text(tip, style: const TextStyle(fontSize: 12))),
-      ]),
-    )).closed.then((_) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
+          content: Row(children: [
+            // ignore: prefer_const_constructors
+            PesoMascot(size: 28, mood: PesoMood.winking),
+            const SizedBox(width: 10),
+            Expanded(child: Text(tip, style: const TextStyle(fontSize: 12))),
+          ]),
+        ))
+        .closed
+        .then((_) {
       if (mounted) setState(() => _pesoNavBubbleActive = false);
     });
   }
