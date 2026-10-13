@@ -81,9 +81,12 @@
     *   **Intrinsic Motivation:** Gamification (daily quests, badges, streaks) supports the core psychological needs of Autonomy, Competence, and Relatedness (SDT).
     *   **Peer Cues:** Benchmarking against local spending standards drives competitive motivation (Social Comparison Theory).
     *   **Validated Path Coefficients:** (Atlantis Press, 2026 PLS-SEM)
-        *   Personalized Feedback Nudge (PBFN) $ightarrow$ SFI ($eta = 0.28$, $t = 6.21$)
-        *   Gamified Rewards (GR) $ightarrow$ SFI ($eta = 0.25$, $t = 5.89$)
-        *   Social Comparison (SC) $ightarrow$ SFI ($eta = 0.18$, $t = 4.11$)
+        *   Personalized Feedback Nudge (PBFN) $
+ightarrow$ SFI ($eta = 0.28$, $t = 6.21$)
+        *   Gamified Rewards (GR) $
+ightarrow$ SFI ($eta = 0.25$, $t = 5.89$)
+        *   Social Comparison (SC) $
+ightarrow$ SFI ($eta = 0.18$, $t = 4.11$)
 
 ### 2. Presenter's Speaking Script
 > "SmartSpend is built on robust behavioral economics. We do not simply display transaction lists; we employ an active choice architecture. By combining **Nudge Theory** and **Self-Determination Theory**, we explain how subtle design elements foster long-term behavior change [34]. 
@@ -101,9 +104,12 @@
 *   **Slide Title:** Perceived Algorithm Transparency as an Active Moderator
 *   **Visual Layout:** Interaction plot illustrating how Perceived Algorithm Transparency (PAT) moderates the path from Sustainable Financial Intention (SFI) to Digital Financial Well-being (DFWB). Includes model fit and variance metrics.
 *   **On-Slide Content:**
-    *   **The Path SFI $ightarrow$ PAT:** $eta = 0.51$, $t = 10.04$ (Atlantis Press, 2026).
-    *   **Direct Path PAT $ightarrow$ DFWB:** $eta = 0.43$, $t = 8.67$.
-    *   **Moderation Interaction (SFI $	imes$ PAT $ightarrow$ DFWB):** $eta = 0.14$, $t = 2.95$, $p < 0.001$.
+    *   **The Path SFI $
+ightarrow$ PAT:** $eta = 0.51$, $t = 10.04$ (Atlantis Press, 2026).
+    *   **Direct Path PAT $
+ightarrow$ DFWB:** $eta = 0.43$, $t = 8.67$.
+    *   **Moderation Interaction (SFI $	imes$ PAT $
+ightarrow$ DFWB):** $eta = 0.14$, $t = 2.95$, $p < 0.001$.
     *   **Variance Explained ($R^2$):**
         *   $	ext{SFI} = 0.38$ (Nudges explain 38% of intention).
         *   $	ext{PAT} = 0.26$ (Intention explains 26% of perceived transparency).
@@ -146,7 +152,8 @@
 
 ### 1. Slide Configuration
 *   **Slide Title:** Technical Architecture: Transaction Enrichment Pipeline
-*   **Visual Layout:** Schematic diagram showing the 5-step processing pipeline: Raw e-wallet string input $ightarrow$ Clean standardized database output.
+*   **Visual Layout:** Schematic diagram showing the 5-step processing pipeline: Raw e-wallet string input $
+ightarrow$ Clean standardized database output.
 *   **On-Slide Content:**
     *   **WealthNX 5-Step Model:**
         1.  *Ingestion:* Ingesting messy payment signals (GCash, Shopee, Lazada screenshots or pasted SMS logs) [360].
@@ -291,24 +298,27 @@
 ### 2. Presenter's Speaking Script
 > "While usability is vital, capstone-level computer science research requires objective technical evaluation. Therefore, our methodology includes rigorous **Engineering Performance Benchmarks** [585].
 > 
-> First, we measure the field-level **precision and recall of our Optical Character Recognition (OCR)** engine across local receipt types, evaluating how accurately it extracts transaction Dates, Merchants, and Amounts without human correction [585, 616]. Second, we benchmark our AI model's **categorization accuracy** across a test set of English, Filipino, and colloquial Taglish inputs [585]. Third, we verify our **offline SQLite sync recovery** [585, 586]. We simulate network dropouts during active transaction logging, measure conflict resolution speed, and verify data completeness upon reconnecting to Firebase Firestore [585, 586]. These engineering metrics ensure that SmartSpend meets production-level software reliability standards."
-
-### 3. Source Grounding & Defense Alignment
-*   **Academic Base:** Leverages technical benchmarking practices, testing local processing constraints, language patterns, and SQLite recovery under network volatility [585, 586, 616].
-
----
-
 ## SLIDE 14: Post-Capstone Future Roadmap
 
 ### 1. Slide Configuration
 *   **Slide Title:** Post-Capstone Future Development Roadmap
 *   **Visual Layout:** Horizontal timeline highlighting three immediate technical milestones and two long-term research directions.
 *   **On-Slide Content:**
-    *   **Milestone 1: Paluwagan Tracker (High Priority):** A specialized tracker for rotating savings groups, utilizing our existing debt and recurring transaction tables [666, 682].
-    *   **Milestone 2: Payday-Cycle-Aware Budgeting:** Implementing semi-monthly salary cycle resets (15th and 30th) to align with standard Philippine payrolls [666, 683].
-    *   **Milestone 3: Secure Backend API Proxy:** Moving LLM API key management to secure server-side proxy environments to prevent APK-level key exposure [683].
+    *   **Milestone 1: Paluwagan Tracker (Implemented in v3.0.x):** A specialized tracker for rotating savings groups, utilizing our existing debt and recurring transaction tables — completed in the post-evaluation build [666, 682].
+    *   **Milestone 2: Peso Companion System (Implemented in v3.0.x):** A behaviorally-aware AI mascot with 12 mood states, screen-aware contextual tips, FHS tier change announcements, streak milestone celebrations, and Peso-voiced push notifications — all implemented in v3.0.x to reinforce the behavioral feedback loops identified in the original FHS design.
+    *   **Milestone 3: Payday-Cycle-Aware Budgeting:** Implementing semi-monthly salary cycle resets (15th and 30th) to align with standard Philippine payrolls [666, 683].
+    *   **Milestone 4: Secure Backend API Proxy:** Moving LLM API key management to secure server-side proxy environments to prevent APK-level key exposure [683].
     *   **Long-Term: Multi-user Shared Wallets & Remittance Tracking** [666, 684].
 
+### 2. Presenter's Speaking Script
+> "Based on our developmental findings and expert validation, we have established a clear **Post-Capstone Roadmap** to transition SmartSpend into a production-level ecosystem [666, 682].
+> 
+> Our highest priority was the implementation of a **Paluwagan tracker** — and I'm pleased to report this has already been completed in our post-evaluation v3.0.x build. The tracker supports local rotating savings groups by leveraging our active debt and recurring transaction database tables [682]. Alongside this, we implemented the **Peso Companion System**, which transforms our coin mascot into a behaviorally-aware guide present on all 34 screens — reacting in real time to Financial Health Score changes, logging streaks, and delivering Taglish contextual tips that adapt to whichever screen the user is viewing.
+>
+> Looking ahead, we are planning **payday-cycle-aware budgeting resets** [683]. Standard Philippine payrolls operate on semi-monthly cycles — specifically on the 15th and 30th — and our budget engine must reflect this local reality [683]. Third, to align with production-grade security, we will migrate our LLM API key management from secure runtime configuration to a **backend proxy server**, preventing any device-side key exposure [683]. We also plan to submit to the Google Play Store after implementing a comprehensive, certified privacy policy [683]."
+
+### 3. Source Grounding & Defense Alignment
+*   **Academic Base:** Addresses future work, aligning with the actual capabilities, constraints, and post-capstone recommendations documented in your manuscript [666, 682, 683, 684]. Milestones 1 and 2 are updated to reflect completed post-evaluation implementations in v3.0.x.
 ### 2. Presenter's Speaking Script
 > "Based on our developmental findings and expert validation, we have established a clear **Post-Capstone Roadmap** to transition SmartSpend into a production-level ecosystem [666, 682].
 > 
