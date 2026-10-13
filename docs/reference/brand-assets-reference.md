@@ -1,4 +1,4 @@
-# SmartSpend Brand Assets Reference
+ # SmartSpend Brand Assets Reference
 **Last updated:** October 12, 2026
 
 ---
@@ -131,3 +131,23 @@ An AI mascot for the Time Variance Authority — anthropomorphic clock with rubb
 
 ### Splash Screen Blue (brand identity moment)
 `#2563EB` — used only for brand name in nav, hero badge, and survey CTA. Matches the app's splash screen background color.
+
+
+---
+
+## Update Log
+
+### October 12, 2026 — v3.0.7 (Peso Everywhere)
+- PesoMascot now appears on 34 of 45 screens
+- Nav AI button uses PesoMascot instead of Icons.smart_toy
+- AI chat reply bubbles show 22px Peso avatar on left
+- AI typing indicator shows PesoMood.thinking
+- AI AppBar: 32px Peso + "Your money buddy 💚" subtitle
+- "Talk to Peso" and "Parse with AI" buttons use Peso
+- All ❓ InfoButton dialogs show Peso bottom sheet
+- PesoVoiceService: 31 Taglish speech contexts
+- 36 achievement badges (was 25), all unlock with Peso celebration
+- Tappable Peso: onTap bounce + tapMood override
+
+### Current app version: 3.0.7+105
+### Current website: https://zushikina-kun.github.io/smartspend-app/ (167.5 KB)
