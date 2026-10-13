@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.0.7';
-  static const _prefKey = 'whats_new_seen_3_0_7';
+  static const _version = '3.0.8';
+  static const _prefKey = 'whats_new_seen_3_0_8';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,6 +20,19 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🔔',
+      'Peso-voiced notifications (v3.0.8)',
+      'All push notifications now sound like Peso — budget alerts, daily limits, '
+          'weekly summaries, debt reminders, FHS level ups — all with Peso''s warm Taglish voice.',
+    ),
+    (
+      '👆',
+      'Smart tap on Peso (v3.0.8)',
+      'Single tap Peso in the nav bar: shows a context-aware tip for your current screen, '
+          'then opens AI chat. Double tap: jumps straight to chat. '
+          'If a tip bubble is showing, single tap dismisses it.',
+    ),
     (
       '🔍',
       'Peso is everywhere (v3.0.7)',
