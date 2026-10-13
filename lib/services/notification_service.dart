@@ -1,4 +1,4 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+﻿import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'db_service.dart';
 import 'currency_service.dart';
@@ -69,8 +69,8 @@ class NotificationService {
 
     await _plugin.show(
       1,
-      '📊 Weekly Spending Summary',
-      'You spent ${CurrencyService.format(total)} this week. Top category: $topCat.',
+      '💚 Peso''s Weekly Recap',
+      'You spent \ this week. \ ang pinaka! Kamusta? 😊',
       const NotificationDetails(android: android),
     );
 
@@ -157,7 +157,7 @@ class NotificationService {
 
       await _plugin.show(
         998,
-        '📊 Your week in review',
+        '💚 Peso: Your Week in Review',
         '$savingsStr · $overStr · $logStr',
         const NotificationDetails(android: android),
       );
@@ -299,7 +299,7 @@ class NotificationService {
     final isOver = spent >= limit;
     await _plugin.show(
       9999,
-      isOver ? '🚨 Daily Limit Exceeded' : '⚠️ Daily Limit Warning',
+      isOver ? '🚨 Peso: Daily limit exceeded!' : '⚠️ Peso: Daily limit warning',
       isOver
           ? 'You\'ve spent ₱${spent.toStringAsFixed(0)} today — ₱${(spent - limit).toStringAsFixed(0)} over your ₱${limit.toStringAsFixed(0)} limit'
           : 'You\'ve used ${(spent / limit * 100).toStringAsFixed(0)}% of your ₱${limit.toStringAsFixed(0)} daily limit',
@@ -505,7 +505,7 @@ class NotificationService {
         } else if (diff == 0) {
           await _plugin.show(
             ('debt_${d['id']}').hashCode,
-            isOwe ? '💳 Payment due today' : '💰 Payment expected today',
+            isOwe ? '💳 Peso: Payment due today!' : '💰 Peso: Payment expected today',
             '$title — $amtStr to ${isOwe ? person : 'receive from $person'}',
             const NotificationDetails(
               android: AndroidNotificationDetails(
@@ -715,7 +715,7 @@ class NotificationService {
         final label = t >= 80 ? 'Good 🟢' : 'Fair 🟡';
         await _plugin.show(
           ('levelup_$t').hashCode,
-          '🎉 Financial Health Level Up!',
+          '🎉 Peso: Score Level Up!',
           'Your score reached $t/100 — $label! Keep it up.',
           const NotificationDetails(
             android: AndroidNotificationDetails(
@@ -787,7 +787,7 @@ class NotificationService {
 
       await _plugin.show(
         999,
-        '☀️ Good morning! Here\'s your financial snapshot',
+        '☀️ Magandang umaga! Peso here 👋',
         '$remainingStr$billsStr',
         const NotificationDetails(android: android),
       );

@@ -72,6 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _showTour = false;
   bool _isOffline = false;
   Timer? _connectivityTimer;
+  bool _pesoNavBubbleActive =
+      false; // tracks if a Peso bubble is currently showing
 
   // U1: AI quick-input bar
   final TextEditingController _quickInputController = TextEditingController();
@@ -360,27 +362,70 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Shows a one-time floating tip bubble above the nav AI button
+
+  /// Shows a one-time floating tip bubble above the nav AI button
   /// 8 seconds after launch — introduces Peso to new users gently.
   void _showPesoNavTip() {
     Future.delayed(const Duration(seconds: 8), () {
-      if (!mounted || _index == 2) return; // skip if already on AI tab
+      if (!mounted || _index == 2) return;
       PesoSoundService.playTalk();
+      setState(() => _pesoNavBubbleActive = true);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 4),
         behavior: SnackBarBehavior.floating,
         margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
         content: Row(children: [
           // ignore: prefer_const_constructors
-          PesoMascot(
-              size: 32, mood: PesoMood.winking, tapMood: PesoMood.excited),
+          PesoMascot(size: 32, mood: PesoMood.winking, tapMood: PesoMood.excited),
           const SizedBox(width: 10),
-          const Expanded(
-              child: Text(
+          const Expanded(child: Text(
             'Tap me anytime to chat! Ask anything about your money 💬',
             style: TextStyle(fontSize: 13),
           )),
         ]),
-      ));
+      )).closed.then((_) {
+        if (mounted) setState(() => _pesoNavBubbleActive = false);
+      });
+    });
+  }
+
+  /// Screen-aware context tips per tab index
+  static const Map<int, List<String>> _pesoScreenTips = {
+    0: [
+      'Kamusta ang budget mo ngayon? Tap me to ask! 💬',
+      'I can log expenses, check FHS, or answer any money question! 😊',
+      'Tip: Tell me what you spent in Taglish — I understand both! 🇵🇭',
+    ],
+    1: [
+      'Want me to explain any chart here? Just ask! 📊',
+      'Ask me ''where am I overspending?'' for a detailed breakdown! 💡',
+      'I can see all your data — ask me to compare months or categories! 📈',
+    ],
+    3: [
+      'Your Financial Health Certificate is shareable from here! 🏆',
+      'Tip: Export your data any time from Profile → Export CSV! 📋',
+      'I can explain your FHS breakdown — just tap the score card! 💚',
+    ],
+  };
+
+  /// Shows a context-aware Peso tip based on current tab
+  void _showContextualPesoTip() {
+    final tips = _pesoScreenTips[_index] ?? _pesoScreenTips[0]!;
+    final tip = tips[DateTime.now().millisecondsSinceEpoch % tips.length];
+    PesoSoundService.playTalk();
+    setState(() => _pesoNavBubbleActive = true);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 3),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.only(bottom: 80, left: 24, right: 24),
+      content: Row(children: [
+        // ignore: prefer_const_constructors
+        PesoMascot(size: 28, mood: PesoMood.winking),
+        const SizedBox(width: 10),
+        Expanded(child: Text(tip, style: const TextStyle(fontSize: 12))),
+      ]),
+    )).closed.then((_) {
+      if (mounted) setState(() => _pesoNavBubbleActive = false);
     });
   }
 
@@ -837,16 +882,33 @@ class _HomeScreenState extends State<HomeScreen> {
     if (isAI) {
       // AI button — Peso mascot, bigger (40px) so expressions are visible
       final cs = Theme.of(context).colorScheme;
-      return InkWell(
+      return GestureDetector(
+        // Single tap: if Peso bubble is showing → dismiss it; otherwise show tip or go to AI
         onTap: () {
           PesoSoundService.playTap();
-          if (onTap != null) {
-            onTap();
+          if (_pesoNavBubbleActive) {
+            // Dismiss bubble and stay on current screen
+            ScaffoldMessenger.of(context).clearSnackBars();
+            setState(() => _pesoNavBubbleActive = false);
+          } else if (_index == 2) {
+            // Already on AI tab — do nothing (already there)
           } else {
-            setState(() => _index = idx);
+            // Show a context-aware Peso tip then go to AI tab
+            _showContextualPesoTip();
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (mounted) setState(() => _index = 2);
+            });
           }
         },
-        borderRadius: BorderRadius.circular(20),
+        // Double tap: always go to AI chat immediately
+        onDoubleTap: () {
+          PesoSoundService.playCelebrate();
+          ScaffoldMessenger.of(context).clearSnackBars();
+          setState(() {
+            _index = 2;
+            _pesoNavBubbleActive = false;
+          });
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Column(
