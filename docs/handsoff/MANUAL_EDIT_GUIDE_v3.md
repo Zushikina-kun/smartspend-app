@@ -19,6 +19,7 @@ editing at once, just don't grab the same numbered step.
       in Ch. III/IV — see the ⚠️ callout below, this part's new)
 - [ ] PART 4 — Add all of Chapter III (results)
 - [ ] PART 5 — Add all of Chapter IV (conclusions)
+- [ ] PART 6 — Use Kiro's Local-LLM text blocks (with 6 fixes)
 
 > ⚠️ **If you already did an earlier version of this guide:** two rounds of changes since then.
 > Round 1 (fact-check pass): UNSGSA/CBA-MI citations corrected, a "why 25 points each" box and a
@@ -310,8 +311,8 @@ plain text). ❓ = still needs an actual benchmark run, don't guess a number for
 
 | Model | Provider | Context | Speed (t/s) | Filipino | Tool Use | Free Tier | Selected? |
 |---|---|---|---|---|---|---|---|
-| Gemini 3.5 Flash-Lite | Google | 1,048,576 | ~400–600 | ★★★★★ | ★★★★★ | ~1,000/day | ✅ PRIMARY |
-| Gemini 3.5 Flash | Google | 1,048,576 | ~200–400 | ★★★★★ | ★★★★★ | ~1,500/day | ✅ Fallback 1 |
+| Gemini 3.5 Flash-Lite | Google | 1,048,576 | ~400–600 | ★★★★★ | ★★★★★ | ~500/day ⚠️ | ✅ PRIMARY |
+| Gemini 3.5 Flash | Google | 1,048,576 | ~200–400 | ★★★★★ | ★★★★★ | ~20/day ⚠️ | ✅ Fallback 1 |
 | LLaMA 4 Scout | Groq LPU | 10M | ~460 | ★★★★★ | ★★★★★ | 1,000/day, 30K TPM | ❌ RETIRED (Groq, 2026) |
 | LLaMA 3.3 70B | Groq LPU | 128,000 | ~315 | ★★★★☆ | ★★★★★ | ~1,000/day | ❌ RETIRED (Groq, 2026) |
 | LLaMA 3.1 8B | Groq LPU | 8,192 | ~800 | ★★★★☆ | ★★★★☆ | 14,400/day | ❌ RETIRED (Groq, 2026) |
@@ -323,13 +324,15 @@ plain text). ❓ = still needs an actual benchmark run, don't guess a number for
 | GPT-OSS 120B | Cerebras WSE | 131,072 | ~3,000 | ❓ | ★★★★★ | 1M tokens/day | ✅ Fallback 7 |
 | GPT-4o Mini | OpenAI | 128,000 | ~120 | ★★★★☆ | ★★★★★ | No free tier | ❌ Cost |
 | claude-3-5-haiku | Anthropic | 200,000 | ~80 | ★★★★★ | ★★★★★ | Paid only | ❌ Cost |
-| Gemini 3.7 Flash | Google | 1,048,576 | ~300–500 | ★★★★★ | ★★★★★ | Paid ($0.75/1M) | ❌ No free |
+| Gemini 3.7 Flash | Google | 1,048,576 | ~300–500 | ★★★★★ | ★★★★★ | ~20/day free; paid beyond ⚠️ | ❌ Free quota too small |
 | Grok 3 Mini | xAI | 131,072 | ~100–200 | ★★★★☆ | ★★★★★ | Paid | ❌ Cost |
 | DeepSeek V3 | DeepSeek | 64,000 | ~200 | ★★★☆☆ | ★★★☆☆ | $0.14/1M | ❌ Weak Fil. |
 | Qwen 3 32B | Alibaba | 128,000 | ~150–300 | ★★★★☆ | ★★★★★ | Free preview | ❌ Less tested |
 | Fin-R1 (7B) | Self-hosted | 128,000 | Varies | ★★★☆☆ | ★★☆☆☆ | Self-host | ❌ No API |
 | Mistral 7B | Mistral | 32,000 | ~600 | ★★★☆☆ | ★★★☆☆ | Self-host | ❌ Poor Fil. |
 | Gemma 2 9B | Google | 8,192 | ~500 | ★★★☆☆ | ★★★☆☆ | Local only | ❌ No API |
+
+> ⚠️ **Free-tier request quotas changed vs the old table** (500 / 20 instead of ~1,000 / ~1,500). The most recent source found (Sept 2026, a third-party tracker, not Google's own page) lists 500 requests/day for Gemini 3.5 Flash-Lite and about 20/day for Gemini 3.5 / 3.6 / 3.7 / 3.8 Flash. Older sources quote 250–1,500 for older models. Before defense, open AI Studio → your project → Rate limits and type in the real numbers shown there — those are the only ones that count.
 
 > Gemini 3.5 Flash-Lite was selected as the primary model because it offers a high free-tier request quota, strong Filipino-English multilingual performance among free-tier models, a 1-million token context window, and native function calling support for the 34 agentic action types (Li et al., 2024; Google, 2024f). Groq's LLaMA-family endpoints (LLaMA 4 Scout, LLaMA 3.3 70B, LLaMA 3.1 8B) were retired by Groq in mid-to-late 2026 and have been replaced in the fallback chain with Groq-hosted OpenAI GPT-OSS (120B/20B) and Qwen (3.6/3.8 27B) models, which Groq now recommends as the direct migration path. Models like GPT-4o and Claude are paid-only — cost-prohibitive for academic deployment at zero budget.
 
@@ -382,10 +385,10 @@ rewards verified restraint and penalizes silence that can't be told apart from u
 |---|---|---|
 | Backlog | Define features; needs survey; literature review on PH financial gaps | Prioritized feature list; literature review |
 | Requirements | Translate findings into specs; validate questionnaire; LLM API benchmarking | Validated questionnaire; LLM benchmarking matrix (Table 2.2) |
-| Design | SQLite schema (25 tables); FHS formula; UI wireframes; data flow diagrams | System architecture; FHS documentation |
+| Design | SQLite schema (26 tables); FHS formula; UI wireframes; data flow diagrams | System architecture; FHS documentation |
 | Development | Build expense tracking; integrate Gemini 3.5 Flash-Lite; add OCR/voice/batch screenshots; FHS engine; Firebase sync; gamification | Functional app; all 34 agentic actions operational |
 | Testing | LLM parsing accuracy; SUS with 30 respondents; interviews; bug log | SUS scores; parsing observations; bug documentation |
-| Deployment | Build release APKs; prepare Demo Mode; publish GitHub Releases | Release APKs v2.9.96; project documentation |
+| Deployment | Build release APKs; prepare Demo Mode; publish GitHub Releases | Release APKs v3.0.3; project documentation |
 | Done/Review | Analyze SUS scores; review feedback; document recommendations | Final evaluation report; post-capstone roadmap |
 
 *(Figure 2.2 "Agile Kanban Workflow" and Figure 2.1 "SUS Score Interpretation" were diagrams in the
@@ -393,7 +396,7 @@ source, not text — someone needs to redraw or screenshot these, nothing to cop
 
 **System Development Results:**
 
-> SmartSpend v2.9.96 was developed across seven Kanban phases. Platform: Android (Flutter/Dart); Version: 2.9.96; SQLite schema: v13, 25 tables (expenses, budgets, settings, savings_goals, income, recurring, debts, score_history, scan_history, installment_plans, custom_categories, category_rules, mood_log, recurring_candidates, conversation_summaries, wallets, user_profile, chat_history, installments, insurance_policies, wallet_history, budget_history, goal_contribution_history, income_history, paluwagan); APK size: ~45 MB (arm64-v8a), AAB: ~75 MB; AI providers: 9 (8-provider cloud failover chain plus an optional local LLM via Ollama/LM Studio/Jan for Private Mode, where financial data never leaves the user's own network); Primary model: Gemini 3.5 Flash-Lite; Agentic actions: 34; Input modalities: 7; Screenshot platforms: 40+; Achievement badges: 25; Daily quests: 10; Currencies: 57; PH banks/e-wallets supported: 20 banks + 5 e-wallets; Color themes: 11 (Blue, Sky Blue, Purple, Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, Slate, Emerald — Emerald is Peso's signature color and the new-install default since v2.9.76); Hub tiles: 26. GitHub: https://github.com/Zushikina-kun/smartspend-app
+> SmartSpend v3.0.3 was developed across seven Kanban phases. Platform: Android (Flutter/Dart); Version: 3.0.3; SQLite schema: v14, 26 tables (expenses, budgets, settings, savings_goals, income, recurring, debts, score_history, scan_history, installment_plans, custom_categories, category_rules, mood_log, recurring_candidates, conversation_summaries, wallets, user_profile, chat_history, installments, insurance_policies, wallet_history, budget_history, goal_contribution_history, income_history, paluwagan, chat_sessions); APK size: ~45 MB (arm64-v8a), AAB: ~75 MB; AI providers: 9 (8-provider cloud failover chain plus an optional local LLM via Ollama/LM Studio/Jan for Private Mode, where financial data never leaves the user's own network); Primary model: Gemini 3.5 Flash-Lite; Agentic actions: 34; Input modalities: 7; Screenshot platforms: 40+; Achievement badges: 25; Daily quests: 10; Currencies: 57; PH banks/e-wallets supported: 20 banks + 5 e-wallets; Color themes: 11 (Blue, Sky Blue, Purple, Orange, Crimson, Deep Navy, Midnight Teal, Rose Pink, Charcoal, Slate, Emerald — Emerald is Peso's signature color and the new-install default since v2.9.76); Hub tiles: 26. GitHub: https://github.com/Zushikina-kun/smartspend-app
 
 > ✅ **Resolved (Oct 6):** both numbers flagged last round are now settled, straight from the code
 > — 11 color themes (Emerald was the missing one) and all 25 SQLite tables named above (the
@@ -402,6 +405,10 @@ source, not text — someone needs to redraw or screenshot these, nothing to cop
 > Several Filipino-specific and usability features were implemented over the course of development rather than left as future work: a Paluwagan (rotating savings group) tracker built on the existing debt and recurring-transaction infrastructure; a six-month savings-rate trend chart with a 20% target line in Analytics; a long-press quick-edit gesture on budget tiles; and an offline cache fallback for the AI-generated financial advice and monthly summary cards, so a quota error does not leave the user without any insight.
 
 > Two further additions worth documenting as part of the system's development: first, a full audit-trail subsystem (four dedicated history tables — wallet, budget, goal-contribution, and income — each logging the old value, new value, change amount, reason, and source of every edit, viewable per-item via a long-press) gives the app's financial records the kind of change-of-custody traceability expected of a financial tool, not just a flat transaction log. Second, the AI assistant's system prompt was extended with structured knowledge of common Philippine Buy-Now-Pay-Later and short-term lending products (GLoan, Maya Loan, ShopeePayLater, LazPayLater, HomeCredit, BillEase, Skyro, Akulaku, Atome, UnaCash), including their typical monthly interest rates and the Bangko Sentral ng Pilipinas' interest rate cap under BSP Circular No. 1133, so that the assistant can meaningfully discuss a user's installment and lending obligations rather than treating them as generic expenses.
+
+> The v2.9.97–3.0.3 releases added several usability and reliability capabilities. Earlier, an AI date-resolution fix made the assistant receive today's and yesterday's dates explicitly so that phrases such as "yesterday" or "kahapon" are recorded on the correct day, and the assistant now checks whether an item is already stored before logging it again. Version 3.0.3 added a Local Account mode ("Continue Without Account") in which all data stays on the device and can be exported at any time, with a one-way upgrade path that pushes the local data to a new cloud account on registration. The four larger additions were as follows. First, chat sessions: AI conversations are now stored as separate, titled sessions (a new `chat_sessions` table, database schema v14) that can be renamed, archived, searched, or deleted, replacing a single flat history that silently dropped anything older than the last 200 messages. Second, AI recovery: after each AI response, a summary card shows which items were recorded, skipped as duplicates, or failed, with a one-tap helper to re-log anything the AI missed, so errors are visible to the user instead of silent. Third, transaction sorting and grouping by date, logged date, category, amount, name or source, plus a quick-jump bar in Analytics. Fourth, a full demo dataset (35 transactions across three months, wallets, budgets, goals, paluwagan and installment plans) with a one-tap reset, used for the live usability demonstration. Note: the Local Account "log in" path replaces local data with the cloud copy by design; confirm with the dev team that the app warns the user before doing so before describing this as a data-safe feature.
+
+> AI privacy is described as three tiers, only two of which exist today. (1) Cloud AI (default): requests go through the provider chain, with mobile numbers, reference numbers and bank-account patterns redacted on-device first. The primary provider is used under Google's free ("unpaid") Gemini API quota, whose terms state that submitted content may be used to improve Google's products, may be read by human reviewers, and should not include personal information; redaction therefore reduces but does not remove the exposure, and users with sensitive details are directed to Private Local Mode. (2) Private Local Mode (implemented, v2.9.92): while the app can reach a model running on the user's own PC or Mac over the home network, requests go only to that model and financial data does not leave the network; if the local server is unreachable the app falls back to the cloud chain unless fallback is switched off [confirm this setting exists before stating it]. (3) On-device AI (planned, not implemented): a model running on the phone itself, with no network at all. Current research indicates this is feasible on 2026 flagship phones and, as an opt-in download of roughly 2.6 GB, on phones with about 6 GB of RAM, but not yet on the 4 GB mid-range phones common among Filipino students; it is therefore listed under Recommendations, not as a delivered feature.
 
 > The optional local-LLM integration (Section 1.2 above) ships with a guided in-app setup flow covering three common local-inference tools (Ollama, LM Studio, Jan), including a hardware-tier picker (8/16/32GB RAM) to help a non-technical user choose a workable local model size, and automatically falls back to the cloud provider chain if the local server becomes unreachable mid-session.
 
@@ -447,7 +454,7 @@ Insert right after Chapter III. Heading: **CHAPTER IV**, then **CONCLUSIONS AND 
 
 > For the first objective — assessment of financial management practices: The survey and interview data confirmed the presence of financial management challenges identified in the literature: the manual effort burden, irregular budgeting behavior, and the absence of visible consequences for ignoring financial warnings. These findings validated the design rationale for SmartSpend's core features — multi-modal AI input, the Financial Health Score, and the Warning Decay mechanism.
 
-> For the second objective — system development and LLM benchmarking: SmartSpend v2.9.96 was successfully developed as a fully functional Android application featuring 34 autonomous AI actions and a dual-mode Financial Health Score — formally classified as a Prototype Observed Financial Health Indicator (FHI) adapting CBA-MI's Observed-scale approach and the Financial Health Network's pillar concepts. The comparative benchmarking of 15 LLM API providers confirmed Gemini 3.5 Flash-Lite as the optimal primary model — highest free-tier quota, best Filipino-English performance, native function calling, at zero cost. The 8-provider cloud failover chain (Gemini 3.5 Flash-Lite → Gemini 3.5 Flash → GPT-OSS 120B [Groq] → Qwen 3.6 27B [Groq] → Qwen 3.8 27B [Groq] → GPT-OSS 20B [Groq] → Groq Compound Mini → GPT-OSS 120B [Cerebras]) ensures continuous AI availability at zero cost, with the Cerebras-hosted GPT-OSS 120B serving as a cross-vendor last resort independent of Groq's infrastructure. As of v2.9.96, a ninth provider sits ahead of this chain: an optional connection to a local LLM running on the user's own PC/Mac (Ollama, LM Studio, or Jan), for users who want their financial data to never leave their home network at all.
+> For the second objective — system development and LLM benchmarking: SmartSpend v3.0.3 was successfully developed as a fully functional Android application featuring 34 autonomous AI actions and a dual-mode Financial Health Score — formally classified as a Prototype Observed Financial Health Indicator (FHI) adapting CBA-MI's Observed-scale approach and the Financial Health Network's pillar concepts. The comparative benchmarking of 15 LLM API providers led to Gemini 3.5 Flash-Lite being selected as the primary model for its free-tier availability, 1-million-token context window, native function calling, and strong Filipino-English handling in the team's trials, at zero cost. (The side-by-side speed and Filipino-accuracy measurements for several fallback models are still pending, so this chapter does not claim a measured ranking.) The 8-provider cloud failover chain (Gemini 3.5 Flash-Lite → Gemini 3.5 Flash → GPT-OSS 120B [Groq] → Qwen 3.6 27B [Groq] → Qwen 3.8 27B [Groq] → GPT-OSS 20B [Groq] → Groq Compound Mini → GPT-OSS 120B [Cerebras]) kept AI available at zero cost for the evaluated prototype (30 respondents, one shared set of free-tier keys), with the Cerebras-hosted GPT-OSS 120B serving as a cross-vendor last resort independent of Groq's infrastructure. This arrangement is a prototype-scale design: free-tier request quotas are shared across all users, so wider release would require per-user keys or a server-side proxy (see Recommendations). Since v2.9.92, a ninth provider sits ahead of this chain: an optional connection to a local LLM running on the user's own PC/Mac (Ollama, LM Studio, or Jan), for users who want their financial data to never leave their home network at all.
 
 > For the third objective — usability evaluation: SmartSpend achieved a mean SUS score of 82.50 (SD = 6.42, Grade B / 'Good' per Bangor et al., 2009), exceeding the target threshold of ≥80. Technical benchmarking demonstrated 82.5% overall multimodal parsing accuracy across 50 local receipts and screenshots, while offline sync tests confirmed complete record continuity upon network restoration.
 
@@ -457,9 +464,10 @@ Insert right after Chapter III. Heading: **CHAPTER IV**, then **CONCLUSIONS AND 
 
 1. **Safe-to-Spend number** — Surface a single reserved-balance figure (income minus upcoming bills, active goal contributions, and debt payments) so users see what is actually free to spend today, not just the raw wallet balance.
 2. **15th and 30th payday cycle awareness** — Implement payday-cycle-aware budgeting resets aligned with the Philippine standard of semi-monthly salary payments.
-3. **Backend API proxy** — Move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to eliminate device-side key exposure.
+3. **Backend API proxy and per-user keys** — Move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to eliminate device-side key exposure, and enforce per-user message limits there. Free-tier quotas are shared by every user of the app today, so a few dozen daily AI users would exhaust them; letting users add their own key is the interim fix.
 4. **Play Store submission** — After implementing the backend proxy and a privacy policy, submit to the Google Play Store for wider distribution.
-5. **SQLite encryption** — Implement SQLCipher-based encryption for the local database in a future schema migration.
+5. **On-device AI tier** — Add an opt-in on-device model (e.g., Gemma 4 E2B via Google's LiteRT-LM, about 2.6 GB download) for users who want fully offline AI, routing only simple logging tasks to it and keeping complex financial advice on the cloud tier.
+5b. **SQLite encryption** — Implement SQLCipher-based encryption for the local database in a future schema migration.
 6. **Couple and family wallet sharing** — Allow multiple users to view a shared household wallet.
 7. **OFW remittance tracking** — Add inbound international remittance tracking as a distinct income category.
 8. **Open Finance (OFxPERA) readiness** — SmartSpend's manual paste-to-import and batch-screenshot pipelines are architecturally aligned with BSP's Open Finance framework (OFxPERA), which entered pilot in July 2025 with UnionBank as its first participant. When consented, API-based account access becomes available to third-party app developers, the current paste-based import flow could be replaced with a secure, user-consented data API call without requiring a redesign of the underlying transaction-processing pipeline.
@@ -467,6 +475,71 @@ Insert right after Chapter III. Heading: **CHAPTER IV**, then **CONCLUSIONS AND 
 > For future research, longitudinal studies measuring SmartSpend's actual impact on financial behavior over 3–6 months would provide stronger empirical evidence for the behavioral intervention mechanisms designed in this study.
 
 ---
+
+## PART 6 — Using Kiro's `manuscript-local-llm-sections` blocks (Cyrille: read this first)
+
+Kiro wrote five paste-ready blocks (A–E) about Local LLM / on-device AI. They're mostly good, but
+**six things need fixing before they go in**. Use the fixes below instead of Kiro's wording.
+
+### ☐ 6.1 — Put them in the RIGHT chapters
+Kiro's table says "Ch. 2 = Literature Review" and "Ch. 5 = Conclusions". **Your manuscript has no
+Ch. 5, and Ch. II is Design & Methodology.** Use this instead:
+
+| Block | Goes in | Where |
+|---|---|---|
+| A — Privacy tiers | Chapter II | AI architecture / security design |
+| B — Background | Chapter I | Technical Background, after the "LLM API Integration" paragraph |
+| C — Device landscape | Chapter I or II | Limitations / constraints |
+| D — Future work | Chapter IV | Recommendations (item 5 above already covers it — merge, don't duplicate) |
+| E — Privacy rationale | Chapter II | Right after the RA 10173 paragraph from 2.5 |
+
+### ☐ 6.2 — Block A: don't say "no data leaves" without the condition
+🔍 `In this configuration, no financial data is transmitted to any third-party service.`
+→ Replace with: `While the local server is reachable, requests are sent only to that server and no financial data is transmitted to a third-party service.`
+Also change Tier 1's last sentence to mention Google's free-tier terms — use the wording already in
+Part 4.2's "three tiers" paragraph. (Google's own Gemini API terms say free-quota content may be used
+to improve products and read by reviewers, and tell developers not to submit personal information.
+A panel member who knows this will ask — better that the manuscript says it first.)
+
+### ☐ 6.3 — Block B: fix the quantization sentence
+🔍 `from 32-bit floating point to 4-bit integers`
+→ Replace the whole sentence with: `Quantization — reducing model weight precision, for example from 16-bit to 4-bit — shrinks a typical 7-billion-parameter model from roughly 14 GB to under 4 GB, making mobile deployment feasible.`
+(14 GB is the 16-bit size; 32-bit would be about 28 GB.) **Don't cite the Medium post, the GitHub Gist,
+Forasoft, Effloow or Digitbin** — blogs and gists are weak in a manuscript. Cite Google's own pages
+instead: Android Developers (Gemini Nano, hybrid inference), Firebase AI Logic docs, and Google AI Edge
+(LiteRT-LM, Gemma 4 model page).
+
+### ☐ 6.4 — Block C: remove the made-up-looking source
+🔍 `PhilPad/GadgetMatch Philippines market data, 2025`
+→ Delete that attribution. Nobody can check it. Best fix: ask your 30 SUS respondents which phone
+and how much RAM they have and cite *that* ("of the 30 respondents, N used phones with ≤4 GB RAM").
+Also **delete any "95%" or "60%" figures** if they sneak in from Kiro's other docs — nothing supports them.
+
+### ☐ 6.5 — Block D: wrong phone for the speed number
+🔍 `55 tokens per second on a Snapdragon 8 Gen 3 device`
+→ Replace with: `Google's published benchmark for Gemma 4 E2B on a Samsung Galaxy S26 Ultra reports about 47 tokens per second on the CPU and about 52 on the GPU (Google AI Edge, 2026).`
+(The Pixel 9 uses Google's own Tensor chip, not a Snapdragon, so the earlier attribution was wrong.)
+
+### ☐ 6.6 — Block E: two legal sentences are too strong
+🔍 `qualifies as sensitive personal information`
+→ Replace with: `is personal information of a financial nature that warrants careful handling.`
+(RA 10173 Sec. 3(l) lists race, age, health, education, government-issued IDs, tax returns, etc. — it
+does not list financial transaction data. If the app stores SSS/PhilHealth/Pag-IBIG numbers, *those* are
+government identifiers and ARE sensitive — ask Kiro whether it stores any ID numbers.)
+🔍 `and responsible AI principles require transparency about how AI-generated advice is produced`
+→ Delete that clause. RA 11765 is a consumer-protection law for financial providers; it doesn't set AI
+rules, and whether SmartSpend counts as a covered provider is a legal question nobody here has answered.
+Also: Kiro says the EY 49% stat is "cited in the Comparative Research Report" — **it isn't.** Either find the
+EY source yourself or drop the sentence. And only keep "users can verify what data is sent through the debug
+log export" if Kiro confirms that feature exists.
+
+---
+
+## 🙅 Deliberately kept OUT of the manuscript text
+
+- **Freemium / pricing (₱59 / ₱299 / ₱799, Pro vs Free split):** planned for v4.0, not implemented — `ProService` currently treats every user as Pro. Describing it as a feature would be a claim about software that doesn't exist yet. It can appear, clearly labelled, in Future Work.
+- **Any "free forever" wording:** the app is free as a prototype today; the v4.0 plan changes that. Say "currently free" if you must.
+- **Scale/cost numbers from the commercialization doc:** several are arithmetically wrong (see the sync note), so don't copy them in.
 
 ## 🙅 What this guide still does NOT cover
 

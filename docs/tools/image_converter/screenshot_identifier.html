@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Screenshot Identifier</title>
+<style>
+  body { font-family: sans-serif; background: #111; color: #eee; padding: 20px; }
+  h1 { color: #00C896; margin-bottom: 4px; }
+  p { color: #999; margin-bottom: 24px; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .card { background: #1a1a1a; border: 1px solid #333; border-radius: 10px; overflow: hidden; }
+  .card img { width: 100%; height: 380px; object-fit: cover; display: block; }
+  .card .info { padding: 8px 10px; }
+  .card .num { font-size: 18px; font-weight: 800; color: #00C896; }
+  .card .fname { font-size: 10px; color: #666; word-break: break-all; margin-top: 2px; }
+  .card input { width: 100%; margin-top: 6px; padding: 5px 8px; background: #222; border: 1px solid #444; border-radius: 5px; color: #eee; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>SmartSpend Screenshot Identifier</h1>
+<p>Each image is numbered. Type the screen name in the box below each one. Use Ctrl+A → Ctrl+C on the page text to copy all labels.</p>
+<div class="grid">  <div class="card">
+    <img src="Kiro_Ready/040642b2-72ca-4d27-a197-16682544cbf2.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#1</div>
+      <div class="fname">040642b2-72ca-4d27-a197-16682544cbf2.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s1" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/042495b2-c037-4588-851b-88ab0717b498.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#2</div>
+      <div class="fname">042495b2-c037-4588-851b-88ab0717b498.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s2" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/060ef3a5-377c-4697-a085-cd26f491aca6.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#3</div>
+      <div class="fname">060ef3a5-377c-4697-a085-cd26f491aca6.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s3" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/0df9cb9b-c51d-44cc-882b-983865be751f.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#4</div>
+      <div class="fname">0df9cb9b-c51d-44cc-882b-983865be751f.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s4" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/119c30b1-6755-4454-af93-b9d95db7e73a.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#5</div>
+      <div class="fname">119c30b1-6755-4454-af93-b9d95db7e73a.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s5" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/1358d387-2c88-4dc7-b712-16dc4f1c35c8.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#6</div>
+      <div class="fname">1358d387-2c88-4dc7-b712-16dc4f1c35c8.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s6" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/13806dc2-787c-4de4-aec5-da9272f6e7f1.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#7</div>
+      <div class="fname">13806dc2-787c-4de4-aec5-da9272f6e7f1.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s7" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/1c49de4f-7ed9-42e5-909f-0cc363290c49.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#8</div>
+      <div class="fname">1c49de4f-7ed9-42e5-909f-0cc363290c49.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s8" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/1e12206b-4e30-4bed-8356-c0dc0e4c2983.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#9</div>
+      <div class="fname">1e12206b-4e30-4bed-8356-c0dc0e4c2983.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s9" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/1eaef5dc-fbf2-419c-808b-5783ad0e2164.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#10</div>
+      <div class="fname">1eaef5dc-fbf2-419c-808b-5783ad0e2164.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s10" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/20029bd6-f14d-4f80-b39b-60a8dc63d5ce.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#11</div>
+      <div class="fname">20029bd6-f14d-4f80-b39b-60a8dc63d5ce.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s11" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/22f2bd83-ff91-4c06-b310-faffd7b288ef.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#12</div>
+      <div class="fname">22f2bd83-ff91-4c06-b310-faffd7b288ef.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s12" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/25775403-171f-4af4-b9af-8aab4d3447ed.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#13</div>
+      <div class="fname">25775403-171f-4af4-b9af-8aab4d3447ed.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s13" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/276c0a5f-9076-45da-8106-1fe6d6234e79.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#14</div>
+      <div class="fname">276c0a5f-9076-45da-8106-1fe6d6234e79.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s14" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/2bb55139-3ff9-45cd-a7ef-fd740c0d7742.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#15</div>
+      <div class="fname">2bb55139-3ff9-45cd-a7ef-fd740c0d7742.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s15" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/2d0f4c8c-4efb-4932-9610-b48b0c2f710b.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#16</div>
+      <div class="fname">2d0f4c8c-4efb-4932-9610-b48b0c2f710b.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s16" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/2fd324fd-4157-452e-ae1d-1968ac353c0e.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#17</div>
+      <div class="fname">2fd324fd-4157-452e-ae1d-1968ac353c0e.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s17" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/335f4123-ab21-4933-9371-a2d354987a38.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#18</div>
+      <div class="fname">335f4123-ab21-4933-9371-a2d354987a38.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s18" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/339a1454-f924-43de-a40f-9ce3306ec3b8.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#19</div>
+      <div class="fname">339a1454-f924-43de-a40f-9ce3306ec3b8.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s19" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/34016713-5441-449f-8dde-f4e4f3bb38fd.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#20</div>
+      <div class="fname">34016713-5441-449f-8dde-f4e4f3bb38fd.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s20" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/3422090b-dafd-4cf1-ad35-e4f69011cd7c.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#21</div>
+      <div class="fname">3422090b-dafd-4cf1-ad35-e4f69011cd7c.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s21" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/36454a58-e745-4578-a3cb-2841a17d959f.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#22</div>
+      <div class="fname">36454a58-e745-4578-a3cb-2841a17d959f.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s22" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/369d2bf2-5717-44e5-a568-57112dd0cf62.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#23</div>
+      <div class="fname">369d2bf2-5717-44e5-a568-57112dd0cf62.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s23" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/36b61e2b-ae6a-4634-baa7-295fec8ec680.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#24</div>
+      <div class="fname">36b61e2b-ae6a-4634-baa7-295fec8ec680.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s24" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/36cf3aca-18ea-477b-9ce0-59dab5f6532d.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#25</div>
+      <div class="fname">36cf3aca-18ea-477b-9ce0-59dab5f6532d.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s25" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/39adfaa7-de4b-43b9-9b67-52d61e690f4c.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#26</div>
+      <div class="fname">39adfaa7-de4b-43b9-9b67-52d61e690f4c.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s26" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/3ac80354-bac0-4d1a-9f77-8f678c51536a.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#27</div>
+      <div class="fname">3ac80354-bac0-4d1a-9f77-8f678c51536a.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s27" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/3bcda1fe-9bea-4134-9c91-37e815f21589.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#28</div>
+      <div class="fname">3bcda1fe-9bea-4134-9c91-37e815f21589.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s28" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/460cbf61-31d1-451e-b465-4d8b56e9cfb3.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#29</div>
+      <div class="fname">460cbf61-31d1-451e-b465-4d8b56e9cfb3.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s29" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/4dee1858-ea79-411e-86b4-ca30e2a1c3c3.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#30</div>
+      <div class="fname">4dee1858-ea79-411e-86b4-ca30e2a1c3c3.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s30" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/5367a385-89f3-4a96-9909-ca4d613cd3a0.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#31</div>
+      <div class="fname">5367a385-89f3-4a96-9909-ca4d613cd3a0.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s31" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/56e414a0-4ba9-4af6-a2a4-8a839162526c.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#32</div>
+      <div class="fname">56e414a0-4ba9-4af6-a2a4-8a839162526c.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s32" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/58290f59-053c-4dd8-9616-9b7b8ea6f380.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#33</div>
+      <div class="fname">58290f59-053c-4dd8-9616-9b7b8ea6f380.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s33" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/598ae6e0-8da4-4e13-9c0b-da688a1c1d7d.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#34</div>
+      <div class="fname">598ae6e0-8da4-4e13-9c0b-da688a1c1d7d.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s34" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/5b7c8073-840a-479f-9f44-3eed8c06390c.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#35</div>
+      <div class="fname">5b7c8073-840a-479f-9f44-3eed8c06390c.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s35" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/5ead1de7-5bec-423d-ae7a-3b977052bc26.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#36</div>
+      <div class="fname">5ead1de7-5bec-423d-ae7a-3b977052bc26.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s36" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/5f56b99b-d81c-4080-8aba-4cdcaa419f92.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#37</div>
+      <div class="fname">5f56b99b-d81c-4080-8aba-4cdcaa419f92.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s37" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/60d2d050-b090-417d-bea2-1d71fa2df2dd.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#38</div>
+      <div class="fname">60d2d050-b090-417d-bea2-1d71fa2df2dd.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s38" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/673ce79c-56c6-40ea-8054-8ca8535c9f3a.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#39</div>
+      <div class="fname">673ce79c-56c6-40ea-8054-8ca8535c9f3a.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s39" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/67f3ac9e-4e4f-4d58-a41f-987a3fc61b9f.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#40</div>
+      <div class="fname">67f3ac9e-4e4f-4d58-a41f-987a3fc61b9f.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s40" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/68cd6720-e8e5-4e47-a977-7a1be13d7f1a.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#41</div>
+      <div class="fname">68cd6720-e8e5-4e47-a977-7a1be13d7f1a.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s41" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/6944888b-59ae-4535-b480-300e4d0404c1.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#42</div>
+      <div class="fname">6944888b-59ae-4535-b480-300e4d0404c1.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s42" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/6a6dac4c-905c-4403-a9bc-a802dc8cda1a.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#43</div>
+      <div class="fname">6a6dac4c-905c-4403-a9bc-a802dc8cda1a.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s43" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/6c076cdd-dc8f-4b88-a54b-813864311132.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#44</div>
+      <div class="fname">6c076cdd-dc8f-4b88-a54b-813864311132.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s44" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/6d47b551-a044-4d85-9ad1-9af7fe816121.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#45</div>
+      <div class="fname">6d47b551-a044-4d85-9ad1-9af7fe816121.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s45" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/6f9e9b57-82f5-4f52-adec-5cc1dc521072.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#46</div>
+      <div class="fname">6f9e9b57-82f5-4f52-adec-5cc1dc521072.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s46" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/7025623e-8a3a-451c-9c16-f23693b01479.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#47</div>
+      <div class="fname">7025623e-8a3a-451c-9c16-f23693b01479.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s47" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/71e6607c-fb34-42b5-bcd7-3d2b5fcf1346.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#48</div>
+      <div class="fname">71e6607c-fb34-42b5-bcd7-3d2b5fcf1346.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s48" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/7965e935-e152-43c0-8fdb-62ad9272918c.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#49</div>
+      <div class="fname">7965e935-e152-43c0-8fdb-62ad9272918c.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s49" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/79909ea5-f66b-4ed9-9fac-311f5d32f183.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#50</div>
+      <div class="fname">79909ea5-f66b-4ed9-9fac-311f5d32f183.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s50" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/7c48ff7e-b06e-4f8f-9a3a-70d65ea4b4b9.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#51</div>
+      <div class="fname">7c48ff7e-b06e-4f8f-9a3a-70d65ea4b4b9.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s51" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/7d9569f1-9436-4f07-8647-b67d202c6985.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#52</div>
+      <div class="fname">7d9569f1-9436-4f07-8647-b67d202c6985.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s52" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/7ee3fb70-ddd7-4b3b-90c6-642623c116a8.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#53</div>
+      <div class="fname">7ee3fb70-ddd7-4b3b-90c6-642623c116a8.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s53" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/7f16e32e-eb99-46db-8033-c5f37982126f.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#54</div>
+      <div class="fname">7f16e32e-eb99-46db-8033-c5f37982126f.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s54" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/802afd41-721e-45ac-80e2-8ff97d641eee.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#55</div>
+      <div class="fname">802afd41-721e-45ac-80e2-8ff97d641eee.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s55" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/849fd9fb-0a09-49a2-9541-b2440c8c1f42.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#56</div>
+      <div class="fname">849fd9fb-0a09-49a2-9541-b2440c8c1f42.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s56" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/8625ff2b-ffc3-43fd-9a6d-37f8ad060c12.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#57</div>
+      <div class="fname">8625ff2b-ffc3-43fd-9a6d-37f8ad060c12.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s57" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/88cd19c6-216a-4136-b0fb-1b99fa5ed155.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#58</div>
+      <div class="fname">88cd19c6-216a-4136-b0fb-1b99fa5ed155.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s58" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/8f9ff04f-a2da-4abb-a3e9-a936307e645e.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#59</div>
+      <div class="fname">8f9ff04f-a2da-4abb-a3e9-a936307e645e.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s59" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/93402e3b-e526-4f97-87fd-222171de3478.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#60</div>
+      <div class="fname">93402e3b-e526-4f97-87fd-222171de3478.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s60" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/948e1c2c-d297-429d-9cd9-0f8d6f9bad92.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#61</div>
+      <div class="fname">948e1c2c-d297-429d-9cd9-0f8d6f9bad92.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s61" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/949379e6-8266-47cc-a8b2-7a3f0b1efd58.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#62</div>
+      <div class="fname">949379e6-8266-47cc-a8b2-7a3f0b1efd58.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s62" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/9b456c96-6f95-4b08-88ec-74085695f620.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#63</div>
+      <div class="fname">9b456c96-6f95-4b08-88ec-74085695f620.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s63" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/9b985886-8ee5-4489-ad76-61d803db3ec7.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#64</div>
+      <div class="fname">9b985886-8ee5-4489-ad76-61d803db3ec7.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s64" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/a0a445c8-1d10-44cb-8739-89f1697c39c2.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#65</div>
+      <div class="fname">a0a445c8-1d10-44cb-8739-89f1697c39c2.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s65" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/a768eef7-f2dd-47df-ae9f-7ab6b45bfa70.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#66</div>
+      <div class="fname">a768eef7-f2dd-47df-ae9f-7ab6b45bfa70.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s66" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/acb5d30b-c000-4be4-b91c-7c6696b8a245.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#67</div>
+      <div class="fname">acb5d30b-c000-4be4-b91c-7c6696b8a245.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s67" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/addc7634-25fd-44e4-9819-c70a07359641.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#68</div>
+      <div class="fname">addc7634-25fd-44e4-9819-c70a07359641.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s68" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/ade0bc2c-bbf8-41a5-b430-701b567ef423.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#69</div>
+      <div class="fname">ade0bc2c-bbf8-41a5-b430-701b567ef423.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s69" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b0c594a8-224d-446b-9fc3-4dc32ca8df5f.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#70</div>
+      <div class="fname">b0c594a8-224d-446b-9fc3-4dc32ca8df5f.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s70" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b1c1e7f2-aa69-4199-bf98-ec58b06a36e0.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#71</div>
+      <div class="fname">b1c1e7f2-aa69-4199-bf98-ec58b06a36e0.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s71" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b2f2d2cf-0b4b-4b9c-ba39-144a536aaccc.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#72</div>
+      <div class="fname">b2f2d2cf-0b4b-4b9c-ba39-144a536aaccc.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s72" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b4fd81d1-b0c0-4ab1-bde4-63c3058d4562.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#73</div>
+      <div class="fname">b4fd81d1-b0c0-4ab1-bde4-63c3058d4562.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s73" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b5a81cbf-84d4-434d-ac47-ca4f3ef90fc2.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#74</div>
+      <div class="fname">b5a81cbf-84d4-434d-ac47-ca4f3ef90fc2.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s74" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b7cbff0b-46ed-4bb5-a44e-7af20d2c029c.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#75</div>
+      <div class="fname">b7cbff0b-46ed-4bb5-a44e-7af20d2c029c.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s75" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b81574bd-df28-4717-9232-393c77441a23.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#76</div>
+      <div class="fname">b81574bd-df28-4717-9232-393c77441a23.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s76" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b88af03a-44a9-4a08-b3fb-74670d0f1633.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#77</div>
+      <div class="fname">b88af03a-44a9-4a08-b3fb-74670d0f1633.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s77" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/b88c141c-7371-4716-bd92-e04164021fa7.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#78</div>
+      <div class="fname">b88c141c-7371-4716-bd92-e04164021fa7.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s78" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/ba31e09f-c7ac-4f59-a1af-31df60ce35b4.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#79</div>
+      <div class="fname">ba31e09f-c7ac-4f59-a1af-31df60ce35b4.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s79" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/ba8cd8aa-7c8a-4692-b1c0-469847a155a1.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#80</div>
+      <div class="fname">ba8cd8aa-7c8a-4692-b1c0-469847a155a1.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s80" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/bcf81999-a730-46e0-b826-91300b5b4627.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#81</div>
+      <div class="fname">bcf81999-a730-46e0-b826-91300b5b4627.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s81" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/c0f64cc4-f350-493d-aa93-c7ef47a16ce2.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#82</div>
+      <div class="fname">c0f64cc4-f350-493d-aa93-c7ef47a16ce2.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s82" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/c536ac70-80ef-4f73-b867-6ecb8d641655.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#83</div>
+      <div class="fname">c536ac70-80ef-4f73-b867-6ecb8d641655.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s83" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/c7cd4e22-b318-40bb-a823-46d4e61fbd3d.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#84</div>
+      <div class="fname">c7cd4e22-b318-40bb-a823-46d4e61fbd3d.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s84" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/c8096974-a25f-41ed-ba09-eff9a963c69a.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#85</div>
+      <div class="fname">c8096974-a25f-41ed-ba09-eff9a963c69a.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s85" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/c8a81ee4-08d3-4be8-9455-28481a9d59e8.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#86</div>
+      <div class="fname">c8a81ee4-08d3-4be8-9455-28481a9d59e8.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s86" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/cb4a010b-adfc-4618-9d65-166d413ce9a1.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#87</div>
+      <div class="fname">cb4a010b-adfc-4618-9d65-166d413ce9a1.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s87" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/cb5674e6-1a1d-45e2-ad36-35140666b961.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#88</div>
+      <div class="fname">cb5674e6-1a1d-45e2-ad36-35140666b961.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s88" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/cfc77398-3eed-41be-a645-58fa7419e48a.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#89</div>
+      <div class="fname">cfc77398-3eed-41be-a645-58fa7419e48a.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s89" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/d04262c7-fd8e-4dbb-83a3-c28301487ba1.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#90</div>
+      <div class="fname">d04262c7-fd8e-4dbb-83a3-c28301487ba1.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s90" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/d4c4c411-ba37-4e58-ac0c-f87e6ea160dd.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#91</div>
+      <div class="fname">d4c4c411-ba37-4e58-ac0c-f87e6ea160dd.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s91" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/d74c3f90-a7e3-4119-b707-2bbfd691d56f.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#92</div>
+      <div class="fname">d74c3f90-a7e3-4119-b707-2bbfd691d56f.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s92" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/d9c3e2f7-f8a6-4761-b41e-a6219ed62a79.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#93</div>
+      <div class="fname">d9c3e2f7-f8a6-4761-b41e-a6219ed62a79.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s93" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/dd8cbe7e-46c5-4e0c-b2c0-161e3974a569.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#94</div>
+      <div class="fname">dd8cbe7e-46c5-4e0c-b2c0-161e3974a569.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s94" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/de27de2b-cc11-4361-9b83-15f7db10c81d.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#95</div>
+      <div class="fname">de27de2b-cc11-4361-9b83-15f7db10c81d.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s95" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/e6aa783f-7be1-4e44-9c09-4ff90066ae15.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#96</div>
+      <div class="fname">e6aa783f-7be1-4e44-9c09-4ff90066ae15.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s96" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/e6b3ab45-706d-400f-8145-4188581d3d2c.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#97</div>
+      <div class="fname">e6b3ab45-706d-400f-8145-4188581d3d2c.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s97" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/e6ed56aa-3b06-4b7a-92c1-667a8c54aaf9.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#98</div>
+      <div class="fname">e6ed56aa-3b06-4b7a-92c1-667a8c54aaf9.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s98" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/ea00d587-4867-4116-9e7f-338fcdb6f3df.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#99</div>
+      <div class="fname">ea00d587-4867-4116-9e7f-338fcdb6f3df.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s99" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/ec65d707-5c52-4742-99dc-b6bdcb2faafe.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#100</div>
+      <div class="fname">ec65d707-5c52-4742-99dc-b6bdcb2faafe.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s100" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/ed07a92b-11ea-4f2a-8773-bd3b0d044aba.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#101</div>
+      <div class="fname">ed07a92b-11ea-4f2a-8773-bd3b0d044aba.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s101" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/ee4905c9-8d66-4c16-b120-22d8cee62a72.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#102</div>
+      <div class="fname">ee4905c9-8d66-4c16-b120-22d8cee62a72.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s102" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/f15299b0-3a09-40d7-baa7-870fb4bbb761.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#103</div>
+      <div class="fname">f15299b0-3a09-40d7-baa7-870fb4bbb761.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s103" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/f27ab11a-d3c1-4fd7-a872-df013192d1e4.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#104</div>
+      <div class="fname">f27ab11a-d3c1-4fd7-a872-df013192d1e4.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s104" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/f3748a49-0769-4c81-92ab-edc92e566ae1.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#105</div>
+      <div class="fname">f3748a49-0769-4c81-92ab-edc92e566ae1.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s105" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/f58e4821-d2db-4f5d-a81d-b48b00e6cde7.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#106</div>
+      <div class="fname">f58e4821-d2db-4f5d-a81d-b48b00e6cde7.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s106" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/f7f28cad-ebe6-4034-bf3b-4ded89c2abca.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#107</div>
+      <div class="fname">f7f28cad-ebe6-4034-bf3b-4ded89c2abca.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s107" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/f809edfd-6513-488e-94f8-ea27830fa30e.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#108</div>
+      <div class="fname">f809edfd-6513-488e-94f8-ea27830fa30e.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s108" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/f8f85745-416d-48ce-afd5-4d200072a043.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#109</div>
+      <div class="fname">f8f85745-416d-48ce-afd5-4d200072a043.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s109" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/fd42ded5-a86d-4c0d-9507-cca3cef7cffb.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#110</div>
+      <div class="fname">fd42ded5-a86d-4c0d-9507-cca3cef7cffb.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s110" />
+    </div>
+  </div>  <div class="card">
+    <img src="Kiro_Ready/fd7eab6c-90cc-4306-b65d-b1eff22cf195.jpg" loading="lazy" />
+    <div class="info">
+      <div class="num">#111</div>
+      <div class="fname">fd7eab6c-90cc-4306-b65d-b1eff22cf195.jpg</div>
+      <input type="text" placeholder="What screen is this?" id="s111" />
+    </div>
+  </div></div>
+<br/><br/>
+<button onclick="copyAll()" style="background:#00C896;color:#000;font-weight:700;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-size:14px;">Copy All Labels</button>
+<pre id="out" style="margin-top:16px;background:#222;padding:16px;border-radius:8px;font-size:12px;white-space:pre-wrap;"></pre>
+<script>
+function copyAll() {
+  let out = '';
+  document.querySelectorAll('input').forEach((inp, i) => {
+    const fname = inp.previousElementSibling.textContent;
+    out += '#' + (i+1) + ' | ' + fname + ' | ' + (inp.value || '(unlabeled)') + '\n';
+  });
+  document.getElementById('out').textContent = out;
+  navigator.clipboard.writeText(out).catch(()=>{});
+}
+</script>
+</body>
+</html>
