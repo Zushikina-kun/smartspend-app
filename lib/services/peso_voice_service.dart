@@ -34,6 +34,15 @@ enum PesoContext {
   newGoalAdded,
   debtPaidOff,
   firstLogin,
+  // Idle / screen-specific lines
+  idleHome,
+  idleAnalytics,
+  idleGoals,
+  idleBudget,
+  idleDebts,
+  idleRecurring,
+  scrolledFar,
+  holdGreeting,
 }
 
 class PesoVoiceService {
@@ -48,6 +57,10 @@ class PesoVoiceService {
     vars.forEach((k, v) => line = line.replaceAll('{$k}', v));
     return line;
   }
+
+  /// Returns all phrase options for a given context (for use as idleSpeeches).
+  static List<String> getAll(PesoContext ctx) =>
+      List.unmodifiable(_phrases[ctx] ?? const []);
 
   static const Map<PesoContext, List<String>> _phrases = {
     PesoContext.morningGreeting: [
@@ -183,6 +196,41 @@ class PesoVoiceService {
     PesoContext.firstLogin: [
       'Kumusta! Ako si Peso — your money buddy! Magtayo tayo ng magandang financial future! 💚',
       "Hi! I'm Peso! Tell me what you spent, ask me anything, or let's set some goals! 😊",
+    ],
+    PesoContext.idleHome: [
+      'Kamusta ang budget mo ngayon? Tap me to ask! 💬',
+      "I can log expenses, check FHS, or answer anything! 😊",
+      'Long-press me to go straight to AI chat! 💬',
+    ],
+    PesoContext.idleAnalytics: [
+      'Want me to explain any chart? Just tap me! 📊',
+      'Ask "where am I overspending?" for a deep dive! 💡',
+      'Double-tap me for a quick summary! 📈',
+    ],
+    PesoContext.idleGoals: [
+      'Set a goal with a deadline — I\'ll track it for you! 🎯',
+      'Tip: Even small contributions add up fast! 💰',
+      'Long-press me to chat about your goals! 💬',
+    ],
+    PesoContext.idleBudget: [
+      'Set limits per category — I\'ll warn you at 80%! 💡',
+      'Ask me "am I on track with my budgets?" anytime! 📊',
+    ],
+    PesoContext.idleDebts: [
+      'Track what you owe AND what\'s owed to you! 💳',
+      'Ask me "how much do I owe in total?" anytime! 💬',
+    ],
+    PesoContext.idleRecurring: [
+      'Add Netflix, GCash load, Meralco — I\'ll remind you! 🔁',
+      'Tap Log All Due to record all overdue items at once! ✅',
+    ],
+    PesoContext.scrolledFar: [
+      'Still scrolling? I\'ll wait! 😄',
+      'Found what you were looking for? 🔍',
+    ],
+    PesoContext.holdGreeting: [
+      'Ay, hawak mo ako nang matagal! 😄 Sige, papasok tayo sa AI chat!',
+      'Long press detected! Opening Peso AI... 💬',
     ],
   };
 }
