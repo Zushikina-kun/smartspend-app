@@ -4,9 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/expense.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
-import '../services/currency_service.dart';
+import '../services/peso_sound_service.dart';
+import '../services/peso_voice_service.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/export_service.dart';
+import '../services/currency_service.dart';
 import '../services/category_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/expense_tile.dart';
@@ -733,6 +735,34 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
               ]
             : [
+                Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: PesoMascot(
+                    size: 30,
+                    mood: PesoMood.neutral,
+                    tapMood: PesoMood.winking,
+                    idleSpeeches: PesoVoiceService.getAll(PesoContext.idleHome),
+                    onTap: () {
+                      PesoSoundService.playTalk();
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 4),
+                        content: Text(
+                          'Search, filter, sort, and export all your transactions here! 📋',
+                        ),
+                      ));
+                    },
+                    onLongPress: () {
+                      PesoSoundService.playCelebrate();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 4),
+                        content: Text(
+                            PesoVoiceService.get(PesoContext.holdGreeting)),
+                      ));
+                    },
+                  ),
+                ),
                 const InfoButton(
                   title: "Transactions",
                   body: "This screen shows all your logged expenses.\n\n"

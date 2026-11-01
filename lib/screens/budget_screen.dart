@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import '../models/budget.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
+import '../services/peso_sound_service.dart';
+import '../services/peso_voice_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
 import '../widgets/history_sheet.dart';
@@ -275,6 +277,31 @@ class _BudgetScreenState extends State<BudgetScreen> {
       appBar: AppBar(
         title: const Text("Budgets"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: PesoMascot(
+              size: 30,
+              mood: PesoMood.proud,
+              tapMood: PesoMood.winking,
+              idleSpeeches: PesoVoiceService.getAll(PesoContext.idleBudget),
+              onTap: () {
+                PesoSoundService.playTalk();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoContextService.getTip(screen: 'budget')),
+                ));
+              },
+              onLongPress: () {
+                PesoSoundService.playCelebrate();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoVoiceService.get(PesoContext.holdGreeting)),
+                ));
+              },
+            ),
+          ),
           const InfoButton(
             title: "How Budgets Work",
             body:

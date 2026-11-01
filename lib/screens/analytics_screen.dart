@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import '../models/expense.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
+import '../services/peso_sound_service.dart';
+import '../services/peso_voice_service.dart';
 import '../services/tax_service.dart';
 import '../services/predict_service.dart';
 import '../services/llm_service.dart';
@@ -16,8 +18,8 @@ import '../services/event_bus.dart';
 import '../services/currency_service.dart';
 import '../services/score_service.dart';
 import '../services/behavioral_feedback_service.dart';
-import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
+import '../widgets/info_button.dart';
 import 'transactions_screen.dart';
 import 'savings_goals_screen.dart';
 import 'debt_screen.dart';
@@ -656,6 +658,31 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       appBar: AppBar(
         title: const Text("Analytics"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: PesoMascot(
+              size: 30,
+              mood: PesoMood.thinking,
+              tapMood: PesoMood.excited,
+              idleSpeeches: PesoVoiceService.getAll(PesoContext.idleAnalytics),
+              onTap: () {
+                PesoSoundService.playTalk();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoContextService.getTip(screen: 'analytics')),
+                ));
+              },
+              onLongPress: () {
+                PesoSoundService.playCelebrate();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoVoiceService.get(PesoContext.holdGreeting)),
+                ));
+              },
+            ),
+          ),
           IconButton(
             icon: Icon(
                 _showAdvancedCharts ? Icons.unfold_less : Icons.unfold_more),

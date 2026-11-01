@@ -41,6 +41,9 @@ import 'settings_screen.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
+import '../services/peso_sound_service.dart';
+import '../services/peso_context_service.dart';
+import '../services/peso_voice_service.dart';
 import 'achievements_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -1485,6 +1488,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text("Profile"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: PesoMascot(
+              size: 30,
+              mood: PesoMood.happy,
+              tapMood: PesoMood.winking,
+              idleSpeeches: PesoVoiceService.getAll(PesoContext.idleHome),
+              onTap: () {
+                PesoSoundService.playTalk();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoContextService.getTip(screen: 'profile')),
+                ));
+              },
+              onLongPress: () {
+                PesoSoundService.playCelebrate();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoVoiceService.get(PesoContext.holdGreeting)),
+                ));
+              },
+            ),
+          ),
           const InfoButton(
             title: "Profile",
             body:
@@ -3820,5 +3848,4 @@ class _NetWorthCardState extends State<_NetWorthCard> {
       ),
     );
   }
-
 }

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
+import '../services/peso_sound_service.dart';
+import '../services/peso_voice_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
@@ -515,6 +517,31 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
       appBar: AppBar(
         title: const Text("Savings Goals"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: PesoMascot(
+              size: 30,
+              mood: PesoMood.excited,
+              tapMood: PesoMood.celebrating,
+              idleSpeeches: PesoVoiceService.getAll(PesoContext.idleGoals),
+              onTap: () {
+                PesoSoundService.playTalk();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoContextService.getTip(screen: 'goals')),
+                ));
+              },
+              onLongPress: () {
+                PesoSoundService.playCelebrate();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 4),
+                  content: Text(PesoVoiceService.get(PesoContext.holdGreeting)),
+                ));
+              },
+            ),
+          ),
           const InfoButton(
             title: "Savings Goals",
             body:
