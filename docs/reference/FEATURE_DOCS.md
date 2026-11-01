@@ -1,11 +1,11 @@
 # Smart Spend — Application Documentation
 
-**Version:** 3.1.0
+**Version:** 3.1.1
 **Group:** Lucid Frame
 **Platform:** Android (Flutter)
 **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** October 13, 2026 (v3.1.0 — Peso Companion System complete, FHS tier announcements, streak milestones, session tips)
-**Build:** SmartSpend-v3.1.0-arm64-v8a.apk — ~47.5 MB (October 13, 2026)
+**Last Updated:** November 1, 2026 (v3.1.1 — Peso Companion System complete, FHS tier announcements, streak milestones, session tips)
+**Build:** SmartSpend-v3.1.1-arm64-v8a.apk — ~47.5 MB (November 1, 2026)
 
 ---
 
@@ -1082,10 +1082,10 @@ Accessible via the Hub tab in the bottom nav bar. Lists all features:
 - **PesoSoundService** — audio feedback for celebrations and interactions
 - **Daily check-in** — 2 PM nudge if no log, budget reactions, no-spend day celebration
 - **Goal & badge milestones** — bottom sheets at goal progress milestones; 36 achievement badges
-- **FHS tier announcements** (v3.1.0) — Peso reacts at tier boundary crossings, once per day
-- **Logging streak milestones** (v3.1.0) — 7/14/21/30-day consecutive streak one-time celebrations
-- **Notification tap reaction SA-6** (v3.1.0) — Peso greeting on notification-opened app launch
-- **Session-based screen tips SA-3** (v3.1.0) — `getSessionTip()` cycles tips per session
+- **FHS tier announcements** (v3.1.1) — Peso reacts at tier boundary crossings, once per day
+- **Logging streak milestones** (v3.1.1) — 7/14/21/30-day consecutive streak one-time celebrations
+- **Notification tap reaction SA-6** (v3.1.1) — Peso greeting on notification-opened app launch
+- **Session-based screen tips SA-3** (v3.1.1) — `getSessionTip()` cycles tips per session
 
 ---
 
@@ -1944,7 +1944,7 @@ All rights reserved by **Lucid Frame**, 2026.
 - **Settings grouped section cards** — each section wrapped in soft-shadow card (v2.9.67)
 - **Hub search bar + 4 category groups** — FINANCES / TRANSACTIONS & DATA / TOOLS / HELP (v2.9.67)
 - **Full-app soft-UI polish** — 30 files updated, consistent shadow/radius/fill across all 37 screens (v2.9.67)
-- **25 achievement badges** — No-Spend Day + No-Spend Streak added (v2.9.67); expanded to **36** badges in v3.1.0
+- **25 achievement badges** — No-Spend Day + No-Spend Streak added (v2.9.67); expanded to **36** badges in v3.1.1
 - **Hub tiles: 26** — expanded from 22 in v2.9.67
 - **AI PII redaction** — RA 10173 compliance, strips mobile numbers + ref numbers before LLM (v2.9.67)
 - **FHS improvements** — Overspend one-off penalty (0.5×), Category Balance exempts Bills/Health/Education, Warning Decay skips essential categories (v2.9.67)
@@ -2020,6 +2020,6 @@ These are intentional design decisions or platform constraints — not bugs.
 
 ---
 
-*SmartSpend v3.1.0 — Lucid Frame*
+*SmartSpend v3.1.1 — Lucid Frame*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
 *Lorma Colleges — CCSE, BSIT — City of San Fernando, La Union — 2026–2027 (1st Semester)*

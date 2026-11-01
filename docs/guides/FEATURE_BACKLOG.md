@@ -1,5 +1,5 @@
 # SmartSpend — Master Feature Backlog & Planning
-**Version:** 3.1.0 | **Updated:** October 2026 — v3.1.0 Peso Companion System complete
+**Version:** 3.1.1 | **Updated:** November 2026 — v3.1.1 Peso Companion System complete
 **Group:** Lucid Frame | **Academic Year:** 2026–2027, 1st Semester
 
 > **Single consolidated planning document.** Fuses inputs from:
@@ -19,13 +19,13 @@
 
 ---
 
-## Part 0 — Authoritative Build Numbers (v3.1.0)
+## Part 0 — Authoritative Build Numbers (v3.1.1)
 
 Use these everywhere. Many older docs are stale.
 
-| Metric | v3.1.0 value |
+| Metric | v3.1.1 value |
 |--------|--------------|
-| Version string | **3.1.0** |
+| Version string | **3.1.1** |
 | Platform | Android (Flutter/Dart) |
 | Min SDK | Android 5.0 (API 21) |
 | Target SDK | Android 16 (API 36) |
@@ -64,6 +64,7 @@ Use these everywhere. Many older docs are stale.
 | v3.0.8 | Oct 11, 2026 | All 20+ push notifications Peso-voiced in Taglish; PesoContextService (17 screens); screen-aware tips |
 | v3.0.9 | Oct 12, 2026 | Swipe-to-delete transactions, Quick Undo snackbar (5s), PesoContextService wired to 6 screens, SA-7 nudge |
 | v3.1.0 | Oct 13, 2026 | FHS tier change announcements, logging streak milestones (7/14/21/30-day), SA-6 notification tap reaction, SA-3 session-based tips |
+| **v3.1.1** | Nov 1, 2026 | CRITICAL BUG FIX: AI transactions now save (parser extended to bullet format); Peso gesture system (double-tap, long-press, idle timer); 0 code warnings; 5 new screens; Peso in AppBar of 7 screens |
 | v3.0.3 | Oct 9, 2026 | Local Account mode — "Continue Without Account" on login screen; data on device; `uid='local_user'`; connect Firebase later from Profile |
 | v3.0.2 | Oct 9, 2026 | ProService + ProFeature enum (freemium infra, v4.0); support links in About/website; APP_FLAVOR dev/prod |
 | v3.0.1 | Oct 9, 2026 | Demo account overhaul — 18 tables seeded, Reset to Demo Defaults button |
