@@ -1150,9 +1150,10 @@ PH BNPL/Loan Services (2026):
         "   ADD RECURRING: 'buwanang bayad sa Netflix 299', 'lingguhang gastos sa pamasahe 150', 'monthly bill sa Meralco 1200' → add_recurring\n"
         "   SET LIMIT: 'limitahan ang gastos ko ng 500 kada araw', 'daily limit ko 200 pesos', 'monthly spending limit 8000' → set_spending_limit\n"
         "   ADD INSURANCE/CONTRIBUTION: 'SSS ko 560 monthly', 'PhilHealth contribution 250 a month', 'dagdagan ang insurance ko' → add_insurance_policy\n"
-        "12. LANGUAGE: Default language is ENGLISH. Reply in English unless the user has clearly written multiple sentences in Filipino/Tagalog. Single ambiguous words like 'hello', 'ok', 'yes', 'thanks', 'sige', 'oo' do NOT count as Filipino — stay in English. If the user explicitly asks to switch ('speak English', 'mag-Tagalog ka'), honor that for the rest of the conversation.\n\n"
+        "12. LANGUAGE: Default language is ENGLISH. Reply in English unless the user has clearly written multiple sentences in Filipino/Tagalog. Single ambiguous words like 'hello', 'ok', 'yes', 'thanks', 'sige', 'oo' do NOT count as Filipino — stay in English. If the user explicitly asks to switch ('speak English', 'mag-Tagalog ka'), honor that for the rest of the conversation.\n"
+        "13. TONE: Always reply like a warm, friendly Filipino money buddy — never sound like a robot or a database. NEVER say things like 'I am executing a transaction', 'Recording to database', 'Logging action', 'I will now process', or repeat back raw data/JSON. When logging an expense just say something natural like 'Got it!' or 'Noted!' or 'Ay, sige — logged na!' with a brief friendly comment. When the user mentions spending on something fun (games, food, coffee), add a short relatable reaction. When they overspend, be supportive not preachy. Max 2 sentences for simple logging confirmations — keep it short and human.\n\n"
         "$guardRailNote"
-        "ACTIONS (append after reply text, one per line, format: ACTION:{json}):\n"
+        "ACTIONS (append after reply text, one per line, format: • type_name: {json} OR ACTION:{json}):\n"
         "• log_expense: {\"type\":\"log_expense\",\"item_name\":\"X\",\"category\":\"Food\",\"amount\":30,\"is_want\":false} — optional: \"date\":\"YYYY-MM-DD\" (REQUIRED when user says yesterday/kahapon/past day — use Yesterday date from context),\"payment_method\":\"GCash\",\"shop_name\":\"X\"\n"
         "• set_budget: {\"type\":\"set_budget\",\"category\":\"Food\",\"amount\":3000}\n"
         "• set_income: {\"type\":\"set_income\",\"amount\":25000}\n"
@@ -1400,8 +1401,17 @@ PH BNPL/Loan Services (2026):
     // Find every ACTION: occurrence and extract the JSON object that follows it
     // Handles: ACTION:{...}, **ACTION**{...}, **ACTION** {...}, →ACTION:{...}
     // ACTION tag regex — handles: ACTION:{...}, ACTION: type_name: {...}, →ACTION:{...}, **ACTION**{...}
-    final actionTagRegex =
-        RegExp(r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*(?:\w+:\s*)?', dotAll: true);
+    // Also handles bullet/arrow format the model uses: • log_expense: {...}, → log_expense: {...}
+    // Matches both ACTION:{...} legacy format AND the bullet/inline format the model uses:
+    // • log_expense: {...}, → log_expense: {...}, log_expense: {...}, ACTION:{...}
+    final actionTagRegex = RegExp(
+      r'(?:'
+      r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*(?:\w+:\s*)?' // legacy ACTION: prefix
+      r'|[•·\-\*]\s*\w+:\s*(?=\{)' // • type_name: {  (bullet format)
+      r'|→\s*\w+:\s*(?=\{)' // → type_name: {  (arrow format)
+      r')',
+      dotAll: true,
+    );
     for (final tagMatch in actionTagRegex.allMatches(replyForParsing)) {
       final jsonStart = tagMatch.end;
       if (jsonStart >= replyForParsing.length) continue;
@@ -1582,8 +1592,14 @@ PH BNPL/Loan Services (2026):
 
     // Strip all ACTION blocks from the displayed reply.
     // Handles multiple formats: ACTION:{...}, ACTION: type_name: {...}, →ACTION:{...}
-    final stripTagRegex =
-        RegExp(r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*(?:\w+:\s*)?\{', dotAll: true);
+    final stripTagRegex = RegExp(
+      r'(?:'
+      r'\*{0,2}→?\s*ACTION:?\*{0,2}\s*(?:\w+:\s*)?\{'
+      r'|[•·\-\*]\s*\w+:\s*\{'
+      r'|→\s*\w+:\s*\{'
+      r')',
+      dotAll: true,
+    );
     final buffer = StringBuffer();
     int pos = 0;
     for (final tagMatch in stripTagRegex.allMatches(fullReply)) {
