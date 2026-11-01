@@ -1,4 +1,7 @@
-﻿/// Tracks which screen Peso is currently on and provides
+﻿import 'peso_activity_log.dart';
+import '../widgets/peso_mascot.dart';
+
+/// Tracks which screen Peso is currently on and provides
 /// screen-aware contextual tips. Any screen can call setScreen()
 /// in initState so Peso knows where he is.
 ///
@@ -12,10 +15,29 @@ class PesoContextService {
   static void setScreen(String screen, {Map<String, dynamic>? data}) {
     _currentScreen = screen;
     _screenData = data ?? {};
+    PesoActivityLog.log('screen:$screen');
   }
 
   static String get currentScreen => _currentScreen;
   static Map<String, dynamic> get screenData => _screenData;
+
+  /// Returns the contextually appropriate PesoMood based on financial state.
+  static PesoMood moodForContext({
+    int fhsScore = 70,
+    bool budgetOver = false,
+    int daysSinceLastLog = 0,
+    int? hour,
+  }) {
+    final h = hour ?? DateTime.now().hour;
+    if (daysSinceLastLog >= 7) return PesoMood.sad;
+    if (daysSinceLastLog >= 3) return PesoMood.worried;
+    if (fhsScore >= 90) return PesoMood.proud;
+    if (budgetOver) return PesoMood.worried;
+    if (h < 6) return PesoMood.sleepy;
+    if (h < 9) return PesoMood.excited;
+    if (fhsScore < 50) return PesoMood.thinking;
+    return PesoMood.happy;
+  }
 
   /// Returns contextual tips for a given screen key.
   static List<String> getTipsForScreen(String screen) {

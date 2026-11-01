@@ -920,6 +920,41 @@
 .peso-speech{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) scale(0.85);opacity:0;background:var(--surface-elevated,var(--surface2));border:1px solid var(--border-strong);border-radius:14px 14px 14px 4px;padding:8px 14px;font-size:13px;color:var(--text);white-space:nowrap;pointer-events:none;transition:opacity .25s,transform .25s;z-index:10;}
 .hero-peso-wrap:hover .peso-speech{opacity:1;transform:translateX(-50%) scale(1);}
 @media(prefers-reduced-motion:reduce){.peso-mascot,.peso-mascot *,.peso-eye-l,.peso-eye-r,.peso-pupil-l,.peso-pupil-r,.peso-shine,.peso-arm-r{animation:none!important;transition:none!important;}}
+
+    /* ===== QR CARD + SHARE STRIP EXTRAS ===== */
+    .qr-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px;
+      display: inline-block;
+      text-align: center;
+      margin: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+    }
+    .qr-card img {
+      display: block;
+      border-radius: 4px;
+    }
+    .qr-card .qr-label {
+      font-size: 11px;
+      color: #555;
+      margin-top: 4px;
+      max-width: 120px;
+    }
+    .share-strip-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      margin: 12px 0;
+    }
+    .qr-toggle-area {
+      margin-top: 6px;
+    }
+    .share-strip-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
   </style></head>
 <body>
 <!-- SVG sprite — Peso mascot -->
@@ -1107,7 +1142,7 @@
           <li>Manual expense logging takes too long — people give up after a week</li>
           <li>No one knows their actual Financial Health Score</li>
           <li>Installment plans (ShopeePayLater, HomeCredit) are hard to track</li>
-          <li>Cloud-based AI means your financial conversations are stored on foreign servers</li>
+          <li>Cloud-based AI sends your conversation and expense context to third-party servers</li>
         </ul>
       </div>
       <div class="solution-card">
@@ -1127,7 +1162,7 @@
   <div class="section-title">Everything you need to manage money</div>
   <div class="section-sub">Built specifically for Filipino spending habits, income cycles, and financial products.</div>
   <div class="features-grid">
-    <div class="feature-card"><div class="feature-icon-wrap">🏆</div><div class="feature-title">Financial Health Score</div><div class="feature-desc">A real-time 0–100 score based on your savings rate, budget adherence, debt load, and spending control. Dual-mode: full or lightweight.</div></div>
+    <div class="feature-card"><div class="feature-icon-wrap">🏆</div><div class="feature-title">Financial Health Score</div><div class="feature-desc">A real-time 0–100 score based on your savings rate, overspend control, budget adherence, and logging consistency. Dual-mode: full or lightweight.</div></div>
     <div class="feature-card"><div class="feature-icon-wrap">🧾</div><div class="feature-title">OCR Receipt Scanner</div><div class="feature-desc">Point your camera at any receipt or screenshot — SmartSpend reads it and logs all items automatically. Supports 40+ platforms including GCash, Shopee, Lazada.</div></div>
     <div class="feature-card"><div class="feature-icon-wrap">🎯</div><div class="feature-title">Savings Goals</div><div class="feature-desc">Set goals with deadlines and track progress. Auto-calculate monthly contributions. Peso celebrates every milestone from 25% to 100%.</div></div>
     <div class="feature-card"><div class="feature-icon-wrap">💚</div><div class="feature-title">Safe to Spend</div><div class="feature-desc">Know exactly how much you can freely spend before your next payday after reserving upcoming bills, goal contributions, and debt payments.</div></div>
@@ -1226,7 +1261,7 @@
       Based on your 6-month trend, your Food spending is 23% above average this month. You still have ₱1,240 safe to spend until payday on Oct 30.
     </div>
   </div>
-  <p style="margin-top:18px;font-size:13px;">8-provider fallback chain: <strong>Gemini 3.5 Flash-Lite</strong> → Flash → GPT-OSS 120B → Qwen3.6 → Qwen3.8 → Compound → Compound Mini → Cerebras — always finds a working model.</p>
+  <p style="margin-top:18px;font-size:13px;">9-provider fallback chain: <strong>Gemini 3.5 Flash-Lite</strong> → Flash → GPT-OSS 120B → Qwen3.6 → Qwen3.8 → Compound → Compound Mini → Cerebras — always finds a working model.</p>
 </section>
 <section class="privacy-ai-section" id="privacy-ai">
   <div class="section-title">🔒 Privacy-First AI</div>
@@ -1235,7 +1270,7 @@
     <div class="pai-left">
       <div class="pai-badge pai-badge-green">🔒 Available Now</div>
       <h3>Your Finances, Your Device</h3>
-      <p>SmartSpend is the only Filipino finance app with a built-in local AI mode. Connect to a local LLM server on your PC — Peso runs entirely on your hardware.</p>
+      <p>SmartSpend is one of the few Filipino finance apps with a built-in local AI mode. Connect to a local LLM server on your PC — Peso runs entirely on your hardware.</p>
       <div class="pai-points">
         <div class="pai-point">
           <span class="pai-point-icon">🏠</span>
@@ -1285,7 +1320,7 @@
   <div class="roadmap-card">
     <div class="pai-badge pai-badge-blue" style="margin-bottom:20px;">🚀 On the Roadmap</div>
     <h3>The Next Step: AI That Lives on Your Phone</h3>
-    <p>On-device LLM inference on Android has crossed a meaningful threshold in 2026. Flagship phones with Snapdragon 8 Gen 5 and Tensor G6 chips deliver 45–60 TOPS of NPU performance — enough to run 1B–4B parameter models at 20–50 tokens per second, faster than most people read.</p>
+    <p>On-device LLM inference on Android has crossed a meaningful threshold in 2026. Recent flagship phones deliver enough NPU performance to run 1B–4B parameter models locally — we're evaluating models like Gemma 4 E2B (INT4, ~2.6 GB, requires 6 GB RAM and Android 10+) for a future release.</p>
     <p><strong>What this means for SmartSpend:</strong><br/>We're actively researching full on-device AI for a future release. When stable enough for financial use, Peso would run entirely on your phone — no PC, no WiFi, no server.</p>
     <p><strong>Candidate models we're evaluating:</strong></p>
     <div class="model-chips">
@@ -1305,7 +1340,7 @@
 </section>
 <section class="screenshots-section" id="screenshots">
   <div class="section-title">See it in action</div>
-  <div class="section-sub">Real screenshots from the app. Click any screenshot to zoom. <span style="color:var(--text-dim);font-size:0.9em">Screenshots are from v3.0.4 — the app has been updated significantly since. Some UI details may differ in the latest version.</span></div>
+  <div class="section-sub">Real screenshots from the app. Click any screenshot to zoom. <span style="color:var(--text-dim);font-size:0.9em">Screenshots are from v3.0.4–v3.1.1 — the app is actively updated. Some UI details may differ.</span></div>
   <div class="ss-tabs">
     <div class="ss-tab active" onclick="filterSlides('all', this)">All</div>
     <div class="ss-tab" onclick="filterSlides('ai', this)">🤖 AI &amp; Chat</div>
@@ -1320,7 +1355,7 @@
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View startup screen full size"><img src="docs/tools/image_converter/Kiro_Ready/startup screen.jpg" alt="SmartSpend splash screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Welcome Screen</strong><span>Clean splash with the SmartSpend brand and tagline &mdash; &ldquo;Your AI Financial Assistant.&rdquo;</span></div></div>
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View login screen full size"><img src="docs/tools/image_converter/Kiro_Ready/login screen.jpg" alt="Login screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Login / Sign Up</strong><span>Email, Google sign-in, or tap &ldquo;Continue Without Account&rdquo; &mdash; start tracking in seconds, no account required.</span></div></div>
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View home screen full size"><img src="docs/tools/image_converter/Kiro_Ready/home screen.jpg" alt="Home screen dark mode" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Home Dashboard</strong><span>Good Evening &mdash; &#8369;1,234 spent this month, My Wallets &#8369;6,110 (Cash/GCash/BDO), and a &ldquo;Score improved!&rdquo; toast after logging.</span></div></div>
-      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View FHS screen full size"><img src="docs/tools/image_converter/Kiro_Ready/fhs.jpg" alt="Financial Health Score breakdown" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Financial Health Score</strong><span>96/100 Excellent &mdash; broken into 4 pillars: Savings Rate, Budget Adherence, Budget Setup, and Logging Consistency. Tap any to see why.</span></div></div>
+      <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View FHS screen full size"><img src="docs/tools/image_converter/Kiro_Ready/fhs.jpg" alt="Financial Health Score breakdown" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Financial Health Score</strong><span>96/100 Excellent &mdash; broken into 4 components: Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency. Tap any to see why.</span></div></div>
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View light mode screen full size"><img src="docs/tools/image_converter/Kiro_Ready/light mode.jpg" alt="Home light mode with FHS and cash flow" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Cash Flow Overview</strong><span>FHS 94/100 Excellent, Income &#8369;6,600, Spent &#8369;1,234, Bills Due &#8369;3,629, Remaining &#8369;1,737. Management Score 95/100 &mdash; Consistent Saver badge earned.</span></div></div>
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View quick access screen full size"><img src="docs/tools/image_converter/Kiro_Ready/quick access light.jpg" alt="Quick Access 9-icon grid" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Quick Access Hub</strong><span>9-icon grid: Analytics, Bill Calendar, Goals, Debts &amp; Plans, My Wallets, Budgets, Import, Recurring, Achievements &mdash; plus Goals Timeline (34%, 35%, 19%).</span></div></div>
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View recent transactions screen full size"><img src="docs/tools/image_converter/Kiro_Ready/recent transactions light.jpg" alt="Recent Transactions list" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Recent Transactions</strong><span>Canteen Lunch &#8369;65, Jeepney Fare &#8369;13, Jollibee Chickenjoy &#8369;149 (tagged Want), Globe Load &#8369;99 via GCash, Grab Ride &#8369;85 &mdash; every peso accounted for.</span></div></div>
@@ -1377,7 +1412,7 @@
               <div class="demo-fhs-score">94 / 100</div>
               <div class="demo-fhs-label">Excellent • Financial Health Score</div>
               <div class="demo-fhs-tooltip" id="demo-fhs-tooltip">
-                Savings Rate +25pts<br>Budget Adherence +24pts<br>Budget Setup +25pts<br>Logging +20pts
+                Savings Rate +25pts<br>Overspend Control +24pts<br>Budget Adherence +25pts<br>Logging +20pts
               </div>
             </div>
             <div class="demo-wallets-title">My Wallets</div>
@@ -1623,6 +1658,12 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2H5v14h14v-9h2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h9zm7-1v6h-2V5.414l-8.293 8.293-1.414-1.414L17.586 4H15V2h6z"/></svg>
         Take the SUS Survey
       </a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g%2Fviewform" target="_blank" rel="noopener" class="share-btn share-fb" style="font-size:0.85em;padding:4px 10px;">📤 Share</a>
+      <button onclick="var el=document.getElementById('qr-sus-research');el.style.display=el.style.display==='none'?'inline-block':'none'" class="share-btn" style="background:rgba(0,0,0,0.08);font-size:0.85em;padding:4px 10px;">📱 QR</button>
+      <div id="qr-sus-research" class="qr-card" style="display:none;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g%2Fviewform" alt="QR code for SUS Survey" width="120" height="120" loading="lazy">
+        <div class="qr-label">SUS Survey</div>
+      </div>
     </div>
 
     <div class="research-card">
@@ -1638,6 +1679,12 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3v2H5v14h14v-9h2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h9zm7-1v6h-2V5.414l-8.293 8.293-1.414-1.414L17.586 4H15V2h6z"/></svg>
         Take the Research Survey
       </a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ%2Fviewform" target="_blank" rel="noopener" class="share-btn share-fb" style="font-size:0.85em;padding:4px 10px;">📤 Share</a>
+      <button onclick="var el=document.getElementById('qr-research-section');el.style.display=el.style.display==='none'?'inline-block':'none'" class="share-btn" style="background:rgba(0,0,0,0.08);font-size:0.85em;padding:4px 10px;">📱 QR</button>
+      <div id="qr-research-section" class="qr-card" style="display:none;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ%2Fviewform" alt="QR code for Research Survey" width="120" height="120" loading="lazy">
+        <div class="qr-label">Research Survey</div>
+      </div>
     </div>
 
   </div>
@@ -1739,7 +1786,7 @@
         Is SmartSpend really free? <span class="faq-arrow">▾</span>
       </button>
       <div class="faq-a">
-        <p>Yes — completely free, forever. No subscriptions, no premium tier, no ads. It's a capstone project built by CS students at Lorma Colleges. All features are available from day one. If it's useful to you, there's an optional support link at the bottom of this page.</p>
+        <p>Yes — free right now. No subscriptions, no premium tier, no ads. It's a capstone project built by BSIT students at Lorma Colleges. All features are available from day one. If it's useful to you, there's an optional support link at the bottom of this page.</p>
       </div>
     </div>
 
@@ -1766,7 +1813,7 @@
         Is my financial data safe? Who can see it? <span class="faq-arrow">▾</span>
       </button>
       <div class="faq-a">
-        <p>Your expense data lives on your device — not on our servers. When you use AI chat, the conversation text (not your full expense history) is sent to an AI provider to generate a response. If you use Local AI mode, nothing leaves your home network at all. We don't sell data, don't run ads, and don't have a business model that depends on your information.</p>
+        <p>When you use AI chat, Peso sends your recent expenses, budget limits, savings goals, and wallet balances as context — plus the conversation itself — to an AI provider to generate a personalized response (roughly 5,000–8,000 tokens per request). No receipt images, account numbers, or personal IDs are included. Philippine mobile numbers, GCash reference numbers, and OTPs are automatically redacted before anything is sent. If you use Local AI mode, nothing leaves your home network at all. We don't sell data, don't run ads, and don't have a business model that depends on your information.</p>
       </div>
     </div>
 
@@ -1775,7 +1822,7 @@
         What Android version do I need? <span class="faq-arrow">▾</span>
       </button>
       <div class="faq-a">
-        <p>Android 5.0 (API 21) or higher — which covers virtually every Android phone made after 2014. Install the arm64-v8a APK for any phone from 2018 onwards (this is 99% of phones in use today). If that doesn't install, try armeabi-v7a.</p>
+        <p>Android 5.0 (API 21) or higher — which covers virtually every Android phone made after 2014. Install the arm64-v8a APK for any phone from 2018 onwards. If that doesn't install, try armeabi-v7a.</p>
       </div>
     </div>
 
@@ -1793,7 +1840,7 @@
         What is the Financial Health Score (FHS)? <span class="faq-arrow">▾</span>
       </button>
       <div class="faq-a">
-        <p>FHS is a 0–100 score calculated from 4 pillars: Savings Rate (are you saving ≥20% of income?), Budget Adherence (are you staying within your category budgets?), Budget Setup (have you configured budgets?), and Logging Consistency (are you tracking regularly?). Each pillar contributes 25 points. The score updates in real time as you log expenses.</p>
+        <p>FHS is a 0–100 score calculated from 4 components: Savings Rate (are you saving ≥20% of income?), Overspend Control (how many days did spending stay within budget?), Budget Adherence (are you staying within your category budgets?), and Logging Consistency (are you tracking regularly?). Each component contributes up to 25 points. The score updates in real time as you log expenses. A lightweight mode is available if you don't track income.</p>
       </div>
     </div>
 
@@ -1835,17 +1882,17 @@
     <tbody>
       <tr>
         <td>Modern phones (2018+) <span class="recommended">Recommended</span></td>
-        <td>arm64-v8a</td><td>~45 MB</td>
+        <td>arm64-v8a</td><td>~47.5 MB</td>
         <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.1.0-arm64-v8a.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
       </tr>
       <tr>
         <td>Older / 32-bit phones</td>
-        <td>armeabi-v7a</td><td>~38 MB</td>
+        <td>armeabi-v7a</td><td>~40.3 MB</td>
         <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.1.0-armeabi-v7a.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
       </tr>
       <tr>
         <td>Emulator / x86 device</td>
-        <td>x86_64</td><td>~48 MB</td>
+        <td>x86_64</td><td>~50.5 MB</td>
         <td><a class="apk-dl-btn" href="https://github.com/Zushikina-kun/smartspend-app/releases/latest/download/SmartSpend-v3.1.0-x86_64.apk" target="_blank" rel="noopener noreferrer">Download</a></td>
       </tr>
     </tbody>
@@ -1866,6 +1913,20 @@
   <div class="section-title">📋 What's New</div>
   <p class="section-sub">SmartSpend is actively developed. Here's what changed recently.</p>
 
+  <div class="changelog-block">
+    <div class="changelog-ver">v3.1.1 — October 2026 · Peso Alive + AI Fix</div>
+    <ul class="changelog-items">
+      <li class="cl-bug">🐛 Fixed: AI transactions were never saving — Peso said "Got it!" but nothing was recorded. Root cause: action parser only matched legacy format; model uses bullet format. Both now accepted.</li>
+      <li class="cl-bug">🐛 Fixed: Raw JSON data was leaking into Peso's chat replies — now fully hidden from the user</li>
+      <li class="cl-new">✨ New: Peso now reacts to double-tap — surprised mood + random Taglish voice line</li>
+      <li class="cl-new">✨ New: Long-press Peso anywhere for a context-aware tip bottom sheet</li>
+      <li class="cl-new">✨ New: Peso has an idle speech timer — after 8 seconds, he winks at you (once per hour)</li>
+      <li class="cl-new">✨ New: Peso added to Onboarding, Register, Batch Import, Currency, and Scan Review screens</li>
+      <li class="cl-new">✨ New: Peso in AppBar of Profile, Analytics, Budget, Goals, Debt, Recurring, Transactions — tap for a screen tip</li>
+      <li class="cl-new">✨ New: Return-after-absence greeting — if you haven't opened the app in 2+ days, Peso notices</li>
+      <li class="cl-new">✨ New: Peso tone rule — no more robotic "Recording to database" replies; max 2 warm sentences for logging confirmations</li>
+    </ul>
+  </div>
   <div class="changelog-block">
     <div class="changelog-ver">v3.1.0 — October 2026 · Peso Behavior Update</div>
     <ul class="changelog-items">
@@ -1980,18 +2041,18 @@
 </section>
 <section class="section" id="about">
   <div class="section-title">About SmartSpend</div>
-  <p class="section-sub">A free, open-source capstone project built by Filipino CS students for Filipino users.</p>
+  <p class="section-sub">A source-available capstone project built by final-year BSIT students at Lorma Colleges for Filipino users.</p>
   <div class="about-grid">
     <div class="about-info">
       <div class="about-info-card">
         <div style="font-size:1.5rem;margin-bottom:8px">🎓</div>
         <strong>Built by Students</strong>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Capstone project by 3rd-year Computer Science students at Lorma Colleges, La Union, Philippines.</p>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Capstone project by final-year BSIT students at Lorma Colleges, College of Computer Studies and Engineering, La Union, Philippines.</p>
       </div>
       <div class="about-info-card">
         <div style="font-size:1.5rem;margin-bottom:8px">🔓</div>
-        <strong>Open Source</strong>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Free to use, free to inspect. No subscriptions, no ads, no data sales. Your financial data stays on your device.</p>
+        <strong>Source-Available</strong>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Free to use, free to inspect (Source Available License — academic &amp; personal use). No subscriptions, no ads. Your financial data stays on your device.</p>
       </div>
       <div class="about-info-card">
         <div style="font-size:1.5rem;margin-bottom:8px">🇵🇭</div>
@@ -2038,10 +2099,44 @@
 
 <div class="share-strip">
   <span class="share-strip-text">Found SmartSpend useful? Share it! 🙏</span>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-    <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
-    <a class="share-btn" href="https://twitter.com/intent/tweet?text=Check+out+SmartSpend+%E2%80%94+free+AI+finance+app+for+Filipinos!+Log+expenses+in+Taglish%2C+get+a+Financial+Health+Score.+%F0%9F%87%B5%F0%9F%87%AD&url=https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" target="_blank" rel="noopener noreferrer">🐦 Twitter/X</a>
-    <button class="share-btn" onclick="copyPageUrl()" id="copyUrlBtn">🔗 Copy Link</button>
+  <div class="share-strip-buttons">
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" target="_blank" rel="noopener" class="share-btn share-fb">📘 Facebook</a>
+    <!-- Twitter/X -->
+    <a href="https://twitter.com/intent/tweet?text=Check+out+SmartSpend+%E2%80%94+free+AI+finance+app+for+Filipinos!+%F0%9F%87%B5%F0%9F%87%AD&url=https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" target="_blank" rel="noopener" class="share-btn share-tw">🐦 X/Twitter</a>
+    <!-- WhatsApp -->
+    <a href="https://wa.me/?text=Check+out+SmartSpend+%E2%80%94+free+AI+finance+app+for+Filipinos!+%F0%9F%87%B5%F0%9F%87%AD+https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" target="_blank" rel="noopener" class="share-btn share-wa" style="background:#25D366;color:#fff;">💬 WhatsApp</a>
+    <!-- Copy Link -->
+    <button onclick="copyPageUrl()" class="share-btn share-copy" id="copyUrlBtn">🔗 Copy Link</button>
+    <!-- Website QR toggle -->
+    <button onclick="document.getElementById('qr-website').style.display = document.getElementById('qr-website').style.display === 'none' ? 'block' : 'none'" class="share-btn" style="background:rgba(255,255,255,0.15);">📱 QR Code</button>
+  </div>
+  <div id="qr-website" class="qr-toggle-area" style="display:none;">
+    <div class="qr-card">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fzushikina-kun.github.io%2Fsmartspend-app%2F" alt="QR code for SmartSpend website" width="120" height="120" loading="lazy">
+      <div class="qr-label">SmartSpend Website</div>
+    </div>
+  </div>
+  <hr class="share-strip-divider">
+  <span class="share-strip-text" style="font-size:0.93em;">📋 Share the surveys — help us reach 30 respondents!</span>
+  <div class="share-strip-buttons">
+    <!-- SUS Survey -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g%2Fviewform" target="_blank" rel="noopener" class="share-btn share-fb">📘 SUS Survey</a>
+    <!-- Research Survey -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ%2Fviewform" target="_blank" rel="noopener" class="share-btn share-fb">📘 Research Survey</a>
+    <!-- QR toggles -->
+    <button onclick="document.getElementById('qr-sus').style.display = document.getElementById('qr-sus').style.display === 'none' ? 'inline-block' : 'none'" class="share-btn" style="background:rgba(255,255,255,0.15);">📱 QR — SUS</button>
+    <button onclick="document.getElementById('qr-research').style.display = document.getElementById('qr-research').style.display === 'none' ? 'inline-block' : 'none'" class="share-btn" style="background:rgba(255,255,255,0.15);">📱 QR — Research</button>
+  </div>
+  <div class="qr-toggle-area">
+    <div id="qr-sus" class="qr-card" style="display:none;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g%2Fviewform" alt="QR code for SUS Survey" width="120" height="120" loading="lazy">
+      <div class="qr-label">SUS Survey</div>
+    </div>
+    <div id="qr-research" class="qr-card" style="display:none;">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ%2Fviewform" alt="QR code for Research Survey" width="120" height="120" loading="lazy">
+      <div class="qr-label">Research Survey</div>
+    </div>
   </div>
 </div>
 <footer>
@@ -2071,10 +2166,10 @@
     <a href="https://buymeacoffee.com/zushikina_kuroh143" target="_blank" rel="noopener noreferrer" style="background:#FFDD00;color:#000;font-weight:700;font-size:13px;padding:8px 16px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">&#x2615; Buy Me a Coffee</a>
     <a href="https://ko-fi.com/zushikina143" target="_blank" rel="noopener noreferrer" style="background:#29ABE0;color:#fff;font-weight:700;font-size:13px;padding:8px 16px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">&#x1F375; Ko-fi</a>
     <a href="https://paypal.me/BrixDirecto" target="_blank" rel="noopener noreferrer" style="background:#003087;color:#fff;font-weight:700;font-size:13px;padding:8px 16px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">&#x1F17F;&#xFE0F; PayPal</a>
-    <span style="background:rgba(255,255,255,0.08);color:#9099b2;font-size:13px;padding:8px 16px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,0.1);">&#x1F4F1; GCash / PayMaya: <strong style="color:#fff;">09953583040</strong></span>
+    <span style="background:rgba(255,255,255,0.08);color:#9099b2;font-size:13px;padding:8px 16px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,0.1);">📱 GCash / PayMaya: <a href="https://ko-fi.com/zushikina143" target="_blank" rel="noopener noreferrer" style="color:#fff;text-decoration:none;">ko-fi.com/zushikina143</a></span>
   </div>
-  <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">SmartSpend is free and open-source. If it helped you, any support keeps it alive. &#x1F64F;</p>
-  <p>© 2026 LucidFrame. SmartSpend is a free, open-source capstone project.</p>
+  <p style="font-size:12px;color:var(--text-dim);margin-bottom:12px;">SmartSpend is free right now. Source Available License (Non-Commercial) — see LICENSE. &#x1F64F;</p>
+  <p>© 2026 LucidFrame. SmartSpend — Source Available License (Non-Commercial).</p>
   <p style="margin-top:6px;font-size:12px;color:var(--text-dim);">SmartSpend is a capstone research project. Not affiliated with any financial institution.</p>
 </footer>
 

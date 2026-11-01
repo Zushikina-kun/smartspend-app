@@ -2995,7 +2995,11 @@ class _AIScreenState extends State<AIScreen> {
           children: [
             // ignore: prefer_const_constructors
             PesoMascot(
-                size: 32, mood: _pesoChatMood, tapMood: PesoMood.excited),
+                size: 36,
+                mood: _pesoChatMood,
+                tapMood: PesoMood.excited,
+                tapSpeech: 'Ask me anything about your finances! 🤖',
+                contextKey: 'ai'),
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
