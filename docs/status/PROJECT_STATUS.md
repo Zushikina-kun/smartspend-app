@@ -1,12 +1,12 @@
 # SmartSpend — Project Status & Master To-Do List
-**Version:** 3.1.0 | **Academic Year:** 2026–2027, 1st Semester
-**Last Updated:** October 13, 2026
+**Version:** 3.1.1 | **Academic Year:** 2026–2027, 1st Semester
+**Last Updated:** November 1, 2026
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > Full docs index:
 > - Technical reference → `docs/reference/CAPSTONE_REFERENCE.md`
 > - Feature backlog → `docs/guides/FEATURE_BACKLOG.md`
-> - Latest Kiro→Claude handoff → `docs/handsoff/kiro-to-claude-handoff-2026-10-10.md`
+> - Latest Kiro→Claude handoff → `docs/handsoff/kiro-to-claude-handoff-2026-10-26.md`
 > - Latest session handoff → `docs/handsoff/kiro-session-final-2026-10-13-v2.md`
 > - Latest Kiro→Kiro handoff → `docs/handsoff/kiro-to-kiro-handoff-v3.0.0-2026-10-09.md`
 > - Freemium plan → `docs/handsoff/freemium-split-plan-2026-10-09.md`
@@ -17,14 +17,14 @@
 
 ---
 
-## AUTHORITATIVE BUILD NUMBERS (v3.1.0)
+## AUTHORITATIVE BUILD NUMBERS (v3.1.1)
 
 | Metric | Value |
 |--------|-------|
-| Version string | **3.1.0** |
-| pubspec | `3.1.0+108` |
-| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.0 |
-| APK (arm64, demo phone) | **~47.5 MB** — `SmartSpend-v3.1.0-arm64-v8a.apk` |
+| Version string | **3.1.1** |
+| pubspec | `3.1.1+109` |
+| GitHub Release | https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.1 |
+| APK (arm64, demo phone) | **~47.5 MB** — `SmartSpend-v3.1.1-arm64-v8a.apk` |
 | APK (armeabi-v7a) | **~40.3 MB** — `SmartSpend-v3.1.0-armeabi-v7a.apk` |
 | APK (x86_64) | **~50.5 MB** — `SmartSpend-v3.1.0-x86_64.apk` |
 | Platform | Android (Flutter/Dart) |
@@ -54,8 +54,8 @@
 
 | Task | Owner | Status | Notes |
 |------|-------|--------|-------|
-| Install **v3.1.0** on demo phone | Brix | ❌ | Download `SmartSpend-v3.1.0-arm64-v8a.apk` from GitHub Releases |
-| Verify About screen shows **"Version 3.1.0"** | Brix | ❌ | kAppVersion in debug_service.dart |
+| Install **v3.1.1** on demo phone | Brix | ❌ | Download `SmartSpend-v3.1.1-arm64-v8a.apk` from GitHub Releases |
+| Verify About screen shows **"Version 3.1.1"** | Brix | ❌ | kAppVersion in debug_service.dart |
 | Load demo data on phone | Brix | ❌ | "Try Demo" on login screen OR Profile → Load Demo Data |
 | Reset AI daily limit before demo | Brix | ❌ | AI screen → ⋮ → Reset Daily Limit |
 | Set AI model to **Auto** | Brix | ❌ | Settings → AI MODEL → Auto (Recommended) |
@@ -205,10 +205,10 @@ These are longer-term items for when the app has real users.
 
 ---
 
-## DEMO SCRIPT — Final Defense (v3.1.0)
+## DEMO SCRIPT — Final Defense (v3.1.1)
 
 ### Night before
-1. Download `SmartSpend-v3.1.0-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.0
+1. Download `SmartSpend-v3.1.1-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.1
 2. Install on demo phone
 3. Tap **"Try Demo"** on login screen → loads full dataset automatically
 4. Verify Home shows FHS ~80, 3 goals, Safe-to-Spend card
@@ -241,6 +241,7 @@ These are longer-term items for when the app has real users.
 
 | Version | Date | Key changes |
 |---------|------|------------|
+| **v3.1.1** | Nov 1, 2026 | CRITICAL BUG FIX: AI transactions now save (parser extended to bullet format); Peso gesture system (double-tap, long-press, idle timer); 0 code warnings; 5 new screens; Peso in AppBar of 7 screens |
 | **v3.1.0** | Oct 13, 2026 | FHS tier announcements, streak milestones (7/14/21/30-day), SA-6 notification tap, SA-3 session tips |
 | v3.0.9 | Oct 12, 2026 | Swipe-to-delete, Quick Undo snackbar, PesoContextService wired to 6 screens, SA-7 nudge |
 | v3.0.8 | Oct 11, 2026 | 20+ push notifications Peso-voiced (Taglish), PesoContextService (17 screens) |
