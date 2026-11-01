@@ -1,9 +1,9 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.0.7 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 3.1.1 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.0.7-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.1.1-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
 > **Note on screenshots and demo:** The website screenshots were taken during development (v3.0.4) and the interactive demo shows a simplified prototype of the general concept. The actual app has been significantly updated since — animations, Peso mascot interactions, UI polish, and features have all been improved. Download the latest APK for the full experience.
@@ -12,14 +12,13 @@ Version 3.0.7 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
 ## Support the Project
 
-SmartSpend is free and open-source. If it helped you, consider supporting the dev:
+SmartSpend is free right now. Source Available License (Non-Commercial) — see LICENSE. If it helped you, consider supporting the dev:
 
 | Platform | Link |
 |----------|------|
 | ☕ Buy Me a Coffee | https://buymeacoffee.com/zushikina_kuroh143 |
 | 🍵 Ko-fi | https://ko-fi.com/zushikina143 |
 | 🅿️ PayPal | https://paypal.me/BrixDirecto |
-| 📱 GCash / PayMaya | 09953583040 |
 
 ---
 
@@ -34,7 +33,7 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 - Cyrille John M. Rubis — UI/UX Designer & Documentation Lead
 - Djaunathan Albert S. Madayag — Project Manager & QA Lead
 
-**Adviser:** Ellen F. Mangaoang, MIT — Lorma Colleges CCSE
+**Adviser:** Ellen F. Mangaoang, DIT — Lorma Colleges, College of Computer Studies and Engineering (CCSE)
 
 ---
 
@@ -42,7 +41,7 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 
 Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides you through the app, celebrates your financial wins, and nudges you gently when something needs attention.
 
-- **Appears on 34+ screens** — from login to analytics to achievements
+- **Appears on 45 screens** — from login to analytics to achievements
 - **Reacts to your data** — proud when FHS is high, worried when budget is tight, celebrating when you hit goals
 - **Speaks in Taglish** — warm, non-judgmental, always helpful
 - **Tappable** — tap Peso anywhere for a bounce + mood reaction
@@ -120,6 +119,8 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 SmartSpend is a capstone research project at Lorma Colleges. If you've used the app, please help our research:
 
+> **For the SUS survey:** Please try the app (or use "Try Demo" on the login screen) for about 10 minutes first before answering.
+
 | Survey | Link | Time |
 |--------|------|------|
 | 📋 SUS Usability Evaluation | https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform | ~2 min |
@@ -133,7 +134,11 @@ Salamat! 🙏
 
 | Version | Highlights |
 |---------|-----------|
-| **3.0.7** | Peso on 34+ screens, nav AI button is Peso, chat bubbles show Peso avatar, typing indicator |
+| **3.1.1** | Peso gestures (double-tap, long-press, idle timer), AI transaction save fix, site factual corrections |
+| **3.1.0** | FHS tier change announcements, streak milestones, notification tap reaction, session tips |
+| **3.0.9** | Swipe-to-delete, Quick Undo, profile section headers, PesoContextService on 6 screens |
+| **3.0.8** | All notifications Peso-voiced, PesoContextService (17 screens), smart nav tap logic |
+| **3.0.7** | Peso on 45 screens, nav AI button is Peso, chat bubbles show Peso avatar, typing indicator |
 | **3.0.6** | Peso companion system — daily nudges, goal celebrations, 36 badges, PesoVoice, tappable Peso |
 | **3.0.5** | Peso animation (12 moods), feedback screen, privacy disclosure, Quick Tips |
 | **3.0.4** | Local-only AI mode, login warning, use-without-account |
