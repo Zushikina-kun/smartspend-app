@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'db_service.dart';
 import 'score_service.dart';
 import 'app_config.dart';
+import 'peso_activity_log.dart';
 
 /// Current app version — keep in sync with pubspec.yaml.
 const kAppVersion = '3.1.0';
@@ -547,6 +549,31 @@ class DebugService {
       buffer.writeln(
           '  [${(s['scanned_at'] as String).substring(0, 19)}] ${s['barcode']}');
     }
+    buffer.writeln();
+
+    // ── PESO INTERACTION LOG (SharedPreferences) ──────────────────────────────
+    buffer.writeln(
+        '── PESO INTERACTION LOG ─────────────────────────────────────');
+    try {
+      final pesoPrefs = await SharedPreferences.getInstance();
+      buffer.writeln(
+          '  peso_tap_count = ${pesoPrefs.getInt('peso_tap_count') ?? 0}');
+      buffer.writeln(
+          '  peso_double_tap_count = ${pesoPrefs.getInt('peso_double_tap_count') ?? 0}');
+      buffer.writeln(
+          '  peso_long_press_count = ${pesoPrefs.getInt('peso_long_press_count') ?? 0}');
+      buffer.writeln(
+          '  peso_last_interaction = ${pesoPrefs.getString('peso_last_interaction') ?? 'never'}');
+      buffer.writeln(
+          '  peso_idle_speech_date = ${pesoPrefs.getString('peso_idle_speech_date') ?? 'never'}');
+    } catch (_) {
+      buffer.writeln('  (unavailable)');
+    }
+    buffer.writeln();
+
+    // ── ACTIVITY LOG (this session) ───────────────────────────────────────────
+    buffer.writeln('── ACTIVITY LOG (this session) ─────────────────');
+    buffer.write(PesoActivityLog.exportBlock);
     buffer.writeln();
 
     buffer.writeln('═══════════════════════════════════════════════');
