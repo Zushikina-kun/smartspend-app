@@ -35,6 +35,9 @@ class WhatsNewScreen extends StatelessWidget {
       'Income setup nudge (v3.1.2)',
       'New users without income configured now see a gentle "Set income to unlock Full Mode" card — so Safe-to-Spend and full FHS are discoverable right away.',
     ),
+    (
+      '🐛',
+      'AI expenses now actually save (v3.1.1)',
       'Fixed a critical bug where Peso said "Got it, logged!" but nothing was saved. '
           'AI-logged expenses from Oct 13–26 may need re-entry. '
           'This is now fixed — every expense Peso confirms is saved instantly.',
