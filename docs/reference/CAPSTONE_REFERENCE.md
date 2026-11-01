@@ -1,12 +1,13 @@
 # SmartSpend — Capstone 2 Documentation Reference
-**Version:** 3.1.0 | **Date:** October 2026
+**Version:** 3.1.1 | **Date:** November 2026
 **Academic Year:** 2026–2027, 1st Semester
 **For:** Lucid Frame — Capstone 2 thesis paper, defense, and final documentation
 **Maintained by:** Brix A. Directo (Lead Developer)
 
 > This is the single source of truth for capstone 2 documentation.
 > Copy numbers, descriptions, and justifications from here into your paper.
-> All figures are accurate to the final build (v3.1.0).
+> All figures are accurate to the final build (v3.1.1).
+> **v3.1.1 changes (Nov 2026):** Fixed AI transaction parser (actions now save correctly); Peso gesture system (double-tap voice, long-press tip sheet, idle timer); 0 code warnings; 5 new screens added (onboarding, register, batch import, currency, scan review); Peso in AppBar of 7 more screens.
 
 ---
 
@@ -15,7 +16,7 @@
 **Full Title:** SmartSpend: An AI-Assisted Multi-Modal Personal Financial Management Application for Filipino Users Using Agentic Large Language Model Architecture
 
 **Platform:** Android (Flutter/Dart)
-**Version:** 3.1.0
+**Version:** 3.1.1
 **Build date:** October 2026
 **Package name:** com.lucidframe.smartspend_app
 **Min SDK:** Android 5.0 (API 21)
@@ -540,7 +541,7 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ### PesoVoiceService
 - `lib/services/peso_voice_service.dart`
-- **31 voice contexts** — Peso speaks Taglish contextual messages for: first log, budget reactions, no-spend day, goal milestones, badges, daily nudges, and more
+- **33 voice contexts** — Peso speaks Taglish contextual messages for: first log, budget reactions, no-spend day, goal milestones, badges, daily nudges, and more
 - Powers all 20+ push notification messages (Taglish tone)
 
 ### PesoContextService
@@ -561,19 +562,19 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 - **First-log celebration:** One-time Peso celebration on user's very first expense log
 - **Tap count tracking:** Tracks how many times user taps Peso for interaction analytics
 
-### FHS Tier Announcements (v3.1.0)
+### FHS Tier Announcements (v3.1.1)
 - Peso reacts with a special animation and message when user's Financial Health Score crosses a tier boundary (e.g., Poor → Fair → Good → Excellent)
 - Triggered at most once per day per direction (upgrade/downgrade)
 
-### Logging Streak Milestones (v3.1.0)
+### Logging Streak Milestones (v3.1.1)
 - One-time celebrations at 7, 14, 21, and 30-day consecutive logging streaks
 - Each milestone triggers a unique Peso animation and congratulatory message
 
-### Notification Tap Reaction — SA-6 (v3.1.0)
+### Notification Tap Reaction — SA-6 (v3.1.1)
 - When user taps a push notification to open the app, Peso greets them with a context-aware welcome message
 - Detects notification-opened launch via `notification_service.dart`
 
-### Session-Based Screen Tips — SA-3 (v3.1.0)
+### Session-Based Screen Tips — SA-3 (v3.1.1)
 - `getSessionTip()` in PesoContextService returns tips that cycle per session (reset each launch)
 - Ensures users see different tips across sessions rather than the same static tip every time
 
@@ -701,6 +702,6 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 ---
 
-*SmartSpend v3.1.0 — Lucid Frame*
+*SmartSpend v3.1.1 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT, City of San Fernando, La Union — 2026–2027 (1st Semester)*
 *Last updated: October 10, 2026*
