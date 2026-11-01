@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.1.1';
-  static const _prefKey = 'whats_new_seen_3_1_1';
+  static const _version = '3.1.2';
+  static const _prefKey = 'whats_new_seen_3_1_2';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,8 +21,20 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🐛',
-      'AI expenses now actually save (v3.1.1)',
+      '🎨',
+      'FHS tier ring (v3.1.2)',
+      'Peso now wears a colored ring on the Home screen — green when your Financial Health Score is Good or better, orange for Fair, red for Poor. You can see your score health at a glance without even reading the number.',
+    ),
+    (
+      '💬',
+      'Cleaner Peso messages (v3.1.2)',
+      'Fixed an issue where multiple Peso startup messages would pile up on top of each other. Now only the most relevant message shows — no more fighting snackbars.',
+    ),
+    (
+      '🆕',
+      'Income setup nudge (v3.1.2)',
+      'New users without income configured now see a gentle "Set income to unlock Full Mode" card — so Safe-to-Spend and full FHS are discoverable right away.',
+    ),
       'Fixed a critical bug where Peso said "Got it, logged!" but nothing was saved. '
           'AI-logged expenses from Oct 13–26 may need re-entry. '
           'This is now fixed — every expense Peso confirms is saved instantly.',
