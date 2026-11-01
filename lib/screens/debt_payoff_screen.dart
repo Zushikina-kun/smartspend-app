@@ -20,6 +20,7 @@ class _DebtPayoffScreenState extends State<DebtPayoffScreen>
   bool _loading = true;
   List<_DebtEntry> _debts = [];
   final _budgetCtrl = TextEditingController();
+  // ignore: unused_field
   double _extraBudget = 0;
   late TabController _tabCtrl;
 

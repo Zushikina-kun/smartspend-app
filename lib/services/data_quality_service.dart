@@ -15,6 +15,7 @@ import 'event_bus.dart';
 ///   'round_amount'  — suspiciously round AI-logged amounts (₱1000, ₱5000) that may
 ///                     be wallet balance updates accidentally logged as expenses
 class DataQualityService {
+  // ignore: unused_field
   static const _cacheKey = 'data_quality_issues';
   static const _lastScanKey = 'data_quality_last_scan';
 

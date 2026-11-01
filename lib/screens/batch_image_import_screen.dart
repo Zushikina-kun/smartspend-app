@@ -34,12 +34,11 @@ class _ImageEntry {
 
   _ImageEntry({
     required this.path,
-    this.status = _ImageStatus.pending,
-    this.type = 'unknown',
-    this.ocrText = '',
-    this.error = '',
-    this.rows = const [],
-  });
+  })  : status = _ImageStatus.pending,
+        type = 'unknown',
+        ocrText = '',
+        error = '',
+        rows = const [];
 }
 
 class _BatchRow {
@@ -62,8 +61,7 @@ class _BatchRow {
     required this.shopName,
     required this.paymentMethod,
     this.notes = '',
-    this.selected = true,
-  });
+  }) : selected = true;
 }
 
 class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
@@ -169,8 +167,7 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
     const batchSize = 3;
     for (var i = 0; i < toparse.length; i += batchSize) {
       final batch = toparse.skip(i).take(batchSize).toList();
-      final parseBatch =
-          batch.map((e) => {'ocrText': e.ocrText, 'type': e.type}).toList();
+      // parseBatch used implicitly via individual entry processing below
 
       // Parse each image individually so we can map results back
       final futures = batch.map((entry) async {

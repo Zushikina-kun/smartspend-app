@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/data_quality_service.dart';
-import '../services/db_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/peso_mascot.dart';
 import 'transactions_screen.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/db_service.dart';
-import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../services/recurring_helper.dart';
 

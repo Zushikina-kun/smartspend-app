@@ -151,6 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (mounted) setState(() => _loading = false);
   }
 
+  // ignore: unused_element
   void _applyLiteMode(bool on) => _applyPreset(on ? 'lite' : 'normal');
 
   /// Apply an experience preset — sets all 14 show_* keys atomically.

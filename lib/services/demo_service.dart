@@ -962,6 +962,7 @@ class DemoService {
       'created_at': now.subtract(const Duration(days: 3)).toIso8601String(),
       'is_current': 0,
     });
+    // ignore: unused_local_variable
     final currentSessionId = await db.insert('chat_sessions', {
       'title': null,
       'created_at': now.toIso8601String(),

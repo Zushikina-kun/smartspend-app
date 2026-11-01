@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/info_button.dart';
 import '../services/merchant_normalization_service.dart';
-import '../services/db_service.dart';
 import '../services/event_bus.dart';
 
 /// MerchantMergeScreen — find and fix duplicate merchant names.

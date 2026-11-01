@@ -82,6 +82,7 @@ class LLMService {
     }
   }
 
+  // ignore: unused_element
   static Future<String> _callGeminiFallback(String system, String user) async {
     final response = await http
         .post(

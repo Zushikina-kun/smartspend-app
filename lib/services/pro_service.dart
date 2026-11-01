@@ -1,5 +1,3 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 /// ProService — single source of truth for SmartSpend Pro entitlement.
 ///
 /// CURRENT STATUS (v3.x): Everyone is Pro. No gates are active yet.
@@ -114,7 +112,7 @@ class ProService {
 
     // Analytics — current month only
     ProFeature.fhsCurrentScore, // ALWAYS free — our #1 differentiator
-    ProFeature.fhsExplanation,  // ALWAYS free
+    ProFeature.fhsExplanation, // ALWAYS free
     ProFeature.pieChartCurrentMonth,
     ProFeature.fiftyThirtyTwentyBasic,
     ProFeature.monthlyTotal,
@@ -133,10 +131,10 @@ class ProService {
     ProFeature.threeThemes,
     ProFeature.tenBadges,
     ProFeature.threeDailyQuests,
-    ProFeature.basicCloudSync,   // expenses + budgets + goals — basic sync free
+    ProFeature.basicCloudSync, // expenses + budgets + goals — basic sync free
     ProFeature.profileAccount,
     ProFeature.helpAboutDemo,
-    ProFeature.offlineMode,      // ALWAYS free — core promise
+    ProFeature.offlineMode, // ALWAYS free — core promise
   };
 }
 
@@ -173,7 +171,7 @@ enum ProFeature {
   offlineMode,
 
   // ── Pro: AI ─────────────────────────────────────────────────────────────
-  aiMessagesExtra,        // 150/day vs 30/day
+  aiMessagesExtra, // 150/day vs 30/day
   voiceInput,
   screenshotImport,
   batchScreenshotImport,
@@ -182,10 +180,10 @@ enum ProFeature {
   aiSessionSummaryCard,
   relogHelperSheet,
   aiFinancialAdviceTier,
-  localLlmPrivateMode,    // unique — run AI on your own PC
+  localLlmPrivateMode, // unique — run AI on your own PC
 
   // ── Pro: Analytics ───────────────────────────────────────────────────────
-  allPeriodFilters,       // All Time, This Year, Payday Cycle, Pick Month, Custom, Logged Today
+  allPeriodFilters, // All Time, This Year, Payday Cycle, Pick Month, Custom, Logged Today
   monthlyBarChart,
   dailyTrendChart,
   dayOfWeekHeatmap,
@@ -211,7 +209,7 @@ enum ProFeature {
   recurringIncome,
   windfallFlag,
   incomeHistory,
-  fullCloudSync,          // wallets, income, chat, all tables
+  fullCloudSync, // wallets, income, chat, all tables
 
   // ── Pro: Unlimited ───────────────────────────────────────────────────────
   unlimitedBudgets,
@@ -249,5 +247,5 @@ enum ProFeature {
   biometricLock,
   compactMode,
   experiencePresets,
-  sortGroupTransactions,  // all 7 sort keys + 5 group-by options
+  sortGroupTransactions, // all 7 sort keys + 5 group-by options
 }

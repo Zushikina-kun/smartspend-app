@@ -27,11 +27,13 @@ class BehavioralFeedbackService {
       ..sort((a, b) => (a['points'] as int).compareTo(b['points'] as int));
 
     final weakest = sorted.first;
+    // ignore: unused_local_variable
     final weakPts = weakest['points'] as int;
     final weakComp = weakest['component'] as String? ?? '';
 
     // Find strongest component
     final strongest = sorted.last;
+    // ignore: unused_local_variable
     final strongPts = strongest['points'] as int;
     final strongComp = strongest['component'] as String? ?? '';
 
@@ -194,6 +196,7 @@ class BehavioralFeedbackService {
     for (final m in milestones) {
       if (logStreak == m) {
         final milestoneKey = 'praised_streak_$m';
+        // ignore: unused_local_variable
         final already = await DBService.getSetting(milestoneKey);
         // Check if we've crossed this specific milestone before
         final prevMilestone =
