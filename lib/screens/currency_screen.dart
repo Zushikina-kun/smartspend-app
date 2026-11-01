@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/currency_service.dart';
+import '../services/peso_context_service.dart';
 import '../widgets/info_button.dart';
+import '../widgets/peso_mascot.dart';
 
 class CurrencyScreen extends StatefulWidget {
   const CurrencyScreen({super.key});
@@ -15,11 +17,13 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
   String _lastUpdated = '';
   String _search = '';
   final _searchCtrl = TextEditingController();
+  String? _sessionTip;
 
   @override
   void initState() {
     super.initState();
     _loadLastUpdated();
+    _sessionTip = PesoContextService.getSessionTip('currency');
   }
 
   @override
@@ -61,6 +65,17 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
       appBar: AppBar(
         title: const Text("Currency & Region"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: PesoMascot(
+              size: 30,
+              mood: PesoMood.proud,
+              tapMood: PesoMood.winking,
+              tapSpeech:
+                  'Live exchange rates! Tip: OFW? Track your remittances in PHP! 🌏',
+              contextKey: 'currency',
+            ),
+          ),
           const InfoButton(
             title: "Currency & Exchange Rates",
             body:
@@ -190,6 +205,17 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
               onChanged: (v) => setState(() => _search = v.toLowerCase()),
             ),
           ),
+
+          // Peso one-time session tip
+          if (_sessionTip != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: PesoMascot.withSpeech(
+                size: 44,
+                mood: PesoMood.winking,
+                text: _sessionTip!,
+              ),
+            ),
 
           Expanded(
             child: ListView(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth_service.dart';
 import '../services/db_service.dart';
+import '../widgets/peso_mascot.dart';
 import 'setup_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -143,7 +144,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 errorBuilder: (_, __, ___) =>
                     const Icon(Icons.account_balance_wallet, size: 64),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
+              PesoMascot.withSpeech(
+                size: 56,
+                mood: PesoMood.happy,
+                text: "Hi! I'm Peso — let's set up your financial future! 💚",
+              ),
+              const SizedBox(height: 8),
               const Text(
                 "Smart Spend",
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),

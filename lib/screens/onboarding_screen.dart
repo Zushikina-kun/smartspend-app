@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/peso_mascot.dart';
 import 'login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -13,27 +14,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _controller = PageController();
   int _page = 0;
 
-  final _pages = const [
-    _OnboardPage(
+  final _pages = [
+    const _OnboardPage(
       icon: Icons.account_balance_wallet,
       title: "Track Every Peso",
       subtitle:
           "Log expenses manually, by voice, OCR receipt scan, or barcode — SmartSpend makes it effortless.",
-      color: const Color(0xFF0066FF),
+      color: Color(0xFF0066FF),
+      speech: "Kumusta! Ako si Peso — your money buddy! 💚",
     ),
-    _OnboardPage(
+    const _OnboardPage(
       icon: Icons.auto_awesome,
       title: "AI-Powered Insights",
       subtitle:
           "Our AI analyzes your spending patterns and gives you personalized advice to save more.",
       color: Color(0xFF7C3AED),
+      speech: "Ask me anything in Filipino or English! 🇵🇭",
     ),
-    _OnboardPage(
+    const _OnboardPage(
       icon: Icons.monitor_heart,
       title: "Know Your Financial Health",
       subtitle:
           "Get a real-time financial health score, budget alerts, and tax estimates — all in one place.",
       color: Color(0xFF059669),
+      speech: "I'll help you reach your goals — one peso at a time! 🎯",
     ),
   ];
 
@@ -131,12 +135,14 @@ class _OnboardPage extends StatelessWidget {
   final String title;
   final String subtitle;
   final Color color;
+  final String speech;
 
   const _OnboardPage({
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.color,
+    required this.speech,
   });
 
   @override
@@ -155,7 +161,20 @@ class _OnboardPage extends StatelessWidget {
                   errorBuilder: (_, __, ___) =>
                       Icon(icon, size: 100, color: Colors.white))
               : Icon(icon, size: 100, color: Colors.white),
-          const SizedBox(height: 40),
+          const SizedBox(height: 20),
+          PesoMascot.withSpeech(
+            size: 56,
+            mood: PesoMood.happy,
+            text: speech,
+            bubbleColor: Colors.white.withValues(alpha: 0.92),
+            textStyle: TextStyle(
+              fontSize: 13,
+              color: color,
+              fontWeight: FontWeight.w600,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 16),
           Text(title,
               textAlign: TextAlign.center,
               style: const TextStyle(

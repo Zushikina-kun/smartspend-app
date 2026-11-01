@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../services/ocr_service.dart';
+import '../widgets/peso_mascot.dart';
 import '../services/llm_service.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
@@ -293,6 +294,16 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
       appBar: AppBar(
         title: const Text("Batch Screenshot Import"),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: PesoMascot(
+              size: 30,
+              mood: _processing ? PesoMood.thinking : PesoMood.happy,
+              tapMood: PesoMood.excited,
+              tapSpeech: "Select your screenshots — I'll read them! 📸",
+              contextKey: 'batch_import',
+            ),
+          ),
           if (hasDoneImages && _totalRows > 0)
             TextButton(
               onPressed: () {

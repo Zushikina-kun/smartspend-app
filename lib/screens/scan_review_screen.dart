@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../widgets/peso_mascot.dart';
 
 /// Shown after OCR or barcode scan — lets user review and edit
 /// the extracted text before sending to the AI.
@@ -78,6 +79,16 @@ class _ScanReviewScreenState extends State<ScanReviewScreen> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: PesoMascot(
+              size: 30,
+              mood: widget.isBarcode ? PesoMood.thinking : PesoMood.proud,
+              tapMood: PesoMood.excited,
+              tapSpeech: 'Scan complete! Review before logging! 👀',
+              contextKey: 'scan_review',
+            ),
+          ),
           TextButton.icon(
             icon: const Icon(Icons.send),
             label: const Text("Send to AI"),
