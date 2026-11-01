@@ -58,7 +58,9 @@ import 'help_screen.dart';
 import 'debt_payoff_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
+import '../services/peso_voice_service.dart';
 import '../services/peso_context_service.dart';
+import '../services/peso_activity_log.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -83,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
+    PesoActivityLog.log(
+        'cold_start hour:${DateTime.now().hour} dow:${DateTime.now().weekday}');
     _screens = [
       Dashboard(onNavigate: (i) => setState(() => _index = i)),
       const AnalyticsScreen(),
@@ -100,6 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkFhsTierChange();
     _checkStreakMilestone();
     _checkNotificationTap();
+    _checkReturnVisit();
+    _checkPesoNeglect();
     _showPesoNavTip();
     // Check local mode on first render
     AuthService.isLocalMode().then((v) {
@@ -539,6 +544,87 @@ class _HomeScreenState extends State<HomeScreen> {
       PesoSoundService.playNudge();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        content: Row(children: [
+          // ignore: prefer_const_constructors
+          PesoMascot(size: 28, mood: mood),
+          const SizedBox(width: 10),
+          Expanded(child: Text(msg, style: const TextStyle(fontSize: 13))),
+        ]),
+      ));
+    } catch (_) {}
+  }
+
+  Future<void> _checkReturnVisit() async {
+    await Future.delayed(const Duration(milliseconds: 2500));
+    if (!mounted) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lastOpenStr = prefs.getString('last_app_open_date');
+      final today = DateTime.now().toIso8601String().substring(0, 10);
+      await prefs.setString('last_app_open_date', today);
+      if (lastOpenStr == null || lastOpenStr == today) return;
+      final lastOpen = DateTime.tryParse(lastOpenStr);
+      if (lastOpen == null) return;
+      final gap = DateTime.now().difference(lastOpen).inDays;
+      if (gap < 2) return;
+      PesoActivityLog.log('cold_start gap:${gap}d');
+      String msg;
+      PesoMood mood;
+      if (gap >= 7) {
+        msg =
+            'Bakit nawala ka? $gap days! 😢 Pero okay lang — fresh start tayo!';
+        mood = PesoMood.sad;
+      } else if (gap >= 3) {
+        msg = 'Peso missed you! $gap days na! Kumusta ang finances mo? 🥰';
+        mood = PesoMood.surprised;
+      } else {
+        msg = 'Welcome back! $gap days ago ka pa nag-log. Kumusta? 😊';
+        mood = PesoMood.happy;
+      }
+      if (!mounted) return;
+      PesoSoundService.playNudge();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        content: Row(children: [
+          // ignore: prefer_const_constructors
+          PesoMascot(size: 28, mood: mood),
+          const SizedBox(width: 10),
+          Expanded(child: Text(msg, style: const TextStyle(fontSize: 13))),
+        ]),
+      ));
+    } catch (_) {}
+  }
+
+  Future<void> _checkPesoNeglect() async {
+    await Future.delayed(const Duration(milliseconds: 7000));
+    if (!mounted) return;
+    try {
+      final expenses = await DBService.getExpenses();
+      if (expenses.isEmpty) return;
+      final now = DateTime.now();
+      final lastExpense = expenses
+          .map((e) => DateTime.tryParse(e.date.substring(0, 10)))
+          .whereType<DateTime>()
+          .fold<DateTime?>(null,
+              (latest, d) => latest == null || d.isAfter(latest) ? d : latest);
+      if (lastExpense == null) return;
+      final gap = now.difference(lastExpense).inDays;
+      if (gap < 3) return;
+      final prefs = await SharedPreferences.getInstance();
+      final key =
+          'peso_neglect_shown_${lastExpense.toIso8601String().substring(0, 10)}';
+      if (prefs.getBool(key) == true) return;
+      await prefs.setBool(key, true);
+      if (!mounted) return;
+      final msg = gap >= 7
+          ? 'Peso is worried... $gap days walang log! Kumusta ka ba? 😢'
+          : 'Hey... $gap days na since last log. Miss na kita! 😟';
+      final mood = gap >= 7 ? PesoMood.sad : PesoMood.worried;
+      PesoSoundService.playNudge();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 6),
         behavior: SnackBarBehavior.floating,
         content: Row(children: [
           // ignore: prefer_const_constructors
@@ -2301,6 +2387,7 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     _loadData();
+    _checkDashboardGreeting();
     // Auto-refresh when any expense/budget/income/goal changes
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
@@ -2328,6 +2415,40 @@ class _DashboardState extends State<Dashboard> {
   void dispose() {
     _eventSub?.cancel();
     super.dispose();
+  }
+
+  /// Shows a time-based greeting from Peso once per day on the Dashboard.
+  Future<void> _checkDashboardGreeting() async {
+    await Future.delayed(const Duration(milliseconds: 2000));
+    if (!mounted) return;
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('peso_dashboard_greeting') == today) return;
+    await prefs.setString('peso_dashboard_greeting', today);
+    final hour = DateTime.now().hour;
+    PesoContext ctx;
+    if (hour >= 5 && hour < 12) {
+      ctx = PesoContext.morningGreeting;
+    } else if (hour >= 12 && hour < 18) {
+      ctx = PesoContext.afternoonGreeting;
+    } else if (hour >= 18 && hour < 22) {
+      ctx = PesoContext.eveningGreeting;
+    } else {
+      ctx = PesoContext.midnightGreeting;
+    }
+    if (!mounted) return;
+    PesoSoundService.playTalk();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 4),
+      content: Row(children: [
+        PesoMascot(size: 28, mood: PesoMood.happy),
+        const SizedBox(width: 10),
+        Expanded(
+            child: Text(PesoVoiceService.get(ctx),
+                style: const TextStyle(fontSize: 13))),
+      ]),
+    ));
   }
 
   Future<void> _loadData() async {
@@ -3907,9 +4028,11 @@ class _DashboardState extends State<Dashboard> {
             ),
             const SizedBox(width: 4),
             PesoMascot(
-              size: 32,
+              size: 36,
               mood: PesoMood.winking,
               tapMood: PesoMood.excited,
+              tapSpeech: 'Kamusta ang finances mo ngayon? 💚',
+              contextKey: 'home',
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -6502,6 +6625,19 @@ class _DashboardState extends State<Dashboard> {
                                           : _score >= 50
                                               ? PesoMood.neutral
                                               : PesoMood.worried,
+                                  tapMood: PesoMood.winking,
+                                  onDoubleTap: () {
+                                    PesoSoundService.playCelebrate();
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      duration: const Duration(seconds: 4),
+                                      content: Text(_score >= 70
+                                          ? 'FHS: $_score/100 🏆 Keep it up!'
+                                          : 'FHS: $_score/100 — ask me for tips! 💬'),
+                                    ));
+                                  },
+                                  onLongPress: () => widget.onNavigate(2),
                                 ),
                               ),
                             // BF-2: Plain-language score narrative
