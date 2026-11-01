@@ -1,8 +1,12 @@
-﻿import 'dart:math';
+﻿import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/peso_activity_log.dart';
+import '../services/peso_context_service.dart';
 import '../services/peso_sound_service.dart';
+import '../services/peso_voice_service.dart';
 
 /// Peso — SmartSpend's mascot.
 ///
@@ -45,6 +49,18 @@ class PesoMascot extends StatefulWidget {
   final VoidCallback? onTap;
   final PesoMood? tapMood;
   final String? tapSpeech;
+  // New gesture params — all nullable/optional, fully backward-compatible
+  final VoidCallback? onDoubleTap;
+  final PesoMood? doubleTapMood;
+  final VoidCallback? onLongPress;
+  final PesoMood? longPressMood;
+
+  /// Rotating idle lines shown after 8 s of no interaction.
+  /// Null = use built-in defaults.
+  final List<String>? idleSpeeches;
+
+  /// Optional context key for gesture logging (e.g. 'budget', 'home').
+  final String? contextKey;
 
   const PesoMascot({
     super.key,
@@ -53,6 +69,12 @@ class PesoMascot extends StatefulWidget {
     this.onTap,
     this.tapMood,
     this.tapSpeech,
+    this.onDoubleTap,
+    this.doubleTapMood,
+    this.onLongPress,
+    this.longPressMood,
+    this.idleSpeeches,
+    this.contextKey,
   });
 
   /// Peso with a speech bubble above him
@@ -72,6 +94,20 @@ class PesoMascot extends StatefulWidget {
     );
   }
 
+  /// Returns a time- and day-aware default mood for Peso.
+  static PesoMood get timeAwareMood {
+    final now = DateTime.now();
+    final h = now.hour;
+    final dow = now.weekday;
+    if (h < 6) return PesoMood.sleepy;
+    if (dow == 1 && h < 10) return PesoMood.excited; // Monday morning
+    if ((dow == 5 || dow == 6) && h >= 17) {
+      return PesoMood.winking; // Fri/Sat evening
+    }
+    if (h >= 22) return PesoMood.sleepy;
+    return PesoMood.happy;
+  }
+
   @override
   State<PesoMascot> createState() => _PesoMascotState();
 }
@@ -82,6 +118,21 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
   late AnimationController _blinkCtrl;
   late AnimationController _tapCtrl;
   PesoMood? _currentMood;
+  Timer? _idleSpeechTimer;
+  Timer? _moodRevertTimer;
+
+  static const _defaultIdleSpeeches = [
+    'Tap me anytime to ask about your money! 💬',
+    "I can log expenses, set budgets, or just chat! 😊",
+    'Kumusta ang finances mo? 🇵🇭',
+    "Tell me what you spent — I'll handle the rest! ✅",
+  ];
+
+  // Gesture state
+  int _tapCount = 0;
+  Timer? _tapTimer;
+  Timer? _idleReactionTimer;
+  bool _idleReactionFired = false;
 
   @override
   void initState() {
@@ -108,24 +159,253 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
         _idleCtrl.repeat(reverse: true);
         _scheduleBlink();
       }
+      if (widget.size >= 48) _scheduleIdleReaction();
+      _startIdleSpeechTimer();
     });
   }
 
+  // ── IDLE SPEECH TIMER ──────────────────────────────────────────────────────
+
+  void _startIdleSpeechTimer() {
+    _idleSpeechTimer?.cancel();
+    _idleSpeechTimer = Timer(const Duration(seconds: 8), _fireIdleSpeech);
+  }
+
+  Future<void> _fireIdleSpeech() async {
+    if (!mounted) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final lastRaw = prefs.getString('peso_idle_speech_date') ?? '';
+      if (lastRaw.isNotEmpty) {
+        final last = DateTime.tryParse(lastRaw);
+        if (last != null && DateTime.now().difference(last).inMinutes < 60) {
+          return; // throttle to once per hour
+        }
+      }
+      await prefs.setString(
+          'peso_idle_speech_date', DateTime.now().toIso8601String());
+    } catch (_) {}
+    if (!mounted) return;
+    _moodRevertTimer?.cancel();
+    setState(() => _currentMood = PesoMood.winking);
+    PesoSoundService.playNudge();
+    final speeches = widget.idleSpeeches ?? _defaultIdleSpeeches;
+    final line = speeches[DateTime.now().second % speeches.length];
+    _showSpeechBubbleOverlay(line);
+    _moodRevertTimer = Timer(const Duration(milliseconds: 3000), () {
+      if (mounted) setState(() => _currentMood = null);
+    });
+    _startIdleSpeechTimer(); // re-arm
+  }
+
+  // ── GESTURE HANDLERS ───────────────────────────────────────────────────────
+
   void _handleTap() {
+    _startIdleSpeechTimer();
+    _tapCount++;
+    _tapTimer?.cancel();
+    if (_tapCount >= 3) {
+      _tapCount = 0;
+      _handleTripleTap();
+      return;
+    }
+    _tapTimer = Timer(const Duration(milliseconds: 400), () {
+      _tapCount = 0;
+      _doSingleTap();
+    });
+  }
+
+  void _doSingleTap() {
     _tapCtrl.forward(from: 0).then((_) => _tapCtrl.reverse());
     PesoSoundService.playTap();
     if (widget.tapMood != null) {
+      _moodRevertTimer?.cancel();
       setState(() => _currentMood = widget.tapMood);
-      Future.delayed(const Duration(milliseconds: 1500), () {
+      _moodRevertTimer = Timer(const Duration(milliseconds: 1500), () {
         if (mounted) setState(() => _currentMood = null);
       });
     }
-    // Increment global Peso tap count for 'Peso Pal' badge
     SharedPreferences.getInstance().then((prefs) {
       final count = (prefs.getInt('peso_tap_count') ?? 0) + 1;
       prefs.setInt('peso_tap_count', count);
+      prefs.setString('peso_last_interaction',
+          DateTime.now().toIso8601String().substring(0, 10));
     }).catchError((_) {});
+    if (widget.tapSpeech != null && mounted) {
+      _showSpeechBubbleOverlay(widget.tapSpeech!);
+    }
+    PesoActivityLog.log('peso_tap:${widget.contextKey ?? 'unknown'}');
     widget.onTap?.call();
+  }
+
+  void _handleDoubleTap() {
+    _startIdleSpeechTimer();
+    _tapCtrl.forward(from: 0).then((_) => _tapCtrl.reverse());
+    _moodRevertTimer?.cancel();
+    final mood = widget.doubleTapMood ?? PesoMood.surprised;
+    setState(() => _currentMood = mood);
+    _moodRevertTimer = Timer(const Duration(milliseconds: 2000), () {
+      if (mounted) setState(() => _currentMood = null);
+    });
+    PesoSoundService.playTalk();
+    PesoActivityLog.log('peso_doubletap:${widget.contextKey ?? 'unknown'}');
+    SharedPreferences.getInstance().then((prefs) {
+      final count = (prefs.getInt('peso_double_tap_count') ?? 0) + 1;
+      prefs.setInt('peso_double_tap_count', count);
+      prefs.setString('peso_last_interaction',
+          DateTime.now().toIso8601String().substring(0, 10));
+    }).catchError((_) {});
+    final ctx = _contextFromKey(widget.contextKey);
+    final line = PesoVoiceService.get(ctx);
+    _showSpeechBubbleOverlay(line);
+    widget.onDoubleTap?.call();
+  }
+
+  void _handleLongPress() {
+    _startIdleSpeechTimer();
+    _moodRevertTimer?.cancel();
+    final mood = widget.longPressMood ?? PesoMood.winking;
+    setState(() => _currentMood = mood);
+    _moodRevertTimer = Timer(const Duration(milliseconds: 2500), () {
+      if (mounted) setState(() => _currentMood = null);
+    });
+    PesoSoundService.playCelebrate();
+    PesoActivityLog.log('peso_longpress:${widget.contextKey ?? 'unknown'}');
+    SharedPreferences.getInstance().then((prefs) {
+      final count = (prefs.getInt('peso_long_press_count') ?? 0) + 1;
+      prefs.setInt('peso_long_press_count', count);
+      prefs.setString('peso_last_interaction',
+          DateTime.now().toIso8601String().substring(0, 10));
+    }).catchError((_) {});
+    _showLongPressSheet();
+    widget.onLongPress?.call();
+  }
+
+  void _handleTripleTap() {
+    setState(() => _currentMood = PesoMood.celebrating);
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      if (mounted) setState(() => _currentMood = null);
+    });
+    PesoSoundService.playCelebrate();
+    PesoActivityLog.log('peso_triple:${widget.contextKey ?? 'unknown'}');
+    const easterEggs = [
+      '₱sos! You found the secret! 🤫',
+      'Triple tap! Galing mo! 🎉 Peso is impressed!',
+      'You tapped me 3x?! Ay nako! 😂',
+      'Secret unlocked: Peso loves you! 💚',
+      'GRABE! 3x tap! You really like me ha! 😄',
+      'Easter egg found! Tell your friends! 🥚',
+      '3 taps = 3x the blessings! 🙏',
+      'Huy! Galing! Hidden feature found! 🌟',
+      'Peso achievement unlocked: Triple Tap Master! 🏆',
+      "Okay sige — I'll work harder for you! 💪",
+    ];
+    final msg = easterEggs[DateTime.now().millisecond % easterEggs.length];
+    _showSpeechBubbleOverlay(msg);
+  }
+
+  PesoContext _contextFromKey(String? key) {
+    switch (key) {
+      case 'budget':
+        return PesoContext.budgetAllGreen;
+      case 'savings_goals':
+        return PesoContext.goalMilestone50;
+      case 'analytics':
+        return PesoContext.fhsImproved;
+      case 'transactions':
+        return PesoContext.firstLogToday;
+      case 'debt':
+        return PesoContext.debtPaidOff;
+      case 'recurring':
+        return PesoContext.generalEncouragement;
+      default:
+        return PesoContext.generalEncouragement;
+    }
+  }
+
+  void _showLongPressSheet() {
+    final tips =
+        PesoContextService.getTipsForScreen(widget.contextKey ?? 'home');
+    final voiceLine = PesoVoiceService.get(PesoContext.generalEncouragement);
+    final tipText = tips.isNotEmpty ? tips.first : voiceLine;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const PesoMascot(size: 64, mood: PesoMood.celebrating),
+            const SizedBox(height: 12),
+            const Text('Peso says... 💬',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Text(tipText, textAlign: TextAlign.center),
+            const SizedBox(height: 8),
+            Text(voiceLine,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontStyle: FontStyle.italic)),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Got it!'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── IDLE REACTION (Feature 6) ───────────────────────────────────────────────
+
+  void _scheduleIdleReaction() {
+    _idleReactionTimer?.cancel();
+    _idleReactionTimer = Timer(const Duration(seconds: 12), () {
+      if (!mounted || _idleReactionFired) return;
+      _idleReactionFired = true;
+      setState(() => _currentMood = PesoMood.sleepy);
+      Future.delayed(const Duration(milliseconds: 2500), () {
+        if (mounted) setState(() => _currentMood = null);
+      });
+    });
+  }
+
+  void resetIdle() {
+    _idleReactionTimer?.cancel();
+    _idleReactionFired = false;
+    if (widget.size >= 48) _scheduleIdleReaction();
+  }
+
+  // ── SPEECH BUBBLE OVERLAY (Feature 2) ──────────────────────────────────────
+
+  void _showSpeechBubbleOverlay(String text) {
+    final overlay = Overlay.of(context);
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+
+    late OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (ctx) => Positioned(
+        left: (position.dx + size.width / 2 - 80).clamp(8.0, double.infinity),
+        top: (position.dy - 60).clamp(8.0, double.infinity),
+        width: 160,
+        child: Material(
+          color: Colors.transparent,
+          child: _SpeechBubblePopup(
+            text: text,
+            onDone: () => entry.remove(),
+          ),
+        ),
+      ),
+    );
+    overlay.insert(entry);
   }
 
   void _scheduleBlink() {
@@ -162,6 +442,10 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
     _moodCtrl.dispose();
     _blinkCtrl.dispose();
     _tapCtrl.dispose();
+    _tapTimer?.cancel();
+    _idleReactionTimer?.cancel();
+    _idleSpeechTimer?.cancel();
+    _moodRevertTimer?.cancel();
     super.dispose();
   }
 
@@ -191,10 +475,12 @@ class _PesoMascotState extends State<PesoMascot> with TickerProviderStateMixin {
       },
     );
 
-    if (widget.onTap != null || widget.tapMood != null) {
-      return GestureDetector(onTap: _handleTap, child: core);
-    }
-    return core;
+    return GestureDetector(
+      onTap: _handleTap,
+      onDoubleTap: _handleDoubleTap,
+      onLongPress: _handleLongPress,
+      child: core,
+    );
   }
 }
 
@@ -1258,3 +1544,77 @@ class _PesoWithSpeech extends StatelessWidget {
 /// Extension on Color for opacity — already provided by Flutter's withValues,
 /// this is kept for semantic clarity in the painter code.
 // (no additional extension needed)
+
+// ── SPEECH BUBBLE POPUP OVERLAY ───────────────────────────────────────────────
+
+class _SpeechBubblePopup extends StatefulWidget {
+  final String text;
+  final VoidCallback onDone;
+  const _SpeechBubblePopup({required this.text, required this.onDone});
+  @override
+  State<_SpeechBubblePopup> createState() => _SpeechBubblePopupState();
+}
+
+class _SpeechBubblePopupState extends State<_SpeechBubblePopup>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _ctrl;
+  late Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _opacity = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
+    _ctrl.forward();
+    Future.delayed(const Duration(milliseconds: 2200), () {
+      if (mounted) {
+        _ctrl.reverse().then((_) => widget.onDone());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _opacity,
+      child: GestureDetector(
+        onTap: () {
+          _ctrl.reverse().then((_) => widget.onDone());
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+          decoration: BoxDecoration(
+            color: kPesoGreen,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: kPesoGreen.withValues(alpha: 0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Text(
+            widget.text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              height: 1.3,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+}
