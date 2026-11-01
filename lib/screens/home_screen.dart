@@ -204,6 +204,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
 
     // Show as SnackBar with Peso
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 5),
@@ -286,6 +288,8 @@ class _HomeScreenState extends State<HomeScreen> {
       await prefs.setString('peso_budget_reaction', today);
 
       if (overCategory != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: const Duration(seconds: 4),
           behavior: SnackBarBehavior.floating,
@@ -300,6 +304,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ]),
         ));
       } else if (warningCategory != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: const Duration(seconds: 4),
           behavior: SnackBarBehavior.floating,
@@ -315,6 +321,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
       } else {
         // All budgets good — positive nudge
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: const Duration(seconds: 3),
           behavior: SnackBarBehavior.floating,
@@ -353,6 +361,8 @@ class _HomeScreenState extends State<HomeScreen> {
           final rTitle = r['title'] as String? ?? '';
           final rAmt = (r['amount'] as num).toStringAsFixed(0);
           final dueStr = daysUntilDue == 0 ? 'today' : 'in $daysUntilDue days';
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 4),
             behavior: SnackBarBehavior.floating,
@@ -376,6 +386,8 @@ class _HomeScreenState extends State<HomeScreen> {
         await prefs.setString('peso_tasks_nudge', today);
         if (!mounted) return;
         PesoSoundService.playNudge();
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           duration: const Duration(seconds: 4),
           behavior: SnackBarBehavior.floating,
@@ -437,6 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       if (!mounted) return;
       PesoSoundService.playMoodChange(mood);
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
@@ -497,6 +510,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? PesoMood.excited
                   : PesoMood.happy;
           PesoSoundService.playCelebrate();
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             duration: const Duration(seconds: 5),
             behavior: SnackBarBehavior.floating,
@@ -542,6 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       if (!mounted) return;
       PesoSoundService.playNudge();
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
@@ -584,6 +600,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       if (!mounted) return;
       PesoSoundService.playNudge();
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
@@ -623,6 +640,8 @@ class _HomeScreenState extends State<HomeScreen> {
           : 'Hey... $gap days na since last log. Miss na kita! 😟';
       final mood = gap >= 7 ? PesoMood.sad : PesoMood.worried;
       PesoSoundService.playNudge();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 6),
         behavior: SnackBarBehavior.floating,
@@ -661,6 +680,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await Future.delayed(const Duration(milliseconds: 1500));
       if (!mounted) return;
 
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         duration: const Duration(seconds: 4),
         behavior: SnackBarBehavior.floating,
@@ -1031,16 +1051,27 @@ class _HomeScreenState extends State<HomeScreen> {
     // Only show on Home tab
     if (_index != 0) return const SizedBox.shrink();
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 6, 8, 6),
+      padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
       decoration: BoxDecoration(
         color: cs.surface,
-        border:
-            Border(top: BorderSide(color: cs.outline.withValues(alpha: 0.12))),
+        border: Border(
+          top: BorderSide(
+            color: const Color(0xFF00C896).withValues(alpha: 0.35),
+            width: 1.5,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF00C896).withValues(alpha: 0.06),
+            blurRadius: 6,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Row(
         children: [
           // ignore: prefer_const_constructors
-          PesoMascot(size: 20, mood: PesoMood.happy),
+          PesoMascot(size: 24, mood: PesoMood.happy),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -1052,7 +1083,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: InputDecoration(
                 hintText: _isOffline
                     ? "No internet — Peso unavailable"
-                    : "Ask Peso or log an expense…",
+                    : "Tell Peso what you spent today…",
                 hintStyle: TextStyle(
                     fontSize: 13, color: cs.onSurface.withValues(alpha: 0.4)),
                 isDense: true,
@@ -4948,8 +4979,62 @@ class _DashboardState extends State<Dashboard> {
   }
 
   /// Safe-to-Spend card — shows spendable balance after reserving
-  /// upcoming bills, goal contributions, and overdue debts.
-  /// Only shown in income/wallet mode with wallet data available.
+  /// Setup CTA shown to new users who haven't set income yet.
+  Widget _buildSetupCta(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF00C896).withValues(alpha: 0.15),
+            const Color(0xFF00C896).withValues(alpha: 0.04),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF00C896).withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          const PesoMascot(size: 36, mood: PesoMood.excited),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Set income to unlock Full Mode',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Full FHS, Safe-to-Spend, and savings tracking all need your income.',
+                  style: TextStyle(fontSize: 11.5, color: cs.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          TextButton(
+            onPressed: () => widget.onNavigate(3),
+            style: TextButton.styleFrom(
+              foregroundColor: const Color(0xFF00C896),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: const Text('Set up',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds the Safe-to-Spend card
   Widget _buildSafeToSpendCard(BuildContext context) {
     if (!_incomeWalletMode) return const SizedBox.shrink();
     final walletTotal = _wallets.fold<double>(
@@ -6266,6 +6351,9 @@ class _DashboardState extends State<Dashboard> {
               // Outlook card — tabbed Cash Flow + Prediction in one card
               // Only shown when at least one of the two is enabled
               _buildPriorityBanner(context),
+              // Setup CTA for new users without income configured
+              if (!_incomeWalletMode && _expenses.length < 5)
+                _buildSetupCta(context),
               if (_showForecast || _showPrediction) _buildOutlookCard(context),
               Row(
                 children: [
@@ -6616,28 +6704,44 @@ class _DashboardState extends State<Dashboard> {
                             if (_score > 0)
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 4),
-                                child: PesoMascot(
-                                  size: 40,
-                                  mood: _score >= 90
-                                      ? PesoMood.proud
-                                      : _score >= 70
-                                          ? PesoMood.happy
-                                          : _score >= 50
-                                              ? PesoMood.neutral
-                                              : PesoMood.worried,
-                                  tapMood: PesoMood.winking,
-                                  onDoubleTap: () {
-                                    PesoSoundService.playCelebrate();
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      behavior: SnackBarBehavior.floating,
-                                      duration: const Duration(seconds: 4),
-                                      content: Text(_score >= 70
-                                          ? 'FHS: $_score/100 🏆 Keep it up!'
-                                          : 'FHS: $_score/100 — ask me for tips! 💬'),
-                                    ));
-                                  },
-                                  onLongPress: () => widget.onNavigate(2),
+                                child: Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: _score >= 90
+                                          ? Colors.green
+                                          : _score >= 70
+                                              ? const Color(0xFF4CAF50)
+                                              : _score >= 50
+                                                  ? Colors.orange
+                                                  : Colors.red,
+                                      width: 2.5,
+                                    ),
+                                  ),
+                                  child: PesoMascot(
+                                    size: 40,
+                                    mood: _score >= 90
+                                        ? PesoMood.proud
+                                        : _score >= 70
+                                            ? PesoMood.happy
+                                            : _score >= 50
+                                                ? PesoMood.neutral
+                                                : PesoMood.worried,
+                                    tapMood: PesoMood.winking,
+                                    onDoubleTap: () {
+                                      PesoSoundService.playCelebrate();
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        duration: const Duration(seconds: 4),
+                                        content: Text(_score >= 70
+                                            ? 'FHS: $_score/100 🏆 Keep it up!'
+                                            : 'FHS: $_score/100 — ask me for tips! 💬'),
+                                      ));
+                                    },
+                                    onLongPress: () => widget.onNavigate(2),
+                                  ),
                                 ),
                               ),
                             // BF-2: Plain-language score narrative
