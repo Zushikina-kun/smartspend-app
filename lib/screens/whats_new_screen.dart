@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.1.0';
-  static const _prefKey = 'whats_new_seen_3_1_0';
+  static const _version = '3.1.1';
+  static const _prefKey = 'whats_new_seen_3_1_1';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -20,6 +20,31 @@ class WhatsNewScreen extends StatelessWidget {
   }
 
   static const _features = [
+    (
+      '🐛',
+      'AI expenses now actually save (v3.1.1)',
+      'Fixed a critical bug where Peso said "Got it, logged!" but nothing was saved. '
+          'AI-logged expenses from Oct 13–26 may need re-entry. '
+          'This is now fixed — every expense Peso confirms is saved instantly.',
+    ),
+    (
+      '👆',
+      'Double-tap Peso for a voice line (v3.1.1)',
+      'Double-tap Peso anywhere — he switches to a surprised mood and says '
+          'a random Taglish line relevant to the screen you\'re on.',
+    ),
+    (
+      '🤝',
+      'Long-press Peso for a tip sheet (v3.1.1)',
+      'Long-press Peso anywhere — he shows a context-aware tip bottom sheet '
+          'for the current screen. Great for learning features quickly.',
+    ),
+    (
+      '💤',
+      'Peso has an idle timer (v3.1.1)',
+      'After 8 seconds without interaction, Peso winks at you. '
+          'Throttled to once per hour so it stays a surprise, not an annoyance.',
+    ),
     (
       '📊',
       'FHS Tier Change Announcements (v3.1.0)',
