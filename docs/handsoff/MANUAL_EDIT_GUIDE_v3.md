@@ -588,3 +588,93 @@ Say: "designed with RA 10173 in mind — data minimization, on-device storage by
 - **Figures 2.1 and 2.2** — diagrams, need to be redrawn/screenshotted separately.
 - **Approval Sheet's Chairperson and Dean fields** — verify before printing.
 - Fonts/spacing/table styling — none, on purpose, every time.
+
+---
+
+## 📋 PART 8 — New items from November 1, 2026 session
+
+*These were identified during the Nov 1 review session. Do them after Parts 1–7.*
+
+### ☐ 8.1 — Add FHS Formula Derivation table to Chapter III (Adviser asked for this)
+
+The full table is in: `docs/capstone/FHS_Formula_Basis_Table.md`
+
+**Where to insert:** Chapter III Objective 2 → after the FHS formula/computation section (after Table 3.2 LLM benchmark)
+
+**What to copy:** Table 1 ("Theoretical and Literature Basis of the FHS Formula") from that file. Caption it:
+> Table 3.X. Theoretical and Literature Basis of the SmartSpend Financial Health Score (FHS) Formula
+
+Then add Table 3 from the same file as a separate table:
+> Table 3.X+1. FHS Components Linked to Needs Assessment Findings
+
+Ask the adviser what table number to use before printing.
+
+### ☐ 8.2 — Add finalized questionnaire as Appendix A
+
+The finalized 30-question instrument is in: `docs/capstone/SmartSpend_Selected_Survey_Questions_FINAL.md`
+
+This becomes **Appendix A: Research Survey Instrument** in the manuscript. Format it as a proper questionnaire (not a markdown table — proper Word questionnaire formatting with checkbox symbols). Section labels A–E from that document become the section headers.
+
+The 4 "Adviser Decision Points" at the end of the document should appear as a footnote page or a separate "Notes for Adviser Review" page before the questionnaire itself.
+
+### ☐ 8.3 — Fix 73.4% in Chapter IV Objective 1 conclusion
+
+The Chapter IV text currently says:
+> "73.4% of respondents reporting manual expense logging as highly tedious"
+
+This number was NEVER collected from the actual survey. It was from an earlier draft. Replace with:
+> `[[PENDING — insert actual % from Q21/Q22 survey responses]]`
+
+**Do NOT fill this with an estimated number.** Only replace it when real Google Forms data is available.
+
+### ☐ 8.4 — Fill [[PENDING]] tags ONLY from real survey data
+
+When Google Forms responses arrive:
+
+| Tag to fill | Source question | What to report |
+|-------------|----------------|----------------|
+| `[[PENDING — Q8]]` | Q8: budget preparation | % for Always + Often combined |
+| `[[PENDING — Q11]]` | Q11: savings before spending | % for Always + Often combined |
+| `[[PENDING — Q14]]` | Q14: expenses exceed budget | Mean score (1–5) + mode |
+| `[[PENDING — Q21]]` | Q21: record expenses | % for Always + Often + Sometimes |
+| `[[PENDING — Q22]]` | Q22: how they record | List top 3 methods by frequency |
+| `[[PENDING — Q23]]` | Q23: how soon after purchase | % for Immediately + Same day |
+
+**Never fill any [[PENDING]] from memory, estimation, or other studies.**
+
+### ☐ 8.5 — Defense script adviser name (already fixed by Kiro — verify)
+
+The defense script was fixed (commit e9a7346). Verify Slide 1 now reads:
+- Adviser: **Ms. Ellen F. Mangaoang, DIT**
+- Chairperson: TBA
+- Panel: Shekiro R. Raposas, Mary-Ann Mzana
+
+### ☐ 8.6 — App version throughout manuscript
+
+Search for "v3.1.0" or "v3.1.1" in the manuscript. Update references to the "current" or "final" version to **v3.1.2**. Historical version mentions in the development timeline section are fine to leave.
+
+### ☐ 8.7 — Peso Companion System subsection in Chapter III
+
+Add a subsection after the Local AI discussion. Title: **"Peso Companion System"**
+
+Key facts to include (present as design features, NOT as measured behavior change):
+- **PesoMascot:** 12 mood states, idle animation (bob + eye blink), mood pop-in, present on 45 screens
+- **PesoVoiceService:** 31 Taglish contexts, 2–4 random variants each — prevents semantic satiation
+- **PesoSoundService:** haptic feedback patterns (not audio) — tap, celebrate, talk, nudge, mood change
+- **PesoContextService:** 17 screen keys → contextual tips, session-gated (once per screen per launch)
+- **Behavioral feedback loop (design):** streak → milestone celebration → reinforces logging; FHS tier change → Peso reaction → makes score change salient; notification tap → contextual greeting → re-engagement
+- **Critical note:** These features are grounded in SDT (Deci & Ryan, 2000) and Nudge Theory (Thaler & Sunstein, 2008). Their effect on actual spending behavior has NOT been measured. Do NOT claim "Peso improves financial behavior" — only "Peso was designed to apply behavioral principles."
+
+### ☐ 8.8 — SUS Sheets formula (when data arrives)
+
+```
+=((B2-1)+(5-C2)+(D2-1)+(5-E2)+(F2-1)+(5-G2)+(H2-1)+(5-I2)+(J2-1)+(5-K2))*2.5
+```
+
+Columns B–K = the 10 SUS answers per respondent (1–5 scale). Check your form export column order — a timestamp column shifts everything right by one.
+
+Then: `=AVERAGE(L2:L31)` for mean, `=STDEV.S(L2:L31)` for SD. Use Bangor et al. (2009) for adjective rating interpretation.
+
+---
+
+*Part 8 added: November 1, 2026 — Kiro review session*
