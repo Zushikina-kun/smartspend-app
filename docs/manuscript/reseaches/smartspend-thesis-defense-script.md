@@ -2,9 +2,9 @@
 **Institution:** College of Computer Studies and Engineering, LORMA Colleges  
 **Degree:** Bachelor of Science in Information Technology  
 **Capstone Title:** SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management  
-**Adviser:** Mr. Johnny Flores Verzola, MTS  
-**Chairperson:** Ms. Ellen F. Mangaoang, MIT  
-**Teacher-in-Charge:** Dr. Janelli M. Mendez, MIT  
+**Adviser:** Ms. Ellen F. Mangaoang, DIT  
+**Panel:** Shekiro R. Raposas, Mary-Ann Mzana  
+**Chairperson:** TBA  
 
 ---
 
@@ -16,16 +16,16 @@
 *   **On-Slide Content:**
     *   Presented by: Brix A. Directo, Cyrille John M. Rubis, and Djaunathan Albert S. Madayag
     *   In Partial Fulfillment of the Requirements for the Degree of Bachelor of Science in Information Technology
-    *   Capstone Project Adviser: Mr. Johnny Flores Verzola, MTS
+    *   Capstone Project Adviser: Ms. Ellen F. Mangaoang, DIT
     *   LORMA Colleges, College of Computer Studies and Engineering (CCSE)
 
 ### 2. Presenter's Speaking Script
-> "Good morning, respected members of the panel, Chairperson Mangaoang, Dean Layco, and guests. We are Brix Directo, Cyrille John Rubis, and Djaunathan Albert Madayag. Today, we are privileged to present our capstone research project entitled: *'SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management.'*
+> "Good morning, respected members of the panel, Dean Layco, and guests. We are Brix Directo, Cyrille John Rubis, and Djaunathan Albert Madayag. Today, we are privileged to present our capstone research project entitled: *'SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management.'*
 > 
-> Our research has been conducted under the guidance of our Capstone Project Adviser, Mr. Johnny Flores Verzola, MTS. The focus of our work is to design, implement, and rigorously evaluate an intelligent, offline-first mobile financial tracking ecosystem specifically optimized for parents and young professionals in the province of La Union, Philippines. We will demonstrate how our system mitigates manual entry barriers through automated multimodal processing and enforces behavioral financial wellness via a mathematically-modeled Financial Health Score."
+> Our research has been conducted under the guidance of our Capstone Project Adviser, Ms. Ellen F. Mangaoang, DIT. The focus of our work is to design, implement, and rigorously evaluate an intelligent, offline-first mobile financial tracking ecosystem specifically optimized for parents and young professionals in the province of La Union, Philippines. We will demonstrate how our system mitigates manual entry barriers through automated multimodal processing and enforces behavioral financial wellness via a mathematically-modeled Financial Health Score."
 
 ### 3. Source Grounding & Defense Alignment
-*   **Academic Base:** Resolves title page inconsistencies. Verzola is properly designated as the primary Adviser, Mangaoang as Chairperson, and the student author block is corrected to exclude faculty members [SmartSpend Manuscript Approval Sheet].
+*   **Academic Base:** Resolves title page inconsistencies. Ms. Ellen F. Mangaoang, DIT is designated as the primary Adviser, Chairperson is TBA, panel members are Shekiro R. Raposas and Mary-Ann Mzana, and the student author block is corrected to exclude faculty members [SmartSpend Manuscript Approval Sheet].
 
 ---
 
