@@ -93,7 +93,7 @@
 
 ## Open items Kiro cannot answer (need Brix to check)
 
-1. Dean's full name and title for Approval Sheet — call CCSE office
+1. Dean's full name and title for Approval Sheet — **Jeoffrey B. Layco, [title TBD]** — name and middle initial B. confirmed; exact degree title (MIS/MIT/BSCIS) needs Brix to reconfirm directly before printing
 2. Chairperson name — ask Ms. Mangaoang
 3. Are OCR accuracy numbers (91.2%/88.5%) and AI categorization (94.6%) from a real test? If not, these must be removed from Table 3.5
 4. Gemini key's Cloud project billing status — check in Google AI Studio

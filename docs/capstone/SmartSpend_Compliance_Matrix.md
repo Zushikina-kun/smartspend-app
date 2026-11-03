@@ -13,7 +13,7 @@
 
 | Requirement | Deliverable / Evidence | Status | Notes |
 |-------------|----------------------|--------|-------|
-| Title page (title, authors, adviser, institution, AY, date) | `CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx` | 🔄 IN PROGRESS | Updated from "Proposal" → "Capstone Project"; Nov 2026; Adviser: Ellen F. Mangaoang, DIT. Chairperson still TBA. Dean name (Jeoffrey B. Layco, MIS) unverified — confirm with school. |
+| Title page (title, authors, adviser, institution, AY, date) | `CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx` | 🔄 IN PROGRESS | Updated from "Proposal" → "Capstone Project"; Nov 2026; Adviser: Ellen F. Mangaoang, DIT. Chairperson still TBA. **Dean: Jeoffrey B. Layco, [title TBD — confirm with Brix before printing]** |
 | Abstract | Chapter I of __5_.docx | 🔄 IN PROGRESS | SUS sentence updated to "pending". Some `[[PENDING]]` tags remain. |
 | Chapter I: Introduction, Background of the Study | __5_.docx Chapter I | ✅ DONE | Written. BSP CFIS 2025 figures updated (literacy 74%, account ownership 50%, household access 85%). |
 | Chapter I: Problem Statement | __5_.docx Chapter I | ✅ DONE | 5-point enumeration; validated via needs assessment |
@@ -34,7 +34,7 @@
 | Table of Contents | Manual in manuscript | ⏳ PENDING | Not updated since Ch. III/IV added. Update after all figures are inserted and page count is final. |
 | List of Tables | Manual in manuscript | ⏳ PENDING | Add Tables 2.2, 3.1–3.5. |
 | List of Figures | Manual in manuscript | ⏳ PENDING | Add Figures 3.1–3.11. |
-| Approval Sheet (adviser + panel signatures) | __5_.docx Approval Sheet | ⏳ PENDING | Adviser: Ellen F. Mangaoang, DIT. Chairperson: TBA. Panel: Raposas, Mzana. Dean: unverified. |
+| Approval Sheet (adviser + panel signatures) | __5_.docx Approval Sheet | ⏳ PENDING | Adviser: Ellen F. Mangaoang, DIT. Chairperson: TBA. Panel: Raposas, Mzana. **Dean: Jeoffrey B. Layco, [title TBD — Brix to confirm]** |
 | Appendices (SUS instrument, validator certificates, raw data) | Not yet compiled | ⏳ PENDING | Need: actual 10-item SUS questionnaire printout; validator signature pages (IT prof + finance expert); sample survey responses. |
 
 **Critical before printing:** `Ctrl+F [[` must find nothing (currently 97 tags in __5_.docx).
