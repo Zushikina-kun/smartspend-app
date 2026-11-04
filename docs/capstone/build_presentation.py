@@ -746,13 +746,62 @@ txt(s, "Prepared answers: see DEFENSE_QA_PREP.md   ·   FHS formula: see FHS_FOR
 txt(s, "15 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
 
 
-# ── SAVE ──────────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# SLIDE 16 — COMPETITOR COMPARISON (bonus slide, shown if panel asks)
+# ══════════════════════════════════════════════════════════════════════════════
+COMPETITORS = [
+    ("BudgetPH",     "✅ Filipino", "❌ No", "❌ No", "❌ No", "Payday-cycle, paluwagan — no AI, no screenshot import"),
+    ("P1SO Budget",  "❌ Generic",  "❌ No", "❌ No", "✅ Yes","100% offline, no ads — manual only, no AI or FHS"),
+    ("GoodBudget",   "❌ Generic",  "❌ No", "❌ No", "❌ No", "Envelope budgeting — no Filipino context"),
+    ("Spendee",      "❌ Generic",  "❌ No", "❌ No", "❌ No", "Paid, bank-linked — no offline, no Taglish"),
+    ("SmartSpend ✅","✅ Taglish AI","✅ Yes","✅ Yes","✅ Yes","All 4 differentiators combined — only integrated PH solution"),
+]
+
+s = add_slide()
+bg(s, RGBColor(0x08, 0x0F, 0x18))
+accent_bar(s)
+tag_label(s, "CHAPTER II  ·  COMPETITOR ANALYSIS (BACKUP SLIDE)")
+title_text(s, "Competitor Gap Analysis — Why SmartSpend?")
+
+col_labels = ["App", "Language", "GCash Import", "FHS (0-100)", "Offline", "Key Differentiator"]
+col_widths  = [1.8,  1.5,        1.4,           1.4,           1.1,     5.4]
+x0 = 0.3
+for j, (h, w) in enumerate(zip(col_labels, col_widths)):
+    box(s, x0 + sum(col_widths[:j]), 1.85, w, 0.5,
+        fill=RGBColor(0x00, 0x40, 0x30), line=GREEN, line_width_pt=0.5)
+    txt(s, h, x0 + sum(col_widths[:j]) + 0.08, 1.9, w - 0.1, 0.4,
+        size=10, bold=True, color=GREEN)
+
+for i, row in enumerate(COMPETITORS):
+    is_smart = (i == len(COMPETITORS) - 1)
+    fill_c = RGBColor(0x00, 0x28, 0x1E) if is_smart else (
+             RGBColor(0x0A, 0x14, 0x10) if i % 2 == 0 else RGBColor(0x06, 0x10, 0x0C))
+    for j, (cell, w) in enumerate(zip(row, col_widths)):
+        box(s, x0 + sum(col_widths[:j]), 2.38 + i * 0.82, w, 0.78,
+            fill=fill_c, line=GREEN if is_smart else RGBColor(0x1A, 0x3A, 0x2A),
+            line_width_pt=1.0 if is_smart else 0.4)
+        c = GREEN if is_smart else (
+            GREEN if "✅" in cell else RED if "❌" in cell else GRAY)
+        txt(s, cell, x0 + sum(col_widths[:j]) + 0.08, 2.42 + i * 0.82,
+            w - 0.1, 0.7, size=11, color=c, bold=(is_smart and j == 0), wrap=True)
+
+txt(s, "Sources: BudgetPH (kindlyf.com, Nov 2026), P1SO Budget (pisobudget.com), GoodBudget, Spendee — feature set verified against public listings",
+    0.3, 6.88, 12.7, 0.35, size=10, color=GRAY)
+txt(s, "16 / 16", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
+
+
 output = r"c:\xampp\htdocs\smartspend_app\docs\capstone\SmartSpend_Defense_Presentation.pptx"
 prs.save(output)
 print(f"\n✅  Saved: {output}")
-print(f"   15 slides  ·  13.33×7.5 inches (widescreen 16:9)")
-print(f"\nHow to fill [PENDING] slides:")
-print(f"  - Open in PowerPoint or Google Slides")
-print(f"  - Slides 11 & 12 have orange [PENDING] cells")
-print(f"  - Replace with actual survey data when N=30 responses arrive")
-print(f"  - See docs/capstone/DEFENSE_QA_PREP.md for Q&A preparation")
+print(f"   16 slides  ·  13.33×7.5 inches (widescreen 16:9)")
+print(f"   Slide 16 = Competitor comparison (backup/bonus slide)")
+print(f"\nScreenshots needed for full presentation:")
+print(f"  Take these on demo phone (v3.1.2 + Try Demo loaded):")
+print(f"  1. Home screen — FHS card with Peso tier ring, wallets, Safe-to-Spend")
+print(f"  2. AI chat — 'nag-gastos ako ng 65 sa canteen' → clean Peso reply")
+print(f"  3. FHS breakdown dialog — 4 components with points")
+print(f"  4. Analytics overview — pie chart + 50/30/20")
+print(f"  5. Achievements — badge grid (36 badges)")
+print(f"  Drop into docs/debug/screenshots/v3.1.2/ then tell Kiro to update.")
+print(f"\n[PENDING] slides to update when survey data arrives:")
+print(f"  Slide 11 (SUS Results) · Slide 12 (Conclusions Obj 1 & 3)")
