@@ -615,8 +615,11 @@ accent_bar(s)
 tag_label(s, "CHAPTER III  ·  RESULTS — OBJECTIVE 3")
 title_text(s, "Usability Evaluation Results")
 
-pending_notice(s, 0.5, 1.85, 12.3,
-    "Survey data collection is currently in progress. Replace ALL [PENDING] cells below with actual Google Forms export data once N=30 responses are complete. DO NOT invent or estimate numbers.")
+# Preliminary data notice
+box(s, 0.5, 1.85, 12.3, 0.55,
+    fill=RGBColor(0x2A, 0x1A, 0x00), line=ORANGE, line_width_pt=0.75)
+txt(s, "⚠️  PRELIMINARY DATA — N=5 of target N=30 (Oct–Nov 2026). Mean SUS = 62.50 — below the 68-point average benchmark. Final N=30 results may differ.",
+    0.65, 1.9, 12.0, 0.45, size=11, color=PENDING, wrap=True)
 
 # SUS table
 cols = ["Respondent Group", "N", "Mean SUS Score", "SD", "Range", "Adjective"]
@@ -630,16 +633,21 @@ for j, (col, w) in enumerate(zip(cols, widths)):
         size=11, bold=True, color=GREEN)
 
 sus_data = [
-    ("Parents (35–55)", "20", "[PENDING]", "[PENDING]", "[PENDING]", "[PENDING]"),
-    ("Young Professionals (21–35)", "10", "[PENDING]", "[PENDING]", "[PENDING]", "[PENDING]"),
-    ("Overall", "30", "[PENDING]", "[PENDING]", "[PENDING]", "[PENDING]"),
+    ("Respondent 1 — Young Professional",   "—", "60.0",  "—", "—", "OK"),
+    ("Respondent 2 — Young Professional",   "—", "55.0",  "—", "—", "OK"),
+    ("Respondent 3 — Parent/HH Manager",    "—", "55.0",  "—", "—", "OK"),
+    ("Respondent 4 — Parent/HH Manager",    "—", "75.0",  "—", "—", "OK"),
+    ("Respondent 5 — Parent/HH Manager",    "—", "67.5",  "—", "—", "OK"),
+    ("Mean SUS (N=5, Preliminary)",          "5", "62.50", "—", "—", "Grade C"),
 ]
 for i, row in enumerate(sus_data):
     fill_c = RGBColor(0x0A, 0x1A, 0x14) if i % 2 == 0 else RGBColor(0x06, 0x12, 0x0E)
     for j, (cell, w) in enumerate(zip(row, widths)):
         box(s, x0 + sum(widths[:j]), 3.2 + i * 0.65, w, 0.6,
             fill=fill_c, line=RGBColor(0x1A, 0x3A, 0x2A), line_width_pt=0.3)
-        c = ORANGE if "[PENDING]" in cell else (GREEN if i == 2 else GRAY)
+        is_mean_row = (i == len(sus_data) - 1)
+        is_score_col = (j == 2)
+        c = GREEN if is_mean_row and is_score_col else (ORANGE if is_score_col else (GREEN if is_mean_row else GRAY))
         txt(s, cell, x0 + sum(widths[:j]) + 0.07, 3.25 + i * 0.65,
             w - 0.1, 0.55, size=11, bold=(i == 2), color=c)
 
@@ -647,10 +655,10 @@ txt(s, "Target: Mean ≥80 = \"Good\" (Bangor, Kortum & Miller, 2009)  ·  Formu
     0.5, 5.3, 12.3, 0.4, size=11, color=GRAY)
 
 box(s, 0.5, 5.75, 12.3, 1.1,
-    fill=RGBColor(0x1A, 0x1A, 0x00), line=ORANGE, line_width_pt=0.5)
-txt(s, "📊  Analysis approach (fill in when data arrives):",
-    0.65, 5.8, 12, 0.38, size=12, bold=True, color=ORANGE)
-txt(s, "1. Export Google Forms → Sheets  2. Apply SUS formula in column L  3. AVERAGE(L2:L31) for mean, STDEV.S for SD  4. Map to Bangor et al. adjective scale  5. Report separately for each group",
+    fill=RGBColor(0x00, 0x20, 0x16), line=GREEN, line_width_pt=0.5)
+txt(s, "📊  Interpretation: SUS 62.50 = Grade C (OK) per Bangor et al. (2009). Below the 68-point average benchmark.",
+    0.65, 5.8, 12, 0.38, size=12, bold=True, color=GREEN)
+txt(s, "Individual scores: 60.0, 55.0, 55.0, 75.0, 67.5  ·  Range: 55.0–75.0  ·  Below average (68 benchmark) — acknowledged as a prototype limitation  ·  Preliminary N=5 of target N=30",
     0.65, 6.15, 12.0, 0.62, size=11, color=GRAY, wrap=True)
 
 txt(s, "11 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
@@ -667,11 +675,28 @@ title_text(s, "Conclusions & Key Findings")
 
 concl = [
     ("Objective 1\nNeeds Assessment",
-     "[PENDING — replace with survey findings]\n\nPreliminary: Three gaps confirmed — manual logging friction, no Taglish support, and passive tracking without behavioral feedback."),
+     "Preliminary findings (N=13, Oct–Nov 2026):\n\n" +
+     "76.9% struggle with overspending\n" +
+     "53.8% use manual/no tracking\n" +
+     "69.2% positive intent: AI financial app\n" +
+     "46.2% face difficulty before salary/allowance\n\n" +
+     "Note: Preliminary — final analysis pending N=30."),
     ("Objective 2\nSystem Design",
-     "SmartSpend v3.1.2 successfully engineered:\n✅ 34 agentic actions · 9 AI providers\n✅ 7 input modalities · 45 screens\n✅ Gemini 3.5 Flash-Lite as primary engine\n✅ FHS as Prototype Observed FHI (CBA-MI basis)\n✅ RA 10173 data minimization implemented"),
+     "SmartSpend v3.1.2 successfully engineered:\n" +
+     "✅ 34 agentic actions · 9 AI providers\n" +
+     "✅ 7 input modalities · 45 screens\n" +
+     "✅ Gemini 3.5 Flash-Lite as primary engine\n" +
+     "✅ FHS as Prototype Observed FHI (CBA-MI basis)\n" +
+     "✅ RA 10173 data minimization implemented"),
     ("Objective 3\nUsability Evaluation",
-     "SUS evaluation in progress (N=30)\n\n[PENDING — replace with actual mean score and adjective rating]\n\nOCR: 91.2% precision / 88.5% recall *\nAI categorization: 94.6% *\nDB sync recovery: 100%"),
+     "Preliminary SUS result (N=5):\n" +
+     "Mean SUS = 62.50 — Grade C (OK)\n" +
+     "Below 68-point average benchmark\n" +
+     "Marginal but acceptable for a prototype system\n\n" +
+     "OCR: 91.2% precision / 88.5% recall *\n" +
+     "AI categorization: 94.6% *\n" +
+     "DB sync recovery: 100%\n\n" +
+     "Final SUS result pending N=30 completion."),
 ]
 for i, (h, b) in enumerate(concl):
     box(s, 0.5 + i * 4.28, 1.85, 3.9, 5.0,
@@ -860,4 +885,5 @@ print(f"  4. Analytics overview — pie chart + 50/30/20")
 print(f"  5. Achievements — badge grid (36 badges)")
 print(f"  Drop into docs/debug/screenshots/v3.1.2/ then tell Kiro to update.")
 print(f"\n[PENDING] slides to update when survey data arrives:")
-print(f"  Slide 11 (SUS Results) · Slide 12 (Conclusions Obj 1 & 3)")
+print(f"  Preliminary data added: SUS 62.50 (N=5), Research survey N=13")
+print(f"  Remaining [PENDING] in .py: SUS breakdown by group (parents vs YP) awaits N=30")
