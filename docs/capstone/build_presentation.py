@@ -9,7 +9,34 @@ from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN
 from pptx.util import Inches, Pt
-import copy
+import os
+
+# ── SCREENSHOT PATHS ─────────────────────────────────────────────────────────
+SS_DIR = r"c:\xampp\htdocs\smartspend_app\docs\debug\screenshots"
+
+def ss(filename):
+    """Return full path for a screenshot filename."""
+    return os.path.join(SS_DIR, filename)
+
+# Screenshot catalogue (verified by viewing each image)
+IMG = {
+    "splash":       ss("894085e6-46d9-4653-924d-203f4717217c.jpg"),  # Splash screen
+    "home":         ss("b86a5f4f-d491-49ab-b158-a7283c29f008.jpg"),  # Home: FHS 81 + ring + AI Insights
+    "fhs_81":       ss("3144493a-92b4-4c8f-b262-48dc411d3a94.jpg"),  # FHS breakdown 81/100 Great
+    "fhs_75":       ss("aa9605f7-bf76-4d1d-8abe-debbc95beff2.jpg"),  # FHS breakdown 75/100 Good
+    "ai_chat":      ss("529786e2-7d44-4712-94eb-12d8936163b2.jpg"),  # AI: Taglish → warm reply + recorded
+    "ai_backdate":  ss("6e686c35-6add-4aa4-9352-ca0a0636b177.jpg"),  # AI: backdated logging, date slip
+    "batch":        ss("a54ef2ad-df1b-4833-8f5e-af888c7ab741.jpg"),  # Batch screenshot import review
+    "analytics":    ss("d37e0936-9667-450b-a7a7-5d1fb260a03e.jpg"),  # Analytics pie chart
+    "badges1":      ss("24ae5fa8-3a48-4e8e-b4d4-a31fbad921f8.jpg"),  # Achievements page 1
+    "badges2":      ss("45a953b4-cc13-47c2-9cf3-7bf64202c25e.jpg"),  # Achievements page 2
+    "smart_import": ss("99109c6b-8d35-4d80-90d4-68e369196619.jpg"),  # Smart Import options sheet
+    "transactions": ss("491c49ad-e4b1-4016-a279-f34cb4cb3365.jpg"),  # Recent Transactions list
+    "budgets":      ss("2868672c-4102-44d4-8369-1657fd86d2ed.jpg"),  # Budgets screen + Peso winking
+    "fhs_cert":     ss("78465e35-d03f-4b08-a076-767491c4ec01.jpg"),  # Financial Health Certificate 81/100
+    "home_full":    ss("9d0eda20-63a0-466f-8d66-fc77819760d9.jpg"),  # Home: FHS card + ring + safe to spend
+    "quick_access": ss("b5852025-18e0-4f48-8a4f-b6cb690bb661.jpg"),  # Quick Access hub grid
+}
 
 # ── BRAND COLORS ─────────────────────────────────────────────────────────────
 GREEN      = RGBColor(0x00, 0xC8, 0x96)   # kPesoGreen
@@ -37,6 +64,20 @@ BLANK = prs.slide_layouts[6]  # completely blank
 
 def add_slide():
     return prs.slides.add_slide(BLANK)
+
+
+def phone_img(slide, img_path, left, top, height=5.5):
+    """Add a phone screenshot image with correct aspect ratio (810x1800 = 0.45 ratio)."""
+    if not os.path.exists(img_path):
+        # Placeholder box if image missing
+        box(slide, left, top, height * 0.45, height,
+            fill=RGBColor(0x1A, 0x2A, 0x3A), line=GREEN, line_width_pt=0.5)
+        txt(slide, "📱\nScreenshot", left, top + height/2 - 0.3, height * 0.45, 0.6,
+            size=10, color=GRAY, align=PP_ALIGN.CENTER)
+        return
+    width = height * (810 / 1800)  # maintain aspect ratio
+    slide.shapes.add_picture(img_path,
+        Inches(left), Inches(top), Inches(width), Inches(height))
 
 
 def bg(slide, color=NAVY):
@@ -183,6 +224,8 @@ txt(s, "BSIT Capstone 2  ·  AY 2026–2027", 1.0, 5.6, 11.3, 0.35,
     size=11, color=GREEN, align=PP_ALIGN.CENTER, bold=True)
 
 txt(s, "1 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
+# Splash screen screenshot on right side
+phone_img(s, IMG["splash"], 9.8, 0.4, height=6.9)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -351,6 +394,8 @@ for i, row in enumerate(rows):
             size=11, color=GRAY)
 
 txt(s, "5 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
+# Screenshot: FHS breakdown dialog showing all 4 components
+phone_img(s, IMG["fhs_81"], 10.0, 0.6, height=6.5)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -391,6 +436,8 @@ for i, (n, l) in enumerate(stats6):
     stat_block(s, 0.5 + i * 2.05, 4.3, n, l, width=1.85)
 
 txt(s, "6 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
+# Screenshot: Home screen showing FHS card with Peso ring
+phone_img(s, IMG["home_full"], 9.8, 0.55, height=6.8)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -421,6 +468,9 @@ for i, (h, b) in enumerate(peso_cards):
     card(s, 0.5 + c * 4.28, 1.85 + r * 2.4, 3.9, 2.2, h, b)
 
 txt(s, "7 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
+# Screenshots: Achievements grid (2 pages)
+phone_img(s, IMG["badges1"], 9.0, 0.55, height=6.7)
+phone_img(s, IMG["badges2"], 11.55, 0.55, height=6.7)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -551,6 +601,9 @@ for i, (metric, val) in enumerate(perf):
 txt(s, "* Internal estimates — formal 50-receipt parsing test pending",
     0.5, 6.98, 12, 0.3, size=10, color=GRAY)
 txt(s, "10 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
+# Screenshots: AI chat (Taglish) + Batch import
+phone_img(s, IMG["ai_chat"], 7.1, 0.5, height=4.8)
+phone_img(s, IMG["batch"],   9.9, 0.5, height=4.8)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -678,32 +731,35 @@ s = add_slide()
 bg(s, RGBColor(0x00, 0x1E, 0x14))
 accent_bar(s)
 
-# Coin
-box(s, 5.9, 1.2, 1.5, 1.5, fill=GREEN)
-txt(s, "₱", 5.9, 1.2, 1.5, 1.5,
-    size=48, bold=True, color=NAVY, align=PP_ALIGN.CENTER)
+# Right side: text content
+txt(s, "LIVE DEMO", 8.7, 0.2, 4.4, 0.4,
+    size=11, bold=True, color=GREEN, align=PP_ALIGN.CENTER)
+txt(s, "SmartSpend in action", 8.5, 0.6, 4.6, 0.6,
+    size=26, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
+txt(s, "Showing the 3 core features:", 8.6, 1.25, 4.5, 0.4,
+    size=13, color=GRAY, align=PP_ALIGN.CENTER)
 
-txt(s, "LIVE DEMO", 1, 2.85, 11.3, 0.45,
-    size=12, bold=True, color=GREEN, align=PP_ALIGN.CENTER)
-txt(s, "Let's see SmartSpend in action", 1, 3.3, 11.3, 0.75,
-    size=32, bold=True, color=WHITE, align=PP_ALIGN.CENTER)
-txt(s, "Demo device loaded with realistic Filipino spending data",
-    1, 4.1, 11.3, 0.45, size=16, color=GRAY, align=PP_ALIGN.CENTER)
-
-demo_items = [("Taglish AI logging", "💬"), ("FHS breakdown tap", "📊"),
-              ("Batch screenshot import", "🖼️"), ("Analytics overview", "📈")]
-for i, (label, icon) in enumerate(demo_items):
-    box(s, 1.5 + i * 2.7, 4.75, 2.4, 0.75,
+demo_items = [
+    ("💬", "Taglish AI logging"),
+    ("📊", "FHS breakdown"),
+    ("📈", "Analytics"),
+]
+for i, (icon, label) in enumerate(demo_items):
+    box(s, 8.6, 1.7 + i * 0.75, 4.3, 0.65,
         fill=RGBColor(0x00, 0x28, 0x1E), line=GREEN, line_width_pt=0.5)
-    txt(s, f"{icon}  {label}", 1.6 + i * 2.7, 4.85, 2.2, 0.55,
-        size=11, color=GREEN, align=PP_ALIGN.CENTER)
+    txt(s, f"{icon}  {label}", 8.7, 1.77 + i * 0.75, 4.1, 0.52,
+        size=13, color=GREEN, align=PP_ALIGN.CENTER)
 
-txt(s, "📲  Download: zushikina-kun.github.io/smartspend-app/   ·   Version v3.1.2",
-    1, 5.75, 11.3, 0.45, size=13, color=GRAY, align=PP_ALIGN.CENTER)
-txt(s, "Open the app → tap \"Try Demo\" on the login screen",
-    1, 6.18, 11.3, 0.4, size=12, color=GRAY, align=PP_ALIGN.CENTER, italic=True)
+txt(s, "v3.1.2  ·  Try Demo on login",
+    8.5, 4.1, 4.5, 0.4, size=11, color=GRAY, align=PP_ALIGN.CENTER, italic=True)
+txt(s, "zushikina-kun.github.io/smartspend-app/",
+    8.4, 4.5, 4.6, 0.35, size=10, color=GRAY, align=PP_ALIGN.CENTER)
 
 txt(s, "14 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
+# Three key screenshots for the demo slide
+phone_img(s, IMG["home"],       0.2,  0.5, height=6.8)
+phone_img(s, IMG["ai_chat"],    3.0,  0.5, height=6.8)
+phone_img(s, IMG["analytics"],  5.8,  0.5, height=6.8)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
