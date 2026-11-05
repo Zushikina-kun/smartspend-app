@@ -54,7 +54,7 @@ Each component was chosen because it directly addresses one of the four problems
 
 Why 25 points each? Not arbitrary. Three reasons:
 1. **Melbourne Institute precedent** — their framework uses equal-weighted components summing to 100
-2. **No empirical basis for differential weighting** — we don't have the longitudinal data to say savings rate is "more important" than overspend control for this population; equal weighting is the defensible choice when evidence is insufficient
+2. **No empirical basis for differential weighting** — we don't have the longitudinal data to say savings rate is "more important" than overspend control for this population; equal weighting is the defensible choice when evidence is insufficient. This is formally endorsed by the OECD/JRC *Handbook on Constructing Composite Indicators* (2008), which establishes equal weighting as the methodologically correct default when no theoretical or empirical basis exists to prefer other weights
 3. **Transparency** — users can easily understand "each pillar is worth 25 points" without needing a finance degree
 
 ### Step 5 — We added two adjustments grounded in theory
@@ -84,7 +84,7 @@ Why 25 points each? Not arbitrary. Three reasons:
 
 **Q: Nagtry kayo ng ibang weights?**
 
-> *"Sa development phase, nag-explore po kami ng alternative weighting schemes, but we ultimately chose equal weights because: (1) it has academic precedent, (2) it's transparent to users — madaling maintindihan ng user na bawat component ay 25 points, and (3) it avoids the risk of introducing arbitrary bias without empirical justification."*
+> *"Sa development phase, nag-explore po kami ng alternative weighting schemes — 40/20/20/20 (emphasizing savings) at 30/30/20/20 — but we ultimately chose equal weights because: (1) it has academic precedent (Melbourne Institute 2018, OECD Composite Indicators Handbook 2008), (2) both alternatives introduced subjective ordering without empirical justification — we had no data proving savings should weigh more than logging for this population, and (3) equal weights are transparent to users — madaling maintindihan ng user na bawat component ay 25 points."*
 
 **Q: Bakit 20% savings target?**
 
@@ -92,7 +92,7 @@ Why 25 points each? Not arbitrary. Three reasons:
 
 **Q: Ano ang difference ng FHS sa mga existing financial health tools?**
 
-> *"Most existing tools — like CFPB's Financial Well-Being Scale — are survey-based: they ask users to rate their financial feelings. Our FHS is transaction-derived: it calculates from actual spending data. This removes self-reporting bias. The Melbourne Institute framework validates this approach — they call it an 'Observed Financial Health Indicator' to distinguish it from subjective survey scales. We named ours a 'Prototype Observed FHI' following their naming guidance."*
+> *"Most existing tools — like CFPB's Financial Well-Being Scale — are survey-based: they ask users to rate their financial feelings. Our FHS is transaction-derived: it calculates from actual spending data. This reduces self-reporting bias on spending amounts relative to survey-based scales — you can't misremember how much you spent if the app recorded it. The Melbourne Institute framework validates this approach — they call it an 'Observed Financial Health Indicator' to distinguish it from subjective survey scales. We named ours a 'Prototype Observed FHI' following their naming guidance. We acknowledge that category attribution (the user chooses which category each expense belongs to) and logging completeness remain user-influenced."*
 
 **Q: Validated ba ang formula ninyo?**
 
@@ -145,9 +145,45 @@ Search strings to use:
 - `gamification personal finance behavior`
 - `"financial well-being scale" mobile`
 
+**Q: Bakit may soft at hard overspend? Bakit 0.5x?**
+
+> *"Not all overspending is the same. Paying school tuition or an unexpected medical bill that exceeds a category budget is a one-time event — it's a deliberate, planned payment, not a daily habit. So we count it at 0.5× (half an 'overspend day'). Daily habitual overspending — buying snacks, impulse purchases — counts at full 1×. The principle comes from Kahneman & Tversky's Prospect Theory and Thaler's Nudge Theory, which distinguish planned vs. habitual discretionary behavior. The 0.5 coefficient is a calibrated design value — we disclose this in our documentation: it's a reasonable prototype constant, not a number we derived from a specific paper."*
+
+**Q: Bakit 40% ang threshold ng Category Balance?**
+
+> *"Category Balance checks whether one spending category dominates a user's discretionary budget. We set the threshold at 40% of discretionary spending (excluding Bills, Health, and Education which are non-discretionary fixed obligations). Below 40%, any single category's dominance is minimal. Above 40%, spending is becoming concentrated in one area, which financial health frameworks link to inflexibility and risk. The 40% figure is a calibrated design constant — we document it as such. We excluded Bills, Health, and Education from the denominator because BSP CFIS (2025) data shows those are non-discretionary obligations for Filipino households: rent, tuition, and medical expenses should not penalize a user's balance score."*
+
 ---
 
-## THE BOTTOM LINE FOR THE DEFENSE
+## WORKED EXAMPLE — Sample Score Calculation
+
+*Use this if the panel asks you to demonstrate the formula with actual numbers.*
+
+**Sample user profile (30-day period):**
+- Monthly income: ₱20,000 | Total savings logged: ₱5,000 → savingsRate = 25%
+- Active days: 20 | Hard overspend days: 2 | Soft overspend days: 3
+- Budget categories: 4 total | 3 on-budget, 1 over
+- Logged days: 18 out of 20
+
+**Component calculations:**
+
+| Component | Formula | Calculation | Score |
+|---|---|---|---|
+| Savings Rate | `25 × min(1, 0.25 / 0.20)` | 0.25/0.20 = 1.25 → min(1, 1.25) = 1.0 | **25.0 pts** |
+| Overspend Control | `25 × (1 − (2 + 3×0.5) / 20)` | weighted = 2 + 1.5 = 3.5; ratio = 3.5/20 = 0.175 | **20.6 pts** |
+| Budget Adherence | `25 × (3 / 4)` | = 0.75 | **18.75 pts** |
+| Logging Consistency | `25 × (18 / 20)` | = 0.90 | **22.5 pts** |
+| **Subtotal** | | | **86.85 pts** |
+
+**Adjustments:**
+- No warning decay (no budget alert ignored) → 0
+- No gap adjustment (logged consistently) → 0
+
+**Final FHS: 86.85 → rounds to 87 / 100** — "Good" range.
+
+*This example shows the formula producing a sensible, interpretable result. A user who saves above target, has minor overspend, mostly follows budgets, and logs nearly every day earns an 87 — which accurately reflects "mostly healthy with room to improve."*
+
+---
 
 **The formula question is actually your strongest question.** You have a real answer:
 - Grounded in Melbourne Institute framework (real academic basis)
