@@ -1,271 +1,199 @@
-## ✅ Auto-Fixed by Kiro (Nov 5, 2026 — Round 2)
-
-- Font: Applied Times New Roman 12pt to Normal/body text style to match TEMPLATE_HABSS.docx
-- Headings: Matched Heading 1/2/3 font, size, bold, caps, and spacing to TEMPLATE_HABSS.docx
-- Paragraph spacing: Set double-spacing for body text paragraphs; single spacing inside tables
-- Page margins: Set left=1.5in, top/right/bottom=1in (Lorma binding standard) across all sections
-- Table formatting: Verified/applied APA top-and-bottom border rules; table captions verified
-- Figure captions: Verified figure caption style matches template
-- Blurry chart (P140, 600×371px 12KB): Replaced with Figure_1_1_Financial_Literacy_Rates.png (1333×748px 73KB), same display size
-- Figure 1.1 [[PENDING]] placeholder: Inserted high-res Financial Literacy Rates chart
-- Figure 1.2 [[PENDING]] placeholder: Inserted high-res Conceptual Framework IPO diagram
-- Figure 2.1 [[PENDING]] placeholder: Inserted high-res SUS Score Interpretation chart
-- Figure 2.2 [[PENDING]] placeholder: Inserted high-res Agile Kanban Workflow diagram
-- Existing embedded figures (P161, P261, P265): Verified/replaced with high-res versions where needed
-- Header/footer banner: Left unchanged (official Lorma template image)
-- Student photos (CV section): Left unchanged — manual replacement required
-
-## 🔲 Still Needs Manual Work
-
-- **Figure 3.1** — System flowchart/DFD: Insert actual diagram when ready (placeholder text left in document)
-- **Figure 3.2–3.10** — App screenshots: Cyrille to insert actual screenshots before printing (placeholder text left in each location)
-- **Student photos** — Replace low-res photos in Curriculum Vitae section with high-quality passport photos:
-  - Brix (currently 184×185px via rId60)
-  - Cyrille (currently 1536×2048px via rId61 — crop/resize to passport format)
-  - Djaunathan (currently 433×457px via rId62)
-- **Signatures** — Panel signatures, adviser signature pages: obtain wet signatures or scanned signatures
-- **Page numbering** — Manually verify Roman numeral / Arabic numeral break point after printing preview
-- **Survey data tables** — Any remaining [[PENDING]] table placeholders require actual survey result data
-
----
-
-# SmartSpend Manuscript — Manual To-Do Guide
+# SmartSpend Manuscript — Final Manual To-Do Guide
 **For:** Cyrille John M. Rubis · Djaunathan Albert S. Madayag  
-**Prepared:** November 5, 2026  
-**Deadline:** November 6, 2026 (manuscript print) · November 9, 2026 (defense)  
-**Status:** Kiro has auto-fixed all issues it can. This guide covers what ONLY you can do.
+**Last updated:** November 5, 2026 (Round 2 — post formatting audit)  
+**Deadline:** November 6 (print) · November 9 (defense)
 
 ---
 
-## ✅ Already Fixed by Kiro (do NOT redo these)
+## ✅ EVERYTHING KIRO ALREADY FIXED — Do NOT redo these
 
-These were auto-corrected in the `.md` source files and committed:
-
-| What was wrong | What was fixed |
+### Content fixes (applied to `.md` source files AND `CAPSTONE__5_.docx`)
+| What was wrong | Fixed to |
 |---|---|
-| Abstract claimed SUS "exceeding ≥80" | Changed to honest 62.50 / Grade C language |
-| Adviser listed as "Mr. Johnny Flores Verzola, MTS" | Changed to "Ms. Ellen F. Mangaoang, MIT" |
-| "31 agentic actions" throughout all chapters | Changed to 34 everywhere |
-| "23 achievement badges" in Chapter I | Changed to 25 |
-| Warren & Tyagi (2004) in text + bibliography | Changed to 2005 |
-| Tables 3.1–3.3 showing N=30 without disclaimer | Added preliminary data note below each table |
-| GPT-5.6 Terra — no footnote | Added footnote: "current as of benchmarking date September 2026" |
-| Version inconsistency v2.9.9 vs v3.1.2 | Clarified: v2.9.9 = evaluated version, v3.1.2 = current release |
+| Adviser "Mr. Johnny Flores Verzola, MTS" | Ms. Ellen F. Mangaoang, MIT |
+| Abstract: SUS "exceeding ≥80 (Good)" | Honest: 62.50, Grade C, preliminary N=5 |
+| "31 agentic/conversational actions" everywhere | 34 everywhere |
+| "23 achievement badges" | 25 everywhere |
+| Warren & Tyagi (2004) | 2005 (correct year) |
+| Tables 3.1–3.3 showing N=30 as final | Added "preliminary N=13" disclaimer |
+| Mangaoang DIT | MIT (correct title) |
+| SUS placeholders `[[N]]`, `[score]`, `[grade]` | Filled: N=5, 62.50, Grade C, "OK" |
+| Research survey `[[N]]` | Filled: 13 respondents (preliminary) |
+| Sharma et al. DOI — no flag | ⚠️ flagged for Cyrille to verify |
+| Bangor (2009) — no URL | URL added |
+| Warren & Tyagi missing from bibliography | Added with correct 2005 year |
+| Gemini 3.1 vs 3.5 inconsistency | Clarified: 3.1 benchmarked, 3.5 current |
+
+### Formatting fixes (applied to `CAPSTONE__5_.docx`)
+| What was fixed |
+|---|
+| Times New Roman 12pt applied to all 629 body paragraphs |
+| Double-spacing applied to all body paragraphs |
+| Single-spacing applied to 430 table cell paragraphs |
+| Page margins: left=1.5in (binding), top/right/bottom=1in — all sections |
+| Heading 1/2/3 matched to Lorma HABSS template (font, size, bold, spacing) |
+| Blurry bar chart (600×371px 12KB) → replaced with 1333×748px high-res version |
+| Figures 1.1, 1.2, 2.1, 2.2 — high-res versions inserted |
+| Figures 3.1–3.11 — placeholder text inserted with clear instructions |
 
 ---
 
-## 🔲 PART A — Things You Must Do in Word (Before Printing)
+## 🔲 WHAT CYRILLE MUST DO (before printing Nov 6)
 
-These cannot be done in the `.md` files — they require the actual Word document.
+### STEP 1 — Open `CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx`
+This is the main file. All Kiro's fixes are already applied here. Open this in Word.
 
-### A1. Apply All `.md` Changes to the Word Document
-The Kiro-fixed source is in these files:
-```
-docs/manuscript/reseaches/smartspend-thesis-chapter-1.md
-docs/manuscript/reseaches/smartspend-thesis-chapter-2.md
-docs/manuscript/reseaches/smartspend-thesis-chapter-3.md
-docs/manuscript/reseaches/smartspend-thesis-chapter-4.md
-```
-Use `Ctrl+F` in Word on each issue below and apply the same change:
+### STEP 2 — Insert app screenshots (Figures 3.4–3.10)
+Find these placeholders in Word (Ctrl+F: "App screenshot to be inserted"):
+- **Figure 3.4** — Login screen + Demo Mode
+- **Figure 3.5** — Home Dashboard (FHS ring, Peso)
+- **Figure 3.6** — Chat with Peso logging an expense in Taglish
+- **Figure 3.7** — Receipt scanning / batch screenshot import
+- **Figure 3.8** — FHS breakdown screen
+- **Figure 3.9** — Budgets + Savings Goals
+- **Figure 3.10** — Local AI Mode setup screen
 
-**In CAPSTONE__4_.docx or your main Word file:**
+**How to get the screenshots:**
+- Already have 30 screenshots in `docs/debug/screenshots/` — use these
+- Or take fresh ones from the app on phone
+- Export as PNG at high resolution
+- In Word: click placeholder line → Insert → Pictures → select PNG
 
-| Find this | Replace with |
+**Caption format:** `Figure 3.X. [Screen Name]. Source: Authors' own development.`
+
+### STEP 3 — Insert system diagrams (Figures 3.1–3.3)
+- **Figure 3.1** — System Flowchart/DFD (draw in Canva or Lucidchart, export PNG)
+- **Figure 3.2** — Use Case Diagram (same)
+- **Figure 3.3** — Visual Table of Contents / Screen Map
+
+You can use any of these free tools:
+- https://www.canva.com — easiest, has flowchart templates
+- https://app.diagrams.net — free, good for DFDs
+- https://lucidchart.com — free tier works for simple diagrams
+
+Export at 300 DPI PNG. Insert same way as screenshots.
+
+### STEP 4 — Replace your ID photo (optional but recommended)
+Your photo (rId60) is only 184×185px — it will look blurry at 2-inch print size.
+If you have a better passport photo (at least 600×600px), replace it:
+In Word: right-click the photo → Change Picture → select new file
+
+### STEP 5 — Verify the Sharma DOI
+Open: https://doi.org/10.2991/978-94-6463-IYC-2026_28
+- If it opens the correct paper → find the `[⚠️ DOI TO VERIFY]` note in the bibliography and delete just that warning note
+- If it doesn't work → delete the entire Sharma reference and remove any in-text `[2]` citations
+
+### STEP 6 — Verify 3 unverified references
+Search on Google Scholar (https://scholar.google.com):
+| Reference | Search string |
 |---|---|
-| `Verzola` | `Ms. Ellen F. Mangaoang, MIT` |
-| `exceeding the predefined threshold of ≥80` | delete this phrase; use the new SUS language |
-| `31 conversational actions` | `34 conversational actions` |
-| `31 agentic actions` | `34 agentic actions` |
-| `31 distinct data actions` | `34 distinct data actions` |
-| `23 achievement badges` | `25 achievement badges` |
-| `23 habit achievement badges` | `25 habit achievement badges` |
-| `Warren & Tyagi (2004)` | `Warren & Tyagi (2005)` |
-| `Warren, E., & Tyagi, A. W. (2004)` | `Warren, E., & Tyagi, A. W. (2005)` |
+| FHN (2026) | `"Financial Health Network" 2026 financial health measurement` |
+| Groq (2026) | check developer.groq.com directly |
+| Li et al. (2024) | search the exact title if you know it |
 
-### A2. Update Approval Sheet
-Check that your approval sheet matches exactly:
+If NOT found → delete from bibliography + remove in-text citations.
+
+### STEP 7 — Update TOC and Lists
+1. Ctrl+A to select all → right-click any field → Update Field → Update entire table
+2. Or: References tab → Update Table (for each: TOC, List of Tables, List of Figures)
+3. Verify page numbers are correct
+
+### STEP 8 — Approval sheet check
+Verify these exact names on the approval/title page:
 ```
 Adviser:        Ms. Ellen F. Mangaoang, MIT
-Chairperson:    Ms. Ellen F. Mangaoang, MIT
+Chairperson:    Ms. Ellen F. Mangaoang, MIT  
 Member 1:       Mr. Jopher F. Reyes, MIT
 Member 2:       Mr. Gelo Ryann M. Carbonell
 Dean:           Mr. Jeoffrey B. Layco, MIS
 ```
-⚠️ If Dean's title is wrong, ask Brix to confirm before printing.
+⚠️ Brix to confirm Dean's title before you print.
 
-### A3. Verify Page Numbers and Table of Contents
-After all edits are applied:
-1. Right-click the TOC → **Update Field** → **Update entire table**
-2. Right-click the List of Tables → **Update Field**
-3. Right-click the List of Figures → **Update Field**
-4. Check that Chapter headings still match TOC page numbers
-
-### A4. Print Setup
-- **Font:** Times New Roman 12pt throughout
-- **Margins:** 1 inch all sides (or per Lorma format)
-- **Spacing:** Double-spaced body text
-- **Print 3 copies** (one for submission, one for each panel member)
-- **Do NOT use LibreOffice** — use Microsoft Word only (LibreOffice breaks formatting)
-
----
-
-## 🔲 PART B — References You Must Verify Before Printing
-
-### B1. Sharma et al. (2026) DOI — MUST CHECK
-**Reference:**
-```
-Sharma, P., Gaba, P., & Sharma, B. (2026). Can cognitive nudges in gamified digital payments 
-    foster digital financial well-being? In Proceedings of the 13th International Youth 
-    Conference (IYC 2026)... Atlantis Press. 
-    https://doi.org/10.2991/978-94-6463-IYC-2026_28
-```
-**Action:** Go to https://doi.org/10.2991/978-94-6463-IYC-2026_28
-- If it OPENS the correct paper → DOI is valid, remove the flag note in the manuscript
-- If it says "Not Found" or opens a different paper → DELETE this reference from the manuscript and remove all `[92]`/`[93]` in-text citations. Replace with a verified alternative.
-
-### B2. Three Unverified References — Find or Delete
-These were flagged as unverified in an earlier session. Before printing, for each one:
-1. Search the **exact title** on Google Scholar (https://scholar.google.com)
-2. If found with matching authors, year, and journal → keep it
-3. If NOT found → **delete the reference** and remove its in-text citations
-
-| Reference | What to search |
-|---|---|
-| FHN (2026) — Financial Health Network 2026 | "Financial Health Network" 2026 in Google Scholar |
-| Groq (2026) — Groq LPU documentation | Search groq.com/docs or developer.groq.com |
-| Li et al. (2024) | Search exact title in Google Scholar |
-
-### B3. Bangor et al. (2009) — Missing URL
-The bibliography entry:
-```
-Bangor, A., Kortum, P., & Miller, J. (2009). Determining what individual SUS scores mean...
-    Journal of Usability Studies, 4(3), 114–123.
-```
-This is missing a DOI or URL. Add:
-```
-https://uxpajournal.org/determining-what-individual-sus-scores-mean-adding-an-adjective-rating-scale/
-```
-
-### B4. Brooke (1996) — Book chapter format check
-```
-Brooke, J. (1996). SUS: A quick and dirty usability scale. In P. W. Jordan et al. (Eds.), 
-    Usability evaluation in industry (pp. 189–194). Taylor & Francis.
-```
-This is correct APA 7th format for a book chapter. No URL needed for print books. ✅
-
----
-
-## 🔲 PART C — Figures (Cyrille's Main Task)
-
-All figures in the manuscript are currently PLACEHOLDER. You must draw/create and insert:
-
-| Figure | Where in manuscript | What it shows |
+### STEP 9 — Final Ctrl+F checks before printing
+| Search for | Should find | Action if found |
 |---|---|---|
-| Figure 1.1 | Chapter I — Conceptual Framework | The IPO diagram (can copy from the text box version already in Chapter I) |
-| Figure 1.2 | Chapter I — Theoretical Framework | SDT + Nudge Theory + Prospect Theory + TAM diagram |
-| Figure 2.1 | Chapter II — Research Design | Mixed-methods flowchart |
-| Figure 2.2 | Chapter II — Sampling Design | The sampling table as a visual diagram |
-| Figure 3.1 | Chapter III — LLM Benchmarking | Bar chart of the Table 3.4 results |
-| Figure 3.2 | Chapter III — FHS Formula | Visual diagram of FHS components |
-| Figure 3.3 | Chapter III — Full Mode FHS | Formula diagram |
-| Figure 3.4 | Chapter III — Lightweight Mode | Formula diagram |
-| Figure 3.5 | Chapter III — SUS Results | Bar chart of the preliminary N=5 SUS scores |
-| Figure 3.6–3.11 | Chapter III | App screenshots (use the ones in docs/debug/screenshots/) |
+| `[[` | 0 results | Fill or remove any remaining PENDING tags |
+| `Verzola` | 0 results | Replace with Mangaoang |
+| `31 agentic` | 0 results | Change to 34 |
+| `23 achievement` | 0 results | Change to 25 |
+| `2004` near "Warren" | 0 results | Change to 2005 |
+| `App screenshot to be inserted` | 0 results | Insert actual screenshot |
 
-**Easiest approach:**
-1. Use Canva or PowerPoint to draw the diagrams
-2. Export as PNG at 300 DPI
-3. Insert in Word at the placeholder location
-4. Add caption: `Figure X.X: [Title]. Source: Authors' own.`
+### STEP 10 — Save as PDF and print
+1. File → Save As → PDF
+2. Scroll through the PDF — check for broken formatting, blank pages, overflowing tables
+3. Print 3 copies (Word, not LibreOffice)
 
 ---
 
-## 🔲 PART D — Signatures and Validation Forms
+## 🔲 WHAT DJAUNATHAN MUST DO
 
-### D1. Survey Questionnaire Validation
-Print: `docs/capstone/SmartSpend_Survey_Questionnaire_FOR_VALIDATION.pdf`
-- Get Ma'am Ellen's signature on the Content Validator block
-- Get a Finance/Business expert's signature (second content validator)
+### D1 — Study the defense script
+Read: `docs/capstone/DEFENSE_QA_PREP.md`
+Focus on:
+- Your part of the intro/background section
+- Questions about the system architecture and LLM selection
+- How to answer "Why Gemini 3.5 Flash-Lite?"
 
-### D2. Expert Validator Signatures
-The manuscript needs signatures from:
-1. **IT/Software Expert** — validates the technical development (Objective 2)
-2. **Financial Management Expert** — validates the FHS formula and financial concepts
+### D2 — Study the FHS defense answer
+Read: `docs/capstone/FHS_Defense_Guide.pdf`
+Memorize the 3-sentence short answer at the top.
 
-Ask Sir Raposas if he can recommend validators. This is a formal requirement.
-
-### D3. Informed Consent Forms
-- Prepare 30 copies of the Informed Consent Form (Appendix C)
-- Have each SUS respondent sign before participating
-- Keep signed copies for submission
+### D3 — Demo rehearsal
+Read: `docs/capstone/DEMO_DAY_CHECKLIST.md`
+Know your part of the Nov 8 rehearsal.
 
 ---
 
-## 🔲 PART E — Survey Data (When N=30 is Complete)
+## 🔲 WHAT BRIX MUST DO
 
-When you get all 30 responses on both Google Forms:
-
-1. Download both sheets as CSV
-2. Send to Brix (or drop them in chat with Kiro)
-3. Kiro will recompute all stats and update:
-   - Chapter III Tables 3.1–3.3 (final N=30 data)
-   - Chapter IV SUS results (final mean score)
-   - Presentation Slides 11 and 12
-   - All `[[PENDING]]` tags in the manuscript
-
-**Survey links (resend these to get more responses):**
-- Research survey: https://docs.google.com/forms/d/e/1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ/viewform
-- SUS survey: https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform
-
-Current count: N=13 research, N=5 SUS. Need N=30 each.
+- [ ] Confirm Dean's title (Jeoffrey B. Layco — MIS confirmed? double-check)
+- [ ] Confirm chairperson with Ma'am Ellen (is it also her, or someone else?)
+- [ ] Pay defense fee (ask Sir Raposas for amount)
+- [ ] Send survey links to more people — need N=30
+- [ ] Nov 8 night: install v3.1.2 arm64 APK on demo phone
+- [ ] Nov 8 night: reset AI daily limit in app settings
+- [ ] Nov 8 night: tap Try Demo, verify all features work
 
 ---
 
-## 🔲 PART F — Final Pre-Print Checklist
+## 🔲 SIGNATURES NEEDED (Cyrille to get)
 
-Run through this before sending to print:
-
-**Ctrl+F checks in Word:**
-- [ ] `[[PENDING]]` — count = 0 (or document all remaining ones)
-- [ ] `Verzola` — count = 0
-- [ ] `v2.9.9` — only appears as historical reference, not as "current version"
-- [ ] `31 actions` or `31 agentic` — count = 0
-- [ ] `23 badge` or `23 achievement` — count = 0
-- [ ] `Warren.*2004` — count = 0
-- [ ] `≥80` with "achieving" or "exceeding" — count = 0
-- [ ] `[FIGURE PLACEHOLDER]` — count = 0 (all replaced with actual figures)
-
-**Visual checks:**
-- [ ] Page numbers are continuous and correct
-- [ ] All tables have captions (Table X.X: Title)
-- [ ] All figures have captions (Figure X.X: Title. Source: Authors' own.)
-- [ ] References are alphabetical and hanging-indent formatted
-- [ ] Chapter headings match TOC exactly
-- [ ] Abstract is on its own page
-- [ ] Approval sheet has all correct names and blank signature lines
-
-**Final step:**
-- [ ] Save as PDF from Word (File → Save As → PDF)
-- [ ] Do a final visual scroll through the PDF — catch any broken tables or formatting
-- [ ] Print 3 copies
+| Document | Who signs | Deadline |
+|---|---|---|
+| `SmartSpend_Survey_Questionnaire_FOR_VALIDATION.pdf` | Ma'am Ellen | Before survey distribution |
+| Informed Consent Forms (30 copies) | Each SUS respondent | Before SUS evaluation |
+| Expert Validator Letter — IT/Software | IT professor (ask Sir Raposas) | Nov 7–8 |
+| Expert Validator Letter — Finance | Finance/business expert (Susan Arquisal already in manuscript) | Nov 7–8 |
+| Approval Sheet | All panel members | Defense day or before |
 
 ---
 
-## 📁 Key Files Reference
+## 📊 SURVEY STATUS
 
-| File | What it's for |
-|---|---|
-| `docs/capstone/MANUSCRIPT_AUDIT_REPORT.md` | Full list of all issues found and fixed |
-| `docs/capstone/FHS_FORMULA_VALIDATION_FOR_ADVISER.pdf` | 12-page FHS formula doc for Ma'am Ellen |
-| `docs/capstone/FHS_Formula_For_Maam_Mangaoang.pdf` | 5-page short formula doc for Ma'am Ellen |
-| `docs/capstone/FHS_Formula_Basis_Table.pdf` | 6-page basis table with academic sources |
-| `docs/capstone/FHS_Defense_Guide.pdf` | Defense Q&A prep (for team study) |
-| `docs/capstone/SmartSpend_Survey_Questionnaire_FOR_VALIDATION.pdf` | 30-question survey for Ma'am Ellen to sign |
-| `docs/capstone/SUMMARY_FOR_MAAM_ELLEN.pdf` | 2-page summary of literature + validation |
-| `docs/capstone/DEFENSE_QA_PREP.md` | Full panel Q&A prep for all 3 team members |
-| `docs/capstone/DEMO_DAY_CHECKLIST.md` | Step-by-step demo day checklist |
-| `docs/capstone/SmartSpend_Defense_Presentation.html` | 16-slide defense presentation |
-| `docs/handsoff/MANUAL_EDIT_GUIDE_v3.md` | Older Word editing guide (use this guide instead) |
+When you have N=30 responses — give the CSV files to Brix → Brix sends to Kiro → Kiro fills all remaining `[[PENDING]]` survey data automatically.
+
+Current: N=13 research, N=5 SUS (preliminary)
+
+Survey links:
+- Research: https://docs.google.com/forms/d/e/1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ/viewform
+- SUS: https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform
+
+---
+
+## 📁 Key files — what each one is for
+
+| File | Who uses it | What for |
+|---|---|---|
+| `docs/handsoff/CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx` | Cyrille | **THE main manuscript** — all Kiro fixes applied here |
+| `docs/capstone/FHS_Formula_For_Maam_Mangaoang.pdf` | Cyrille → Ma'am Ellen | Print and give her (5-page formula doc) |
+| `docs/capstone/FHS_Formula_Basis_Table.pdf` | Cyrille → Ma'am Ellen | Give with the above (6-page basis table) |
+| `docs/capstone/SmartSpend_Survey_Questionnaire_FOR_VALIDATION.pdf` | Cyrille → Ma'am Ellen | Print, get her signature |
+| `docs/capstone/SUMMARY_FOR_MAAM_ELLEN.pdf` | Brix → Ma'am Ellen | Send in GC (2-page summary) |
+| `docs/capstone/FHS_Defense_Guide.pdf` | All 3 | Study before defense |
+| `docs/capstone/DEFENSE_QA_PREP.md` | All 3 | Study before defense |
+| `docs/capstone/DEMO_DAY_CHECKLIST.md` | All 3 | Follow on Nov 8 rehearsal and Nov 9 |
+| `docs/capstone/FUTURE_FEATURES_RESEARCH.md` | Djaunathan | Answer "what are your future plans?" |
 
 ---
 
@@ -273,17 +201,15 @@ Run through this before sending to print:
 
 | Date | Task | Who |
 |---|---|---|
-| **Nov 5 (today)** | Send SUMMARY + QUESTIONNAIRE to Ma'am Ellen | Brix |
-| **Nov 5 (today)** | Push survey links everywhere — need more responses | All |
-| **Nov 5–6** | Apply all Word fixes (Parts A, B, C) | Cyrille |
-| **Nov 6 morning** | Print 3 copies — manuscript deadline | Cyrille + Brix |
-| **Nov 6** | Confirm Dean title with Brix | Brix |
-| **Nov 6** | Get survey questionnaire signed by Ma'am Ellen | Cyrille |
+| **Nov 5 (today)** | Send SUMMARY + QUESTIONNAIRE PDF to Ma'am Ellen in GC | Brix |
+| **Nov 5 (today)** | Share survey links — push for more responses | All |
+| **Nov 5–6** | Steps 1–10 above (Word edits, screenshots, diagrams, TOC) | Cyrille |
+| **Nov 6 morning** | Confirm Dean title, then print 3 copies | Brix + Cyrille |
+| **Nov 6** | Get Ma'am Ellen signature on questionnaire | Cyrille |
 | **Nov 7–8** | Get expert validator signatures | Cyrille |
-| **Nov 8 night** | Install v3.1.2 APK on demo phone, reset AI limit | Brix |
-| **Nov 8 night** | Full rehearsal of demo script | All 3 |
+| **Nov 8 night** | Install APK on demo phone, reset AI limit, full rehearsal | All 3 |
 | **Nov 9** | 🎯 DEFENSE DAY | All 3 |
 
 ---
 
-*This guide was generated by Kiro on November 5, 2026. When Kiro fixes additional issues, this file will be updated.*
+*Updated by Kiro — November 5, 2026. All automated fixes applied. Only manual tasks remain.*
