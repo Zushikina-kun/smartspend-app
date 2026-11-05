@@ -1,3 +1,34 @@
+## ✅ Auto-Fixed by Kiro (Nov 5, 2026 — Round 2)
+
+- Font: Applied Times New Roman 12pt to Normal/body text style to match TEMPLATE_HABSS.docx
+- Headings: Matched Heading 1/2/3 font, size, bold, caps, and spacing to TEMPLATE_HABSS.docx
+- Paragraph spacing: Set double-spacing for body text paragraphs; single spacing inside tables
+- Page margins: Set left=1.5in, top/right/bottom=1in (Lorma binding standard) across all sections
+- Table formatting: Verified/applied APA top-and-bottom border rules; table captions verified
+- Figure captions: Verified figure caption style matches template
+- Blurry chart (P140, 600×371px 12KB): Replaced with Figure_1_1_Financial_Literacy_Rates.png (1333×748px 73KB), same display size
+- Figure 1.1 [[PENDING]] placeholder: Inserted high-res Financial Literacy Rates chart
+- Figure 1.2 [[PENDING]] placeholder: Inserted high-res Conceptual Framework IPO diagram
+- Figure 2.1 [[PENDING]] placeholder: Inserted high-res SUS Score Interpretation chart
+- Figure 2.2 [[PENDING]] placeholder: Inserted high-res Agile Kanban Workflow diagram
+- Existing embedded figures (P161, P261, P265): Verified/replaced with high-res versions where needed
+- Header/footer banner: Left unchanged (official Lorma template image)
+- Student photos (CV section): Left unchanged — manual replacement required
+
+## 🔲 Still Needs Manual Work
+
+- **Figure 3.1** — System flowchart/DFD: Insert actual diagram when ready (placeholder text left in document)
+- **Figure 3.2–3.10** — App screenshots: Cyrille to insert actual screenshots before printing (placeholder text left in each location)
+- **Student photos** — Replace low-res photos in Curriculum Vitae section with high-quality passport photos:
+  - Brix (currently 184×185px via rId60)
+  - Cyrille (currently 1536×2048px via rId61 — crop/resize to passport format)
+  - Djaunathan (currently 433×457px via rId62)
+- **Signatures** — Panel signatures, adviser signature pages: obtain wet signatures or scanned signatures
+- **Page numbering** — Manually verify Roman numeral / Arabic numeral break point after printing preview
+- **Survey data tables** — Any remaining [[PENDING]] table placeholders require actual survey result data
+
+---
+
 # SmartSpend Manuscript — Manual To-Do Guide
 **For:** Cyrille John M. Rubis · Djaunathan Albert S. Madayag  
 **Prepared:** November 5, 2026  
