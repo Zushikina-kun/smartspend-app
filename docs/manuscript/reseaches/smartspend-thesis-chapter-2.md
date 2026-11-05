@@ -11,7 +11,7 @@ This study employs a **mixed-methods research design**, systematically integrati
 Additionally, this study adopts a **descriptive-developmental research approach** [599]. Descriptive-developmental research focuses on the design, development, and evaluation of functional prototypes [599]. Rather than operating as a passive tracking app, the developmental aspect of this study centers on the engineering of a functional Android-based prototype (**SmartSpend v2.9.9**) [558, 629] that merges:
 1. Multimodal transaction input mechanisms (on-device OCR, voice input, barcode, manual entry, and batch screenshot parsing) [572].
 2. A dual-mode programmatic **Financial Health Score (FHS)** operating under **Full Mode** (income tracking) and **Lightweight Mode** (no income required) with built-in behavioral loss-aversion modifiers (Warning Decay and Logging Gap adjustments) [559, 596].
-3. Bounded, multilingual (Taglish/Filipino-English) agentic AI assistance capable of executing 31 distinct data actions and providing localized financial Q&A [559, 581, 591].
+3. Bounded, multilingual (Taglish/Filipino-English) agentic AI assistance capable of executing 34 distinct data actions and providing localized financial Q&A [559, 581, 591].
 
 ```
 +-----------------------------------------------------------------------------------+
@@ -25,7 +25,7 @@ Additionally, this study adopts a **descriptive-developmental research approach*
 | * Barcode Scans              | * Offline-First sqflite DB   |   & fl_chart Views  |
 | * Mixed GCash/Maya/Bank      | * Bidirectional Firebase     | * Behavioral FHS    |
 |   Screenshots & Logs         |   Sync & Remote Config Keys  |   (0-100 Score)     |
-| * Transaction History Text   | * RA 10173 On-Device Regex   | * 31 Agentic Data   |
+| * Transaction History Text   | * RA 10173 On-Device Regex   | * 34 Agentic Data   |
 |   Pasted for Bulk Parsing    |   Scrubbing and Redaction     |   Actions & Q&A     |
 +------------------------------+------------------------------+---------------------+
 ```
@@ -106,7 +106,7 @@ To assess pre-development financial practices and challenges, a structured surve
 The technical evaluation of Large Language Models is conducted systematically by running identical expense-parsing, Taglish translation, and function-calling prompts across 15 candidate APIs [580, 608]. Performance is benchmarked on:
 * **Inference Speed:** Tokens per second (t/s) [580, 622].
 * **Filipino-English Accuracy:** Percentage of colloquial Taglish financial statements (e.g., *"nagbayad ako ng ₱150 sa trike kanina"*) correctly converted to structured JSON [580, 622].
-* **Function-Calling Reliability:** Execution success rate across the 31 agentic actions [559, 622].
+* **Function-Calling Reliability:** Execution success rate across the 34 agentic actions [559, 622].
 * **Free-Tier Viability:** Request quotas permitted under academic/free developer constraints [580, 622].
 
 ### 2.4.3 System Usability Scale (SUS) (Objective 3)
@@ -152,7 +152,7 @@ The development workflow is visualized on a Kanban board containing seven column
 #### Phase 1: Backlog Phase
 The Backlog is populated with user stories, technical tasks, and desired system requirements [613]:
 * *Example User Story:* *"As a budget-conscious parent, I want to capture a receipt screenshot of my Shopee or Lazada checkout so that I don't have to manually encode every household item."* [558, 572, 613]
-* *Deliverable:* A prioritized backlog of 31 agentic actions, 6 input modalities, 14 expense categories, and 23 gamification badges [613, 628, 629].
+* *Deliverable:* A prioritized backlog of 34 agentic actions, 6 input modalities, 14 expense categories, and 25 gamification badges [613, 628, 629].
 
 #### Phase 2: Requirements Phase
 This phase defines functional requirements (automated Taglish transaction logging, e-wallet balance synchronization, programmatic FHS computing, regulatory privacy scrubbing) and non-functional requirements (offline capability, response latency $< 1.5$ seconds, target SUS score $\ge 80$) based on Objective 1 survey data [580, 598, 614].
@@ -171,7 +171,7 @@ Actual coding in Dart using the **Flutter framework** [558, 560, 616]. Developme
 3. **LLM API Integration:** Construct a secure client-side model adaptivity layer. This layer pulls the API key securely at runtime via **Firebase Remote Config** (preventing key exposure in the APK binary) and implements a **conversation summarization mechanism** to compress conversation history, saving up to 75% on token overhead [583, 589, 592].
 4. **Cloud Synchronization:** Build bidirectional sync using Firebase Firestore, automatically merging offline SQLite records with cloud backups once connection is restored [576, 616].
 5. **On-Device Privacy Masking:** Write the client-side regex filter to scrub e-wallet and account numbers before transmitting prompt payloads to the cloud LLM [540, 541].
-* *Deliverable:* A compile-ready Android APK (v2.9.9) with all 31 agentic actions operational [559, 628, 629].
+* *Deliverable:* A compile-ready Android APK (v2.9.9) with all 34 agentic actions operational [559, 628, 629].
 
 #### Phase 5: Testing Phase
 This phase runs functional, technical, and usability evaluations [617]. In addition to standard unit testing, this capstone study implements a rigorous **Technical Performance Evaluation Protocol** [617, 628]:

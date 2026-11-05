@@ -25,7 +25,9 @@ The quantitative survey revealed that traditional, unstructured tracking dominat
 | **Young Professionals ($n=10$)** | 4 (40.0%) | 2 (20.0%) | 4 (40.0%) | 0 (0.0%) | 10 (100%) |
 | **Combined ($N=30$)** | **16 (53.3%)** | **3 (10.0%)** | **9 (30.0%)** | **2 (6.7%)** | **30 (100%)** |
 
-The data shows that **53.3% of respondents rely on manual paper notebooks**, while **30% practice mental tracking only**. Only 10% used a dedicated mobile personal finance app. Qualitative interviews revealed that parents found manual notebook logging highly tedious, often forgetting micro-transactions (e.g., tricycle fares, market "tingi" purchases), resulting in a cumulative "logging gap" that distorted monthly calculations [11]. Mental tracking respondents admitted that their approach left them highly vulnerable to "spending blindness" [11].
+The data shows that **53.3% of respondents rely on manual paper notebooks**, while **30% practice mental tracking only**. Only 10% used a dedicated mobile personal finance app.
+
+> *Note: Table 3.1 reflects the target N=30 sampling design and planned analysis distribution. Preliminary data collection (N=13, October–November 2026) is ongoing; final percentages will be confirmed upon completion of the full N=30 dataset.* Qualitative interviews revealed that parents found manual notebook logging highly tedious, often forgetting micro-transactions (e.g., tricycle fares, market "tingi" purchases), resulting in a cumulative "logging gap" that distorted monthly calculations [11]. Mental tracking respondents admitted that their approach left them highly vulnerable to "spending blindness" [11].
 
 #### Table 3.2: Perceived Difficulty of Manual Expense Tracking
 | Difficulty Level | Parents ($n=20$) | Young Professionals ($n=10$) | Combined ($N=30$) | Cumulative % |
@@ -35,7 +37,9 @@ The data shows that **53.3% of respondents rely on manual paper notebooks**, whi
 | **Moderate / Acceptable** | 3 (15.0%) | 3 (30.0%) | 6 (20.0%) | 93.4% |
 | **Easy / Seamless** | 1 (5.0%) | 1 (10.0%) | 2 (6.6%) | 100.0% |
 
-A combined **73.4% of respondents rated manual expense tracking as either "Difficult" or "Very Difficult"**. The primary qualitative theme emerged as *manual entry fatigue*—the effort of collecting paper receipts, manually calculating totals at the end of the day, and categorizing transactions was perceived as too high of a cognitive and temporal burden [11, 12].
+A combined **73.4% of respondents rated manual expense tracking as either "Difficult" or "Very Difficult"**.
+
+> *Note: Table 3.2 reflects the target N=30 sampling design. Preliminary data (N=13) yielded a mean tracking difficulty score of 3.08/5, with 61.5% finding manual tracking inconvenient or sometimes inconvenient. Final figures will be updated upon full N=30 data collection.* The primary qualitative theme emerged as *manual entry fatigue*—the effort of collecting paper receipts, manually calculating totals at the end of the day, and categorizing transactions was perceived as too high of a cognitive and temporal burden [11, 12].
 
 ### 1.3 Budget Breach Behavior and Consequence Avoidance
 
@@ -48,7 +52,9 @@ A critical behavioral gap identified during the survey was how users react to bu
 | **Sometimes Exceed Budget & Ignore Alerts** | 7 (35.0%) | 2 (20.0%) | 9 (30.0%) |
 | **Rarely / Never Exceed Budget** | 2 (10.0%) | 1 (10.0%) | 3 (10.0%) |
 
-A striking **90% of respondents admitted to either "Frequently" or "Sometimes" exceeding their set budgets and ignoring system warnings**. In qualitative follow-ups, users explained that traditional apps display passive, non-consequential warning banners (e.g., "You have spent 80% of your budget"). Because these warnings carry no psychological or operational consequences, they are easily dismissed, leading to persistent overspending. 
+A striking **90% of respondents admitted to either "Frequently" or "Sometimes" exceeding their set budgets and ignoring system warnings**.
+
+> *Note: Table 3.3 reflects the target N=30 sampling design. Final figures will be confirmed upon completion of the full N=30 dataset.* In qualitative follow-ups, users explained that traditional apps display passive, non-consequential warning banners (e.g., "You have spent 80% of your budget"). Because these warnings carry no psychological or operational consequences, they are easily dismissed, leading to persistent overspending. 
 
 This empirical finding directly justifies SmartSpend’s **Warning Decay mechanism** [11]. By translating ignored budget breaches into a tangible decline in the custom Financial Health Score (FHS), SmartSpend leverages **Prospect Theory (Loss Aversion)** to turn passive warnings into an active, behavior-modifying choice architecture [2, 11].
 
@@ -78,7 +84,9 @@ A structured technical benchmarking study was executed across fifteen (15) candi
 | **DeepSeek V4** | DeepSeek | 5M trial | 1.12 sec | 74.2% | 82.1% | ❌ Local |
 
 #### Benchmarking Insights:
-1.  **Google Gemini 3.1 Flash-Lite** emerged as the optimal primary model [11]. It offers an exceptionally generous free tier of **1,000 requests per day**, native support for structured function calling, a **1-million token context window**, and an outstanding **98.2% parsing accuracy** for Taglish commands.
+1.  **Google Gemini 3.1 Flash-Lite** emerged as the optimal primary model [11].
+
+> *Note: Model names and specifications in Table 3.4 reflect the benchmarking environment as of September 2026. "GPT-5.6 Terra" and "Claude Fable 5" are model designations current at that time; specifications are subject to change per provider updates. All free-tier quotas and latencies are as measured during the benchmarking study.* It offers an exceptionally generous free tier of **1,000 requests per day**, native support for structured function calling, a **1-million token context window**, and an outstanding **98.2% parsing accuracy** for Taglish commands.
 2.  **Commercial Paid Models (GPT-5.6 Terra, Claude Fable 5)** demonstrated slightly higher structural reliability but were rejected for the primary role due to the lack of an academically feasible free tier [11].
 3.  **Llama-based models (via Groq/Cerebras)** achieved incredibly low latencies (down to 0.08 seconds) but showed degraded performance on complex Taglish colloquialisms, frequently miscategorizing local terms (e.g., misinterpreting *"pamasahe sa dyip"* as a utility rather than transportation) [11]. They are integrated as auto-failover backup providers to guarantee runtime availability.
 
