@@ -1,5 +1,5 @@
 # SmartSpend — FHS Formula, Validation, and Questionnaire Summary
-### For Ma'am Ellen F. Mangaoang, MIT (Capstone Adviser)
+### For Ma'am Ellen F. Mangaoang, DIT (Capstone Adviser)
 
 **Project:** SmartSpend — AI-Assisted Mobile Financial Tracking and Advisory Application
 **Researchers:** Directo, Brix A. · Rubis, Cyrille John M. · Madayag, Djaunathan Albert S.

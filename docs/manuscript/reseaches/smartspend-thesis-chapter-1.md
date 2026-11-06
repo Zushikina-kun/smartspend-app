@@ -4,8 +4,8 @@
 
 **Title:** SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management  
 **Researchers:** Directo, Brix A., Rubis, Cyrille John M., and Madayag, Djaunathan Albert S.  
-**Adviser:** Ms. Ellen F. Mangaoang, MIT  
-**Chairperson:** Ms. Ellen F. Mangaoang, MIT  
+**Adviser:** Ms. Ellen F. Mangaoang, DIT  
+**Chairperson:** Ms. Ellen F. Mangaoang, DIT  
 **Institution:** College of Computer Studies and Engineering, Lorma Colleges, San Fernando City, La Union, Philippines  
 **Degree:** Bachelor of Science in Information Technology  
 

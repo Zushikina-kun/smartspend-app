@@ -63,8 +63,8 @@ References tab → Update Table → Update entire table (do this for TOC, List o
 
 ### 9. Approval sheet — verify names
 ```
-Adviser:     Ms. Ellen F. Mangaoang, MIT
-Chairperson: Ms. Ellen F. Mangaoang, MIT
+Adviser:     Ms. Ellen F. Mangaoang, DIT
+Chairperson: Ms. Ellen F. Mangaoang, DIT
 Member 1:    Mr. Jopher F. Reyes, MIT
 Member 2:    Mr. Gelo Ryann M. Carbonell
 Dean:        Mr. Jeoffrey B. Layco, MIS

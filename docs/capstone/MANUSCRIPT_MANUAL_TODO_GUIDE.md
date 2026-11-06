@@ -10,13 +10,13 @@
 ### Content fixes (applied to `.md` source files AND `CAPSTONE__5_.docx`)
 | What was wrong | Fixed to |
 |---|---|
-| Adviser "Mr. Johnny Flores Verzola, MTS" | Ms. Ellen F. Mangaoang, MIT |
+| Adviser "Mr. Johnny Flores Verzola, MTS" | Ms. Ellen F. Mangaoang, DIT |
 | Abstract: SUS "exceeding ≥80 (Good)" | Honest: 62.50, Grade C, preliminary N=5 |
 | "31 agentic/conversational actions" everywhere | 34 everywhere |
 | "23 achievement badges" | 25 everywhere |
 | Warren & Tyagi (2004) | 2005 (correct year) |
 | Tables 3.1–3.3 showing N=30 as final | Added "preliminary N=13" disclaimer |
-| Mangaoang DIT | MIT (correct title) |
+| Mangaoang MIT (outdated) | DIT (correct — she has a doctorate) |
 | SUS placeholders `[[N]]`, `[score]`, `[grade]` | Filled: N=5, 62.50, Grade C, "OK" |
 | Research survey `[[N]]` | Filled: 13 respondents (preliminary) |
 | Sharma et al. DOI — no flag | ⚠️ flagged for Cyrille to verify |
@@ -101,8 +101,8 @@ If NOT found → delete from bibliography + remove in-text citations.
 ### STEP 8 — Approval sheet check
 Verify these exact names on the approval/title page:
 ```
-Adviser:        Ms. Ellen F. Mangaoang, MIT
-Chairperson:    Ms. Ellen F. Mangaoang, MIT  
+Adviser:        Ms. Ellen F. Mangaoang, DIT
+Chairperson:    Ms. Ellen F. Mangaoang, DIT  
 Member 1:       Mr. Jopher F. Reyes, MIT
 Member 2:       Mr. Gelo Ryann M. Carbonell
 Dean:           Mr. Jeoffrey B. Layco, MIS

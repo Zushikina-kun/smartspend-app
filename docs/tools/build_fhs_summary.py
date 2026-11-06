@@ -6,7 +6,7 @@ No SUS, no questionnaire, no validation section.
 import subprocess, sys, os
 
 md = """# SmartSpend — Financial Health Score (FHS) Literature Summary
-**Prepared for:** Ms. Ellen F. Mangaoang, MIT — Capstone Adviser  
+**Prepared for:** Ms. Ellen F. Mangaoang, DIT — Capstone Adviser  
 **Prepared by:** Directo, Brix A. · Rubis, Cyrille John M. · Madayag, Djaunathan Albert S.  
 **Lorma Colleges — CCSE — BSIT Capstone 2 — AY 2026–2027**
 

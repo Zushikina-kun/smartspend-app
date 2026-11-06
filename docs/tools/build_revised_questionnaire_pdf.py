@@ -13,7 +13,7 @@ html_body = """
     SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application<br>
     Lorma Colleges — College of Computer Studies and Engineering<br>
     Researchers: Directo, Brix A. · Rubis, Cyrille John M. · Madayag, Djaunathan Albert S.<br>
-    Adviser: Ms. Ellen F. Mangaoang, MIT
+    Adviser: Ms. Ellen F. Mangaoang, DIT
   </p>
 </div>
 

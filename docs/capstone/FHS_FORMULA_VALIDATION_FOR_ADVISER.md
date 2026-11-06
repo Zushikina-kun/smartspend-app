@@ -3,7 +3,7 @@
 
 **Project:** SmartSpend — AI-Assisted Mobile Financial Tracking and Advisory Application  
 **Researchers:** Directo, Brix A. · Rubis, Cyrille John M. · Madayag, Djaunathan Albert S.  
-**Adviser:** Ellen F. Mangaoang, MIT  
+**Adviser:** Ellen F. Mangaoang, DIT  
 **Institution:** Lorma Colleges — College of Computer Studies and Engineering  
 **Date:** November 5, 2026  
 **Version:** v3.1.2 (current release)
