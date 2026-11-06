@@ -1,48 +1,28 @@
-"""
-Prepare clean logo files for the certificates.
-- Upscale the Lorma banner (321x80) to 4x using Lanczos for clean print quality
-- Verify CCSE seal and City seal
-"""
-from PIL import Image
+"""Crop LormaLogo.jpg tightly and save as clean PNG."""
+from PIL import Image, ImageChops
 import os
 
-os.makedirs('docs/tools/extracted_images/logos', exist_ok=True)
+# Open the clean Lorma logo
+img = Image.open('assets/LormaLogo.jpg').convert('RGB')
+print(f'Original: {img.size}')
 
-# 1. Lorma banner — upscale 4x with Lanczos (high quality)
-banner = Image.open('docs/tools/extracted_images/logos/habss_ref_p3_img0.png')
-print(f'Lorma banner original: {banner.size} {banner.mode}')
+# Auto-crop white borders using getbbox on inverted image
+bg = Image.new('RGB', img.size, (255, 255, 255))
+diff = ImageChops.difference(img, bg)
+bbox = diff.getbbox()
+print(f'Crop bbox: {bbox}')
 
-# The banner has black background (corner pixel was 0,0,0)
-# Convert to RGBA and make black transparent, then add white bg
-banner_rgba = banner.convert('RGBA')
-data = banner_rgba.getdata()
-new_data = []
-for item in data:
-    # Make very dark pixels transparent
-    if item[0] < 15 and item[1] < 15 and item[2] < 15:
-        new_data.append((255, 255, 255, 255))  # replace black with white
-    else:
-        new_data.append(item)
-banner_rgba.putdata(new_data)
+# Add small padding
+pad = 20
+x1 = max(0, bbox[0] - pad)
+y1 = max(0, bbox[1] - pad)
+x2 = min(img.width, bbox[2] + pad)
+y2 = min(img.height, bbox[3] + pad)
 
-# Now upscale 4x
-w, h = banner_rgba.size
-banner_big = banner_rgba.resize((w*4, h*4), Image.LANCZOS)
-# Paste onto white background
-bg = Image.new('RGB', banner_big.size, (255, 255, 255))
-bg.paste(banner_big, mask=banner_big.split()[3])
-bg.save('docs/tools/extracted_images/logos/lorma_banner_clean.png', 'PNG')
-size = os.path.getsize('docs/tools/extracted_images/logos/lorma_banner_clean.png')
-print(f'Lorma banner cleaned & upscaled: {bg.size}, {size//1024}KB')
+cropped = img.crop((x1, y1, x2, y2))
+print(f'Cropped: {cropped.size}')
 
-# Check corner
-check = Image.open('docs/tools/extracted_images/logos/lorma_banner_clean.png')
-print(f'Corner pixel: {check.getpixel((5,5))} (should be ~255,255,255)')
-
-# 2. CCSE seal check
-ccse = Image.open('docs/tools/extracted_images/logos/habss_ref_p3_img1.jpeg')
-print(f'CCSE: {ccse.size} {ccse.mode}, corner: {ccse.getpixel((5,5))}')
-
-# 3. City seal check
-city = Image.open('docs/tools/extracted_images/logos/seal_sanfernando.png')
-print(f'City: {city.size} {city.mode}, corner: {city.getpixel((5,5))}')
+out = 'docs/tools/extracted_images/logos/lorma_cropped.png'
+cropped.save(out, 'PNG')
+print(f'Saved: {out} ({os.path.getsize(out)//1024}KB)')
+print(f'Corner pixel: {cropped.getpixel((5,5))}')
