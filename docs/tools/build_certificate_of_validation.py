@@ -151,6 +151,7 @@ def make_cert(title_sub, statement, fields_html, output_path, cert_title="CONTEN
         edge, '--headless', '--disable-gpu', '--no-sandbox',
         f'--print-to-pdf={output_path}',
         '--print-to-pdf-no-header',
+        '--no-pdf-header-footer',
         f'file:///{html_path.replace(chr(92), "/")}'
     ], capture_output=True, text=True, timeout=30)
 

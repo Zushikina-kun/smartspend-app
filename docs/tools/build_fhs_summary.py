@@ -152,6 +152,7 @@ result = subprocess.run([
     edge, '--headless', '--disable-gpu', '--no-sandbox',
     f'--print-to-pdf={pdf_path}',
     '--print-to-pdf-no-header',
+    '--no-pdf-header-footer',
     f'file:///{html_path.replace(chr(92), "/")}'
 ], capture_output=True, text=True, timeout=30)
 
