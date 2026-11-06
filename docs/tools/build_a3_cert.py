@@ -8,7 +8,7 @@ def img_to_b64(path):
     mime = 'image/jpeg' if ext in ('jpg','jpeg') else 'image/png'
     return f"data:{mime};base64,{base64.b64encode(data).decode()}"
 
-lorma = img_to_b64('docs/tools/extracted_images/logos/habss_ref_p3_img0.png')
+lorma = img_to_b64('docs/tools/extracted_images/logos/lorma_clean.png')
 city  = img_to_b64('docs/tools/extracted_images/logos/seal_sanfernando.png')
 ccse  = img_to_b64('docs/tools/extracted_images/logos/habss_ref_p3_img1.jpeg')
 
@@ -16,7 +16,7 @@ css = """
 @page { size: Letter; margin: 22mm 25mm 20mm 25mm; }
 body { font-family: 'Times New Roman', serif; font-size: 12pt; color: #000; line-height: 1.65; }
 .logo-row { display: flex; justify-content: center; align-items: center; gap: 24pt; margin-bottom: 10pt; }
-.logo-lorma { height: 48pt; width: auto; }
+.logo-lorma { height: 56pt; width: auto; }
 .logo-city  { height: 56pt; width: auto; }
 .logo-ccse  { height: 56pt; width: auto; }
 hr { border: none; border-top: 1.5px solid #000; margin: 8pt 0 14pt 0; }
