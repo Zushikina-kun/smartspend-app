@@ -38,6 +38,9 @@
 **Key fact:** 76.9% of respondents struggle with overspending; 69.2% expressed positive AI app adoption intent (N=13 preliminary).
 **Likely question:** *Are these results reliable with only N=13?* → We're transparent that these are preliminary — the full N=30 dataset is still being collected. However, the directional pattern is consistent with BSP CFIS 2025 national data on Filipino budgeting behaviors, so we're confident the design direction is validated even if individual percentages shift with more respondents.
 
+**Likely question:** *"Isn't this app only for rich people? Poor people don't log transactions daily."*
+→ The data says the opposite. PSA 2023 counted 15.5% of individual Filipinos — 17.54 million people — living in poverty. These are the households with zero margin for financial mistakes; they benefit MORE from a financial tracking tool, not less. GCash has 41.5 million monthly active users including lower- and middle-income households across the Philippines (Bloomberg/Mynt 2026), and ResearchSquare (2025) research in rural Philippine villages found that income had no notable influence on GCash adoption. For GCash users, SmartSpend's batch screenshot import means there is NO manual logging at all — they import their GCash transaction history from a screenshot and the app parses every transaction automatically. Lightweight Mode was built specifically for gig workers, vendors, and informal economy workers who do not have a fixed salary and cannot define a monthly income — they still get a meaningful FHS score. The app is free, works fully offline, and runs on ₱3,000–₱5,000 budget Android phones. Every adoption barrier is addressed. And the core argument: a wealthy person absorbs overspending easily. A low-income family cannot. Financial mismanagement HURTS low-income families MORE — they are the primary beneficiaries of this app, not an excluded group.
+
 ---
 
 ## Slide 5 — Theoretical Framework
@@ -165,3 +168,5 @@
 5. **FHS formula short answer (all three must know this cold):** *"Hindi namin ito ginawa mula sa wala. We adapted the CBA–Melbourne Institute Observed Financial Health Indicator — a transaction-based 0–100 equal-weight framework. Our four components — Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency — were chosen to match the four pain points confirmed by our needs assessment."*
 
 6. **If the demo fails:** Stay calm, say "We prepared for this possibility," and show the offline features — expense logging, FHS, analytics all work without internet. Then show screenshots from your phone gallery. Composure under pressure is itself a positive signal to the panel.
+
+7. **"Rich people only" counter** — Key facts to have cold: (a) PSA 2023: 15.5% of Filipinos (17.54M) were poor; (b) GCash has 41.5M monthly users including low-income households; (c) batch GCash import = zero manual logging; (d) Lightweight Mode = no income tracking needed; (e) FREE + offline + Android 5.0+ (budget phones). Core argument: financial mismanagement HURTS low-income families MORE — they are the primary beneficiaries, not an excluded group.

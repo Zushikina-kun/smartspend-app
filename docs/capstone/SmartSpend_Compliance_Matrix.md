@@ -165,9 +165,24 @@ These are the questions panelists are most likely to ask that are NOT already in
 
 ---
 
-### "Isn't your app only for rich people who have smartphones?" / "Your target users are parents — do they even have smartphones?"
+### "Isn't your app only for rich people? Poor people don't log daily transactions."
 
-> **Answer:** This is a valid concern we specifically addressed in our design. Per BSP CFIS 2025, smartphone penetration in urban and regional Philippines including La Union is above 80%. SmartSpend targets parents 35–55 and young professionals 21–35 in San Fernando City — a regional urban center with high mobile internet adoption. The app runs on Android 5.0 and above, which includes most budget Android phones available for ₱3,000–₱5,000. It is free to download, has no subscription, and functions fully offline — so even users with limited data plans can use it. We also designed Demo Mode so users can try it before committing, and Lightweight Mode for users without regular income tracking — specifically for informal economy workers and parents with irregular household cash flow.
+> **Answer:** The data says the opposite — low-income Filipinos are the ones who need this tool most, and SmartSpend was specifically designed to serve them.
+>
+> **Who needs it most:** The PSA (2025 Official Poverty Statistics) counted 15.5% of individual Filipinos — 17.54 million people — living in poverty in 2023, with 6.4% of families (1.90 million families) classified as poor in 2025. These households have zero margin for financial mismanagement. A wealthy family absorbs overspending easily; a low-income family cannot. Financial tracking tools are equity tools, not luxury tools — and the people who benefit most are those with the least room for error.
+>
+> **Digital adoption is not limited to the wealthy:** BSP CFIS 2025 reports that 62% of households with electronic devices used them for online financial transactions — up from 35% in 2022. That rapid adoption is not isolated to high-income brackets. GCash has 41.5 million monthly active users including lower- and middle-income households, women, and provincial communities (Bloomberg/Mynt 2026). ResearchSquare (2025) research in rural Philippine villages found that income had no notable influence on GCash adoption — meaning poor and low-income Filipinos actively use GCash at the same rate as higher-income users.
+>
+> **SmartSpend removes every adoption barrier for low-income users:**
+> - **FREE** — no subscription, no bank account required, zero cost to download and use permanently.
+> - **Offline-first** — core features work with zero internet or mobile data; no recurring data cost.
+> - **Android 5.0+** — runs on budget phones available for ₱3,000–₱5,000, which are the phones most low-income Filipinos own.
+> - **Lightweight Mode** — no income tracking needed; designed for gig workers, vendors, drivers, and informal economy workers who do not have a fixed salary. The FHS Lightweight Mode still calculates a meaningful score without any income data.
+> - **Batch GCash screenshot import** — GCash users (who are disproportionately low-to-mid-income) can import their full transaction history in bulk from screenshots, with zero manual entry. For these users, the "logging is too much work" objection does not apply at all — SmartSpend does the logging for them from their existing GCash activity.
+>
+> **Daily logging is NOT required.** Even logging major expenses a few times a week gives useful FHS feedback. And for the 41.5 million GCash users — including the low-income households who form a large share of that base — batch screenshot import means there is no manual logging at all. Their existing GCash history becomes their expense log automatically.
+>
+> **Core argument:** "Poor people don't log expenses" is precisely the problem this app exists to solve. The absence of structured financial tracking is a pattern that can keep households in financial difficulty. SmartSpend reduces that friction to near-zero for GCash users — the very population most skeptics assume cannot use it.
 
 ---
 
