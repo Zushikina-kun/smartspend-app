@@ -145,6 +145,9 @@
 **Key fact:** v3.1.2 · Demo Mode on login screen · APK at zushikina-kun.github.io/smartspend-app/
 **Likely question:** *Paano gumagana ang AI ninyo? API lang ba ito ng ChatGPT?* → It's not ChatGPT and it's more than a simple API call. We use an agentic architecture with 34 defined action types. When you say "nag-gastos ako ng 65 sa canteen," the AI parses the intent, extracts the amount and category, and fires a structured JSON `log_expense` action against our local SQLite database. The LLM is the reasoning layer; the actual database operations are deterministic Dart code we wrote. The AI can be wrong — which is why every agentic action shows a review screen before committing to the database.
 
+**Likely question:** *The colors look harsh / the design is painful to the eyes.*
+→ "The app ships with 12 color themes and users can switch them in Settings in under 10 seconds. There is also a dedicated high contrast mode for accessibility — it switches to a full WCAG AA black/white scheme, designed for users with visual impairments. The screenshots you see use the default Emerald theme, which is Peso's signature color — we can switch to any of the other 11 themes, including lighter options like Sky Blue or Forest Green, during the demo right now if you'd like. The app also uses Material 3, Google's latest design system, which auto-generates accessible color relationships."
+
 ---
 
 ## Slide 18 — Closing
@@ -170,3 +173,5 @@
 6. **If the demo fails:** Stay calm, say "We prepared for this possibility," and show the offline features — expense logging, FHS, analytics all work without internet. Then show screenshots from your phone gallery. Composure under pressure is itself a positive signal to the panel.
 
 7. **"Rich people only" counter** — Key facts to have cold: (a) PSA 2023: 15.5% of Filipinos (17.54M) were poor; (b) GCash has 41.5M monthly users including low-income households; (c) batch GCash import = zero manual logging; (d) Lightweight Mode = no income tracking needed; (e) FREE + offline + Android 5.0+ (budget phones). Core argument: financial mismanagement HURTS low-income families MORE — they are the primary beneficiaries, not an excluded group.
+
+8. **"Painful colors" counter** — Key facts: (a) 12 color themes — switch in under 10 seconds from Settings; (b) High contrast mode = WCAG AA black/white scheme; (c) Dark/Light mode toggle; (d) Text scaling (Normal / Large / XL); (e) Material 3 with `ColorScheme.fromSeed()` — same design system Google uses. Core message: the Emerald default is one of 12 options and can be changed live during the demo.

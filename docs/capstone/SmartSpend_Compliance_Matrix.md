@@ -67,6 +67,7 @@
 | SSS / PhilHealth / Pag-IBIG contributions | `insurance_screen.dart` | ✅ DONE | Government contributions tracked |
 | 36 achievement badges + Peso celebrations | `achievements_screen.dart` | ✅ DONE | 36 badges confirmed from source code |
 | Peso Companion System (12 moods, gestures) | `peso_mascot.dart`, companion services | ✅ DONE | Double-tap, long-press, idle speech, 45 screens |
+| Accessibility features (high contrast, text scaling, 12 themes, dark/light mode) | `theme_service.dart`, Settings screen | ✅ DONE | Material 3, WCAG AA high contrast mode, 12 themes (Emerald default), text scale (Normal/Large/XL), compact mode |
 | Demo mode | `demo_service.dart`, login screen | ✅ DONE | "Try Demo" seeds realistic dataset |
 
 ---
@@ -233,5 +234,23 @@ These are the questions panelists are most likely to ask that are NOT already in
 > **Answer (key points):** (1) **No direct bank API** — transactions must be manually logged, pasted, or imported via screenshots; (2) **AI requires internet** — offline operation means no AI chat; (3) **Android-only** — no iOS version yet; (4) **FHS is a prototype indicator** — not clinically validated; our equal weights are methodologically defensible but not empirically derived from longitudinal data; (5) **SUS 62.50 is below average** — we acknowledge this as a limitation of the current prototype at N=5 preliminary; (6) **No longitudinal behavioral data** — we cannot yet claim the app actually changes spending habits, only that it is designed to.
 
 ---
+
+---
+
+### "The app's colors/design are painful to the eyes. The UI/UX looks bad."
+
+> **Answer:** The app is not locked into one color scheme — it ships with **12 selectable color themes**: Emerald (default, Peso's signature color), Ocean Blue, Sky Blue, Forest Green, Royal Purple, Sunset Orange, Crimson Red, Deep Navy, Midnight Teal, Rose Pink, Charcoal, and Slate. Users open Settings and switch themes in under 10 seconds.
+>
+> **Accessibility modes already in the app:**
+> - **Dark / Light mode** — full toggle via `ThemeService.toggle()`
+> - **High contrast mode** — when enabled, forces a full WCAG AA black/white scheme (`ColorScheme.light(primary: Colors.black)` / `ColorScheme.dark(primary: Colors.white)`); designed for users with visual impairments
+> - **Text scaling** — three levels: Normal (1.0×), Large (1.15×), Extra Large (1.3×)
+> - **Compact mode** — reduced UI density for smaller screens
+>
+> **Why it looks a certain way in the screenshots:** The defense screenshots show the default Emerald theme (`Color(0xFF00C896)`). That is Peso's signature color and our brand identity, but it is one of twelve options.
+>
+> **Color science:** SmartSpend uses **Material 3** (`useMaterial3: true`) with `ColorScheme.fromSeed()` — Google's 2023–2026 design system that auto-generates accessible, harmonious color relationships from a seed color. This is the same system used in Google's own first-party apps.
+>
+> **Live demo response (if panelist raises this during defense):** "Kung gusto ninyong makita ang ibang kulay, maaari po naming palitan ang theme ngayon sa Settings — tatagal lang ng sampung segundo. Pwede po nating subukan ang Sky Blue o Forest Green kung mas komportable kayo." (Switch right then in the demo.)
 
 *Section 6 added November 6, 2026. Cross-reference: `docs/capstone/DEFENSE_QA_PREP.md` for additional Q&A.*
