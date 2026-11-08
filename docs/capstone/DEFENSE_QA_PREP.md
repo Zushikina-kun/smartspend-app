@@ -77,6 +77,22 @@
 
 ---
 
+## CONTRIBUTION AND ORIGINALITY QUESTIONS
+
+**Q: "What is your contribution to existing knowledge?"**
+> SmartSpend contributes three things to the existing body of knowledge: (a) it is the first Taglish-capable Prototype Observed Financial Health Indicator (FHI) implemented in a mobile app for the Philippine informal economy context, adapting the CBA–Melbourne Institute transaction-based methodology for users without formal bank accounts; (b) it introduces a dual-mode FHS design — Full Mode and Lightweight Mode — that achieves structural equity across salaried workers, gig economy workers, and students, a design gap not addressed by any existing Philippine PFM app; and (c) it provides empirical benchmarking data on 15 LLM APIs for Taglish financial parsing accuracy, producing a ranked model selection matrix that future researchers can use as a reference for similar Filipino-context NLP applications.
+
+**Q: "How is this different from existing apps like Tarsi, BudgetPH, GCash, or Alkansya AI?"**
+> No existing Philippine app combines all three of SmartSpend's core differentiators simultaneously. GCash is a digital wallet, not a budgeting app — it has no Financial Health Score and no cross-platform screenshot import. BudgetPH supports manual expense tracking but has no AI, no Taglish input, and no transaction-derived scoring. Alkansya AI has conversational features but lacks GCash screenshot import, a full OCR pipeline, and a programmatic FHS. Tarsi offers budgeting but no AI logging or Filipino-language support. SmartSpend is the only app in the Philippine market, to our knowledge, that simultaneously offers Taglish AI parsing, multi-platform e-wallet screenshot import, and a real-time transaction-derived Financial Health Score — filling all three gaps at once.
+
+**Q: "What would you do differently if you started over?"**
+> Three honest reflections. First, we would begin N=30 data collection three months earlier — we underestimated how long purposive recruitment takes when respondents must use the app for 10 minutes before answering the SUS. Starting earlier would give us complete N=30 data before the defense rather than preliminary N=5. Second, we would conduct a formal OCR benchmark study from the very beginning of development, not after — OCR performance on thermal receipts turned out to be significantly lower than on digital screenshots, and knowing that early would have shaped our UI review screen design earlier. Third, for research reach, we would target a Play Store soft-launch from v2.0 onward — wider real-world usage data would have strengthened our needs assessment and given us more organic SUS respondents.
+
+**Q: "Did AI write your thesis?"**
+> That's a fair question given the current landscape, and we'll answer it honestly. AI tools — specifically Kiro and Claude — were used as development and writing assistants throughout this project, under our adviser's supervision. This is analogous to using Grammarly for grammar checking, SPSS for statistical analysis, or GitHub Copilot for code completion — the tools assist, but they do not make research decisions. All intellectual decisions in this manuscript — the research design, the choice of frameworks, the FHS formula derivation, the benchmarking methodology, the interpretation of results — were made by us, reviewed by our adviser, and validated through the capstone process. The writing was drafted with AI assistance and then revised, fact-checked, and approved by the three of us and our adviser. No AI tool conducted interviews, collected survey data, ran the app benchmarks, or designed the system architecture — those are entirely our work.
+
+---
+
 ## AI-SPECIFIC QUESTIONS (panels ask these in 2026)
 
 **Q: Trained ba ang AI ninyo o pre-trained lang?**
