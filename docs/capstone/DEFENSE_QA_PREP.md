@@ -1,5 +1,5 @@
 # SmartSpend — Defense Q&A Preparation
-**Defense:** November 10, 2026
+**Defense:** November 9, 2026
 **Team:** Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 
 > Read this aloud once the night before. Each of you should know your sections.

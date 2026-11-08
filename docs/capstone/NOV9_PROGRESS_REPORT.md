@@ -1,7 +1,7 @@
 # SmartSpend — Progress Report
 ## Capstone 2 | AY 2026–2027 | Lorma Colleges CCSE
 ## Reporting Date: November 9, 2026
-## Final Defense: November 10, 2026
+## Final Defense: November 9, 2026 (DEFENSE DAY)
 ## Team: Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 ## Adviser: Ms. Ellen F. Mangaoang, DIT
 

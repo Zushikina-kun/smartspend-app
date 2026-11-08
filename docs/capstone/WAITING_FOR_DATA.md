@@ -1,6 +1,6 @@
 # SmartSpend — Waiting for Data (Final Revision List)
 **Last updated:** November 9, 2026  
-**Defense:** November 10, 2026  
+**Defense:** November 9, 2026  
 **When data arrives → give to Brix → Brix sends to Kiro → Kiro does final revision in one pass**
 
 ---
