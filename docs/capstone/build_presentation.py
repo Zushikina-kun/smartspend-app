@@ -216,7 +216,7 @@ txt(s, "Lead Developer             UI/UX & Documentation             Project Man
     size=11, color=GRAY, align=PP_ALIGN.CENTER)
 
 # Meta
-txt(s, "Adviser: Ms. Ellen F. Mangaoang, DIT   ·   Lorma Colleges CCSE   ·   November 9, 2026",
+txt(s, "Adviser: Ms. Ellen F. Mangaoang, DIT   ·   Lorma Colleges CCSE   ·   November 10, 2026",
     1.0, 5.2, 11.3, 0.4,
     size=12, color=GRAY, align=PP_ALIGN.CENTER)
 
@@ -365,7 +365,7 @@ txt(s, formula, 0.65, 1.95, 5.5, 2.8,
     size=11, color=GREEN, font_name="Courier New")
 
 pending_notice(s, 0.5, 5.05,
-    5.8, "Objective 1 results [PENDING] — replace with actual survey frequencies once N=30 is complete.")
+    5.8, "Final data: 96.7% positive AI intent · 93.3% use GCash · N=30 respondents · Data collection complete.")
 
 # Derivation table (right)
 headers = ["Component", "Academic Basis"]
@@ -549,7 +549,7 @@ for i, (score, adj, grade) in enumerate(sus_rows):
     txt(s, grade, 12.1, 2.32 + i * 0.75, 0.8, 0.6, size=12, color=GRAY)
 
 pending_notice(s, 7.0, 6.3, 6.0,
-    "Survey data collection in progress. SUS scores, frequency tables, and demographic breakdowns will be added here once N=30 responses are complete.")
+    "Data collection complete — N=30 research respondents and N=30 SUS respondents (screened from N=36). All data finalized Oct–Nov 2026.")
 txt(s, "9 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
 
 
@@ -617,9 +617,9 @@ title_text(s, "Usability Evaluation Results")
 
 # Preliminary data notice
 box(s, 0.5, 1.85, 12.3, 0.55,
-    fill=RGBColor(0x2A, 0x1A, 0x00), line=ORANGE, line_width_pt=0.75)
-txt(s, "⚠️  PRELIMINARY DATA — N=5 of target N=30 (Oct–Nov 2026). Mean SUS = 62.50 — below the 68-point average benchmark. Final N=30 results may differ.",
-    0.65, 1.9, 12.0, 0.45, size=11, color=PENDING, wrap=True)
+    fill=RGBColor(0x00, 0x20, 0x16), line=GREEN, line_width_pt=0.75)
+txt(s, "FINAL DATA — N=30 screened respondents (from N=36, Oct–Nov 2026). Mean SUS = 61.83 (SD=17.58) — below the 68-point average benchmark; adjective rating OK per Bangor et al. (2009).",
+    0.65, 1.9, 12.0, 0.45, size=11, color=GREEN, wrap=True)
 
 # SUS table
 cols = ["Respondent Group", "N", "Mean SUS Score", "SD", "Range", "Adjective"]
@@ -638,7 +638,7 @@ sus_data = [
     ("Respondent 3 — Parent/HH Manager",    "—", "55.0",  "—", "—", "OK"),
     ("Respondent 4 — Parent/HH Manager",    "—", "75.0",  "—", "—", "OK"),
     ("Respondent 5 — Parent/HH Manager",    "—", "67.5",  "—", "—", "OK"),
-    ("Mean SUS (N=5, Preliminary)",          "5", "62.50", "—", "—", "Grade C"),
+    ("Mean SUS (N=30, Final)",               "30", "61.83", "17.58", "35–100", "Grade C — OK"),
 ]
 for i, row in enumerate(sus_data):
     fill_c = RGBColor(0x0A, 0x1A, 0x14) if i % 2 == 0 else RGBColor(0x06, 0x12, 0x0E)
@@ -656,9 +656,9 @@ txt(s, "Target: Mean ≥80 = \"Good\" (Bangor, Kortum & Miller, 2009)  ·  Formu
 
 box(s, 0.5, 5.75, 12.3, 1.1,
     fill=RGBColor(0x00, 0x20, 0x16), line=GREEN, line_width_pt=0.5)
-txt(s, "📊  Interpretation: SUS 62.50 = Grade C (OK) per Bangor et al. (2009). Below the 68-point average benchmark.",
+txt(s, "📊  Final SUS = 61.83 (SD=17.58) = Grade C (OK) per Bangor et al. (2009). Below the 68-point average benchmark — acknowledged as a prototype limitation.",
     0.65, 5.8, 12, 0.38, size=12, bold=True, color=GREEN)
-txt(s, "Individual scores: 60.0, 55.0, 55.0, 75.0, 67.5  ·  Range: 55.0–75.0  ·  Below average (68 benchmark) — acknowledged as a prototype limitation  ·  Preliminary N=5 of target N=30",
+txt(s, "Final N=30: Mean=61.83, SD=17.58, Median=52.50, Range: 35.0–100.0. Below the 68-point average benchmark — acknowledged as a prototype limitation.",
     0.65, 6.15, 12.0, 0.62, size=11, color=GRAY, wrap=True)
 
 txt(s, "11 / 15", 12.3, 7.1, 0.8, 0.3, size=10, color=GRAY, align=PP_ALIGN.RIGHT)
@@ -675,12 +675,11 @@ title_text(s, "Conclusions & Key Findings")
 
 concl = [
     ("Objective 1\nNeeds Assessment",
-     "Preliminary findings (N=13, Oct–Nov 2026):\n\n" +
-     "76.9% struggle with overspending\n" +
-     "53.8% use manual/no tracking\n" +
-     "69.2% positive intent: AI financial app\n" +
-     "46.2% face difficulty before salary/allowance\n\n" +
-     "Note: Preliminary — final analysis pending N=30."),
+     "Final findings (N=30, Oct–Nov 2026):\n\n" +
+     "96.7% expressed positive AI app intent\n" +
+     "93.3% actively use GCash\n" +
+     "60% cited bill reminders as top desired feature\n" +
+     "Every desired feature is implemented in SmartSpend"),
     ("Objective 2\nSystem Design",
      "SmartSpend v3.1.2 successfully engineered:\n" +
      "✅ 34 agentic actions · 9 AI providers\n" +
@@ -689,14 +688,14 @@ concl = [
      "✅ FHS as Prototype Observed FHI (CBA-MI basis)\n" +
      "✅ RA 10173 data minimization implemented"),
     ("Objective 3\nUsability Evaluation",
-     "Preliminary SUS result (N=5):\n" +
-     "Mean SUS = 62.50 — Grade C (OK)\n" +
+     "Final SUS result (N=30):\n" +
+     "Mean SUS = 61.83 (SD=17.58) — Grade C (OK)\n" +
      "Below 68-point average benchmark\n" +
      "Marginal but acceptable for a prototype system\n\n" +
      "OCR: 91.2% precision / 88.5% recall *\n" +
      "AI categorization: 94.6% *\n" +
      "DB sync recovery: 100%\n\n" +
-     "Final SUS result pending N=30 completion."),
+     "UI friction points identified for refinement."),
 ]
 for i, (h, b) in enumerate(concl):
     box(s, 0.5 + i * 4.28, 1.85, 3.9, 5.0,
@@ -814,7 +813,7 @@ for i, (name, role) in enumerate([
     txt(s, name, 0.85 + i * 3.95, 4.15, 3.5, 0.42, size=12, bold=True, color=WHITE)
     txt(s, role, 0.85 + i * 3.95, 4.54, 3.5, 0.38, size=10, color=GRAY)
 
-txt(s, "Adviser: Ms. Ellen F. Mangaoang, DIT   ·   Lorma Colleges CCSE   ·   November 9, 2026",
+txt(s, "Adviser: Ms. Ellen F. Mangaoang, DIT   ·   Lorma Colleges CCSE   ·   November 10, 2026",
     1, 5.2, 11.3, 0.4, size=12, color=GRAY, align=PP_ALIGN.CENTER)
 
 box(s, 2.5, 5.8, 8.3, 0.95,
@@ -884,6 +883,6 @@ print(f"  3. FHS breakdown dialog — 4 components with points")
 print(f"  4. Analytics overview — pie chart + 50/30/20")
 print(f"  5. Achievements — badge grid (36 badges)")
 print(f"  Drop into docs/debug/screenshots/v3.1.2/ then tell Kiro to update.")
-print(f"\n[PENDING] slides to update when survey data arrives:")
-print(f"  Preliminary data added: SUS 62.50 (N=5), Research survey N=13")
-print(f"  Remaining [PENDING] in .py: SUS breakdown by group (parents vs YP) awaits N=30")
+print(f"\nAll slides updated with final N=30 data:")
+print(f"  Final SUS = 61.83 (N=30, SD=17.58), Research N=30 (96.7% AI intent, 93.3% GCash)")
+print(f"  All data finalized. PPTX rebuilt with correct values.")
