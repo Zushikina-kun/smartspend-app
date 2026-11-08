@@ -1,9 +1,9 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.1.1 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 3.1.2 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.1.1-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.1.2-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
 > **Note on screenshots and demo:** The website screenshots were taken during development (v3.0.4) and the interactive demo shows a simplified prototype of the general concept. The actual app has been significantly updated since — animations, Peso mascot interactions, UI polish, and features have all been improved. Download the latest APK for the full experience.
@@ -59,7 +59,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 - 🔒 **Local AI Mode** — connect to Ollama, LM Studio, or Jan on your PC; zero cloud exposure
 
 ### Financial Intelligence
-- 🧠 **Financial Health Score (FHS)** — 0–100 score across 4 pillars: Savings Rate, Budget Adherence, Budget Setup, Logging Consistency
+- 🧠 **Financial Health Score (FHS)** — 0–100 score across 4 pillars: Savings Rate, Overspend Control, Budget Adherence, Logging Consistency
 - 💚 **Safe to Spend** — how much you can freely spend before payday after bills and goals
 - 📊 **Analytics** — pie chart, trend bars, 50/30/20 rule, savings rate, FHS history, spending heatmap, long-range forecast (3/6/12 months), AI financial advice
 - 💹 **Peso Cost Averaging Calculator** — MP2, UITFs, stocks with year-by-year projections
@@ -84,7 +84,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 - 🔔 **Smart Reactions** — first-log-of-day, no-spend day, budget warnings, FHS tier changes
 
 ### Other
-- ⚙️ **Full App Settings** — dark/light mode, 11 color themes, compact mode, Local AI config
+- ⚙️ **Full App Settings** — dark/light mode, 12 color themes, compact mode, Local AI config
 - 🔐 **API Security** — Firebase Remote Config + App Check
 - ☁️ **Full Firestore sync** across devices (optional)
 - 🔒 **App Lock** — PIN + biometric
@@ -117,16 +117,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 ## Surveys (Capstone Research)
 
-SmartSpend is a capstone research project at Lorma Colleges. If you've used the app, please help our research:
-
-> **For the SUS survey:** Please try the app (or use "Try Demo" on the login screen) for about 10 minutes first before answering.
-
-| Survey | Link | Time |
-|--------|------|------|
-| 📋 SUS Usability Evaluation | https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform | ~2 min |
-| 📊 Financial Management Practices | https://docs.google.com/forms/d/e/1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ/viewform | ~5 min |
-
-Salamat! 🙏
+SmartSpend is a capstone research project at Lorma Colleges (AY 2026-2027). Data collection for the formal evaluation is complete (N=30 research survey, N=30 SUS evaluation). Thank you to all respondents!
 
 ---
 
@@ -134,6 +125,7 @@ Salamat! 🙏
 
 | Version | Highlights |
 |---------|-----------|
+| **3.1.2** | UX polish — clearSnackBars, FHS tier ring, setup CTA, quick input bar prominence, weekly notification fix |
 | **3.1.1** | Peso gestures (double-tap, long-press, idle timer), AI transaction save fix, site factual corrections |
 | **3.1.0** | FHS tier change announcements, streak milestones, notification tap reaction, session tips |
 | **3.0.9** | Swipe-to-delete, Quick Undo, profile section headers, PesoContextService on 6 screens |
