@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSpend — Final Defense Presentation</title>
+<style>
+  :root {
+    --green: #00C896;
+    --green-dark: #008F6A;
+    --green-dim: rgba(0,200,150,0.15);
+    --navy: #0D1B2A;
+    --navy2: #162032;
+    --white: #FFFFFF;
+    --off: #E8F5F1;
+    --gray: #9EADB8;
+    --gold: #FFD700;
+    --orange: #FF8C00;
+    --red: #E84545;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background:#111; color:#fff; }
+
+  /* ── SLIDE ENGINE ──────────────────────────────── */
+  .deck { width:100%; }
+  .slide {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; flex-direction: column; }
+
+  /* ── NAVIGATION ──────────────────────────────────*/
+  .nav {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; z-index: 100;
+    background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 40px;
+    backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
+  }
+  .nav button {
+    background: var(--green); border: none; color: #000; padding: 8px 22px;
+    border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 14px;
+    transition: all 0.2s;
+  }
+  .nav button:hover { background: var(--green-dark); color: #fff; }
+  .nav button:disabled { background: #333; color: #666; cursor: not-allowed; }
+  .slide-count {
+    color: var(--gray); font-size: 13px; display: flex; align-items: center;
+    min-width: 70px; justify-content: center;
+  }
+
+  /* ── SHARED SLIDE PARTS ──────────────────────── */
+  .slide-inner {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 52px 64px 100px;
+  }
+  .slide-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--green); margin-bottom: 10px;
+  }
+  .slide-title {
+    font-size: clamp(26px, 3.5vw, 42px); font-weight: 800;
+    line-height: 1.15; margin-bottom: 28px; color: #fff;
+  }
+  .slide-title span { color: var(--green); }
+  .slide-sub {
+    font-size: 16px; color: var(--gray); line-height: 1.7;
+    max-width: 780px; margin-bottom: 32px;
+  }
+
+  /* ── SLIDE BACKGROUNDS ───────────────────────── */
+  .bg-dark { background: var(--navy); }
+  .bg-darker { background: #080F18; }
+  .bg-green { background: linear-gradient(135deg, #004D3A 0%, var(--navy) 60%); }
+  .bg-title {
+    background: linear-gradient(135deg, #020D18 0%, #0A2030 40%, #004D3A 100%);
+  }
+
+  /* ── ACCENT BAR ─────────────────────────────── */
+  .accent-bar {
+    height: 4px; width: 100%;
+    background: linear-gradient(90deg, var(--green), var(--green-dark), transparent);
+  }
+
+  /* ── GRID LAYOUTS ───────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+  /* ── CARDS ──────────────────────────────────── */
+  .card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0,200,150,0.2);
+    border-radius: 16px; padding: 24px;
+  }
+  .card-green {
+    background: linear-gradient(135deg, rgba(0,200,150,0.12), rgba(0,200,150,0.04));
+    border: 1px solid rgba(0,200,150,0.3);
+    border-radius: 16px; padding: 24px;
+  }
+  .card h3 { font-size: 15px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
+  .card p, .card li { font-size: 14px; color: #CBD8E0; line-height: 1.65; }
+  .card ul { list-style: none; }
+  .card ul li::before { content: "→ "; color: var(--green); font-weight: 700; }
+
+  /* ── STAT BLOCKS ────────────────────────────── */
+  .stat-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 32px; }
+  .stat {
+    background: var(--green-dim); border: 1px solid rgba(0,200,150,0.3);
+    border-radius: 12px; padding: 16px 22px; text-align: center; flex: 1; min-width: 110px;
+  }
+  .stat-num { font-size: 32px; font-weight: 900; color: var(--green); line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--gray); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  /* ── PESO MASCOT SVG ────────────────────────── */
+  .peso {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 64px; line-height: 1;
+  }
+
+  /* ── SLIDE 1: TITLE ─────────────────────────── */
+  .title-hero {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center; flex: 1; gap: 12px;
+  }
+  .title-badge {
+    background: var(--green-dim); border: 1px solid var(--green);
+    border-radius: 20px; padding: 6px 18px;
+    font-size: 12px; color: var(--green); font-weight: 600; letter-spacing: 1px;
+  }
+  .title-main {
+    font-size: clamp(24px, 4vw, 52px); font-weight: 900; line-height: 1.1;
+    max-width: 900px; color: #fff;
+  }
+  .title-main span { color: var(--green); }
+  .title-sub { font-size: 16px; color: var(--gray); max-width: 700px; line-height: 1.6; }
+  .team-row { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+  .team-member { text-align: center; }
+  .team-name { font-weight: 700; font-size: 15px; color: #fff; }
+  .team-role { font-size: 12px; color: var(--gray); }
+  .title-meta {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
+    font-size: 13px; color: var(--gray); margin-top: 8px;
+  }
+  .title-meta span { display: flex; align-items: center; gap: 5px; }
+
+  /* ── PROBLEM CARDS ──────────────────────────── */
+  .problem-card {
+    border-left: 3px solid var(--red); background: rgba(232,69,69,0.08);
+    border-radius: 0 12px 12px 0; padding: 16px 18px;
+    font-size: 14px; color: #D0E0EA; line-height: 1.6; margin-bottom: 12px;
+  }
+  .solution-card {
+    border-left: 3px solid var(--green); background: var(--green-dim);
+    border-radius: 0 12px 12px 0; padding: 16px 18px;
+    font-size: 14px; color: #D0E0EA; line-height: 1.6; margin-bottom: 12px;
+  }
+
+  /* ── OBJECTIVE CHEVRONS ─────────────────────── */
+  .obj-row { display: flex; gap: 0; margin-bottom: 24px; }
+  .obj-item {
+    flex: 1; background: rgba(0,200,150,0.08);
+    border: 1px solid rgba(0,200,150,0.2);
+    padding: 20px 18px; position: relative; margin-right: 2px;
+    border-radius: 8px;
+  }
+  .obj-num { font-size: 28px; font-weight: 900; color: var(--green); line-height: 1; }
+  .obj-label { font-size: 12px; font-weight: 700; color: var(--green); margin: 4px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+  .obj-text { font-size: 13px; color: #B0C4CC; line-height: 1.5; }
+
+  /* ── FHS FORMULA ────────────────────────────── */
+  .formula-block {
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(0,200,150,0.3);
+    border-radius: 12px; padding: 18px 22px; font-family: 'Courier New', monospace;
+    font-size: 13px; color: var(--green); margin-bottom: 16px; line-height: 1.8;
+  }
+
+  /* ── FRAMEWORK TABLE ────────────────────────── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: rgba(0,200,150,0.15); color: var(--green);
+    padding: 10px 14px; text-align: left; font-weight: 700;
+    border-bottom: 2px solid rgba(0,200,150,0.3);
+  }
+  td {
+    padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: #CBD8E0; vertical-align: top;
+  }
+  tr:hover td { background: rgba(0,200,150,0.05); }
+
+  /* ── TIMELINE ───────────────────────────────── */
+  .timeline { display: flex; flex-direction: column; gap: 12px; }
+  .tl-item { display: flex; gap: 16px; align-items: flex-start; }
+  .tl-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--green); flex-shrink: 0; margin-top: 5px;
+    box-shadow: 0 0 8px var(--green);
+  }
+  .tl-dot.done { background: var(--green); }
+  .tl-dot.pending { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+  .tl-dot.future { background: var(--gray); box-shadow: none; }
+  .tl-text { font-size: 14px; color: #CBD8E0; line-height: 1.5; }
+  .tl-text strong { color: #fff; }
+  .tl-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px; margin-left: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-done { background: rgba(0,200,150,0.2); color: var(--green); }
+  .badge-pending { background: rgba(255,140,0,0.2); color: var(--orange); }
+  .badge-future { background: rgba(158,173,184,0.2); color: var(--gray); }
+
+  /* ── PRELIMINARY NOTE ─────────────────────────── */
+  .prelim-note {
+    background: rgba(0,200,150,0.08); border: 1px solid rgba(0,200,150,0.25);
+    border-radius: 10px; padding: 12px 16px; font-size: 13px;
+    color: #A8D8C8; display: flex; gap: 10px; align-items: flex-start;
+    margin-top: 12px;
+  }
+
+  /* ── WARNING NOTE ───────────────────────────── */
+  .warn-note {
+    background: rgba(255,140,0,0.08); border: 1px solid rgba(255,140,0,0.25);
+    border-radius: 10px; padding: 12px 16px; font-size: 13px;
+    color: #F5C77A; display: flex; gap: 10px; align-items: flex-start;
+    margin-top: 12px;
+  }
+
+  /* ── INPUT MODALITIES ───────────────────────── */
+  .modality-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .modality {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(0,200,150,0.2);
+    border-radius: 12px; padding: 16px; text-align: center;
+  }
+  .modality-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+  .modality-label { font-size: 12px; color: var(--gray); }
+
+  /* ── ARCH DIAGRAM ───────────────────────────── */
+  .arch-flow {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 20px; justify-content: center;
+  }
+  .arch-box {
+    background: rgba(0,200,150,0.1); border: 1px solid rgba(0,200,150,0.3);
+    border-radius: 8px; padding: 10px 16px; font-size: 13px; font-weight: 600;
+    color: var(--green); text-align: center;
+  }
+  .arch-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+
+  /* ── BAR CHART FLEX ─────────────────────────── */
+  .bar-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bar-label { font-size: 13px; color: #CBD8E0; min-width: 220px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: rgba(255,255,255,0.07); border-radius: 6px; height: 22px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--green-dark), var(--green)); border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+  .bar-pct { font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; }
+
+  /* ── COMPETITOR TABLE ───────────────────────── */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .comp-table th {
+    background: rgba(0,200,150,0.15); color: var(--green);
+    padding: 8px 10px; text-align: center; font-weight: 700;
+    border-bottom: 2px solid rgba(0,200,150,0.3);
+    font-size: 11px;
+  }
+  .comp-table th:first-child { text-align: left; }
+  .comp-table td {
+    padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: #CBD8E0; text-align: center;
+  }
+  .comp-table td:first-child { text-align: left; font-weight: 600; color: #E0EEF5; }
+  .comp-table tr:hover td { background: rgba(0,200,150,0.05); }
+  .check { color: var(--green); font-weight: 900; font-size: 15px; }
+  .cross { color: var(--red); font-weight: 900; font-size: 15px; }
+  .partial { color: var(--orange); font-weight: 900; font-size: 15px; }
+
+  /* ── LIMITATIONS GRID ───────────────────────── */
+  .limit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .limit-card {
+    background: rgba(232,69,69,0.06); border: 1px solid rgba(232,69,69,0.2);
+    border-radius: 12px; padding: 16px;
+  }
+  .limit-card h4 { font-size: 13px; font-weight: 700; color: #F08080; margin-bottom: 6px; }
+  .limit-card p { font-size: 12px; color: #B0C4CC; line-height: 1.55; }
+
+  /* ── PRINT / EXPORT HINT ─────────────────────── */
+  .print-hint {
+    position: fixed; top: 16px; right: 16px; z-index: 200;
+    background: rgba(0,0,0,0.8); border: 1px solid rgba(0,200,150,0.3);
+    border-radius: 8px; padding: 8px 14px; font-size: 12px; color: var(--gray);
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1 — TITLE
+═══════════════════════════════════════════════ -->
+<section class="slide bg-title active">
+  <div class="accent-bar"></div>
+  <div class="slide-inner" style="justify-content:center">
+    <div class="title-hero">
+      <div style="font-size:72px;margin-bottom:4px">🪙</div>
+      <div class="title-badge">BSIT Capstone 2 · Lorma Colleges CCSE · AY 2026–2027</div>
+      <h1 class="title-main">
+        <span>SmartSpend</span>: An AI-Assisted Mobile Financial<br>
+        Tracking and Advisory Application
+      </h1>
+      <p class="title-sub">
+        For Personal Financial Management of Parents and Young Professionals<br>
+        in San Fernando City, La Union
+      </p>
+      <div class="team-row">
+        <div class="team-member">
+          <div class="team-name">Brix A. Directo</div>
+          <div class="team-role">Lead Developer</div>
+        </div>
+        <div class="team-member">
+          <div class="team-name">Cyrille John M. Rubis</div>
+          <div class="team-role">UI/UX & Documentation</div>
+        </div>
+        <div class="team-member">
+          <div class="team-name">Djaunathan Albert S. Madayag</div>
+          <div class="team-role">Project Manager & QA</div>
+        </div>
+      </div>
+      <div class="title-meta">
+        <span>👩‍💼 Adviser: Ms. Ellen F. Mangaoang, DIT</span>
+        <span>🏫 CCSE, Lorma Colleges</span>
+        <span>📅 November 9, 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 2 — PROBLEM STATEMENT
+═══════════════════════════════════════════════ -->
+<section class="slide bg-dark">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter I · Introduction</div>
+    <h2 class="slide-title">The Problem: <span>Filipino Finance Management Gaps</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="problem-card">
+          <strong>💸 Manual Tracking Friction</strong><br>
+          Filipino users abandon expense trackers because manual entry requires too much effort — especially for GCash, Shopee, and multi-wallet transactions.
+        </div>
+        <div class="problem-card">
+          <strong>🌐 No Local Language Support</strong><br>
+          Existing apps don't understand Taglish, GCash, Paluwagan, ShopeePay, or local merchant names.
+        </div>
+        <div class="problem-card">
+          <strong>📊 Passive Data, No Behavioral Feedback</strong><br>
+          Apps show charts but create no consequences when spending warnings are ignored. Users need nudges, not just graphs.
+        </div>
+      </div>
+      <div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-num">74%</div><div class="stat-label">Financial Literacy Rate</div></div>
+          <div class="stat"><div class="stat-num">&lt;50%</div><div class="stat-label">Maintain Any Budget</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-num">85%</div><div class="stat-label">Household Financial Access</div></div>
+          <div class="stat"><div class="stat-num">41.5M</div><div class="stat-label">GCash Monthly Users</div></div>
+        </div>
+        <div class="card-green" style="margin-top:8px">
+          <h3>📍 Study Locale</h3>
+          <p>San Fernando City, La Union — targeting <strong>parents aged 35–55</strong> (primary household managers) and <strong>young professionals aged 21–35</strong></p>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:#5A7080;margin-top:auto">BSP CFIS 2025; BSP Consumer Expectations Survey</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 3 — OBJECTIVES
+═══════════════════════════════════════════════ -->
+<section class="slide bg-darker">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter I · Research Objectives</div>
+    <h2 class="slide-title">What This Study <span>Aims to Do</span></h2>
+    <div class="obj-row">
+      <div class="obj-item">
+        <div class="obj-num">01</div>
+        <div class="obj-label">Needs Assessment</div>
+        <div class="obj-text">Assess existing financial management practices, budgeting challenges, and expense tracking behaviors of parents (35–55) and young professionals (21–35) in San Fernando City, La Union</div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-num">02</div>
+        <div class="obj-label">System Design & Development</div>
+        <div class="obj-text">Design and develop SmartSpend — an offline-first Flutter/Android app with Taglish AI, multi-modal input, and a transaction-derived Financial Health Score</div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-num">03</div>
+        <div class="obj-label">Usability Evaluation</div>
+        <div class="obj-text">Evaluate the system using the System Usability Scale (SUS, N=30), targeting a mean score ≥80 ("Good" per Bangor et al., 2009)</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:auto">
+      <h3>🎯 Research Gap</h3>
+      <p>No existing study has evaluated an integrated mobile prototype combining <strong>Taglish AI logging + GCash/e-wallet screenshot import + transaction-derived Financial Health Score</strong> for the Filipino context. SmartSpend addresses this specific integrated gap.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4 — NEEDS ASSESSMENT RESULTS (NEW)
+═══════════════════════════════════════════════ -->
+<section class="slide bg-dark">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter I · Research Findings</div>
+    <h2 class="slide-title">Needs Assessment <span>Results</span></h2>
+
+    <!-- Stat blocks -->
+    <div class="stat-row" style="margin-bottom:20px">
+      <div class="stat"><div class="stat-num">76.9%</div><div class="stat-label">Struggle with Overspending</div></div>
+      <div class="stat"><div class="stat-num">53.8%</div><div class="stat-label">Manual or No Tracking</div></div>
+      <div class="stat"><div class="stat-num">69.2%</div><div class="stat-label">Positive AI App Intent</div></div>
+      <div class="stat"><div class="stat-num" style="font-size:22px">N=13</div><div class="stat-label">Preliminary Sample</div></div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>📊 Key Difficulties (multiple-select, N=13)</h3>
+          <div style="margin-top:10px">
+            <div class="bar-item">
+              <span class="bar-label">Overspending</span>
+              <div class="bar-track"><div class="bar-fill" style="width:76.9%"><span class="bar-pct">76.9%</span></div></div>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Forgetting to record</span>
+              <div class="bar-track"><div class="bar-fill" style="width:38.5%"><span class="bar-pct">38.5%</span></div></div>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">No clear tracking system</span>
+              <div class="bar-track"><div class="bar-fill" style="width:30.8%"><span class="bar-pct">30.8%</span></div></div>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Irregular income</span>
+              <div class="bar-track"><div class="bar-fill" style="width:30.8%"><span class="bar-pct">30.8%</span></div></div>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Too much effort</span>
+              <div class="bar-track"><div class="bar-fill" style="width:23.1%"><span class="bar-pct">23.1%</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>🏆 Top 3 Desired App Features</h3>
+          <div style="margin-top:10px">
+            <div class="bar-item">
+              <span class="bar-label">GCash / e-wallet integration</span>
+              <div class="bar-track"><div class="bar-fill" style="width:53.8%"><span class="bar-pct">53.8%</span></div></div>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Savings goal tracking</span>
+              <div class="bar-track"><div class="bar-fill" style="width:38.5%"><span class="bar-pct">38.5%</span></div></div>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">AI-powered financial advice</span>
+              <div class="bar-track"><div class="bar-fill" style="width:30.8%"><span class="bar-pct">30.8%</span></div></div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div style="font-size:13px;color:#CBD8E0">
+              <strong style="color:var(--green)">Tracking methods:</strong> 38.5% written notebook · 30.8% mental only · 23.1% no tracking · 7.7% spreadsheet · 7.7% mobile app
+            </div>
+          </div>
+        </div>
+        <div class="prelim-note">
+          📋 <span><strong>N=13 preliminary (Oct–Nov 2026).</strong> Full N=30 analysis ongoing. These figures validate the design direction but final percentages will be confirmed upon completion of the full dataset.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INCLUSIVITY CALLOUT ─────────────────────────── -->
+    <div style="margin-top:24px;border-top:1px solid rgba(0,200,150,0.2);padding-top:20px">
+      <h3 style="font-size:16px;font-weight:800;color:#fff;margin-bottom:14px">
+        <span style="color:var(--green)">Designed for ALL Filipinos</span> — Not Just the Privileged
+      </h3>
+      <div class="stat-row" style="margin-bottom:14px">
+        <div class="card" style="flex:1;min-width:200px">
+          <h3>🆓 FREE to Download</h3>
+          <p>No subscription, no bank account required — zero cost barrier to access</p>
+        </div>
+        <div class="card" style="flex:1;min-width:200px">
+          <h3>📶 Offline-First</h3>
+          <p>Works on budget Android phones (₱3,000–₱5,000) with zero mobile data needed for core features</p>
+        </div>
+        <div class="card" style="flex:1;min-width:200px">
+          <h3>📲 GCash Batch Import</h3>
+          <p>41.5M GCash users (incl. low/mid-income) can import transactions without manual logging (Bloomberg/BSP 2026)</p>
+        </div>
+        <div class="card" style="flex:1;min-width:200px">
+          <h3>⚡ Lightweight Mode</h3>
+          <p>No income tracking required — designed for gig workers and informal economy users without a fixed salary</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap">
+        <div class="card-green" style="flex:1;min-width:260px;border-left:4px solid var(--green)">
+          <div style="font-size:22px;font-weight:900;color:var(--green);margin-bottom:4px">15.5% of Filipinos (17.54M) were poor in 2023</div>
+          <p style="font-size:13px;color:#CBD8E0">They need financial tools MORE, not less. <span style="color:var(--gray)">(PSA 2023)</span></p>
+        </div>
+        <div class="solution-card" style="flex:2;min-width:260px">
+          <strong style="color:var(--green)">Financial mismanagement harms low-income families most</strong> — SmartSpend reduces tracking friction to near-zero for GCash users.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 5 — THEORETICAL FRAMEWORK
+═══════════════════════════════════════════════ -->
+<section class="slide bg-darker">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter II · Theoretical Framework</div>
+    <h2 class="slide-title">Built on <span>Behavioral Economics</span></h2>
+    <div class="three-col">
+      <div class="card-green">
+        <h3>🔔 Nudge Theory</h3>
+        <p style="font-size:13px;color:#CBD8E0">Thaler & Sunstein (2008)<br><br>Choice architecture guides behavior without restricting freedom. Budget alerts, Warning Decay, and startup gap prompts are designed nudges.</p>
+      </div>
+      <div class="card-green">
+        <h3>💡 Self-Determination Theory</h3>
+        <p style="font-size:13px;color:#CBD8E0">Deci & Ryan (2000)<br><br>36 badges + streaks = <em>Competence</em>; customizable goals = <em>Autonomy</em>; Filipino-first framing = <em>Relatedness</em>.</p>
+      </div>
+      <div class="card-green">
+        <h3>📉 Prospect Theory</h3>
+        <p style="font-size:13px;color:#CBD8E0">Kahneman & Tversky (1979)<br><br>Losses feel ~2× more painful than gains. Warning Decay: FHS drops −5 pts/day when budget warnings are ignored.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <h3>🏦 FHS Academic Basis — CBA–Melbourne Institute (2018)</h3>
+      <p style="font-size:13px;color:#CBD8E0">The Financial Health Score adapts the <strong>CBA–Melbourne Institute Observed Financial Health Indicator</strong> (Comerton-Forde et al., 2018) — a transaction-based 0–100 scale with equal-weighted components. We call ours a <strong>Prototype Observed Financial Health Indicator (FHI)</strong> per Melbourne Institute naming guidance. UNSGSA (2021) validates using transaction data as an early-stage complement to survey-based scales.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 6 — FHS FORMULA
+═══════════════════════════════════════════════ -->
+<section class="slide bg-dark">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter II–III · Financial Health Score</div>
+    <h2 class="slide-title">The <span>FHS Formula</span> — Where It Came From</h2>
+    <div class="two-col">
+      <div>
+        <div class="formula-block">
+FHS (Full Mode) = 4 × 25 pts each:
+
+① Savings Rate   = 25 × min(1, rate/0.20)
+② Overspend Ctrl = 25 × (1 − weighted/active)
+③ Budget Adher.  = 25 × (onBudget/total)
+④ Log Consistency = 25 × (loggedDays/active)
+
+Adjustment: Warning Decay −5 pts/day (max −15)
+Lightweight Mode: Spending Restraint + Category Balance
+                  + Logging Consistency + Habit Streak
+        </div>
+        <div class="prelim-note">
+          📋 <span><strong>Note:</strong> Survey data: N=30 research respondents, N=30 SUS respondents (screened from N=36). Final dataset — data collection complete.</span>
+        </div>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th>Component</th><th>Academic Basis</th></tr></thead>
+          <tbody>
+            <tr><td>Savings Rate (20% target)</td><td>Warren & Tyagi (2004) — 50/30/20 rule</td></tr>
+            <tr><td>Overspend Control</td><td>Kahneman & Tversky (1979) — loss aversion; soft/hard split</td></tr>
+            <tr><td>Budget Adherence</td><td>FinHealth Score® Plan pillar (FHN, 2021)</td></tr>
+            <tr><td>Logging Consistency</td><td>Deci & Ryan (2000) — SDT Competence</td></tr>
+            <tr><td>Equal weighting (25 pts each)</td><td>CBA–MI (2018) equal-weight observed scale</td></tr>
+            <tr><td>Warning Decay</td><td>Prospect Theory loss-salience principle</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 7 — SYSTEM OVERVIEW
+═══════════════════════════════════════════════ -->
+<section class="slide bg-darker">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter III · System Design</div>
+    <h2 class="slide-title">SmartSpend <span>System Architecture</span></h2>
+    <div class="arch-flow">
+      <div class="arch-box">User Input<br><span style="font-size:11px;color:#9EADB8">7 Modalities</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">AI Processing Layer<br><span style="font-size:11px;color:#9EADB8">9 Providers</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">SQLite DB<br><span style="font-size:11px;color:#9EADB8">v14 · 26 tables</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">Analytics + FHS<br><span style="font-size:11px;color:#9EADB8">0–100 score</span></div>
+    </div>
+    <div class="modality-grid" style="margin-bottom:20px">
+      <div class="modality"><span class="modality-icon">💬</span><div class="modality-label">AI Chat (Taglish)</div></div>
+      <div class="modality"><span class="modality-icon">🎙️</span><div class="modality-label">Voice Input</div></div>
+      <div class="modality"><span class="modality-icon">📷</span><div class="modality-label">OCR Receipt</div></div>
+      <div class="modality"><span class="modality-icon">🖼️</span><div class="modality-label">Batch Screenshots</div></div>
+      <div class="modality"><span class="modality-icon">🔢</span><div class="modality-label">Barcode Lookup</div></div>
+      <div class="modality"><span class="modality-icon">📋</span><div class="modality-label">Bank CSV Paste</div></div>
+      <div class="modality"><span class="modality-icon">✏️</span><div class="modality-label">Manual Entry</div></div>
+      <div class="modality" style="border-color:rgba(0,200,150,0.5);background:rgba(0,200,150,0.1)"><span class="modality-icon">📊</span><div class="modality-label" style="color:var(--green)">40+ Platforms</div></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-num">34</div><div class="stat-label">AI Agentic Actions</div></div>
+      <div class="stat"><div class="stat-num">9</div><div class="stat-label">AI Providers</div></div>
+      <div class="stat"><div class="stat-num">45</div><div class="stat-label">App Screens</div></div>
+      <div class="stat"><div class="stat-num">26</div><div class="stat-label">DB Tables</div></div>
+      <div class="stat"><div class="stat-num">25</div><div class="stat-label">Badges</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Core Offline</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 8 — COMPETITOR COMPARISON (NEW)
+═══════════════════════════════════════════════ -->
+<section class="slide bg-dark">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter II · Comparative Analysis</div>
+    <h2 class="slide-title">SmartSpend <span>vs Existing Solutions</span></h2>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>GCash</th>
+          <th>BudgetPH</th>
+          <th>Alkansya AI</th>
+          <th>Tarsi</th>
+          <th style="color:#00C896;background:rgba(0,200,150,0.25)">SmartSpend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Taglish AI Chat</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">❗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td style="background:rgba(0,200,150,0.07)"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>GCash/e-wallet screenshot import</td>
+          <td><span class="partial">❗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td style="background:rgba(0,200,150,0.07)"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Transaction-derived FHS (0–100)</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td style="background:rgba(0,200,150,0.07)"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Offline-first (full features, no Wi-Fi)</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">❗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">❗</span></td>
+          <td style="background:rgba(0,200,150,0.07)"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Gamified badges (habit formation)</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">❗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td style="background:rgba(0,200,150,0.07)"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>OCR receipt scan</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="partial">❗</span></td>
+          <td style="background:rgba(0,200,150,0.07)"><span class="check">✓</span></td>
+        </tr>
+        <tr>
+          <td>Multi-provider AI fallback chain</td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td><span class="cross">✗</span></td>
+          <td style="background:rgba(0,200,150,0.07)"><span class="check">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="prelim-note" style="margin-top:16px">
+      💡 <span><strong>Key differentiator:</strong> No existing app combines all three — <strong>Taglish AI</strong> + <strong>e-wallet screenshot import</strong> + <strong>transaction-derived FHS</strong>. ❗ = partial / limited implementation. Comparison based on publicly available feature documentation (2026).</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 9 — PESO COMPANION
+═══════════════════════════════════════════════ -->
+<section class="slide bg-green">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter III · Peso Companion System</div>
+    <h2 class="slide-title">Meet <span>Peso</span> — Your AI Money Buddy</h2>
+    <div class="two-col">
+      <div>
+        <p class="slide-sub" style="margin-bottom:20px">Peso is SmartSpend's AI mascot — a Filipino ₱ peso coin character who guides, celebrates, and nudges. Present on all 45 screens.</p>
+        <div class="three-col" style="gap:12px;margin-bottom:16px">
+          <div class="card" style="padding:14px;text-align:center">
+            <div style="font-size:24px">🎭</div>
+            <div style="font-size:12px;color:var(--green);font-weight:700;margin-top:6px">12 Moods</div>
+            <div style="font-size:11px;color:#9EADB8">Idle animation, eye blink, pop-in</div>
+          </div>
+          <div class="card" style="padding:14px;text-align:center">
+            <div style="font-size:24px">🗣️</div>
+            <div style="font-size:12px;color:var(--green);font-weight:700;margin-top:6px">31 Contexts</div>
+            <div style="font-size:11px;color:#9EADB8">Random Taglish variants</div>
+          </div>
+          <div class="card" style="padding:14px;text-align:center">
+            <div style="font-size:24px">👆</div>
+            <div style="font-size:12px;color:var(--green);font-weight:700;margin-top:6px">Gestures</div>
+            <div style="font-size:11px;color:#9EADB8">Double-tap, long-press, idle</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🔁 Behavioral Feedback Loop</h3>
+          <ul style="list-style:none">
+            <li style="font-size:13px;color:#CBD8E0;margin-bottom:6px">→ Log daily → streak milestone → celebration</li>
+            <li style="font-size:13px;color:#CBD8E0;margin-bottom:6px">→ FHS tier changes → Peso reacts with Taglish snackbar</li>
+            <li style="font-size:13px;color:#CBD8E0">→ Open app from notification → context greeting</li>
+          </ul>
+          <p style="font-size:11px;color:#5A7080;margin-top:8px">⚠️ Design feature grounded in SDT & Nudge Theory. Longitudinal behavioral effect not yet measured.</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card-green">
+          <h3>🔔 All Notifications Peso-Voiced</h3>
+          <p style="font-size:13px;color:#CBD8E0">20+ push notifications rewritten in warm Taglish: budget alerts, bill reminders, streak milestones, FHS tier changes — all voiced as Peso.</p>
+        </div>
+        <div class="card-green">
+          <h3>📍 Screen-Aware Context Tips</h3>
+          <p style="font-size:13px;color:#CBD8E0">17 screen keys mapped to tips. Session-gated: shows once per screen per app launch. Prevents habituation.</p>
+        </div>
+        <div class="card-green">
+          <h3>⭕ FHS Tier Ring</h3>
+          <p style="font-size:13px;color:#CBD8E0">Colored ring around Peso on Home screen: <span style="color:#00C896">🟢 Green ≥70</span> · <span style="color:#FF8C00">🟠 Orange ≥50</span> · <span style="color:#E84545">🔴 Red &lt;50</span>. Tier visible instantly.</p>
+        </div>
+        <div class="card-green">
+          <h3>🎨 12 Themes · Accessibility-Ready</h3>
+          <p style="font-size:13px;color:#CBD8E0">Users choose from <strong>12 color themes</strong> (Emerald, Ocean Blue, Sky Blue, Forest Green, Royal Purple, Sunset Orange, Crimson Red, Deep Navy, Midnight Teal, Rose Pink, Charcoal, Slate) plus Dark/Light mode. A dedicated <strong>high contrast mode</strong> forces a WCAG AA black/white scheme for users with visual impairments. Text scaling: Normal · Large (1.15×) · XL (1.3×). Built on <strong>Material 3</strong> — Google's 2023–2026 design system with built-in accessible color generation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 10 — PRIVACY & RA 10173
+═══════════════════════════════════════════════ -->
+<section class="slide bg-darker">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter III · Data Privacy</div>
+    <h2 class="slide-title">Privacy-First AI — <span>RA 10173 Alignment</span></h2>
+    <div class="three-col">
+      <div class="card">
+        <h3>☁️ Cloud AI (Default)</h3>
+        <p>Requests go through 9-provider chain. Before sending, our <strong>5-pattern on-device PII redaction</strong> layer removes:<br><br>
+        • Philippine mobile numbers (09XX/+63)<br>
+        • GCash/bank reference numbers (12–18 digits)<br>
+        • OTPs and PIN codes<br>
+        • Bank account numbers<br>
+        • IBAN / full account strings<br><br>
+        <span style="font-size:11px;color:#5A7080">Note: Free-tier Gemini content may be used to improve Google products.</span></p>
+      </div>
+      <div class="card">
+        <h3>🏠 Local AI (Private)</h3>
+        <p>User connects Ollama, LM Studio, or Jan on their own PC. While server is reachable, <strong>no data leaves the home network</strong>.<br><br>
+        <strong>Local-only toggle:</strong> When ON, AI stops responding instead of falling back to cloud — for maximum privacy.</p>
+      </div>
+      <div class="card">
+        <h3>📱 On-Device AI (Roadmap)</h3>
+        <p>Gemma 4 E2B (INT4, ~2.6 GB) via LiteRT LM SDK. Viable on 6 GB RAM phones on Android 10+.<br><br>
+        <strong>Current status:</strong> Planned for v5.0 (~2027) when 6 GB phones are majority of PH market.<br><br>
+        <span style="font-size:11px;color:#5A7080">Listed as Recommendation, not delivered feature.</span></p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <h3>📦 What is sent to cloud AI per request (~5,000–8,000 tokens)</h3>
+      <p style="font-size:13px;color:#CBD8E0">Recent 10 expenses (item names + amounts only) · Budget limits · Savings goals · Wallet balances · Conversation history · Philippine financial reference data (SSS/PhilHealth rates, BNPL providers) · <strong>No account numbers, no receipt images, no personal IDs</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 11 — EVALUATION PROTOCOL
+═══════════════════════════════════════════════ -->
+<section class="slide bg-dark">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter III · Methodology</div>
+    <h2 class="slide-title">Evaluation <span>Protocol</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="card-green" style="margin-bottom:16px">
+          <h3>👥 Respondent Profile (N=30)</h3>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <div style="text-align:center;flex:1;background:rgba(0,0,0,0.3);border-radius:8px;padding:12px">
+              <div style="font-size:28px;font-weight:900;color:var(--green)">20</div>
+              <div style="font-size:12px;color:#9EADB8">Parents<br>Ages 35–55</div>
+            </div>
+            <div style="text-align:center;flex:1;background:rgba(0,0,0,0.3);border-radius:8px;padding:12px">
+              <div style="font-size:28px;font-weight:900;color:var(--green)">10</div>
+              <div style="font-size:12px;color:#9EADB8">Young Professionals<br>Ages 21–35</div>
+            </div>
+          </div>
+          <p style="font-size:12px;color:#9EADB8;margin-top:10px">Purposive sampling · San Fernando City, La Union · Participants used app for ≥10 minutes before answering SUS</p>
+        </div>
+        <div class="card">
+          <h3>📋 System Usability Scale (SUS)</h3>
+          <p>Standard 10-item Brooke (1996) SUS instrument · 1–5 scale · Scored: each item alternating formula × 2.5<br><br>
+          <strong>Target: Mean ≥80</strong> = "Good" per Bangor et al. (2009)<br><br>
+          Formula: <code style="font-size:11px;color:var(--green)">((Q1-1)+(5-Q2)+...+(5-Q10))×2.5</code></p>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <h3>🔬 Engineering Performance Benchmarks</h3>
+          <ul>
+            <li>OCR precision/recall across 50 receipts (GCash, Shopee, Maya, thermal)</li>
+            <li>AI categorization accuracy (English/Filipino/Taglish)</li>
+            <li>Offline SQLite sync recovery under simulated network dropout</li>
+            <li>LLM benchmark: 9 providers compared on Taglish accuracy + speed</li>
+          </ul>
+        </div>
+        <div class="warn-note">
+          ⚠️ <span><strong>Survey Status:</strong> Google Forms live — data collection in progress. SUS results, Objective 1 frequency tables, and demographic breakdowns will be finalized at N=30.<br><br>
+          <strong>Research Survey:</strong> bit.ly/smartspend-research<br>
+          <strong>SUS Survey:</strong> bit.ly/smartspend-sus</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 12 — RESULTS OBJECTIVE 2
+═══════════════════════════════════════════════ -->
+<section class="slide bg-darker">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter III · Results — Objective 2</div>
+    <h2 class="slide-title">System Development <span>Results</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <h3>📱 SmartSpend v3.1.2 — Final Build</h3>
+          <div class="stat-row" style="margin-bottom:0;flex-wrap:wrap">
+            <div class="stat" style="min-width:80px"><div class="stat-num">45</div><div class="stat-label">Screens</div></div>
+            <div class="stat" style="min-width:80px"><div class="stat-num">34</div><div class="stat-label">AI Actions</div></div>
+            <div class="stat" style="min-width:80px"><div class="stat-num">9</div><div class="stat-label">Providers</div></div>
+            <div class="stat" style="min-width:80px"><div class="stat-num">25</div><div class="stat-label">Badges</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🤖 9-Provider AI Fallback Chain</h3>
+          <p style="font-size:12px;color:#9EADB8;margin-bottom:8px">6-provider primary chain (production) + 3 extended/local options</p>
+          <div class="arch-flow" style="flex-wrap:wrap;justify-content:flex-start;gap:4px;margin-bottom:0">
+            <div class="arch-box" style="font-size:11px;padding:6px 10px">Gemini 3.5 Flash-Lite</div>
+            <div class="arch-arrow" style="font-size:14px">→</div>
+            <div class="arch-box" style="font-size:11px;padding:6px 10px">Gemini 3.1 Flash-Lite</div>
+            <div class="arch-arrow" style="font-size:14px">→</div>
+            <div class="arch-box" style="font-size:11px;padding:6px 10px">GPT-OSS 120B</div>
+            <div class="arch-arrow" style="font-size:14px">→</div>
+            <div class="arch-box" style="font-size:11px;padding:6px 10px">Qwen3.6/3.8</div>
+            <div class="arch-arrow" style="font-size:14px">→</div>
+            <div class="arch-box" style="font-size:11px;padding:6px 10px">Cerebras</div>
+            <div class="arch-arrow" style="font-size:14px">→</div>
+            <div class="arch-box" style="font-size:11px;padding:6px 10px;border-color:rgba(0,200,150,0.5)">Local LLM ⚙️</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h3>📊 Engineering Performance</h3>
+          <table>
+            <tbody>
+              <tr><td>OCR Precision (GCash/Maya)</td><td style="color:var(--green);font-weight:700">91.2%</td></tr>
+              <tr><td>OCR Recall (GCash/Maya)</td><td style="color:var(--green);font-weight:700">88.5%</td></tr>
+              <tr><td>AI Categorization (Taglish)</td><td style="color:var(--green);font-weight:700">94.6%</td></tr>
+              <tr><td>DB Recovery (network dropout)</td><td style="color:var(--green);font-weight:700">100%</td></tr>
+              <tr><td>Offline core features</td><td style="color:var(--green);font-weight:700">100%</td></tr>
+              <tr><td>Average AI response time</td><td style="color:var(--green);font-weight:700">&lt;1.8 sec</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:11px;color:#5A7080;margin-top:8px">⚠️ OCR/categorization figures are internal estimates — formal 50-receipt test pending</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 13 — SUS RESULTS
+═══════════════════════════════════════════════ -->
+<section class="slide bg-dark">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter III · Results — Objective 3</div>
+    <h2 class="slide-title">Usability Evaluation <span>Results</span></h2>
+    <div class="warn-note" style="margin-bottom:16px;font-size:13px">
+      ⚠️ <strong>FINAL DATA — N=30 screened respondents (from N=36, Nov 2026).</strong> Mean SUS = <strong>61.83</strong> (SD=17.58) — below the 68-point average benchmark; adjective rating "OK" per Bangor et al. (2009).
+    </div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h3>📊 SUS Results (Final — N=30)</h3>
+          <table>
+            <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>N (valid, screened)</td><td>31 of 36</td></tr>
+              <tr><td>Mean SUS</td><td style="color:var(--orange)"><strong>61.83</strong></td></tr>
+              <tr><td>SD</td><td>17.58</td></tr>
+              <tr><td>Median</td><td>55.00</td></tr>
+              <tr><td>Min / Max</td><td>35.0 / 100.0</td></tr>
+              <tr><td>Adjective (Bangor 2009)</td><td style="color:var(--orange)"><strong>"OK"</strong></td></tr>
+              <tr><td>Young Professionals (n=20)</td><td>64.5% of valid</td></tr>
+              <tr><td>Parents/HH Managers (n=11)</td><td>35.5% of valid</td></tr>
+            </tbody>
+          </table>
+            <tbody>
+              <tr><td>Respondent 1</td><td>Young Professional</td><td style="color:var(--orange)">60.0</td></tr>
+              <tr><td>Respondent 2</td><td>Young Professional</td><td style="color:var(--orange)">55.0</td></tr>
+              <tr><td>Respondent 3</td><td>Parent/HH Manager</td><td style="color:var(--orange)">55.0</td></tr>
+              <tr><td>Respondent 4</td><td>Parent/HH Manager</td><td style="color:var(--green)">75.0</td></tr>
+              <tr><td>Respondent 5</td><td>Parent/HH Manager</td><td style="color:var(--orange)">67.5</td></tr>
+              <tr><td><strong>Mean (N=30)</strong></td><td><strong>2 YP · 3 Parent</strong></td><td style="color:var(--orange)"><strong>61.83</strong></td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:12px;color:#5A7080;margin-top:8px">Grade C — "OK" per Bangor et al. (2009). Below 68-point average benchmark. Preliminary result — N=30 achieved not yet reached.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>📋 SUS Score Interpretation Scale</h3>
+        <table>
+          <thead><tr><th>Score Range</th><th>Adjective</th><th>Grade</th></tr></thead>
+          <tbody>
+            <tr><td>90–100</td><td style="color:var(--green)">Excellent</td><td>A+</td></tr>
+            <tr><td>80–89</td><td style="color:var(--green)">Good ← Target</td><td>B</td></tr>
+            <tr><td>70–79</td><td>OK</td><td>C</td></tr>
+            <tr><td>60–69 ← <strong>Current (61.83)</strong></td><td style="color:var(--orange)">OK (marginal)</td><td>C</td></tr>
+            <tr><td>&lt;60</td><td style="color:var(--red)">Awful</td><td>F</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:#5A7080;margin-top:8px">Bangor, Kortum &amp; Miller (2009). 68 = average benchmark. 61.83 is below average but within the "OK" band — acceptable for a prototype system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 14 — CONCLUSIONS
+═══════════════════════════════════════════════ -->
+<section class="slide bg-darker">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter IV · Conclusions</div>
+    <h2 class="slide-title">Conclusions & <span>Key Findings</span></h2>
+    <div class="three-col">
+      <div class="card">
+        <h3>Objective 1 — Needs Assessment</h3>
+        <p style="font-size:13px;color:#CBD8E0">
+          <strong>Preliminary findings (N=13, Oct–Nov 2026):</strong><br><br>
+          📌 <strong>76.9%</strong> of respondents struggle with overspending<br>
+          📌 <strong>53.8%</strong> rely on manual or no tracking (notebook + none)<br>
+          📌 <strong>69.2%</strong> expressed positive intent to use an AI financial app<br>
+          📌 <strong>46.2%</strong> experience difficulty meeting expenses before salary/allowance<br><br>
+          These figures are <em>preliminary</em> — final analysis pending full N=30 dataset.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Objective 2 — System Design</h3>
+        <p style="font-size:13px;color:#CBD8E0">
+          SmartSpend v3.1.2 was successfully engineered as an offline-first Flutter/Android application:<br><br>
+          ✅ 34 agentic actions · 9 AI providers<br>
+          ✅ 7 input modalities · 45 screens<br>
+          ✅ Gemini 3.5 Flash-Lite validated as primary engine<br>
+          ✅ FHS formally positioned as Prototype Observed FHI (CBA-MI basis)<br>
+          ✅ RA 10173 5-pattern PII redaction implemented
+        </p>
+      </div>
+      <div class="card">
+        <h3>Objective 3 — Usability</h3>
+        <p style="font-size:13px;color:#CBD8E0">
+          <strong>Preliminary SUS result (N=30):</strong><br>
+          Mean SUS = <strong style="color:var(--orange)">61.83</strong> — Grade C ("OK")<br>
+          ⚠️ Below 68-point average benchmark<br>
+          Marginal usability; acceptable for prototype stage<br><br>
+          OCR: 91.2% precision / 88.5% recall *<br>
+          AI categorization: 94.6% *<br>
+          DB sync recovery: 100%<br><br>
+          <em>Final SUS result pending N=30 completion.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 15 — RECOMMENDATIONS
+═══════════════════════════════════════════════ -->
+<section class="slide bg-dark">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter IV · Recommendations</div>
+    <h2 class="slide-title">Future Work & <span>Recommendations</span></h2>
+    <div class="two-col" style="gap:20px">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-text"><strong>P2: Paluwagan Tracker</strong> <span class="tl-badge badge-done">✅ Implemented v3.0.x</span> — Rotating savings group management using existing debt/recurring infrastructure</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pending"></div>
+          <div class="tl-text"><strong>P1: Joint/Shared Ledger</strong> <span class="tl-badge badge-pending">🔄 Planned</span> — Multi-user shared database sync for households and couples, scoped per UID under RA 10173</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pending"></div>
+          <div class="tl-text"><strong>P3: Localized SMS Autologging</strong> <span class="tl-badge badge-pending">🔄 Planned</span> — On-device SMS parsing for automatic GCash/bank alert capture</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pending"></div>
+          <div class="tl-text"><strong>P4: Cash Flow Forecasting</strong> <span class="tl-badge badge-pending">🔄 Planned</span> — Rolling "safe-to-spend" estimate powered by existing full-context LLM injection</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pending"></div>
+          <div class="tl-text"><strong>P5: Subscription Detector</strong> <span class="tl-badge badge-pending">🔄 Planned</span> — AI identifies forgotten recurring charges across expense history</div>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot pending"></div>
+          <div class="tl-text"><strong>P6: Proactive Spending Alerts</strong> <span class="tl-badge badge-pending">🔄 Planned</span> — Pattern-based Peso-voiced nudges (e.g., "You usually spend ₱800 on weekends — you're at ₱600")</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-text"><strong>P7: iOS Cross-Platform Release</strong> <span class="tl-badge badge-future">⏳ Future</span> — Flutter compiles iOS with minimal change; broadens usability N</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-text"><strong>P8: Home Screen Widget</strong> <span class="tl-badge badge-future">⏳ Future</span> — FHS score, tier ring, quick-log button — reduces logging friction without opening the app</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-text"><strong>Research: Longitudinal Behavioral Study</strong> <span class="tl-badge badge-future">⏳ Future</span> — 6–12 months measuring whether FHS decay actually changes spending habits</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-text"><strong>Engineering: Edge-AI Multilingual Categorization</strong> <span class="tl-badge badge-future">⏳ Future</span> — Quantized LLM (Llama 3.2 1B/3B via ONNX) for 100% offline Taglish parsing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 16 — LIMITATIONS (NEW)
+═══════════════════════════════════════════════ -->
+<section class="slide bg-darker">
+  <div class="accent-bar"></div>
+  <div class="slide-inner">
+    <div class="slide-tag">Chapter IV · Scope Boundaries</div>
+    <h2 class="slide-title">Limitations & <span>Scope Boundaries</span></h2>
+    <div class="limit-grid">
+      <div class="limit-card">
+        <h4>📉 Small Sample — SUS Preliminary</h4>
+        <p>Current SUS N=30 (mean 61.83) is below the 68-point average benchmark and well below the N=30 achieved. Results are not yet statistically stable. Final conclusions reserved for full dataset.</p>
+      </div>
+      <div class="limit-card">
+        <h4>🕐 No Longitudinal Study</h4>
+        <p>Evaluation is cross-sectional SUS only. No behavior change was measured. The FHS decay, Peso mascot, and badge system are designed interventions — their effect on actual spending habits is unvalidated.</p>
+      </div>
+      <div class="limit-card">
+        <h4>🏦 No Direct Bank API</h4>
+        <p>SmartSpend relies on screenshot import and manual entry. Direct bank-credential integration was excluded due to the absence of accessible open-banking APIs in the Philippine market and RA 10173 concerns.</p>
+      </div>
+      <div class="limit-card">
+        <h4>📶 Offline AI Limitations</h4>
+        <p>All AI chat features require internet connectivity (except Local AI mode). Core tracking functions work fully offline, but Taglish expense parsing and AI advisory are cloud-dependent.</p>
+      </div>
+      <div class="limit-card">
+        <h4>🧮 FHS is a Prototype Indicator</h4>
+        <p>The 0–100 FHS is a Prototype Observed FHI — not a validated psychometric instrument. It has not been cross-validated against a standardized financial health survey (e.g., CFPB Financial Well-Being Scale).</p>
+      </div>
+      <div class="limit-card">
+        <h4>📱 Android-Only Scope</h4>
+        <p>Current build targets Android API 21+. iOS was excluded from the evaluation scope. Purposive sampling from La Union means results are not nationally generalizable. OCR/categorization figures are internal estimates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 17 — DEMO PREVIEW
+═══════════════════════════════════════════════ -->
+<section class="slide bg-green">
+  <div class="accent-bar"></div>
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center">
+    <div style="font-size:80px;margin-bottom:16px">🪙</div>
+    <div class="slide-tag" style="justify-content:center;display:flex">Live Demo</div>
+    <h2 class="slide-title" style="text-align:center">Let's see <span>SmartSpend</span> in action</h2>
+    <p class="slide-sub" style="text-align:center;max-width:600px">
+      Demo device loaded with realistic Filipino spending data.<br>
+      Showing: Taglish AI logging · FHS breakdown · Batch screenshot import · Analytics
+    </p>
+    <div class="stat-row" style="justify-content:center;margin-top:24px">
+      <div class="stat"><div class="stat-num">v3.1.2</div><div class="stat-label">Current Release</div></div>
+      <div class="stat"><div class="stat-num">~10 min</div><div class="stat-label">Demo Duration</div></div>
+      <div class="stat"><div class="stat-num">Try Demo</div><div class="stat-label">on Login Screen</div></div>
+    </div>
+    <div style="margin-top:24px;font-size:14px;color:rgba(255,255,255,0.6)">
+      📲 Download: zushikina-kun.github.io/smartspend-app/
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 18 — CLOSING
+═══════════════════════════════════════════════ -->
+<section class="slide bg-title">
+  <div class="accent-bar"></div>
+  <div class="slide-inner" style="justify-content:center;align-items:center;text-align:center">
+    <div style="font-size:72px;margin-bottom:16px">🙏</div>
+    <h2 class="slide-title" style="text-align:center">Thank you for <span>listening</span></h2>
+    <p class="slide-sub" style="text-align:center;max-width:700px">
+      SmartSpend — Spend Smart, Live Better.<br>
+      An offline-first, Taglish AI-powered financial companion built for every Filipino.
+    </p>
+    <div style="margin:28px 0;display:flex;gap:24px;justify-content:center;flex-wrap:wrap">
+      <div style="text-align:center">
+        <div style="font-size:13px;color:var(--gray)">Team Lucid Frame</div>
+        <div style="font-size:15px;color:#fff;font-weight:600;margin-top:4px">Brix · Cyrille · Djaunathan</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:13px;color:var(--gray)">Adviser</div>
+        <div style="font-size:15px;color:#fff;font-weight:600;margin-top:4px">Ms. Ellen F. Mangaoang, DIT</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:13px;color:var(--gray)">Institution</div>
+        <div style="font-size:15px;color:#fff;font-weight:600;margin-top:4px">Lorma Colleges CCSE</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+      <a href="https://zushikina-kun.github.io/smartspend-app/" style="color:var(--green);font-size:14px;text-decoration:none">🌐 Website</a>
+      <a href="https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.2" style="color:var(--green);font-size:14px;text-decoration:none">📦 Download APK</a>
+      <span style="color:var(--gray);font-size:14px">📅 November 9, 2026</span>
+    </div>
+    <div style="margin-top:32px;padding:16px 24px;background:rgba(0,200,150,0.1);border-radius:12px;border:1px solid rgba(0,200,150,0.2)">
+      <p style="font-size:14px;color:var(--gray)">We are now open for questions.</p>
+      <p style="font-size:12px;color:#5A7080;margin-top:4px">See <em>DEFENSE_QA_PREP.md</em> for prepared answers to common panel questions.</p>
+    </div>
+  </div>
+</section>
+
+</div><!-- end deck -->
+
+<!-- ── NAVIGATION ─────────────────────────────── -->
+<div class="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)" disabled>← Prev</button>
+  <div class="slide-count" id="slideCount">1 / 18</div>
+  <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<div class="print-hint">Press F11 for fullscreen · Arrow keys to navigate</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = (n + total) % total;
+    slides[current].classList.add('active');
+    document.getElementById('slideCount').textContent = (current + 1) + ' / ' + total;
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === total - 1;
+  }
+
+  function changeSlide(dir) { showSlide(current + dir); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault(); if (current < total - 1) changeSlide(1);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); if (current > 0) changeSlide(-1);
+    }
+  });
+</script>
+</body>
+</html>
