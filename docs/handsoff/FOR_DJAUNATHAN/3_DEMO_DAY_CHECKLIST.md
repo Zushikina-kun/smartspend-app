@@ -1,5 +1,5 @@
 # SmartSpend — Defense Demo Day Checklist
-**Defense Date:** November 9, 2026
+**Defense Date:** November 10, 2026
 **Manuscript Deadline:** November 6, 2026 (3 printed copies)
 **Demo device:** Your Android phone (NOT the same phone running your SIM — bring a backup hotspot)
 

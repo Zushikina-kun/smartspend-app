@@ -2,7 +2,7 @@
 **AY 2026–2027, 1st Semester | Lorma Colleges, College of Computer Studies and Engineering (CCSE)**
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 **Adviser:** Ms. Ellen F. Mangaoang, DIT
-**Defense Date:** November 9, 2026 | **Submission Deadline:** November 6, 2026
+**Defense Date:** November 10, 2026 | **Submission Deadline:** November 6, 2026
 **Last Updated:** November 6, 2026 | **App Version:** v3.1.2
 
 > Status legend: ✅ DONE · 🔄 IN PROGRESS · ⏳ PENDING · ❌ NOT STARTED

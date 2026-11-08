@@ -1,7 +1,7 @@
 # SmartSpend — Progress Report
 ## Capstone 2 | AY 2026–2027 | Lorma Colleges CCSE
-## Reporting Date: November 9, 2026
-## Final Defense: November 9, 2026 (DEFENSE DAY)
+## Reporting Date: November 10, 2026
+## Final Defense: November 10, 2026
 ## Team: Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 ## Adviser: Ms. Ellen F. Mangaoang, DIT
 
@@ -142,5 +142,5 @@ Status: Below the project target of ≥80 and below the 68-point average benchma
 
 ---
 
-*Document generated: November 9, 2026*
+*Document generated: November 10, 2026*
 *SmartSpend v3.1.2+110 · Flutter/Dart · Android · Lorma Colleges CCSE*
