@@ -4,11 +4,40 @@ This chapter outlines the research design, population, locale, sampling techniqu
 
 ---
 
+## Review of Related Literature
+
+**Table 2.1. Summary of Related Studies on Financial Health Measurement and Mobile Personal Finance Applications**
+
+| Study / System | Authors / Organization | Year | Sample Size | Key Finding Relevant to SmartSpend | Limitation / Gap SmartSpend Addresses |
+| :--- | :--- | :---: | :---: | :--- | :--- |
+| BSP Financial Inclusion Survey | Bangko Sentral ng Pilipinas (BSP) | 2021 | National survey (adult Filipino population) | Only 2% of Filipino adults answered all six basic financial literacy questions correctly; less than half maintain a structured household budget; parents aged 35–55 show lowest formal budgeting rates [576] | Study documents the problem but provides no digital tracking solution; no localized, behaviorally-aware PFM tool was recommended or evaluated |
+| CFPB Financial Well-Being Scale | Consumer Financial Protection Bureau (CFPB) | 2017 | Scale development study (national US sample) | Established a validated 10-item psychometric instrument for measuring subjective financial security and well-being on a standardized 0–100 scale [3, 7] | Instrument measures subjective psychological states only; cannot capture objective transaction-level behavior; no mobile implementation |
+| CBA–Melbourne Institute Observed FHI | Comerton-Forde et al. / Commonwealth Bank of Australia & Melbourne Institute | 2018 | Administrative bank records (large-scale) | Demonstrated that objective, transaction-derived indicators from administrative banking data can reliably track population-level financial health without self-report bias [7] | Requires access to formal banking records; not applicable to informal economy workers or users without bank accounts; no mobile-native implementation |
+| FinHealth Score® Toolkit | Financial Health Network | 2021 | Practitioner framework (multi-organization) | Introduced a comprehensive four-pillar framework (Spend, Save, Borrow, Plan) for measuring financial health across behavioral dimensions; widely adopted by financial institutions [7] | Framework requires institutional data integration; not designed for individual consumer self-tracking on mobile devices |
+| UNSGSA Financial Health Guidelines | United Nations Secretary-General's Special Advocate for Inclusive Finance for Development (UNSGSA) | 2021 | Policy / institutional guidance | Recommended that transaction-derived Observed FHIs serve as a practical complement to subjective scales in developing market contexts [7] | Guidelines are policy-level; no prototype or application was built; no localized implementation for the Philippine mobile context |
+| PLS-SEM Study on Digital Financial Well-Being | Sharma, Gaba, & Sharma (Atlantis Press) | 2026 | N=656 | Found that Perceived Algorithm Transparency (PAT) moderates the relationship between Sustainable Financial Intentions (SFI) and Digital Financial Well-being (DFWB); confirmed gamified nudges improve financial behavior (β=0.14, t=2.95) [2, 91, 92] | Large-sample SEM study; does not provide a deployable mobile prototype; findings are behavioral-predictive rather than implementation-validated |
+| Nielsen Usability Heuristics | Jakob Nielsen | 1993 | Meta-analysis of usability studies | Empirically established that 5 participants uncover 80–85% of core usability defects; 20–30 participants uncover 90–95% of all issues — foundational justification for SmartSpend's N=30 purposive sample [601, 607] | Heuristics are design principles; Nielsen's studies were conducted on desktop interfaces and may not fully account for mobile-specific or Taglish-context usability challenges |
+| SUS Adjective Rating Scale | Bangor, Kortum, & Miller | 2009 | 2,324 SUS evaluations (meta-analysis) | Introduced an adjective rating scale (Excellent/Good/OK/Poor/Awful) and letter-grade labels to interpret SUS scores; established the 68-point average benchmark [598, 630] | Scale was derived from Western software products; its applicability to Filipino mobile application populations and Taglish-context interactions has not been validated |
+| AI Nudge Study on Gamified Digital Payments | Sharma, P., Gaba, P., & Sharma, B. | 2026 | Conference proceedings | Demonstrated that cognitive nudges in gamified digital payment apps can foster measurable digital financial well-being outcomes [2] | Study focused on payment behavior, not holistic financial tracking; did not measure long-term behavioral change; no offline or developing-market context |
+| 50/30/20 Budgeting Rule | Warren, E. & Tyagi, A. W. | 2005 | N/A (conceptual framework) | Established the 50/30/20 income allocation rule (50% needs, 30% wants, 20% savings) as a practical, accessible personal budgeting heuristic [7] | Framework is a static rule not validated for the Filipino income and expenditure context; does not account for variable informal income or gig-economy cash flows |
+| Self-Determination Theory (SDT) | Deci, E. L. & Ryan, R. M. | 2000 | N/A (theoretical framework) | Established that Autonomy, Competence, and Relatedness are fundamental psychological needs driving intrinsic motivation; foundational for SmartSpend's badge system and non-prescriptive design [7, 35] | Theoretical framework; empirical validation in the context of mobile financial applications and Filipino user populations requires separate longitudinal study |
+| Prospect Theory | Kahneman, D. & Tversky, A. | 1979 | Laboratory experiments | Established that individuals are more motivated to avoid losses than to achieve equivalent gains (loss aversion); foundational for SmartSpend's Warning Decay mechanism (−5 pts/day) [645] | Theoretical framework developed in laboratory conditions; applicability to long-term mobile financial behavior in the Philippine context requires empirical validation |
+
+---
+
+**Evolution of Financial Health Measurement Instruments**
+
+The development of SmartSpend's Financial Health Score (FHS) is contextualized within a progression of financial health measurement frameworks spanning three decades. The System Usability Scale (SUS) was introduced by Brooke (1996) as the first standardized instrument for measuring perceived software usability, establishing the 0–100 benchmark scale now used to evaluate SmartSpend [598, 607]. Two decades later, the Consumer Financial Protection Bureau (CFPB) Financial Well-Being Scale (2017) introduced a validated psychometric instrument for measuring subjective financial security, demonstrating that behavioral and psychological dimensions of financial health require dedicated measurement tools distinct from objective transaction records [3, 7]. The Commonwealth Bank of Australia and Melbourne Institute (CBA/MI) Observed Financial Health Indicator (Comerton-Forde et al., 2018) advanced the field by demonstrating that objective, transaction-derived indicators derived from administrative banking data can reliably track population-level financial health without relying on self-report bias [7]. Building on this, the FinHealth Score® toolkit (Financial Health Network, 2021) introduced a comprehensive practitioner framework structuring financial health across four pillars — Spend, Save, Borrow, and Plan — which directly informs the four components of SmartSpend's Full Mode FHS [7]. In the same year, the United Nations Secretary-General's Special Advocate for Inclusive Finance for Development (UNSGSA, 2021) published guidelines recommending that transaction-derived Observed FHIs serve as a practical complement to subjective scales in developing market contexts — the precise methodological alignment SmartSpend adopts [7]. This study (2026) contributes a Prototype Observed Financial Health Indicator (FHI) implemented on mobile transaction logs within the Philippine context, extending the administrative-data approach to a localized, app-based setting where formal banking records are unavailable for most users.
+
+*This timeline contextualizes SmartSpend within the evolution of financial health measurement instruments.*
+
+---
+
 ## 2.1 Research Design
 
 This study employs a **mixed-methods research design**, systematically integrating both qualitative and quantitative data collection and analysis workflows [597]. This design is selected because a purely quantitative approach (e.g., standard usability testing) cannot fully capture the behavioral, emotional, and social dimensions of personal budgeting, while a purely qualitative approach lacks the empirical measurements necessary to validate technical feasibility, optical character recognition (OCR) accuracy, and systemic usability [597, 598].
 
-Additionally, this study adopts a **descriptive-developmental research approach** [599]. Descriptive-developmental research focuses on the design, development, and evaluation of functional prototypes [599]. Rather than operating as a passive tracking app, the developmental aspect of this study centers on the engineering of a functional Android-based prototype (**SmartSpend v2.9.9**) [558, 629] that merges:
+Additionally, this study adopts a **descriptive-developmental research approach** [599]. Descriptive-developmental research focuses on the design, development, and evaluation of functional prototypes [599]. Rather than operating as a passive tracking app, the developmental aspect of this study centers on the engineering of a functional Android-based prototype (**SmartSpend v3.1.1**) [558, 629] that merges:
 1. Multimodal transaction input mechanisms (on-device OCR, voice input, barcode, manual entry, and batch screenshot parsing) [572].
 2. A dual-mode programmatic **Financial Health Score (FHS)** operating under **Full Mode** (income tracking) and **Lightweight Mode** (no income required) with built-in behavioral loss-aversion modifiers (Warning Decay and Logging Gap adjustments) [559, 596].
 3. Bounded, multilingual (Taglish/Filipino-English) agentic AI assistance capable of executing 34 distinct data actions and providing localized financial Q&A [559, 581, 591].
@@ -93,7 +122,7 @@ Following the **NIST AI RMF (Govern, Map, Measure, Manage)** guidelines, SmartSp
 * **Govern:** Establish strict technical boundaries [539]. The AI assistant is system-prompted to refuse requests for registered investment, tax, or legal advice, acting strictly as an educational financial companion [532, 536, 582].
 * **Map:** Document potential failure modes, particularly the "longer context hallucination" risk [13, 539]. Benchmarking revealed that sending more than 100 transactions in a single batch to the LLM increases categorization errors and causes the model to fabricate or duplicate transaction IDs [13, 547]. SmartSpend restricts bulk text-pasting and transaction imports to a maximum target batch size of **120 transactions** [547].
 * **Measure:** Monitor and record factual accuracy, prompt injection pass rates, and the frequency of unsafe responses [539, 548].
-* **Manage (Human-in-the-Loop Safeguard):** To prevent catastrophic failures like unauthorized database writes, deletions, or erratic FHS calculations, the app enforces a strict **Human-in-the-Loop (HITL) architecture** [536, 539, 547]. No agentic AI action (from the 31 natural language actions) can write to, update, or delete records from the local SQLite database without displaying a transparent **"Review and Confirm" preview screen** [547, 593]. The user must manually review and tap a confirmation button before any local write is executed, and an "Undo" transaction button is available on all log screens [539, 547, 593].
+* **Manage (Human-in-the-Loop Safeguard):** To prevent catastrophic failures like unauthorized database writes, deletions, or erratic FHS calculations, the app enforces a strict **Human-in-the-Loop (HITL) architecture** [536, 539, 547]. No agentic AI action (from the 34 natural language actions) can write to, update, or delete records from the local SQLite database without displaying a transparent **"Review and Confirm" preview screen** [547, 593]. The user must manually review and tap a confirmation button before any local write is executed, and an "Undo" transaction button is available on all log screens [539, 547, 593].
 
 ---
 
@@ -123,6 +152,8 @@ Perceived usability is measured using the standard 10-item **System Usability Sc
   * $70 - 79$: Acceptable (Grade C) [610, 631]
   * $60 - 69$: Marginal (Grade D) [610, 631]
   * $<60$: Poor (Grade F) [610, 631]
+
+*Note: The preliminary SUS score of 62.50 falls in the 60–69 range (Grade D / "OK" per Bangor et al., 2009). Final classification will be confirmed upon N=30 completion.*
 * The target usability benchmark for SmartSpend is set at **$\ge 80$ (Good)** [560, 598].
 
 ---
@@ -152,7 +183,7 @@ The development workflow is visualized on a Kanban board containing seven column
 #### Phase 1: Backlog Phase
 The Backlog is populated with user stories, technical tasks, and desired system requirements [613]:
 * *Example User Story:* *"As a budget-conscious parent, I want to capture a receipt screenshot of my Shopee or Lazada checkout so that I don't have to manually encode every household item."* [558, 572, 613]
-* *Deliverable:* A prioritized backlog of 34 agentic actions, 6 input modalities, 14 expense categories, and 25 gamification badges [613, 628, 629].
+* *Deliverable:* A prioritized backlog of 34 agentic actions, 6 input modalities, 14 expense categories, and 36 gamification badges [613, 628, 629].
 
 #### Phase 2: Requirements Phase
 This phase defines functional requirements (automated Taglish transaction logging, e-wallet balance synchronization, programmatic FHS computing, regulatory privacy scrubbing) and non-functional requirements (offline capability, response latency $< 1.5$ seconds, target SUS score $\ge 80$) based on Objective 1 survey data [580, 598, 614].
@@ -171,7 +202,7 @@ Actual coding in Dart using the **Flutter framework** [558, 560, 616]. Developme
 3. **LLM API Integration:** Construct a secure client-side model adaptivity layer. This layer pulls the API key securely at runtime via **Firebase Remote Config** (preventing key exposure in the APK binary) and implements a **conversation summarization mechanism** to compress conversation history, saving up to 75% on token overhead [583, 589, 592].
 4. **Cloud Synchronization:** Build bidirectional sync using Firebase Firestore, automatically merging offline SQLite records with cloud backups once connection is restored [576, 616].
 5. **On-Device Privacy Masking:** Write the client-side regex filter to scrub e-wallet and account numbers before transmitting prompt payloads to the cloud LLM [540, 541].
-* *Deliverable:* A compile-ready Android APK (v2.9.9) with all 34 agentic actions operational [559, 628, 629].
+* *Deliverable:* A compile-ready Android APK (v3.1.1) with all 34 agentic actions operational [559, 628, 629].
 
 #### Phase 5: Testing Phase
 This phase runs functional, technical, and usability evaluations [617]. In addition to standard unit testing, this capstone study implements a rigorous **Technical Performance Evaluation Protocol** [617, 628]:
@@ -197,7 +228,7 @@ This phase runs functional, technical, and usability evaluations [617]. In addit
 * *Deliverable:* SUS Score reports, Bug logs, OCR precision metrics, and SQLite sync recovery logs [628].
 
 #### Phase 6: Deployment Phase
-The compiled release-ready APK (v2.9.9) is built with arm64-v8a target architectures, optimizing package size to 45 MB to ensure installation feasibility on low-end and mid-range Android devices common in La Union [618, 629]. Demo Mode is activated with pre-seeded, realistic Filipino sample data to enable frictionless usability evaluations [577, 618].
+The compiled release-ready APK (v3.1.1) is built with arm64-v8a target architectures, optimizing package size to 45 MB to ensure installation feasibility on low-end and mid-range Android devices common in La Union [618, 629]. Demo Mode is activated with pre-seeded, realistic Filipino sample data to enable frictionless usability evaluations [577, 618].
 * *Deliverable:* Stable GitHub Releases repository and installable APK binaries [628, 629].
 
 #### Phase 7: Done/Review Phase
@@ -214,8 +245,8 @@ The Agile Kanban phases correspond directly to the research objectives and acade
 | **Backlog** | Needs Assessment (Obj. 1) | Define local financial gaps; map Philippine e-wallet context | Prioritized features; pre-development themes | [567, 568, 600, 628] |
 | **Requirements** | Design Prep (Obj. 2) | Gather functional inputs; validate survey instruments | Content-validated questionnaire; spec sheets | [580, 606, 614] |
 | **Design** | System Architecture (Obj. 2) | Design sqflite v11 database; specify behavioral FHS formulas | ERDs; wireframes; choice architecture specs | [596, 615, 627] |
-| **Development** | Coding & Integration (Obj. 2) | Program in Flutter; write client-side regex privacy scrub | Release-ready APK v2.9.9; operational agentic actions | [541, 560, 616, 629] |
-| **Testing** | usabiliy & Feasibility (Obj. 3) | Administer SUS; measure OCR precision and SQLite recovery | Usability scores; engineering benchmarks | [548, 598, 607, 631] |
+| **Development** | Coding & Integration (Obj. 2) | Program in Flutter; write client-side regex privacy scrub | Release-ready APK v3.1.1; operational agentic actions | [541, 560, 616, 629] |
+| **Testing** | Usability & Feasibility (Obj. 3) | Administer SUS; measure OCR precision and SQLite recovery | Usability scores; engineering benchmarks | [548, 598, 607, 631] |
 | **Deployment** | System Release (Obj. 2 & 3) | Compile release APK; configure pre-seeded Demo Mode | GitHub Releases repository; installable APK binaries | [577, 618, 629] |
 | **Done/Review** | Document Validation (Obj. 3) | Tabulate usability metrics; compile post-capstone roadmaps | Approved thesis chapters; technical certificates | [618, 633, 634] |
 

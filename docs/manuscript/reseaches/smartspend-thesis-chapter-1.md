@@ -54,7 +54,7 @@ The conceptual design of SmartSpend is modeled around the **Input-Process-Output
 | - Multimodal GCash/Maya Screenshots| - On-Device Regex Masking Layer    | - Interactive Analytics       |
 | - Voice Input (en_PH Locale)       | - SQLite Transaction Logging       | - 0-100 Financial Health Score|
 | - Camera Images of Paper Receipts  | - Warning Decay Score Calculations | - Non-Prescriptive AI Q&A     |
-| - Configurable Budget Thresholds   | - Firebase Sync & Sync-Recovery    | - 25 Habit Achievement Badges |
+| - Configurable Budget Thresholds   | - Firebase Sync & Sync-Recovery    | - 36 Habit Achievement Badges |
 +------------------------------------+------------------------------------+-------------------------------+
 |                                      FEEDBACK / BEHAVIORAL LOOPS                                        |
 |                     (Warning Decay, Loss Aversion, and Self-Monitoring Reminders)                       |
@@ -62,7 +62,7 @@ The conceptual design of SmartSpend is modeled around the **Input-Process-Output
 ```
 
 ### Theoretical Foundations
-1. **Self-Determination Theory (SDT):** Grounded in the psychological needs of Autonomy, Competence, and Relatedness [35]. SmartSpend supports *Competence* through its 25 habit achievement badges and progress streaks [49, 597], *Autonomy* by providing non-prescriptive, customizable budget parameters [611], and *Relatedness* by framing financial tracking within local community realities [591, 598].
+1. **Self-Determination Theory (SDT):** Grounded in the psychological needs of Autonomy, Competence, and Relatedness [35]. SmartSpend supports *Competence* through its 36 habit achievement badges and progress streaks [49, 597], *Autonomy* by providing non-prescriptive, customizable budget parameters [611], and *Relatedness* by framing financial tracking within local community realities [591, 598].
 2. **Nudge Theory (Thaler & Sunstein, 2008):** Proposes that subtle choice architecture can guide individuals toward optimal choices without restricting freedom [34]. SmartSpend applies cognitive nudges through timely budget alerts, end-of-month balance projections, and spending restraint indicators [55, 611].
 3. **Prospect Theory & Loss Aversion (Kahneman & Tversky, 1979):** Establishes that individuals are significantly more motivated to avoid losses than to achieve equivalent gains [645]. The FHS **Warning Decay** algorithm (−5 points per day, capped at −15) acts as an active loss nudge, applying a temporary reduction in the user’s overall score for ignored alerts, thereby breaking automation bias and promoting active budget self-regulation [611, 645].
 4. **Technology Acceptance Model (TAM):** Evaluates user adoption based on Perceived Usefulness (PU) and Perceived Ease of Use (PEOU) [502, 596]. SmartSpend optimizes PEOU through its multimodal, low-friction entry mechanisms and local Taglish conversational interface [583, 596].
@@ -98,7 +98,7 @@ Specifically, the study aims to:
 * **Local Data Management & Portability:** All transactional records, budgets, savings goals, and chat histories are persisted on-device in a structured SQLite database to ensure the system operates fully offline [588, 602]. To ensure portability, the application supports JSON-based backup, share sheet export, and local recovery without mandatory cloud account registration [589, 609].
 * **Multimodal Data Enrichment:** The system supports manual entry, voice input using on-device Speech-to-Text (en_PH locale detection) [608], barcode scanning [609], Google ML Kit OCR [608], and automated bulk transaction paste-parsing [583].
 * **AI-Assisted Educational Advisory:** The conversational chat interface supports 34 agentic transaction actions and non-prescriptive personal financial assistance [567]. The assistant can explain localized Philippine banking products, outline government benefit application processes (SSS, PhilHealth, Pag-IBIG), provide general budgeting education, and estimate market prices for second-hand items [593, 594, 596].
-* **Behavioral Architecture & Gamification:** Programmatic 0–100 FHS calculations, dynamic Warning Decay, and a gamification layer featuring 25 achievement badges and streaks designed to increase engagement and self-regulation [597, 611].
+* **Behavioral Architecture & Gamification:** Programmatic 0–100 FHS calculations, dynamic Warning Decay, and a gamification layer featuring 36 achievement badges and streaks designed to increase engagement and self-regulation [597, 611].
 
 ### Limitations of the System
 * **No Direct Bank Integration:** Direct bank-credential integration is excluded [594]. Due to the absence of accessible open-banking APIs in the Philippine market and critical DPA security concerns regarding credential-sharing, all digital transactions must be logged via manual entry, bulk notification pasting, or screenshot parsing [594].
@@ -157,7 +157,7 @@ The design and development of SmartSpend provide direct, practical, and theoreti
 
 ## Technical Background
 
-SmartSpend v2.9.9 utilizes a robust, hybrid client-side stack designed to minimize cost, enforce data privacy, and ensure maximum client performance [647]:
+SmartSpend v3.1.2 utilizes a robust, hybrid client-side stack designed to minimize cost, enforce data privacy, and ensure maximum client performance [647]:
 
 1. **Flutter (SDK v3.x):** An open-source, cross-platform UI framework developed by Google [601]. Flutter enables the creation of highly responsive, native compiled UI views for Android using a single, performant Dart codebase [601].
 2. **SQLite via sqflite (v11):** The primary local transactional database engine [602]. All tables (transactions, budgets, savings goals, notification histories, and chat summaries) are maintained locally [602]. sqflite v11 ensures sub-millisecond query execution speeds on local devices [602].
