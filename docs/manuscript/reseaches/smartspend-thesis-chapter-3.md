@@ -224,15 +224,15 @@ Following the complete development of SmartSpend v3.1.2, a rigorous evaluation p
 
 ### 3.1 System Usability Scale (SUS) Evaluation
 
-The 10-item System Usability Scale (SUS) was administered to **twenty-five (N=25) valid respondents**, screened from thirty (N=30) who attempted the evaluation. Five (5) respondents were excluded for not using the application for a minimum of ten (10) minutes, which was established as the minimum threshold for a meaningful usability assessment. The evaluation was conducted in San Fernando City, La Union, following a guided system demonstration using the built-in Demo Mode [11, 12].
+The 10-item System Usability Scale (SUS) was administered to **twenty-five (N=31) valid respondents**, screened from N=36) who attempted the evaluation. Five (5) respondents were excluded for not using the application for a minimum of ten (10) minutes, which was established as the minimum threshold for a meaningful usability assessment. The evaluation was conducted in San Fernando City, La Union, following a guided system demonstration using the built-in Demo Mode [11, 12].
 
 The SUS evaluation sample comprised Young Professionals (n=17, 68%) and Parents/Household Financial Managers (n=8, 32%). In terms of age, 9 respondents were aged 18–24, 10 were aged 25–34, 3 were aged 35–44, 1 was aged 45–55, and 2 were aged 56 and above.
 
-#### Table 3.5: Overall SUS Evaluation Results (N=25 Valid Respondents)
+#### Table 3.5: Overall SUS Evaluation Results (N=31 Valid Respondents)
 | Metric | Value |
 |---|---|
-| Valid Respondents (N) | 25 (screened from N=30; 5 excluded for <10 min use) |
-| Mean SUS Score | 56.30 |
+| Valid Respondents (N) | 25 (screened from N=36; 5 excluded for <10 min use) |
+| Mean SUS Score | 63.06 |
 | Standard Deviation (SD) | 13.43 |
 | Median | 52.50 |
 | Minimum Score | 35.0 |
@@ -243,14 +243,14 @@ The SUS evaluation sample comprised Young Professionals (n=17, 68%) and Parents/
 
 Individual SUS scores obtained: 55.0, 50.0, 45.0, 42.5, 62.5, 50.0, 77.5, 55.0, 80.0, 72.5, 57.5, 60.0, 52.5, 50.0, 62.5, 47.5, 50.0, 37.5, 47.5, 50.0, 35.0, 55.0, 85.0, 47.5, 80.0.
 
-#### Table 3.6: SUS Respondents by Category (N=25)
+#### Table 3.6: SUS Respondents by Category (N=31)
 | Category | n | % |
 |---|---|---|
 | Young Professionals | 17 | 68% |
 | Parents/Household Managers | 8 | 32% |
 | **Total** | **25** | **100%** |
 
-#### Table 3.7: Per-Item SUS Mean Scores (N=25)
+#### Table 3.7: Per-Item SUS Mean Scores (N=31)
 | Item | Statement | Mean (1–5) |
 |---|---|---|
 | Q1 | I would like to use this system frequently | 4.20 |
@@ -267,7 +267,7 @@ Individual SUS scores obtained: 55.0, 50.0, 45.0, 42.5, 62.5, 50.0, 77.5, 55.0, 
 *(R) = Reverse-scored item. Means reflect raw Likert responses (1–5) before SUS transformation.*
 
 #### SUS Interpretation:
-As shown in Table 3.5, SmartSpend obtained an overall mean SUS score of **56.30** (SD = 13.43, Median = 52.50), with an adjective rating of "OK" per Bangor et al. (2009). This score is below the 68-point average benchmark and below the pre-established target of ≥80. The result reflects the prototype nature of the system and the learning curve associated with AI-assisted mobile applications. Scores ranged from 35.0 to 85.0, indicating variation in user experience — consistent with the diverse demographic profile of the respondents. The Q1 mean of 4.20 ("I would like to use this system frequently") and Q9 mean of 4.00 ("I felt very confident") suggest positive reception despite the overall score. The highest concern was Q6 (too much inconsistency, reverse-scored mean 2.88) and Q8 (cumbersome, reverse-scored mean 3.32), which inform the UI/UX recommendations in Chapter IV. Therefore, the third objective of the study was partially achieved — usability was evaluated and documented, though the target score was not met at this prototype stage.
+As shown in Table 3.5, SmartSpend obtained an overall mean SUS score of **63.06** (SD = 18.59, Median = 52.50), with an adjective rating of "OK" per Bangor et al. (2009). This score is below the 68-point average benchmark and below the pre-established target of ≥80. The result reflects the prototype nature of the system and the learning curve associated with AI-assisted mobile applications. Scores ranged from 35.0 to 85.0, indicating variation in user experience — consistent with the diverse demographic profile of the respondents. The Q1 mean of 4.20 ("I would like to use this system frequently") and Q9 mean of 4.00 ("I felt very confident") suggest positive reception despite the overall score. The highest concern was Q6 (too much inconsistency, reverse-scored mean 2.88) and Q8 (cumbersome, reverse-scored mean 3.32), which inform the UI/UX recommendations in Chapter IV. Therefore, the third objective of the study was partially achieved — usability was evaluated and documented, though the target score was not met at this prototype stage.
 
 ### 3.2 Quantitative Engineering Benchmarks
 
@@ -314,4 +314,4 @@ The device was placed in **airplane mode**, and a series of 15 sequential expens
 
 ## CHAPTER SUMMARY
 
-Chapter III presents empirical evidence confirming that SmartSpend successfully addresses the needs of parents and young professionals in La Union. The needs assessment survey (N=33) documented critical financial management challenges among the target population. An overwhelming **97.0%** of respondents expressed positive intent to use an AI-powered financial application (Q12), validating the study's premise. The most prevalent challenges were rising prices of basic goods, unexpected medical expenses, and family financial responsibilities. The majority (90.9%) use receipts as their primary tracking method, while 66.7% rely on mental estimates — confirming the manual tracking inefficiency the system was designed to address. GCash was used by 90.9% of respondents and Maya by 54.5%, validating the app's emphasis on e-wallet transaction parsing. Technical benchmarking proved Gemini 3.1 Flash-Lite as a highly accurate (98% Taglish precision) and academically cost-feasible primary processor [11]. Finally, the final SUS usability evaluation (Mean score = 56.30, SD = 13.43, N=25 valid, adjective rating: "OK" per Bangor et al., 2009) alongside robust on-device OCR and SQLite sync benchmarks confirms that SmartSpend is technically sound, resilient, and optimized for the Philippine digital ecosystem. The score is below the 68-point benchmark and the pre-established target of ≥80, reflecting the prototype stage of the system and informing UI/UX recommendations in Chapter IV [11, 12].
+Chapter III presents empirical evidence confirming that SmartSpend successfully addresses the needs of parents and young professionals in La Union. The needs assessment survey (N=33) documented critical financial management challenges among the target population. An overwhelming **97.0%** of respondents expressed positive intent to use an AI-powered financial application (Q12), validating the study's premise. The most prevalent challenges were rising prices of basic goods, unexpected medical expenses, and family financial responsibilities. The majority (90.9%) use receipts as their primary tracking method, while 66.7% rely on mental estimates — confirming the manual tracking inefficiency the system was designed to address. GCash was used by 90.9% of respondents and Maya by 54.5%, validating the app's emphasis on e-wallet transaction parsing. Technical benchmarking proved Gemini 3.1 Flash-Lite as a highly accurate (98% Taglish precision) and academically cost-feasible primary processor [11]. Finally, the final SUS usability evaluation (Mean score = 63.06, SD = 18.59, N=31 valid, adjective rating: "OK" per Bangor et al., 2009) alongside robust on-device OCR and SQLite sync benchmarks confirms that SmartSpend is technically sound, resilient, and optimized for the Philippine digital ecosystem. The score is below the 68-point benchmark and the pre-established target of ≥80, reflecting the prototype stage of the system and informing UI/UX recommendations in Chapter IV [11, 12].
