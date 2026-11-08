@@ -1,5 +1,5 @@
 # SmartSpend — Defense Presentation Script
-**Defense Date:** November 9, 2026
+**Defense Date:** November 10, 2026
 **Team:** Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 **Adviser:** Ms. Ellen F. Mangaoang, DIT
 **Institution:** CCSE, Lorma Colleges, San Fernando City, La Union
@@ -10,7 +10,7 @@
 
 ## Slide 1 — Title
 **Speaker:** Djaunathan Madayag
-**Script:** Good morning, ma'am, good morning, sirs. We are Team Lucid Frame, and our capstone project is SmartSpend — an AI-assisted mobile financial tracking and advisory application for parents and young professionals here in San Fernando City, La Union. I'm Djaunathan Madayag, Project Manager. To my left is Cyrille Rubis, our documentation lead, and Brix Directo, our lead developer. Together we'll walk you through our research, our system, and the results we have so far. Defense date is today, November 9, 2026.
+**Script:** Good morning, ma'am, good morning, sirs. We are Team Lucid Frame, and our capstone project is SmartSpend — an AI-assisted mobile financial tracking and advisory application for parents and young professionals here in San Fernando City, La Union. I'm Djaunathan Madayag, Project Manager. To my left is Cyrille Rubis, our documentation lead, and Brix Directo, our lead developer. Together we'll walk you through our research, our system, and the results we have so far. Defense date is today, November 10, 2026.
 **Key fact:** SmartSpend v3.1.2, Android, built on Flutter, targeting two demographics — parents 35–55 and young professionals 21–35 in La Union.
 **Likely question:** *What is SmartSpend in one sentence?* → SmartSpend is an offline-first Android app that lets Filipino users log transactions in Taglish, automatically import GCash and e-wallet screenshots, and get a real-time 0–100 Financial Health Score — all without requiring a bank account link or formal finance knowledge.
 
@@ -109,8 +109,8 @@
 
 ## Slide 13 — SUS Results
 **Speaker:** Cyrille Rubis
-**Script:** This is our SUS data — preliminary at N=5 of the target N=30. Individual scores are 60.0, 55.0, 55.0, 75.0, and 67.5, giving us a mean of 62.50. Per Bangor, Kortum, and Miller 2009, that's a Grade C — "OK." We need to be honest here: 62.50 is below the 68-point average SUS benchmark, which is a limitation we acknowledge clearly. The target remains 80 or above. With only 5 respondents, this result is not yet stable — the variance across individual scores is high, ranging from 55 to 75. We expect the score to improve as we address UI friction points identified in qualitative feedback. The final conclusion on usability will be drawn at N=30.
-**Key fact:** Preliminary mean SUS = 62.50 (N=5) — Grade C, below the 68-point average benchmark. Target remains ≥80 at N=30.
+**Script:** This is our SUS data — preliminary at N=5 of the target N=30. Individual scores are 60.0, 55.0, 55.0, 75.0, and 67.5, giving us a mean of 62.50. Per Bangor, Kortum, and Miller 2009, that's an adjective rating of "OK" (Bangor et al., 2009). We need to be honest here: 62.50 is below the 68-point average SUS benchmark, which is a limitation we acknowledge clearly. The target remains 80 or above. With only 5 respondents, this result is not yet stable — the variance across individual scores is high, ranging from 55 to 75. We expect the score to improve as we address UI friction points identified in qualitative feedback. The final conclusion on usability will be drawn at N=30.
+**Key fact:** Preliminary mean SUS = 62.50 (N=5) — adjective rating of "OK" (Bangor et al., 2009), below the 68-point average benchmark. Target remains ≥80 at N=30.
 **Likely question:** *Ano ang SUS score ninyo? Bakit below 80?* → Our preliminary mean is 62.50 at N=5 — we acknowledge that's below both our 80-point target and the 68-point average benchmark. This is a prototype limitation we document honestly in Chapter IV. Respondents who scored lower flagged the learning curve for advanced features — specifically batch screenshot import. We've identified those as UI refinement priorities. The final N=30 score may differ significantly; N=5 is not a stable sample for SUS interpretation.
 
 ---
@@ -153,7 +153,7 @@
 ## Slide 18 — Closing
 **Speaker:** Djaunathan Madayag
 **Script:** And that's SmartSpend. An offline-first, Taglish AI-powered financial companion built for Filipino parents and young professionals who deserve better tools than a notebook or a passive graph. We're proud of what we built — and we're honest about what's still ahead: N=30 to complete, behavior change to measure, iOS to ship, and bank APIs to wait for. To our adviser Ms. Ellen Mangaoang, maraming salamat for the guidance. To the panel, thank you for your time and attention. We are now open for your questions.
-**Key fact:** SmartSpend v3.1.2 — offline-first · Taglish AI · 0–100 FHS · 34 agentic actions · built for Filipino users · November 9, 2026.
+**Key fact:** SmartSpend v3.1.2 — offline-first · Taglish AI · 0–100 FHS · 34 agentic actions · built for Filipino users · November 10, 2026.
 **Likely question:** *Kung bibigyan kayo ng mas maraming oras, ano pa ang gagawin ninyo?* → Three things. First, run the full N=30 SUS evaluation and address the UI friction points flagged by early respondents. Second, implement SMS autologging — that one feature would eliminate manual entry for digital wallet transactions entirely. Third, start the longitudinal study design so we can measure whether the FHS gamification actually produces lasting behavior change — not just good intentions.
 
 ---

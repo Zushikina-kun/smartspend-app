@@ -1,14 +1,31 @@
 # SmartSpend — Defense Demo Day Checklist
-**Defense Date:** November 9, 2026
+**Defense Date:** November 10, 2026
 **Manuscript Deadline:** November 6, 2026 (3 printed copies)
 **Demo device:** Your Android phone (NOT the same phone running your SIM — bring a backup hotspot)
 
 ---
 
-## 🔴 NIGHT BEFORE (Nov 8 evening)
+## 🟡 NOV 9 NIGHT — Final Prep Before Defense
+
+- [ ] Install `SmartSpend-v3.1.2-arm64-v8a.apk` on demo phone (uninstall old version first)
+- [ ] Open app → tap **"Try Demo"** → verify Home shows FHS score, wallets, Safe-to-Spend card
+- [ ] Verify all 7 input methods work: AI chat, Voice, OCR scan, Batch screenshots, Barcode, CSV paste, Manual entry
+- [ ] AI screen → ⋮ menu → **Reset Daily Limit** (resets to full 150 messages for defense day)
+- [ ] Settings → AI MODEL → confirm set to **Auto (Recommended)**
+- [ ] Settings → Quick Presets → confirm **Normal** (not Lite mode)
+- [ ] Charge phone to **100%**, enable Do Not Disturb
+- [ ] Practice the 3-sentence FHS answer aloud (see DEFENSE_QA_PREP.md)
+- [ ] Review DEFENSE_QA_PREP.md: UI/UX section, inclusivity/"rich people" section, and deployment section
+- [ ] Review the 4 new Q&A scenarios added for this defense (contribution to knowledge, AI-wrote-thesis, what-would-you-do-differently, comparison to other apps)
+- [ ] Do NOT reopen the app after final test — cold start at the defense
+- [ ] **Sleep before midnight**
+
+---
+
+## 🔴 NIGHT BEFORE (Nov 9 evening)
 
 ### App setup on demo phone
-- [ ] Download `SmartSpend-v3.1.1-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.1
+- [ ] Download `SmartSpend-v3.1.2-arm64-v8a.apk` from https://github.com/Zushikina-kun/smartspend-app/releases/tag/v3.1.2
 - [ ] Uninstall any old version first, then install fresh
 - [ ] Open app → tap **"Try Demo"** on login screen (loads full realistic dataset)
 - [ ] Verify Home shows: FHS score ~85–90, Safe-to-Spend card visible, wallets showing
@@ -91,17 +108,17 @@
 
 | Stat | Value | Note |
 |------|-------|------|
-| SUS Mean Score | **62.50** (N=5) | Grade C / "OK" — below 68-pt average benchmark |
+| SUS Mean Score | **62.50** (N=5) | adjective rating of "OK" (Bangor et al., 2009) — below 68-pt average benchmark |
 | Overspending struggle | **76.9%** of respondents | Most cited financial difficulty |
 | Positive AI app intent | **69.2%** (Yes + Probably yes) | Strong adoption interest |
 | Manual/no tracking | **53.8%** | Notebook + do not track combined |
 
 ### How to address SUS 62.50 honestly:
-> "Our preliminary SUS mean is 62.50 with N=5 respondents, which is Grade C — below the 68-point average benchmark. We're being transparent about this. The target is ≥80, and we expect scores to improve once UI refinements are complete and the full N=30 data is collected. At the prototype stage, a Grade C is within acceptable range."
+> "Our preliminary SUS mean is 62.50 with N=5 respondents, which is adjective rating 'OK' per Bangor et al. (2009) — below the 68-point average benchmark. We're being transparent about this. The target is ≥80, and we expect scores to improve once UI refinements are complete and the full N=30 data is collected. At the prototype stage, a score in the 'OK' band is within acceptable range."
 
 ### If panel asks why SUS is below target:
 - Sample is only N=5 (preliminary) — not statistically conclusive
-- Grade C / 62.50 is within the 'OK' band — not 'poor' or 'awful'
+- 62.50 is within the 'OK' band — not 'poor' or 'awful'
 - Known areas for improvement: onboarding flow, navigation labels
 - Full N=30 evaluation is ongoing; results will be in the final manuscript
 

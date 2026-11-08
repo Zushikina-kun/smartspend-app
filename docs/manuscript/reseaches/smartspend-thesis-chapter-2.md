@@ -17,7 +17,7 @@ This chapter outlines the research design, population, locale, sampling techniqu
 | UNSGSA Financial Health Guidelines | United Nations Secretary-General's Special Advocate for Inclusive Finance for Development (UNSGSA) | 2021 | Policy / institutional guidance | Recommended that transaction-derived Observed FHIs serve as a practical complement to subjective scales in developing market contexts [7] | Guidelines are policy-level; no prototype or application was built; no localized implementation for the Philippine mobile context |
 | PLS-SEM Study on Digital Financial Well-Being | Sharma, Gaba, & Sharma (Atlantis Press) | 2026 | N=656 | Found that Perceived Algorithm Transparency (PAT) moderates the relationship between Sustainable Financial Intentions (SFI) and Digital Financial Well-being (DFWB); confirmed gamified nudges improve financial behavior (β=0.14, t=2.95) [2, 91, 92] | Large-sample SEM study; does not provide a deployable mobile prototype; findings are behavioral-predictive rather than implementation-validated |
 | Nielsen Usability Heuristics | Jakob Nielsen | 1993 | Meta-analysis of usability studies | Empirically established that 5 participants uncover 80–85% of core usability defects; 20–30 participants uncover 90–95% of all issues — foundational justification for SmartSpend's N=30 purposive sample [601, 607] | Heuristics are design principles; Nielsen's studies were conducted on desktop interfaces and may not fully account for mobile-specific or Taglish-context usability challenges |
-| SUS Adjective Rating Scale | Bangor, Kortum, & Miller | 2009 | 2,324 SUS evaluations (meta-analysis) | Introduced an adjective rating scale (Excellent/Good/OK/Poor/Awful) and letter-grade labels to interpret SUS scores; established the 68-point average benchmark [598, 630] | Scale was derived from Western software products; its applicability to Filipino mobile application populations and Taglish-context interactions has not been validated |
+| SUS Adjective Rating Scale | Bangor, Kortum, & Miller | 2009 | 2,324 SUS evaluations (meta-analysis) | Introduced an adjective rating scale (Excellent / Good / OK / Poor / Awful) to interpret SUS scores; established the 68-point average benchmark [598, 630] | Scale was derived from Western software products; its applicability to Filipino mobile application populations and Taglish-context interactions has not been validated |
 | AI Nudge Study on Gamified Digital Payments | Sharma, P., Gaba, P., & Sharma, B. | 2026 | Conference proceedings | Demonstrated that cognitive nudges in gamified digital payment apps can foster measurable digital financial well-being outcomes [2] | Study focused on payment behavior, not holistic financial tracking; did not measure long-term behavioral change; no offline or developing-market context |
 | 50/30/20 Budgeting Rule | Warren, E. & Tyagi, A. W. | 2005 | N/A (conceptual framework) | Established the 50/30/20 income allocation rule (50% needs, 30% wants, 20% savings) as a practical, accessible personal budgeting heuristic [7] | Framework is a static rule not validated for the Filipino income and expenditure context; does not account for variable informal income or gig-economy cash flows |
 | Self-Determination Theory (SDT) | Deci, E. L. & Ryan, R. M. | 2000 | N/A (theoretical framework) | Established that Autonomy, Competence, and Relatedness are fundamental psychological needs driving intrinsic motivation; foundational for SmartSpend's badge system and non-prescriptive design [7, 35] | Theoretical framework; empirical validation in the context of mobile financial applications and Filipino user populations requires separate longitudinal study |
@@ -147,13 +147,13 @@ Perceived usability is measured using the standard 10-item **System Usability Sc
   * Overall SUS Score = $(\sum X_i + \sum Y_i) 	imes 2.5$ [631]
 * The resulting score ranges from 0 to 100 [610].
 * To interpret the score, we apply the **Bangor, Kortum, & Miller (2009)** adjective rating scale [598, 630]:
-  * $\ge 90$: Excellent (Grade A) [610, 631]
-  * $80 - 89$: Good (Grade B) [610, 631]
-  * $70 - 79$: Acceptable (Grade C) [610, 631]
-  * $60 - 69$: Marginal (Grade D) [610, 631]
-  * $<60$: Poor (Grade F) [610, 631]
+  * $\ge 90$: Excellent [610, 631]
+  * $80 - 89$: Good [610, 631]
+  * $70 - 79$: Acceptable [610, 631]
+  * $60 - 69$: Marginal / OK [610, 631]
+  * $<60$: Poor [610, 631]
 
-*Note: The preliminary SUS score of 62.50 falls in the 60–69 range (Grade D / "OK" per Bangor et al., 2009). Final classification will be confirmed upon N=30 completion.*
+*Note: The preliminary SUS score of 62.50 falls in the 60–69 range, adjective rating of "OK" per Bangor et al. (2009). Final classification will be confirmed upon N=30 completion.*
 * The target usability benchmark for SmartSpend is set at **$\ge 80$ (Good)** [560, 598].
 
 ---
