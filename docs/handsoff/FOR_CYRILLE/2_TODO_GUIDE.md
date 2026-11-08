@@ -1,3 +1,13 @@
+## ✅ Round 3 Auto-fixes (Nov 9, 2026)
+- SUS Grade D label removed → adjective `"OK"` per Bangor et al. (2009) only
+- Badge count 25/23 → 36 everywhere (confirmed from source code)
+- Defense date Nov 9 → **Nov 10** (defense is Nov 10, reporting is Nov 9)
+- Table 3.4 sub-group disclaimer added (80.50/86.50 = targets, not actuals)
+- Related Studies Table 2.1 placeholder added in Chapter II
+- FHS milestone timeline paragraph added in Chapter II
+- Critical analysis: 18 issues fixed across all 4 chapters
+
+---
 # SmartSpend — Groupmates Handsoff
 **From:** Brix (via Kiro)  
 **Date:** November 5, 2026  
