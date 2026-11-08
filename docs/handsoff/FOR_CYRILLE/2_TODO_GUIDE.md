@@ -1,77 +1,90 @@
-## ✅ Round 3 Auto-fixes (Nov 9, 2026)
-- SUS Grade D label removed → adjective `"OK"` per Bangor et al. (2009) only
-- Badge count 25/23 → 36 everywhere (confirmed from source code)
-- Defense date Nov 9 → **Nov 10** (defense is Nov 9, reporting is Nov 9)
-- Table 3.4 sub-group disclaimer added (80.50/86.50 = targets, not actuals)
-- Related Studies Table 2.1 placeholder added in Chapter II
-- FHS milestone timeline paragraph added in Chapter II
-- Critical analysis: 18 issues fixed across all 4 chapters
-
----
-# SmartSpend — Groupmates Handsoff
-**From:** Brix (via Kiro)  
-**Date:** November 5, 2026  
-**Deadline:** Nov 6 print · Nov 9 defense
+# SmartSpend Manuscript — Final Manual Tasks for Cyrille
+**Defense:** November 10, 2026  
+**Last updated by Kiro:** November 9, 2026
 
 ---
 
-## CYRILLE — Your task list (in order)
+## ✅ ALREADY DONE BY KIRO — Do NOT change these
 
-### 1. Git pull first
-```
-git pull origin master
-```
+| What | Status |
+|---|---|
+| All survey data filled (N=30, SUS 61.83, 96.7% AI intent) | ✅ Done |
+| All [[PENDING]] tags filled | ✅ Done — 0 remaining |
+| Adviser: Ellen F. Mangaoang, DIT | ✅ Correct |
+| Dean: Jeoffrey B. Layco, MIS | ✅ Correct |
+| 36 achievement badges everywhere | ✅ Done |
+| 34 agentic actions everywhere | ✅ Done |
+| No Verzola, no fabricated numbers | ✅ Done |
+| Font, spacing, margins matched to Lorma template | ✅ Done |
+| Defense date: November 10, 2026 | ✅ Correct |
 
-### 2. Open the main manuscript
-```
-docs/handsoff/CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx
-```
-Kiro already fixed all the content and formatting. You only need to add the things that require a human.
+---
 
-### 3. Insert app screenshots
-Ctrl+F: `"App screenshot to be inserted"` — you'll find 7 placeholders (Figures 3.4–3.10).
-For each one, insert a screenshot from the phone. Screenshots already available in `docs/debug/screenshots/`.
+## 🔲 YOUR TASKS (in order — do these before printing)
+
+### STEP 1 — Open the manuscript
+Open: `1_MAIN_MANUSCRIPT.docx` (in this same folder)
+
+---
+
+### STEP 2 — Insert Figures 3.1–3.3 (system diagrams)
+These need to be drawn. Use **Canva** (free: canva.com) or draw.io.
+
+| Figure | What to draw | Where in Word |
+|---|---|---|
+| **Figure 3.1** | System Flowchart — how user input flows through the app to stored data | Search: `Figure 3.1` |
+| **Figure 3.2** | Use Case Diagram — User ↔ System interactions | Search: `Figure 3.2` |
+| **Figure 3.3** | Screen Navigation Map — visual overview of all screens | Search: `Figure 3.3` |
+
+Export each as PNG → Insert in Word → Add caption below:
+`Figure 3.X. [Title]. Source: Authors' own development.`
+
+---
+
+### STEP 3 — Insert Figures 3.4–3.10 (app screenshots)
+Screenshots are already in `docs/debug/screenshots/` folder. Pick the best ones.
 
 | Figure | What to show |
 |---|---|
-| 3.4 | Login screen + Demo Mode button |
-| 3.5 | Home screen (FHS ring, Peso) |
-| 3.6 | Peso chat — logging expense in Taglish |
-| 3.7 | Batch screenshot import screen |
-| 3.8 | FHS breakdown screen (81/100 or similar) |
-| 3.9 | Budgets + Savings Goals screen |
-| 3.10 | Settings or Local AI mode |
+| **Figure 3.4** | Login screen + "Try Demo" button |
+| **Figure 3.5** | Home screen (FHS ring, Peso mascot) |
+| **Figure 3.6** | Peso AI chat — logging expense in Taglish |
+| **Figure 3.7** | Batch screenshot import screen |
+| **Figure 3.8** | FHS breakdown (show the 4 components) |
+| **Figure 3.9** | Budgets or Savings Goals screen |
+| **Figure 3.10** | Analytics or Settings screen |
 
 Caption format: `Figure 3.X. [Screen Name]. Source: Authors' own development.`
 
-### 4. Insert system diagrams (Figures 3.1–3.3)
-Ctrl+F: `"[Figure 3.1"`, `"[Figure 3.2"`, `"[Figure 3.3"`
-Draw in Canva (free): https://www.canva.com
-- Figure 3.1 = System Flowchart
-- Figure 3.2 = Use Case Diagram  
-- Figure 3.3 = Screen Navigation Map
+---
 
-### 5. Print these for Ma'am Ellen and bring to her
-Print these 2 files and bring them to Ma'am Ellen for signature:
-- `docs/capstone/FHS_Formula_For_Maam_Mangaoang.pdf` (5 pages — formula doc)
-- `docs/capstone/SmartSpend_Survey_Questionnaire_FOR_VALIDATION.pdf` (9 pages — needs her signature)
+### STEP 4 — Update TOC and List of Figures
+After inserting all figures:
+1. Select all (Ctrl+A)
+2. Right-click any field → Update Field → Update entire table
+3. Do this for: Table of Contents, List of Tables, List of Figures
 
-### 6. Verify Sharma DOI
-Go to: https://doi.org/10.2991/978-94-6463-IYC-2026_28
-- Works → find `[⚠️ DOI TO VERIFY]` in the bibliography and delete just that warning text
-- Doesn't work → delete the whole Sharma reference + any `[2]` in-text citations
+---
 
-### 7. Check 3 unverified references on Google Scholar
-- FHN (2026) — search "Financial Health Network 2026"
-- Groq (2026) — check developer.groq.com
-- Li et al. (2024) — search exact title
+### STEP 5 — Verify Sharma et al. (2026) DOI
+Go to: **https://doi.org/10.2991/978-94-6463-IYC-2026_28**
+- Opens correct paper → find `[⚠️ DOI TO VERIFY]` in bibliography → delete that warning text
+- Doesn't open → delete entire Sharma reference + remove `[2]` in-text citations
 
-Delete any that can't be found.
+---
 
-### 8. Update TOC
-References tab → Update Table → Update entire table (do this for TOC, List of Tables, List of Figures)
+### STEP 6 — Final Ctrl+F checks before printing
+| Search for | Expected result |
+|---|---|
+| `[[` | **0 results** |
+| `Verzola` | 0 results |
+| `Figure 3.1` as placeholder | 0 results (should be replaced with actual figure) |
+| `[TO INSERT` | 0 results |
 
-### 9. Approval sheet — verify names
+---
+
+### STEP 7 — Approval sheet
+Confirm these exact names on the approval page:
 ```
 Adviser:     Ms. Ellen F. Mangaoang, DIT
 Chairperson: Ms. Ellen F. Mangaoang, DIT
@@ -79,52 +92,46 @@ Member 1:    Mr. Jopher F. Reyes, MIT
 Member 2:    Mr. Gelo Ryann M. Carbonell
 Dean:        Mr. Jeoffrey B. Layco, MIS
 ```
-Wait for Brix to confirm Dean's title before printing.
-
-### 10. Print 3 copies
-File → Save As → PDF first, check it looks right, then print. Use Word not LibreOffice.
 
 ---
 
-## DJAUNATHAN — Your task list
-
-### 1. Study the defense Q&A
-Read: `docs/capstone/DEFENSE_QA_PREP.md`
-Know: your intro section, system architecture questions, "why did you choose Gemini?"
-
-### 2. Memorize the FHS short answer
-Read: `docs/capstone/FHS_Defense_Guide.pdf` — the 3-sentence answer at the top.
-
-### 3. Know the demo script
-Read: `docs/capstone/DEMO_DAY_CHECKLIST.md`
-Know your part of the demo.
+### STEP 8 — Get signatures
+- [ ] Print `3_PRINT_GIVE_TO_MAAM_ELLEN_Formula.pdf` → bring to Ma'am Ellen
+- [ ] Print `4_PRINT_SIGN_BY_MAAM_ELLEN_Questionnaire.pdf` → get Ma'am Ellen's signature
+- [ ] Print `6_CERT_A1...pdf` + `7_CERT_A3...pdf` (in FOR_MAAM_ELLEN folder) → get Ma'am Abby's signature
 
 ---
 
-## BOTH — Survey links (share these everywhere)
-
-Research survey (3 mins, anyone 18+):
-https://docs.google.com/forms/d/e/1FAIpQLSfuDVpOSzTCQ8ICl-FGDjZ9a7iGPpKsh51xxAJ6ajesM36DXQ/viewform
-
-SUS survey (10 mins, need to try the app first):
-https://docs.google.com/forms/d/e/1FAIpQLScs24mLCXnSpCZnqDJt46wSWXQUsxhgu0GBkMAlYcOo8oAf2g/viewform
-
-Current count: 13 research / 5 SUS. Need 30 each.
+### STEP 9 — Print
+1. File → Save As → PDF first (check it looks right)
+2. Print **3 copies** — use **Word**, NOT LibreOffice
+3. Submit before defense
 
 ---
 
-## Files summary
+## 📁 Other files in this folder
 
-| What | Where |
+| File | What it is |
 |---|---|
-| **Main manuscript (FINAL)** | `docs/handsoff/CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx` |
-| **Defense Q&A** | `docs/capstone/DEFENSE_QA_PREP.md` |
-| **Demo checklist** | `docs/capstone/DEMO_DAY_CHECKLIST.md` |
-| **FHS formula script** | `docs/capstone/FHS_Defense_Guide.pdf` |
-| **Full manual guide** | `docs/capstone/MANUSCRIPT_MANUAL_TODO_GUIDE.md` |
-| **For Ma'am Ellen** | `docs/capstone/FHS_Formula_For_Maam_Mangaoang.pdf` |
-| **For Ma'am Ellen (sign)** | `docs/capstone/SmartSpend_Survey_Questionnaire_FOR_VALIDATION.pdf` |
+| `1_MAIN_MANUSCRIPT.docx` | **THE manuscript — open this** |
+| `3_PRESENTATION.html` | Defense presentation — open in Chrome |
+| `3_PRESENTATION.pptx` | Defense presentation — PowerPoint version |
 
 ---
 
-*Questions → ask Brix. Brix will relay to Kiro if needed.*
+## 🎯 Defense Day (November 10, 2026)
+
+**Your key talking points:**
+- N=30 respondents, 96.7% positive AI intent, 93.3% use GCash
+- SUS = 61.83 (adjective "OK", Bangor 2009) — below 68 benchmark, acknowledged as prototype limitation
+- FHS adapted from CBA-Melbourne Institute (2018) — not invented
+- App is free, offline, runs on budget Android — not for rich only
+- 12 color themes + high contrast mode — answers UI/UX concern
+
+**Read before defense:**
+- `docs/capstone/DEFENSE_QA_PREP.md` — full Q&A prep
+- `docs/capstone/FHS_FORMULA_DERIVATION_DEFENSE_GUIDE.md` — memorize the 3-sentence FHS answer
+
+---
+
+*Kiro finished everything that could be automated. The rest is yours. Good luck. 🎯*
