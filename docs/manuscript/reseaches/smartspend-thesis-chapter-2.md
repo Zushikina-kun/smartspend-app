@@ -68,14 +68,18 @@ The quantitative workflow measures system performance (latency, OCR precision/re
 ### 2.2.1 Population and Locale
 The study is conducted in **San Fernando City, La Union, Philippines** [600]. The geographic choice is highly relevant: regional urban centers in the Philippines represent unique economic micro-ecosystems where digital-wallet transactions (GCash, Maya) coexist with cash-heavy informal markets and unique local financial structures (such as e-commerce shopping, cash-on-delivery, and informal credit arrangements) [568, 572, 600].
 
-The target population consists of two distinct demographic segments:
-1. **Primary Target Population (Parents aged 35–55):** Defined as adult parents who serve as the principal household financial decision-makers in Filipino families [558, 600]. Per the **Bangko Sentral ng Pilipinas (BSP) 2021 Financial Inclusion Survey**, this age bracket shoulders the highest household financial responsibilities (rent, utilities, childcare, tuition) yet exhibits some of the lowest rates of formal budgeting and digital tool adoption due to manual data entry friction and lack of localized feedback [567, 586, 600].
-2. **Secondary Target Population (Young Professionals aged 21–35):** Defined as early-career working individuals who independently manage their personal income [558, 600]. This segment represents the highest demographic of digital payment and e-wallet adopters but often exhibits a "come-what-may" attitude (*bahala na*) toward financial planning, resulting in high discretionary overspending and low savings rates [568, 600, 665].
+The target population consists of two primary demographic segments, with a third combined category:
+1. **Primary Target Population (Young Professionals):** Defined as early-career working individuals who independently manage their personal income [558, 600]. This segment represents the highest demographic of digital payment and e-wallet adopters but often exhibits a "come-what-may" attitude (*bahala na*) toward financial planning, resulting in high discretionary overspending and low savings rates [568, 600, 665].
+2. **Secondary Target Population (Parents):** Defined as adult parents who serve as the principal household financial decision-makers in Filipino families [558, 600]. Per the **Bangko Sentral ng Pilipinas (BSP) 2021 Financial Inclusion Survey**, this segment shoulders the highest household financial responsibilities (rent, utilities, childcare, tuition) yet exhibits some of the lowest rates of formal budgeting and digital tool adoption due to manual data entry friction and lack of localized feedback [567, 586, 600].
+3. **Both:** Respondents who identify as both a parent and a young professional.
 
 ### 2.2.2 Purposive Sampling and Sample Size Justification
-A total of **thirty (30) respondents** are selected using **purposive sampling**, which is a non-probability sampling technique where respondents are chosen based on specific pre-defined inclusion criteria [601]:
-* **Inclusion Criteria for Parents (n=20):** Must be aged 35–55, reside in La Union, act as the primary manager of household expenses, and regularly use digital-wallets (GCash or Maya) or cash to settle expenses [558, 600].
-* **Inclusion Criteria for Young Professionals (n=10):** Must be aged 21–35, reside in La Union, be currently employed or self-employed, independently manage personal earnings, and possess an Android smartphone [558, 600].
+A total of **thirty-three (33) respondents** are selected using **purposive sampling**, which is a non-probability sampling technique where respondents are chosen based on specific pre-defined inclusion criteria [601]:
+* **Inclusion Criteria for Parents (n=13):** Must reside in La Union, act as the primary manager of household expenses, and regularly use digital-wallets (GCash or Maya) or cash to settle expenses [558, 600].
+* **Inclusion Criteria for Young Professionals (n=16):** Must reside in La Union, be currently employed or self-employed, independently manage personal earnings, and possess an Android smartphone [558, 600].
+* **Both (n=4):** Respondents who identify as both a parent and a young professional.
+
+For the SUS usability evaluation, **twenty-five (25) valid respondents** are used, screened from thirty (30) who attempted the evaluation. Five (5) were excluded for not meeting the minimum 10-minute application use threshold.
 
 ```
 +-----------------------------------------------------------------------+
@@ -83,17 +87,22 @@ A total of **thirty (30) respondents** are selected using **purposive sampling**
 +-----------------------------------------------------------------------+
 | Participant Segment       | Sample Size (n) | Selection Criteria      |
 +---------------------------+-----------------+-------------------------+
-| Parents (Ages 35-55)      | 20 (Primary)    | Primary HH Decision-    |
+| Young Professionals       | 16              | Employed/self-employed, |
+|                           |                 | independent income      |
++---------------------------+-----------------+-------------------------+
+| Parents                   | 13              | Primary HH Decision-    |
 |                           |                 | Maker, lowest PFM rate  |
 +---------------------------+-----------------+-------------------------+
-| Young Professionals       | 10 (Secondary)  | Early-career, working,  |
-| (Ages 21-35)              |                 | independent income      |
+| Both                      | 4               | Identify as both        |
++---------------------------+-----------------+-------------------------+
+| Research Survey Total     | 33              | Mixed Purposive Design  |
++---------------------------+-----------------+-------------------------+
+| SUS Evaluation (valid)    | 25              | Screened from N=30;     |
+|                           |                 | 5 excluded (<10 min use)|
 +---------------------------+-----------------+-------------------------+
 | Survey Content Validator  | 1               | Business/Commerce Expert|
 +---------------------------+-----------------+-------------------------+
 | Technical Validator       | 1               | IT/Software Expert      |
-+---------------------------+-----------------+-------------------------+
-| Total Portfolio           | 32              | Mixed Purposive Design  |
 +-----------------------------------------------------------------------+
 ```
 
@@ -102,7 +111,7 @@ During the capstone defense, the panel may query: *“Given that the underlying 
 
 To defend this, the methodology draws a strict line between **predictive behavioral modeling** and **prototype usability/feasibility testing** [532, 538]:
 1. **PLS-SEM Modeling Rationale:** In the **Atlantis Press (2026)** study, a priori power analysis using **G*Power 3.1** indicated that a minimum of 77 respondents was required to detect a medium effect size ($f^2 = 0.15$) at $lpha = 0.05$ and power $eta = 0.80$ for the structural model containing three predictors [91, 92]. The study's actual sample of $N=656$ was required because PLS-SEM evaluates latent structural covariance and population-wide behavioral generalizability [92, 93, 118].
-2. **Usability and Feasibility Testing Rationale:** In contrast, SmartSpend is evaluated as a functional prototype [599]. For usability testing using the **System Usability Scale (SUS)**, a purposive sample of $N=30$ is statistically robust and represents the gold standard in human-computer interaction (HCI) literature [598, 601]. Landmark usability research by **Nielsen (1993)** and **Faulkner (2003)** empirically proves that usability testing with **5 participants uncovers 80–85% of core usability defects**, while **20 to 30 participants are sufficient to uncover over 90–95% of all usability and technical issues**, including edge-case errors [601, 607]. Therefore, $N=30$ provides extreme statistical reliability for prototype validation, preventing unnecessary and costly data gathering on a pre-commercial prototype.
+2. **Usability and Feasibility Testing Rationale:** In contrast, SmartSpend is evaluated as a functional prototype [599]. For usability testing using the **System Usability Scale (SUS)**, a purposive sample of N=25 valid respondents (screened from N=30 who attempted the evaluation; 5 excluded for not meeting the ≥10-minute minimum use threshold) is statistically robust and represents the gold standard in human-computer interaction (HCI) literature [598, 601]. Landmark usability research by **Nielsen (1993)** and **Faulkner (2003)** empirically proves that usability testing with **5 participants uncovers 80–85% of core usability defects**, while **20 to 30 participants are sufficient to uncover over 90–95% of all usability and technical issues**, including edge-case errors [601, 607]. Therefore, N=25 (valid) provides strong statistical reliability for prototype validation. The research needs assessment utilized N=33 respondents, providing a robust final sample for the descriptive analysis of financial management practices.
 
 ---
 
@@ -129,17 +138,33 @@ Following the **NIST AI RMF (Govern, Map, Measure, Manage)** guidelines, SmartSp
 ## 2.4 Data Gathering Instruments and Validation
 
 ### 2.4.1 Survey Questionnaires and Structured Interviews (Objective 1)
-To assess pre-development financial practices and challenges, a structured survey (Appendix B) is content-validated by **Susan C. Arquisal**, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with extensive financial operations experience [602, 656]. This questionnaire collects data on monthly income brackets, expense tracking habits, budget breach frequencies, manual logging inconveniences, and feature requirements [652, 653, 654, 655]. Pre-development qualitative interviews gather deeper contextual themes on local budget stressors, caregiving costs, and digital payment friction [598, 606].
+To assess pre-development financial practices and challenges, a structured survey questionnaire (Appendix B) comprising 13 questions across 5 sections was content-validated by **Susan C. Arquisal**, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with extensive financial operations experience [602, 656]. The validation certificate is included in Appendix A-1. This questionnaire collects data on monthly income brackets, expense tracking habits, budget breach frequencies, manual logging inconveniences, and feature requirements [652, 653, 654, 655]. Open-ended responses and frequency analysis of reported challenges and behaviors constitute the qualitative component of this study's mixed-methods design. Pre-development qualitative interviews gather deeper contextual themes on local budget stressors, caregiving costs, and digital payment friction [598, 606]. The complete survey questionnaire is in Appendix B. All participants reviewed and signed an Informed Consent Form prior to participation.
 
-### 2.4.2 Technical Benchmarking (Objective 2)
+### 2.4.2 Data Analysis Methods
+
+The following analytical methods are used to process and interpret the collected data:
+
+1. **Frequency and Percentage Analysis:** Applied to survey responses (Objective 1) to determine the distribution of tracking methods, budget preparation frequencies, budget breach behaviors, digital wallet usage, and AI app adoption intent across the N=33 sample (multiple-response items reported as frequency counts and percentages of total respondents).
+
+2. **SUS Scoring Formula (Brooke, 1996):** For each respondent's 10-item SUS questionnaire:
+   - For odd-positioned items (positive statements, Q1, Q3, Q5, Q7, Q9): subtract 1 from the raw Likert score ($X_i = \text{Score} - 1$).
+   - For even-positioned items (negative/reverse statements, Q2, Q4, Q6, Q8, Q10): subtract the raw Likert score from 5 ($Y_i = 5 - \text{Score}$).
+   - Overall SUS Score = $(\sum X_i + \sum Y_i) \times 2.5$ [631].
+
+3. **Mean and Standard Deviation Computation:** Applied to SUS scores (Objective 3) to compute the overall mean SUS score (M = 56.30, SD = 13.43, N=25), median (52.50), and score range (35.0–85.0) for the final SUS evaluation sample.
+
+4. **Qualitative Frequency Tallying:** Applied to open-ended survey responses (Q6: financial challenges; Q7: budget breach responses) to identify the most frequently cited themes and rank-order challenges by mention count.
+
+### 2.4.3 Technical Benchmarking (Objective 2)
+
 The technical evaluation of Large Language Models is conducted systematically by running identical expense-parsing, Taglish translation, and function-calling prompts across 15 candidate APIs [580, 608]. Performance is benchmarked on:
 * **Inference Speed:** Tokens per second (t/s) [580, 622].
 * **Filipino-English Accuracy:** Percentage of colloquial Taglish financial statements (e.g., *"nagbayad ako ng ₱150 sa trike kanina"*) correctly converted to structured JSON [580, 622].
 * **Function-Calling Reliability:** Execution success rate across the 34 agentic actions [559, 622].
 * **Free-Tier Viability:** Request quotas permitted under academic/free developer constraints [580, 622].
 
-### 2.4.3 System Usability Scale (SUS) (Objective 3)
-Perceived usability is measured using the standard 10-item **System Usability Scale (SUS)** developed by **Brooke (1996)** [598, 607, 660]:
+### 2.4.4 System Usability Scale (SUS) (Objective 3)
+Perceived usability is measured using the standard 10-item **System Usability Scale (SUS)** developed by **Brooke (1996)** (Appendix C) [598, 607, 660]. Technical validation of the instrument is included in Appendix A-2.
 * Respondents independently complete the 10-item questionnaire on a 5-point Likert scale (1 = Strongly Disagree, 5 = Strongly Agree) [598, 609, 660].
 * The SUS score is computed using the standard psychometric formula [609, 631]:
   * For odd-numbered items (positive statements): $X_i = 	ext{Score} - 1$ [631]
@@ -153,7 +178,7 @@ Perceived usability is measured using the standard 10-item **System Usability Sc
   * $60 - 69$: Marginal / OK [610, 631]
   * $<60$: Poor [610, 631]
 
-*Note: The preliminary SUS score of 62.50 falls in the 60–69 range, adjective rating of "OK" per Bangor et al. (2009). Final classification will be confirmed upon N=30 completion.*
+*Note: The final SUS score of 56.30 falls in the 50–59 range, adjective rating of "OK" per Bangor et al. (2009). This is based on the final N=25 valid respondents, screened from N=30 who attempted the evaluation.*
 * The target usability benchmark for SmartSpend is set at **$\ge 80$ (Good)** [560, 598].
 
 ---
@@ -224,7 +249,7 @@ This phase runs functional, technical, and usability evaluations [617]. In addit
    * Event-driven cloud syncing and data restoration [576, 594].
    * Deduplication logic (preventing duplicate entries when merging on-device logs with cloud Firestore) [544, 576].
 4. **Responsible AI Safeguards Verification:** Unit-tested with adversarial prompts (prompt injections, direct commands to execute database wipes, requests for unauthorized financial investments) to verify that policy filters and the on-device regex masking layer achieve 100% compliance [539, 547].
-5. **Standardized Usability Testing:** Administrated to the purposive sample of 30 local testers using Demo Mode, with SUS evaluations recorded and tabulated [598, 607, 630].
+5. **Standardized Usability Testing:** Administered to a screened sample of N=25 valid respondents (from N=30 who attempted the evaluation) using Demo Mode, with SUS evaluations recorded and tabulated [598, 607, 630].
 * *Deliverable:* SUS Score reports, Bug logs, OCR precision metrics, and SQLite sync recovery logs [628].
 
 #### Phase 6: Deployment Phase
