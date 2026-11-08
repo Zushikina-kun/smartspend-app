@@ -11,13 +11,13 @@
 | What was wrong | Fixed to |
 |---|---|
 | Adviser "Mr. Johnny Flores Verzola, MTS" | Ms. Ellen F. Mangaoang, DIT |
-| Abstract: SUS "exceeding ≥80 (Good)" | Honest: 62.50, Grade C, preliminary N=5 |
+| Abstract: SUS "exceeding ≥80 (Good)" | Final: 61.83 (N=30), adjective "OK" |
 | "31 agentic/conversational actions" everywhere | 34 everywhere |
-| "23 achievement badges" | 25 everywhere |
+| "23 achievement badges" | 36 everywhere |
 | Warren & Tyagi (2004) | 2005 (correct year) |
 | Tables 3.1–3.3 showing N=30 as final | Added "preliminary N=13" disclaimer |
 | Mangaoang MIT (outdated) | DIT (correct — she has a doctorate) |
-| SUS placeholders `[[N]]`, `[score]`, `[grade]` | Filled: N=5, 62.50, Grade C, "OK" |
+| SUS placeholders `[[N]]`, `[score]`, `[grade]` | Filled: N=30, 61.83, adjective "OK" (Bangor 2009) |
 | Research survey `[[N]]` | Filled: 13 respondents (preliminary) |
 | Sharma et al. DOI — no flag | ⚠️ flagged for Cyrille to verify |
 | Bangor (2009) — no URL | URL added |
@@ -115,7 +115,7 @@ Dean:           Mr. Jeoffrey B. Layco, MIS
 | `[[` | 0 results | Fill or remove any remaining PENDING tags |
 | `Verzola` | 0 results | Replace with Mangaoang |
 | `31 agentic` | 0 results | Change to 34 |
-| `23 achievement` | 0 results | Change to 25 |
+| `23 achievement` | 0 results | Change to 36 |
 | `2004` near "Warren" | 0 results | Change to 2005 |
 | `App screenshot to be inserted` | 0 results | Insert actual screenshot |
 

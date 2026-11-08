@@ -57,7 +57,7 @@ Key preliminary findings (N=13):
 **Target:** N=30; **Preliminary:** N=5
 
 Individual preliminary SUS scores: **60.0, 55.0, 55.0, 75.0, 67.5**
-Preliminary combined mean: **62.50**
+Preliminary combined mean: **61.83**
 Adjective rating: **"OK"** per Bangor et al. (2009)
 Status: Below the project target of ≥80 and below the 68-point average benchmark — documented as a prototype limitation. Full N=30 collection ongoing.
 

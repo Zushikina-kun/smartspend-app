@@ -97,7 +97,7 @@ When Brix brings any of the above:
 ## 📋 WHAT'S ALREADY DONE (do NOT redo)
 
 - ✅ All 4 chapter markdown files — 0 `[[PENDING]]` tags, all numbers correct
-- ✅ `CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx` — DIT, MIS, 36 badges, 34 actions, 62.50 SUS
+- ✅ `CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx` — DIT, MIS, 36 badges, 34 actions, 61.83 SUS
 - ✅ Presentation — 18 slides, Nov 10 date, real screenshots
 - ✅ Defense script — 18 entries, speaker assignments
 - ✅ All Q&A prep docs — inclusivity, UI/UX, FHS formula, deployment, AI ethics, originality

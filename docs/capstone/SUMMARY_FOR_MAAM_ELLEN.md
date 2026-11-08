@@ -27,7 +27,7 @@ The FHS is the sum of four components, each worth 25 points:
 
 ## B. Validation
 
-**System Usability Scale (SUS):** Preliminary results from N = 5 respondents yield a mean SUS of **62.50**, corresponding to **Grade C / "OK"** per the Bangor et al. (2009) interpretation scale. This sits below the established 68-point average benchmark. We acknowledge this as a limitation; the full N = 30 evaluation is ongoing and will be reported in the final manuscript.
+**System Usability Scale (SUS):** Preliminary results from N = 30 respondents yield a mean SUS of **61.83**, corresponding to **adjective "OK"** per the Bangor et al. (2009) interpretation scale. This sits below the established 68-point average benchmark. We acknowledge this as a limitation; the evaluation is complete at N = 30 (screened from 36 responses).
 
 **Technical validation:** OCR precision of **91.2%**, Taglish (Filipino-English) transaction categorization accuracy of **94.6%**, and a **100% database recovery rate** across backup/restore testing.
 

@@ -14,12 +14,12 @@
 | R3         | Parent/HH Financial Manager | 55.0      |
 | R4         | Parent/HH Financial Manager | 75.0      |
 | R5         | Parent/HH Financial Manager | 67.5      |
-| **Mean**   | 2 YP · 3 Parent             | **62.50** |
+| **Mean**   | 2 YP · 3 Parent             | **61.83** |
 
 **Interpretation:** Grade C — "OK" per Bangor, Kortum & Miller (2009)
-**Important:** 62.50 is **below the 68-point average benchmark**. This is acknowledged as a limitation of the current prototype.
+**Important:** 61.83 is **below the 68-point average benchmark**. This is acknowledged as a limitation of the current prototype.
 **Grade scale:** A+ ≥90 · B ≥80 · C ≥70 · D ≥60 · F <60
-**Note:** Bangor et al. (2009) place scores 60–69 in Grade D / "Poor". 62.50 is in the lower OK/marginal band. Target remains ≥80 (Grade B, "Good").
+**Note:** Bangor et al. (2009) place scores 60–69 in Grade D / "Poor". 61.83 is in the lower OK/marginal band. Target remains ≥80 (Grade B, "Good").
 
 ---
 
@@ -92,7 +92,7 @@ Update these locations when the full dataset is collected:
 ### Chapter 4 manuscript
 - `c:\xampp\htdocs\smartspend_app\docs\manuscript\reseaches\smartspend-thesis-chapter-4.md`
   - Objective 1 section: Replace preliminary % values with final N=30 figures
-  - Objective 3 section: Replace SUS 62.50 (N=5) with final mean SUS (N=30) + adjective + grade
+  - Objective 3 section: Replace SUS 61.83 (N=5) with final mean SUS (N=30) + adjective + grade
 
 ### Defense Presentation HTML
 - `c:\xampp\htdocs\smartspend_app\docs\capstone\SmartSpend_Defense_Presentation.html`

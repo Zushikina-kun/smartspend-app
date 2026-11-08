@@ -108,17 +108,17 @@
 
 | Stat | Value | Note |
 |------|-------|------|
-| SUS Mean Score | **62.50** (N=5) | adjective rating of "OK" (Bangor et al., 2009) — below 68-pt average benchmark |
+| SUS Mean Score | **61.83** (N=30) | adjective rating of "OK" (Bangor et al., 2009) — below 68-pt average benchmark |
 | Overspending struggle | **76.9%** of respondents | Most cited financial difficulty |
 | Positive AI app intent | **69.2%** (Yes + Probably yes) | Strong adoption interest |
 | Manual/no tracking | **53.8%** | Notebook + do not track combined |
 
-### How to address SUS 62.50 honestly:
-> "Our preliminary SUS mean is 62.50 with N=5 respondents, which is adjective rating 'OK' per Bangor et al. (2009) — below the 68-point average benchmark. We're being transparent about this. The target is ≥80, and we expect scores to improve once UI refinements are complete and the full N=30 data is collected. At the prototype stage, a score in the 'OK' band is within acceptable range."
+### How to address SUS 61.83 honestly:
+> "Our final SUS mean is 61.83 with N=30 respondents, which is adjective rating 'OK' per Bangor et al. (2009) — below the 68-point average benchmark. We're being transparent about this. The target is ≥80, and we expect scores to improve once UI refinements are complete and the full N=30 data is collected. At the prototype stage, a score in the 'OK' band is within acceptable range."
 
 ### If panel asks why SUS is below target:
 - Sample is only N=5 (preliminary) — not statistically conclusive
-- 62.50 is within the 'OK' band — not 'poor' or 'awful'
+- 61.83 is within the 'OK' band — not 'poor' or 'awful'
 - Known areas for improvement: onboarding flow, navigation labels
 - Full N=30 evaluation is ongoing; results will be in the final manuscript
 

@@ -14,7 +14,7 @@
 | Requirement | Deliverable / Evidence | Status | Notes |
 |-------------|----------------------|--------|-------|
 | Title page (title, authors, adviser, institution, AY, date) | `CAPSTONE_LucidFrame_-_SMARTSPEND__5_.docx` | ✅ DONE | Mangaoang DIT confirmed. Dean: Jeoffrey B. Layco, MIS confirmed. |
-| Abstract | Chapter I of __5_.docx | ✅ DONE | SUS sentence updated to preliminary 62.50 Grade C. No fabricated claims. |
+| Abstract | Chapter I of __5_.docx | ✅ DONE | SUS sentence updated to preliminary 61.83 Grade C. No fabricated claims. |
 | Chapter I: Introduction, Background of the Study | __5_.docx Chapter I | ✅ DONE | Written. BSP CFIS 2025 figures updated (literacy 74%, account ownership 50%, household access 85%). |
 | Chapter I: Problem Statement | __5_.docx Chapter I | ✅ DONE | 5-point enumeration; validated via needs assessment |
 | Chapter I: Objectives (3 research objectives) | __5_.docx Chapter I | ✅ DONE | Obj 1: financial practices baseline; Obj 2: system design/architecture; Obj 3: SUS evaluation |
@@ -25,7 +25,7 @@
 | Chapter II: Development Methodology (Kanban, Table 2.2) | Table 2.2 added in __4_ | ✅ DONE | 3-column Kanban phases table |
 | Chapter III: Results & Discussion — Objective 1 (needs assessment) | __5_.docx Ch. III Obj 1 | 🔄 IN PROGRESS | Survey live; `[[PENDING]]` tags for N, frequencies, percentages. Fill only from real responses. |
 | Chapter III: Results & Discussion — Objective 2 (system design) | __5_.docx Ch. III Obj 2 | ✅ DONE | LLM benchmark Table 3.2 (20 models); FHS computation; system architecture; Peso companion; privacy tiers; local LLM. Two `[[VERIFY]]` notes remain (TBD cells in Table 3.2; Cerebras key). |
-| Chapter III: Results & Discussion — Objective 3 (SUS evaluation) | __5_.docx Ch. III Obj 3 | 🔄 IN PROGRESS | SUS procedure written; preliminary N=5 results filled (62.50, Grade C, below 68 benchmark). Full N=30 ongoing. |
+| Chapter III: Results & Discussion — Objective 3 (SUS evaluation) | __5_.docx Ch. III Obj 3 | 🔄 IN PROGRESS | SUS procedure written; preliminary N=5 results filled (61.83, Grade C, below 68 benchmark). Full N=30 ongoing. |
 | Chapter III: Overview of the System (Figures 3.1–3.3) | __5_.docx placeholders | ⏳ PENDING | Flowchart, use case diagram, visual ToC — all placeholders. Must be replaced with real diagrams. |
 | Chapter III: Production Screens (Figures 3.4–3.10) | __5_.docx placeholders | ⏳ PENDING | 7 figure placeholders for login/demo, dashboard, AI chat, receipt import, FHS, budgets/goals, Local AI. Replace with real v3.1.1 screenshots. |
 | Chapter IV: Conclusions (3 objectives) | __5_.docx Chapter IV | 🔄 IN PROGRESS | Obj 2 conclusion written. Obj 1 & 3 pending survey data. |
@@ -77,7 +77,7 @@
 | Requirement | Deliverable / Evidence | Status | Notes |
 |-------------|----------------------|--------|-------|
 | Needs assessment survey (N=30, pre-design) | Google Forms Research Survey | 🔄 IN PROGRESS | N=13 preliminary responses collected. Need N=30. Revised to 13 questions per adviser. |
-| SUS evaluation (N=30, target mean ≥80) | Google Forms SUS Survey | 🔄 IN PROGRESS | N=5 preliminary: mean SUS = 62.50 (Grade C, below 68 benchmark). Acknowledged as limitation. Full N=30 ongoing. |
+| SUS evaluation (N=30, target mean ≥80) | Google Forms SUS Survey | 🔄 IN PROGRESS | N=5 preliminary: mean SUS = 61.83 (Grade C, below 68 benchmark). Acknowledged as limitation. Full N=30 ongoing. |
 | SUS form validity | Google Forms SUS Survey | ⏳ PENDING | Need: 10-item SUS standard wording confirmed; 18+ screening; consent statement; demographic items (age band, occupation, city, phone brand/RAM) |
 | Expert validator — financial management | `docs/handsoff/FOR_MAAM_ELLEN/7_CERT_A3_FHS_Formula_Validation.pdf` | 🔄 IN PROGRESS | Ma'am Abby (finance expert) — certificate prepared, awaiting signature |
 | Expert validator — IT professional | `docs/handsoff/FOR_MAAM_ELLEN/6_CERT_A1_Survey_Questionnaire_Validation.pdf` | ⏳ PENDING | Certificate prepared. Need IT/software expert to sign. Ask Sir Raposas. |
@@ -195,7 +195,7 @@ These are the questions panelists are most likely to ask that are NOT already in
 
 ### "Did you test this with real users? How many?"
 
-> **Answer:** Yes. For Objective 1 (needs assessment), we surveyed N=13 respondents (preliminary; target N=30) — 9 young professionals and 4 parents. For Objective 3 (usability evaluation using SUS), N=5 respondents evaluated the app (preliminary; target N=30), yielding a mean SUS score of 62.50 (Grade C, "OK" per Bangor et al., 2009). We acknowledge this is below the 68-point average benchmark and below our target of ≥80. We attribute this to the small preliminary sample size and the prototype nature of the system. Full N=30 data collection is ongoing.
+> **Answer:** Yes. For Objective 1 (needs assessment), we surveyed N=13 respondents (preliminary; target N=30) — 9 young professionals and 4 parents. For Objective 3 (usability evaluation using SUS), N=5 respondents evaluated the app (preliminary; target N=30), yielding a mean SUS score of 61.83 (Grade C, "OK" per Bangor et al., 2009). We acknowledge this is below the 68-point average benchmark and below our target of ≥80. We attribute this to the small preliminary sample size and the prototype nature of the system. Full N=30 data collection is ongoing.
 
 ---
 
@@ -231,7 +231,7 @@ These are the questions panelists are most likely to ask that are NOT already in
 
 ### "What are the limitations of your system?"
 
-> **Answer (key points):** (1) **No direct bank API** — transactions must be manually logged, pasted, or imported via screenshots; (2) **AI requires internet** — offline operation means no AI chat; (3) **Android-only** — no iOS version yet; (4) **FHS is a prototype indicator** — not clinically validated; our equal weights are methodologically defensible but not empirically derived from longitudinal data; (5) **SUS 62.50 is below average** — we acknowledge this as a limitation of the current prototype at N=5 preliminary; (6) **No longitudinal behavioral data** — we cannot yet claim the app actually changes spending habits, only that it is designed to.
+> **Answer (key points):** (1) **No direct bank API** — transactions must be manually logged, pasted, or imported via screenshots; (2) **AI requires internet** — offline operation means no AI chat; (3) **Android-only** — no iOS version yet; (4) **FHS is a prototype indicator** — not clinically validated; our equal weights are methodologically defensible but not empirically derived from longitudinal data; (5) **SUS 61.83 is below average** — we acknowledge this as a limitation of the current prototype at N=5 preliminary; (6) **No longitudinal behavioral data** — we cannot yet claim the app actually changes spending habits, only that it is designed to.
 
 ---
 

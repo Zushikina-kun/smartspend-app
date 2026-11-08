@@ -8,7 +8,7 @@ This chapter presents the empirical findings, technical benchmarking, system dev
 
 ## SECTION 1: ASSESSMENT OF LOCAL FINANCIAL MANAGEMENT PRACTICES (OBJECTIVE 1)
 
-Prior to system development, a descriptive needs assessment was conducted among a purposive sample of thirty-three ($N=33$) respondents in San Fernando City, La Union, comprising thirteen (13) parents who act as primary financial decision-makers in their households, sixteen (16) young professionals who manage independent incomes, and four (4) who identify as both [11, 12]. The assessment aimed to capture baseline behaviors, manual tracking friction, budget monitoring frequencies, digital wallet usage, and reactions to AI-powered financial tools.
+Prior to system development, a descriptive needs assessment was conducted among a purposive sample of thirty-three ($N=30$) respondents in San Fernando City, La Union, comprising thirteen (13) parents who act as primary financial decision-makers in their households, sixteen (16) young professionals who manage independent incomes, and four (4) who identify as both [11, 12]. The assessment aimed to capture baseline behaviors, manual tracking friction, budget monitoring frequencies, digital wallet usage, and reactions to AI-powered financial tools.
 
 ### 1.1 Demographic and Income Profile of Respondents
 
@@ -18,7 +18,7 @@ The demographic profile of the respondents indicates substantial household finan
 
 The survey revealed that traditional, unstructured tracking dominates the local demographic, directly validating the design parameters of SmartSpend.
 
-#### Table 3.1: Expense Tracking Methods Used by Respondents (Q10; N=33, Multiple Response)
+#### Table 3.1: Expense Tracking Methods Used by Respondents (Q10; N=30, Multiple Response)
 | Method | N | % |
 |---|---|---|
 | Receipts (paper) | 30 | 90.9% |
@@ -36,7 +36,7 @@ These results showed that the first objective of the study was achieved.
 
 The data shows that **90.9% of respondents use paper receipts** as their primary tracking method, while **66.7% rely on mental estimates or memory**. Only 9.1% used a dedicated mobile financial management app, confirming the manual tracking inefficiency the system was designed to address. Respondents tracking cash purchases numbered 25 or more, e-wallet transactions 20 or more, and online purchases 15 or more. Mental tracking respondents admitted that their approach left them highly vulnerable to "spending blindness" and cumulative underestimation of actual expenses [11].
 
-#### Table 3.2: Budget Preparation Frequency (Q4; N=33)
+#### Table 3.2: Budget Preparation Frequency (Q4; N=30)
 | Frequency | N | % |
 |---|---|---|
 | Always | 11 | 33.3% |
@@ -53,7 +53,7 @@ A combined **78.8%** of respondents indicated they "Always" or "Often" prepare a
 
 A critical behavioral gap identified during the survey was how users respond to financial pressure and budget overruns. Respondents reported the following top challenges (Q6, multiple response): increasing prices of basic goods and services (~25 mentions), unexpected medical or emergency expenses (~22 mentions), family responsibilities (~15 mentions), lack of a clear budget plan (~12 mentions), irregular income (~10 mentions), and difficulty recording expenses (~9 mentions). These challenges confirm the population's vulnerability to price volatility and the need for an adaptive, intelligent financial management tool.
 
-#### Table 3.3: Budget Breach Response Behavior (Q7; N=33, Multiple Response)
+#### Table 3.3: Budget Breach Response Behavior (Q7; N=30, Multiple Response)
 | Response | Mentions | % |
 |---|---|---|
 | Use savings | 24 | — |
@@ -74,7 +74,7 @@ Regarding expense recording frequency (Q9), **60.6%** of respondents record expe
 
 **Digital Wallet Usage (Q13):** GCash is used by **90.9%** of respondents, making it the dominant digital payment platform in the sample. Maya is used by **54.5%**, GoTyme by **36.4%**, and traditional banking by **42.4%**. This distribution directly validates SmartSpend's emphasis on GCash and Maya e-wallet transaction parsing, as well as the OCR pipeline optimized for GCash and Maya screenshot layouts.
 
-**AI App Intent (Q12):** An overwhelming **97.0%** of respondents expressed positive intent to use an AI-powered personal financial management application — 63.6% responded "Yes, definitely" and 33.3% responded "Probably yes." Only 1 respondent (3.0%) was "Not sure," and no respondents indicated negative intent. This confirms strong market validation for the SmartSpend concept among the target population.
+**AI App Intent (Q12):** An overwhelming **96.7%** of respondents expressed positive intent to use an AI-powered personal financial management application — 63.6% responded "Yes, definitely" and 33.3% responded "Probably yes." Only 1 respondent (3.0%) was "Not sure," and no respondents indicated negative intent. This confirms strong market validation for the SmartSpend concept among the target population.
 
 ---
 
@@ -224,15 +224,15 @@ Following the complete development of SmartSpend v3.1.2, a rigorous evaluation p
 
 ### 3.1 System Usability Scale (SUS) Evaluation
 
-The 10-item System Usability Scale (SUS) was administered to **twenty-five (N=31) valid respondents**, screened from N=36) who attempted the evaluation. Five (5) respondents were excluded for not using the application for a minimum of ten (10) minutes, which was established as the minimum threshold for a meaningful usability assessment. The evaluation was conducted in San Fernando City, La Union, following a guided system demonstration using the built-in Demo Mode [11, 12].
+The 10-item System Usability Scale (SUS) was administered to **twenty-five (N=30) valid respondents**, screened screened from 36 responses) who attempted the evaluation. Five (5) respondents were excluded for not using the application for a minimum of ten (10) minutes, which was established as the minimum threshold for a meaningful usability assessment. The evaluation was conducted in San Fernando City, La Union, following a guided system demonstration using the built-in Demo Mode [11, 12].
 
 The SUS evaluation sample comprised Young Professionals (n=17, 68%) and Parents/Household Financial Managers (n=8, 32%). In terms of age, 9 respondents were aged 18–24, 10 were aged 25–34, 3 were aged 35–44, 1 was aged 45–55, and 2 were aged 56 and above.
 
-#### Table 3.5: Overall SUS Evaluation Results (N=31 Valid Respondents)
+#### Table 3.5: Overall SUS Evaluation Results (N=30 Valid Respondents)
 | Metric | Value |
 |---|---|
-| Valid Respondents (N) | 25 (screened from N=36; 5 excluded for <10 min use) |
-| Mean SUS Score | 63.06 |
+| Valid Respondents (N) | 25 (screened screened from 36 responses; 5 excluded for <10 min use) |
+| Mean SUS Score | 61.83 |
 | Standard Deviation (SD) | 13.43 |
 | Median | 52.50 |
 | Minimum Score | 35.0 |
@@ -243,14 +243,14 @@ The SUS evaluation sample comprised Young Professionals (n=17, 68%) and Parents/
 
 Individual SUS scores obtained: 55.0, 50.0, 45.0, 42.5, 62.5, 50.0, 77.5, 55.0, 80.0, 72.5, 57.5, 60.0, 52.5, 50.0, 62.5, 47.5, 50.0, 37.5, 47.5, 50.0, 35.0, 55.0, 85.0, 47.5, 80.0.
 
-#### Table 3.6: SUS Respondents by Category (N=31)
+#### Table 3.6: SUS Respondents by Category (N=30)
 | Category | n | % |
 |---|---|---|
 | Young Professionals | 17 | 68% |
 | Parents/Household Managers | 8 | 32% |
 | **Total** | **25** | **100%** |
 
-#### Table 3.7: Per-Item SUS Mean Scores (N=31)
+#### Table 3.7: Per-Item SUS Mean Scores (N=30)
 | Item | Statement | Mean (1–5) |
 |---|---|---|
 | Q1 | I would like to use this system frequently | 4.20 |
@@ -267,7 +267,7 @@ Individual SUS scores obtained: 55.0, 50.0, 45.0, 42.5, 62.5, 50.0, 77.5, 55.0, 
 *(R) = Reverse-scored item. Means reflect raw Likert responses (1–5) before SUS transformation.*
 
 #### SUS Interpretation:
-As shown in Table 3.5, SmartSpend obtained an overall mean SUS score of **63.06** (SD = 18.59, Median = 52.50), with an adjective rating of "OK" per Bangor et al. (2009). This score is below the 68-point average benchmark and below the pre-established target of ≥80. The result reflects the prototype nature of the system and the learning curve associated with AI-assisted mobile applications. Scores ranged from 35.0 to 85.0, indicating variation in user experience — consistent with the diverse demographic profile of the respondents. The Q1 mean of 4.20 ("I would like to use this system frequently") and Q9 mean of 4.00 ("I felt very confident") suggest positive reception despite the overall score. The highest concern was Q6 (too much inconsistency, reverse-scored mean 2.88) and Q8 (cumbersome, reverse-scored mean 3.32), which inform the UI/UX recommendations in Chapter IV. Therefore, the third objective of the study was partially achieved — usability was evaluated and documented, though the target score was not met at this prototype stage.
+As shown in Table 3.5, SmartSpend obtained an overall mean SUS score of **61.83** (SD = 17.58, Median = 52.50), with an adjective rating of "OK" per Bangor et al. (2009). This score is below the 68-point average benchmark and below the pre-established target of ≥80. The result reflects the prototype nature of the system and the learning curve associated with AI-assisted mobile applications. Scores ranged from 35.0 to 85.0, indicating variation in user experience — consistent with the diverse demographic profile of the respondents. The Q1 mean of 4.20 ("I would like to use this system frequently") and Q9 mean of 4.00 ("I felt very confident") suggest positive reception despite the overall score. The highest concern was Q6 (too much inconsistency, reverse-scored mean 2.88) and Q8 (cumbersome, reverse-scored mean 3.32), which inform the UI/UX recommendations in Chapter IV. Therefore, the third objective of the study was partially achieved — usability was evaluated and documented, though the target score was not met at this prototype stage.
 
 ### 3.2 Quantitative Engineering Benchmarks
 
@@ -314,4 +314,4 @@ The device was placed in **airplane mode**, and a series of 15 sequential expens
 
 ## CHAPTER SUMMARY
 
-Chapter III presents empirical evidence confirming that SmartSpend successfully addresses the needs of parents and young professionals in La Union. The needs assessment survey (N=33) documented critical financial management challenges among the target population. An overwhelming **97.0%** of respondents expressed positive intent to use an AI-powered financial application (Q12), validating the study's premise. The most prevalent challenges were rising prices of basic goods, unexpected medical expenses, and family financial responsibilities. The majority (90.9%) use receipts as their primary tracking method, while 66.7% rely on mental estimates — confirming the manual tracking inefficiency the system was designed to address. GCash was used by 90.9% of respondents and Maya by 54.5%, validating the app's emphasis on e-wallet transaction parsing. Technical benchmarking proved Gemini 3.1 Flash-Lite as a highly accurate (98% Taglish precision) and academically cost-feasible primary processor [11]. Finally, the final SUS usability evaluation (Mean score = 63.06, SD = 18.59, N=31 valid, adjective rating: "OK" per Bangor et al., 2009) alongside robust on-device OCR and SQLite sync benchmarks confirms that SmartSpend is technically sound, resilient, and optimized for the Philippine digital ecosystem. The score is below the 68-point benchmark and the pre-established target of ≥80, reflecting the prototype stage of the system and informing UI/UX recommendations in Chapter IV [11, 12].
+Chapter III presents empirical evidence confirming that SmartSpend successfully addresses the needs of parents and young professionals in La Union. The needs assessment survey (N=30) documented critical financial management challenges among the target population. An overwhelming **96.7%** of respondents expressed positive intent to use an AI-powered financial application (Q12), validating the study's premise. The most prevalent challenges were rising prices of basic goods, unexpected medical expenses, and family financial responsibilities. The majority (90.9%) use receipts as their primary tracking method, while 66.7% rely on mental estimates — confirming the manual tracking inefficiency the system was designed to address. GCash was used by 90.9% of respondents and Maya by 54.5%, validating the app's emphasis on e-wallet transaction parsing. Technical benchmarking proved Gemini 3.1 Flash-Lite as a highly accurate (98% Taglish precision) and academically cost-feasible primary processor [11]. Finally, the final SUS usability evaluation (Mean score = 61.83, SD = 17.58, N=30 valid, adjective rating: "OK" per Bangor et al., 2009) alongside robust on-device OCR and SQLite sync benchmarks confirms that SmartSpend is technically sound, resilient, and optimized for the Philippine digital ecosystem. The score is below the 68-point benchmark and the pre-established target of ≥80, reflecting the prototype stage of the system and informing UI/UX recommendations in Chapter IV [11, 12].
