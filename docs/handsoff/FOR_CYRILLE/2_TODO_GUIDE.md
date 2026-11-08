@@ -133,7 +133,19 @@ These should be past tense since the work is done:
 
 ---
 
-## 🟡 FIGURES — Insert these in Word
+### 5. Handle `[[VERIFY]]` tags
+
+Ctrl+F: `[[VERIFY`
+
+There are 5 of these — mostly in the LLM benchmark table. For each one:
+- If you can verify the number is correct → delete just the `[[VERIFY: ...]]` note
+- If you cannot verify → delete the entire cell value and write "Not measured" instead
+
+The most important one:
+> **Find:** `[[VERIFY: confirm the quota figures in the Google AI Studio rate-limit dashboard before defense.]]`  
+> **Action:** Delete this tag — quota figures (1,000 req/day for Gemini) are confirmed correct from the app's current behavior.
+
+---
 
 For each placeholder, search using Ctrl+F and replace with an actual image.
 
