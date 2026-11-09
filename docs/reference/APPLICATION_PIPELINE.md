@@ -402,4 +402,4 @@ End of month
 *SmartSpend v2.9.67 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
-*Teacher-in-Charge: Shekiro R. Raposas | Capstone Adviser: Ellen F. Mangaoang, MIT*
+*Teacher-in-Charge: Shekiro R. Raposas | Capstone Adviser: Dr. Janelli M. Raposas*

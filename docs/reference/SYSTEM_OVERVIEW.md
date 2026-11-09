@@ -344,5 +344,5 @@ The **Peso Companion System** adds an emotional, context-aware layer to SmartSpe
 *SmartSpend v2.9.67 — Lucid Frame*
 *Lorma Colleges, CCSE, BSIT 4th Year — 2026–2027, 1st Semester*
 *Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag*
-*Capstone Adviser: Ellen F. Mangaoang, MIT*
+*Capstone Adviser: Dr. Janelli M. Raposas*
 *Teacher-in-Charge: Shekiro R. Raposas*
