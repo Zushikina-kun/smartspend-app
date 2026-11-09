@@ -1,165 +1,160 @@
-# SmartSpend — Final Manuscript Tasks
-**Defense: November 10, 2026**
+# SmartSpend — Final Manuscript Tasks for Claude
+**Updated: November 9, 2026 | Defense: November 10, 2026**  
+**Working file:** `SmartSpend_Manuscript_updated.docx` (diagram PNGs also in `figures/`)
 
 ---
 
-## ✅ Already done — do NOT touch
+## ✅ ALREADY DONE — do NOT redo these
 
-- SUS: 61.83, N=30, SD=17.58, "OK" ✓
-- 30 respondents, 96.7% AI intent, 93.3% GCash ✓
-- Mangaoang DIT, Layco MIS ✓
-- 36 badges, 34 agentic actions ✓
-- All [[PENDING]], [[VERIFY]] tags filled/removed ✓
-- TBD cells → "Not measured" ✓
-- Future tense fixed ✓ (including Task 1 below)
-
----
-
-## ✅ TASK 1 — DONE
-~~Fix one remaining future tense sentence~~ — already fixed in Google Docs version ✓
-
----
-
-## 🔴 TASK 2 — Fill survey data tables
-
-**Can use AI:** Yes — use **ChatGPT** or **Claude** (free at chat.openai.com or claude.ai)
-
-**Prompt to use (copy-paste this):**
-
-> "I need help filling in a Word table for my capstone thesis. Here are the numbers:
->
-> Table 3.1 — Expense Tracking Methods (N=30, split: 13 parents, 14 young professionals, 3 both):
-> Receipts: parents=11, YP=13, both=3, total=27 (90%)
-> Mental estimates: parents=8, YP=7, both=1, total=16 (53.3%)
-> E-wallet history: parents=6, YP=6, both=1, total=13 (43.3%)
-> Notes app: parents=4, YP=5, both=0, total=9 (30%)
-> Notebook: parents=3, YP=3, both=1, total=7 (23.3%)
-> Mobile app: parents=1, YP=2, both=0, total=3 (10%)
->
-> Format this as a clean table I can copy into Word. Include frequency and percentage for each cell."
-
-**Then:** Copy the AI's output → paste into Word table at the placeholder locations.
-
-**Table 3.3 — SUS Result — just type these values:**
-| N | Mean | SD | Median | Min | Max | Adjective |
-|---|---|---|---|---|---|---|
-| 30 | 61.83 | 17.58 | 55.00 | 35.0 | 92.5 | OK |
-
-**Table 3.4 — SUS by Group:**
-| Group | n | Mean | Adjective |
-|---|---|---|---|
-| Young Professionals | 20 | ~63.5 | OK |
-| Parents/HH Managers | 10 | ~58.3 | OK |
-| Combined | 30 | 61.83 | OK |
-
-**Table 3.5 — OCR Performance:** Write `91.2% precision, 88.5% recall (preliminary developer testing)`
+- Table 3.1 added (demographics + expense tracking methods, frequency and %)
+- Table 3.3 filled: Mean = 61.83 | Grade D | Adjective = OK | Above 68 = No
+- Table 3.5 filled: modalities = "Not measured"; Overall = 91.2% precision, 88.5% recall (preliminary developer testing)
+- Figures 3.1 (flowchart), 3.2 (use case), 3.3 (navigation map) inserted with captions
+- Future tense fixed in Chapter II methodology (including "will involve"), abstract updated with SUS result, "Data are being gathered" fixed
+- Table 2.1 and Chapter II text updated to actual sample: 13 parents, 14 young professionals, 3 both
+- Interviews removed everywhere (study was survey-only): Objective 1, Ch. II, Table 2.2
+- Chapter I Technical Background converted to present tense
+- Chapter IV fixed: v3.1.2 → v3.1.0, Grade C → D, Median 52.50 → 55.00
+- Table 3.2 note: "TBD" → "Not measured"
+- "Third objective achieved" sentence fixed at end of SUS section
 
 ---
 
-## 🔴 TASK 3 — Insert system diagrams (Figures 3.1–3.3)
+## 🔴 TASK A — Verify SUS numbers (10 min — needs the raw SUS sheet)
 
-**Best AI tool: Canva AI** (free at canva.com) — has flowchart templates and AI generation
+**What to do:** The group split in Table 3.4 (Parents vs Young Professionals) is marked `[[VERIFY]]`. The old numbers (20 YP / 10 parents) conflict with the needs-survey split (13/14/3) so do NOT reuse those.
 
-**Steps:**
-1. Go to canva.com → New Design → Whiteboard or Flowchart template
-2. Use this prompt in Canva's AI generator or just use their flowchart template:
+1. Open the SUS response sheet: `docs/handsoff/survey_data/03_SUS_Responses_FINAL_N36.xlsx`
+2. Filter by respondent type (column: "Which best describes you?")
+3. For each group (Parents and Young Professionals), compute: n, mean SUS, SD, min, max
+4. Type the real numbers into Table 3.4 replacing `[[VERIFY]]` cells
 
-**For Figure 3.1 (System Flowchart) — prompt:**
-> "Create a simple system flowchart for a mobile app called SmartSpend. Flow: User Input (voice/photo/text) → AI Processing (Gemini) → SQLite Database → FHS Score → User Output (charts/alerts). Include decision points and arrows. Clean, professional style."
+**Paste the per-respondent scores to Claude and use this prompt:**
+> "Here are SUS scores for SmartSpend respondents grouped by type. Compute n, mean, SD, median, min, max for each group:
+> Parents: [paste scores]
+> Young Professionals: [paste scores]
+> Format as a table row."
 
-**For Figure 3.2 (Use Case Diagram) — prompt:**
-> "Create a use case diagram for SmartSpend mobile app. Actor: User. Use cases: Log Expense, View FHS Score, Set Budget, View Analytics, Chat with AI, Import Screenshots, Set Savings Goal. Actor: System. Use cases: Calculate FHS, Send Notifications, Sync to Cloud."
+**Also check the median:**
+- Chapter III says 55.00 and Chapter IV was updated to match — verify this is the true median from the raw data
+- SUS mean = 61.83 is confirmed correct
 
-**For Figure 3.3 (Screen Navigation Map) — just use this text as a diagram:**
-> Login → Home (FHS ring) → [Expenses | Budget | Savings | Analytics | AI Chat | Achievements | Settings]
-
-Export each as **PNG** → Insert in Word → Add caption below.
-
-**Alternative to Canva:** Use **draw.io** (free at app.diagrams.net) — drag-and-drop flowchart tool, no AI needed.
-
----
-
-## 🔴 TASK 4 — Insert app screenshots (Figures 3.4–3.10)
-
-**No AI needed** — just take screenshots from the app or use existing ones.
-
-Screenshots already saved at: `docs/debug/screenshots/` — use those.
-
-**OR use AI to enhance blurry screenshots:**
-- Upload to **Adobe Firefly** (free, firefly.adobe.com) → Generative Fill → enhance/upscale
-- OR use **Upscayl** (free desktop app) to upscale to 4x resolution
-
-| Figure | Screenshot to take/use |
-|---|---|
-| 3.4 | Login screen + "Try Demo" button |
-| 3.5 | Home screen (FHS ring + Peso mascot) |
-| 3.6 | AI chat — type "nag-lunch ako 150 pesos" → show result |
-| 3.7 | Batch import screen (with GCash screenshots loaded) |
-| 3.8 | FHS breakdown (tap the score on home screen) |
-| 3.9 | Budgets or Savings Goals screen |
-| 3.10 | Analytics screen |
-
-Caption format: `Figure 3.X. [Screen Name]. Source: Authors' own development.`
+**Grade D is correct:** 61.83 falls in the 60–69 band on the Bangor (2009) grade scale → Grade D, adjective "OK". Keep it.
 
 ---
 
-## 🔴 TASK 5 — Update TOC after inserting figures
+## 🔴 TASK B — Approval sheet — confirm names with your adviser
 
-References tab → Update Table → **Update entire table**  
-Do this for: Table of Contents, List of Tables, List of Figures
-
----
-
-## 🔴 TASK 6 — Approval sheet — verify names
-
+**Current file says:**
 ```
-Adviser:     Ms. Ellen F. Mangaoang, DIT
-Chairperson: Ms. Ellen F. Mangaoang, DIT
-Member 1:    Mr. Jopher F. Reyes, MIT
-Member 2:    Mr. Gelo Ryann M. Carbonell
-Dean:        Mr. Jeoffrey B. Layco, MIS
+Adviser:           Ellen F. Mangaoang, DIT
+Teacher-in-Charge: Shekiro R. Raposas, MIT
+Chairperson:       Jeoffrey B. Layco, MIS
+Members:           Shekiro R. Raposas, Mary-Ann Mzana
+Dean, CCSE:        Jeoffrey B. Layco, MIS
 ```
 
+**Issues to resolve before printing:**
+- Old guide said Chairperson = Mangaoang and Members = Jopher F. Reyes + Gelo Ryann M. Carbonell — which is correct?
+- Raposas is listed as BOTH Teacher-in-Charge and panel Member — is that intended?
+- Acknowledgements names "Dr. Janelli M. Mendez" as instructor in charge — is that a third person or an error?
+
+**Action:** Ask Ma'am Mangaoang to confirm the panel composition. Then fix the approval sheet to match.
+
 ---
 
-## 🔴 TASK 7 — Get signatures
+## 🔴 TASK C — Screenshots (Figures 3.4–3.11)
 
-- [ ] `FOR_MAAM_ELLEN/6_CERT_A1...pdf` → Ma'am Abby signs
-- [ ] `FOR_MAAM_ELLEN/7_CERT_A3...pdf` → Ma'am Abby signs
-- [ ] `FOR_MAAM_ELLEN/5_REVISED_QUESTIONNAIRE...pdf` → Ma'am Ellen signs
+One placeholder per figure. Replace each with the real screenshot, centered, caption stays below.
+
+| Figure | Caption in manuscript | What to capture |
+|---|---|---|
+| 3.4 | Login and Demo Mode Screen | Login screen + "Try Demo" button |
+| 3.5 | Home Dashboard | Home screen (FHS ring + Peso) |
+| 3.6 | Expense Logging Through Peso Chat | Type "nag-lunch ako 150 pesos" → show logged result |
+| 3.7 | Receipt Scanning and Batch Screenshot Import | Batch import screen with GCash screenshots loaded |
+| 3.8 | Financial Health Score Breakdown | Tap the FHS score → breakdown screen |
+| 3.9 | Budgets, Safe-to-Spend, and Savings Goals | Budgets or Savings Goals screen |
+| 3.10 | Local AI Mode Setup | Local AI setup screen — OR retitle caption to "Analytics Dashboard" if using analytics screenshot |
+| 3.11 | SUS Computation Table | Screenshot of your SUS scoring sheet |
+
+**Source:** `docs/debug/screenshots/` folder — use existing screenshots if possible  
+**Blurry?** → Use **Upscayl** (free, upscayl.org) to 4x upscale before inserting  
+**Note:** If you send the images to Claude, Claude can guide the insertion.
+
+---
+
+## 🔴 TASK D — Table of Contents (manually typed — Update Field will NOT work)
+
+The TOC, List of Tables, and List of Figures are typed by hand (not Word fields). After inserting screenshots:
+
+1. **Add missing entries for Chapter III:** Tables 3.1–3.5 and Figures 3.1–3.11 are currently absent — add them to the List of Tables and List of Figures
+2. **Re-check every page number** against the final layout — figure pages in Chapter III will have moved
+3. **Table 2.1 note:** it now has a "Both Groups" row — update the List of Tables entry if needed
+
+---
+
+## 🔴 TASK E — Inconsistencies that need your decision
+
+These need a human call — Claude or Kiro cannot decide for you:
+
+1. **Banks/e-wallets count:** Chapter II says "30+ Philippine banks and e-wallets" but Chapter III says "20 banks + 5 e-wallets" — pick one and fix the other
+2. **Appendix reference:** Technical Validation Certificate is cited as "(Appendix A)" but Appendix A is the survey questionnaire — fix the reference to the correct appendix letter
+3. **Two SUS scales:** Figure 2.1 labels 60–69 as "Marginal" (Brooke grade scale) but results use "OK" (Bangor adjective scale). Both are correct but different systems. At the defense: *"Figure 2.1 shows the Brooke/Sauro grade scale; our results section uses the Bangor (2009) adjective scale. Both place 61.83 in the same band."*
+4. **Same group or different?** Chapter III opening still implies the 30 needs-survey respondents and the 30 SUS respondents are the same group. If they are different people, add a sentence clarifying this (see Task A)
+
+---
+
+## 🔴 TASK F — Signatures (physical — bring to Ma'am Abby and Ma'am Ellen)
+
+- [ ] `FOR_MAAM_ELLEN/6_CERT_A1_Survey_Questionnaire_Validation.pdf` → Ma'am Abby signs
+- [ ] `FOR_MAAM_ELLEN/7_CERT_A3_FHS_Formula_Validation.pdf` → Ma'am Abby signs
+- [ ] `FOR_MAAM_ELLEN/5_REVISED_QUESTIONNAIRE_FOR_VALIDATION.pdf` → Ma'am Ellen signs
 
 ---
 
 ## ✅ Final check before printing
 
-Ctrl+F these — must be **0 results**:
-- `[[` → 0
-- `[Figure to be inserted` → 0 (replaced with actual figures)
-- `will involve` in methodology → 0
+**Ctrl+F in Word — must be 0 results:**
+- `[[` → 0 (currently the [[VERIFY]] cells in Table 3.4 — fill those first)
+- `to be inserted` → 0 (screenshot placeholders)
+- `will involve` → 0 (already fixed)
 
-Then: File → Save As → PDF → scroll through → **Print 3 copies** (Word only, NOT LibreOffice)
-
----
-
-## 🤖 AI Tools Summary
-
-| Task | Best Tool | Link | Cost |
-|---|---|---|---|
-| Data tables (Task 2) | ChatGPT or Claude | chat.openai.com / claude.ai | Free |
-| Flowchart / diagrams (Task 3) | Canva AI or draw.io | canva.com / app.diagrams.net | Free |
-| Screenshot upscaling (Task 4) | Upscayl | upscayl.org | Free |
-| Writing help (any section) | ChatGPT or Claude | chat.openai.com | Free |
-| Reference checking | Google Scholar | scholar.google.com | Free |
+**Then:**
+1. Open in **Word** (NOT LibreOffice — LibreOffice cannot render this file's layout reliably)
+2. Check TOC page numbers by hand (Task D)
+3. Check figure sizes and page breaks visually
+4. File → Save As → PDF
+5. Scroll through every page in the PDF before printing
+6. **Print 3 copies**
 
 ---
 
-## 🎯 What to say at the defense
+## 🤖 Claude prompts for remaining tasks
+
+**For Task A (SUS group stats):**
+> "Here are per-respondent SUS scores for SmartSpend. Group A (Parents): [paste scores]. Group B (Young Professionals): [paste scores]. Compute for each group: n, mean, SD, median, min, max. Format as a table."
+
+**For Task C (screenshot captions):**
+> "I need APA-style figure captions for these SmartSpend app screenshots. Format: 'Figure 3.X. [Descriptive title]. Adapted from the SmartSpend mobile application (Lucid Frame, 2026).' Figures: 3.4 Login screen, 3.5 Home dashboard, 3.6 AI chat logging, 3.7 Batch import, 3.8 FHS breakdown, 3.9 Budgets, 3.10 Local AI, 3.11 SUS scoring sheet."
+
+**For Task E (inconsistency fixes):**
+> "I have two conflicting numbers in my capstone thesis: Chapter II says '30+ Philippine banks and e-wallets' but Chapter III says '20 banks + 5 e-wallets = 25 total'. The app currently has [insert real number]. Help me write a consistent sentence for both chapters."
+
+**For any paragraph writing:**
+> "I need a 2-sentence paragraph in formal academic English for my capstone thesis. Topic: [describe what the paragraph should say]. It should be in past tense since this is in the Results section."
+
+---
+
+## 🎯 Defense talking points (November 10, 2026)
 
 1. **"96.7% of our 30 respondents want an AI financial app"** — SmartSpend delivers that
 2. **"93.3% use GCash"** — batch import reads GCash screenshots, zero typing needed
-3. **"FHS adapted from CBA-Melbourne Institute (2018)"** — not invented, academically grounded
-4. **"SUS = 61.83, adjective 'OK' per Bangor 2009"** — below 68 benchmark, acknowledged prototype limitation
-5. **"Free, offline, runs on budget phones"** — not for rich people only
+3. **"FHS adapted from CBA-Melbourne Institute (2018)"** — academically grounded, labeled a prototype indicator
+4. **"SUS = 61.83, adjective 'OK' per Bangor 2009"** — below 68 benchmark; acknowledged prototype limitation
+5. **"Free, offline-first, runs on budget phones"** — not for rich people only
+6. **"OCR numbers are preliminary developer testing"** — not a formal evaluation; stated as such in the manuscript
 
 ---
-*Defense: November 10, 2026 | You got this 🎯*
+
+*Defense: November 10, 2026*
