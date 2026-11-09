@@ -400,3 +400,26 @@ ightarrow$ Clean standardized database output.
 
 ### 3. Source Grounding & Defense Alignment
 *   **Academic Base:** Direct summation of the study's conclusions, engineering achievements, and theoretical baseline contributions [586, 672, 682, 684].
+
+---
+
+## SLIDE 18: Questions and Discussion
+
+### 1. Slide Configuration
+*   **Slide Title:** Salamat po! (Thank you)
+*   **Visual Layout:** Dark background slide matching the title slide aesthetic, with the SmartSpend logo and closing message.
+*   **On-Slide Content:**
+    *   **Closing Message:** "Questions and discussion"
+    *   **Team Names:** Directo, Rubis, Madayag
+    *   **Adviser Credit:** Adviser: Ellen F. Mangaoang, DIT
+    *   **Repository Link:** github.com/Zushikina-kun/smartspend-app
+
+### 2. Presenter's Speaking Script
+> "Salamat po! Thank you very much for your time and attention. We are now open for your questions, feedback, and discussion. Our team—Brix Directo, Cyrille John Rubis, and Djaunathan Albert Madayag—along with our adviser, Ms. Ellen F. Mangaoang, DIT, are ready to address any questions the panel may have regarding our research methodology, technical implementation, evaluation results, or future development roadmap.
+> 
+> For those interested in exploring the codebase, our complete project repository including all source code, documentation, and technical specifications is publicly available on GitHub at github.com/Zushikina-kun/smartspend-app. We also have prepared detailed answers to anticipated questions in our DEFENSE_QA_PREP.md document and technical breakdowns in our FHS_FORMULA_DERIVATION_DEFENSE_GUIDE.md.
+> 
+> We welcome your questions."
+
+### 3. Source Grounding & Defense Alignment
+*   **Academic Base:** Standard closing slide for academic defense presentations. "Salamat po" demonstrates cultural grounding and respect for the Filipino academic context, aligning with the project's local-first design philosophy.
