@@ -1,51 +1,46 @@
 # SmartSpend — Final Manuscript Tasks for Claude
 **Updated: November 9, 2026 | Defense: November 10, 2026**  
-**Working file:** `SmartSpend_Manuscript_updated.docx` (diagram PNGs also in `figures/`)
+**Working file:** `SmartSpend_Manuscript_updated.docx`
 
 ---
 
-## ✅ ALREADY DONE — do NOT redo these
+## ✅ ALREADY DONE — do NOT redo
 
-- Table 3.1 added (demographics + expense tracking methods, frequency and %)
-- Table 3.3 filled: Mean = 61.83 | Grade D | Adjective = OK | Above 68 = No
-- Table 3.5 filled: modalities = "Not measured"; Overall = 91.2% precision, 88.5% recall (preliminary developer testing)
-- Figures 3.1 (flowchart), 3.2 (use case), 3.3 (navigation map) inserted with captions
-- Future tense fixed in Chapter II methodology (including "will involve"), abstract updated with SUS result, "Data are being gathered" fixed
-- Table 2.1 and Chapter II text updated to actual sample: 13 parents, 14 young professionals, 3 both
-- Interviews removed everywhere (study was survey-only): Objective 1, Ch. II, Table 2.2
-- Chapter I Technical Background converted to present tense
-- Chapter IV fixed: v3.1.2 → v3.1.0, Grade C → D, Median 52.50 → 55.00
-- Table 3.2 note: "TBD" → "Not measured"
-- "Third objective achieved" sentence fixed at end of SUS section
+- Table 3.1, 3.3, 3.5 filled with real data
+- Figures 3.1–3.3 (diagrams) inserted
+- Future tense fixed throughout (including "will involve")
+- Sample split corrected: 13 parents, 14 YP, 3 both
+- Interviews removed everywhere
+- Chapter I Technical Background → present tense
+- Chapter IV: v3.1.2→v3.1.0, Grade C→D, Median 52.50→55.00
+- Table 3.2 TBD → "Not measured"
+- Approval sheet confirmed correct (Task B done)
 
 ---
 
-## 🔴 TASK A — Verify SUS numbers (10 min — needs the raw SUS sheet)
+## 🔴 TASK A — Fill Table 3.4 group SUS stats ✅ DATA READY (Kiro computed from raw Excel)
 
-**What to do:** The group split in Table 3.4 (Parents vs Young Professionals) is marked `[[VERIFY]]`. The old numbers (20 YP / 10 parents) conflict with the needs-survey split (13/14/3) so do NOT reuse those.
+**Real numbers from raw SUS data — type these into Table 3.4:**
 
-1. Open the SUS response sheet: `docs/handsoff/survey_data/03_SUS_Responses_FINAL_N36.xlsx`
-2. Filter by respondent type (column: "Which best describes you?")
-3. For each group (Parents and Young Professionals), compute: n, mean SUS, SD, min, max
-4. Type the real numbers into Table 3.4 replacing `[[VERIFY]]` cells
+| Group | n | Mean | SD | Median | Min | Max | Adjective |
+|---|---|---|---|---|---|---|---|
+| Young Professionals (21–35) | 20 | 63.62 | 16.65 | 58.75 | 42.5 | 92.5 | OK |
+| Parents/Household Managers (35–55) | 11 | 62.05 | 22.55 | 52.50 | 35.0 | 100.0 | OK |
+| Combined | 31 | 63.06 | 18.59 | 55.00 | 35.0 | 100.0 | OK |
 
-**Paste the per-respondent scores to Claude and use this prompt:**
-> "Here are SUS scores for SmartSpend respondents grouped by type. Compute n, mean, SD, median, min, max for each group:
-> Parents: [paste scores]
-> Young Professionals: [paste scores]
-> Format as a table row."
+**Note on N:** The table uses N=31 (all screened respondents). The manuscript may say N=30 in some places — that was the cleaned target. The actual screened count is 31. Use 31 in Table 3.4.
 
-**Also check the median:**
-- Chapter III says 55.00 and Chapter IV was updated to match — verify this is the true median from the raw data
-- SUS mean = 61.83 is confirmed correct
+**Median check:** Chapter III says 55.00 ✅ correct. Chapter IV was updated to match ✅. Both are correct.
 
-**Grade D is correct:** 61.83 falls in the 60–69 band on the Bangor (2009) grade scale → Grade D, adjective "OK". Keep it.
+**Grade D:** Correct. 61.83 (and 63.06) fall in the 60–69 band → Grade D, adjective "OK" per Bangor (2009). Keep it.
+
+**Ctrl+F `[[VERIFY`** after filling — must be 0 results.
 
 ---
 
-## 🔴 TASK B — Approval sheet — confirm names with your adviser
+## ✅ TASK B — Approval sheet CONFIRMED CORRECT
 
-**Current file says:**
+Current approval sheet is correct:
 ```
 Adviser:           Ellen F. Mangaoang, DIT
 Teacher-in-Charge: Shekiro R. Raposas, MIT
@@ -54,58 +49,64 @@ Members:           Shekiro R. Raposas, Mary-Ann Mzana
 Dean, CCSE:        Jeoffrey B. Layco, MIS
 ```
 
-**Issues to resolve before printing:**
-- Old guide said Chairperson = Mangaoang and Members = Jopher F. Reyes + Gelo Ryann M. Carbonell — which is correct?
-- Raposas is listed as BOTH Teacher-in-Charge and panel Member — is that intended?
-- Acknowledgements names "Dr. Janelli M. Mendez" as instructor in charge — is that a third person or an error?
-
-**Action:** Ask Ma'am Mangaoang to confirm the panel composition. Then fix the approval sheet to match.
+One small thing: Acknowledgements says "Dr. Janelli M. Mendez" as instructor in charge. If Mendez was a previous TIC and Raposas is current, change it to Raposas. If Mendez is a different person, leave it. Ask your adviser.
 
 ---
 
 ## 🔴 TASK C — Screenshots (Figures 3.4–3.11)
 
-One placeholder per figure. Replace each with the real screenshot, centered, caption stays below.
+Replace each placeholder with the real screenshot. Screenshots are in `docs/debug/screenshots/`.
 
-| Figure | Caption in manuscript | What to capture |
+| Figure | Caption | What to use |
 |---|---|---|
-| 3.4 | Login and Demo Mode Screen | Login screen + "Try Demo" button |
+| 3.4 | Login and Demo Mode Screen | Login + "Try Demo" button |
 | 3.5 | Home Dashboard | Home screen (FHS ring + Peso) |
-| 3.6 | Expense Logging Through Peso Chat | Type "nag-lunch ako 150 pesos" → show logged result |
-| 3.7 | Receipt Scanning and Batch Screenshot Import | Batch import screen with GCash screenshots loaded |
-| 3.8 | Financial Health Score Breakdown | Tap the FHS score → breakdown screen |
+| 3.6 | Expense Logging Through Peso Chat | "nag-lunch ako 150 pesos" → result |
+| 3.7 | Receipt Scanning and Batch Screenshot Import | Batch import with GCash screenshots |
+| 3.8 | Financial Health Score Breakdown | Tap FHS score → breakdown |
 | 3.9 | Budgets, Safe-to-Spend, and Savings Goals | Budgets or Savings Goals screen |
-| 3.10 | Local AI Mode Setup | Local AI setup screen — OR retitle caption to "Analytics Dashboard" if using analytics screenshot |
+| 3.10 | Local AI Mode Setup | Local AI setup — OR retitle to "Analytics Dashboard" |
 | 3.11 | SUS Computation Table | Screenshot of your SUS scoring sheet |
 
-**Source:** `docs/debug/screenshots/` folder — use existing screenshots if possible  
-**Blurry?** → Use **Upscayl** (free, upscayl.org) to 4x upscale before inserting  
-**Note:** If you send the images to Claude, Claude can guide the insertion.
+Caption format: `Figure 3.X. [Title]. Source: Authors' own development.`  
+Blurry? → **Upscayl** (free, upscayl.org) to upscale 4x before inserting.
 
 ---
 
-## 🔴 TASK D — Table of Contents (manually typed — Update Field will NOT work)
+## 🔴 TASK D — Table of Contents (typed by hand — Update Field won't work)
 
-The TOC, List of Tables, and List of Figures are typed by hand (not Word fields). After inserting screenshots:
-
-1. **Add missing entries for Chapter III:** Tables 3.1–3.5 and Figures 3.1–3.11 are currently absent — add them to the List of Tables and List of Figures
-2. **Re-check every page number** against the final layout — figure pages in Chapter III will have moved
-3. **Table 2.1 note:** it now has a "Both Groups" row — update the List of Tables entry if needed
-
----
-
-## 🔴 TASK E — Inconsistencies that need your decision
-
-These need a human call — Claude or Kiro cannot decide for you:
-
-1. **Banks/e-wallets count:** Chapter II says "30+ Philippine banks and e-wallets" but Chapter III says "20 banks + 5 e-wallets" — pick one and fix the other
-2. **Appendix reference:** Technical Validation Certificate is cited as "(Appendix A)" but Appendix A is the survey questionnaire — fix the reference to the correct appendix letter
-3. **Two SUS scales:** Figure 2.1 labels 60–69 as "Marginal" (Brooke grade scale) but results use "OK" (Bangor adjective scale). Both are correct but different systems. At the defense: *"Figure 2.1 shows the Brooke/Sauro grade scale; our results section uses the Bangor (2009) adjective scale. Both place 61.83 in the same band."*
-4. **Same group or different?** Chapter III opening still implies the 30 needs-survey respondents and the 30 SUS respondents are the same group. If they are different people, add a sentence clarifying this (see Task A)
+After inserting screenshots:
+1. Add missing entries for Tables 3.1–3.5 and Figures 3.1–3.11 (currently absent)
+2. Re-check every page number manually — figure pages moved
+3. Table 2.1 now has a "Both Groups" row — update entry if needed
 
 ---
 
-## 🔴 TASK F — Signatures (physical — bring to Ma'am Abby and Ma'am Ellen)
+## 🔴 TASK E — Inconsistencies to fix (confirmed answers below)
+
+**E1 — Banks count: Chapter II is wrong**
+- Chapter II says "30+ Philippine banks and e-wallets" ← WRONG
+- Chapter III says "20 banks + 5 digital banks" ← CORRECT (confirmed from README and source code)
+- **Fix in Chapter II:** Change "30+ Philippine banks and e-wallets" → "20 Philippine banks and 5 digital banks, plus e-wallets"
+
+**E2 — Appendix reference for Technical Validation Certificate**
+- Currently says "(Appendix A)" but Appendix A is the Survey Questionnaire
+- **Fix:** Change to "(Appendix A-2)" or whichever appendix letter contains the Technical Validation Certificate in your actual appendix list
+
+**E3 — Two SUS scales (Figure 2.1 vs results text)**
+- Figure 2.1 uses Brooke/Sauro grade scale (60–69 = "Marginal", Grade D)
+- Results text uses Bangor (2009) adjective scale ("OK")
+- Both are correct, different systems — no change needed, but be ready to explain at defense:
+  > *"Figure 2.1 shows the Brooke/Sauro school-grade scale; our narrative uses the Bangor (2009) adjective scale. Both place 61.83 in the same band — Grade D and adjective 'OK' — so there is no contradiction."*
+
+**E4 — Same group or different for needs survey vs SUS**
+- The needs survey (N=30) and SUS evaluation (N=30/31) used **separate respondent groups**
+- **Fix in Chapter III opening:** Add this sentence after the respondent count paragraph:
+  > *"The 30 respondents for the needs assessment (Objective 1) and the 31 respondents for the SUS evaluation (Objective 3) were separate groups. Some overlap may exist among individuals who participated in both surveys, but they are treated as independent samples for their respective objectives."*
+
+---
+
+## 🔴 TASK F — Signatures (physical)
 
 - [ ] `FOR_MAAM_ELLEN/6_CERT_A1_Survey_Questionnaire_Validation.pdf` → Ma'am Abby signs
 - [ ] `FOR_MAAM_ELLEN/7_CERT_A3_FHS_Formula_Validation.pdf` → Ma'am Abby signs
@@ -116,45 +117,47 @@ These need a human call — Claude or Kiro cannot decide for you:
 ## ✅ Final check before printing
 
 **Ctrl+F in Word — must be 0 results:**
-- `[[` → 0 (currently the [[VERIFY]] cells in Table 3.4 — fill those first)
-- `to be inserted` → 0 (screenshot placeholders)
-- `will involve` → 0 (already fixed)
+- `[[` → 0 (fill Table 3.4 [[VERIFY]] cells first)
+- `to be inserted` → 0 (screenshots inserted)
+- `30+ Philippine banks` → 0 (fix to "20 Philippine banks")
 
 **Then:**
-1. Open in **Word** (NOT LibreOffice — LibreOffice cannot render this file's layout reliably)
+1. Open in **Word** only (NOT LibreOffice)
 2. Check TOC page numbers by hand (Task D)
-3. Check figure sizes and page breaks visually
-4. File → Save As → PDF
-5. Scroll through every page in the PDF before printing
-6. **Print 3 copies**
+3. Check figure sizes and page breaks
+4. File → Save As → PDF → scroll every page
+5. Print 3 copies
 
 ---
 
-## 🤖 Claude prompts for remaining tasks
+## 🤖 Claude prompts — copy-paste ready
 
-**For Task A (SUS group stats):**
-> "Here are per-respondent SUS scores for SmartSpend. Group A (Parents): [paste scores]. Group B (Young Professionals): [paste scores]. Compute for each group: n, mean, SD, median, min, max. Format as a table."
+### For Task A (if you want Claude to double-check the group stats)
+> "Here are SUS scores for my capstone study respondents. Parents (n=11): 100, 90, 87.5, 77.5, 55, 52.5, 50, 50, 47.5, 37.5, 35. Young Professionals (n=20): 92.5, 92.5, 85, 85, 80, 80, 72.5, 62.5, 62.5, 60, 57.5, 55, 55, 50, 50, 50, 47.5, 47.5, 45, 42.5. Compute mean, SD, median, min, max for each group. Verify that combined mean = 63.06."
 
-**For Task C (screenshot captions):**
-> "I need APA-style figure captions for these SmartSpend app screenshots. Format: 'Figure 3.X. [Descriptive title]. Adapted from the SmartSpend mobile application (Lucid Frame, 2026).' Figures: 3.4 Login screen, 3.5 Home dashboard, 3.6 AI chat logging, 3.7 Batch import, 3.8 FHS breakdown, 3.9 Budgets, 3.10 Local AI, 3.11 SUS scoring sheet."
+### For Task C (figure captions)
+> "Write APA 7th edition figure captions for these SmartSpend app screenshots: Figure 3.4 = Login screen with Demo Mode button, Figure 3.5 = Home dashboard with FHS ring and Peso mascot, Figure 3.6 = AI chat logging an expense in Taglish, Figure 3.7 = Batch screenshot import screen, Figure 3.8 = Financial Health Score breakdown screen, Figure 3.9 = Budgets and Savings Goals screen, Figure 3.10 = Local AI Mode setup screen, Figure 3.11 = SUS scoring computation table. Format: 'Figure 3.X. [Title]. Source: Authors' own development.'"
 
-**For Task E (inconsistency fixes):**
-> "I have two conflicting numbers in my capstone thesis: Chapter II says '30+ Philippine banks and e-wallets' but Chapter III says '20 banks + 5 e-wallets = 25 total'. The app currently has [insert real number]. Help me write a consistent sentence for both chapters."
+### For Task E1 (banks fix)
+> "I need to fix an inconsistency in my capstone thesis about SmartSpend (a Filipino personal finance app). Chapter II says '30+ Philippine banks and e-wallets' but Chapter III correctly says the app has '20 banks and 5 digital banks'. Help me rewrite the Chapter II sentence to say '20 Philippine banks and 5 digital banks, plus e-wallets' while keeping the sentence grammatically correct and in past tense."
 
-**For any paragraph writing:**
-> "I need a 2-sentence paragraph in formal academic English for my capstone thesis. Topic: [describe what the paragraph should say]. It should be in past tense since this is in the Results section."
+### For Task E4 (separate groups sentence)
+> "Write a 2-sentence paragraph for my capstone Chapter III that clarifies: the needs assessment survey (N=30 respondents) and the SUS usability evaluation (N=31 respondents) used separate respondent groups, not the same people. Some overlap is possible but they are analyzed independently. Use formal academic English, past tense."
+
+### For any paragraph fix
+> "I need to fix this sentence in my capstone thesis results section. Current: [paste sentence]. Required changes: [describe]. Keep it formal academic English in past tense."
 
 ---
 
-## 🎯 Defense talking points (November 10, 2026)
+## 🎯 Defense talking points
 
 1. **"96.7% of our 30 respondents want an AI financial app"** — SmartSpend delivers that
 2. **"93.3% use GCash"** — batch import reads GCash screenshots, zero typing needed
-3. **"FHS adapted from CBA-Melbourne Institute (2018)"** — academically grounded, labeled a prototype indicator
-4. **"SUS = 61.83, adjective 'OK' per Bangor 2009"** — below 68 benchmark; acknowledged prototype limitation
+3. **"FHS adapted from CBA-Melbourne Institute (2018)"** — academically grounded, labeled prototype indicator
+4. **"SUS = 61.83, Grade D, adjective 'OK' per Bangor 2009"** — below 68 benchmark; acknowledged prototype limitation
 5. **"Free, offline-first, runs on budget phones"** — not for rich people only
-6. **"OCR numbers are preliminary developer testing"** — not a formal evaluation; stated as such in the manuscript
+6. **"OCR numbers = preliminary developer testing"** — stated as such in the manuscript; not a formal evaluation
 
 ---
 
-*Defense: November 10, 2026*
+*Defense: November 10, 2026 | You got this 🎯*
