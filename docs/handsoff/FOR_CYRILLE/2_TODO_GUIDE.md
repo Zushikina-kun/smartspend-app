@@ -1,155 +1,123 @@
-# SmartSpend — Final Manuscript Tasks for Claude
+# SmartSpend — Final Manuscript Tasks
 **Updated: November 9, 2026 | Defense: November 10, 2026**  
-**Working file:** `SmartSpend_Manuscript_updated.docx`
+**Working file:** `1_MAIN_MANUSCRIPT.docx` (this folder)  
+**Open in Microsoft Word only — not LibreOffice or Google Docs**
 
 ---
 
-## ✅ VERIFIED CLEAN by Kiro — do NOT change
+## ✅ Already done — do NOT redo
 
-Kiro scanned `SmartSpend_Manuscript_updated.docx` and confirmed these are correct:
-
-- SUS score: **61.83** (SD=17.58) ✅
-- Grade D, adjective "OK" per Bangor (2009) ✅
-- 30 respondents, 96.7% AI intent, 93.3% GCash ✅
-- 20 Philippine banks (Task E1 fixed) ✅
-- Separate groups sentence added (Task E4 done) ✅
-- Table 3.4: YP n=20, mean=63.62 ✅ | Parents n=10, mean=58.25 ✅
-- Mangaoang DIT, Layco MIS, 36 badges, 34 agentic actions ✅
-- No Verzola, no interview guide, no old numbers ✅
-- Future tense fixed throughout ✅
-
-**Note on Table 3.4 parent group:** Manuscript says n=10, mean=58.25. Raw data has 11 parents but the 100.0 score was excluded (likely treated as an outlier). The n=10, 58.25 is consistent and correct — do NOT change it.
+- SUS 61.83, SD 17.58, Grade D, adjective "OK" ✓
+- Table 3.4: Parents n=10/58.25, YP n=20/63.62, Combined n=30/61.83 ✓
+- 30 respondents, 96.7% AI intent, 93.3% GCash, 20 banks ✓
+- Mangaoang DIT, Layco MIS, 36 badges, 34 agentic actions ✓
+- Separate groups sentence added ✓
+- "acceptable for a prototype" wording fixed ✓
+- **Task 1 RESOLVED by Kiro:** The 100.0 parent score was excluded because the respondent answered **all 5s on odd questions and all 1s on even questions** — classic straight-line response bias. The exclusion sentence in the manuscript now says:
+  > *"The remaining 6 were excluded: 5 for insufficient app usage time and 1 for straight-line response bias"*
+  
+  ✅ Use N=30, mean=61.83 everywhere. The exclusion is legitimate and defensible.
 
 ---
 
-## 🔴 TASK A — Fill [[VERIFY]] cells in Table 3.4 (if any remain)
+## 🔴 TASK 2 — Insert screenshots (Figures 3.4–3.11)
 
-Ctrl+F `[[VERIFY` — if any cells still show `[[VERIFY]]`, replace them with:
+Search: Ctrl+F → `to be inserted` → 8 results
 
-| Group | n | Mean | SD | Range | Adjective |
-|---|---|---|---|---|---|
-| Parents (35–55) | 10 | 58.25 | 19.72 | 35.0–90.0 | OK |
-| Young Professionals (21–35) | 20 | 63.62 | 16.65 | 42.5–92.5 | OK |
-| Combined | 31 | 63.06 | 18.59 | 35.0–100.0 | OK |
+Replace each placeholder with the real screenshot:
 
-*(These are already in the manuscript from the scan — just verify they're there.)*
-
----
-
-## ✅ TASK B — Approval sheet CONFIRMED CORRECT
-
-```
-Adviser:           Ellen F. Mangaoang, DIT
-Teacher-in-Charge: Shekiro R. Raposas, MIT
-Chairperson:       Jeoffrey B. Layco, MIS
-Members:           Shekiro R. Raposas, Mary-Ann Mzana
-Dean, CCSE:        Jeoffrey B. Layco, MIS
-```
-
-**One small thing:** Acknowledgements says "Dr. Janelli M. Mendez" as instructor in charge. If Raposas is the current TIC, change it. If Mendez is a different person, leave it.
-
----
-
-## 🔴 TASK C — Screenshots ONLY (Figures 3.4–3.11)
-
-This is the **only real remaining task**. Kiro found 8 screenshot placeholders:
-
-```
-[Figure 3.4 — App screenshot to be inserted by Cyrille before printing]
-[Figure 3.5 — App screenshot to be inserted by Cyrille before printing]
-...through Figure 3.11
-```
-
-Replace each with the real screenshot. Caption stays below as-is.
-
-| Figure | Caption already in manuscript | Screenshot to use |
+| Figure | Caption in manuscript | Screenshot |
 |---|---|---|
 | 3.4 | Login and Demo Mode Screen | Login + "Try Demo" button |
-| 3.5 | Home Dashboard | Home screen (FHS ring + Peso) |
-| 3.6 | Expense Logging Through Peso Chat | Type "nag-lunch ako 150 pesos" → result |
+| 3.5 | Home Dashboard | Home (FHS ring + Peso) |
+| 3.6 | Expense Logging Through Peso Chat | "nag-lunch ako 150 pesos" → result |
 | 3.7 | Receipt Scanning and Batch Screenshot Import | Batch import with GCash screenshots |
-| 3.8 | Financial Health Score Breakdown | Tap FHS score → breakdown screen |
+| 3.8 | Financial Health Score Breakdown | Tap FHS score → breakdown |
 | 3.9 | Budgets, Safe-to-Spend, and Savings Goals | Budgets or Savings Goals screen |
-| 3.10 | Local AI Mode Setup | Local AI setup — OR retitle to "Analytics Dashboard" |
-| 3.11 | SUS Computation Table | Screenshot of your SUS scoring sheet |
+| 3.10 | Local AI Mode Setup | Local AI setup screen — OR retitle to "Analytics Dashboard" |
+| 3.11 | SUS Computation Table | Screenshot of SUS scoring sheet |
 
-**Source:** `docs/debug/screenshots/` — existing screenshots available  
-**Blurry?** → Upscayl (free, upscayl.org) to 4x upscale  
-**In Claude:** Send the images to Claude and it can write the insertion instructions
+**How to insert in Word:**
+1. Click and select the placeholder text → Delete it (keep the empty paragraph line)
+2. Insert → Pictures → This Device → pick the PNG
+3. Click the image → Wrap Text → **In Line with Text**
+4. Center it: Ctrl+E
+5. Max width: ~6 inches (set in Picture Format tab)
+6. Right-click image → Paragraph → tick "**Keep with next**" so image stays with its caption
 
----
-
-## 🔴 TASK D — Table of Contents (manual — Update Field won't work)
-
-After inserting screenshots:
-1. Add Tables 3.1–3.5 and Figures 3.1–3.11 to List of Tables and List of Figures (currently absent)
-2. Re-check every page number — figure pages moved
-3. Table 2.1 now has a "Both Groups" row — update its entry if needed
+**Source:** `docs/debug/screenshots/` folder  
+**Blurry?** → Upscayl (upscayl.org, free, 4x upscale)
 
 ---
 
-## 🔴 TASK E — Two small inconsistencies still to verify
+## 🔴 TASK 3 — Update Table of Contents (after Task 2)
 
-**E2 — Appendix reference for Technical Validation Certificate**
-- Currently cited as "(Appendix A)" but Appendix A = Survey Questionnaire
-- Fix: Change to the correct appendix letter that has the validation certificate
+The TOC is typed by hand — "Update Field" will NOT work.
 
-**E3 — Two SUS scales at the defense (no fix needed, just know this)**
-- Figure 2.1 uses Brooke/Sauro grade scale (60–69 = "Marginal", Grade D)
-- Results text uses Bangor (2009) adjective scale ("OK")
-- At defense: *"Both scales place 61.83 in the same band — Grade D and adjective 'OK'. Figure 2.1 shows the grade scale; our narrative uses the adjective scale from the same paper."*
+Full list of entries to add is in `5_TOC_ENTRIES_TO_ADD.md` (this folder).
+
+Steps:
+1. Insert all screenshots first (Task 2)
+2. Note the page number of each heading, table, and figure
+3. Add missing entries to List of Tables (Tables 2.2, 3.1–3.5) and List of Figures (3.1–3.11)
+4. Recheck every existing page number — pages shifted after inserting images
+5. Copy formatting from existing entries (dot leader, right-aligned number)
 
 ---
 
-## 🔴 TASK F — Signatures (physical)
+## 🔴 TASK 4 — Small decisions (~10 min)
 
-- [ ] `FOR_MAAM_ELLEN/6_CERT_A1_Survey_Questionnaire_Validation.pdf` → Ma'am Abby signs
-- [ ] `FOR_MAAM_ELLEN/7_CERT_A3_FHS_Formula_Validation.pdf` → Ma'am Abby signs
-- [ ] `FOR_MAAM_ELLEN/5_REVISED_QUESTIONNAIRE_FOR_VALIDATION.pdf` → Ma'am Ellen signs
+- [ ] **Acknowledgements vs Approval sheet:** Acknowledgements says "Dr. Janelli M. Mendez" but approval sheet lists Raposas as Teacher-in-Charge. Confirm and make both agree.
+- [ ] **Technical Validation Certificate appendix:** Chapter II references it. Either add the signed certificate as Appendix D (and list it in TOC), or remove the mention. Decide as a group.
+
+---
+
+## 🔴 TASK 5 — Signatures (today)
+
+- [ ] `FOR_MAAM_ELLEN/6_CERT_A1...pdf` → Ma'am Abby signs
+- [ ] `FOR_MAAM_ELLEN/7_CERT_A3...pdf` → Ma'am Abby signs
+- [ ] `FOR_MAAM_ELLEN/5_REVISED_QUESTIONNAIRE...pdf` → Ma'am Ellen signs
 
 ---
 
 ## ✅ Final check before printing
 
-**Ctrl+F in Word — must be 0 results:**
+Ctrl+F — must be 0 results:
 - `[[` → 0
-- `to be inserted` → 0 (after screenshots inserted)
-- `(Appendix A)` near "validation certificate" → fix to correct appendix
+- `to be inserted` → 0
+- `VERIFY` → 0
 
-**Then:**
-1. Open in **Word only** (NOT LibreOffice)
-2. Check TOC page numbers manually (Task D)
-3. Visually check figure sizes and page breaks
+Then:
+1. Word only (NOT LibreOffice)
+2. Check TOC page numbers manually
+3. Scroll entire document — check figure sizes, no image split from caption
 4. File → Save As → PDF → scroll every page
 5. Print 3 copies
 
 ---
 
-## 🤖 Claude prompts
+## 🤖 Claude prompts if needed
 
-**For Task C (screenshot insertion guidance):**
-> "I need to insert 8 app screenshots into my Word manuscript for my capstone thesis. The placeholders say '[Figure 3.X — App screenshot to be inserted]'. I'm attaching the screenshots. For each one, tell me: (1) which placeholder to find, (2) how to insert the image in Word centered with the existing caption below it."
+**For screenshot insertion (Task 2):**
+> "I need to insert 8 app screenshots into my Word manuscript. I'll share the images. For each, tell me how to: (1) find the placeholder text '[Figure 3.X to be inserted]', (2) insert the PNG centered and in-line, (3) keep it with its caption below."
 
-**For Task D (TOC update):**
-> "I need to update a manually-typed Table of Contents in my Word document. The current TOC is missing all Chapter III entries (Tables 3.1–3.5 and Figures 3.1–3.11). Here is the current TOC: [paste current TOC]. Here are the new entries to add with these page numbers: [describe pages]. Format the additions to match the existing style."
+**For TOC formatting (Task 3):**
+> "I need to add these entries to a manually-typed Table of Contents in Word. Current style has dot leaders and right-aligned page numbers. Here are the entries to add: [paste from 5_TOC_ENTRIES_TO_ADD.md]. Format them to match the existing style."
 
-**For Task E2 (appendix reference fix):**
-> "In my capstone thesis, I have a Technical Validation Certificate that is cited as '(Appendix A)' but Appendix A is actually the Survey Questionnaire. My appendices are: A = Survey Questionnaire, B = Consent Form, C = SUS Questionnaire, D = Validation Certificates. Fix the in-text citation to point to the correct appendix."
-
-**For any text fix:**
-> "Fix this sentence from my capstone thesis to be in past tense and formal academic English: [paste sentence]"
+**For exclusion explanation (if panelist asks):**
+> *"One respondent was excluded for straight-line response bias — they answered all 5s on odd questions and all 1s on even questions, which produces a perfect SUS score of 100 but does not reflect genuine usability perception. This is a standard data quality exclusion criterion in usability research."*
 
 ---
 
 ## 🎯 Defense talking points
 
-1. **"96.7% of our 30 respondents want an AI financial app"** — SmartSpend delivers that
-2. **"93.3% use GCash"** — batch import reads GCash screenshots automatically
-3. **"FHS adapted from CBA-Melbourne Institute (2018)"** — academically grounded, labeled prototype indicator
-4. **"SUS = 61.83, Grade D, adjective 'OK'"** — below 68 benchmark; acknowledged prototype limitation
-5. **"Free, offline-first, runs on budget phones"** — not for rich people only
-6. **"Two SUS scales — both correct"** — Figure 2.1 uses Brooke grade scale; results use Bangor adjective scale; same band, no contradiction
+1. **96.7% of 30 respondents** want an AI financial app
+2. **93.3% use GCash** — batch import reads GCash screenshots automatically
+3. **FHS from CBA-Melbourne Institute (2018)** — academically grounded prototype indicator
+4. **SUS = 61.83, Grade D, "OK"** — below 68 benchmark, acknowledged prototype limitation
+5. **Free, offline, budget phones** — not for rich people only
+6. **Two SUS scales** — Figure 2.1 uses Brooke grade scale; results use Bangor adjective scale; both put 61.83 in same band (Grade D / "OK")
+7. **100.0 score excluded** — straight-line response bias, 5 excluded for time + 1 for bias = 6 total exclusions
 
 ---
-
 *Defense: November 10, 2026 | Good luck 🎯*
