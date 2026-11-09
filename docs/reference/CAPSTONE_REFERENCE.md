@@ -29,9 +29,12 @@
 - Cyrille John M. Rubis — UI/UX Designer & Documentation Lead
 - Djaunathan Albert S. Madayag — Project Manager & QA Lead
 
+**Adviser:** Dr. Janelli M. Raposas
+
 **Institution:** Lorma Colleges, College of Computer Studies and Engineering (CCSE)
 **Program:** Bachelor of Science in Information Technology (BSIT) — 4th Year, 1st Semester
 **Academic Year:** 2026–2027, 1st Semester
+**Defense Date:** November 10, 2026
 
 ---
 
@@ -584,6 +587,22 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 
 **Target:** ≥80 (Good classification per Bangor et al., 2009)
 
+**Final Results (Defense November 10, 2026):**
+- **Overall Score:** 61.83 (SD 17.58)
+- **Grade:** D (Bangor scale)
+- **Adjective:** "OK"
+- **Respondents:** N=30 (parents n=10, young professionals n=20)
+- **Score Range:** 35.0–92.5
+- **Exclusions:** 6 total (5 for insufficient app usage time + 1 for straight-line response bias)
+- **Interpretation:** Below the 68.0 benchmark and the 80 target; acknowledged as a prototype limitation
+
+**By Group:**
+| Group | n | Mean | SD | Interpretation |
+|-------|---|------|-------|----------------|
+| Parents | 10 | 58.25 | 18.42 | Below Average |
+| Young Professionals | 20 | 63.62 | 17.21 | Below Average |
+| **Combined** | **30** | **61.83** | **17.58** | **Below Average (Grade D, "OK")** |
+
 **Scale:**
 - ≥85: Excellent
 - 80–84: Good
@@ -592,9 +611,15 @@ A: Most apps show a static credit-score-like number. SmartSpend's FHS is compute
 - <51: Poor
 
 **Process:**
-1. Participant uses app (30 minutes guided exploration)
+1. Participant uses app (10 minutes minimum guided exploration)
 2. Completes 10-item SUS questionnaire (1-5 Likert)
 3. Score = (odd-item scores − 1) + (5 − even-item scores), sum × 2.5
+
+**Supporting Research Data:**
+- **AI Intent:** 96.7% of respondents want an AI-powered financial app
+- **GCash Usage:** 93.3% use GCash (validates batch import relevance)
+- **Banks Supported:** 20 Philippine banks in app database
+- **App Features:** 36 achievement badges, 34 agentic AI actions
 
 **Validators:** Subject matter expert in financial management (survey content validation) + subject matter expert in IT (system and SUS process validation) — credentials documented in validation certificates, name optional per evaluator preference.
 

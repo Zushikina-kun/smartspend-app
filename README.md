@@ -33,7 +33,28 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 - Cyrille John M. Rubis — UI/UX Designer & Documentation Lead
 - Djaunathan Albert S. Madayag — Project Manager & QA Lead
 
-**Adviser:** Ellen F. Mangaoang, DIT — Lorma Colleges, College of Computer Studies and Engineering (CCSE)
+**Adviser:** Dr. Janelli M. Raposas — Lorma Colleges, College of Computer Studies and Engineering (CCSE)
+
+**Defense Date:** November 10, 2026
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/images/screenshots/Figure_3.4_Login_Demo_Mode.jpg" width="200" alt="Login & Demo Mode"/>
+  <img src="docs/images/screenshots/Figure_3.5_Home_Dashboard.jpg" width="200" alt="Home Dashboard"/>
+  <img src="docs/images/screenshots/Figure_3.6_Peso_Chat_Expense_Logging.jpg" width="200" alt="Peso AI Chat"/>
+</p>
+
+<p align="center">
+  <img src="docs/images/screenshots/Figure_3.7_Batch_Import_GCash.jpg" width="200" alt="Batch Import"/>
+  <img src="docs/images/screenshots/Figure_3.8_FHS_Breakdown.jpg" width="200" alt="FHS Breakdown"/>
+  <img src="docs/images/screenshots/Figure_3.9_Budgets_Savings_Goals.jpg" width="200" alt="Budgets & Goals"/>
+  <img src="docs/images/screenshots/Figure_3.10_Local_AI_Setup.jpg" width="200" alt="Local AI Setup"/>
+</p>
+
+*App screenshots from v3.1.1 (October 2026). See [docs/images/screenshots/](docs/images/screenshots/) for full resolution.*
 
 ---
 
@@ -115,9 +136,20 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 ---
 
-## Surveys (Capstone Research)
+## Research & Evaluation
 
-SmartSpend is a capstone research project at Lorma Colleges (AY 2026-2027). Data collection for the formal evaluation is complete (N=30 research survey, N=30 SUS evaluation). Thank you to all respondents!
+SmartSpend is a capstone research project at Lorma Colleges (AY 2026-2027, 1st Semester). 
+
+**Defense:** November 10, 2026
+
+**Final Evaluation Results:**
+- **System Usability Scale (SUS):** 61.83 (SD 17.58), Grade D, adjective "OK"
+- **Respondents:** N=30 (parents n=10, young professionals n=20)
+- **Score Range:** 35.0–92.5
+- **Interpretation:** Below the 68.0 benchmark; acknowledged as a prototype limitation
+- **Supporting Data:** 96.7% want AI financial app, 93.3% use GCash
+
+Data collection for the formal evaluation is complete. Thank you to all respondents!
 
 ---
 
