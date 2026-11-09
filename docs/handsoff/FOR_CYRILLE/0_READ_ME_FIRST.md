@@ -11,7 +11,7 @@
 | `0_READ_ME_FIRST.md` | This file — start here |
 | `1_MAIN_MANUSCRIPT.docx` | **Final manuscript** — all Kiro's fixes applied (open in Word only) |
 | `2_TODO_GUIDE.md` | **Task checklist** — 5 remaining tasks before printing |
-| `3_PRESENTATION.html` | **Defense presentation** — all numbers updated, open in browser |
+| `3_PRESENTATION.html` | **Defense presentation** — all numbers updated, open in browser (see below for PowerPoint conversion) |
 | `5_TOC_ENTRIES_TO_ADD.md` | **Exact TOC entries** to type after inserting screenshots |
 | `FIGURES/` | **All 8 screenshot figures** ready to insert (3.4–3.11) |
 
@@ -105,6 +105,32 @@ Then:
 ❌ **Don't resize figures too large** — max 6 inches wide for phone screenshots  
 ❌ **Don't forget "Keep with next"** — figures will split from captions otherwise  
 ❌ **Don't print before checking the PDF** — Word view ≠ print view
+
+---
+
+## 💡 Converting HTML presentation to PowerPoint (if needed)
+
+The presentation is in HTML format for easy navigation and updates. If you need PowerPoint:
+
+**Option 1: Use the HTML directly (recommended)**
+- Open `3_PRESENTATION.html` in Chrome/Edge
+- Press F11 for fullscreen
+- Use arrow keys or click navigation buttons to advance slides
+- Works perfectly for defense — no conversion needed
+
+**Option 2: Convert to PowerPoint (manual)**
+1. Open `3_PRESENTATION.html` in browser
+2. For each slide: Press F11 (fullscreen) → Win+Shift+S → capture slide
+3. In PowerPoint: Insert each screenshot as a slide
+4. **This will lose navigation and animations** — only do if panelists require .pptx file
+
+**Option 3: Use print-to-PDF**
+1. Open `3_PRESENTATION.html` in Chrome
+2. Ctrl+P → Save as PDF → Select "Print backgrounds"
+3. Each slide becomes a PDF page
+4. Can present PDF in fullscreen (works well)
+
+**Note:** The HTML version is already updated with all final numbers. If you convert, you're working with a static copy.
 
 ---
 
