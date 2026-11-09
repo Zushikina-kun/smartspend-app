@@ -13,62 +13,65 @@
 - Mangaoang DIT, Layco MIS, 36 badges, 34 agentic actions ✓
 - Separate groups sentence added ✓
 - "acceptable for a prototype" wording fixed ✓
-- **Task 1 RESOLVED by Kiro:** The 100.0 parent score was excluded because the respondent answered **all 5s on odd questions and all 1s on even questions** — classic straight-line response bias. The exclusion sentence in the manuscript now says:
-  > *"The remaining 6 were excluded: 5 for insufficient app usage time and 1 for straight-line response bias"*
-  
-  ✅ Use N=30, mean=61.83 everywhere. The exclusion is legitimate and defensible.
+- **Task 1 RESOLVED by Kiro:** 100.0 parent score excluded for straight-line response bias ✓
+- **✅ ALL 8 FIGURES PREPARED by Kiro** — ready in `FIGURES/` folder ✓
 
 ---
 
-## 🔴 TASK 2 — Insert screenshots (Figures 3.4–3.11)
+## 🔴 TASK 2 — Insert 8 prepared screenshots (~30 min)
+
+**All 8 figures are ready in the `FIGURES/` folder** — just insert them into Word.
 
 Search: Ctrl+F → `to be inserted` → 8 results
 
-Replace each placeholder with the real screenshot:
-
-| Figure | Caption in manuscript | Screenshot |
+| Figure | File in FIGURES/ folder | What to insert |
 |---|---|---|
-| 3.4 | Login and Demo Mode Screen | Login + "Try Demo" button |
-| 3.5 | Home Dashboard | Home (FHS ring + Peso) |
-| 3.6 | Expense Logging Through Peso Chat | "nag-lunch ako 150 pesos" → result |
-| 3.7 | Receipt Scanning and Batch Screenshot Import | Batch import with GCash screenshots |
-| 3.8 | Financial Health Score Breakdown | Tap FHS score → breakdown |
-| 3.9 | Budgets, Safe-to-Spend, and Savings Goals | Budgets or Savings Goals screen |
-| 3.10 | Local AI Mode Setup | Local AI setup screen — OR retitle to "Analytics Dashboard" |
-| 3.11 | SUS Computation Table | Screenshot of SUS scoring sheet |
+| 3.4 | `Figure_3.4_Login_Demo_Mode.jpg` | Login + "Try Demo" button |
+| 3.5 | `Figure_3.5_Home_Dashboard.jpg` | Home with FHS ring + Peso |
+| 3.6 | `Figure_3.6_Peso_Chat_Expense_Logging.jpg` | Peso chat logging expense |
+| 3.7 | `Figure_3.7_Batch_Import_GCash.jpg` | Batch import with GCash screenshots |
+| 3.8 | `Figure_3.8_FHS_Breakdown.jpg` | FHS breakdown screen |
+| 3.9 | `Figure_3.9_Budgets_Savings_Goals.jpg` | Budgets/Savings Goals |
+| 3.10 | `Figure_3.10_Local_AI_Setup.jpg` | Local AI setup in Settings |
+| 3.11 | `Figure_3.11_SUS_Computation_Table.jpg` | SUS computation table* |
 
-**How to insert in Word:**
-1. Click and select the placeholder text → Delete it (keep the empty paragraph line)
-2. Insert → Pictures → This Device → pick the PNG
-3. Click the image → Wrap Text → **In Line with Text**
-4. Center it: Ctrl+E
-5. Max width: ~6 inches (set in Picture Format tab)
-6. Right-click image → Paragraph → tick "**Keep with next**" so image stays with its caption
+**\*Figure 3.11:** Open `FIGURES/SUS_Computation_Table.html` in browser → Win+Shift+S → capture white box → save as `Figure_3.11_SUS_Computation_Table.jpg` in FIGURES folder. (Or use the HTML as-is if you can insert HTML screenshots directly.)
 
-**Source:** `docs/debug/screenshots/` folder  
-**Blurry?** → Upscayl (upscayl.org, free, 4x upscale)
+### How to insert each figure in Word:
+
+1. Click and select the `[Figure 3.X to be inserted...]` placeholder text
+2. Delete it (keep the empty paragraph line)
+3. **Insert → Pictures → This Device** → pick the JPG from `FIGURES/` folder
+4. Click the inserted image → **Wrap Text → In Line with Text**
+5. Center it: **Ctrl+E**
+6. Resize if needed: **Picture Format → Width: ~5-6 inches** (phone screenshots can be narrower)
+7. Right-click image → **Paragraph** → tick **"Keep with next"** so image stays with its caption below
+
+**Repeat for all 8 figures.** The caption text is already in the manuscript below each placeholder — just leave it as-is.
 
 ---
 
-## 🔴 TASK 3 — Update Table of Contents (after Task 2)
+## 🔴 TASK 3 — Update Table of Contents (~20 min, after Task 2)
 
 The TOC is typed by hand — "Update Field" will NOT work.
 
 Full list of entries to add is in `5_TOC_ENTRIES_TO_ADD.md` (this folder).
 
-Steps:
+**Steps:**
 1. Insert all screenshots first (Task 2)
-2. Note the page number of each heading, table, and figure
-3. Add missing entries to List of Tables (Tables 2.2, 3.1–3.5) and List of Figures (3.1–3.11)
+2. Note the page number of each heading, table, and figure in the manuscript
+3. Add missing entries to:
+   - **List of Tables:** Tables 2.2, 3.1, 3.2, 3.3, 3.4, 3.5
+   - **List of Figures:** Figures 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11
 4. Recheck every existing page number — pages shifted after inserting images
-5. Copy formatting from existing entries (dot leader, right-aligned number)
+5. Copy formatting from existing entries (dot leader `....`, right-aligned page number)
 
 ---
 
-## 🔴 TASK 4 — Small decisions (~10 min)
+## 🔴 TASK 4 — Small decisions (~5 min)
 
-- [ ] **Acknowledgements vs Approval sheet:** Acknowledgements says "Dr. Janelli M. Mendez" but approval sheet lists Raposas as Teacher-in-Charge. Confirm and make both agree.
-- [ ] **Technical Validation Certificate appendix:** Chapter II references it. Either add the signed certificate as Appendix D (and list it in TOC), or remove the mention. Decide as a group.
+- [ ] **Acknowledgements vs Approval sheet:** Acknowledgements says "Dr. Janelli M. Mendez" as instructor in charge, but approval sheet lists Raposas. Confirm who is correct and make both pages agree.
+- [ ] **Technical Validation Certificate appendix:** Chapter II references it but no appendix contains it. Either add it as Appendix D (and list in TOC), or remove the mention. Decide as a group.
 
 ---
 
@@ -96,19 +99,6 @@ Then:
 
 ---
 
-## 🤖 Claude prompts if needed
-
-**For screenshot insertion (Task 2):**
-> "I need to insert 8 app screenshots into my Word manuscript. I'll share the images. For each, tell me how to: (1) find the placeholder text '[Figure 3.X to be inserted]', (2) insert the PNG centered and in-line, (3) keep it with its caption below."
-
-**For TOC formatting (Task 3):**
-> "I need to add these entries to a manually-typed Table of Contents in Word. Current style has dot leaders and right-aligned page numbers. Here are the entries to add: [paste from 5_TOC_ENTRIES_TO_ADD.md]. Format them to match the existing style."
-
-**For exclusion explanation (if panelist asks):**
-> *"One respondent was excluded for straight-line response bias — they answered all 5s on odd questions and all 1s on even questions, which produces a perfect SUS score of 100 but does not reflect genuine usability perception. This is a standard data quality exclusion criterion in usability research."*
-
----
-
 ## 🎯 Defense talking points
 
 1. **96.7% of 30 respondents** want an AI financial app
@@ -117,7 +107,8 @@ Then:
 4. **SUS = 61.83, Grade D, "OK"** — below 68 benchmark, acknowledged prototype limitation
 5. **Free, offline, budget phones** — not for rich people only
 6. **Two SUS scales** — Figure 2.1 uses Brooke grade scale; results use Bangor adjective scale; both put 61.83 in same band (Grade D / "OK")
-7. **100.0 score excluded** — straight-line response bias, 5 excluded for time + 1 for bias = 6 total exclusions
+7. **100.0 score excluded** — straight-line response bias (all 5s and 1s). 5 excluded for time + 1 for bias = 6 total exclusions
+8. **Figure 3.11 shows SUS computation** — sample respondent scoring with formula clearly shown
 
 ---
 *Defense: November 10, 2026 | Good luck 🎯*
