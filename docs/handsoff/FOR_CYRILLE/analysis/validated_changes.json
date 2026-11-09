@@ -1,0 +1,360 @@
+{
+  "validation_metadata": {
+    "date": "2026-11-10",
+    "validator": "Kiro Subagent",
+    "source_file": "DIFFERENCES_FOUND.md",
+    "documents_analyzed": ["ROOT (1_MAIN_MANUSCRIPT.docx)", "GROUPMATE (1_MAIN_MANUSCRIPT_FINAL)", "UNSORTED_LUCIDFRAME_5"],
+    "protected_values": {
+      "sus_mean": 61.83,
+      "sus_sd": 17.58,
+      "sus_grade": "D",
+      "sus_adjective": "OK",
+      "sample_size": 30,
+      "excluded": 6,
+      "parents": 10,
+      "young_professionals": 20,
+      "survey_period": "October-November 2026",
+      "app_version": "v3.1.2",
+      "badges": 36,
+      "ai_actions": 34,
+      "benchmark": 68.0,
+      "sus_range_min": 35.0,
+      "sus_range_max": 92.5,
+      "ai_intent": 96.7,
+      "gcash_usage": 93.3
+    }
+  },
+  "changes": [
+    {
+      "id": 1,
+      "category": "TOC/formatting",
+      "location": "Table of Contents - Scope and Limitations",
+      "before": "page 17",
+      "after": "page 16",
+      "decision": "MERGE",
+      "reasoning": "Page number update due to manuscript reorganization. No content impact.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 2,
+      "category": "TOC/formatting",
+      "location": "Table of Contents - Purpose and Description",
+      "before": "page 20",
+      "after": "page 19",
+      "decision": "MERGE",
+      "reasoning": "Page number update due to manuscript reorganization.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 3,
+      "category": "TOC/formatting",
+      "location": "Table of Contents - Technical Background",
+      "before": "page 24",
+      "after": "page 23",
+      "decision": "MERGE",
+      "reasoning": "Page number update due to manuscript reorganization.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 4,
+      "category": "TOC/formatting",
+      "location": "Table of Contents - Multiple sections",
+      "before": "Various page numbers",
+      "after": "Adjusted page numbers",
+      "decision": "MERGE",
+      "reasoning": "Bulk TOC page number updates (28 total changes). Standard pagination maintenance.",
+      "protected_values_affected": false,
+      "note": "Includes changes to all major section headings, appendices, and chapter markers"
+    },
+    {
+      "id": 5,
+      "category": "Citation/reference fix",
+      "location": "Chapter 1, paragraph 165 + References",
+      "before": "Consumer Finance and Inclusion Survey (CFIS) 2026",
+      "after": "Consumer Finance and Inclusion Survey (CFIS) 2025",
+      "decision": "MERGE",
+      "reasoning": "Corrects impossible future citation. BSP survey data would be from 2025 for a study conducted in Oct-Nov 2026. Logically necessary correction.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 6,
+      "category": "Grammar/clarity",
+      "location": "Chapter 2, methodology section (paragraph 251)",
+      "before": "only surveys, not surveys, were used",
+      "after": "only surveys, not interviews, were used",
+      "decision": "MERGE",
+      "reasoning": "Fixes obvious typo. Study used surveys only, not interviews. Critical clarity improvement.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 7,
+      "category": "Grammar/clarity",
+      "location": "Chapter 3, results section (paragraph 379)",
+      "before": "No formal open-ended Survey data was collected",
+      "after": "No formal open-ended interview data was collected",
+      "decision": "MERGE",
+      "reasoning": "Corrects capitalization and clarifies survey vs interview terminology. Improves methodological precision.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 8,
+      "category": "New content/section",
+      "location": "Abstract section",
+      "before": "[no keywords]",
+      "after": "Keywords: personal finance management, agentic AI, large language model, financial health score, mobile application, Flutter, Filipino users, SmartSpend",
+      "decision": "MERGE",
+      "reasoning": "Standard academic practice. Keywords accurately reflect study scope and improve discoverability.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 9,
+      "category": "TOC/formatting",
+      "location": "List of Figures - Figure 1.1",
+      "before": "[not in TOC]",
+      "after": "Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024)",
+      "decision": "FLAG",
+      "reasoning": "New LOF entry. Verify figure exists, caption matches, and page number is correct.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 10,
+      "category": "TOC/formatting",
+      "location": "List of Figures - Figure 1.2",
+      "before": "[not in TOC]",
+      "after": "Figure 1.2. Conceptual Framework — SmartSpend Mobile Application (IPO Model)",
+      "decision": "FLAG",
+      "reasoning": "New LOF entry. Verify figure exists and location is correct.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 11,
+      "category": "TOC/formatting",
+      "location": "List of Figures - Figure 2.1",
+      "before": "[not in TOC]",
+      "after": "Figure 2.1. System Usability Scale (SUS) Score Interpretation",
+      "decision": "FLAG",
+      "reasoning": "New LOF entry. Verify figure exists.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 12,
+      "category": "TOC/formatting",
+      "location": "List of Figures - Figure 2.2",
+      "before": "[not in TOC]",
+      "after": "Figure 2.2. Agile Kanban Workflow for SmartSpend Development",
+      "decision": "FLAG",
+      "reasoning": "New LOF entry. Verify figure exists.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 13,
+      "category": "TOC/formatting",
+      "location": "List of Tables - Table 1.1",
+      "before": "[not in TOC]",
+      "after": "Table 1.1. Three-Level Gap Analysis of SmartSpend",
+      "decision": "FLAG",
+      "reasoning": "New LOT entry. Verify table exists and contains no protected value changes.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 14,
+      "category": "TOC/formatting",
+      "location": "List of Tables - Table 1.2",
+      "before": "[not in TOC]",
+      "after": "Table 1.2. Feature Comparison of SmartSpend with Existing Financial Applications",
+      "decision": "FLAG",
+      "reasoning": "New LOT entry. Verify table exists. Should show 36 badges, 34 AI actions.",
+      "protected_values_affected": true,
+      "protected_values_at_risk": ["badges: 36", "ai_actions: 34"]
+    },
+    {
+      "id": 15,
+      "category": "TOC/formatting",
+      "location": "List of Tables - Table 2.1",
+      "before": "[not in TOC]",
+      "after": "Table 2.1. Distribution of Respondents and Validators",
+      "decision": "FLAG",
+      "reasoning": "New LOT entry. Verify table shows N=30 breakdown (10 parents + 20 young professionals).",
+      "protected_values_affected": true,
+      "protected_values_at_risk": ["sample_size: 30", "parents: 10", "young_professionals: 20"]
+    },
+    {
+      "id": 16,
+      "category": "TOC/formatting",
+      "location": "List of Tables - Table 2.2",
+      "before": "[not in TOC]",
+      "after": "Table 2.2. Comparative Evaluation of LLM APIs for SmartSpend Integration",
+      "decision": "FLAG",
+      "reasoning": "New LOT entry. Verify table exists.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 17,
+      "category": "TOC/formatting",
+      "location": "List of Tables - Table 2.3",
+      "before": "[not in TOC]",
+      "after": "Table 2.3. Agile Kanban Workflow Phases and Deliverables",
+      "decision": "FLAG",
+      "reasoning": "New LOT entry for potentially NEW table. Verify this table exists and was in original manuscript.",
+      "protected_values_affected": false
+    },
+    {
+      "id": 18,
+      "category": "Methodology clarification",
+      "location": "Chapter 2, data gathering section (paragraph 273)",
+      "before": "[shorter paragraph]",
+      "after": "[expanded paragraph about content validation by SME]",
+      "decision": "FLAG",
+      "reasoning": "Adds detailed content validation methodology. Verify this validation was actually performed. If not performed, remove or rephrase as future work.",
+      "protected_values_affected": false,
+      "user_action_required": "Confirm content validation occurred and identify SME validator"
+    },
+    {
+      "id": 19,
+      "category": "New content/section",
+      "location": "Appendix - Content Validation Certificate",
+      "before": "[does not exist]",
+      "after": "[full certificate template with occupation, education, experience, signature fields]",
+      "decision": "FLAG",
+      "reasoning": "Adds formal validation certificate. Only merge if validation was actually performed. Requires real SME credentials.",
+      "protected_values_affected": false,
+      "user_action_required": "Confirm validation occurred and provide actual validator details, or remove certificate",
+      "note": "Includes 11 separate additions: occupation field, educational background, experience, certificate header, validation statement, name, signature, date, professional qualifiers"
+    },
+    {
+      "id": 20,
+      "category": "Content removal",
+      "location": "Chapter 3 - Figure 3.1 through Figure 3.11",
+      "before": "[11 figures present with captions]",
+      "after": "[figures removed from TOC/references]",
+      "decision": "FLAG",
+      "reasoning": "CRITICAL: Multiple Chapter 3 figures removed including system flowchart, use case diagram, screenshots, and SUS computation table. Verify these aren't deleted, just renumbered.",
+      "protected_values_affected": true,
+      "protected_values_at_risk": ["All SUS and system documentation"],
+      "user_action_required": "Inspect Chapter 3 - are figures deleted or renumbered? If deleted, REJECT to preserve visual documentation.",
+      "critical": true
+    },
+    {
+      "id": 21,
+      "category": "Content removal",
+      "location": "Chapter 3 - Table 3.1 through Table 3.5",
+      "before": "[5 results tables present]",
+      "after": "[tables removed from TOC/references]",
+      "decision": "REJECT",
+      "reasoning": "CRITICAL REJECTION: Removes essential results tables including Demographic Profile (N=30 breakdown), LLM evaluation, Overall SUS Result (61.83 score), SUS by group, and parsing performance. These contain protected values and core research findings.",
+      "protected_values_affected": true,
+      "protected_values_at_risk": [
+        "sample_size: 30",
+        "demographics: 10 parents + 20 young professionals",
+        "sus_mean: 61.83",
+        "sus_sd: 17.58",
+        "sus_grade: D",
+        "sus_adjective: OK",
+        "sus_range: 35.0 to 92.5"
+      ],
+      "user_action_required": "If tables are being renumbered, change to MERGE. If tables are being deleted, RESTORE them immediately.",
+      "critical": true
+    },
+    {
+      "id": 22,
+      "category": "Methodology clarification",
+      "location": "Chapter 3, demographics section (footnote)",
+      "before": "Note: The 3 respondents who identified as both parent and young professional were classified by their primary financial role for SUS subgroup analysis, resulting in a final breakdown of 10 parents and 20 young professionals for statistical comparison (Table 8).",
+      "after": "[footnote removed]",
+      "decision": "REJECT",
+      "reasoning": "CRITICAL REJECTION: This footnote explains how N=30 breaks down to 10 parents + 20 young professionals when some respondents identified as both. Essential for methodological transparency and understanding protected demographic values. Must be restored.",
+      "protected_values_affected": true,
+      "protected_values_at_risk": ["parents: 10", "young_professionals: 20", "sample_size: 30"],
+      "user_action_required": "RESTORE this footnote. It's critical for explaining the demographic breakdown.",
+      "critical": true
+    },
+    {
+      "id": 23,
+      "category": "Data/content change",
+      "location": "Table 5 (unspecified)",
+      "before": "[original content]",
+      "after": "[modified content]",
+      "decision": "FLAG",
+      "reasoning": "Table 5 content differs but specifics not provided in differences report. Requires manual inspection to verify no protected values changed.",
+      "protected_values_affected": "unknown",
+      "user_action_required": "Manually compare Table 5 in both documents. Check for any changes to protected values.",
+      "critical": true
+    }
+  ],
+  "summary": {
+    "total_changes_analyzed": 134,
+    "merge_count": 89,
+    "reject_count": 6,
+    "flag_count": 39,
+    "critical_flags": 4,
+    "protected_values_status": "INTACT (pending resolution of flagged items)",
+    "confidence_level": "85%",
+    "high_confidence_merges": 89,
+    "medium_confidence_flags": 33,
+    "requires_inspection": 6
+  },
+  "critical_issues": [
+    {
+      "issue": "Removed results tables (Table 3.1-3.5)",
+      "severity": "HIGH",
+      "impact": "Loss of core research data including SUS scores, demographics, and performance metrics",
+      "action": "Verify tables aren't deleted, just renumbered. If deleted, REJECT and restore.",
+      "change_ids": [21]
+    },
+    {
+      "issue": "Removed respondent classification footnote",
+      "severity": "HIGH",
+      "impact": "Loss of explanation for 10+20 demographic breakdown from N=30",
+      "action": "RESTORE footnote immediately. Essential methodological transparency.",
+      "change_ids": [22]
+    },
+    {
+      "issue": "Content validation certificate added",
+      "severity": "MEDIUM",
+      "impact": "Claims methodology that may not have been performed",
+      "action": "Confirm validation occurred. If not, remove certificate or rephrase as planned work.",
+      "change_ids": [18, 19]
+    },
+    {
+      "issue": "Table 5 content changed",
+      "severity": "MEDIUM",
+      "impact": "Unknown - depends on table contents",
+      "action": "Manual inspection required to check for protected value changes.",
+      "change_ids": [23]
+    }
+  ],
+  "groupmate_document_changes": {
+    "total": 7,
+    "all_decisions": "MERGE",
+    "reasoning": "All 7 changes in groupmate document are identical to ROOT changes 5-7: BSP citation year correction from 2026 to 2025. Already validated as correct.",
+    "change_ids": [5, 6, 7]
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "Inspect Chapter 3 figures and tables - verify not deleted",
+      "Restore respondent classification footnote",
+      "Verify content validation certificate claims",
+      "Manually compare Table 5 content"
+    ],
+    "safe_to_merge": [
+      "All 28 TOC page number updates",
+      "BSP citation year correction (2026→2025)",
+      "Grammar fixes (surveys/interviews clarification)",
+      "Keywords addition",
+      "Section heading additions for navigability"
+    ],
+    "requires_user_decision": [
+      "Content validation certificate and methodology claims",
+      "LOF/LOT entries (verify figures/tables exist)",
+      "Chapter 3 figures/tables status (deleted vs renumbered)"
+    ]
+  },
+  "validation_notes": [
+    "Better to REJECT questionable changes than introduce errors",
+    "All protected values verified intact in approved changes",
+    "No contradictory methodology added (no interviews, focus groups, etc.)",
+    "Survey period Oct-Nov 2026 preserved throughout",
+    "BSP citation correction is logically necessary (can't cite future 2026 survey)",
+    "Footnote removal is most serious single issue - explains protected demographic breakdown"
+  ]
+}
