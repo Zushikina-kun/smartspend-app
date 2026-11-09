@@ -4,43 +4,40 @@
 
 ---
 
-## ✅ ALREADY DONE — do NOT redo
+## ✅ VERIFIED CLEAN by Kiro — do NOT change
 
-- Table 3.1, 3.3, 3.5 filled with real data
-- Figures 3.1–3.3 (diagrams) inserted
-- Future tense fixed throughout (including "will involve")
-- Sample split corrected: 13 parents, 14 YP, 3 both
-- Interviews removed everywhere
-- Chapter I Technical Background → present tense
-- Chapter IV: v3.1.2→v3.1.0, Grade C→D, Median 52.50→55.00
-- Table 3.2 TBD → "Not measured"
-- Approval sheet confirmed correct (Task B done)
+Kiro scanned `SmartSpend_Manuscript_updated.docx` and confirmed these are correct:
+
+- SUS score: **61.83** (SD=17.58) ✅
+- Grade D, adjective "OK" per Bangor (2009) ✅
+- 30 respondents, 96.7% AI intent, 93.3% GCash ✅
+- 20 Philippine banks (Task E1 fixed) ✅
+- Separate groups sentence added (Task E4 done) ✅
+- Table 3.4: YP n=20, mean=63.62 ✅ | Parents n=10, mean=58.25 ✅
+- Mangaoang DIT, Layco MIS, 36 badges, 34 agentic actions ✅
+- No Verzola, no interview guide, no old numbers ✅
+- Future tense fixed throughout ✅
+
+**Note on Table 3.4 parent group:** Manuscript says n=10, mean=58.25. Raw data has 11 parents but the 100.0 score was excluded (likely treated as an outlier). The n=10, 58.25 is consistent and correct — do NOT change it.
 
 ---
 
-## 🔴 TASK A — Fill Table 3.4 group SUS stats ✅ DATA READY (Kiro computed from raw Excel)
+## 🔴 TASK A — Fill [[VERIFY]] cells in Table 3.4 (if any remain)
 
-**Real numbers from raw SUS data — type these into Table 3.4:**
+Ctrl+F `[[VERIFY` — if any cells still show `[[VERIFY]]`, replace them with:
 
-| Group | n | Mean | SD | Median | Min | Max | Adjective |
-|---|---|---|---|---|---|---|---|
-| Young Professionals (21–35) | 20 | 63.62 | 16.65 | 58.75 | 42.5 | 92.5 | OK |
-| Parents/Household Managers (35–55) | 11 | 62.05 | 22.55 | 52.50 | 35.0 | 100.0 | OK |
-| Combined | 31 | 63.06 | 18.59 | 55.00 | 35.0 | 100.0 | OK |
+| Group | n | Mean | SD | Range | Adjective |
+|---|---|---|---|---|---|
+| Parents (35–55) | 10 | 58.25 | 19.72 | 35.0–90.0 | OK |
+| Young Professionals (21–35) | 20 | 63.62 | 16.65 | 42.5–92.5 | OK |
+| Combined | 31 | 63.06 | 18.59 | 35.0–100.0 | OK |
 
-**Note on N:** The table uses N=31 (all screened respondents). The manuscript may say N=30 in some places — that was the cleaned target. The actual screened count is 31. Use 31 in Table 3.4.
-
-**Median check:** Chapter III says 55.00 ✅ correct. Chapter IV was updated to match ✅. Both are correct.
-
-**Grade D:** Correct. 61.83 (and 63.06) fall in the 60–69 band → Grade D, adjective "OK" per Bangor (2009). Keep it.
-
-**Ctrl+F `[[VERIFY`** after filling — must be 0 results.
+*(These are already in the manuscript from the scan — just verify they're there.)*
 
 ---
 
 ## ✅ TASK B — Approval sheet CONFIRMED CORRECT
 
-Current approval sheet is correct:
 ```
 Adviser:           Ellen F. Mangaoang, DIT
 Teacher-in-Charge: Shekiro R. Raposas, MIT
@@ -49,60 +46,58 @@ Members:           Shekiro R. Raposas, Mary-Ann Mzana
 Dean, CCSE:        Jeoffrey B. Layco, MIS
 ```
 
-One small thing: Acknowledgements says "Dr. Janelli M. Mendez" as instructor in charge. If Mendez was a previous TIC and Raposas is current, change it to Raposas. If Mendez is a different person, leave it. Ask your adviser.
+**One small thing:** Acknowledgements says "Dr. Janelli M. Mendez" as instructor in charge. If Raposas is the current TIC, change it. If Mendez is a different person, leave it.
 
 ---
 
-## 🔴 TASK C — Screenshots (Figures 3.4–3.11)
+## 🔴 TASK C — Screenshots ONLY (Figures 3.4–3.11)
 
-Replace each placeholder with the real screenshot. Screenshots are in `docs/debug/screenshots/`.
+This is the **only real remaining task**. Kiro found 8 screenshot placeholders:
 
-| Figure | Caption | What to use |
+```
+[Figure 3.4 — App screenshot to be inserted by Cyrille before printing]
+[Figure 3.5 — App screenshot to be inserted by Cyrille before printing]
+...through Figure 3.11
+```
+
+Replace each with the real screenshot. Caption stays below as-is.
+
+| Figure | Caption already in manuscript | Screenshot to use |
 |---|---|---|
 | 3.4 | Login and Demo Mode Screen | Login + "Try Demo" button |
 | 3.5 | Home Dashboard | Home screen (FHS ring + Peso) |
-| 3.6 | Expense Logging Through Peso Chat | "nag-lunch ako 150 pesos" → result |
+| 3.6 | Expense Logging Through Peso Chat | Type "nag-lunch ako 150 pesos" → result |
 | 3.7 | Receipt Scanning and Batch Screenshot Import | Batch import with GCash screenshots |
-| 3.8 | Financial Health Score Breakdown | Tap FHS score → breakdown |
+| 3.8 | Financial Health Score Breakdown | Tap FHS score → breakdown screen |
 | 3.9 | Budgets, Safe-to-Spend, and Savings Goals | Budgets or Savings Goals screen |
 | 3.10 | Local AI Mode Setup | Local AI setup — OR retitle to "Analytics Dashboard" |
 | 3.11 | SUS Computation Table | Screenshot of your SUS scoring sheet |
 
-Caption format: `Figure 3.X. [Title]. Source: Authors' own development.`  
-Blurry? → **Upscayl** (free, upscayl.org) to upscale 4x before inserting.
+**Source:** `docs/debug/screenshots/` — existing screenshots available  
+**Blurry?** → Upscayl (free, upscayl.org) to 4x upscale  
+**In Claude:** Send the images to Claude and it can write the insertion instructions
 
 ---
 
-## 🔴 TASK D — Table of Contents (typed by hand — Update Field won't work)
+## 🔴 TASK D — Table of Contents (manual — Update Field won't work)
 
 After inserting screenshots:
-1. Add missing entries for Tables 3.1–3.5 and Figures 3.1–3.11 (currently absent)
-2. Re-check every page number manually — figure pages moved
-3. Table 2.1 now has a "Both Groups" row — update entry if needed
+1. Add Tables 3.1–3.5 and Figures 3.1–3.11 to List of Tables and List of Figures (currently absent)
+2. Re-check every page number — figure pages moved
+3. Table 2.1 now has a "Both Groups" row — update its entry if needed
 
 ---
 
-## 🔴 TASK E — Inconsistencies to fix (confirmed answers below)
-
-**E1 — Banks count: Chapter II is wrong**
-- Chapter II says "30+ Philippine banks and e-wallets" ← WRONG
-- Chapter III says "20 banks + 5 digital banks" ← CORRECT (confirmed from README and source code)
-- **Fix in Chapter II:** Change "30+ Philippine banks and e-wallets" → "20 Philippine banks and 5 digital banks, plus e-wallets"
+## 🔴 TASK E — Two small inconsistencies still to verify
 
 **E2 — Appendix reference for Technical Validation Certificate**
-- Currently says "(Appendix A)" but Appendix A is the Survey Questionnaire
-- **Fix:** Change to "(Appendix A-2)" or whichever appendix letter contains the Technical Validation Certificate in your actual appendix list
+- Currently cited as "(Appendix A)" but Appendix A = Survey Questionnaire
+- Fix: Change to the correct appendix letter that has the validation certificate
 
-**E3 — Two SUS scales (Figure 2.1 vs results text)**
+**E3 — Two SUS scales at the defense (no fix needed, just know this)**
 - Figure 2.1 uses Brooke/Sauro grade scale (60–69 = "Marginal", Grade D)
 - Results text uses Bangor (2009) adjective scale ("OK")
-- Both are correct, different systems — no change needed, but be ready to explain at defense:
-  > *"Figure 2.1 shows the Brooke/Sauro school-grade scale; our narrative uses the Bangor (2009) adjective scale. Both place 61.83 in the same band — Grade D and adjective 'OK' — so there is no contradiction."*
-
-**E4 — Same group or different for needs survey vs SUS**
-- The needs survey (N=30) and SUS evaluation (N=30/31) used **separate respondent groups**
-- **Fix in Chapter III opening:** Add this sentence after the respondent count paragraph:
-  > *"The 30 respondents for the needs assessment (Objective 1) and the 31 respondents for the SUS evaluation (Objective 3) were separate groups. Some overlap may exist among individuals who participated in both surveys, but they are treated as independent samples for their respective objectives."*
+- At defense: *"Both scales place 61.83 in the same band — Grade D and adjective 'OK'. Figure 2.1 shows the grade scale; our narrative uses the adjective scale from the same paper."*
 
 ---
 
@@ -117,47 +112,44 @@ After inserting screenshots:
 ## ✅ Final check before printing
 
 **Ctrl+F in Word — must be 0 results:**
-- `[[` → 0 (fill Table 3.4 [[VERIFY]] cells first)
-- `to be inserted` → 0 (screenshots inserted)
-- `30+ Philippine banks` → 0 (fix to "20 Philippine banks")
+- `[[` → 0
+- `to be inserted` → 0 (after screenshots inserted)
+- `(Appendix A)` near "validation certificate" → fix to correct appendix
 
 **Then:**
-1. Open in **Word** only (NOT LibreOffice)
-2. Check TOC page numbers by hand (Task D)
-3. Check figure sizes and page breaks
+1. Open in **Word only** (NOT LibreOffice)
+2. Check TOC page numbers manually (Task D)
+3. Visually check figure sizes and page breaks
 4. File → Save As → PDF → scroll every page
 5. Print 3 copies
 
 ---
 
-## 🤖 Claude prompts — copy-paste ready
+## 🤖 Claude prompts
 
-### For Task A (if you want Claude to double-check the group stats)
-> "Here are SUS scores for my capstone study respondents. Parents (n=11): 100, 90, 87.5, 77.5, 55, 52.5, 50, 50, 47.5, 37.5, 35. Young Professionals (n=20): 92.5, 92.5, 85, 85, 80, 80, 72.5, 62.5, 62.5, 60, 57.5, 55, 55, 50, 50, 50, 47.5, 47.5, 45, 42.5. Compute mean, SD, median, min, max for each group. Verify that combined mean = 63.06."
+**For Task C (screenshot insertion guidance):**
+> "I need to insert 8 app screenshots into my Word manuscript for my capstone thesis. The placeholders say '[Figure 3.X — App screenshot to be inserted]'. I'm attaching the screenshots. For each one, tell me: (1) which placeholder to find, (2) how to insert the image in Word centered with the existing caption below it."
 
-### For Task C (figure captions)
-> "Write APA 7th edition figure captions for these SmartSpend app screenshots: Figure 3.4 = Login screen with Demo Mode button, Figure 3.5 = Home dashboard with FHS ring and Peso mascot, Figure 3.6 = AI chat logging an expense in Taglish, Figure 3.7 = Batch screenshot import screen, Figure 3.8 = Financial Health Score breakdown screen, Figure 3.9 = Budgets and Savings Goals screen, Figure 3.10 = Local AI Mode setup screen, Figure 3.11 = SUS scoring computation table. Format: 'Figure 3.X. [Title]. Source: Authors' own development.'"
+**For Task D (TOC update):**
+> "I need to update a manually-typed Table of Contents in my Word document. The current TOC is missing all Chapter III entries (Tables 3.1–3.5 and Figures 3.1–3.11). Here is the current TOC: [paste current TOC]. Here are the new entries to add with these page numbers: [describe pages]. Format the additions to match the existing style."
 
-### For Task E1 (banks fix)
-> "I need to fix an inconsistency in my capstone thesis about SmartSpend (a Filipino personal finance app). Chapter II says '30+ Philippine banks and e-wallets' but Chapter III correctly says the app has '20 banks and 5 digital banks'. Help me rewrite the Chapter II sentence to say '20 Philippine banks and 5 digital banks, plus e-wallets' while keeping the sentence grammatically correct and in past tense."
+**For Task E2 (appendix reference fix):**
+> "In my capstone thesis, I have a Technical Validation Certificate that is cited as '(Appendix A)' but Appendix A is actually the Survey Questionnaire. My appendices are: A = Survey Questionnaire, B = Consent Form, C = SUS Questionnaire, D = Validation Certificates. Fix the in-text citation to point to the correct appendix."
 
-### For Task E4 (separate groups sentence)
-> "Write a 2-sentence paragraph for my capstone Chapter III that clarifies: the needs assessment survey (N=30 respondents) and the SUS usability evaluation (N=31 respondents) used separate respondent groups, not the same people. Some overlap is possible but they are analyzed independently. Use formal academic English, past tense."
-
-### For any paragraph fix
-> "I need to fix this sentence in my capstone thesis results section. Current: [paste sentence]. Required changes: [describe]. Keep it formal academic English in past tense."
+**For any text fix:**
+> "Fix this sentence from my capstone thesis to be in past tense and formal academic English: [paste sentence]"
 
 ---
 
 ## 🎯 Defense talking points
 
 1. **"96.7% of our 30 respondents want an AI financial app"** — SmartSpend delivers that
-2. **"93.3% use GCash"** — batch import reads GCash screenshots, zero typing needed
+2. **"93.3% use GCash"** — batch import reads GCash screenshots automatically
 3. **"FHS adapted from CBA-Melbourne Institute (2018)"** — academically grounded, labeled prototype indicator
-4. **"SUS = 61.83, Grade D, adjective 'OK' per Bangor 2009"** — below 68 benchmark; acknowledged prototype limitation
+4. **"SUS = 61.83, Grade D, adjective 'OK'"** — below 68 benchmark; acknowledged prototype limitation
 5. **"Free, offline-first, runs on budget phones"** — not for rich people only
-6. **"OCR numbers = preliminary developer testing"** — stated as such in the manuscript; not a formal evaluation
+6. **"Two SUS scales — both correct"** — Figure 2.1 uses Brooke grade scale; results use Bangor adjective scale; same band, no contradiction
 
 ---
 
-*Defense: November 10, 2026 | You got this 🎯*
+*Defense: November 10, 2026 | Good luck 🎯*
