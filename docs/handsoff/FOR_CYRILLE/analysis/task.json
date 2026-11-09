@@ -1,0 +1,12 @@
+{
+  "task_id": "task-defense-docs-consistency",
+  "task_description": "Comprehensive comparison and consistency fixes for all SmartSpend defense documents (presentations, manuscript, script) to ensure numerical accuracy, remove outdated language, and align content across all materials before final defense",
+  "status": "pending",
+  "feature_order": [
+    "FEAT-001",
+    "FEAT-002",
+    "FEAT-003",
+    "FEAT-004"
+  ],
+  "blocked_reason": null
+}

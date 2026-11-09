@@ -1,0 +1,12 @@
+[
+  {
+    "issue": "Issue 1 - Hean et al. Reference Year",
+    "before": "Hean, O., Saha, U., & Saha, B. (2026). Can AI help with your personal finances? Applied Economics. https://doi.org/10.1080/00036846.2025.2450384",
+    "after": "Hean, O., Saha, U., & Saha, B. (2025). Can AI help with your personal finances? Applied Economics. https://doi.org/10.1080/00036846.2025.2450384"
+  },
+  {
+    "issue": "Issue 2 - BSP CFIS Year in Text",
+    "before": "More recent data suggests this picture is beginning to shift, though unevenly. BSP's newer, annual Consumer Finance and Inclusion Survey (CFIS) 2025 reports that 74% of Filipinos now correctly answer ...",
+    "after": "More recent data suggests this picture is beginning to shift, though unevenly. BSP's newer, annual Consumer Finance and Inclusion Survey (CFIS) 2026 reports that 74% of Filipinos now correctly answer ..."
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "project_type": "Academic thesis defense documents - PowerPoint presentations, Word manuscript, Markdown script",
+  "language": "English with Filipino context (Taglish references)",
+  "build_system": "Manual document editing - PowerPoint, Word, Markdown editors; Python scripts for analysis only",
+  "test_framework": "Manual verification - visual inspection, cross-reference checks, numerical consistency validation",
+  "build_command": "N/A - Documents are manually edited, not built",
+  "test_command": "Manual review - open each document and verify changes; run Python analysis scripts to detect issues",
+  "verification_instructions": "1) Open each edited document and visually verify changes. 2) Run comprehensive_analysis.py to detect remaining issues. 3) Cross-check numerical values (SUS 61.83, N=30, demographics) across all documents. 4) Verify PDF export matches DOCX. 5) Test presentation on actual defense setup.",
+  "snapshot_or_generated_files": "1_MAIN_MANUSCRIPT_FINAL.docx.pdf - regenerate from DOCX after fixes. Use 'Save As PDF' or 'Export to PDF' in Word. DO NOT manually edit the PDF.",
+  "environment_constraints": "1) PowerPoint and Word files require manual editing - scripts can only analyze, not edit binary Office formats. 2) NEW_DEFENSE.pptx (4 MB) is large - save frequently. 3) Manuscript has 648 paragraphs - use Find & Replace for bulk fixes. 4) Always keep backup copies before major edits.",
+  "contribution_requirements": "From original user request: 'make sure to double check from left, middle, to right and from top, middle to bottom and each cranny of the manuscript and presentation and script for all similar issues'. User hates oversights before final defense. Must fix ALL instances of issues found, not just samples.",
+  "key_patterns": "1) Critical values: SUS Mean=61.83 (Grade D), N=30 (10 parents 35-55, 20 young prof 21-35), Oct-Nov 2026 survey. 2) Issue patterns found: 'BSP CFIS 2025' should be '2026', 'preliminary' language must be removed, date references should be 2026 not 2024/2025. 3) Script references slides 1-17, must match final presentation slide numbers. 4) All documents must align: same statistics, same wording for key claims.",
+  "relevant_files": [
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\3_PRESENTATION_FINAL.pptx",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\SmartSpend_Defense.pptx",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\SMARTSPEND AI-Powered Receipt Expense Tracker for Personal Finance Management.pptx",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\SmartSpend An AI-Assisted Receipt and Expense Tracker for Personal Financial Management.pptx",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\1_MAIN_MANUSCRIPT_FINAL.docx",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\1_MAIN_MANUSCRIPT_FINAL.docx.pdf",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\4_DEFENSE_SCRIPT_FINAL.md",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\analysis\\comprehensive_analysis.json",
+    "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\analysis\\IMPLEMENTATION_PLAN.md"
+  ],
+  "directory_structure": "docs/handsoff/ - root for defense documents; docs/handsoff/FOR_CYRILLE/ - final versions prepared for team lead (FINAL versions, backup files, guides, reports); docs/handsoff/FOR_CYRILLE/analysis/ - analysis scripts and results, FEAT artifacts, implementation plan"
+}
