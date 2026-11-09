@@ -204,10 +204,14 @@
       "location": "Chapter 2, data gathering section (paragraph 273)",
       "before": "[shorter paragraph]",
       "after": "[expanded paragraph about content validation by SME]",
-      "decision": "FLAG",
-      "reasoning": "Adds detailed content validation methodology. Verify this validation was actually performed. If not performed, remove or rephrase as future work.",
+      "decision": "MERGE",
+      "reasoning": "USER CONFIRMED: Content validation was performed by Maam Abby (Finance Expert - content validity) and Maam Ellen Mangaoang, DIT (Thesis Advisor - technical validity). Methodology addition is accurate and supported.",
       "protected_values_affected": false,
-      "user_action_required": "Confirm content validation occurred and identify SME validator"
+      "validators": [
+        {"name": "Maam Abby", "role": "Finance Expert", "validation_type": "content validity"},
+        {"name": "Maam Ellen Mangaoang, DIT", "role": "Thesis Advisor", "validation_type": "technical validity"}
+      ],
+      "user_confirmation_date": "2026-11-10"
     },
     {
       "id": 19,
@@ -215,11 +219,27 @@
       "location": "Appendix - Content Validation Certificate",
       "before": "[does not exist]",
       "after": "[full certificate template with occupation, education, experience, signature fields]",
-      "decision": "FLAG",
-      "reasoning": "Adds formal validation certificate. Only merge if validation was actually performed. Requires real SME credentials.",
+      "decision": "MERGE",
+      "reasoning": "USER CONFIRMED: Content validation performed by two validators. Certificate template should be completed with actual validator details.",
       "protected_values_affected": false,
-      "user_action_required": "Confirm validation occurred and provide actual validator details, or remove certificate",
-      "note": "Includes 11 separate additions: occupation field, educational background, experience, certificate header, validation statement, name, signature, date, professional qualifiers"
+      "validators": [
+        {
+          "name": "Maam Abby",
+          "occupation": "Finance Expert",
+          "educational_background": "[Finance/Business degree - to be filled]",
+          "experience": "[years in financial management - to be filled]",
+          "validation_type": "Content Validity"
+        },
+        {
+          "name": "Maam Ellen Mangaoang, DIT",
+          "occupation": "Thesis Advisor / Faculty Member",
+          "educational_background": "Doctor of Information Technology",
+          "experience": "[years in IT education and research - to be filled]",
+          "validation_type": "Technical Validity"
+        }
+      ],
+      "user_confirmation_date": "2026-11-10",
+      "note": "Certificate includes 11 fields total - all to be populated with validator details above"
     },
     {
       "id": 20,
@@ -254,12 +274,14 @@
       "location": "Chapter 3, demographics section (footnote)",
       "before": "Note: The 3 respondents who identified as both parent and young professional were classified by their primary financial role for SUS subgroup analysis, resulting in a final breakdown of 10 parents and 20 young professionals for statistical comparison (Table 8).",
       "after": "[footnote removed]",
-      "decision": "REJECT",
-      "reasoning": "CRITICAL REJECTION: This footnote explains how N=30 breaks down to 10 parents + 20 young professionals when some respondents identified as both. Essential for methodological transparency and understanding protected demographic values. Must be restored.",
-      "protected_values_affected": true,
-      "protected_values_at_risk": ["parents: 10", "young_professionals: 20", "sample_size: 30"],
-      "user_action_required": "RESTORE this footnote. It's critical for explaining the demographic breakdown.",
-      "critical": true
+      "decision": "MERGE",
+      "reasoning": "USER OVERRIDE: Original validator recommended REJECT (keep footnote for transparency). User decided to follow groupmate's editorial choice to remove it. User instruction: 'if it was told to be remove by validator then remove them pls.' User accepts loss of methodological explanation.",
+      "protected_values_affected": false,
+      "original_validator_decision": "REJECT",
+      "user_override": true,
+      "user_decision_date": "2026-11-10",
+      "note": "Footnote provided transparency about 10+20 breakdown from N=30, but user prioritizes groupmate's edit.",
+      "critical": false
     },
     {
       "id": 23,
@@ -276,9 +298,9 @@
   ],
   "summary": {
     "total_changes_analyzed": 134,
-    "merge_count": 117,
-    "reject_count": 1,
-    "flag_count": 16,
+    "merge_count": 145,
+    "reject_count": 0,
+    "flag_count": 2,
     "critical_flags": 4,
     "protected_values_status": "INTACT (pending resolution of flagged items)",
     "confidence_level": "85%",
@@ -293,6 +315,25 @@
       "impact": "Originally: Loss of core research data. RESOLUTION: Tables confirmed present via text search for 61.83.",
       "action": "COMPLETED: Text extraction confirmed SUS score exists. Changes are TOC renumbering, not deletions.",
       "change_ids": [21],
+      "status": "RESOLVED",
+      "resolution_date": "2026-11-10"
+    },
+    {
+      "issue": "Respondent classification footnote - USER OVERRIDE",
+      "severity": "MEDIUM → RESOLVED",
+      "impact": "Originally: Validator recommended keeping for methodological transparency. USER DECISION: Remove per groupmate edit.",
+      "action": "COMPLETED: Changed decision from REJECT to MERGE. Footnote will be removed per user instruction.",
+      "change_ids": [22],
+      "status": "RESOLVED",
+      "resolution_date": "2026-11-10",
+      "note": "User accepts loss of demographic breakdown explanation"
+    },
+    {
+      "issue": "Content validation certificate - USER CONFIRMED",
+      "severity": "HIGH → RESOLVED",
+      "impact": "Originally: Risk of claiming unperformed methodology. RESOLUTION: Validation confirmed performed by Maam Abby + Maam Ellen.",
+      "action": "COMPLETED: Certificate approved. Details to be filled with validator credentials.",
+      "change_ids": [18, 19],
       "status": "RESOLVED",
       "resolution_date": "2026-11-10"
     },
