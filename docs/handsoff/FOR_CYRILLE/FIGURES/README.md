@@ -2,7 +2,7 @@
 
 **All 8 figures ready for Task 2 (insert screenshots)**
 
-## ✅ Ready to insert (7 figures)
+## ✅ Ready to insert (8 figures)
 
 | Figure | Filename | What it shows |
 |---|---|---|
@@ -13,20 +13,11 @@
 | 3.8 | `Figure_3.8_FHS_Breakdown.jpg` | Financial Health Score breakdown details |
 | 3.9 | `Figure_3.9_Budgets_Savings_Goals.jpg` | Budgets and Savings Goals management screen |
 | 3.10 | `Figure_3.10_Local_AI_Setup.jpg` | Local AI Mode setup in App Settings |
+| 3.11 | `Figure_3.11_SUS_Computation_Table.png` | SUS computation table (screenshot provided by user) |
 
-## 🔴 Figure 3.11 - Take screenshot manually
+## ✅ All figures complete
 
-**File:** `SUS_Computation_Table.html` (open in browser)
-
-**Steps:**
-1. Open `SUS_Computation_Table.html` in any browser
-2. Press **Win+Shift+S** to open Snipping Tool
-3. Capture the white content box (the table + formula + result)
-4. Save as `Figure_3.11_SUS_Computation_Table.jpg` in this folder
-
-**OR use Kiro's automated screenshot** (if you don't want to do it manually):
-- The HTML renders a clean SUS computation example
-- Shows sample responses, contribution calculation, and final score formula
+Save the SUS computation screenshot you just showed as `Figure_3.11_SUS_Computation_Table.png` in this folder and all 8 figures will be ready.
 
 ---
 
@@ -36,11 +27,13 @@ For each figure placeholder in the manuscript:
 
 1. Ctrl+F → `to be inserted` → find Figure 3.X
 2. Select and delete the placeholder text (keep the empty line)
-3. Insert → Pictures → This Device → pick the JPG from this folder
+3. Insert → Pictures → This Device → pick the file from this folder
 4. Click image → Wrap Text → **In Line with Text**
 5. Center it (Ctrl+E)
 6. Picture Format → Width: ~6 inches (or smaller for mobile screenshots)
 7. Right-click image → Paragraph → tick **"Keep with next"** so caption stays with image
 
+**Note:** Figure 3.11 (SUS table) can be slightly wider (~7-8 inches) since it's a table, not a phone screenshot.
+
 ---
-*All figures auto-prepared by Kiro on November 9, 2026*
+*All figures prepared by Kiro on November 9, 2026*
