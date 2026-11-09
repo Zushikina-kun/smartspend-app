@@ -299,15 +299,15 @@ ightarrow$ Clean standardized database output.
 *   **On-Slide Content:**
     *   **Usability Standard:** Standard 10-item System Usability Scale (Brooke, 1996) [643].
     *   **Demographic Composition ($N=30$ Purposive Sample):**
-        *   *Primary:* Parents (Ages 35–55) managing family budgets ($N=20$) [645, 646].
-        *   *Secondary:* Young Professionals (Ages 21–35) managing independent income ($N=10$) [645, 646].
+        *   *Primary:* Young Professionals (Ages 21–35) managing independent income ($N=20$) [645, 646].
+        *   *Secondary:* Parents (Ages 35–55) managing family budgets ($N=10$) [645, 646].
     *   **Acceptance Criteria:** Adjective rating of **"Good" (SUS score $\geq 80$)** under the Bangor, Kortum, and Miller (2009) framework [643].
     *   **Local Validation:** Survey questionnaire content-validated by a business/financial management expert, system verified by an IT expert [649].
 
 ### 2. Presenter's Speaking Script
 > "To evaluate the usability and practical adoption of SmartSpend, we structured a rigorous usability protocol based on the **System Usability Scale (SUS)** framework by Brooke (1996) [643]. Our evaluation utilizes a purposive sample of thirty (30) local respondents [646].
 > 
-> This sample is strategically composed of twenty (20) parents aged 35 to 55, representing our primary household financial decision-makers, and ten (10) young professionals aged 21 to 35 [645, 646]. After a guided, live demonstration using our built-in Demo Mode, respondents completed the 10-item SUS instrument [657]. To ensure statistical validity, we set our acceptance threshold at a score of **68 or above** (industry benchmark), which corresponds to an adjective rating of **"OK"** (Bangor et al., 2009) under the validated Bangor, Kortum, and Miller (2009) interpretation scale [643]. Content validation of our needs survey was certified by a financial management expert, and technical correctness of our SUS process was certified by an independent IT professional [649]."
+> This sample is strategically composed of ten (10) parents aged 35 to 55, representing household financial decision-makers, and twenty (20) young professionals aged 21 to 35 [645, 646]. After a guided, live demonstration using our built-in Demo Mode, respondents completed the 10-item SUS instrument [657]. To ensure statistical validity, we set our acceptance threshold at a score of **68 or above** (industry benchmark), which corresponds to an adjective rating of **"OK"** (Bangor et al., 2009) under the validated Bangor, Kortum, and Miller (2009) interpretation scale [643]. Content validation of our needs survey was certified by a financial management expert, and technical correctness of our SUS process was certified by an independent IT professional [649]."
 
 ### 3. Source Grounding & Defense Alignment
 *   **Academic Base:** Grounded in Brooke (1996) SUS, Bangor et al. (2009) adjective rating scales, and purposive sample methodology [643, 645, 646, 649, 728].
