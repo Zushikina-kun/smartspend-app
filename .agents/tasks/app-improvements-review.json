@@ -1,0 +1,8 @@
+{
+  "verdict": "APPROVED",
+  "findings": [
+    "Privacy sheet secondary button ('Switch to Local AI') calls Navigator.pop without setting _privacyDisclaimerShown=true or writing to DB — user will see the sheet again on next send if they dismiss this way. Non-blocking but should be a conscious decision.",
+    "Export & Backup tile routes to ProfileScreen(), not a dedicated export screen. Subtitle promises 'CSV export · JSON backup · Restore' but user lands on the full profile page. Non-blocking if no dedicated screen exists yet."
+  ],
+  "reviewDoc": "c:\\xampp\\htdocs\\smartspend_app\\.agents\\tasks\\app-improvements-review.md"
+}

@@ -1,0 +1,9 @@
+{
+  "verdict": "APPROVED",
+  "findings": [
+    "Demo hardcoded dark theme in light mode — All .demo-* color values are hardcoded dark hex constants with no [data-theme=\"light\"] overrides. Visitors who switch to light mode see a dark phone island with no surrounding context. Add a [data-theme=\"light\"] .demo-wrapper background adjustment, or add copy to the section header clarifying this is always a dark-mode preview.",
+    "Description field silently ignored — The <input class=\"demo-desc-input\"> has no id and is never read by the submit handler. A user who types a description and submits sees it silently dropped. Either wire it into the toast message or add placeholder=\"(not used in demo)\" to set expectations.",
+    "Keyword substring misfires in Peso chat — demoGetReply matches keys like 'how', 'track', 'doing' anywhere in the lowercased message string. 'Somehow' triggers the monthly-summary reply; 'backtrack' triggers the budget-check reply. Low-stakes given the fallback is honest, but easy to fix by anchoring keys with word boundaries or switching to exact-phrase matching."
+  ],
+  "reviewDoc": "c:\\xampp\\htdocs\\smartspend_app\\.agents\\tasks\\demo-review.md"
+}

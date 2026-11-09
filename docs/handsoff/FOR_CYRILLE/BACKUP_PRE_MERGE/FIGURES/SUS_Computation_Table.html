@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SUS Computation Table - SmartSpend</title>
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px;
+    background: #f5f5f5;
+    margin: 0;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+h2 {
+    color: #2c5f2d;
+    margin-top: 0;
+    text-align: center;
+    font-size: 24px;
+}
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+thead {
+    background: #2c5f2d;
+    color: white;
+}
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+th {
+    font-weight: 600;
+    font-size: 14px;
+}
+td {
+    font-size: 13px;
+}
+.item-num {
+    text-align: center;
+    font-weight: bold;
+    color: #2c5f2d;
+}
+.odd-item {
+    background: #f0f8f0;
+}
+.even-item {
+    background: #fff8f0;
+}
+.total-row {
+    background: #e8f5e9;
+    font-weight: bold;
+}
+.result-box {
+    background: #2c5f2d;
+    color: white;
+    padding: 20px;
+    border-radius: 6px;
+    text-align: center;
+    margin: 20px 0;
+}
+.result-box .score {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+.result-box .label {
+    font-size: 14px;
+    opacity: 0.9;
+}
+.formula {
+    background: #f9f9f9;
+    padding: 15px;
+    border-left: 4px solid #2c5f2d;
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+}
+.note {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>System Usability Scale (SUS) Computation</h2>
+    <div class="subtitle">SmartSpend Usability Evaluation — Sample Respondent Calculation</div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">Item</th>
+                <th>Question</th>
+                <th style="width: 120px;">Response (1-5)</th>
+                <th style="width: 120px;">Contribution</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="odd-item">
+                <td class="item-num">1</td>
+                <td>I think that I would like to use this system frequently</td>
+                <td style="text-align: center;">4</td>
+                <td style="text-align: center;">4 − 1 = 3</td>
+            </tr>
+            <tr class="even-item">
+                <td class="item-num">2</td>
+                <td>I found the system unnecessarily complex</td>
+                <td style="text-align: center;">2</td>
+                <td style="text-align: center;">5 − 2 = 3</td>
+            </tr>
+            <tr class="odd-item">
+                <td class="item-num">3</td>
+                <td>I thought the system was easy to use</td>
+                <td style="text-align: center;">4</td>
+                <td style="text-align: center;">4 − 1 = 3</td>
+            </tr>
+            <tr class="even-item">
+                <td class="item-num">4</td>
+                <td>I would need support to be able to use this system</td>
+                <td style="text-align: center;">2</td>
+                <td style="text-align: center;">5 − 2 = 3</td>
+            </tr>
+            <tr class="odd-item">
+                <td class="item-num">5</td>
+                <td>I found the functions well integrated</td>
+                <td style="text-align: center;">4</td>
+                <td style="text-align: center;">4 − 1 = 3</td>
+            </tr>
+            <tr class="even-item">
+                <td class="item-num">6</td>
+                <td>I thought there was too much inconsistency</td>
+                <td style="text-align: center;">2</td>
+                <td style="text-align: center;">5 − 2 = 3</td>
+            </tr>
+            <tr class="odd-item">
+                <td class="item-num">7</td>
+                <td>I would imagine most people would learn quickly</td>
+                <td style="text-align: center;">4</td>
+                <td style="text-align: center;">4 − 1 = 3</td>
+            </tr>
+            <tr class="even-item">
+                <td class="item-num">8</td>
+                <td>I found the system very cumbersome to use</td>
+                <td style="text-align: center;">2</td>
+                <td style="text-align: center;">5 − 2 = 3</td>
+            </tr>
+            <tr class="odd-item">
+                <td class="item-num">9</td>
+                <td>I felt very confident using the system</td>
+                <td style="text-align: center;">4</td>
+                <td style="text-align: center;">4 − 1 = 3</td>
+            </tr>
+            <tr class="even-item">
+                <td class="item-num">10</td>
+                <td>I needed to learn a lot before getting going</td>
+                <td style="text-align: center;">2</td>
+                <td style="text-align: center;">5 − 2 = 3</td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="3" style="text-align: right; padding-right: 20px;">Sum of Contributions:</td>
+                <td style="text-align: center;">30</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="formula">
+        <strong>SUS Score Formula:</strong><br>
+        SUS Score = Sum of Contributions × 2.5<br>
+        SUS Score = 30 × 2.5 = <strong>75.0</strong>
+    </div>
+    
+    <div class="result-box">
+        <div class="label">Final SUS Score</div>
+        <div class="score">75.0</div>
+        <div class="label">Adjective Rating: "Good" (Bangor et al., 2009)</div>
+    </div>
+    
+    <div class="note">
+        <strong>Note:</strong> This example shows a sample respondent scoring. For odd-numbered items (1, 3, 5, 7, 9), 
+        the contribution is the scale position minus 1. For even-numbered items (2, 4, 6, 8, 10), 
+        the contribution is 5 minus the scale position. The sum is then multiplied by 2.5 to obtain 
+        the overall SUS score, which ranges from 0 to 100.
+    </div>
+    
+    <div class="note" style="margin-top: 10px;">
+        <strong>Reference:</strong> Brooke, J. (1996). SUS: A "quick and dirty" usability scale. 
+        In P. W. Jordan et al. (Eds.), <em>Usability Evaluation in Industry</em> (pp. 189–194). 
+        Taylor & Francis.
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+TOTAL TABLES: 8
+TOTAL PARAGRAPHS: 762
+
+===== TABLE 0 (4x3) =====
+  R0: ['Gap Level', 'Existing Problem', 'SmartSpend Solution']
+  R1: ['International', 'Manual entry dominates; AI categorization degrades for non-English transactions (Stefanov et al., 2024)', 'LLM-based parsing for Filipino-English natural language input']
+  R2: ['National (PH)', 'Local apps lack LLM chat, spending behavior analysis, and health scoring (Bangko Sentral ng Pilipinas, 2021; Stefanov et al., 2024)', 'Conversational AI + Financial Health Score + multi-period summaries']
+  R3: ['Demographic', 'Parents abandon apps due to manual effort; warnings ignored without consequences (BSP, 2021)', 'Automated input + score decay consequence system']
+
+===== TABLE 1 (17x8) =====
+  R0: ['Feature', 'Tarsi', 'YNAB', 'Monarch', 'Copilot', 'BudgetPH', 'Alkansya AI', 'SmartSpend']
+  R1: ['Offline mode', 'Yes', 'No', 'No', 'No', 'Yes', 'No', 'Yes']
+  R2: ['LLM chat assistant', 'No', 'No', 'No', 'No', 'No (insights only)', 'Yes (basic)', 'Yes']
+  R3: ['Financial Health Score', 'No', 'No', 'No', 'No', 'Yes (simpler)', 'No', 'Yes (0–100)']
+  R4: ['OCR receipt scanning', 'Yes', 'No', 'No', 'No', 'No', 'No', 'Yes']
+  R5: ['Voice input (en-PH)', 'No', 'No', 'No', 'No', 'No', 'No', 'Yes']
+  R6: ['Spending behavior analysis', 'No', 'No', 'No', 'No', 'No', 'No', 'Yes']
+  R7: ['Bank synchronization', 'No', 'Yes', 'Yes', 'Yes', 'CSV import', 'No', 'No']
+  R8: ['Free tier (Android)', 'Yes', 'No', 'No', 'No', 'Yes (PWA)', 'Limited', 'Yes']
+  R9: ['General financial Q&A', 'No', 'No', 'No', 'No', 'No', 'Yes', 'Yes']
+  R10: ['Market price estimates', 'No', 'No', 'No', 'No', 'No', 'No', 'Yes']
+  R11: ['Financial product guidance', 'No', 'No', 'No', 'No', 'No', 'No', 'Yes']
+  R12: ['Batch screenshot import (40+ platforms)', 'No', 'No', 'No', 'No', 'No', 'No', 'Yes']
+  R13: ['Multi-period spending limits', 'No', 'No', 'No', 'No', 'Yes', 'No', 'Yes']
+  R14: ['Filipino-English AI (Taglish)', 'No', 'No', 'No', 'No', 'No', 'Yes', 'Yes']
+  R15: ['Paluwagan tracker', 'No', 'No', 'No', 'No', 'Yes', 'No', 'No']
+  R16: ['15th & 30th payday cycle', 'No', 'No', 'No', 'No', 'Yes', 'No', 'No']
+
+===== TABLE 2 (8x2) =====
+  R0: ['Category:', 'Number of Respondents:']
+  R1: ['Parents (Ages 35–55)', '20']
+  R2: ['Young Professionals (Ages 21–35)', '10']
+  R3: ['Total ', '30 ']
+  R4: ['Validators / Experts:', 'Number of Validators/Experts:']
+  R5: ['Content Validator (Survey)            ', '1']
+  R6: ['Technical Validator (System & SUS Process)      ', '1']
+  R7: ['Total Validators', '2']
+
+===== TABLE 3 (8x3) =====
+  R0: ['Phase', 'Key Tasks', 'Deliverable']
+  R1: ['Backlog', 'Define features; needs survey; literature review on PH financial gaps', 'Prioritized feature list; literature review']
+  R2: ['Requirements', 'Translate findings into specs; validate questionnaire; LLM API benchmarking', 'Validated questionnaire; LLM benchmarking matrix (Table 3.2)']
+  R3: ['Design', 'SQLite schema (26 tables); FHS formula; UI wireframes; data flow diagrams', 'System architecture; FHS documentation']
+  R4: ['Development', 'Build expense tracking; integrate Gemini 3.5 Flash-Lite; add OCR/voice/batch screenshots; FHS engine; Firebase sync; gamification', 'Functional app; all 34 agentic actions operational']
+  R5: ['Testing', 'LLM parsing accuracy; SUS with 30 respondents; interviews; bug log', 'SUS scores; parsing observations; bug documentation']
+  R6: ['Deployment', 'Build release APKs; prepare Demo Mode; publish GitHub Releases', 'Release APKs v3.1.0; project documentation']
+  R7: ['Done/Review', 'Analyze SUS scores; review feedback; document recommendations', 'Final evaluation report; post-capstone roadmap']
+
+===== TABLE 4 (21x8) =====
+  R0: ['Model', 'Provider', 'Context', 'Speed (t/s)', 'Filipino', 'Tool Use', 'Free Tier', 'Status']
+  R1: ['Gemini 3.5 Flash-Lite', 'Google', '1,048,576', '~400–600', '5/5', '5/5', '~500/day', 'Primary']
+  R2: ['Gemini 3.5 Flash', 'Google', '1,048,576', '~200–400', '5/5', '5/5', '~20/day', 'Fallback 1']
+  R3: ['LLaMA 4 Scout', 'Groq LPU', '10M', '~460', '5/5', '5/5', '1,000/day, 30K TPM', 'Not used: retired (Groq, 2026)']
+  R4: ['LLaMA 3.3 70B', 'Groq LPU', '128,000', '~315', '4/5', '5/5', '~1,000/day', 'Not used: retired (Groq, 2026)']
+  R5: ['LLaMA 3.1 8B', 'Groq LPU', '8,192', '~800', '4/5', '4/5', '14,400/day', 'Not used: retired (Groq, 2026)']
+  R6: ['GPT-OSS 120B', 'Groq LPU', '131,072', '~500', 'TBD', '5/5', '~1,000/day', 'Fallback 2']
+  R7: ['Qwen 3.6 27B', 'Groq LPU', '131,072', 'TBD', 'TBD', '5/5', '1,000/day', 'Fallback 3']
+  R8: ['Qwen 3.8 27B', 'Groq LPU', '131,072', 'TBD', 'TBD', '5/5', '1,000/day', 'Fallback 4']
+  R9: ['GPT-OSS 20B', 'Groq LPU', '131,072', 'TBD', 'TBD', '5/5', '1,000/day, 30K TPM', 'Fallback 5']
+  R10: ['Groq Compound Mini', 'Groq LPU', '131,072', 'TBD', 'TBD', '5/5 (web+code)', '1,000/day', 'Fallback 6']
+  R11: ['GPT-OSS 120B', 'Cerebras WSE', '131,072', '~3,000', 'TBD', '5/5', '1M tokens/day', 'Fallback 7']
+  R12: ['GPT-4o Mini', 'OpenAI', '128,000', '~120', '4/5', '5/5', 'No free tier', 'Not used: Cost']
+  R13: ['claude-3-5-haiku', 'Anthropic', '200,000', '~80', '5/5', '5/5', 'Paid only', 'Not used: Cost']
+  R14: ['Gemini 3.7 Flash', 'Google', '1,048,576', '~300–500', '5/5', '5/5', '~20/day free; paid beyond', 'Not used: Free quota too small']
+  R15: ['Grok 3 Mini', 'xAI', '131,072', '~100–200', '4/5', '5/5', 'Paid', 'Not used: Cost']
+  R16: ['DeepSeek V3', 'DeepSeek', '64,000', '~200', '3/5', '3/5', '$0.14/1M', 'Not used: Weak Fil.']
+  R17: ['Qwen 3 32B', 'Alibaba', '128,000', '~150–300', '4/5', '5/5', 'Free preview', 'Not used: Less tested']
+  R18: ['Fin-R1 (7B)', 'Self-hosted', '128,000', 'Varies', '3/5', '2/5', 'Self-host', 'Not used: No API']
+  R19: ['Mistral 7B', 'Mistral', '32,000', '~600', '3/5', '3/5', 'Self-host', 'Not used: Poor Fil.']
+  R20: ['Gemma 2 9B', 'Google', '8,192', '~500', '3/5', '3/5', 'Local only', 'Not used: No API']
+
+===== TABLE 5 (2x4) =====
+  R0: ['Overall SUS Score', 'Grade', 'Adjective', 'Acceptable']
+  R1: ['[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+
+===== TABLE 6 (4x6) =====
+  R0: ['Respondent Group', 'N', 'Mean SUS Score', 'SD', 'Range', 'Adjective Rating']
+  R1: ['Parents (35–55)', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+  R2: ['Young Professionals (21–35)', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+  R3: ['Combined', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+
+===== TABLE 7 (6x7) =====
+  R0: ['Import Modality', 'N', 'Date (P/R)', 'Merchant (P/R)', 'Amount (P/R)', 'Category', 'End-to-End']
+  R1: ['GCash Screenshots', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+  R2: ['Maya Receipts', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+  R3: ['Shopee/Lazada Invoices', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+  R4: ['Thermal Receipts (ML Kit)', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+  R5: ['Overall', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]', '[[PENDING]]']
+
