@@ -1,0 +1,95 @@
+============================================================
+fix_formatting.py  started: 2026-11-10 20:06:13.534577
+File: c:\xampp\htdocs\smartspend_app\docs\handsoff\FOR_CYRILLE\1_MAIN_MANUSCRIPT_FINAL.docx
+============================================================
+Total paragraphs loaded: 785
+
+--- A1: Fix Section 1 margins ---
+  Before: T=863600, B=177800, L=1143000, R=685800
+  After : T=914400, B=914400, L=1371600, R=914400
+  A1 APPLIED: 1 section updated.
+
+--- A2: Fix body text paragraphs styled as Heading 1 → Normal ---
+  Para 51: style='Heading 1' | text='Financial mismanagement remained a critical and documented c'
+  [CHANGED] Para 51: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 52: style='Heading 1' | text='The study employed a mixed-methods, developmental research d'
+  [CHANGED] Para 52: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 53: style='Heading 1' | text='The needs assessment revealed that 96.7% of respondents expr'
+  [CHANGED] Para 53: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 54: style='Heading 1' | text='The results indicated that SmartSpend showed promise as a pr'
+  [CHANGED] Para 54: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 56: style='Heading 1' | text='The researchers wished to express their sincere gratitude an'
+  [CHANGED] Para 56: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 57: style='Heading 1' | text='First and foremost, the researchers thanked the Almighty God'
+  [CHANGED] Para 57: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 58: style='Heading 1' | text='The researchers extended their heartfelt appreciation to the'
+  [CHANGED] Para 58: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 59: style='Heading 1' | text='Special thanks were given to their capstone adviser, Dr. Ell'
+  [CHANGED] Para 59: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 60: style='Heading 1' | text='The researchers also wished to thank their instructor in cha'
+  [CHANGED] Para 60: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 61: style='Heading 1' | text='To the panelists — Mr. Jeoffrey B. Layco, MIS, Mr. Shekiro R'
+  [CHANGED] Para 61: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 62: style='Heading 1' | text='The researchers also acknowledged the College of Computer St'
+  [CHANGED] Para 62: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 63: style='Heading 1' | text='Finally, the researchers extended their deepest gratitude to'
+  [CHANGED] Para 63: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 65: style='normal' | text=''
+  [SKIP] Para 65: style is 'normal', not 'Heading 1'
+  Para 66: style='Heading 1' | text='DEDICATION'
+  [SKIP] Para 66: text is a protected heading ('DEDICATION')
+  Para 67: style='Heading 1' | text='This study was dedicated to the people who had been a consta'
+  [CHANGED] Para 67: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 68: style='Heading 1' | text='First and foremost, the researchers dedicated this work to t'
+  [CHANGED] Para 68: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 69: style='Heading 1' | text='The researchers also dedicated this study to their friends a'
+  [CHANGED] Para 69: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 70: style='Heading 1' | text='To their mentors and instructors, this work was also dedicat'
+  [CHANGED] Para 70: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  Para 71: style='Heading 1' | text='Lastly, this study was dedicated to future researchers who m'
+  [CHANGED] Para 71: Heading 1 → Normal, Tahoma 12pt, Justify, Double spacing
+  A2 SUMMARY: 17 changed, 2 skipped.
+
+--- A3: Fix APPENDIX C (para 648) ---
+  Para 648: style='Heading 1' | text='APPENDIX C'
+  [CHANGED] Para 648: → Normal + CENTER
+
+--- A4: Fix APPENDIX D and E casing and font ---
+  Para 777: style='normal' | text='Appendix D'
+  [CHANGED] Para 777: text → 'APPENDIX D', Tahoma 12pt, CENTER
+  Para 780: style='normal' | text='Appendix E'
+  [CHANGED] Para 780: text → 'APPENDIX E', Tahoma 12pt, CENTER
+
+--- A5: Fix Figure 3.12 / 3.13 / 3.14 caption font size ---
+  [CHANGED] Para 311: 'Figure 3.14. Demographic Distribution of Needs-Assessment Re' – 1 run(s) set to Pt(12)
+  [CHANGED] Para 374: 'Figure 3.12. SUS Score Distribution (N = 30). Individual sco' – 1 run(s) set to Pt(12)
+  [CHANGED] Para 377: 'Figure 3.13. SUS Scores by Respondent Group (N = 30). Parent' – 1 run(s) set to Pt(12)
+  A5 SUMMARY: 3 caption paragraph(s) updated.
+
+--- A6: Fix LIST OF FIGURES and LIST OF TABLES labels ---
+  Para 124: style='normal' | text='LIST OF FIGURES'
+  [CHANGED] Para 124: CENTER + bold on all runs
+  [SCAN] Found 'LIST OF TABLES' at index 145 (not 144)
+  Para 145: style='normal' | text='LIST OF TABLES'
+  [CHANGED] Para 145: CENTER + bold on all runs
+
+--- A7: Fix LoF/LoT entry font (paras 125–158) ---
+  A7 SUMMARY: 34 run(s) updated across paras 125–158.
+
+--- Saving document ---
+  Saved: c:\xampp\htdocs\smartspend_app\docs\handsoff\FOR_CYRILLE\1_MAIN_MANUSCRIPT_FINAL.docx
+  File size: 6374377 bytes
+  Modified : 2026-11-10 20:06:13.850888
+
+============================================================
+SUMMARY
+============================================================
+  A1 – Section 1 margins fixed      : 1 section
+  A2 – Heading 1 → Normal            : 17 changed, 2 skipped
+  A3 – APPENDIX C para 648           : 1 paragraph
+  A4 – APPENDIX D/E casing+font      : 2 paragraphs
+  A5 – Figure 3.12-3.14 caption font : 3 paragraphs
+  A6 – LoF/LoT labels                : 2 paragraphs
+  A7 – LoF/LoT entry font runs       : 34 runs
+
+File saved successfully ✓
