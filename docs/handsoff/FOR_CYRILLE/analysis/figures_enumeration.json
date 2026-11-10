@@ -1,0 +1,1454 @@
+{
+  "captions": [
+    {
+      "key": "Figure 1.1",
+      "kind": "Figure",
+      "number": "1.1",
+      "caption_full": "Figure 1.1.  Financial Literacy Rates by \t\t\t\t\t\tDemographic Group (BSP, 2021; Inquiro, 2024)\t\t\t\t4",
+      "para_idx": 125,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 1.2",
+      "kind": "Figure",
+      "number": "1.2",
+      "caption_full": "Figure 1.2.  Conceptual Framework \u2014 \t\t\t\t\t\tSmartSpend Mobile Application (IPO Model)\t\t\t\t14",
+      "para_idx": 126,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 2.1",
+      "kind": "Figure",
+      "number": "2.1",
+      "caption_full": "Figure 2.1.  System Usability Scale (SUS) \t\t\t\t\tScore Interpretation\t\t\t\t\t\t\t\t36",
+      "para_idx": 128,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 2.2",
+      "kind": "Figure",
+      "number": "2.2",
+      "caption_full": "Figure 2.2.  Agile Kanban Workflow for \t\t\t\t\t\tSmartSpend Development\t\t\t\t\t\t\t37",
+      "para_idx": 129,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.1",
+      "kind": "Figure",
+      "number": "3.1",
+      "caption_full": "Figure 3.1. SmartSpend System Flowchart\t\t\t\t53",
+      "para_idx": 130,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.2",
+      "kind": "Figure",
+      "number": "3.2",
+      "caption_full": "Figure 3.2. Use Case Diagram\t\t\t\t\t\t54",
+      "para_idx": 131,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.3",
+      "kind": "Figure",
+      "number": "3.3",
+      "caption_full": "Figure 3.3. Visual Table of Contents\t\t\t\t\t55",
+      "para_idx": 132,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.4",
+      "kind": "Figure",
+      "number": "3.4",
+      "caption_full": "Figure 3.4. Login and Demo Mode Screen\t\t\t\t62",
+      "para_idx": 133,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.5",
+      "kind": "Figure",
+      "number": "3.5",
+      "caption_full": "Figure 3.5. Home Dashboard\t\t\t\t\t\t63",
+      "para_idx": 134,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.6",
+      "kind": "Figure",
+      "number": "3.6",
+      "caption_full": "Figure 3.6. Expense Logging Through Peso Chat\t\t\t64",
+      "para_idx": 135,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.7",
+      "kind": "Figure",
+      "number": "3.7",
+      "caption_full": "Figure 3.7. Receipt Scanning and Batch Screenshot Import\t\t65",
+      "para_idx": 136,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.8",
+      "kind": "Figure",
+      "number": "3.8",
+      "caption_full": "Figure 3.8. Financial Health Score Breakdown\t\t\t\t66",
+      "para_idx": 137,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.9",
+      "kind": "Figure",
+      "number": "3.9",
+      "caption_full": "Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals\t\t67",
+      "para_idx": 138,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.10",
+      "kind": "Figure",
+      "number": "3.10",
+      "caption_full": "Figure 3.10. Local AI Mode Setup\t\t\t\t\t\t68",
+      "para_idx": 139,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.11",
+      "kind": "Figure",
+      "number": "3.11",
+      "caption_full": "Figure 3.11. SUS Computation Table\t\t\t\t\t70",
+      "para_idx": 140,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 1.1",
+      "kind": "Table",
+      "number": "1.1",
+      "caption_full": "Table 1.1.  Three-Level Gap Analysis of SmartSpend\t\t\t5",
+      "para_idx": 144,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 1.2",
+      "kind": "Table",
+      "number": "1.2",
+      "caption_full": "Table 1.2.  Feature Comparison of SmartSpend \t\t\t\t\twith Existing Financial Applications\t\t\t\t\t8",
+      "para_idx": 145,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 2.1",
+      "kind": "Table",
+      "number": "2.1",
+      "caption_full": "Table 2.1: Distribution of Respondents and Validators",
+      "para_idx": 146,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 2.2",
+      "kind": "Table",
+      "number": "2.2",
+      "caption_full": "Table 2.2: Agile Kanban Workflow Phases and Deliverables",
+      "para_idx": 147,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.1",
+      "kind": "Table",
+      "number": "3.1",
+      "caption_full": "Table 3.1. Demographic Profile and Expense Tracking",
+      "para_idx": 148,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.2",
+      "kind": "Table",
+      "number": "3.2",
+      "caption_full": "Table 3.2. Comparative Evaluation of LLM APIs",
+      "para_idx": 150,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.3",
+      "kind": "Table",
+      "number": "3.3",
+      "caption_full": "Table 3.3. Overall SUS Result\t\t\t\t\t\t70",
+      "para_idx": 152,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.4",
+      "kind": "Table",
+      "number": "3.4",
+      "caption_full": "Table 3.4. System Usability Scale (SUS)",
+      "para_idx": 153,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.5",
+      "kind": "Table",
+      "number": "3.5",
+      "caption_full": "Table 3.5. SmartSpend Multimodal Import:",
+      "para_idx": 155,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 1.1",
+      "kind": "Figure",
+      "number": "1.1",
+      "caption_full": "Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).",
+      "para_idx": 168,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 1.1",
+      "kind": "Table",
+      "number": "1.1",
+      "caption_full": "Table 1.1. Three-Level Gap Analysis of SmartSpend",
+      "para_idx": 170,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 1.2",
+      "kind": "Table",
+      "number": "1.2",
+      "caption_full": "Table 1.2. Feature Comparison of SmartSpend with Existing Financial Applications (including Filipino-context apps)",
+      "para_idx": 175,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 1.2",
+      "kind": "Figure",
+      "number": "1.2",
+      "caption_full": "Figure 1.2 Conceptual Framework (Mobile Application)",
+      "para_idx": 187,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 2.1",
+      "kind": "Table",
+      "number": "2.1",
+      "caption_full": "Table 2.1: Distribution of Respondents and Validators",
+      "para_idx": 253,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 2.1",
+      "kind": "Figure",
+      "number": "2.1",
+      "caption_full": "Figure 2.1 System Usability Scale (SUS) Score Interpretation",
+      "para_idx": 281,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 2.2",
+      "kind": "Figure",
+      "number": "2.2",
+      "caption_full": "Figure 2.2. Agile Kanban Workflow for SmartSpend Development",
+      "para_idx": 285,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 2.2",
+      "kind": "Table",
+      "number": "2.2",
+      "caption_full": "Table 2.2: Agile Kanban Workflow Phases and Deliverables",
+      "para_idx": 296,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.1",
+      "kind": "Table",
+      "number": "3.1",
+      "caption_full": "Table 3.1 presents the demographic profile of the 30 respondents and the expense tracking methods they reported. The sample comprised 13 parents aged 35\u201355 (43.3%), 14 young professionals aged 21\u201335 (46.7%), and 3 respondents identifying as both (10.0%). In terms of employment, 10 were employed full-time (33.3%), 9 were freelance or contractual (30.0%), 8 were self-employed (26.7%), and 3 were unemployed or part-time (10.0%). GCash was used by 93.3% of respondents (28/30), confirming the relevance of e-wallet transaction import as a core feature.",
+      "para_idx": 302,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.1",
+      "kind": "Table",
+      "number": "3.1",
+      "caption_full": "Table 3.1. Demographic Profile and Expense Tracking Methods of Respondents (N = 30)",
+      "para_idx": 303,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.2",
+      "kind": "Table",
+      "number": "3.2",
+      "caption_full": "Table 3.2. Comparative Evaluation of LLM APIs for SmartSpend Integration",
+      "para_idx": 312,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.1",
+      "kind": "Figure",
+      "number": "3.1",
+      "caption_full": "Figure 3.1. SmartSpend System Flowchart",
+      "para_idx": 330,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.2",
+      "kind": "Figure",
+      "number": "3.2",
+      "caption_full": "Figure 3.2. Use Case Diagram",
+      "para_idx": 332,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.3",
+      "kind": "Figure",
+      "number": "3.3",
+      "caption_full": "Figure 3.3. Visual Table of Contents",
+      "para_idx": 334,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.4",
+      "kind": "Figure",
+      "number": "3.4",
+      "caption_full": "Figure 3.4. Login and Demo Mode Screen",
+      "para_idx": 344,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.5",
+      "kind": "Figure",
+      "number": "3.5",
+      "caption_full": "Figure 3.5. Home Dashboard",
+      "para_idx": 346,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.6",
+      "kind": "Figure",
+      "number": "3.6",
+      "caption_full": "Figure 3.6. Expense Logging Through Peso Chat",
+      "para_idx": 348,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.7",
+      "kind": "Figure",
+      "number": "3.7",
+      "caption_full": "Figure 3.7. Receipt Scanning and Batch Screenshot Import",
+      "para_idx": 350,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.8",
+      "kind": "Figure",
+      "number": "3.8",
+      "caption_full": "Figure 3.8. Financial Health Score Breakdown",
+      "para_idx": 352,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.9",
+      "kind": "Figure",
+      "number": "3.9",
+      "caption_full": "Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals",
+      "para_idx": 354,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.10",
+      "kind": "Figure",
+      "number": "3.10",
+      "caption_full": "Figure 3.10. Local AI Mode Setup",
+      "para_idx": 356,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Figure 3.11",
+      "kind": "Figure",
+      "number": "3.11",
+      "caption_full": "Figure 3.11. SUS Computation Table",
+      "para_idx": 362,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.3",
+      "kind": "Table",
+      "number": "3.3",
+      "caption_full": "Table 3.3. Overall SUS Result",
+      "para_idx": 363,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.4",
+      "kind": "Table",
+      "number": "3.4",
+      "caption_full": "Table 3.4. System Usability Scale (SUS) Results by Respondent Group",
+      "para_idx": 365,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    },
+    {
+      "key": "Table 3.5",
+      "kind": "Table",
+      "number": "3.5",
+      "caption_full": "Table 3.5. SmartSpend Multimodal Import: Field-Level Parsing Performance",
+      "para_idx": 370,
+      "style": "normal",
+      "has_image": false,
+      "image_count": 0
+    }
+  ],
+  "images": [
+    {
+      "para_idx": 29,
+      "image_count": 2,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 127,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 167,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 186,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 280,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 284,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 329,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 331,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 333,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 343,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 345,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 347,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 349,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 351,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 353,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 355,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 361,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 675,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 699,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    },
+    {
+      "para_idx": 734,
+      "image_count": 1,
+      "para_text": "",
+      "style": "normal"
+    }
+  ],
+  "tables": [
+    {
+      "table_idx": 0,
+      "n_rows": 4,
+      "n_cols": 3,
+      "rows": [
+        [
+          "Gap Level",
+          "Existing Problem",
+          "SmartSpend Solution"
+        ],
+        [
+          "International",
+          "Manual entry dominates; AI categorization degrades for non-English transactions (Stefanov et al., 2024)",
+          "LLM-based parsing for Filipino-English natural language input"
+        ],
+        [
+          "National (PH)",
+          "Local apps lack LLM chat, spending behavior analysis, and health scoring (Bangko Sentral ng Pilipinas, 2021; Stefanov et al., 2024)",
+          "Conversational AI + Financial Health Score + multi-period summaries"
+        ],
+        [
+          "Demographic",
+          "Parents abandon apps due to manual effort; warnings ignored without consequences (BSP, 2021)",
+          "Automated input + score decay consequence system"
+        ]
+      ]
+    },
+    {
+      "table_idx": 1,
+      "n_rows": 17,
+      "n_cols": 8,
+      "rows": [
+        [
+          "Feature",
+          "Tarsi",
+          "YNAB",
+          "Monarch",
+          "Copilot",
+          "BudgetPH",
+          "Alkansya AI",
+          "SmartSpend"
+        ],
+        [
+          "Offline mode",
+          "Yes",
+          "No",
+          "No",
+          "No",
+          "Yes",
+          "No",
+          "Yes"
+        ],
+        [
+          "LLM chat assistant",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No (insights only)",
+          "Yes (basic)",
+          "Yes"
+        ],
+        [
+          "Financial Health Score",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes (simpler)",
+          "No",
+          "Yes (0\u2013100)"
+        ],
+        [
+          "OCR receipt scanning",
+          "Yes",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes"
+        ],
+        [
+          "Voice input (en-PH)",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes"
+        ],
+        [
+          "Spending behavior analysis",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes"
+        ],
+        [
+          "Bank synchronization",
+          "No",
+          "Yes",
+          "Yes",
+          "Yes",
+          "CSV import",
+          "No",
+          "No"
+        ],
+        [
+          "Free tier (Android)",
+          "Yes",
+          "No",
+          "No",
+          "No",
+          "Yes (PWA)",
+          "Limited",
+          "Yes"
+        ],
+        [
+          "General financial Q&A",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes",
+          "Yes"
+        ],
+        [
+          "Market price estimates",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes"
+        ],
+        [
+          "Financial product guidance",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes"
+        ],
+        [
+          "Batch screenshot import (40+ platforms)",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes"
+        ],
+        [
+          "Multi-period spending limits",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes",
+          "No",
+          "Yes"
+        ],
+        [
+          "Filipino-English AI (Taglish)",
+          "No",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes",
+          "Yes"
+        ],
+        [
+          "Paluwagan tracker",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes",
+          "No",
+          "No"
+        ],
+        [
+          "15th & 30th payday cycle",
+          "No",
+          "No",
+          "No",
+          "No",
+          "Yes",
+          "No",
+          "No"
+        ]
+      ]
+    },
+    {
+      "table_idx": 2,
+      "n_rows": 13,
+      "n_cols": 2,
+      "rows": [
+        [
+          "Category:",
+          "Number of Respondents:"
+        ],
+        [
+          "Parents (Ages 35\u201355)",
+          "13"
+        ],
+        [
+          "Young Professionals (Ages 21\u201335)",
+          "14"
+        ],
+        [
+          "Both Groups",
+          "3"
+        ],
+        [
+          "Total",
+          "30"
+        ],
+        [
+          "Validators / Experts:",
+          "Number of Validators/Experts:"
+        ],
+        [
+          "Content Validator (Survey)",
+          "1"
+        ],
+        [
+          "Technical Validator (System & SUS Process)",
+          "1"
+        ],
+        [
+          "Total Validators",
+          "2"
+        ],
+        [
+          "SUS evaluation sample:",
+          ""
+        ],
+        [
+          "Parents (35-55)",
+          "10"
+        ],
+        [
+          "Young Professionals (21-35)",
+          "20"
+        ],
+        [
+          "Total",
+          "30"
+        ]
+      ]
+    },
+    {
+      "table_idx": 3,
+      "n_rows": 8,
+      "n_cols": 3,
+      "rows": [
+        [
+          "Phase",
+          "Key Tasks",
+          "Deliverable"
+        ],
+        [
+          "Backlog",
+          "Define features; needs survey; literature review on PH financial gaps",
+          "Prioritized feature list; literature review"
+        ],
+        [
+          "Requirements",
+          "Translate findings into specs; validate questionnaire; LLM API benchmarking",
+          "Validated questionnaire; LLM benchmarking matrix (Table 3.2)"
+        ],
+        [
+          "Design",
+          "SQLite schema (26 tables); FHS formula; UI wireframes; data flow diagrams",
+          "System architecture; FHS documentation"
+        ],
+        [
+          "Development",
+          "Build expense tracking; integrate Gemini 3.5 Flash-Lite; add OCR/voice/batch screenshots; FHS engine; Firebase sync; gamification",
+          "Functional app; all 34 agentic actions operational"
+        ],
+        [
+          "Testing",
+          "LLM parsing accuracy; SUS with 30 respondents; survey feedback; bug log",
+          "SUS scores; parsing observations; bug documentation"
+        ],
+        [
+          "Deployment",
+          "Build release APKs; prepare Demo Mode; publish GitHub Releases",
+          "Release APKs v3.1.0; project documentation"
+        ],
+        [
+          "Done/Review",
+          "Analyze SUS scores; review feedback; document recommendations",
+          "Final evaluation report; post-capstone roadmap"
+        ]
+      ]
+    },
+    {
+      "table_idx": 4,
+      "n_rows": 17,
+      "n_cols": 5,
+      "rows": [
+        [
+          "Item",
+          "Parents (n = 13)",
+          "Young Professionals (n = 14)",
+          "Both (n = 3)\u2020",
+          "Total (N = 30)\u2020"
+        ],
+        [
+          "A. Demographic profile, f (%)",
+          "A. Demographic profile, f (%)",
+          "A. Demographic profile, f (%)",
+          "A. Demographic profile, f (%)",
+          "A. Demographic profile, f (%)"
+        ],
+        [
+          "Parents aged 35\u201355",
+          "13 (43.3%)",
+          "13 (43.3%)",
+          "13 (43.3%)",
+          "13 (43.3%)"
+        ],
+        [
+          "Young professionals aged 21\u201335",
+          "14 (46.7%)",
+          "14 (46.7%)",
+          "14 (46.7%)",
+          "14 (46.7%)"
+        ],
+        [
+          "Both groups",
+          "3 (10.0%)",
+          "3 (10.0%)",
+          "3 (10.0%)",
+          "3 (10.0%)"
+        ],
+        [
+          "Employed full-time",
+          "10 (33.3%)",
+          "10 (33.3%)",
+          "10 (33.3%)",
+          "10 (33.3%)"
+        ],
+        [
+          "Freelance or contractual",
+          "9 (30.0%)",
+          "9 (30.0%)",
+          "9 (30.0%)",
+          "9 (30.0%)"
+        ],
+        [
+          "Self-employed",
+          "8 (26.7%)",
+          "8 (26.7%)",
+          "8 (26.7%)",
+          "8 (26.7%)"
+        ],
+        [
+          "Unemployed or part-time",
+          "3 (10.0%)",
+          "3 (10.0%)",
+          "3 (10.0%)",
+          "3 (10.0%)"
+        ],
+        [
+          "GCash users",
+          "28 (93.3%)",
+          "28 (93.3%)",
+          "28 (93.3%)",
+          "28 (93.3%)"
+        ],
+        [
+          "B. Expense tracking methods used, f (%)",
+          "B. Expense tracking methods used, f (%)",
+          "B. Expense tracking methods used, f (%)",
+          "B. Expense tracking methods used, f (%)",
+          "B. Expense tracking methods used, f (%)"
+        ],
+        [
+          "Receipts",
+          "11 (84.6%)",
+          "13 (92.9%)",
+          "3 (100.0%)",
+          "27 (90.0%)"
+        ],
+        [
+          "Mental estimates",
+          "8 (61.5%)",
+          "7 (50.0%)",
+          "1 (33.3%)",
+          "16 (53.3%)"
+        ],
+        [
+          "E-wallet transaction history",
+          "6 (46.2%)",
+          "6 (42.9%)",
+          "1 (33.3%)",
+          "13 (43.3%)"
+        ],
+        [
+          "Notes app",
+          "4 (30.8%)",
+          "5 (35.7%)",
+          "0 (0.0%)",
+          "9 (30.0%)"
+        ],
+        [
+          "Notebook",
+          "3 (23.1%)",
+          "3 (21.4%)",
+          "1 (33.3%)",
+          "7 (23.3%)"
+        ],
+        [
+          "Mobile app",
+          "1 (7.7%)",
+          "2 (14.3%)",
+          "0 (0.0%)",
+          "3 (10.0%)"
+        ]
+      ]
+    },
+    {
+      "table_idx": 5,
+      "n_rows": 21,
+      "n_cols": 8,
+      "rows": [
+        [
+          "Model",
+          "Provider",
+          "Context",
+          "Speed (t/s)",
+          "Filipino",
+          "Tool Use",
+          "Free Tier",
+          "Status"
+        ],
+        [
+          "Gemini 3.5 Flash-Lite",
+          "Google",
+          "1,048,576",
+          "~400\u2013600",
+          "5/5",
+          "5/5",
+          "~500/day",
+          "Primary"
+        ],
+        [
+          "Gemini 3.5 Flash",
+          "Google",
+          "1,048,576",
+          "~200\u2013400",
+          "5/5",
+          "5/5",
+          "~20/day",
+          "Fallback 1"
+        ],
+        [
+          "LLaMA 4 Scout",
+          "Groq LPU",
+          "10M",
+          "~460",
+          "5/5",
+          "5/5",
+          "1,000/day, 30K TPM",
+          "Not used: retired (Groq, 2026)"
+        ],
+        [
+          "LLaMA 3.3 70B",
+          "Groq LPU",
+          "128,000",
+          "~315",
+          "4/5",
+          "5/5",
+          "~1,000/day",
+          "Not used: retired (Groq, 2026)"
+        ],
+        [
+          "LLaMA 3.1 8B",
+          "Groq LPU",
+          "8,192",
+          "~800",
+          "4/5",
+          "4/5",
+          "14,400/day",
+          "Not used: retired (Groq, 2026)"
+        ],
+        [
+          "GPT-OSS 120B",
+          "Groq LPU",
+          "131,072",
+          "~500",
+          "Not measured",
+          "5/5",
+          "~1,000/day",
+          "Fallback 2"
+        ],
+        [
+          "Qwen 3.6 27B",
+          "Groq LPU",
+          "131,072",
+          "Not measured",
+          "Not measured",
+          "5/5",
+          "1,000/day",
+          "Fallback 3"
+        ],
+        [
+          "Qwen 3.8 27B",
+          "Groq LPU",
+          "131,072",
+          "Not measured",
+          "Not measured",
+          "5/5",
+          "1,000/day",
+          "Fallback 4"
+        ],
+        [
+          "GPT-OSS 20B",
+          "Groq LPU",
+          "131,072",
+          "Not measured",
+          "Not measured",
+          "5/5",
+          "1,000/day, 30K TPM",
+          "Fallback 5"
+        ],
+        [
+          "Groq Compound Mini",
+          "Groq LPU",
+          "131,072",
+          "Not measured",
+          "Not measured",
+          "5/5 (web+code)",
+          "1,000/day",
+          "Fallback 6"
+        ],
+        [
+          "GPT-OSS 120B",
+          "Cerebras WSE",
+          "131,072",
+          "~3,000",
+          "Not measured",
+          "5/5",
+          "1M tokens/day",
+          "Fallback 7"
+        ],
+        [
+          "GPT-4o Mini",
+          "OpenAI",
+          "128,000",
+          "~120",
+          "4/5",
+          "5/5",
+          "No free tier",
+          "Not used: Cost"
+        ],
+        [
+          "claude-3-5-haiku",
+          "Anthropic",
+          "200,000",
+          "~80",
+          "5/5",
+          "5/5",
+          "Paid only",
+          "Not used: Cost"
+        ],
+        [
+          "Gemini 3.7 Flash",
+          "Not used: same ~20/day quota as 3.5 Flash with no added benefit in trials",
+          "1,048,576",
+          "~300\u2013500",
+          "5/5",
+          "5/5",
+          "~20/day free; paid beyond",
+          "Not used: Free quota too small"
+        ],
+        [
+          "Grok 3 Mini",
+          "xAI",
+          "131,072",
+          "~100\u2013200",
+          "4/5",
+          "5/5",
+          "Paid",
+          "Not used: Cost"
+        ],
+        [
+          "DeepSeek V3",
+          "DeepSeek",
+          "64,000",
+          "~200",
+          "3/5",
+          "3/5",
+          "$0.14/1M",
+          "Not used: Weak Fil."
+        ],
+        [
+          "Qwen 3 32B",
+          "Alibaba",
+          "128,000",
+          "~150\u2013300",
+          "4/5",
+          "5/5",
+          "Free preview",
+          "Not used: Less tested"
+        ],
+        [
+          "Fin-R1 (7B)",
+          "Self-hosted",
+          "128,000",
+          "Varies",
+          "3/5",
+          "2/5",
+          "Self-host",
+          "Not used: No API"
+        ],
+        [
+          "Mistral 7B",
+          "Mistral",
+          "32,000",
+          "~600",
+          "3/5",
+          "3/5",
+          "Self-host",
+          "Not used: Poor Fil."
+        ],
+        [
+          "Gemma 2 9B",
+          "Google",
+          "8,192",
+          "~500",
+          "3/5",
+          "3/5",
+          "Local only",
+          "Not used: No API"
+        ]
+      ]
+    },
+    {
+      "table_idx": 6,
+      "n_rows": 2,
+      "n_cols": 4,
+      "rows": [
+        [
+          "Overall SUS Score",
+          "Grade",
+          "Adjective",
+          "Acceptable"
+        ],
+        [
+          "61.83",
+          "D",
+          "OK",
+          "No (below the 68 benchmark and the 80 target)"
+        ]
+      ]
+    },
+    {
+      "table_idx": 7,
+      "n_rows": 4,
+      "n_cols": 6,
+      "rows": [
+        [
+          "Respondent Group",
+          "N",
+          "Mean SUS Score",
+          "SD",
+          "Range",
+          "Adjective Rating"
+        ],
+        [
+          "Parents (35\u201355)",
+          "10",
+          "58.25",
+          "19.72",
+          "35.0\u201390.0",
+          "OK"
+        ],
+        [
+          "Young Professionals (21\u201335)",
+          "20",
+          "63.62",
+          "16.65",
+          "42.5\u201392.5",
+          "OK"
+        ],
+        [
+          "Combined",
+          "30",
+          "61.83",
+          "17.58",
+          "35.0\u201392.5",
+          "OK"
+        ]
+      ]
+    },
+    {
+      "table_idx": 8,
+      "n_rows": 6,
+      "n_cols": 7,
+      "rows": [
+        [
+          "Import Modality",
+          "N",
+          "Date (P/R)",
+          "Merchant (P/R)",
+          "Amount (P/R)",
+          "Category",
+          "End-to-End"
+        ],
+        [
+          "GCash Screenshots",
+          "\u2014",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured"
+        ],
+        [
+          "Maya Receipts",
+          "\u2014",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured"
+        ],
+        [
+          "Shopee/Lazada Invoices",
+          "\u2014",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured"
+        ],
+        [
+          "Thermal Receipts (ML Kit)",
+          "\u2014",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured",
+          "Not measured"
+        ],
+        [
+          "Overall",
+          "91.2% precision, 88.5% recall (preliminary developer testing)",
+          "91.2% precision, 88.5% recall (preliminary developer testing)",
+          "91.2% precision, 88.5% recall (preliminary developer testing)",
+          "91.2% precision, 88.5% recall (preliminary developer testing)",
+          "91.2% precision, 88.5% recall (preliminary developer testing)",
+          "91.2% precision, 88.5% recall (preliminary developer testing)"
+        ]
+      ]
+    }
+  ],
+  "table_caption_map": {
+    "0": {
+      "caption_key": "Table 1.1",
+      "caption_text": "Table 1.1. Three-Level Gap Analysis of SmartSpend"
+    },
+    "1": {
+      "caption_key": "Table 1.2",
+      "caption_text": "Table 1.2. Feature Comparison of SmartSpend with Existing Financial Applications (including Filipino-context apps)"
+    },
+    "2": {
+      "caption_key": "Table 2.1",
+      "caption_text": "Table 2.1: Distribution of Respondents and Validators"
+    },
+    "3": {
+      "caption_key": "Table 2.2",
+      "caption_text": "Table 2.2: Agile Kanban Workflow Phases and Deliverables"
+    },
+    "4": {
+      "caption_key": "Table 3.1",
+      "caption_text": "Table 3.1. Demographic Profile and Expense Tracking Methods of Respondents (N = 30)"
+    },
+    "5": {
+      "caption_key": "Table 3.2",
+      "caption_text": "Table 3.2. Comparative Evaluation of LLM APIs for SmartSpend Integration"
+    },
+    "6": {
+      "caption_key": "Table 3.3",
+      "caption_text": "Table 3.3. Overall SUS Result"
+    },
+    "7": {
+      "caption_key": "Table 3.4",
+      "caption_text": "Table 3.4. System Usability Scale (SUS) Results by Respondent Group"
+    },
+    "8": {
+      "caption_key": "Table 3.5",
+      "caption_text": "Table 3.5. SmartSpend Multimodal Import: Field-Level Parsing Performance"
+    }
+  },
+  "references": {
+    "Figure 1.1": 2,
+    "Figure 1.2": 2,
+    "Figure 2.1": 2,
+    "Figure 2.2": 2,
+    "Figure 3.1": 2,
+    "Figure 3.2": 2,
+    "Figure 3.3": 2,
+    "Figure 3.4": 2,
+    "Figure 3.5": 2,
+    "Figure 3.6": 2,
+    "Figure 3.7": 2,
+    "Figure 3.8": 2,
+    "Figure 3.9": 2,
+    "Figure 3.10": 2,
+    "Figure 3.11": 2,
+    "Table 1.1": 3,
+    "Table 1.2": 4,
+    "Table 2.1": 4,
+    "Table 2.2": 4,
+    "Table 3.1": 3,
+    "Table 3.2": 4,
+    "Table 3.3": 3,
+    "Table 3.4": 2,
+    "Table 3.5": 3
+  }
+}
