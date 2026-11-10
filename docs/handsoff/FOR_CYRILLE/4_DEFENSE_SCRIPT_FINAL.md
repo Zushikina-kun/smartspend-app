@@ -2,8 +2,8 @@
 
 Rebuilt from `SmartSpend_Defense.pptx` (18 slides). Numbers match the manuscript. Target time: about 12 minutes plus Q&A.
 
-**Panel:** Mr. Shekiro R. Raposas, MIT (Instructor); Chairperson: Dean Jeoffrey B. Layco
-**Adviser:** Ellen F. Mangaoang, DIT
+**Panel:** Mr. Shekiro R. Raposas, MTS, MIS (Instructor); Chairperson: Dean Jeoffrey B. Layco, MIS; Ms. Mary-Ann Mzana, MTS
+**Adviser:** Dr. Ellen Flores Mangaoang, DIT
 
 **Say / don't say**
 - Say "source-available" for the repo. Never "open source."
@@ -63,7 +63,7 @@ Rebuilt from `SmartSpend_Defense.pptx` (18 slides). Numbers match the manuscript
 "Objective 1 is achieved: 96.7% intent to use an AI finance app, and 93.3% use GCash. Objective 2 is achieved: a working Android app with 34 AI actions, Gemini 3.5 Flash-Lite with failover, and the Financial Health Score. Objective 3 is partially achieved: usability was evaluated, but the SUS of 61.83 is below target, and we identified UI/UX areas to improve."
 
 ## Slide 17: Recommendations
-"We recommend seven steps. One, payday-cycle budgeting aligned to the 15th and 30th. Two, a backend API proxy with server-side keys and per-user limits, followed by a Google Play release once a privacy policy is in place. Three, an opt-in on-device AI tier, about 2.6 GB. Four, SQLCipher encryption for the local database. Five, UI/UX refinement for consistency and complexity. Six, a formal parsing evaluation with 50 or more standardized receipts. Seven, a longitudinal study of 3 to 6 months with a larger sample to measure behavior change."
+"The researchers recommended seven steps. One, payday-cycle-aware budgeting — resets aligned to the 15th and 30th salary cycle. Two, a backend API proxy with server-side keys and per-user limits, removing device-side key exposure. Three, a Google Play release once the backend proxy and a privacy policy are in place. Four, an opt-in on-device AI tier, about 2.6 GB, for fully offline AI. Five, SQLCipher encryption for the local database. Six, shared household wallets and OFW remittance tracking as a distinct income category. Seven, a longitudinal evaluation of three to six months with a larger sample to measure behavior change."
 
 ## Slide 18: Closing
 "Salamat po. We welcome your questions. The source code is available on GitHub at github.com/Zushikina-kun/smartspend-app under a non-commercial source-available license."

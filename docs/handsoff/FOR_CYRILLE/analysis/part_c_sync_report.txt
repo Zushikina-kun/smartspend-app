@@ -1,0 +1,184 @@
+================================================================================
+PART C — PRESENTATION & SCRIPT SYNC REPORT
+================================================================================
+Manuscript (authoritative): 1_MAIN_MANUSCRIPT_FINAL.docx
+Presentation:               SmartSpend_Defense.pptx
+Script:                     4_DEFENSE_SCRIPT_FINAL.md
+Sync date:                  Part C pre-defense pass
+
+================================================================================
+SECTION 1: PPTX FIXES (SmartSpend_Defense.pptx)
+================================================================================
+
+Pre-check findings (via check_pptx.py full text dump, all 18 slides):
+  - Slide 1:  Authors correct (Directo, Rubis, Madayag); Adviser correct
+              (Ellen F. Mangaoang, DIT). No change needed.
+  - Slide 7:  "self-directed use for 10+ minutes (screening confirmed)" already
+              present. No change needed.
+  - Slide 14: 61.83, 17.58, Grade D, OK all present. Protected values intact.
+  - Slide 16: "Partially achieved" for Objective 3 already present.
+  - All slides: No "Joffrey" misspelling, "Dr. Raposas", "MIT" for Raposas, or
+              "live demonstration" found. All already correct.
+
+FIXES APPLIED — Slide 17 (Recommendations):
+
+  CHANGE C2e-1: Rec 2 text updated
+    Old: "Backend API proxy / Server-side keys and per-user limits"
+    New: "Backend API proxy / Server-side keys and per-user limits;
+         remove device-side key exposure"
+    Reason: Align with manuscript item 2 wording.
+
+  CHANGE C2e-2: Rec 3 text updated (item reordered to match manuscript)
+    Old: "On-device AI tier / Opt-in ~2.6 GB model for fully offline AI"
+    New: "Google Play release / After backend proxy and privacy policy are in place"
+    Reason: Manuscript item 3 is Google Play release; pptx had On-device AI here.
+
+  CHANGE C2e-3: Rec 4 text updated (item reordered to match manuscript)
+    Old: "SQLite encryption / SQLCipher for the local database"
+    New: "On-device AI tier / Opt-in ~2.6 GB model for fully offline AI"
+    Reason: Manuscript item 4 is On-device AI tier.
+
+  CHANGE C2e-4: Rec 5 text updated (replaced "UI/UX refinement")
+    Old: "UI/UX refinement / Address consistency and complexity from SUS feedback"
+    New: "SQLite encryption / SQLCipher for the local database"
+    Reason: Manuscript item 5 is SQLite encryption. UI/UX refinement is not a
+    numbered recommendation in Chapter IV.
+
+  CHANGE C2e-5: Rec 6 text updated (replaced "Formal parsing evaluation")
+    Old: "Formal parsing evaluation / 50+ standardized receipts; measure
+         precision and recall"
+    New: "Household and remittance / Shared wallets and OFW remittance as a
+         distinct income category"
+    Reason: Manuscript item 6 is Household and remittance features. Formal
+    parsing evaluation is not a numbered recommendation in Chapter IV.
+
+  CHANGE C2e-6: Rec 7 text updated
+    Old: "Longitudinal study / 3–6 months, larger sample, measure behavior change"
+    New: "Longitudinal evaluation / 3–6 months, larger sample, measure behavior
+         change"
+    Reason: Manuscript uses "Longitudinal evaluation" as the item name.
+
+TOTAL PPTX FIXES: 6 changes on Slide 17.
+No changes required on any other slide.
+
+================================================================================
+SECTION 2: SCRIPT FIXES (4_DEFENSE_SCRIPT_FINAL.md)
+================================================================================
+
+CHANGE C3a-1: Panel header — Raposas MIT → MTS, MIS; added Layco MIS; added
+  Mzana MTS; expanded Mangaoang to full name with DIT
+  Old: "**Panel:** Mr. Shekiro R. Raposas, MIT (Instructor);
+       Chairperson: Dean Jeoffrey B. Layco
+       **Adviser:** Ellen F. Mangaoang, DIT"
+  New: "**Panel:** Mr. Shekiro R. Raposas, MTS, MIS (Instructor);
+       Chairperson: Dean Jeoffrey B. Layco, MIS; Ms. Mary-Ann Mzana, MTS
+       **Adviser:** Dr. Ellen Flores Mangaoang, DIT"
+  Rules applied: C3a (Raposas MIT→MTS,MIS; Layco MIS; Mzana MTS; Mangaoang
+  full name + DIT)
+
+CHANGE C3d/C3b: Slide 17 Recommendations section — rewrote to match manuscript
+  Chapter IV exactly (Option A — user confirmed manuscript is authoritative)
+  Old (7 items): payday-cycle, backend proxy, on-device AI, SQLite, UI/UX
+    refinement, formal parsing evaluation, longitudinal study
+  New (7 items): payday-cycle budgeting, backend API proxy + per-user keys,
+    Google Play release, on-device AI tier, SQLite encryption, household and
+    remittance features, longitudinal evaluation
+  - Framing changed to past tense: "The researchers recommended seven steps..."
+  - UI/UX refinement removed as numbered item (not in manuscript Chapter IV)
+  - Formal parsing evaluation removed as numbered item (not in Chapter IV)
+  - Google Play release added (manuscript item 3)
+  - Household and remittance features added (manuscript item 6)
+
+TOTAL SCRIPT FIXES: 2 changes (panel header block, Slide 17 section).
+
+================================================================================
+SECTION 3: MANUSCRIPT LOF FIXES (1_MAIN_MANUSCRIPT_FINAL.docx)
+================================================================================
+
+Three figure entries were present in the manuscript body but missing from the
+List of Figures section (LOF ended at Figure 3.11).
+
+CHANGE LOF-1: Inserted Figure 3.12 into LOF after Figure 3.11
+  Inserted at para 143: "Figure 3.12.  SUS Score Distribution (N = 30)\t70"
+
+CHANGE LOF-2: Inserted Figure 3.13 into LOF after Figure 3.12
+  Inserted at para 144:
+  "Figure 3.13.  SUS Scores by Respondent Group (N = 30)\t71"
+
+CHANGE LOF-3: Inserted Figure 3.14 into LOF after Figure 3.13
+  Inserted at para 145:
+  "Figure 3.14.  Demographic Distribution of Needs-Assessment Respondents
+  (N = 30)\t44"
+
+Note: Figure 3.14 (demographics) appears in the manuscript body before Figures
+3.12/3.13 (SUS charts), but the LOF lists them in numeric order (3.12, 3.13,
+3.14) as is standard for a List of Figures. The figure appears near Chapter III
+results (Table 3.1 area, page ~44) while SUS figures are on pages 70–71. LOF
+sequence is correct by number regardless of body placement order.
+
+TOTAL MANUSCRIPT LOF FIXES: 3 entries added.
+
+================================================================================
+SECTION 4: [CONFIRM] TAGS
+================================================================================
+
+[CONFIRM] tags in script: NONE FOUND in 4_DEFENSE_SCRIPT_FINAL.md.
+  → Per 00_START_HERE.md, all [CONFIRM] placeholders were resolved in prior
+    passes. The script is clean.
+
+================================================================================
+SECTION 5: ISSUES NOT REQUIRING CHANGES
+================================================================================
+
+C2a — Slide 1 author/adviser names: Already correct. No fix needed.
+C2b — Panelist/validator slide: No dedicated panelist slide in the presentation
+  (not flagged as a gap by the adviser; presenter introduces them verbally).
+C2c — SUS protected values: All present and unchanged (61.83, 17.58, Grade D,
+  OK, below 68, below 80).
+C2d — "Partially achieved" (Slide 16): Already present. No fix needed.
+C2f — "Live demonstration": Not present in PPTX. Already replaced in prior
+  passes. No fix needed.
+C2g — Spelling checks: "Jeoffrey" correct throughout; "Mr. Raposas" correct;
+  no "MIT" for Raposas; no "Dr. Raposas" in PPTX. No fix needed.
+C3b — SUS protocol "self-directed": Slide 7 of PPTX already has "self-directed
+  use for 10+ minutes". Script Slide 7 says "at least 10 minutes" without the
+  "self-directed" phrase but this is acceptable spoken language; not changed.
+C3c — "Partially achieved" in script: Slide 16 and Q&A #1 both correctly say
+  "partially achieved". No fix needed.
+C3f — Wrong spellings in script: "Jeoffrey" correct throughout (never Joffrey);
+  "Mr. Raposas" is used correctly; no "Dr. Raposas" found. No fix needed.
+
+================================================================================
+SECTION 6: MANUAL-ONLY ITEMS
+================================================================================
+
+1. [B8-CARRY-FORWARD] The term 'self-directed' does not appear in the manuscript
+   body prose (paras 278, 366 use "independently completed" and "minimum of
+   10 minutes"). If the adviser/panel expect the exact phrase, it needs manual
+   Word editing in those two paragraphs. Not applied here as it was flagged as
+   optional in Part B.
+
+2. [B9-CARRY-FORWARD] Figure 3.11 LOF entry page number shows \t70. The body
+   caption at para 369 also says Figure 3.11. If the final compiled PDF places
+   this figure on a different page, the LOF page numbers for 3.11–3.14 need
+   manual update in Word (or via automatic TOC/LOF update in Word).
+
+3. [PPTX-MANUAL] The presentation has no slide showing panelist credentials.
+   If the panel expects to see their names/credentials on a title or methods
+   slide, that is a design decision requiring manual PowerPoint editing.
+
+================================================================================
+SUMMARY
+================================================================================
+  PPTX fixes applied:       6  (all on Slide 17 — recommendations reordered
+                                and two items replaced per manuscript)
+  Script fixes applied:     2  (panel header credentials; Slide 17 recs section)
+  Manuscript LOF fixes:     3  (Figure 3.12, 3.13, 3.14 added to LOF)
+  [CONFIRM] tags resolved:  0  (none pending — all resolved in prior passes)
+  [CONFIRM] tags remaining: 0
+  Manual-only items:        3  (see Section 6)
+  Temp scripts deleted:     8
+
+================================================================================
+END OF REPORT
+================================================================================
