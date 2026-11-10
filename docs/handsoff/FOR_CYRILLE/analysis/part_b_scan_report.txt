@@ -1,0 +1,228 @@
+================================================================================
+PART B — COMPREHENSIVE CONTENT SCAN REPORT
+================================================================================
+File: c:\xampp\htdocs\smartspend_app\docs\handsoff\FOR_CYRILLE\1_MAIN_MANUSCRIPT_FINAL.docx
+Total paragraphs: 785
+Scan date: Part B pre-defense pass
+
+================================================================================
+B1. WRONG NAMES
+================================================================================
+[AUTO-FIXED] 'Joffrey' → 'Jeoffrey': 0 replacement(s)
+  → No instances of wrong spelling found. Already correct throughout.
+
+[AUTO-FIXED] 'Dr. Raposas' → 'Mr. Raposas': 0 replacement(s)
+  → No instances of 'Dr. Raposas' found. Already uses 'Mr. Raposas' throughout.
+
+[AUTO-FIXED] Raposas MIT → Raposas MTS, MIS: 0 replacement(s)
+  → No instances of 'MIT' as Raposas credential found. Already uses 'MTS, MIS'.
+
+[OK] 'Janelli' not found anywhere in manuscript.
+
+[OK] 'Mendez' not found anywhere in manuscript.
+
+DEEP SCAN NOTE: Verified against ALL paragraph text AND table cell text.
+No target wrong-name terms found anywhere.
+
+================================================================================
+B2. LIVE DEMONSTRATION
+================================================================================
+[OK] 'live demonstration' not found anywhere in manuscript.
+  → Phrase was already removed/replaced in prior editing passes.
+  → 'self-directed use of 10+ minutes' OR '10 minutes' language is present (see B8).
+
+================================================================================
+B3. PROTECTED VALUES
+================================================================================
+[FOUND] '61.83' (SUS mean score) — found as: '61.83'
+[FOUND] 'N=30'/'n = 30'/'30 respondents' (sample size) — found as: '30 respondents'
+[FOUND] 'grade of D'/'Grade D'/'Grade of D' (SUS grade) — found as: 'grade of D'
+[FOUND] 'partially achieved' (Objective 3 status) — found as: 'partially achieved'
+[FOUND] 'Avigail Candevario' (validator name) — found as: 'Avigail Candevario'
+[FOUND] 'Jeoffrey' (correct spelling) — found as: 'Jeoffrey'
+[FOUND] 'sqflite' (database technology) — found as: 'sqflite'
+
+RESULT: ALL 7 PROTECTED VALUES ARE PRESENT. No modifications made.
+
+================================================================================
+B4. STRAY DRAFTING NOTES
+================================================================================
+[OK] No stray drafting notes found.
+  Checked for: 'enumerate', 'FORMAT:', '[PENDING]', 'TODO', 'TBD', 'to be inserted'
+  RESULT: NONE FOUND — manuscript is clean of drafting placeholders.
+
+================================================================================
+B5. OBJECTIVE 3
+================================================================================
+[OK] 'partially achieved' found (1 occurrence):
+  Para 386: "These results showed that the third objective of the study was partially
+  achieved: usability was evaluated using the System Usability Scale with 30 valid
+  respondents, but the mean score of 61.83 fell below the 68-point benchmark
+  (Sauro & Lewis, 2016) and the pre-established target of 80."
+
+[OK] No 'third objective was achieved' (without 'partially') found.
+  → Objective 3 is correctly stated as partially achieved.
+
+================================================================================
+B6. ABSTRACT STRUCTURE
+================================================================================
+Abstract found at paragraph 50 (body ends ~para 55).
+Abstract text begins: "ABSTRACT Financial mismanagement remained a critical and
+documented challenge among Filipino households..."
+
+Abstract verification:
+  [FOUND] '96.7' or '96.7%' — present as '96.7'
+  [FOUND] '93.3' or '93.3%' — present as '93.3'
+  [FOUND] '61.83' — present
+  [FOUND] 'Grade D'/'grade of D'/'Grade of D' — present as 'grade of D'
+
+RESULT: ALL 4 ABSTRACT KEY VALUES ARE PRESENT.
+
+================================================================================
+B7. VALIDATOR NAMES
+================================================================================
+Para 20 [Ellen Flores Mangaoang, DIT=YES]:
+  "Ellen Flores Mangaoang, DIT"
+
+Para 30 [Ellen F. Mangaoang, DIT=YES]:
+  "Ellen F. Mangaoang, DIT"
+
+Para 32 [Shekiro R. Raposas, MTS=YES, MIS=YES]:
+  "Shekiro R. Raposas, MTS, MIS"
+
+Para 42 [Shekiro R. Raposas, MTS=YES, MIS=YES]:
+  "Shekiro R. Raposas, MTS, MIS  Mary-Ann Mzana, MTS"
+
+Para 59 [Ellen F. Mangaoang — Acknowledgments, DIT NOT listed here (normal)]:
+  "Special thanks were given to their capstone adviser, Dr. Ellen F. Mangaoang,
+  for the invaluable guidance..."
+  NOTE: Credentials not listed in acknowledgments text — this is normal prose;
+  credential listing is in the validator/panelist pages (paras 20, 30).
+
+Para 60 [Mr. Shekiro R. Raposas, MTS=YES, MIS=YES]:
+  "...instructor in charge, Mr. Shekiro R. Raposas, MTS, MIS..."
+
+Para 61 [All panelists listed correctly]:
+  "To the panelists — Mr. Jeoffrey B. Layco, MIS, Mr. Shekiro R. Raposas, MTS, MIS,
+  and Ms. Mary-Ann Mzana, MTS — the researchers expressed..."
+
+Para 257 [Avigail Candevario, PFMe=YES]:
+  "...Avigail Candevario, PFMe, a subject matter expert in financial management
+  and business operations..."
+
+Para 270 [Avigail Candevario, PFMe=YES]:
+  "...submitted to Avigail Candevario, PFMe, a subject matter expert..."
+
+RESULT: All validator names and credentials verified correct.
+  - Avigail Candevario: PFMe ✓
+  - Ellen Flores Mangaoang / Ellen F. Mangaoang: DIT ✓
+  - Shekiro R. Raposas: MTS, MIS ✓ (no MIT credential found — already corrected)
+  - Jeoffrey B. Layco: MIS ✓
+
+================================================================================
+B8. SUS PROTOCOL
+================================================================================
+[FOUND] '10+ minutes' or '10 minutes' — 5 paragraph(s):
+  Para 52:  "...A validated survey questionnaire was administered to [30 respondents]..."
+            (abstract section — mentions methodology)
+  Para 245: "...structured survey questionnaires, which underwent content validation..."
+  Para 278: "Respondents used SmartSpend (the full version or the built-in Demo Mode)
+            for at least 10 minutes, confirmed by a screening question, and then
+            independently completed the 10-item SUS questionnaire online."
+  Para 366: "Respondents were required to use the SmartSpend application — either the
+            full version or the built-in Demo Mode accessible from the login screen —
+            for a minimum of 10 minutes before completing the SUS..."
+  Para 652: "Please try the SmartSpend application or use its Demo Mode for
+            approximately 10 minutes before answering this questionnaire."
+
+[MISSING] 'self-directed' — NOT found in manuscript.
+  → MANUAL ATTENTION NEEDED: The term 'self-directed' is not present. The SUS
+    section uses "independently completed" and "minimum of 10 minutes" language
+    which conveys the same concept, but if the adviser/panelist expects the exact
+    phrase 'self-directed', it needs to be added. Para 278 and 366 are the
+    best candidates for insertion.
+
+[FOUND] 'screening' — 3 paragraph(s):
+  Para 245, 278, 366 — screening question confirmed in SUS methodology.
+
+[OK] 'live demonstration' — NOT found (already cleaned up, see B2).
+
+================================================================================
+B9. IMAGE/FIGURE COUNT (CORRECTED)
+================================================================================
+NOTE: Initial scan over-counted by including LOF (List of Figures) entries.
+      Corrected scan uses precise LOF boundary (paras 124–144).
+
+LOF section: paras 124–144 (15 figure entries in List of Figures)
+Body figure captions (not in LOF): 18
+
+Body figures:
+  [171] Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+  [190] Figure 1.2 Conceptual Framework (Mobile Application)
+  [284] Figure 2.1 System Usability Scale (SUS) Score Interpretation
+  [288] Figure 2.2. Agile Kanban Workflow for SmartSpend Development
+  [311] Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30)
+  [337] Figure 3.1. SmartSpend System Flowchart
+  [339] Figure 3.2. Use Case Diagram
+  [341] Figure 3.3. Visual Table of Contents
+  [351] Figure 3.4. Login and Demo Mode Screen
+  [353] Figure 3.5. Home Dashboard
+  [355] Figure 3.6. Expense Logging Through Peso Chat
+  [357] Figure 3.7. Receipt Scanning and Batch Screenshot Import
+  [359] Figure 3.8. Financial Health Score Breakdown
+  [361] Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals
+  [363] Figure 3.10. Local AI Mode Setup
+  [369] Figure 3.11. SUS Computation Table
+  [374] Figure 3.12. SUS Score Distribution (N = 30)
+  [377] Figure 3.13. SUS Scores by Respondent Group (N = 30)
+
+RESULT: 18 body figure captions found.
+  [FLAG] 18 is below expected 28+. However, manuscript body figures include
+  embedded images (which may not all have text captions as separate paragraphs).
+  The 15 LOF entries suggest 15 officially listed figures. The 18 body captions
+  include Figure 3.14 which is NOT in the LOF — this may indicate a numbering
+  gap or a figure added after the LOF was finalized.
+  MANUAL CHECK: Verify Figure 3.14 is in LOF and that figures 3.1–3.13 are
+  all accounted for. The LOF has entries through Figure 3.11 — Figures 3.12,
+  3.13, 3.14 may need to be added to the LOF.
+
+================================================================================
+B10. PARAGRAPH COUNT
+================================================================================
+Total paragraphs: 785
+Expected: approximately 785
+[OK] Paragraph count matches expected value exactly: 785
+
+================================================================================
+SUMMARY OF AUTO-FIXES APPLIED
+================================================================================
+  'Joffrey' → 'Jeoffrey':                        0 fix(es) — already correct
+  'Dr. Raposas' → 'Mr. Raposas':                  0 fix(es) — already correct
+  Raposas MIT → Raposas MTS, MIS:                 0 fix(es) — already correct
+  'live demonstration' → replacement phrase:       0 fix(es) — already removed
+
+  TOTAL AUTO-FIXES: 0
+  (All targeted issues were already resolved in prior editing passes)
+
+================================================================================
+ITEMS NEEDING MANUAL ATTENTION
+================================================================================
+1. [B8 — MISSING 'self-directed'] The term 'self-directed' does not appear in the
+   manuscript. If this exact phrase is required by the methodology description,
+   insert it in para 278 or 366 around the SUS participant instruction language.
+   Current text uses "independently completed" which may suffice.
+
+2. [B9 — FIGURE COUNT / LOF COMPLETENESS] 18 body figure captions found vs.
+   expected 28+. The LOF lists only 15 figures (through 3.11). Figures 3.12,
+   3.13, and 3.14 appear in the body but are missing from the LOF.
+   ACTION: Add Figure 3.12, 3.13, and 3.14 to the List of Figures section.
+   Also verify whether the manuscript expected count of 28+ is accurate for
+   this version.
+
+3. [B9 — Figure 3.14 out of sequence] Figure 3.14 (Demographic Distribution)
+   appears at para 311, which is BEFORE Figure 3.1 (System Flowchart) at para 337.
+   This may indicate a figure numbering or placement error that needs manual review.
+
+================================================================================
+END OF REPORT
+================================================================================
