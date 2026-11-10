@@ -1,5 +1,5 @@
-# SmartSpend — Manual Task Guide
-**Updated: November 10, 2026, ~9:00 AM | Defense: TODAY**
+# SmartSpend — Manual Tasks for Groupmates
+**Updated: November 10, 2026, Evening | Defense: TODAY**
 **Working file:** `FOR_CYRILLE/1_MAIN_MANUSCRIPT_FINAL.docx`
 **Open in Microsoft Word only — not LibreOffice or Google Docs**
 
@@ -7,197 +7,206 @@
 
 ## STATUS OVERVIEW
 
-| Task | Description | Status |
-|------|-------------|--------|
-| All automated fixes | 180+ changes applied by Kiro | ✅ DONE |
-| Task 1 | Scan validator certificates → Appendix D, E & F | 🔴 YOU DO THIS |
-| Task 2 | Update TOC, List of Tables, List of Figures | 🔴 YOU DO THIS |
-| Task 3 | Regenerate PDF | 🔴 YOU DO THIS (after Tasks 1 & 2) |
-| Task 4 | Copy to USB + email backup | 🔴 YOU DO THIS |
-| Optional A | Verify Table 3.5 parsing N | 🔵 Optional |
-| Optional B | Verify Gemini 3.7 Flash rejection reason in Table 3.2 | 🔵 Optional |
+| Task | Description | Who | Status |
+|------|-------------|-----|--------|
+| All automated fixes | 500+ changes by Kiro | Kiro | ✅ DONE |
+| Task 1 | Verify page number position | Groupmate | 🔴 YOU DO THIS |
+| Task 2 | Fix Technical Background indents | Groupmate | 🔴 YOU DO THIS |
+| Task 3 | Fix Table 2.1 / 2.2 caption alignment | Groupmate | 🔴 YOU DO THIS |
+| Task 4 | Verify References heading | Groupmate | 🔴 YOU DO THIS |
+| Task 5 | Verify certificate images (App D & E) | Groupmate | 🔴 YOU DO THIS |
+| Task 6 | Update TOC / LOF / LOT page numbers | Groupmate | 🔴 YOU DO THIS |
+| Task 7 | Verify Roman numeral front matter | Groupmate | 🔴 YOU DO THIS |
+| Task 8 | Save as PDF (last step) | Groupmate | 🔴 YOU DO THIS |
 
 ---
 
-## 🔴 TASK 1 — Insert Validator Certificates (~30 min)
+## 🔴 TASK 1 — Verify page numbers don't overlap header ⏱️ 5 min
 
-### Validator Information (confirmed from signed certificates)
-- **Validator full name:** Avigail Candevario, PFMe (confirmed from signed certificates)
-- **Both certificates issued:** November 9, 2026
-- **Appendix D** = Content Validation Certificate (Survey Questionnaire)
-- **Appendix E** = Content Validation Certificate (FHS Formula and Literature)
-- **Appendix F** = Technical Validation Certificate (Maam Ellen Mangaoang, DIT)
+**Problem:** Page numbers are in the header of body sections. The institutional college header (Lorma, CCSE) also lives in the header — they might share the same line.
 
-### What you need
-- Signed scan of **Content Validation Certificate** (Avigail Candevario, PFMe, Finance Expert)
-- Signed scan of **Technical Validation Certificate** (Maam Ellen Mangaoang, DIT)
-
-### Steps in Word
-1. Scroll to the very end of the manuscript (after Appendix C / References)
-2. Add a new page: **Insert → Page Break** (or Ctrl+Enter)
-3. Type `Appendix D` → format as **Heading 1** (match existing Appendix headings)
-4. Next line: type `Content Validation Certificate`
-5. Press Enter → **Insert → Pictures → This Device** → select your scan of Avigail Candevario, PFMe's certificate
-6. Click the image → **Layout Options → In Line with Text** (keeps it in-flow)
-7. Repeat steps 2–6 for Appendix E (Avigail Candevario's FHS/Literature certificate)
-8. Repeat steps 2–6 for Appendix F (Maam Ellen Mangaoang's Technical Validation Certificate)
-
-### If you don't have scans yet
-Type `(Certificate on file with the researchers)` as placeholder text.
-You can replace it with the actual scan later before final printing.
+**Steps:**
+1. Go to any Chapter I–IV page (e.g., press Ctrl+End, scroll back a few pages)
+2. Look at the **very top** of the page — do you see the page number AND the college header?
+3. **If they overlap or look crowded:**
+   - Double-click the header area
+   - Delete the page number from the header
+   - Close header/footer (Esc)
+   - Insert → Page Number → Bottom of Page → Plain Number 2
+4. **If they look fine:** ✅ skip
 
 ---
 
-## 🔴 TASK 2 — Update TOC, List of Tables, List of Figures (~20 min)
+## 🔴 TASK 2 — Fix Technical Background paragraph indents ⏱️ 10 min
 
-### Why it needs updating
-New figures were embedded and new sections added. Page numbers have shifted.
-The TOC, List of Tables, and List of Figures all need to reflect these changes.
+**Problem:** Body paragraphs in the "Technical Background" subsection (Chapter I, around pages 26–29) have no first-line indent. All other body text has 0.5 inch first-line indent.
 
-### Quick method (try this first)
-1. Press **Ctrl+A** to select all
-2. Press **F9**
-3. Word will ask: "Update Table of Contents?"
-4. Choose **"Update entire table"** → OK
-5. Do this for each field (TOC, List of Tables, List of Figures) if separate
-
-### Manual method (if automatic doesn't work)
-Scroll through and update page numbers by hand. Use dot leaders (`....`) matching the style of existing entries.
-
-### New entries to add manually if missing
-**Add to Table of Contents:**
-```
-Appendix D — Content Validation Certificate (Survey Questionnaire) ............. XX
-Appendix E — Content Validation Certificate (FHS Formula and Literature) ........ XX
-Appendix F — Technical Validation Certificate (Maam Ellen, DIT) ................. XX
-```
-Under Chapter III, verify this subheading exists:
-```
-Design and Development of the SmartSpend Mobile Application ..... XX
-```
-
-**Add to List of Figures (if not auto-generated):**
-```
-Figure 2.1  SUS Score Interpretation Framework .............. XX
-Figure before 3.11  SUS Score Distribution (N=30) ........... XX
-Figure before Table 3.4  SUS Subgroup Comparison ............ XX
-Figure before Table 3.1  Demographic Breakdown .............. XX
-```
-
-**Verify these List of Tables titles match exactly:**
-```
-Table 2.1  Distribution of Respondents and Validators
-Table 2.2  Agile Kanban Workflow Phases and Deliverables
-```
-
-### Final check
-- Figure 3.10 (Local AI Setup, p.68) and Evaluation section (p.68) — these may now be on different pages. Verify.
-- No two entries share the same page number if they're on different pages.
+**Steps:**
+1. Ctrl+F → type "Technical Background" → Enter
+2. Look for the body paragraphs below that heading (describing Flutter, sqflite, Firebase, etc.)
+3. Click at the start of the first body paragraph there
+4. Shift+click at the end of the last body paragraph in that subsection
+5. Home tab → click the small arrow at bottom-right of "Paragraph" group
+6. Under "Indentation" → Special: **First line** → By: **0.5"** → OK
 
 ---
 
-## 🔴 TASK 3 — Regenerate PDF (2 min)
+## 🔴 TASK 3 — Fix Table 2.1 and 2.2 caption alignment ⏱️ 5 min
 
-**Do this AFTER completing Tasks 1 and 2.**
+**Problem:** "Table 2.1. Distribution of Respondents and Validators" and "Table 2.2. Agile Kanban Workflow Phases and Deliverables" captions need to be centered.
 
-1. In Word: **File → Save As**
+**Steps:**
+1. Ctrl+F → search "Table 2.1." → Enter
+2. Click on that caption line
+3. Press **Ctrl+E** to center it
+4. Ctrl+F → search "Table 2.2." → Enter
+5. Click that caption line → Ctrl+E
+
+---
+
+## 🔴 TASK 4 — Verify References heading ⏱️ 2 min
+
+**Steps:**
+1. Ctrl+F → search "References" → Enter (go to the References section heading, not an in-text citation)
+2. Click on the "References" heading paragraph
+3. Check: is it **centered**? Is it **bold**?
+4. If not: Ctrl+E (center) and Ctrl+B (bold)
+
+---
+
+## 🔴 TASK 5 — Verify certificate images in Appendices D & E ⏱️ 10 min
+
+**What:** Certificate images (Avigail Candevario, PFMe) were automatically embedded. Verify they look correct.
+
+**Steps:**
+1. Ctrl+End → go to end of document
+2. Scroll up to find "APPENDIX D" — check the certificate image:
+   - Is it visible?
+   - Does it fit the page (not cut off at the edges)?
+   - Is it readable?
+3. Check "APPENDIX E" the same way
+4. **If image is too large or misaligned:**
+   - Click the image
+   - Picture Format tab → Size group → set Width to **5.5 inches** (height adjusts automatically)
+5. **If image is missing:** Insert → Pictures → This Device → navigate to `FOR_CYRILLE/FIGURES/certificates/`
+   - `AppendixD_Survey_Questionnaire_Certificate.jpg` for Appendix D
+   - `AppendixE_FHS_Formula_Certificate.jpg` for Appendix E
+
+---
+
+## 🔴 TASK 6 — Update TOC, List of Figures, List of Tables ⏱️ 15 min
+
+**Why:** Page numbers shifted after all the edits and new figures were added. Also 3 new figure entries were added to the List of Figures (3.12, 3.13, 3.14).
+
+**Steps — Quick method (try this first):**
+1. Press **Ctrl+A** (select all)
+2. Press **F9** → choose "Update entire table" → OK for each TOC/LOF/LOT prompt
+3. Scroll through TOC and LOF to verify numbers look right
+
+**Steps — Manual method (if Ctrl+A + F9 doesn't work):**
+1. For each section (TOC, List of Figures, List of Tables):
+   - Scroll to it
+   - Right-click anywhere in the table → Update Field → Update entire table
+
+**New figures in List of Figures to verify:**
+- Figure 3.12. SUS Score Distribution (N = 30) .......... [page ~70]
+- Figure 3.13. SUS Scores by Respondent Group (N = 30) . [page ~71]
+- Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30) .......... [page ~44]
+
+---
+
+## 🔴 TASK 7 — Verify front matter page numbers (Roman numerals) ⏱️ 5 min
+
+**What:** Pages before Chapter I (title page, approval sheet, acknowledgements, dedication, TOC, LOF, LOT, abstract) should use Roman numerals (i, ii, iii...).
+
+**Steps:**
+1. Go to page 3 or 4 (Acknowledgement or Dedication page)
+2. Look for the page number — is it a Roman numeral?
+3. **If Arabic numbers on front matter pages:**
+   - Double-click the footer/header where the page number is
+   - Insert → Page Number → Format Page Numbers
+   - Number format: **i, ii, iii...**
+   - Start at: **i**
+   - OK
+4. **If correct already:** ✅ skip
+
+---
+
+## 🔴 TASK 8 — Save as PDF (LAST STEP) ⏱️ 2 min
+
+**Do this AFTER all 7 tasks above.**
+
+1. File → **Save As**
 2. Change file type to **PDF**
-3. Save as: `1_MAIN_MANUSCRIPT_FINAL.docx.pdf` (overwrite existing)
-4. Scroll through the PDF quickly to verify all 4 new figures display correctly
+3. Save as `1_MAIN_MANUSCRIPT_FINAL.docx.pdf` (overwrite the existing one)
+4. Scroll through the PDF quickly:
+   - All pages have correct margins? ✅
+   - All images visible? (30 total — 28 body + 2 certs) ✅
+   - No pages with tiny bottom margins? ✅
+   - Page numbers correct? ✅
 
 ---
 
-## 🔴 TASK 4 — USB + Email Backup (5 min)
+## ✅ DO NOT REDO — Already done by Kiro
 
-1. Copy to USB drive:
-   - `SmartSpend_Defense.pptx`
-   - `1_MAIN_MANUSCRIPT_FINAL.docx.pdf` (after regenerating)
-2. Email both to yourself as backup
-3. At defense venue: test PPTX on the projector laptop before panel arrives
-
----
-
-## 🔵 OPTIONAL A — Table 3.5: Parsing Accuracy N
-
-**Location:** Chapter III, Table 3.5 "SmartSpend Multimodal Import"
-**Current text in Overall row:** `91.2% precision, 88.5% recall (preliminary developer testing, N = ___)`
-
-**Options:**
-- If you know N: Fill in the number (e.g., "N = 50 receipts")
-- If you don't: Delete the precision/recall figures from Table 3.5 and from Slide 15
-
-**Why it matters:** The panel may ask "where does 91.2% come from?" and you need an answer.
-
----
-
-## 🔵 OPTIONAL B — Table 3.2: Gemini 3.7 Flash
-
-**Location:** Chapter III, Table 3.2, Gemini 3.7 Flash row
-**Current status text:** "Not used: same ~20/day quota as 3.5 Flash with no added benefit in trials"
-
-Confirm this is accurate. If the actual reason was different, update the cell.
-
----
-
-## ✅ DO NOT REDO — These are already done by Kiro
-
-Everything below is **confirmed applied and verified** in the DOCX. Do not touch.
-
-### Figures (28 images embedded)
-- ✅ Figure 2.1: New SUS interpretation chart (Bangor zones, adjective anchors, 61.83 marker)
-- ✅ Before Figure 3.11: SUS score distribution bar chart (N=30)
-- ✅ Before Table 3.4: SUS subgroup comparison chart (Parents 58.25 vs YP 63.62)
-- ✅ Before Table 3.1: Demographic breakdown chart (13P + 14YP + 3Both)
-- ✅ Figures 3.4–3.11: Original app screenshots and SUS table (preserved, not touched)
-
-### Tables
-- ✅ Table 1.2: Paluwagan = Yes, 36 badges, 34 AI actions
-- ✅ Table 2.1: SUS sample row added (10 parents + 20 YP = 30)
-- ✅ Table 3.1: Footnote added (†)
-- ✅ Table 3.3: 61.83, D, OK, No
-- ✅ Table 3.4: Parents 10/58.25/19.72, YP 20/63.62/16.65, Combined 30/61.83/17.58
-- ✅ Table 3.5: "Recommendation 6" (was: Priority 9)
-- ✅ Table 2.2: Description says "26 tables, v3.1.0 deliverable"
-
-### Text fixes (selected highlights)
-- ✅ Instructor: "Mr. Shekiro R. Raposas, MIT"
-- ✅ Objective 3: "partially achieved"
-- ✅ 68 benchmark: "(Sauro & Lewis, 2016)"
-- ✅ OK/Good anchors: "(Bangor et al., 2009)"
-- ✅ BSP CFIS 2025
-- ✅ LLM: "six weighted criteria"
-- ✅ SUS protocol: "10+ minutes self-directed, screening confirmed"
-- ✅ Build: "v3.1.0 evaluated; v3.1.1–v3.1.2 added Peso/badges after"
-- ✅ Chapter IV Conclusions: 3 paragraphs rewritten
-- ✅ Chapter IV Recommendations: 7-item list (UI/UX #5, formal parsing #6)
-- ✅ References: Bangor 2008, Deci & Ryan 2000, Sauro & Lewis 2016 added
-- ✅ References: 9 uncited entries deleted
-- ✅ Bitrián DOI hyperlink fixed
+### Major manuscript changes (don't undo any of these)
+- ✅ Instructor: "Mr. Shekiro R. Raposas, MTS, MIS" (Acknowledgements + Approval Sheet)
+- ✅ Panelists named: Layco MIS, Raposas MTS/MIS, Mzana MTS (Acknowledgements para)
+- ✅ Adviser: "Dr. Ellen Flores Mangaoang, DIT" (full name with Flores)
+- ✅ Validator: "Avigail Candevario, PFMe" named in Chapter II
+- ✅ Abstract: 4-part structure (objectives, methodology, results, implications)
+- ✅ Objective 3: "partially achieved" everywhere
+- ✅ SUS protocol: "10+ minutes self-directed" (no "live demonstration")
+- ✅ 547 tense corrections (Maam Ellen's list) all applied
+- ✅ All 7 recommendations: payday, proxy, Google Play, AI, encryption, household, longitudinal
+- ✅ Certificates embedded: Appendix D (survey) + Appendix E (FHS formula)
+- ✅ Figures 3.12, 3.13, 3.14 added to manuscript and to List of Figures
+- ✅ Formatting: Appendix headings, caption fonts, LOF/LOT labels, section margins
+- ✅ All protected values intact (61.83, N=30, Grade D, 10+20, 96.7%, 93.3%)
 
 ### Presentation (SmartSpend_Defense.pptx)
-- ✅ Slides 2, 7, 11, 14, 15, 16, 17 all updated and consistent with manuscript
+- ✅ Slide 17: 7 recommendations match manuscript Chapter IV exactly
+- ✅ All credentials correct (MTS/MIS, DIT, MIS, MTS)
+- ✅ No "live demonstration" language anywhere
+- ✅ "Partially achieved" on Slide 16
 
 ### Script (4_DEFENSE_SCRIPT_FINAL.md)
-- ✅ All [CONFIRM] placeholders resolved
-- ✅ Panel names confirmed
-- ✅ Sauro & Lewis citations added
-- ✅ Build version confirmed in Q&A
+- ✅ Panel header with correct credentials for all 3 panelists + adviser
+- ✅ Slide 17 speaking notes match the 7 manuscript recommendations
+- ✅ No [CONFIRM] placeholders — all resolved
 
 ---
 
-## 🎯 Pre-Defense Checklist (Morning of Defense)
+## 📋 Pre-Defense Final Checklist
 
-- [ ] Task 1: Insert certificates (or write placeholder)
-- [ ] Task 2: Update TOC / List of Tables / List of Figures
-- [ ] Task 3: Save as PDF
-- [ ] Task 4: Copy to USB, email backup
-- [ ] Open PPTX, test on projector laptop
-- [ ] Check Slides 14–17 display correctly
-- [ ] Verify font sizes readable from back of room
-- [ ] Set laptop to Do Not Disturb (no notifications during defense)
-- [ ] Read through 4_DEFENSE_SCRIPT_FINAL.md one more time
-- [ ] Review Q&A answers for the 10 likely hard questions
+Print this and check each box before the defense:
+
+- [ ] Task 1: Page numbers verified (not overlapping header)
+- [ ] Task 2: Technical Background indents fixed
+- [ ] Task 3: Table 2.1 and 2.2 captions centered
+- [ ] Task 4: References heading centered and bold
+- [ ] Task 5: Appendix D and E certificates look correct
+- [ ] Task 6: TOC, LOF, LOT page numbers updated
+- [ ] Task 7: Roman numerals on front matter pages
+- [ ] Task 8: PDF exported (overwrite old file)
+- [ ] Copy `SmartSpend_Defense.pptx` and PDF to USB
+- [ ] Email both files to yourself as backup
+- [ ] Test PPTX on projector laptop before panel arrives
+- [ ] Phone on silent
+- [ ] Water bottle
 
 ---
 
-*Manual task guide — November 10, 2026 | Kiro*
+## 👥 Key People for the Defense
+
+| Name | Role | Credentials |
+|------|------|-------------|
+| **Jeoffrey B. Layco** | Dean / Panel Chairperson | MIS |
+| **Shekiro R. Raposas** | TIC / Panel Member | MTS, MIS |
+| **Mary-Ann Mzana** | Panel Member | MTS |
+| **Ellen Flores Mangaoang** | Capstone Adviser | DIT |
+| **Avigail Candevario** | Content Validator | PFMe |
+
+---
+
+*Manual task guide — November 10, 2026 (Evening) | Kiro*
