@@ -10,7 +10,7 @@
 | Task | Description | Status |
 |------|-------------|--------|
 | All automated fixes | 180+ changes applied by Kiro | ✅ DONE |
-| Task 1 | Scan validator certificates → Appendix D & E | 🔴 YOU DO THIS |
+| Task 1 | Scan validator certificates → Appendix D, E & F | 🔴 YOU DO THIS |
 | Task 2 | Update TOC, List of Tables, List of Figures | 🔴 YOU DO THIS |
 | Task 3 | Regenerate PDF | 🔴 YOU DO THIS (after Tasks 1 & 2) |
 | Task 4 | Copy to USB + email backup | 🔴 YOU DO THIS |
@@ -21,8 +21,15 @@
 
 ## 🔴 TASK 1 — Insert Validator Certificates (~30 min)
 
+### Validator Information (confirmed from signed certificates)
+- **Validator full name:** Avigail Candevario, PFMe (confirmed from signed certificates)
+- **Both certificates issued:** November 9, 2026
+- **Appendix D** = Content Validation Certificate (Survey Questionnaire)
+- **Appendix E** = Content Validation Certificate (FHS Formula and Literature)
+- **Appendix F** = Technical Validation Certificate (Maam Ellen Mangaoang, DIT)
+
 ### What you need
-- Signed scan of **Content Validation Certificate** (Maam Abby, Finance Expert)
+- Signed scan of **Content Validation Certificate** (Avigail Candevario, PFMe, Finance Expert)
 - Signed scan of **Technical Validation Certificate** (Maam Ellen Mangaoang, DIT)
 
 ### Steps in Word
@@ -30,9 +37,10 @@
 2. Add a new page: **Insert → Page Break** (or Ctrl+Enter)
 3. Type `Appendix D` → format as **Heading 1** (match existing Appendix headings)
 4. Next line: type `Content Validation Certificate`
-5. Press Enter → **Insert → Pictures → This Device** → select your scan of Maam Abby's certificate
+5. Press Enter → **Insert → Pictures → This Device** → select your scan of Avigail Candevario, PFMe's certificate
 6. Click the image → **Layout Options → In Line with Text** (keeps it in-flow)
-7. Repeat steps 2–6 for Appendix E (Maam Ellen's certificate)
+7. Repeat steps 2–6 for Appendix E (Avigail Candevario's FHS/Literature certificate)
+8. Repeat steps 2–6 for Appendix F (Maam Ellen Mangaoang's Technical Validation Certificate)
 
 ### If you don't have scans yet
 Type `(Certificate on file with the researchers)` as placeholder text.
@@ -59,8 +67,9 @@ Scroll through and update page numbers by hand. Use dot leaders (`....`) matchin
 ### New entries to add manually if missing
 **Add to Table of Contents:**
 ```
-Appendix D — Content Validation Certificate ............. XX
-Appendix E — Technical Validation Certificate ........... XX
+Appendix D — Content Validation Certificate (Survey Questionnaire) ............. XX
+Appendix E — Content Validation Certificate (FHS Formula and Literature) ........ XX
+Appendix F — Technical Validation Certificate (Maam Ellen, DIT) ................. XX
 ```
 Under Chapter III, verify this subheading exists:
 ```
