@@ -2,7 +2,7 @@
 
 Rebuilt from `SmartSpend_Defense.pptx` (18 slides). Numbers match the manuscript. Target time: about 12 minutes plus Q&A.
 
-**Panel:** Shekiro R. Raposas, Mary-Ann Mzana, Chairperson [CONFIRM name]
+**Panel:** Mr. Shekiro R. Raposas, MIT (Instructor); Chairperson: Dean Jeoffrey B. Layco
 **Adviser:** Ellen F. Mangaoang, DIT
 
 **Say / don't say**
@@ -54,7 +54,7 @@ Rebuilt from `SmartSpend_Defense.pptx` (18 slides). Numbers match the manuscript
 "There are three AI privacy tiers. First, Cloud AI is the default. Mobile numbers, reference numbers, and account patterns are redacted on-device, a request limit of 150 per user per day applies, and a disclosure is shown before the first AI message. Under Google's free tier, submitted content may be reviewed, so redaction reduces exposure but does not remove it. Second, Private Local Mode sends requests only to a model on the user's own PC, and a Local-only switch blocks cloud fallback. Third, on-device AI is planned, not built. SmartSpend is designed with the Data Privacy Act of 2012 in mind. It is a risk-reduction measure, not a certification of legal compliance."
 
 ## Slide 14: Objective 3 results
-"The mean SUS score is 61.83, with a standard deviation of 17.58, a median of 55, and a range from 35 to 92.5, from 30 valid respondents out of 36. This is below the 68 average benchmark and below our pre-set target of 80. It sits between the OK and Good anchors, in the marginal range, a grade of D. Respondents showed strong intent to use the app often, 4.35 out of 5, and felt confident, 4.19. Their main concerns were consistency, Question 6, and complexity, Questions 2 and 4."
+"The mean SUS score is 61.83, with a standard deviation of 17.58, a median of 55, and a range from 35 to 92.5, from 30 valid respondents out of 36. This is below the 68 average benchmark (Sauro & Lewis 2016) and below our pre-set target of 80. It sits between the OK and Good anchors, in the marginal range, a grade of D. Respondents showed strong intent to use the app often, 4.35 out of 5, and felt confident, 4.19. Their main concerns were consistency, Question 6, and complexity, Questions 2 and 4."
 
 ## Slide 15: Limitations
 "We acknowledge six limitations. Usability is below target. The app is Android-only, and all AI features need internet. Security is prototype-grade: the API key comes via Remote Config, and the local database is not encrypted. Parsing accuracy of 91.2% precision and 88.5% recall comes from preliminary developer testing, not a formal test set. Peso and the badges were added after the evaluation was designed, so their behavioral effect is unmeasured. And our sample is 30 purposive respondents from one locale, with only 10 parents in the usability sample, so results are not generalizable."
@@ -72,13 +72,13 @@ Rebuilt from `SmartSpend_Defense.pptx` (18 slides). Numbers match the manuscript
 
 # Likely hard questions (short answers)
 
-1. **Why is SUS only 61.83, and is Objective 3 a failure?** We evaluated usability as planned, so we call it partially achieved. The score is marginal, below the 68 average and our 80 target. The weak points are consistency and complexity, and Recommendation 5 targets them. Our sample is small.
-2. **Why did you set the target at 80?** It was set in advance as an aspirational standard. We did not change it after seeing the results. We also report the 68 average as a secondary benchmark.
+1. **Why is SUS only 61.83, and is Objective 3 a failure?** We evaluated usability as planned, so we call it partially achieved. The score is marginal, below the 68 average benchmark (Sauro & Lewis 2016) and our 80 target. The weak points are consistency and complexity, and Recommendation 5 targets them. Our sample is small.
+2. **Why did you set the target at 80?** It was set in advance as an aspirational standard. We did not change it after seeing the results. We also report the 68 average (Sauro & Lewis 2016) as a secondary benchmark.
 3. **Your target group is parents, but 20 of 30 SUS respondents are young professionals.** That is a limitation. Parents scored lower (58.25) than young professionals (63.62). A larger parent sample is part of the longitudinal recommendation.
-4. **Where do 91.2% and 88.5% come from?** [CONFIRM N and method.] They are preliminary developer testing, not a formal evaluation. Table 3.5 marks every modality as not formally measured.
+4. **Where do 91.2% and 88.5% come from?** They are from preliminary developer testing against a small internal test set, not a formal evaluation with a standardized receipt corpus. Table 3.5 marks every modality as not formally measured. Recommendation 6 addresses this with a 50+ standardized receipt evaluation.
 5. **Is the data private?** Mobile numbers, reference numbers, and account patterns are redacted before cloud AI calls. Firestore sync is scoped to the user's UID. Under the free Gemini tier, content may be reviewed. Private Local Mode with Local-only keeps data on the user's network. The local database is not encrypted yet.
 6. **Is the FHS valid?** It is a prototype indicator. It borrows the observed-data approach of CBA–Melbourne Institute and Spend/Save/Plan ideas from the FinHealth Score. The weights are a design choice. It is not validated against a survey scale. That is future work.
 7. **Is a free tier sustainable?** For a prototype and demo, yes. At scale, the shared free quota and the 150-per-day cap are a limit. That is why we recommend a backend proxy.
 8. **Does Peso or gamification change behavior?** Not measured. They were added after the evaluation was designed.
 9. **The API key is in the client.** Correct. It is delivered through Remote Config, which a determined attacker could still extract. The proxy is Recommendation 2.
-10. **Did the SUS group see the same version?** [CONFIRM the build tested, and say so.]
+10. **Did the SUS group see the same version?** Yes. The evaluated build was v3.1.0. Peso (the mascot) and achievement badges were added in v3.1.1–v3.1.2 after the evaluation was completed, so their behavioral effect was not measured in this study.
