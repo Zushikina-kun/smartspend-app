@@ -101,7 +101,7 @@ Let me walk through five key screens. The Login and Demo Mode screen allows user
 
 ### Slide 12 — LLM Selection
 
-Selecting the right Large Language Model was a critical design decision. We evaluated 20 candidate models across six providers — assessing inference speed, response accuracy for Filipino-English natural language processing, context window capacity, and cost feasibility for a free-tier prototype. We selected **Gemini 1.5 Flash-Lite** because it offered a one-million-token context window, native function calling for all 34 AI actions, strong Taglish performance in our trials, and the highest free-tier request quota. The selection was systematic and comparative — not arbitrary.
+Selecting the right Large Language Model was a critical design decision. We evaluated 20 candidate models across six providers — assessing inference speed, response accuracy for Filipino-English natural language processing, context window capacity, and cost feasibility for a free-tier prototype. We selected **Gemini 3.5 Flash-Lite** because it offered a one-million-token context window, native function calling for all 34 AI actions, strong Taglish performance in our trials, and the highest free-tier request quota. The selection was systematic and comparative — not arbitrary.
 
 ---
 
@@ -207,7 +207,7 @@ That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang 
 
 ### Q6 — What LLM did you use?
 
-"We used **Gemini 1.5 Flash-Lite**. We evaluated 20 candidate models across six providers — including models from OpenAI, Anthropic, Groq, Mistral, and Google — and selected Gemini 1.5 Flash-Lite based on four criteria: response quality for Filipino-English input, inference latency on mobile, cost feasibility for a free-tier prototype, and context window capacity. It offered a one-million-token context window, native function calling for our 34 AI actions, and the highest free-tier request quota of all evaluated providers."
+"We used **Gemini 3.5 Flash-Lite**. We evaluated 20 candidate models across six providers — including models from OpenAI, Anthropic, Groq, Mistral, and Google — and selected Gemini 3.5 Flash-Lite based on four criteria: response quality for Filipino-English input, inference latency on mobile, cost feasibility for a free-tier prototype, and context window capacity. It offered a one-million-token context window, native function calling for our 34 AI actions, and the highest free-tier request quota of all evaluated providers."
 
 ---
 
