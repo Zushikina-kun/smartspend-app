@@ -1,0 +1,46 @@
+{
+  "verdict": "CHANGES_REQUESTED",
+  "findings": [
+    {
+      "id": "BLOCKER-1",
+      "file": "FOR_CYRILLE/1_MAIN_MANUSCRIPT_FINAL.docx",
+      "location": "Abstract paragraph",
+      "description": "B2 replacement left a duplicate benchmark clause. The abstract now ends with '…and the pre-set target of 80 — below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80.' The tail fragment starting with the em-dash is a remnant of the original sentence and was not removed by the find/replace. The abstract is visibly malformed.",
+      "consequence": "Abstract contains a doubled, slightly inconsistent benchmark statement that a panelist reading before the defense will notice.",
+      "correction": "In Word, delete the tail fragment '— below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80' (em-dash through the final period) from the abstract's SUS sentence. Also fix the double article 'a an eight-provider' → 'an eight-provider' in the same sentence."
+    },
+    {
+      "id": "BLOCKER-2",
+      "file": "FOR_CYRILLE/1_MAIN_MANUSCRIPT_FINAL.docx",
+      "location": "Abstract paragraph",
+      "description": "A7 overclaim fix ('successfully developed with all identified features implemented') was not applied. The manuscript abstract still reads 'SmartSpend version 3.1.0 was successfully developed as an offline-first Android application…'. The find string required the continuation phrase 'with all identified features implemented' which was absent in the abstract, so the replacement did not fire. CLAUDE_RECONCILE_NOV16.md also flags A7 as NOT FOUND.",
+      "consequence": "Abstract overstates system completion ('successfully developed') while Ch IV limitations and the script say Objective 3 was only partially achieved. Direct internal contradiction visible to panelists.",
+      "correction": "In Word, in the abstract change 'SmartSpend version 3.1.0 was successfully developed as an offline-first Android application' to 'SmartSpend v3.1.0 was developed as a working Android prototype'."
+    },
+    {
+      "id": "BLOCKER-3",
+      "file": "FOR_CYRILLE/1_MAIN_MANUSCRIPT_FINAL.docx",
+      "location": "Chapter IV, Conclusions section",
+      "description": "Ch IV Conclusions is truncated. Only Objective 2's conclusion paragraph is present. The required 3-paragraph block (Objectives 1, 2, 3) from RECONCILE_PLAN.md A8 was not inserted. The extracted text shows the section ends with an incomplete sentence 'SmartSpend ' after the Objective 2 paragraph. Objective 3's 'partially achieved' and 'marginal, not acceptable' language is absent from Ch IV.",
+      "consequence": "The critical 'Objective 3 partially achieved' conclusion is not in the manuscript. Ch IV appears visibly incomplete. The abstract and script claim partial achievement but Ch IV does not support it.",
+      "correction": "In Word, replace the truncated Conclusions section (from 'SmartSpend v3.1.0 was developed as a working Android application…' through 'SmartSpend ') with the full 3-paragraph block from RECONCILE_PLAN.md Section A8 covering all three objectives and including the marginal/partially-achieved language for Objective 3."
+    },
+    {
+      "id": "BLOCKER-4",
+      "file": "FOR_CYRILLE/1_MAIN_MANUSCRIPT_FINAL.docx",
+      "location": "Chapter IV, Recommendations section",
+      "description": "Ch IV Recommendations lists 7 items (payday cycle, backend proxy, Google Play release, on-device AI, SQLite encryption, household/remittance, longitudinal). The abstract (correctly fixed) says 'Eight recommendations.' The script says 8. RECONCILE_PLAN.md A8 specifies 8 items led by UI/UX refinement (#1) and formal parsing evaluation (#2). Both are missing from Ch IV. The existing #1 (payday cycle) maps to plan item #6.",
+      "consequence": "Abstract and script promise 8 recommendations; Ch IV delivers 7. The two most directly panel-relevant recommendations (UI/UX refinement tied to SUS results, and formal parsing evaluation tied to the preliminary accuracy disclaimer) are absent. Direct internal inconsistency the panel will find.",
+      "correction": "Add Rec 1 (UI/UX refinement — address Q6 consistency, Q2 complexity, Q4 technical support) and Rec 2 (Formal parsing evaluation — 50+ standardized receipts) to the Ch IV list. Re-number all 8 items to match the RECONCILE_PLAN.md A8 ordering. Verify count is 8."
+    },
+    {
+      "id": "BLOCKER-5",
+      "file": "FOR_CYRILLE/1_MAIN_MANUSCRIPT_FINAL.docx",
+      "location": "Chapter III, Objective 3 (SUS), exclusion paragraph",
+      "description": "B6 replacement produced a doubled, garbled exclusion paragraph. Extracted text reads: 'Of 36 respondents who attempted the survey, Of 36 respondents who attempted the survey, 31 confirmed using the app…leaving 30 valid respondents. The other 5 were excluded for insufficient usage time. and were included in the final analysis. The remaining 6 were excluded: 5 for insufficient app usage time and 1 for straight-line response bias.' The opening phrase was duplicated and the original sentence tail ('and were included in the final analysis. The remaining 6 were excluded…') was not removed because the find string matched only a mid-sentence fragment.",
+      "consequence": "The methodology paragraph is visibly garbled with two contradictory exclusion descriptions in the same sentence. A panelist reading Ch III would see the inconsistency and challenge the exclusion count and process.",
+      "correction": "In Word, rewrite the full exclusion sentence to: 'Of 36 respondents who attempted the survey, 31 confirmed using the app for the required minimum duration; 1 of these was excluded for straight-line responding, leaving 30 valid respondents. The other 5 were excluded for insufficient usage time.' Remove all duplicate and remnant fragments in that paragraph."
+    }
+  ],
+  "reviewDoc": "c:\\xampp\\htdocs\\smartspend_app\\docs\\handsoff\\FOR_CYRILLE\\analysis\\review.md"
+}

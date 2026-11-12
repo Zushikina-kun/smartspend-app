@@ -1,7 +1,8 @@
 """
 apply_fixes.py — SmartSpend manuscript APPLY_NOW fixes (Nov 16 defense prep)
+VERSION 2: Addresses BLOCKER-1 through BLOCKER-5 from review.json plus
+all APPLY_NOW items from RECONCILE_PLAN.md.
 
-Applies text replacements from the RECONCILE_PLAN.md APPLY_NOW items.
 Saves a backup first, then overwrites the original.
 
 Usage:
@@ -188,6 +189,368 @@ def fix_b8_gemini37_table(doc):
 
 
 # ---------------------------------------------------------------------------
+# BLOCKER fixes (from review.json CHANGES_REQUESTED findings)
+# ---------------------------------------------------------------------------
+
+def fix_blocker1_abstract(doc):
+    """
+    BLOCKER-1: Remove duplicate benchmark tail from abstract.
+    Also fix 'a an eight-provider' → 'an eight-provider'.
+    """
+    item_id = "BLOCKER-1"
+    count = 0
+    # Fix double article: 'a an eight-provider' → 'an eight-provider'
+    count += replace_in_doc(doc, "a an eight-provider", "an eight-provider", item_id, "double article fix")
+    # Remove trailing duplicate: '— below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80.'
+    # This tail appears after the main benchmark sentence
+    tail = " \u2014 below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80."
+    count += replace_in_doc(doc, tail, ".", item_id, "remove duplicate benchmark tail")
+    # Also em-dash variants
+    tail2 = " — below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80."
+    count += replace_in_doc(doc, tail2, ".", item_id, "remove duplicate benchmark tail (ASCII)")
+    # Variant: ends without period on tail
+    tail3 = "— below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80"
+    count += replace_in_doc(doc, tail3, "", item_id, "remove duplicate tail (no period)")
+    return count
+
+
+def fix_blocker2_abstract_overclaim(doc):
+    """
+    BLOCKER-2: Fix 'successfully developed' overclaim in abstract.
+    """
+    item_id = "BLOCKER-2"
+    count = 0
+    # The abstract reads: 'SmartSpend version 3.1.0 was successfully developed as an offline-first Android application'
+    count += replace_in_doc(
+        doc,
+        "SmartSpend version 3.1.0 was successfully developed as an offline-first Android application",
+        "SmartSpend v3.1.0 was developed as a working Android prototype",
+        item_id, "abstract overclaim fix"
+    )
+    # Also catch variant with 'SmartSpend v3.1.0'
+    count += replace_in_doc(
+        doc,
+        "SmartSpend v3.1.0 was successfully developed as an offline-first Android application",
+        "SmartSpend v3.1.0 was developed as a working Android prototype",
+        item_id, "abstract overclaim fix (v3.1.0 variant)"
+    )
+    return count
+
+
+def fix_blocker3_chiv_conclusions(doc):
+    """
+    BLOCKER-3: Replace truncated/incomplete Ch IV Conclusions with full 3-paragraph block.
+    The current para is 'SmartSpend ' (exactly, as an isolated truncated para).
+    Replace it with Obj 3 conclusion. Also fix the Obj 2 paragraph and insert Obj 1 before it.
+    """
+    item_id = "BLOCKER-3"
+    count = 0
+    from docx.oxml import OxmlElement
+    from copy import deepcopy
+
+    obj1_conclusion = (
+        "Objective 1 was to assess the financial management practices, budgeting challenges, and "
+        "expense-tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 "
+        "in San Fernando City. The needs assessment of 30 respondents showed that 90.0% track expenses "
+        "through receipts, 53.3% through mental estimates, and only 10.0% through a mobile app, while "
+        "96.7% intend to use an AI-powered financial app and 93.3% already use GCash. The first objective "
+        "was achieved."
+    )
+
+    obj2_conclusion = (
+        "Objective 2 was to design and develop SmartSpend, with an LLM API chosen through comparative "
+        "technical evaluation. SmartSpend v3.1.0 was developed as a working Android application with "
+        "34 autonomous AI actions, Gemini 3.5 Flash-Lite as the primary model with seven fallback providers, "
+        "an optional private local model, and a Financial Health Score. The second objective was achieved. "
+        "Security remains prototype-grade, and accuracy figures come from preliminary developer testing."
+    )
+
+    obj3_conclusion = (
+        "Objective 3 was to evaluate usability and performance using the System Usability Scale and user "
+        "feedback. The mean SUS score of 61.83 (SD = 17.58, N = 30) corresponds to an adjective rating "
+        "of \u201cOK\u201d (Bangor et al., 2009) and Grade D on the Sauro and Lewis (2016) scale, below "
+        "the 68 average benchmark and the pre-set target of 80, and is marginal under the acceptability "
+        "criteria. Users reported strong intent to use the app often (4.35 out of 5) and confidence (4.19), "
+        "while consistency (Q6), complexity (Q2), and need for technical support (Q4) were the main concerns. "
+        "Because usability was evaluated but the target was not met, and performance was assessed only "
+        "preliminarily, the third objective was partially achieved."
+    )
+
+    # Step 1: Replace the EXACT truncated 'SmartSpend ' paragraph (body paragraphs only,
+    # matching paragraphs whose stripped text is exactly 'SmartSpend' or 'SmartSpend ')
+    truncated_found = False
+    for para in doc.paragraphs:
+        full = _full_text(para)
+        if full.strip() == "SmartSpend":
+            if para.runs:
+                para.runs[0].text = obj3_conclusion
+                for run in para.runs[1:]:
+                    run.text = ""
+            else:
+                para.add_run(obj3_conclusion)
+            print(f"  [{item_id}] REPLACED exact truncated 'SmartSpend' para → Obj 3 conclusion")
+            count += 1
+            truncated_found = True
+            break
+    if not truncated_found:
+        print(f"  [{item_id}] NOT FOUND: exact truncated 'SmartSpend' paragraph")
+
+    # Step 2: Fix the existing Obj 2 paragraph
+    for para in doc.paragraphs:
+        full = _full_text(para)
+        if (full.startswith("SmartSpend v3.1.0 was developed as a working Android application") and
+                "Prototype Observed Financial Health Indicator" in full):
+            if para.runs:
+                para.runs[0].text = obj2_conclusion
+                for run in para.runs[1:]:
+                    run.text = ""
+            else:
+                para.add_run(obj2_conclusion)
+            print(f"  [{item_id}] REPLACED Obj 2 conclusion paragraph")
+            count += 1
+            break
+
+    # Step 3: Insert Obj 1 before Obj 2 (find Obj 2 by its new text)
+    obj2_para_ref = None
+    for para in doc.paragraphs:
+        full = _full_text(para)
+        if full.startswith("Objective 2 was to design and develop SmartSpend"):
+            obj2_para_ref = para
+            break
+
+    if obj2_para_ref is not None:
+        # Only insert if Obj 1 is not already present just before Obj 2
+        # Check the paragraph just before by traversing the XML
+        prev_elem = obj2_para_ref._element.getprevious()
+        prev_text = ""
+        if prev_elem is not None:
+            # Try to get text from previous sibling
+            from docx.oxml.ns import qn as _qn
+            for t in prev_elem.iter(_qn('w:t')):
+                prev_text += t.text or ""
+
+        if "Objective 1 was to assess" not in prev_text:
+            new_para_elem = OxmlElement('w:p')
+            pPr = obj2_para_ref._element.find(qn('w:pPr'))
+            if pPr is not None:
+                new_para_elem.insert(0, deepcopy(pPr))
+            r_elem = OxmlElement('w:r')
+            t_elem = OxmlElement('w:t')
+            t_elem.text = obj1_conclusion
+            t_elem.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+            r_elem.append(t_elem)
+            new_para_elem.append(r_elem)
+            obj2_para_ref._element.addprevious(new_para_elem)
+            print(f"  [{item_id}] INSERTED Obj 1 conclusion paragraph before Obj 2")
+            count += 1
+        else:
+            print(f"  [{item_id}] Obj 1 already present before Obj 2, skipping insert")
+    else:
+        print(f"  [{item_id}] NOTE: Could not find Obj 2 conclusion paragraph for Obj 1 insertion")
+
+    return count
+
+
+def fix_blocker4_recommendations(doc):
+    """
+    BLOCKER-4: Add Rec 1 (UI/UX refinement) and Rec 2 (formal parsing evaluation)
+    to Ch IV Recommendations, then renumber existing items.
+    Current order: 1=payday cycle, 2=backend proxy, 3=Google Play, 4=on-device AI,
+                   5=SQLite, 6=household, 7=longitudinal
+    Target order:  1=UI/UX, 2=parsing eval, 3=payday cycle, ... renumbered
+    Strategy: Find item 1 (payday cycle), insert Rec 1 and 2 before it, renumber.
+    """
+    item_id = "BLOCKER-4"
+    count = 0
+
+    rec1_text = (
+        "1. UI/UX refinement. The researchers recommended that the developers address the main usability "
+        "concerns identified in the SUS evaluation: consistency (Q6), complexity (Q2), and the need for "
+        "technical support (Q4). Specific improvements include simplifying navigation for first-time users, "
+        "improving visual consistency across the 45 screens, and adding contextual help or tooltips to "
+        "reduce the need for technical assistance."
+    )
+
+    rec2_text = (
+        "2. Formal parsing evaluation. The researchers recommended that the developers conduct a formal "
+        "evaluation of the AI parsing and OCR features using at least 50 standardized receipts and "
+        "GCash screenshots, replacing the preliminary developer testing figures of 91.2% precision and "
+        "88.5% recall with results from a reproducible test protocol."
+    )
+
+    # Find the paragraph for Rec 1 (payday cycle) — currently numbered "1."
+    payday_para_idx = None
+    for i, para in enumerate(doc.paragraphs):
+        full = _full_text(para)
+        if full.strip().startswith("1. Payday-cycle") or \
+           (full.strip().startswith("1.") and "Payday-cycle" in full) or \
+           (full.strip().startswith("1.") and "payday-cycle" in full.lower()):
+            payday_para_idx = i
+            break
+
+    if payday_para_idx is not None:
+        payday_para = doc.paragraphs[payday_para_idx]
+        # Renumber existing items: 1→3, 2→4 (but actually we want 1-payday→3, so renumber 1-7 → 3-9... but plan says 8 total)
+        # Per RECONCILE_PLAN.md A8 ordering:
+        # 1=UI/UX, 2=parsing eval, 3=backend proxy+Google Play, 4=SQLite, 5=on-device AI,
+        # 6=payday cycle, 7=household, 8=longitudinal
+        # Current: 1=payday, 2=backend proxy, 3=Google Play, 4=on-device, 5=SQLite, 6=household, 7=longitudinal
+        # Let's renumber:
+        renumber_map = [
+            ("1. Payday-cycle-aware budgeting.", "6. Payday-cycle-aware budgeting."),
+            ("2. Backend API proxy and per-user keys.", "3. Backend API proxy and per-user keys."),
+            ("3. Google Play release.", "4. Google Play release."),
+            ("4. On-device AI tier.", "5. On-device AI tier."),
+            ("5. SQLite encryption.", "4. SQLite encryption."),
+            ("6. Household and remittance features.", "7. Household and remittance features."),
+            ("7. Longitudinal evaluation.", "8. Longitudinal evaluation."),
+        ]
+        # Actually, per plan A8, the 8 items are:
+        # 1=UI/UX, 2=formal parsing, 3=backend proxy, 4=SQLite, 5=on-device AI,
+        # 6=payday cycle, 7=household/remittance, 8=longitudinal
+        # So renumber:
+        renumber_map = [
+            ("1. Payday-cycle-aware budgeting.", "6. Payday-cycle-aware budgeting."),
+            ("2. Backend API proxy and per-user keys.", "3. Backend API proxy and per-user keys."),
+            ("3. Google Play release.", "— A Google Play release."),  # merge with proxy rec
+            ("4. On-device AI tier.", "5. On-device AI tier."),
+            ("5. SQLite encryption.", "4. SQLite encryption."),
+            ("6. Household and remittance features.", "7. Household and remittance features."),
+            ("7. Longitudinal evaluation.", "8. Longitudinal evaluation."),
+        ]
+
+        for old_num, new_num in renumber_map:
+            count += replace_in_doc(doc, old_num, new_num, item_id, f"renumber {old_num[:20]}")
+
+        from docx.oxml import OxmlElement
+        from copy import deepcopy
+
+        # Re-find payday para (now numbered "6.")
+        payday_para_new_idx = None
+        for i, para in enumerate(doc.paragraphs):
+            full = _full_text(para)
+            if "6. Payday-cycle-aware budgeting." in full:
+                payday_para_new_idx = i
+                break
+
+        if payday_para_new_idx is None:
+            # Fall back: find near the recommendations header
+            for i, para in enumerate(doc.paragraphs):
+                full = _full_text(para)
+                if "Payday-cycle-aware" in full:
+                    payday_para_new_idx = i
+                    break
+
+        if payday_para_new_idx is not None:
+            payday_para = doc.paragraphs[payday_para_new_idx]
+            # Insert Rec 2 before the payday paragraph
+            new_para2 = OxmlElement('w:p')
+            pPr = payday_para._element.find(qn('w:pPr'))
+            if pPr is not None:
+                new_para2.insert(0, deepcopy(pPr))
+            r2 = OxmlElement('w:r')
+            t2 = OxmlElement('w:t')
+            t2.text = rec2_text
+            t2.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+            r2.append(t2)
+            new_para2.append(r2)
+            payday_para._element.addprevious(new_para2)
+            print(f"  [{item_id}] INSERTED Rec 2 (formal parsing evaluation) before payday cycle")
+            count += 1
+
+            # Now re-find and insert Rec 1 before Rec 2
+            # Find the new Rec 2 paragraph
+            for i, para in enumerate(doc.paragraphs):
+                full = _full_text(para)
+                if "2. Formal parsing evaluation." in full:
+                    new_para1 = OxmlElement('w:p')
+                    pPr = para._element.find(qn('w:pPr'))
+                    if pPr is not None:
+                        new_para1.insert(0, deepcopy(pPr))
+                    r1 = OxmlElement('w:r')
+                    t1 = OxmlElement('w:t')
+                    t1.text = rec1_text
+                    t1.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
+                    r1.append(t1)
+                    new_para1.append(r1)
+                    para._element.addprevious(new_para1)
+                    print(f"  [{item_id}] INSERTED Rec 1 (UI/UX refinement) before Rec 2")
+                    count += 1
+                    break
+        else:
+            print(f"  [{item_id}] WARNING: Could not find payday-cycle paragraph to insert before")
+    else:
+        print(f"  [{item_id}] NOT FOUND: payday-cycle recommendation paragraph (Rec 1)")
+
+    return count
+
+
+def fix_blocker5_exclusion_paragraph(doc):
+    """
+    BLOCKER-5: Fix the doubled/garbled exclusion paragraph in Ch III SUS section.
+    The current text has the opening phrase doubled and an orphaned tail.
+    Replace the whole garbled paragraph with the correct single-sentence text.
+    """
+    item_id = "BLOCKER-5"
+    count = 0
+
+    # The garbled text pattern:
+    garbled_markers = [
+        "Of 36 respondents who attempted the survey, Of 36 respondents",
+        "and were included in the final analysis. The remaining 6 were excluded: 5 for insufficient app usage time and 1 for straight-line response bias",
+    ]
+
+    correct_exclusion = (
+        "Of 36 respondents who attempted the survey, 31 confirmed using the app for the required "
+        "minimum duration; 1 of these was excluded for straight-line responding, leaving 30 valid "
+        "respondents. The other 5 were excluded for insufficient usage time."
+    )
+
+    for para in doc.paragraphs:
+        full = _full_text(para)
+        if "Of 36 respondents who attempted the survey, Of 36" in full:
+            if para.runs:
+                para.runs[0].text = correct_exclusion
+                for run in para.runs[1:]:
+                    run.text = ""
+            else:
+                para.add_run(correct_exclusion)
+            print(f"  [{item_id}] FIXED doubled exclusion paragraph")
+            count += 1
+            break
+
+    # Also check for the orphaned tail fragment
+    for para in doc.paragraphs:
+        full = _full_text(para)
+        if "and were included in the final analysis. The remaining 6 were excluded: 5 for insufficient app usage time and 1 for straight-line response bias" in full:
+            # This is the orphaned tail - delete it
+            p = para._element
+            p.getparent().remove(p)
+            print(f"  [{item_id}] DELETED orphaned exclusion tail paragraph")
+            count += 1
+            break
+
+    if count == 0:
+        # Try to find and fix without exact doubled text (might be a single garbled sentence)
+        for para in doc.paragraphs:
+            full = _full_text(para)
+            if ("Of 36 respondents" in full and
+                "and were included in the final analysis" in full and
+                "The remaining 6 were excluded" in full):
+                if para.runs:
+                    para.runs[0].text = correct_exclusion
+                    for run in para.runs[1:]:
+                        run.text = ""
+                print(f"  [{item_id}] FIXED garbled exclusion paragraph (single-para variant)")
+                count += 1
+                break
+        if count == 0:
+            print(f"  [{item_id}] NOT FOUND: garbled exclusion paragraph (may already be fixed)")
+
+    return count
+
+
+# ---------------------------------------------------------------------------
 # Main fix sequence
 # ---------------------------------------------------------------------------
 
@@ -196,7 +559,7 @@ def main():
         print(f"ERROR: Manuscript not found at {MANUSCRIPT}")
         sys.exit(1)
 
-    print(f"=== SmartSpend apply_fixes.py ===")
+    print(f"=== SmartSpend apply_fixes.py (v2 — BLOCKERS + APPLY_NOW) ===")
     print(f"Manuscript : {MANUSCRIPT}")
     print(f"Backup     : {BACKUP}\n")
 
@@ -208,6 +571,33 @@ def main():
     doc = Document(str(MANUSCRIPT))
     total = 0
 
+    # ==================================================================
+    # PRIORITY: Fix BLOCKERS from review.json first
+    # ==================================================================
+
+    print("=== BLOCKER FIXES (from review.json CHANGES_REQUESTED) ===\n")
+
+    print("--- BLOCKER-1: Abstract — double article + duplicate benchmark tail ---")
+    total += fix_blocker1_abstract(doc)
+
+    print("\n--- BLOCKER-2: Abstract — 'successfully developed' overclaim ---")
+    total += fix_blocker2_abstract_overclaim(doc)
+
+    print("\n--- BLOCKER-3: Ch IV — truncated Conclusions (insert Obj 1 + Obj 3) ---")
+    total += fix_blocker3_chiv_conclusions(doc)
+
+    print("\n--- BLOCKER-4: Ch IV — add Rec 1 and Rec 2, renumber existing ---")
+    total += fix_blocker4_recommendations(doc)
+
+    print("\n--- BLOCKER-5: Ch III SUS — fix doubled/garbled exclusion paragraph ---")
+    total += fix_blocker5_exclusion_paragraph(doc)
+
+    # ==================================================================
+    # APPLY_NOW items from RECONCILE_PLAN.md
+    # ==================================================================
+
+    print("\n=== APPLY_NOW FIXES (RECONCILE_PLAN.md) ===\n")
+
     # ------------------------------------------------------------------
     # A3 — delete leftover instruction + British spellings
     # ------------------------------------------------------------------
@@ -218,7 +608,6 @@ def main():
         "",
         "A3", "delete instruction sentence"
     )
-    # Also try without curly quotes
     total += replace_in_doc(
         doc,
         "Present Peso as a design feature, not as evidence of behaviour change, and avoid phrases such as \u201cdopamine reinforcement\u201d.",
@@ -227,13 +616,11 @@ def main():
     )
     total += replace_in_doc(doc, "These behaviours applied the same ideas", "These behaviors applied the same ideas", "A3", "behaviour→behavior")
     total += replace_in_doc(doc, "so their effect on user behaviour has not been measured", "so their effect on user behavior has not been measured", "A3", "behaviour→behavior")
-    # Catch any remaining British spellings in Peso paragraph context
     total += replace_in_doc(doc, " behaviour ", " behavior ", "A3", "behaviour→behavior generic")
     total += replace_in_doc(doc, " behaviours ", " behaviors ", "A3", "behaviours→behaviors generic")
 
     # ------------------------------------------------------------------
-    # A4 — fix remaining Susan Arquisal reference (ALREADY_DONE tag but
-    #       reconciliation plan still lists it as APPLY_NOW for the specific sentence)
+    # A4 — fix remaining Susan Arquisal reference
     # ------------------------------------------------------------------
     print("\n--- A4: Validator name fix ---")
     total += replace_in_doc(
@@ -256,7 +643,7 @@ def main():
     )
 
     # ------------------------------------------------------------------
-    # A7 — conclusion wording
+    # A7 — conclusion wording (the BLOCKER-2/3 fixes cover most; catch remainder)
     # ------------------------------------------------------------------
     print("\n--- A7: Conclusion wording ---")
     total += replace_in_doc(
@@ -306,7 +693,6 @@ def main():
         'corresponding to an adjective rating of "OK" (Bangor et al., 2009) and a Grade D on the Sauro and Lewis (2016) curved scale, which is below the 68-point average benchmark (Sauro & Lewis, 2016) and the pre-set target of 80',
         "B2", "abstract grade attribution"
     )
-    # Also handle curly-quote variant
     total += replace_in_doc(
         doc,
         "corresponding to a grade of D and an adjective rating of \u201cOK\u201d under the Bangor et al. (2009) scale",
@@ -353,7 +739,6 @@ def main():
         "Figure 2.1 shows how SUS scores were interpreted. Scores below 51 were considered not acceptable, 51 to 70 marginal, and 71 and above acceptable (Bangor et al., 2008). The adjective anchors of Bangor et al. (2009) are marked on the scale: OK (about 51), Good (about 71), and Excellent (about 85). The dashed line marks the 68-point average benchmark (Sauro & Lewis, 2016) and the pre-set target is 80.",
         "B4", "Fig 2.1 description"
     )
-    # ASCII dash variant
     total += replace_in_doc(
         doc,
         "The SUS score ranged from 0 to 100 and is categorized into different levels: Poor (below 60), Marginal (60-69), Acceptable (70-79), Good (80-89), and Excellent (90-100). Higher scores indicated better usability, user satisfaction, and system performance, while lower scores suggested the need for improvements. This scale served as a standardized tool to assess how effectively and efficiently users could interact with the system.",
@@ -368,7 +753,8 @@ def main():
     total += replace_in_doc(doc, "complexity (Q2, Q4)", "complexity (Q2) and need for technical support (Q4)", "B5", "Q4 label")
 
     # ------------------------------------------------------------------
-    # B6 — SUS exclusions
+    # B6 — SUS exclusions (the BLOCKER-5 fix handles the garbled para;
+    #       this catches remaining simpler variants)
     # ------------------------------------------------------------------
     print("\n--- B6: SUS exclusions ---")
     total += replace_in_doc(
@@ -385,7 +771,7 @@ def main():
     )
 
     # ------------------------------------------------------------------
-    # B7 — Step 4 criteria + Obj 2 (ALREADY_DONE per plan but apply text fixes)
+    # B7 — Step 4 criteria + Obj 2
     # ------------------------------------------------------------------
     print("\n--- B7: LLM criteria wording ---")
     total += replace_in_doc(
@@ -419,7 +805,7 @@ def main():
     )
 
     # ------------------------------------------------------------------
-    # B15 — Table 2.1 → Table 1.2 (verify and fix)
+    # B15 — Table 2.1 → Table 1.2
     # ------------------------------------------------------------------
     print("\n--- B15: Table reference fix ---")
     total += replace_in_doc(
@@ -450,14 +836,13 @@ def main():
         doc,
         "Additional enhancements included the implementation of a backend proxy server for secure LLM API key handling, PDF export functionality for financial summaries, and SQLite database encryption.",
         "A backend proxy server for API key handling and SQLite database encryption were identified as enhancements but were not implemented in this study (Chapter IV, Recommendations 3 and 4).",
-        "B17", "proxy sentence"
+        "B17", "proxy sentence (full)"
     )
-    # Variant without PDF mention
     total += replace_in_doc(
         doc,
         "Additional enhancements included the implementation of a backend proxy server",
         "A backend proxy server for API key handling and SQLite database encryption were identified as enhancements but were not implemented in this study (Chapter IV, Recommendations 3 and 4).",
-        "B17", "proxy sentence variant"
+        "B17", "proxy sentence (partial variant)"
     )
 
     # ------------------------------------------------------------------
@@ -487,7 +872,6 @@ def main():
     # B20 — Appendix A→D fix
     # ------------------------------------------------------------------
     print("\n--- B20: Appendix reference fix ---")
-    # Already partially handled in A4; catch any remaining
     total += replace_in_doc(doc, "Content Validation Certificate (Appendix A)", "Content Validation Certificate (Appendix D)", "B20", "Appendix A→D")
 
     # ------------------------------------------------------------------
@@ -505,12 +889,9 @@ def main():
     # C Polish — age range, Raposas credential
     # ------------------------------------------------------------------
     print("\n--- C: Polish fixes ---")
-    # Age range: replace standalone "20–35" (young professionals) with "21–35"
-    # Use an exact string to avoid touching larger ranges
     for target in ["20\u201335", "20-35"]:
         total += replace_in_doc(doc, target, "21\u201335", "C", f"age range 20–35→21–35 ({target})")
 
-    # Raposas credential: add MIS if missing
     total += replace_in_doc(doc, "Raposas, MTS (Instructor)", "Raposas, MTS, MIS (Instructor)", "C", "Raposas MIS credential")
     total += replace_in_doc(doc, "Raposas, MTS (Capstone Teacher", "Raposas, MTS, MIS (Capstone Teacher", "C", "Raposas MIS credential 2")
 
@@ -518,12 +899,10 @@ def main():
     # A5 — delete stray TOC lines
     # ------------------------------------------------------------------
     print("\n--- A5: Delete stray figure lines ---")
-    # These appear as paragraphs with tab-separated page numbers
     stray_lines = [
         "Figure 3.12.  SUS Score Distribution (N = 30)\t70",
         "Figure 3.13.  SUS Scores by Respondent Group (N = 30)\t71",
         "Figure 3.14.  Demographic Distribution of Needs-Assessment Respondents (N = 30)\t44",
-        # Variants with single space
         "Figure 3.12. SUS Score Distribution (N = 30)\t70",
         "Figure 3.13. SUS Scores by Respondent Group (N = 30)\t71",
         "Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30)\t44",
@@ -531,14 +910,12 @@ def main():
     for line in stray_lines:
         total += delete_para_if_contains(doc, line, "A5")
 
-    # Also replace using the tab-stripped version
     stray_replacements = [
         ("Figure 3.12.  SUS Score Distribution (N = 30)", ""),
         ("Figure 3.13.  SUS Scores by Respondent Group (N = 30)", ""),
         ("Figure 3.14.  Demographic Distribution of Needs-Assessment Respondents (N = 30)", ""),
     ]
     for old, new in stray_replacements:
-        # Only replace if they appear as stand-alone body lines (not captions)
         for para in doc.paragraphs:
             full = _full_text(para)
             if full.strip().startswith(old.strip()) and len(full.strip()) < len(old) + 20:
@@ -552,8 +929,6 @@ def main():
     # ------------------------------------------------------------------
     print("\n--- A5: Duplicate footnote notes ---")
     dup_note = "Note: The 3 respondents who identified as both parent and young professional were classified by their primary financial role for SUS subgroup analysis, resulting in a final breakdown of 10 parents and 20 young professionals for statistical comparison (Table 8)."
-    # Delete all occurrences (the reconciliation plan says delete duplicates)
-    # We will delete all and let the manual step place one correct note under Table 3.1
     count_dups = 0
     for para in doc.paragraphs:
         if dup_note in _full_text(para) or "resulting in a final breakdown of 10 parents and 20 young professionals for statistical comparison (Table 8)" in _full_text(para):

@@ -1,0 +1,315 @@
+
+======================================================================
+ISSUE 1/2/3: TABLE 2.1 (Distribution of Respondents and Validators)
+======================================================================
+>> V4 Table index=2:
+   R0: Category: || Number of Respondents:
+   R1: Parents (Ages 35-55) || 16
+   R2: Young Professionals (Ages 21-35) || 14
+   R3: Content Validator (Survey) || 1
+   R4: Parents (35-55) || 10
+   R5: Young Professionals (21-35) || 20
+   R6: Total || 30
+
+>> FINAL Table index=2:
+   R0: Category: || Number of Respondents:
+   R1: Parents (Ages 35-55) || 13
+   R2: Young Professionals (Ages 21-35) || 14
+   R3: Both Groups || 3
+   R4: Total || 30
+   R5: Validators / Experts: || Number of Validators/Experts:
+   R6: Content Validator (Survey) || 1
+   R7: Technical Validator (System & SUS Process) || 1
+   R8: Total Validators || 2
+   R9: SUS evaluation sample: || 
+   R10: Parents (35-55) || 10
+   R11: Young Professionals (21-35) || 20
+   R12: Total || 30
+
+
+======================================================================
+ISSUE 1: Parents count text (16 vs 13)
+======================================================================
+>> V4:
+   ...n (Objective 1)
+The validated questionnaire was distributed to the respondents (13 parents, 14 young professionals, and 3 who identified as both).
+
+Step 4: LLM Technical ...
+   ...espondents and the expense tracking methods they reported. The sample comprised 13 parents aged 35-55 (43.3%), 14 young professionals aged 21-35 (46.7%), and 3 respondent...
+
+>> FINAL:
+   ...n (Objective 1)
+The validated questionnaire was distributed to the respondents (13 parents, 14 young professionals, and 3 who identified as both).
+
+Step 4: LLM Technical ...
+   ...espondents and the expense tracking methods they reported. The sample comprised 13 parents aged 35-55 (43.3%), 14 young professionals aged 21-35 (46.7%), and 3 respondent...
+
+
+======================================================================
+ISSUE 2: 'Both Groups' presence
+======================================================================
+>> V4 'Both Groups' in body idx=-1 | in full=False
+>> FINAL 'Both Groups' in body idx=-1 | in full=False
+
+
+======================================================================
+ISSUE 3: Technical Validator (System & SUS Process) presence
+======================================================================
+>> V4 'Technical Validator' idx=-1 | 'System & SUS' in full=False
+>> FINAL 'Technical Validator' idx=-1 | 'System & SUS' in full=False
+
+
+======================================================================
+ISSUE 4: Susan C. Arquisal / Avigail Candevario
+======================================================================
+>> V4:
+   'Susan C. Arquisal' in full: True
+   'Susan' in full: True
+   'Avigail Candevario' in full: True
+   'Avigail' in full: True
+   [256] The survey questionnaire was reviewed by Susan C. Arquisal, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with experience in financial management and business operations, prior to distribution. This review ensured that the questions were appropriate, 
+   [261] The survey questionnaire underwent content validation by Avigail Candevario, PFMe, a subject matter expert in financial management and business operations to ensure relevance, clarity, and appropriateness of the instrument. The System Usability Scale (SUS) evaluation process and the overall technica
+   [272] The survey questionnaire was reviewed by Susan C. Arquisal, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with experience in financial management and business operations, prior to distribution.
+   [274] The survey questionnaire was drafted by the research team and submitted to Avigail Candevario, PFMe, a subject matter expert in financial management, for content validation. The expert's credentials was recorded in the Content Validation Certificate (Appendix A). Revisions were made based on the fee
+>> FINAL:
+   'Susan C. Arquisal' in full: False
+   'Susan' in full: False
+   'Avigail Candevario' in full: True
+   'Avigail' in full: True
+   [254] The survey questionnaire was reviewed by Avigail Candevario, PFMe, a subject matter expert in financial management and business operations, prior to distribution. This review ensured that the questions were appropriate, relevant, and grounded in the actual financial management experiences of the tar
+   [259] The survey questionnaire underwent content validation by Avigail Candevario, PFMe, a subject matter expert in financial management and business operations to ensure relevance, clarity, and appropriateness of the instrument. The System Usability Scale (SUS) evaluation process and the overall technica
+   [272] The survey questionnaire was drafted by the research team and submitted to Avigail Candevario, PFMe, a subject matter expert in financial management, for content validation. The expert's credentials were recorded in the Content Validation Certificate (Appendix D). The same content validator also rev
+
+
+======================================================================
+ISSUE 5/6: Qualitative aspect & 'surveys' vs 'interviews'
+======================================================================
+>> V4:
+   [247] This study applied a mixed methods developmental research design, which integrated both qualitative and quantitative approaches in collecting and analyzing data (Creswell & Plano Clark, 2011). This design was appropriate for the study because it allowed the researchers to obtain a comprehensive understanding of financi
+   [250] Moreover, this study also adopted a developmental research approach, which focused on the design, development, and evaluation of a functional system or prototype. The SmartSpend mobile application was developed using the Flutter framework, with the integration of artificial intelligence through an LLM API. This approac
+   [269] For the first objective, data were gathered through a survey questionnaire. The survey questionnaire was used to collect quantitative data regarding the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. The survey questionnaire was subjected to cont
+
+>> FINAL:
+   [245] This study applied a mixed methods research design, which integrated both qualitative and quantitative approaches in collecting and analyzing data (Creswell & Plano Clark, 2011). This design was appropriate for the study because it allowed the researchers to obtain a comprehensive understanding of financial management 
+   [246] To address the qualitative aspect of the study, interviews were used to gather respondents' views regarding the features and functionality of the developed application. The qualitative data provided descriptive information that guided the design and improvement of the application.
+   [248] Moreover, this study adopted a descriptive-developmental research approach, which focused on the design, development, and evaluation of a functional system or prototype. The SmartSpend mobile application was developed using the Flutter framework, with the integration of artificial intelligence through an LLM API. This 
+   [267] For the first objective, data were gathered through a survey questionnaire. The survey questionnaire was used to collect quantitative data regarding the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. The survey questionnaire was subjected to cont
+   [385] Optional comments were invited in the SUS form (Appendix C) but were not analyzed thematically. The study used a structured quantitative survey instrument; qualitative insights were derived from survey response patterns.
+
+
+======================================================================
+ISSUE 7/8: Recommendations (Seven vs Eight)
+======================================================================
+>> V4:
+   [54] The results indicated that SmartSpend showed promise as a prototype AI-assisted financial tool for the target demographic, though the below-target usability score highlighted areas for UI/UX refinement. The study contributed a locally contextualized, evaluated prototype that addressed gaps in existing Philippine personal finance applications, particularly th
+
+>> FINAL:
+   [54] The results indicated that SmartSpend showed promise as a prototype AI-assisted financial tool for the target demographic, though the below-target usability score highlighted areas for UI/UX refinement. The study contributed a locally contextualized, evaluated prototype that addressed gaps in existing Philippine personal finance applications, particularly th
+
+
+======================================================================
+ISSUE 7: Recommendations CHAPTER list items
+======================================================================
+>> V4:
+   [403] Recommendations
+   [404] In view of the results of the study, the following recommendations were made:
+   [405] 1. Payday-cycle-aware budgeting. The researchers recommended that the developers implement budgeting resets aligned with the semi-monthly (15th and 30th) salary cycle common in the Philippines.
+   [406] 2. Backend API proxy and per-user keys. The researchers recommended that the developers move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to remove device-side key exp
+   [407] 3. Google Play release. The researchers recommended that, after the backend proxy and a privacy policy were in place, the developers submit SmartSpend to the Google Play Store, since the prototype was
+   [408] 4. On-device AI tier. The researchers recommended that the developers add an opt-in on-device model (e.g., Gemma 4 E2B through Google's LiteRT-LM, about a 2.6 GB download) for users who wanted fully o
+   [409] 5. SQLite encryption. The researchers recommended that the developers implement SQLCipher-based encryption for the local database in a future schema migration, because the local database of the protot
+   [410] 6. Household and remittance features. The researchers recommended that the developers add shared couple and family wallets and inbound OFW remittance tracking as a distinct income category to serve mo
+   [411] 7. Longitudinal evaluation. The researchers recommended that future researchers measure SmartSpend's effect on financial behavior over three to six months with a larger sample, because the usability e
+   [412] References
+   [413] Agila: Finance Coach. (2026). Agila: Finance Coach [Mobile application]. Google Play / App Store.
+   [414] Ariely, D. (2008). Predictably irrational: The hidden forces that shape our decisions. HarperCollins. https://www.anthropic.com/claude
+   [415] Bangko Sentral ng Pilipinas. (2021). 2021 Financial Inclusion Survey. BSP. https://www.bsp.gov.ph/Inclusive-Finance/Financial-Inclusion-Surveys/2021-FIS-Report.pdf
+   [416] Bangko Sentral ng Pilipinas. (2025). Consumer Finance and Inclusion Survey (CFIS) 2025. BSP.
+   [417] Bangor, A., Kortum, P., & Miller, J. (2009). Determining what individual SUS scores mean: Adding an adjective rating scale. Journal of Usability Studies, 4(3), 114-123.
+   [418] Bitrián, P., Buil, I., & Catalán, S. (2021). Making finance fun: The gamification of personal financial management apps. International Journal of Bank Marketing, 39(7), 1310-1332. https://doi.org/10.1
+   [419] Bociek, J. (2023). mobile_scanner: A universal barcode and QR code scanner for Flutter. https://pub.dev/packages/mobile_scanner
+   [420] Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan, B. Thomas, B. A. Weerdmeester, & I. L. McClelland (Eds.), Usability evaluation in industry (pp. 189-194). Taylor & Francis
+   [421] BunnyWise. (2026). BunnyWise: All-in-one investment tracker [Mobile application]. bunnywise.io.
+   [422] Comerton-Forde, C., Ip, E., Ribar, D. C., Ross, J., Salamanca, N., & Tsiaplias, S. (2018). Using survey and banking data to measure financial wellbeing (Financial Wellbeing Scales Technical Report No.
+   [424] Creswell, J. W., & Plano Clark, V. L. (2011). Designing and conducting mixed methods research. Sage Publications.
+   [425] Davenport, T. H., & Mittal, N. (2022). All-in on AI: How smart companies win big with artificial intelligence. Harvard Business Review Press.
+   [426] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319-340.
+   [427] Duhigg, C. (2012). The power of habit: Why we do what we do in life and business. Random House.
+   [428] Dwivedi, Y. K., Hughes, L., Ismagilova, E., Aarts, G., Coombs, C., Crick, T., Duan, Y., Dwivedi, R., Edwards, J., Eirug, A., Galanos, V., Ilavarasan, P. V., Janssen, M., Jones, P., Kar, A. K., Kizgin,
+   [429] Financial Health Network. (2021). FinHealth Score® toolkit and methodology. finhealthnetwork.org
+   [430] Flores, C. A. R. (2025). Financial freedom of Filipinos in personal finance management. Pantao: The International Journal of the Humanities and Social Sciences, 4(1). https://pantaojournal.com/2025/01
+   [431] Flutter 4 Fun. (2022). fl_chart: A highly customizable Flutter chart library. https://pub.dev/packages/fl_chart
+   [432] GCash / Mynt. (2026). GCash launches country's first AI financial coach.
+   [433] Google. (2024a). Firebase authentication documentation. https://firebase.google.com/docs/auth
+   [434] Google. (2024b). Firebase Crashlytics documentation. https://firebase.google.com/docs/crashlytics
+   [435] Google. (2024c). Firebase Firestore documentation. https://firebase.google.com/docs/firestore
+   [436] Google. (2024e). Google ML Kit documentation. https://developers.google.com/ml-kit
+   [437] Google. (2024f). Flutter documentation. https://flutter.dev/docs
+   [438] Groq. (2026). Groq API documentation and model deprecations.
+   [439] Hean, O., Saha, U., & Saha, B. (2025). Can AI help with your personal finances? Applied Economics. https://doi.org/10.1080/00036846.2025.2450384
+   [440] Inquiro. (2024). Financial literacy in the Philippines: Key statistics. Inquiro Analytics. https://inquiro.ph/financial-literacy-in-the-philippines-2024-key-statistics/
+   [441] Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. Econometrica, 47(2), 263-292.
+   [442] Kibo. (2026). Kibo: AI expense tracker [Mobile application]. Google Play.
+
+>> FINAL:
+   [399] Recommendations
+   [400] In view of the results of the study, the following recommendations were made:
+   [401] 1. UI/UX refinement. The researchers recommended that the developers address the main usability concerns identified in the SUS evaluation: consistency (Q6), complexity (Q2), and the need for technical
+   [402] 2. Formal parsing evaluation. The researchers recommended that the developers conduct a formal evaluation of the AI parsing and OCR features using at least 50 standardized receipts and GCash screensho
+   [403] 3. Backend API proxy and per-user keys. The researchers recommended that the developers move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to remove device-side key exp
+   [404] 4. SQLite encryption. The researchers recommended that the developers implement SQLCipher-based encryption for the local database in a future schema migration, because the local database of the protot
+   [405] 5. On-device AI tier. The researchers recommended that the developers add an opt-in on-device model (e.g., Gemma 4 E2B through Google's LiteRT-LM, about a 2.6 GB download) for users who wanted fully o
+   [406] 6. Payday-cycle-aware budgeting. The researchers recommended that the developers implement budgeting resets aligned with the semi-monthly (15th and 30th) salary cycle common in the Philippines.
+   [407] 7. Household and remittance features. The researchers recommended that the developers add shared couple and family wallets and inbound OFW remittance tracking as a distinct income category to serve mo
+   [408] 8. Longitudinal evaluation. The researchers recommended that future researchers measure SmartSpend's effect on financial behavior over three to six months with a larger sample, because the usability e
+   [410] References
+   [411] Agila: Finance Coach. (2026). Agila: Finance Coach [Mobile application]. Google Play / App Store.
+   [412] Ariely, D. (2008). Predictably irrational: The hidden forces that shape our decisions. HarperCollins.
+   [413] Bangko Sentral ng Pilipinas. (2021). 2021 Financial Inclusion Survey. BSP. https://www.bsp.gov.ph/Inclusive-Finance/Financial-Inclusion-Surveys/2021-FIS-Report.pdf
+   [414] Bangko Sentral ng Pilipinas. (2025). Consumer Finance and Inclusion Survey (CFIS) 2025. BSP.
+   [415] Bangor, A., Kortum, P., & Miller, J. (2009). Determining what individual SUS scores mean: Adding an adjective rating scale. Journal of Usability Studies, 4(3), 114-123.
+   [416] Bitrián, P., Buil, I., & Catalán, S. (2021). Making finance fun: The gamification of personal financial management apps. International Journal of Bank Marketing, 39(7), 1310-1332. https://doi.org/10.1
+   [417] Bociek, J. (2023). mobile_scanner: A universal barcode and QR code scanner for Flutter. https://pub.dev/packages/mobile_scanner
+   [418] Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan, B. Thomas, B. A. Weerdmeester, & I. L. McClelland (Eds.), Usability evaluation in industry (pp. 189-194). Taylor & Francis
+   [419] BunnyWise. (2026). BunnyWise: All-in-one investment tracker [Mobile application]. bunnywise.io.
+   [420] Comerton-Forde, C., Ip, E., Ribar, D. C., Ross, J., Salamanca, N., & Tsiaplias, S. (2018). Using survey and banking data to measure financial wellbeing (Financial Wellbeing Scales Technical Report No.
+   [422] Creswell, J. W., & Plano Clark, V. L. (2011). Designing and conducting mixed methods research. Sage Publications.
+   [423] Davenport, T. H., & Mittal, N. (2022). All-in on AI: How smart companies win big with artificial intelligence. Harvard Business Review Press.
+   [424] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319-340.
+   [425] Duhigg, C. (2012). The power of habit: Why we do what we do in life and business. Random House.
+   [426] Dwivedi, Y. K., Hughes, L., Ismagilova, E., Aarts, G., Coombs, C., Crick, T., Duan, Y., Dwivedi, R., Edwards, J., Eirug, A., Galanos, V., Ilavarasan, P. V., Janssen, M., Jones, P., Kar, A. K., Kizgin,
+   [427] Financial Health Network. (2021). FinHealth Score® toolkit and methodology. finhealthnetwork.org
+   [429] Flores, C. A. R. (2025). Financial freedom of Filipinos in personal finance management. Pantao: The International Journal of the Humanities and Social Sciences, 4(1). https://pantaojournal.com/2025/01
+   [430] Flutter 4 Fun. (2022). fl_chart: A highly customizable Flutter chart library. https://pub.dev/packages/fl_chart
+   [431] GCash / Mynt. (2026). GCash launches country's first AI financial coach.
+   [432] Google. (2024a). Firebase authentication documentation. https://firebase.google.com/docs/auth
+   [433] Google. (2024b). Firebase Crashlytics documentation. https://firebase.google.com/docs/crashlytics
+   [434] Google. (2024c). Firebase Firestore documentation. https://firebase.google.com/docs/firestore
+   [435] Google. (2024e). Google ML Kit documentation. https://developers.google.com/ml-kit
+   [436] Google. (2024f). Flutter documentation. https://flutter.dev/docs
+   [437] Groq. (2026). Groq API documentation and model deprecations.
+   [438] Hean, O., Saha, U., & Saha, B. (2025). Can AI help with your personal finances? Applied Economics. https://doi.org/10.1080/00036846.2025.2450384
+
+
+======================================================================
+ISSUE 9: Acknowledgements panelists line (em-dashes)
+======================================================================
+>> V4:
+   [61] To the panelists Mr. Jeoffrey B. Layco, MIS, Mr. Shekiro R. Raposas, MTS, MIS, and Ms. Mary-Ann Mzana, MTS, the researchers expressed their gratitude for their time, effort, and constructive feedback, which greatly contributed to improving the study.
+>> FINAL:
+   [61] To the panelists - Mr. Jeoffrey B. Layco, MIS, Mr. Shekiro R. Raposas, MTS, MIS, and Ms. Mary-Ann Mzana, MTS - the researchers expressed their gratitude for their time, effort, and constructive feedback, which greatly contributed to improving the study.
+
+
+======================================================================
+ISSUE 10: Figures 3.12/3.13/3.14 presence (LOF + body captions)
+======================================================================
+>> V4:
+   [145] 3.12. SUS Score Distribution (N = 30) 73
+   [146] 3.13. SUS Scores by Respondent Group (N = 30)
+   [147] 3.14. Demographic Distribution of Needs-Assessment
+   [315] Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30). The 3 respondents who identified as both parent and young professional were reclassified by primary financial role for S
+   [375] Figure 3.12. SUS Score Distribution (N = 30) 70
+   [376] Figure 3.13. SUS Scores by Respondent Group (N = 30) 71
+   [377] Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30) 44
+   [382] Figure 3.12. SUS Score Distribution (N = 30). Individual scores sorted in ascending order. Zone coloring reflects Bangor et al. (2008) acceptability ranges. Mean = 61.83 (SD = 17.58); range 35.0-92.5.
+   [385] Figure 3.13. SUS Scores by Respondent Group (N = 30). Parents (n = 10) scored M = 58.25 (SD = 19.72); Young Professionals (n = 20) scored M = 63.62 (SD = 16.65). Error bars represent ±1 SD; adjective 
+>> FINAL:
+   [313] Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30). The 3 respondents who identified as both parent and young professional were reclassified by primary financial role for S
+   [377] Figure 3.12. SUS Score Distribution (N = 30). Individual scores sorted in ascending order. Zone coloring reflects Bangor et al. (2008) acceptability ranges. Mean = 61.83 (SD = 17.58); range 35.0-92.5.
+   [380] Figure 3.13. SUS Scores by Respondent Group (N = 30). Parents (n = 10) scored M = 58.25 (SD = 19.72); Young Professionals (n = 20) scored M = 63.62 (SD = 16.65). Error bars represent ±1 SD; adjective 
+
+
+======================================================================
+ISSUE 11: Appendix D/E certificate references & nearby images
+======================================================================
+>> V4:
+   [117] (img=False) APPENDIX D: Content Validation Certificate (Survey Questionnaire) 96
+   [118] (img=False) APPENDIX E: Content Validation Certificate (FHS Formula) 97
+   [274] (img=False) The survey questionnaire was drafted by the research team and submitted to Avigail Candevario, PFMe, a subject matter expert in financial management, for conten
+   [702] (img=False) APPENDIX D
+   [703] (img=False) Content Validation Certificate (Survey Questionnaire)
+   [705] (img=False) APPENDIX E
+   [706] (img=False) Content Validation Certificate (FHS Formula and Literature)
+
+>> FINAL:
+   [112] (img=False) APPENDIX D: Content Validation Certificate (Survey Questionnaire) 96
+   [113] (img=False) APPENDIX E: Content Validation Certificate (FHS Formula) 97
+   [272] (img=False) The survey questionnaire was drafted by the research team and submitted to Avigail Candevario, PFMe, a subject matter expert in financial management, for conten
+   [766] (img=False) APPENDIX D
+   [767] (img=False) Content Validation Certificate (Survey Questionnaire)
+   [770] (img=False) APPENDIX E
+   [771] (img=False) Content Validation Certificate (FHS Formula and Literature)
+
+
+======================================================================
+ISSUE 13: Step 1 Questionnaire Preparation and Validation
+======================================================================
+>> V4:
+   [273] Step 1: Questionnaire Preparation and Validation (Objective 1)
+>> FINAL:
+   [271] Step 1: Questionnaire Preparation and Validation (Objective 1)
+
+
+======================================================================
+TENSE SWEEP: check which corrections are present (past) vs still present-tense in V4
+======================================================================
+Total correction rows parsed: 547
+APPLIED in V4 (past-tense present, present-tense absent): 449
+MISSING in V4 (present-tense still present, past-tense absent): 17
+AMBIGUOUS (both or neither found): 81
+
+--- MISSING (still present tense) in V4, first 80: ---
+#190 [Chapter I - Scope and Limitations of the Study p. 17]
+   ORIG : produce inaccurate results. Voice recognition accuracy will be affected by background noise and
+   CORR : produce inaccurate results. Voice recognition accuracy was affected by background noise and
+#229 [Chapter I - Purpose and Description p. 20]
+   ORIG : as a lightweight financial assistant that can respond to user inputs and
+   CORR : as a lightweight financial assistant that could respond to user inputs and
+#372 [Chapter II - Step-by-Step Data Gathering Procedure p. 36]
+   ORIG : This figure illustrates the interpretation of the
+   CORR : This figure illustrated the interpretation of the
+#444 [Chapter III - Financial Health Score: Computation p. 50]
+   ORIG : scattered, habitual overspending across multiple items counts as "hard" at full
+   CORR : scattered, habitual overspending across multiple items counted as "hard" at full
+#500 [Chapter III - Overview of the System p. 58]
+   ORIG : into a context-aware companion. The mascot has 12 animated moods (idle
+   CORR : into a context-aware companion. The mascot had 12 animated moods (idle
+#501 [Chapter III - Overview of the System p. 58]
+   ORIG : reactions and an optional speech bubble), appears on most major screens
+   CORR : reactions and an optional speech bubble), appeared on most major screens
+#502 [Chapter III - Overview of the System p. 58]
+   ORIG : the avatar beside AI replies, and changes mood with the sentiment
+   CORR : the avatar beside AI replies, and changed mood with the sentiment
+#503 [Chapter III - Overview of the System p. 58]
+   ORIG : Health Score tier. A voice service supplies short Taglish messages for
+   CORR : Health Score tier. A voice service supplied short Taglish messages for
+#504 [Chapter III - Overview of the System p. 59]
+   ORIG : at random so the same line does not repeat every session)
+   CORR : at random so the same line did not repeat every session)
+#505 [Chapter III - Overview of the System p. 59]
+   ORIG : app's scheduled notifications; a context service gives a one-time tip per
+   CORR : app's scheduled notifications; a context service gave a one-time tip per
+#506 [Chapter III - Overview of the System p. 59]
+   ORIG : 17 screens; and a haptic service provides tactile feedback. Once-a-day checks
+   CORR : 17 screens; and a haptic service provided tactile feedback. Once-a-day checks
+#507 [Chapter III - Overview of the System p. 59]
+   ORIG : service provides tactile feedback. Once-a-day checks react to events such as
+   CORR : service provided tactile feedback. Once-a-day checks reacted to events such as
+#508 [Chapter III - Overview of the System p. 59]
+   ORIG : with celebration sheets. Tapping a notification stores its payload so that
+   CORR : with celebration sheets. Tapping a notification stored its payload so that
+#509 [Chapter III - Overview of the System p. 59]
+   ORIG : payload so that the next launch can respond in context.
+   CORR : payload so that the next launch could respond in context.
+#511 [Chapter III - Overview of the System p. 59]
+   ORIG : so their effect on user behaviour has not been measured; the
+   CORR : so their effect on user behaviour had not been measured; the
+#514 [Chapter III - Overview of the System p. 59]
+   ORIG : as evidence of behaviour change, and avoid phrases such as "dopamine reinforcement".
+   CORR : as evidence of behaviour change, and phrases such as "dopamine reinforcement" were avoided.
+#519 [Chapter III - Evaluation of the Usability and Performance of... p. 68]
+   ORIG : 3) were separate groups; some individuals may have taken part in both,
+   CORR : 3) were separate groups; some individuals might have taken part in both,
+
+--- MISSING (still present tense) in V4 that ARE corrected in FINAL: ---
+count: 0

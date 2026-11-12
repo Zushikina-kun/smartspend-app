@@ -1,0 +1,11 @@
+[1A] Susan->Avigail in validator paragraph (instance A)
+[1B] Deleted stray duplicate Susan paragraph (was para 272)
+[2] Qualitative paragraph -> interviews (para 248)
+[3] Acknowledgements panelists em-dashes added (para 61)
+[4] Abstract Seven->Eight recommendations (para 54)
+[5a] Rewrote rec paragraphs 1-7
+[5b] Inserted rec item 8 (Longitudinal evaluation)
+[6] Table 2.1 restructured to 12 rows (Parents 13, Both Groups 3, Total Validators 1, no Technical Validator)
+[7/8] Figures 3.12/3.13/3.14 present-with-image: True; certificates present-with-image: True
+      (Already embedded in V4 — not re-embedded to avoid duplicates.)
+SAVED: c:\xampp\htdocs\smartspend_app\docs\handsoff\FOR_CYRILLE\1_MAIN_MANUSCRIPT_FINAL.docx

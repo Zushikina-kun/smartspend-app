@@ -1,0 +1,287 @@
+== V4 : inline-image paragraphs = 28
+
+============================================================
+V4 FIGURE 3.1x REGION (paras with '3.1' or 'Figure 3.' and IMG flag, +-2 ctx)
+============================================================
+[0141][img=False]      3.8.                     Financial Health Score Breakdown           66
+[0142][img=False]      3.9.               Budgets, Safe-to-Spend, and Savings Goals          67
+[0143][img=False]      3.10.                             Local AI Mode Setup            68
+[0144][img=False]      3.11.                           SUS Computation Table            70
+[0145][img=False]      3.12.       SUS Score Distribution (N = 30)                    73
+
+[0146][img=False]     3.13.             SUS Scores by Respondent Group (N = 30)    
+
+[0147][img=False]     3.14.              Demographic Distribution of Needs-Assessment 
+
+[0148][img=False] Respondents (N = 30)           
+
+[0149][img=False] 
+
+[0312][img=False] Note. Respondents could select more than one tracking method, so percentages were computed within each group (parents n = 13, young professionals n = 14, both n
+[0313][img=False] 
+[0314][img=True] 
+[0315][img=False] Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30). The 3 respondents who identified as both parent and young professional were recl
+[0316][img=False] Receipts were the most common way of tracking expenses (27 of 30, 90.0%), followed by mental estimates (16 of 30, 53.3%) and e-wallet transaction history (13 of
+
+[0317][img=False] The findings confirmed the critical financial management challenges identified in the literature. Among the 30 respondents, 96.7% expressed positive intent to u
+
+[0371][img=False] SUS scores were computed using the standard formula: odd-numbered items minus 1; 5 minus even-numbered items; sum multiplied by 2.5 (Brooke, 1996). The overall 
+[0372][img=True] 
+[0373][img=True] 
+[0374][img=False] Figure 3.11. SUS Computation Table
+[0375][img=False] Figure 3.12.  SUS Score Distribution (N = 30) 70
+
+[0376][img=False] Figure 3.13.  SUS Scores by Respondent Group (N = 30) 71
+
+[0377][img=False] Figure 3.14.  Demographic Distribution of Needs-Assessment Respondents (N = 30) 44
+
+[0378][img=False] Table 3.3. Overall SUS Result
+
+[0379][img=False] As shown in Table 3.3, SmartSpend obtained an overall SUS score of 61.83, a grade of D, and an adjective rating of "OK" (Bangor et al., 2009), which was below t
+
+[0380][img=False] 
+[0381][img=True] 
+[0382][img=False] Figure 3.12. SUS Score Distribution (N = 30). Individual scores sorted in ascending order. Zone coloring reflects Bangor et al. (2008) acceptability ranges. Mea
+[0383][img=False] 
+
+[0384][img=True] 
+
+[0385][img=False] Figure 3.13. SUS Scores by Respondent Group (N = 30). Parents (n = 10) scored M = 58.25 (SD = 19.72); Young Professionals (n = 20) scored M = 63.62 (SD = 16.65)
+[0386][img=True] 
+
+[0387][img=False] 
+
+[0388][img=False] Table 3.4. System Usability Scale (SUS) Results by Respondent Group
+
+
+============================================================
+V4 APPENDIX D/E REGION (paras 695-720 / 760-780)
+============================================================
+[0695][img=False] 
+[0696][img=False] 
+[0697][img=False] 
+[0698][img=False] 
+[0699][img=False] 
+[0700][img=False] 
+[0701][img=False] 
+[0702][img=False] APPENDIX D
+[0703][img=False] Content Validation Certificate (Survey Questionnaire)
+[0704][img=True] 
+[0705][img=False] APPENDIX E
+[0706][img=False] Content Validation Certificate (FHS Formula and Literature)
+[0707][img=True] 
+[0708][img=False] 
+[0709][img=False] PHOTO DOCUMENTATION
+[0710][img=False] 
+[0711][img=False] 
+[0712][img=False] 
+[0713][img=False] 
+[0714][img=False] 
+[0715][img=False] CURRICULUM VITAE
+[0716][img=True] 
+[0717][img=False] BRIX A. DIRECTO
+[0718][img=False] I. PERSONAL INFORMATION 
+[0719][img=False] Address : Bagbag, Quirino, Bacnotan, La Union Date of Birth : September 4, 1999 Email Address : brix.arquisal@lorma.edu
+[0720][img=False] II. EDUCATIONAL BACKGROUND
+[0721][img=False] Tertiary (2018–2020, 2023–Present) Lorma Colleges Bachelor of Science in Information Technology (Undergraduate)
+[0722][img=False] Secondary (2012–2018) Stella Maris Academy General Academic Strand (GAS)
+[0723][img=False] Primary (2006–2012) Quirino Elementary School / Bitalag Integrated School
+[0724][img=False] III. AWARDS/CITATIONS/RECOGNITIONS RECEIVED N/A
+
+============================================================
+V4 ABSTRACT para 51-54 FULL
+============================================================
+[0050] ABSTRACT
+[0051] Financial mismanagement remained a critical and documented challenge among Filipino households, compounded by limited access to accessible, localized, and intelligent financial tools. This study aimed to: (1) assess the financial management practices, budgeting challenges, and expense-tracking behaviors of parents aged 35–55 and young professionals aged 21–35 in San Fernando City, La Union; (2) design and develop SmartSpend, an AI-assisted mobile financial tracking and advisory application for Android; and (3) evaluate the usability of the developed system using the System Usability Scale (SUS).
+[0052] The study employed a mixed-methods developmental research design. A validated survey questionnaire was administered to assess financial practices and technology acceptance. SmartSpend was developed using an Agile Kanban methodology, integrating a multi-provider large language model (LLM) architecture with Gemini 3.5 Flash-Lite as the primary model, enabling 34 autonomous financial management actions. Usability was evaluated using the 10-item Brooke (1996) SUS instrument administered after respondents used the application for at least 10 minutes.
+[0053] The needs assessment revealed that 96.7% of respondents expressed positive intent to use an AI-powered financial application, and 93.3% already used GCash, validating the target features. SmartSpend version 3.1.0 was successfully developed as an offline-first Android application with multi-modal expense input, a Financial Health Score (FHS) formally classified as a Prototype Observed Financial Health Indicator, and a six-provider AI failover chain. Usability evaluation yielded a mean SUS score of 61.83 (SD = 17.58), corresponding to a grade of D and an adjective rating of "OK" under the Bangor et al. (2009) scale below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80.
+[0054] The results indicated that SmartSpend showed promise as a prototype AI-assisted financial tool for the target demographic, though the below-target usability score highlighted areas for UI/UX refinement. The study contributed a locally contextualized, evaluated prototype that addressed gaps in existing Philippine personal finance applications, particularly the absence of Filipino-English LLM integration, offline-first operation, and behavioral health scoring. Seven recommendations were identified for future development, including UI/UX refinement, a backend API proxy, on-device AI, SQLite encryption, formal parsing evaluation, and a longitudinal study.
+
+============================================================
+V4 RECOMMENDATIONS FULL (item lines)
+============================================================
+[0204] 1. Assessed the existing financial management practices, common budgeting challenges, and expense tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 in San Fernando City, La Union, through structured surveys.
+[0205] 2. Designed and developed the SmartSpend mobile application with the integration of a suitable Large Language Model (LLM) API.
+[0206] 3. Evaluated the usability and performance of the SmartSpend application using the System Usability Scale (SUS) and user feedback analysis.
+[0331] 1. Savings Rate (25 pts): Score = 25 × min(1.0, savingsRate / 0.20). The 20% target came from the 50/30/20 budgeting rule (Warren & Tyagi, 2005).
+[0332] 2. Overspend Control (25 pts):pushes spending over the daily budget counts as a "soft" overspend day at half weight; a day with scattered, habitual overspending across multiple items counts as "hard" at full weight.
+[0333] 3. Budget Adherence (25 pts): Score = 25 × (onBudgetCategories / totalBudgetedCategories). Category-level budget limits followed the common personal-finance practice of zero-based budgeting (popularized by Ramsey, 2003), though this practice itself was not independently validated in peer-reviewed literature. The behavior of this component when zero category budgets were configured was a known open
+[0334] 4. Logging Consistency (25 pts): Score = 25 × (loggedDays / activeDays). Consistent self-monitoring increased transaction salience and promoted deliberate spending (Thaler & Sunstein, 2008).
+[0405] 1. Payday-cycle-aware budgeting. The researchers recommended that the developers implement budgeting resets aligned with the semi-monthly (15th and 30th) salary cycle common in the Philippines.
+[0406] 2. Backend API proxy and per-user keys. The researchers recommended that the developers move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to remove device-side key exposure and enforce per-user message limits, because the free-tier request quotas (Table 3.2) were shared by every user of the prototype. Letting users add their own key was an interim measure.
+[0407] 3. Google Play release. The researchers recommended that, after the backend proxy and a privacy policy were in place, the developers submit  SmartSpend to the Google Play Store, since the prototype was currently distributed as a downloadable APK.
+[0408] 4. On-device AI tier. The researchers recommended that the developers add  an opt-in on-device model (e.g., Gemma 4 E2B through Google's LiteRT-LM, about a 2.6 GB download) for users who wanted fully offline AI, routing only simple logging tasks to it and keeping complex financial advice on the cloud tier, because the current local AI mode required a separate computer on the same network.
+[0409] 5. SQLite encryption. The researchers recommended that the developers implement SQLCipher-based encryption for the local database in a future schema migration, because the local database of the prototype was not encrypted.
+[0410] 6. Household and remittance features. The researchers recommended that the developers add  shared couple and family wallets and inbound OFW remittance tracking as a distinct income category to serve more user groups.
+[0411] 7. Longitudinal evaluation. The researchers recommended that future researchers measure  SmartSpend's effect on financial behavior over three to six months with a larger sample, because the usability evaluation in this study measured usability at a single point in time.
+[0494] 1. What is your age?
+[0503] 2. Which category best describes you?
+[0509] 3. What is your current employment status?
+[0519] 4. Do you prepare a budget for your personal or household finances?
+[0525] 5. Do you set aside money for savings before spending on other expenses?
+[0533] 6. What are the main challenges you experience when managing your finances? (Select all that apply.)
+[0548] 7. What do you usually do when you realize that you have exceeded your budget? (Select all that apply.)
+[0557] 8. What would help you manage your budget more effectively? (Select all that apply.)
+
+============================================================
+V4 QUALITATIVE/RESEARCH DESIGN paras 245-252 full
+============================================================
+[0243] CHAPTER II
+[0244] DESIGN AND METHODOLOGY
+[0245] This chapter presented the methods and procedures  that were used in the development, implementation, and evaluation of the SmartSpend system. It included a detailed discussion of  the research design, population and locale, ethical considerations, data gathering tools and procedures, and the software development methodology applied in the study.
+[0246] Research Design
+[0247] This study applied a mixed methods developmental research design, which integrated both qualitative and quantitative approaches in collecting and analyzing data (Creswell & Plano Clark, 2011). This design was appropriate for the study because it allowed the researchers to obtain a comprehensive understanding of financial management practices and system usability by combining numerical data with de
+[0248] To gather user input for the study, structured survey questionnaires were used to collect respondents’ views regarding the features and functionality of the developed application. The survey responses provided descriptive information that guided the design and improvement of the application. 
+[0249] On the other hand, the quantitative aspect of the study involved the use of validated structured survey questionnaires, which underwent content validation by subject matter experts to ensure clarity, relevance, and alignment with the objectives of the study. These questionnaires were used to collect measurable data regarding financial habits, expense tracking practices, and common difficulties enc
+[0250] Moreover, this study also adopted a developmental research approach, which focused on the design, development, and evaluation of a functional system or prototype. The SmartSpend mobile application was developed using the Flutter framework, with the integration of artificial intelligence through an LLM API. This approach enabled the researchers to iteratively improve the system based on the data ga
+[0251] By combining mixed methods and developmental approaches, the study ensured that the system was  not only technically functional but also user-centered, effective, and aligned with the actual needs of the respondents. This integrated research design supported continuous refinement and validation of the SmartSpend application throughout the development process.
+[0252] Population and Locale
+
+============================================================
+V4 SUS validator paragraph (259/272 region) full
+============================================================
+[0255] This demographic composition reflected evidence from the BSP Financial Inclusion Survey (2021) that parents in the 35 to 55 age group served as primary household financial decision-makers and were among the groups with the lowest rates of formal financial account ownership and structured budgeting making them a critical and underserved target population for a financial management tool (Bangko Sent
+[0256] The survey questionnaire was reviewed by Susan C. Arquisal, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with experience in financial management and business operations, prior to distribution. This review ensured that the questions were appropriate, relevant, and grounded in the actual financial management experiences of the target population.
+[0257] Respondents participated in the needs assessment phase and the system evaluation phase; the two samples were separate groups, although some individuals might have taken part in both. Their feedback was essential in identifying real-world financial challenges and in assessing the usability, effectiveness, and practicality of the SmartSpend mobile application in supporting everyday financial managem
+[0258] The distribution of respondents was presented in Table 2.1.
+[0259] 
+[0260] Table 2.1. Distribution of Respondents and Validators
+[0261] The survey questionnaire underwent content validation by Avigail Candevario, PFMe, a subject matter expert in financial management and business operations to ensure relevance, clarity, and appropriateness of the instrument. The System Usability Scale (SUS) evaluation process and the overall technical functionality of the SmartSpend system was reviewed by a subject matter expert in information tech
+[0262] The researchers utilized purposive sampling in selecting participants. This method allowed the intentional selection of individuals who had relevant experience in budgeting, expense tracking, and financial decision-making, ensuring that the collected data was meaningful and directly aligned with the research objectives.
+[0263] Ethical Considerations 
+[0264] All ethical considerations were strictly followed throughout the entire research process. Participation in this study was voluntary, and no form of pressure was imposed on the respondents. All participants, including parents and young professionals, had the right to refuse participation or withdraw from the study at any time without any penalty.
+[0265] Informed consent was obtained from all participants before their involvement in the study. They were properly informed about the nature and purpose of the research prior to their participation.
+[0266] In addition, confidentiality was strictly maintained. Personal information of the respondents was kept secure and treated with utmost confidentiality. All responses gathered were used solely for academic purposes.
+[0267] Furthermore, all collected data were carefully managed and stored to prevent any form of loss or unauthorized access. The researchers ensured that ethical standards were upheld throughout the study.
+[0268] Data Gathering Tools and Procedure
+[0269] For the first objective, data were gathered through a survey questionnaire. The survey questionnaire was used to collect quantitative data regarding the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. The survey questionnaire was subjected to content validation by a subject matter expert to ensure that the questions were appr
+[0270] For the second objective, no direct data gathering instrument was used for the design and development phase, as the results obtained from the first objective served as the primary basis for system design and implementation. However, technical benchmarking was conducted as part of this objective to support the AI engine selection process. A comparative evaluation of candidate large language model (
+[0271] For the third objective, data were collected using the System Usability Scale (SUS) questionnaire, a standardized tool used to evaluate system usability. Respondents assessed the application in terms of ease of use, functionality, and overall user experience. The implementation and administration of the usability evaluation were reviewed by subject matter experts to ensure that the evaluation proc
+[0272] The survey questionnaire was reviewed by Susan C. Arquisal, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with experience in financial management and business operations, prior to distribution. 
+[0273] Step 1: Questionnaire Preparation and Validation (Objective 1)
+[0274] The survey questionnaire was drafted by the research team and submitted to Avigail Candevario, PFMe, a subject matter expert in financial management, for content validation. The expert's credentials was recorded in the Content Validation Certificate (Appendix A). Revisions were made based on the feedback before distribution.
+[0275] Step 2: Respondent Identification and Consent (Objective 1)
+== FINAL : inline-image paragraphs = 31
+
+============================================================
+FINAL FIGURE 3.1x REGION (paras with '3.1' or 'Figure 3.' and IMG flag, +-2 ctx)
+============================================================
+[0310][img=False] Note. Respondents could select more than one tracking method, so percentages were computed within each group (parents n = 13, young professionals n = 14, both n
+[0311][img=False] 
+[0312][img=True] 
+[0313][img=False] Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30). The 3 respondents who identified as both parent and young professional were recl
+[0314][img=False] Receipts were the most common way of tracking expenses (27 of 30, 90.0%), followed by mental estimates (16 of 30, 53.3%) and e-wallet transaction history (13 of
+
+[0315][img=False] The findings confirmed the critical financial management challenges identified in the literature. Among the 30 respondents, 96.7% expressed positive intent to u
+
+[0374][img=False] As shown in Table 3.3, SmartSpend obtained an overall SUS score of 61.83, a grade of D, and an adjective rating of "OK" (Bangor et al., 2009), which was below t
+[0375][img=False] 
+[0376][img=True] 
+[0377][img=False] Figure 3.12. SUS Score Distribution (N = 30). Individual scores sorted in ascending order. Zone coloring reflects Bangor et al. (2008) acceptability ranges. Mea
+[0378][img=False] 
+
+[0379][img=True] 
+
+[0380][img=False] Figure 3.13. SUS Scores by Respondent Group (N = 30). Parents (n = 10) scored M = 58.25 (SD = 19.72); Young Professionals (n = 20) scored M = 63.62 (SD = 16.65)
+[0381][img=True] 
+
+[0382][img=True] 
+
+[0383][img=False] Table 3.4. System Usability Scale (SUS) Results by Respondent Group
+
+[0384][img=False] 
+
+
+============================================================
+FINAL APPENDIX D/E REGION (paras 695-720 / 760-780)
+============================================================
+[0760][img=False] Return on Investment (ROI) Analysis of Business Operations (2021–2022) Financial Management and Salary Allocation in Business Operations (2022–2023) Cost Analys
+[0761][img=False] 
+[0762][img=False] Bangor, A., Kortum, P. T., & Miller, J. T. (2008). An empirical evaluation of the System Usability Scale. International Journal of Human–Computer Interaction, 2
+[0763][img=False] Deci, E. L., & Ryan, R. M. (2000). The "what" and "why" of goal pursuits: Human needs and the self-determination of behavior. Psychological Inquiry, 11(4), 227–
+[0764][img=False] Sauro, J., & Lewis, J. R. (2016). Quantifying the user experience: Practical statistics for user research (2nd ed.). Morgan Kaufmann.
+[0765][img=False] † Respondents who identified as both a parent and a young professional.
+[0766][img=False] APPENDIX D
+[0767][img=False] Content Validation Certificate (Survey Questionnaire)
+[0768][img=True] 
+[0769][img=True] 
+[0770][img=False] APPENDIX E
+[0771][img=False] Content Validation Certificate (FHS Formula and Literature)
+[0772][img=True] 
+[0773][img=True] 
+[0774][img=False] 
+
+============================================================
+FINAL ABSTRACT para 51-54 FULL
+============================================================
+[0050] ABSTRACT
+[0051] Financial mismanagement remained a critical and documented challenge among Filipino households, compounded by limited access to accessible, localized, and intelligent financial tools. This study aimed to: (1) assess the financial management practices, budgeting challenges, and expense-tracking behaviors of parents aged 35–55 and young professionals aged 21–35 in San Fernando City, La Union; (2) design and develop SmartSpend, an AI-assisted mobile financial tracking and advisory application for Android; and (3) evaluate the usability of the developed system using the System Usability Scale (SUS).
+[0052] The study employed a mixed-methods, developmental research design. Purposive sampling was used to select 30 respondents from the target population. A validated survey questionnaire was administered to assess financial practices and technology acceptance. SmartSpend was developed using an Agile Kanban methodology, integrating a multi-provider large language model (LLM) architecture with Gemini 3.5 Flash-Lite as the primary model, enabling 34 autonomous financial management actions. Usability was evaluated using the 10-item Brooke (1996) SUS instrument administered after respondents used the application for at least 10 minutes.
+[0053] The needs assessment revealed that 96.7% of respondents expressed positive intent to use an AI-powered financial application, and 93.3% already used GCash, validating the target features. SmartSpend v3.1.0 was developed as a working Android prototype with multi-modal expense input, a Financial Health Score (FHS) formally classified as a Prototype Observed Financial Health Indicator, and an eight-provider cloud failover chain (Gemini 3.5 Flash-Lite as primary, seven fallbacks) plus an optional private local model. Usability evaluation yielded a mean SUS score of 61.83 (SD = 17.58), corresponding to an adjective rating of "OK" (Bangor et al., 2009) and a Grade D on the Sauro and Lewis (2016) curved scale, which is below the 68-point average benchmark (Sauro & Lewis, 2016) and the pre-set target of 80.
+[0054] The results indicated that SmartSpend showed promise as a prototype AI-assisted financial tool for the target demographic, though the below-target usability score highlighted areas for UI/UX refinement. The study contributed a locally contextualized, evaluated prototype that addressed gaps in existing Philippine personal finance applications, particularly the absence of Filipino-English LLM integration, offline-first operation, and behavioral health scoring. Eight recommendations were identified for future development: UI/UX refinement, formal parsing evaluation, a backend API proxy followed by a Google Play release, SQLite encryption, an on-device AI tier, payday-cycle budgeting, household and remittance features, and a longitudinal evaluation.
+
+============================================================
+FINAL RECOMMENDATIONS FULL (item lines)
+============================================================
+[0200] 1. Assess the existing financial management practices, common budgeting challenges, and expense tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 in San Fernando City, La Union, through structured surveys.
+[0201] 2. Design and develop the SmartSpend mobile application, including its system architecture, database structure, user interface, and core functionalities such as multi-modal expense input, automated data processing, cloud-based synchronization, and the integration of a suitable Large Language Model (LLM) API — using a context injection architecture — selected through a comparative technical evaluat
+[0202] 3. Evaluate the usability and performance of the SmartSpend application using the System Usability Scale (SUS) and user feedback analysis.
+[0329] 1. Savings Rate (25 pts): Score = 25 × min(1.0, savingsRate / 0.20). The 20% target came from the 50/30/20 budgeting rule (Warren & Tyagi, 2005).
+[0330] 2. Overspend Control (25 pts):
+[0331] 3. Budget Adherence (25 pts): Score = 25 × (onBudgetCategories / totalBudgetedCategories). Category-level budget limits followed the common personal-finance practice of zero-based budgeting (popularized by Ramsey, 2003), though this practice itself was not independently validated in peer-reviewed literature. 
+[0332] 4. Logging Consistency (25 pts): Score = 25 × (loggedDays / activeDays). Consistent self-monitoring increased transaction salience and promoted deliberate spending (Thaler & Sunstein, 2008).
+[0401] 1. UI/UX refinement. The researchers recommended that the developers address the main usability concerns identified in the SUS evaluation: consistency (Q6), complexity (Q2), and the need for technical support (Q4). Specific improvements include simplifying navigation for first-time users, improving visual consistency across the 45 screens, and adding contextual help or tooltips to reduce the need 
+[0402] 2. Formal parsing evaluation. The researchers recommended that the developers conduct a formal evaluation of the AI parsing and OCR features using at least 50 standardized receipts and GCash screenshots, replacing the preliminary developer testing figures of 91.2% precision and 88.5% recall (Performance was assessed only through preliminary developer testing; no formal performance evaluation was c
+[0403] 3. Backend API proxy and per-user keys. The researchers recommended that the developers move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to remove device-side key exposure and enforce per-user message limits, because the free-tier request quotas (Table 3.2) were shared by every user of the prototype. Letting users add their own key was an interim measure. Google P
+[0404] 4. SQLite encryption. The researchers recommended that the developers implement SQLCipher-based encryption for the local database in a future schema migration, because the local database of the prototype was not encrypted.
+[0405] 5. On-device AI tier. The researchers recommended that the developers add  an opt-in on-device model (e.g., Gemma 4 E2B through Google's LiteRT-LM, about a 2.6 GB download) for users who wanted fully offline AI, routing only simple logging tasks to it and keeping complex financial advice on the cloud tier, because the current local AI mode required a separate computer on the same network.
+[0406] 6. Payday-cycle-aware budgeting. The researchers recommended that the developers implement budgeting resets aligned with the semi-monthly (15th and 30th) salary cycle common in the Philippines.
+[0407] 7. Household and remittance features. The researchers recommended that the developers add  shared couple and family wallets and inbound OFW remittance tracking as a distinct income category to serve more user groups.
+[0408] 8. Longitudinal evaluation. The researchers recommended that future researchers measure  SmartSpend's effect on financial behavior over three to six months with a larger sample, because the usability evaluation in this study measured usability at a single point in time.
+[0474] 1. What is your age?
+[0483] 2. Which category best describes you?
+[0489] 3. What is your current employment status?
+[0499] 4. Do you prepare a budget for your personal or household finances?
+[0505] 5. Do you set aside money for savings before spending on other expenses?
+[0513] 6. What are the main challenges you experience when managing your finances? (Select all that apply.)
+[0528] 7. What do you usually do when you realize that you have exceeded your budget? (Select all that apply.)
+[0537] 8. What would help you manage your budget more effectively? (Select all that apply.)
+
+============================================================
+FINAL QUALITATIVE/RESEARCH DESIGN paras 245-252 full
+============================================================
+[0243] This chapter presented the methods and procedures  that were used in the development, implementation, and evaluation of the SmartSpend system. It included a detailed discussion of  the research design, population and locale, ethical considerations, data gathering tools and procedures, and the software development methodology applied in the study.
+[0244] Research Design
+[0245] This study applied a mixed methods research design, which integrated both qualitative and quantitative approaches in collecting and analyzing data (Creswell & Plano Clark, 2011). This design was appropriate for the study because it allowed the researchers to obtain a comprehensive understanding of financial management practices and system usability by combining numerical data with detailed user ex
+[0246] To address the qualitative aspect of the study, interviews were used to gather respondents' views regarding the features and functionality of the developed application. The qualitative data provided descriptive information that guided the design and improvement of the application.
+[0247] On the other hand, the quantitative aspect of the study involved the use of validated structured survey questionnaires, which underwent content validation by subject matter experts to ensure clarity, relevance, and alignment with the objectives of the study. These questionnaires were used to collect measurable data regarding financial habits, expense tracking practices, and common difficulties enc
+[0248] Moreover, this study adopted a descriptive-developmental research approach, which focused on the design, development, and evaluation of a functional system or prototype. The SmartSpend mobile application was developed using the Flutter framework, with the integration of artificial intelligence through an LLM API. This approach enabled the researchers to iteratively improve the system based on the 
+[0249] By combining mixed methods and developmental approaches, the study ensured that the system was  not only technically functional but also user-centered, effective, and aligned with the actual needs of the respondents. This integrated research design supported continuous refinement and validation of the SmartSpend application throughout the development process.
+[0250] Population and Locale
+[0251] The study was conducted in San Fernando City, La Union. The primary target population of this study consisted of parents aged 35 to 55 who served as the principal household financial decision-makers in Filipino families. Based on the 2021 BSP Financial Inclusion Survey, this demographic group managed the majority of household budgeting, bill payments, and daily financial decisions, yet exhibited t
+[0252] A total of thirty (30) respondents were selected using purposive sampling. Thirteen (13) respondents were parents who regularly handled household budgeting, bill payments, and daily expense decisions. Fourteen (14) respondents were young professionals who managed their own income, track expenses, and made independent financial decisions. Three (3) respondents identified as both. This sample size a
+
+============================================================
+FINAL SUS validator paragraph (259/272 region) full
+============================================================
+[0253] This demographic composition reflected evidence from the BSP Financial Inclusion Survey (2021) that parents in the 35 to 55 age group served as primary household financial decision-makers and were among the groups with the lowest rates of formal financial account ownership and structured budgeting — making them a critical and underserved target population for a financial management tool (Bangko Se
+[0254] The survey questionnaire was reviewed by Avigail Candevario, PFMe, a subject matter expert in financial management and business operations, prior to distribution. This review ensured that the questions were appropriate, relevant, and grounded in the actual financial management experiences of the target population.
+[0255] Respondents participated in the needs assessment phase and the system evaluation phase; the two samples were separate groups, although some individuals might have taken part in both. Their feedback was essential in identifying real-world financial challenges and in assessing the usability, effectiveness, and practicality of the SmartSpend mobile application in supporting everyday financial managem
+[0256] The distribution of respondents was presented in Table 2.1.
+[0257] 
+[0258] Table 2.1. Distribution of Respondents and Validators
+[0259] The survey questionnaire underwent content validation by Avigail Candevario, PFMe, a subject matter expert in financial management and business operations to ensure relevance, clarity, and appropriateness of the instrument. The System Usability Scale (SUS) evaluation process and the overall technical functionality of the SmartSpend system was reviewed by a subject matter expert in information tech
+[0260] The researchers utilized purposive sampling in selecting participants. This method allowed the intentional selection of individuals who had relevant experience in budgeting, expense tracking, and financial decision-making, ensuring that the collected data was meaningful and directly aligned with the research objectives.
+[0261] Ethical Considerations 
+[0262] All ethical considerations were strictly followed throughout the entire research process. Participation in this study was voluntary, and no form of pressure was imposed on the respondents. All participants, including parents and young professionals, had the right to refuse participation or withdraw from the study at any time without any penalty.
+[0263] Informed consent was obtained from all participants before their involvement in the study. They were properly informed about the nature and purpose of the research prior to their participation.
+[0264] In addition, confidentiality was strictly maintained. Personal information of the respondents was kept secure and treated with utmost confidentiality. All responses gathered were used solely for academic purposes.
+[0265] Furthermore, all collected data were carefully managed and stored to prevent any form of loss or unauthorized access. The researchers ensured that ethical standards were upheld throughout the study.
+[0266] Data Gathering Tools and Procedure
+[0267] For the first objective, data were gathered through a survey questionnaire. The survey questionnaire was used to collect quantitative data regarding the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. The survey questionnaire was subjected to content validation by a subject matter expert to ensure that the questions were appr
+[0268] For the second objective, no direct data gathering instrument was used for the design and development phase, as the results obtained from the first objective served as the primary basis for system design and implementation. However, technical benchmarking was conducted as part of this objective to support the AI engine selection process. A comparative evaluation of candidate large language model (
+[0269] For the third objective, data were collected using the System Usability Scale (SUS) questionnaire, a standardized tool used to evaluate system usability. Respondents assessed the application in terms of ease of use, functionality, and overall user experience. The implementation and administration of the usability evaluation were reviewed by subject matter experts to ensure that the evaluation proc
+[0270] Step-by-Step Data Gathering Procedure
+[0271] Step 1: Questionnaire Preparation and Validation (Objective 1)
+[0272] The survey questionnaire was drafted by the research team and submitted to Avigail Candevario, PFMe, a subject matter expert in financial management, for content validation. The expert's credentials were recorded in the Content Validation Certificate (Appendix D). The same content validator also reviewed the Financial Health Score formula (Appendix E). Revisions were made based on the feedback bef
+[0273] Step 2: Respondent Identification and Consent (Objective 1)

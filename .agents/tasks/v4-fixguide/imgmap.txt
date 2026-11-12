@@ -1,0 +1,66 @@
+============================================================
+V4 inline images: 28
+============================================================
+img#1 idx=0029 -> next: Ellen F. Mangaoang, DIT
+img#2 idx=0173 -> next: Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+img#3 idx=0195 -> next: Figure 1.2 Conceptual Framework (Mobile Application)
+img#4 idx=0286 -> next: Figure 2.1 System Usability Scale (SUS) Score Interpretation
+img#5 idx=0290 -> next: Figure 2.2. Agile Kanban Workflow for SmartSpend Development
+img#6 idx=0308 -> next: Table 3.1 presented the demographic profile of the 30 respondents and the expense tracking
+img#7 idx=0310 -> next: Table 3.1. Demographic Profile and Expense Tracking Methods of Respondents (N = 30)
+img#8 idx=0314 -> next: Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30). The 3 resp
+img#9 idx=0340 -> next: Figure 3.1. SmartSpend System Flowchart
+img#10 idx=0342 -> next: Figure 3.2. Use Case Diagram
+img#11 idx=0344 -> next: Figure 3.3. Visual Table of Contents
+img#12 idx=0354 -> next: Figure 3.4. Login and Demo Mode Screen
+img#13 idx=0356 -> next: Figure 3.5. Home Dashboard
+img#14 idx=0358 -> next: Figure 3.6. Expense Logging Through Peso Chat
+img#15 idx=0360 -> next: Figure 3.7. Receipt Scanning and Batch Screenshot Import
+img#16 idx=0362 -> next: Figure 3.8. Financial Health Score Breakdown
+img#17 idx=0364 -> next: Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals
+img#18 idx=0366 -> next: Figure 3.10. Local AI Mode Setup
+img#19 idx=0372 -> next: Figure 3.11. SUS Computation Table
+img#20 idx=0373 -> next: Figure 3.11. SUS Computation Table
+img#21 idx=0381 -> next: Figure 3.12. SUS Score Distribution (N = 30). Individual scores sorted in ascending order.
+img#22 idx=0384 -> next: Figure 3.13. SUS Scores by Respondent Group (N = 30). Parents (n = 10) scored M = 58.25 (S
+img#23 idx=0386 -> next: Table 3.4. System Usability Scale (SUS) Results by Respondent Group
+img#24 idx=0704 -> next: APPENDIX E
+img#25 idx=0707 -> next: PHOTO DOCUMENTATION
+img#26 idx=0716 -> next: BRIX A. DIRECTO
+img#27 idx=0740 -> next: CYRILLE JOHN M. RUBIS
+img#28 idx=0775 -> next: DJAUNATHAN ALBERT S. MADAYAG
+
+============================================================
+FINAL inline images: 31
+============================================================
+img#1 idx=0029 -> next: Ellen F. Mangaoang, DIT
+img#2 idx=0172 -> next: Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+img#3 idx=0191 -> next: Figure 1.2 Conceptual Framework (Mobile Application)
+img#4 idx=0284 -> next: Figure 2.1 System Usability Scale (SUS) Score Interpretation
+img#5 idx=0288 -> next: Figure 2.2. Agile Kanban Workflow for SmartSpend Development
+img#6 idx=0306 -> next: Table 3.1 presented the demographic profile of the 30 respondents and the expense tracking
+img#7 idx=0308 -> next: Table 3.1. Demographic Profile and Expense Tracking Methods of Respondents (N = 30)
+img#8 idx=0312 -> next: Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30). The 3 resp
+img#9 idx=0338 -> next: Figure 3.1. SmartSpend System Flowchart
+img#10 idx=0340 -> next: Figure 3.2. Use Case Diagram
+img#11 idx=0342 -> next: Figure 3.3. Visual Table of Contents
+img#12 idx=0352 -> next: Figure 3.4. Login and Demo Mode Screen
+img#13 idx=0354 -> next: Figure 3.5. Home Dashboard
+img#14 idx=0356 -> next: Figure 3.6. Expense Logging Through Peso Chat
+img#15 idx=0358 -> next: Figure 3.7. Receipt Scanning and Batch Screenshot Import
+img#16 idx=0360 -> next: Figure 3.8. Financial Health Score Breakdown
+img#17 idx=0362 -> next: Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals
+img#18 idx=0364 -> next: Figure 3.10. Local AI Mode Setup
+img#19 idx=0370 -> next: Figure 3.11. SUS Computation Table
+img#20 idx=0371 -> next: Figure 3.11. SUS Computation Table
+img#21 idx=0376 -> next: Figure 3.12. SUS Score Distribution (N = 30). Individual scores sorted in ascending order.
+img#22 idx=0379 -> next: Figure 3.13. SUS Scores by Respondent Group (N = 30). Parents (n = 10) scored M = 58.25 (S
+img#23 idx=0381 -> next: Table 3.4. System Usability Scale (SUS) Results by Respondent Group
+img#24 idx=0382 -> next: Table 3.4. System Usability Scale (SUS) Results by Respondent Group
+img#25 idx=0681 -> next: BRIX A. DIRECTO
+img#26 idx=0705 -> next: CYRILLE JOHN M. RUBIS
+img#27 idx=0740 -> next: DJAUNATHAN ALBERT S. MADAYAG
+img#28 idx=0768 -> next: APPENDIX E
+img#29 idx=0769 -> next: APPENDIX E
+img#30 idx=0772 -> next: 
+img#31 idx=0773 -> next: 

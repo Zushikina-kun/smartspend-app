@@ -1,0 +1,21 @@
+v4_present_fin_past(BEHIND)=0
+both_present=13
+both_past=430
+neither=100
+
+=== V4 BEHIND FINAL ===
+
+=== both_present (agree, no fix) ===
+#190 [Chapter I - Scope and Limitations of the Study p. 17] produce inaccurate results. Voice recognition accuracy will be affected by background noise and
+#229 [Chapter I - Purpose and Description p. 20] as a lightweight financial assistant that can respond to user inputs and
+#372 [Chapter II - Step-by-Step Data Gathering Procedure p. 36] This figure illustrates the interpretation of the
+#500 [Chapter III - Overview of the System p. 58] into a context-aware companion. The mascot has 12 animated moods (idle
+#501 [Chapter III - Overview of the System p. 58] reactions and an optional speech bubble), appears on most major screens
+#502 [Chapter III - Overview of the System p. 58] the avatar beside AI replies, and changes mood with the sentiment
+#503 [Chapter III - Overview of the System p. 58] Health Score tier. A voice service supplies short Taglish messages for
+#504 [Chapter III - Overview of the System p. 59] at random so the same line does not repeat every session)
+#505 [Chapter III - Overview of the System p. 59] app's scheduled notifications; a context service gives a one-time tip per
+#506 [Chapter III - Overview of the System p. 59] 17 screens; and a haptic service provides tactile feedback. Once-a-day checks
+#507 [Chapter III - Overview of the System p. 59] service provides tactile feedback. Once-a-day checks react to events such as
+#508 [Chapter III - Overview of the System p. 59] with celebration sheets. Tapping a notification stores its payload so that
+#509 [Chapter III - Overview of the System p. 59] payload so that the next launch can respond in context.
