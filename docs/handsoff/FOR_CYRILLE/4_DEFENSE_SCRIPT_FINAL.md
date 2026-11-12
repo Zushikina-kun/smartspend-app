@@ -143,7 +143,7 @@ Three conclusions follow directly from our results.
 
 ### Slide 18 — Recommendations
 
-In view of these results, we make the following seven recommendations for future development:
+In view of these results, we make the following nine recommendations for future development:
 
 1. **Payday-cycle-aware budgeting.** Implement budgeting resets aligned with the semi-monthly 15th-and-30th salary cycle common in the Philippines to better match the financial rhythm of our target users.
 
@@ -158,6 +158,10 @@ In view of these results, we make the following seven recommendations for future
 6. **Household and remittance features.** Add shared couple and family wallets and inbound OFW remittance tracking as a distinct income category to serve a broader range of Filipino household structures.
 
 7. **Longitudinal evaluation.** Conduct a follow-up study measuring SmartSpend's effect on actual financial behavior over three to six months with a larger sample. The current evaluation measured usability at a single point in time and cannot establish behavioral impact.
+8. **UI/UX refinement.** The SUS results flagged two specific items — Q6 on consistency and Q2 on unnecessary complexity — as the lowest-scoring areas. Future iterations should address these through targeted redesign and re-test with a new cohort.
+9. **Formal parsing evaluation.** Develop a standardized benchmark of 50 or more receipt images covering different store formats and test OCR and AI parsing precision and recall systematically, rather than relying solely on overall usability ratings.
+
+All nine are grounded in the specific limitations of the current prototype that our study revealed.
 
 ---
 
@@ -231,7 +235,7 @@ That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang 
 
 ### Q10 — What are your recommendations?
 
-"We have **seven recommendations** for future development:
+"We have **nine recommendations** for future development:
 
 1. Payday-cycle-aware budgeting — resets aligned to the Philippine semi-monthly 15th-and-30th salary cycle.
 2. Backend API proxy and per-user keys — move LLM key management server-side to remove device-side exposure.
@@ -239,9 +243,11 @@ That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang 
 4. On-device AI tier — an opt-in approximately 2.6-gigabyte model for users who want fully offline AI.
 5. SQLite encryption — SQLCipher for the local database in a future schema migration.
 6. Household and remittance features — shared wallets and OFW remittance as a distinct income category.
-7. Longitudinal evaluation — measure behavior change over three to six months with a larger sample.
+7. **Longitudinal evaluation.** Conduct a follow-up study measuring SmartSpend's effect on actual financial behavior over three to six months with a larger sample. The current evaluation measured usability at a single point in time and cannot establish behavioral impact.
+8. **UI/UX refinement.** The SUS results flagged two specific items — Q6 on consistency and Q2 on unnecessary complexity — as the lowest-scoring areas. Future iterations should address these through targeted redesign and re-test with a new cohort.
+9. **Formal parsing evaluation.** Develop a standardized benchmark of 50 or more receipt images covering different store formats and test OCR and AI parsing precision and recall systematically, rather than relying solely on overall usability ratings.
 
-All seven are grounded in the specific limitations of the current prototype that our study revealed."
+All nine are grounded in the specific limitations of the current prototype that our study revealed."
 
 ---
 
