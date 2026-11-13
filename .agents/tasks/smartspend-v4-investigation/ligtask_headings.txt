@@ -1,0 +1,183 @@
+[0000] [Heading 2] LigTask: A 2D Game-Based Learning Platform for Enhancing Disaster Awareness and Preparedness
+[0038] [Heading 1] APPROVAL SHEET
+[0044] [Heading 2] Ellen F. Mangaoang, MIT
+[0046] [Heading 2] Janelli M. Mendez, DIT
+[0053] [Heading 2] Jeoffrey B. Layco, MIS
+[0059] [Heading 2] Fe Marie Binas-o, MIS, LPT
+[0061] [Heading 2] Johnny F. Verzola, MTS
+[0067] [Heading 2] Jeoffrey B. Layco, MIS
+[0069] [Heading 1] ABSTRACT
+[0076] [Heading 1] ACKNOWLEDGEMENT
+[0087] [Heading 1] DEDICATION
+[0092] [normal] MACA ARJA JMGR
+[0094] [normal] CHAPTERS
+[0096] [normal] INTRODUCTION
+[0102] [normal] DESIGN AND METHODOLOGY
+[0108] [normal] RESULTS AND DISCUSSION
+[0112] [normal] PHOTO DOCUMENTATION	80
+[0113] [normal] CURRICULUM VITAE	88
+[0114] [normal] LIST OF FIGURES
+[0117] [normal] LIST OF TABLES
+[0122] [Heading 1] CHAPTER I
+[0124] [normal] INTRODUCTION
+[0127] [Heading 2] Project Context
+[0158] [Heading 2] Statement of Objectives
+[0165] [Heading 2] Scope and Limitation
+[0170] [Heading 2] Purpose and Description
+[0178] [Heading 2] Technical Background
+[0186] [Heading 1] CHAPTER II
+[0188] [normal] DESIGN AND METHODOLOGY
+[0190] [Heading 2] Research Design
+[0197] [Heading 2] Population and Locale
+[0204] [Heading 2] Respondents	No. of Respondents
+[0213] [Heading 2] Ethical Considerations
+[0217] [Heading 2] Data Gathering Tools and Procedures
+[0225] [Heading 2] Software Methodology
+[0246] [Heading 2] Initiation Phase
+[0261] [Heading 2] Pre-Production Phase
+[0269] [Heading 2] Production Phase
+[0271] [Heading 2] Testing Phase
+[0274] [Heading 2] Beta Phase
+[0281] [Heading 2] Release Phase
+[0300] [normal] RAM	2 GB	3–4 GB
+[0307] [Heading 1] CHAPTER III
+[0309] [normal] RESULTS AND DISCUSSION
+[0312] [Heading 2] Assessment on the Level of Disaster Awareness and Preparedness of Students and Teachers
+[0328] [normal] 3.56
+[0330] [normal] 3.79
+[0334] [Heading 2] Average	3.50	Moderate		Average knowledge
+[0354] [normal] 4.00
+[0358] [normal] 2.79
+[0363] [normal] 3.05
+[0366] [normal] 4.10
+[0369] [normal] 3.81
+[0399] [Heading 2] Average	3.55	High		Often manifested
+[0404] [Heading 2] Average	3.87	High		Often manifested
+[0415] [normal] 3.38
+[0424] [Heading 2] Indicators	Mean	Descriptive Equivalent Rating (DER)
+[0430] [normal] 3.43
+[0434] [normal] 2.54
+[0435] [normal] 3.03
+[0439] [normal] 3.03
+[0457] [Heading 2] Average	3.01	Neutral	Undecided
+[0474] [normal] 3.55
+[0476] [normal] 3.87
+[0478] [normal] 3.69
+[0480] [normal] 3.01
+[0485] [Heading 2] Average	3.52	Moderate		Average Knowledge
+[0492] [Heading 2] Indicators	Mean	Descriptive Equivalent
+[0497] [Heading 2] Average	4.00	High	Good
+[0498] [Heading 2] knowledge
+[0510] [normal] 4.57
+[0515] [normal] 4.57
+[0518] [normal] 4.14
+[0522] [normal] 4.57
+[0526] [normal] 4.86
+[0558] [Heading 2] Average	4.54	Very High		Always manifested
+[0564] [Heading 2] Indicators	Mean	Descriptive Equivalent Rating (DER)
+[0570] [normal] 4.86
+[0572] [normal] 4.71
+[0575] [normal] 4.71
+[0577] [normal] 4.86
+[0588] [Heading 2] Average	4.79	Very High		Always manifested
+[0595] [Heading 2] Indicators	Mean
+[0598] [Heading 2] Descriptive Equivalent Rating (DER)
+[0609] [normal] 4.29
+[0612] [normal] 4.14
+[0613] [normal] 4.29
+[0616] [normal] 4.86
+[0619] [normal] 4.71
+[0622] [normal] 4.71
+[0625] [normal] 4.29
+[0655] [Heading 2] Average	4.47	High		Often manifested
+[0664] [Heading 2] Indicators	Mean	Descriptive Equivalent Rating (DER)
+[0670] [normal] 4.00
+[0674] [normal] 3.86
+[0677] [normal] 3.86
+[0681] [normal] 3.86
+[0705] [Heading 2] Average	3.89	Agree		Positive perception
+[0725] [normal] 4.54
+[0727] [normal] 4.79
+[0729] [normal] 4.47
+[0731] [normal] 3.89
+[0735] [Heading 2] Average	4.34	High	Good
+[0736] [Heading 2] knowledge
+[0740] [Heading 2] Designed and developed an interactive 2D educational game that enhances preparedness for the most common disasters in the Philippines
+[0876] [Heading 2] Average	4.13	Agree	Good
+[0894] [Heading 2] Table 16 (continued)
+[0919] [Heading 2] Average	4.05	Agree	Good
+[0931] [Heading 1] CHAPTER IV
+[0933] [normal] CONCLUSION AND RECOMMENDATIONS
+[0936] [Heading 2] Conclusions
+[0945] [Heading 2] Recommendations
+[0952] [Heading 2] References
+[0963] [Heading 2] Online Resources
+[0988] [Heading 1] APPENDICES
+[0990] [Heading 2] Appendix A
+[0993] [Heading 2] Appendix B
+[1013] [normal] DIRECTIONS:
+[1021] [Heading 2] Appendix E
+[1025] [Heading 1] PHOTO DOCUMENTATION
+[1181] [Heading 1] CURRICULUM VITAE
+[1184] [normal] MARY ANNE CAMBA ABENOJA
+[1186] [Heading 1] PERSONAL INFORMATION
+[1188] [Heading 2] Naguilian, La Union, Philippines 2511
+[1194] [Heading 1] EDUCATIONAL BACKGROUND
+[1195] [Heading 2] Kindergarten (2010)
+[1198] [Heading 2] Elementary (2011 – 2015)
+[1201] [Heading 2] Junior High (2016 – 2019)
+[1204] [Heading 2] Senior High (2020 – 2022)
+[1207] [Heading 2] College (2022 – Present)
+[1210] [Heading 1] AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[1211] [Heading 2] College Level:
+[1221] [Heading 2] Senior High School:
+[1226] [Heading 2] Junior High School:
+[1234] [Heading 2] Elementary:
+[1247] [Heading 1] WORK EXPERIENCE
+[1250] [Heading 1] ELIGIBILITY
+[1253] [Heading 1] SEMINARS ATTENDED
+[1267] [Heading 1] INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED
+[1284] [normal] AIMEE RACHELLE JUBILO ARELLANO
+[1286] [Heading 1] PERSONAL INFORMATION
+[1287] [Heading 2] Address	: 5, Purok 2, Lisqueb, Bacnotan, La Union,
+[1294] [Heading 1] EDUCATIONAL BACKGROUND
+[1295] [Heading 2] Kindergarten (2009-2010)
+[1300] [Heading 2] Junior High (2016-2020)
+[1303] [Heading 2] Senior High (2020 – 2022)
+[1306] [Heading 2] College (2022 – Present)
+[1309] [Heading 1] AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[1310] [Heading 2] College Level:
+[1320] [Heading 2] Senior High School:
+[1323] [Heading 2] Junior High School:
+[1326] [Heading 2] Elementary:
+[1329] [Heading 2] Kindergarten:
+[1332] [Heading 1] WORK EXPERIENCE
+[1335] [Heading 1] ELIGIBILITY
+[1338] [Heading 1] SEMINARS ATTENDED
+[1344] [Heading 1] INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED
+[1359] [normal] JANINE MARIELLE GANADEN REYES
+[1361] [Heading 1] PERSONAL INFORMATION
+[1362] [Heading 2] Address	: Cariño Street, Ili Sur, San Juan, La Union,
+[1369] [Heading 1] EDUCATIONAL BACKGROUND
+[1370] [Heading 2] Kindergarten (2010)
+[1377] [Heading 2] Senior High (2020 – 2022)
+[1380] [Heading 2] College (2022 – Present)
+[1383] [Heading 1] AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[1384] [Heading 2] College Level:
+[1394] [Heading 2] Senior High School:
+[1397] [Heading 2] Junior High School:
+[1407] [Heading 2] Elementary:
+[1413] [Heading 1] WORK EXPERIENCE
+[1416] [Heading 1] ELIGIBILITY
+[1419] [Heading 1] SEMINARS ATTENDED
+[1432] [Heading 1] INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED
+[1448] [normal] ELLEN F. MANGAOANG, MIT
+[1450] [Heading 1] PERSONAL INFORMATION
+[1451] [Heading 2] Address		: 161 Governor Nisce Zone 2, Catbangen, City of San Fernando, La Union
+[1455] [Heading 1] EDUCATIONAL BACKGROUND
+[1456] [Heading 2] Elementary
+[1459] [Heading 2] Secondary
+[1462] [Heading 2] College
+[1465] [Heading 2] Graduate School
+[1468] [Heading 1] ELIGIBILITY
+[1474] [Heading 1] IVI. INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED

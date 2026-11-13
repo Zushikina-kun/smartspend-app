@@ -1,0 +1,51 @@
+{
+  "verdict": "CHANGES_REQUESTED",
+  "findings": [
+    {
+      "id": "BLOCKER-1",
+      "check": "MC8 / E / F — Population prose contradicts Table 3",
+      "file": "1_MAIN_MANUSCRIPT_FINAL.docx",
+      "locations": ["paragraph ~238 (Population and Locale)", "paragraph ~275 (Table 5 intro)", "paragraph ~278 (Table 5 note)"],
+      "evidence": "Para 238 reads '…Thirteen (13) respondents were parents…Fourteen (14)…Three (3) identified as both.' Para 275 reads '13 parents aged 35–55 (43.3%), 14 young professionals (46.7%), and 3 respondents identifying as both (10.0%).' Table 3 caption (correctly updated) shows Parents = 16, Young Professionals = 14.",
+      "consequence": "Needs-assessment description and Table 5 show 13+14+3 while Table 3 shows 16+14. Accuracy failure — the 3 'both' respondents were reclassified as parents but the prose was not updated.",
+      "correction": "Update paragraphs ~238, ~275, and ~278 to read 16 parents + 14 young professionals = 30. Remove '3 identified as both' from needs-assessment description; retain the SUS reclassification note (~282) as it correctly explains the 10/20 SUS subgroup split."
+    },
+    {
+      "id": "BLOCKER-2",
+      "check": "MC3b — 'purposive sampling' for content validator absent",
+      "file": "1_MAIN_MANUSCRIPT_FINAL.docx",
+      "locations": ["Population and Locale section (~paragraphs 236–241)"],
+      "evidence": "Full-document search for 'purposive' returns zero matches. The sampling methodology for the content validator is entirely undeclared.",
+      "consequence": "Required methodological statement is missing; the content validator's selection rationale is unexplained.",
+      "correction": "Add a sentence in the Population and Locale section stating the content validator was selected through purposive sampling based on relevant expertise, e.g., 'The content validator was selected through purposive sampling based on her expertise in personal finance and financial education.'"
+    },
+    {
+      "id": "BLOCKER-3",
+      "check": "MC17 — Table 9 (Multimodal Import Parsing Performance) absent",
+      "file": "1_MAIN_MANUSCRIPT_FINAL.docx",
+      "locations": ["Body text — no Table 9 caption found anywhere"],
+      "evidence": "'Table 9' not found in body text or table cells. TOC lines 155–156 reference section '3.5. SmartSpend Multimodal Import: Field-Level Parsing Performance … 72'. Highest table in body is Table 8.",
+      "consequence": "Required table is missing from the merged output. TOC advertises it at page 72 but it does not exist in the document body.",
+      "correction": "Insert Table 9 with caption 'Table 9: SmartSpend Multimodal Import: Field-Level Parsing Performance' and its data in the body, located after the LLM evaluation (Table 6) and before the SUS evaluation (Table 7/8), consistent with the TOC."
+    },
+    {
+      "id": "BLOCKER-4",
+      "check": "MC18 — 'Table 1.2' chapter-prefixed reference in body prose",
+      "file": "1_MAIN_MANUSCRIPT_FINAL.docx",
+      "locations": ["paragraph ~171", "paragraph ~172"],
+      "evidence": "Para 171: 'Beyond the applications summarized in Table 1.2, several other Philippine-context finance apps…'. The actual caption in the document is 'Table 2: Feature Comparison of SmartSpend…'. No 'Table 1.2' caption exists.",
+      "consequence": "Cross-reference is broken. Reader following 'Table 1.2' finds no such table. Violates the no-chapter-prefix requirement.",
+      "correction": "Replace both occurrences of 'Table 1.2' in paragraphs ~171–172 with 'Table 2'."
+    },
+    {
+      "id": "BLOCKER-5",
+      "check": "D — Scope and Limitations not condensed to 1 paragraph",
+      "file": "1_MAIN_MANUSCRIPT_FINAL.docx",
+      "locations": ["paragraphs ~198–201"],
+      "evidence": "Para 198: scope (Android, cloud services). Para 199: main limitations (OCR, voice, banking, investment, advice, Firebase tier). Para 200: LLM API key/Remote Config/decompilation risk. Para 201: RA 10173/data privacy/regex PII redaction. Total: 4 paragraphs with highly technical content explicitly flagged for removal.",
+      "consequence": "Section is 4 paragraphs instead of 1. Paragraphs 200 and 201 contain Remote Config decompilation and RA 10173 technical detail that was explicitly marked for removal in Cyrille's comment.",
+      "correction": "Merge paragraphs 198–201 into one condensed paragraph covering only: Android only, survey-based, no banking integration, no professional financial advice, OCR depends on image quality, AI requires internet, no interviews. Remove Remote Config API key management and RA 10173 detail paragraphs."
+    }
+  ],
+  "reviewDoc": "c:\\xampp\\htdocs\\smartspend_app\\.agents\\tasks\\smartspend-final-revision\\review.md"
+}

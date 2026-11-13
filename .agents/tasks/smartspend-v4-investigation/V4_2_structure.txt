@@ -1,0 +1,86 @@
+=== V4(2) STRUCTURAL SUMMARY ===
+Total paragraphs: 768 | tables: 8 | image rels: 35
+
+### HEADINGS (style contains Heading/Title/CHAPTER) ###
+[0000] (Heading 2): SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management
+[0027] (Heading 1): This is to certify that we have supervised the preparation of the Capstone Project and read the manuscript prepared by DIRECTO, BRIX A., RUBIS, CYRILLE JOHN M., and MADAYAG, DJAUNATHAN ALBERT S. entitled SMARTSPEND: AN AI-ASSISTED MOBILE FINANCIAL TRACKING AND ADVISORY APPLICATION FOR PERSONAL FINANCIAL MANAGEMENT and that the said capstone project has been submitted for final examination by the Oral Examination Committee.
+[0030] (Heading 2): Ellen F. Mangaoang, DIT
+[0035] (Heading 1): As members of the Oral Examination Committee, we certify that we have examined this capstone project presented before the committee and hereby recommend that it be accepted in partial fulfillment of the capstone requirements for the degree in Bachelor of Science in Information Technology.
+[0045] (Heading 1): This capstone project is hereby approved and accepted by the College of Computer Studies and Engineering in partial fulfillment of the requirements for the degree in Bachelor of Science in Information Technology.
+[0064] (Heading 1): The Researchers
+[0066] (Heading 1): 
+[0067] (Heading 1): 
+[0068] (Heading 1): 
+[0069] (Heading 1): 
+[0070] (Heading 1): 
+[0071] (Heading 1): 
+[0072] (Heading 1): 
+[0073] (Heading 1): DEDICATION
+[0165] (Heading 2): INTRODUCTION
+[0167] (Heading 2): Project Context
+[0194] (Heading 2): Conceptual Framework
+[0198] (Heading 3): Statement of Objectives
+[0238] (Heading 2): Research Design
+[0465] (Heading 3): Section A – Respondent Profile
+[0633] (Heading 2): System Usability Scale (SUS) Questionnaire
+
+### PARAGRAPHS containing 'Figure' caption-like text ###
+[0126]: Figure No.				Figure Name			       Page
+[0174]: Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+[0196]: Figure 1.2 Conceptual Framework (Mobile Application)
+[0267]: Figure 2.1 System Usability Scale (SUS) Score Interpretation
+[0273]: Figure 2.2. Agile Kanban Workflow for SmartSpend Development
+[0296]: Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30).
+[0319]: Figure 3.1. SmartSpend System Flowchart
+[0321]: Figure 3.2. Use Case Diagram
+[0325]: Figure 3.3. Visual Table of Contents
+[0335]: Figure 3.4. Login and Demo Mode Screen
+[0337]: Figure 3.5. Home Dashboard
+[0339]: fIGURE 3 PRESENTS THE DASHBOARD OF SMARTSPEND. WHAT? HOW TO USE
+[0341]: Figure 3.6. Expense Logging Through Peso Chat
+[0343]: Figure 3.7. Receipt Scanning and Batch Screenshot Import
+[0345]: Figure 3.8. Financial Health Score Breakdown
+[0347]: Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals
+[0349]: Figure 3.10. Local AI Mode Setup
+[0356]: Figure 3.11. SUS Computation Table
+
+### PARAGRAPHS containing 'Table' caption-like text ###
+[0088]: Table of Contents 	v
+[0151]: Table No.				Table Name			                 Page
+[0176]: Table 1.1. Three-Level Gap Analysis of SmartSpend
+[0180]: Table 1.2. Feature Comparison of SmartSpend with Existing Financial Applications (including Filipino-context apps)
+[0246]: Table 2.1. Distribution of Respondents and Validators
+[0283]: Table 2.2. Agile Kanban Workflow Phases and Deliverables
+[0290]: Table 3.1 presented the demographic profile of the 30 respondents and the expense tracking methods they reported. The sample comprised 13 parents aged 35–55 (43.3%), 14 young professionals aged 21–35 (46.7%), and 3 respondents identifying as both (10.0%). In terms of employment, 10 were employed full-time (33.3%), 9 were freelance or contractual (30.0%), 8 were self-employed (26.7%), and 3 were unemployed or part-time (10.0%). GCash was used by 93.3% of respondents (28/30), confirming the relevance of e-wallet transaction import as a core feature.
+[0292]: Table 3.1. Demographic Profile and Expense Tracking Methods of Respondents (N = 30)
+[0304]: Table 3.2. Comparative Evaluation of LLM APIs for SmartSpend Integration
+[0358]: Table 3.3. Overall SUS Result
+[0364]: Table 3.4. System Usability Scale (SUS) Results by Respondent Group
+
+### INLINE IMAGE positions ###
+[0029] [IMG] next: Ellen F. Mangaoang, DIT
+[0173] [IMG] next: Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+[0195] [IMG] next: Figure 1.2 Conceptual Framework (Mobile Application)
+[0266] [IMG] next: Figure 2.1 System Usability Scale (SUS) Score Interpretation
+[0272] [IMG] next: Figure 2.2. Agile Kanban Workflow for SmartSpend Development
+[0289] [IMG] next: Table 3.1 presented the demographic profile of the 30 respondents and the expense tracking methods they reported. The sa
+[0291] [IMG] next: Table 3.1. Demographic Profile and Expense Tracking Methods of Respondents (N = 30)
+[0295] [IMG] next: Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30).
+[0318] [IMG] next: Figure 3.1. SmartSpend System Flowchart
+[0320] [IMG] next: Figure 3.2. Use Case Diagram
+[0324] [IMG] next: Figure 3.3. Visual Table of Contents
+[0334] [IMG] next: Figure 3.4. Login and Demo Mode Screen
+[0336] [IMG] next: Figure 3.5. Home Dashboard
+[0340] [IMG] next: Figure 3.6. Expense Logging Through Peso Chat
+[0342] [IMG] next: Figure 3.7. Receipt Scanning and Batch Screenshot Import
+[0344] [IMG] next: Figure 3.8. Financial Health Score Breakdown
+[0346] [IMG] next: Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals
+[0348] [IMG] next: Figure 3.10. Local AI Mode Setup
+[0354] [IMG] next: 
+[0355] [IMG] next: Figure 3.11. SUS Computation Table
+[0362] [IMG] next: 
+[0676] [IMG] next: APPENDIX E
+[0679] [IMG] next: 
+[0688] [IMG] next: BRIX A. DIRECTO
+[0712] [IMG] next: CYRILLE JOHN M. RUBIS
+[0747] [IMG] next: DJAUNATHAN ALBERT S. MADAYAG

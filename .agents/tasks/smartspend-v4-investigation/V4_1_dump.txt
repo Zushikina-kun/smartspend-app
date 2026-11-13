@@ -1,0 +1,901 @@
+=== DOC: V4_1 ===
+Paragraph count: 796
+Table count: 9
+Image rel count: 36
+
+### PARAGRAPHS ###
+[0000] (Heading 2): SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management
+[0001] (normal): 
+[0002] (normal): 
+[0003] (normal): A CAPSTONE Project
+[0004] (normal): presented to the faculty of the
+[0005] (normal): College of Computer Studies and Engineering
+[0006] (normal): LORMA Colleges
+[0007] (normal): 
+[0008] (normal): 
+[0009] (normal): 
+[0010] (normal): In Partial Fulfillment
+[0011] (normal): of the requirements for the degree
+[0012] (normal): of Bachelor of Science in Information Technology
+[0013] (normal): 
+[0014] (normal): 
+[0015] (normal): 
+[0016] (normal): by:
+[0017] (normal): Brix A. Directo
+[0018] (normal): Cyrille John M. Rubis
+[0019] (normal): Djaunathan Albert S. Madayag
+[0020] (normal): Ellen Flores Mangaoang, DIT
+[0021] (normal): 
+[0022] (normal): 
+[0023] (normal): 
+[0024] (normal): 
+[0025] (normal): November 2026
+[0026] (normal): APPROVAL SHEET
+[0027] (Heading 1): This is to certify that we have supervised the preparation of the Capstone Project and read the manuscript prepared by DIRECTO, BRIX A., RUBIS, CYRILLE JOHN M., and MADAYAG, DJAUNATHAN ALBERT S. entitled SMARTSPEND: AN AI-ASSISTED MOBILE FINANCIAL TRACKING AND ADVISORY APPLICATION FOR PERSONAL FINANCIAL MANAGEMENT and that the said capstone project has been submitted for final examination by the Oral Examination Committee.
+[0028] (normal): 
+[0029] (normal) [IMG]: 
+[0030] (Heading 2): Ellen F. Mangaoang, DIT
+[0031] (normal): Capstone Project Adviser
+[0032] (normal): Shekiro R. Raposas, MTS, MIS
+[0033] (normal): Capstone Teacher-in-Charge
+[0034] (normal): 
+[0035] (Heading 1): As members of the Oral Examination Committee, we certify that we have examined this capstone project presented before the committee and hereby recommend that it be accepted in partial fulfillment of the capstone requirements for the degree in Bachelor of Science in Information Technology.
+[0036] (normal): 
+[0037] (normal): _______________________________
+[0038] (normal): Jeoffrey B. Layco, MIS
+[0039] (normal): Chairperson
+[0040] (normal): 
+[0041] (normal): _________________     _________________
+[0042] (normal): Shekiro R. Raposas, MTS, MIS     Mary-Ann Mzana, MTS
+[0043] (normal): Member                        Member
+[0044] (normal): 
+[0045] (Heading 1): This capstone project is hereby approved and accepted by the College of Computer Studies and Engineering in partial fulfillment of the requirements for the degree in Bachelor of Science in Information Technology.
+[0046] (normal): 
+[0047] (normal): _______________________________
+[0048] (normal): Jeoffrey B. Layco, MIS
+[0049] (normal): Dean, CCSE
+[0050] (normal): ABSTRACT
+[0051] (normal): Financial mismanagement remained a critical and documented challenge among Filipino households, compounded by limited access to accessible, localized, and intelligent financial tools. This study aimed to: (1) assess the financial management practices, budgeting challenges, and expense-tracking behaviors of parents aged 35–55 and young professionals aged 21–35 in San Fernando City, La Union; (2) design and develop SmartSpend, an AI-assisted mobile financial tracking and advisory application for Android; and (3) evaluate the usability of the developed system using the System Usability Scale (SUS).
+[0052] (normal): The study employed a mixed-methods developmental research design. A validated survey questionnaire was administered to assess financial practices and technology acceptance. SmartSpend was developed using an Agile Kanban methodology, integrating a multi-provider large language model (LLM) architecture with Gemini 3.5 Flash-Lite as the primary model, enabling 34 autonomous financial management actions. Usability was evaluated using the 10-item Brooke (1996) SUS instrument administered after respondents used the application for at least 10 minutes.
+[0053] (normal): The needs assessment revealed that 96.7% of respondents expressed positive intent to use an AI-powered financial application, and 93.3% already used GCash, validating the target features. SmartSpend version 3.1.0 was successfully developed as an offline-first Android application with multi-modal expense input, a Financial Health Score (FHS) formally classified as a Prototype Observed Financial Health Indicator, and a six-provider AI failover chain. Usability evaluation yielded a mean SUS score of 61.83 (SD = 17.58), corresponding to a grade of D and an adjective rating of "OK" under the Bangor et al. (2009) scale below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80.
+[0054] (normal): The results indicated that SmartSpend showed promise as a prototype AI-assisted financial tool for the target demographic, though the below-target usability score highlighted areas for UI/UX refinement. The study contributed a locally contextualized, evaluated prototype that addressed gaps in existing Philippine personal finance applications, particularly the absence of Filipino-English LLM integration, offline-first operation, and behavioral health scoring. Seven recommendations were identified for future development, including UI/UX refinement, a backend API proxy, on-device AI, SQLite encryption, formal parsing evaluation, and a longitudinal study.
+[0055] (normal): ACKNOWLEDGEMENT
+[0056] (normal): The researchers wished to express their sincere gratitude and appreciation to all the individuals who contributed to the successful completion of this study.
+[0057] (normal): First and foremost, the researchers thanked the Almighty God for His guidance, strength, wisdom, and blessings throughout the entire process of this research. His presence had been a source of hope and perseverance in overcoming challenges.
+[0058] (normal): The researchers extended their heartfelt appreciation to the Dean of the College of  Computer Studies and Engineering, Mr. Jeoffrey B. Layco, for his leadership and support in fostering an environment conducive to academic growth.
+[0059] (normal): Special thanks were given to their capstone adviser, Dr. Ellen F. Mangaoang, for the invaluable guidance, patience, and knowledge shared throughout the development of this study. The adviser’s insights and support played a significant role in shaping the direction and quality of this research.
+[0060] (normal): The researchers also wished to thank their instructor in charge, Mr. Shekiro R. Raposas, MTS, MIS, for providing direction, structure, and continuous reminders that helped ensure the completion of all requirements.
+[0061] (normal): To the panelists Mr. Jeoffrey B. Layco, MIS, Mr. Shekiro R. Raposas, MTS, MIS, and Ms. Mary-Ann Mzana, MTS, the researchers expressed their gratitude for their time, effort, and constructive feedback, which greatly contributed to improving the study.
+[0062] (normal): The researchers also acknowledged the College of Computer Studies and Engineering Department for equipping them with the necessary knowledge and skills in the field of Information Technology.
+[0063] (normal): Finally, the researchers extended their deepest gratitude to their families and friends for their unwavering support, encouragement, and understanding throughout this journey. Their motivation and belief had been a constant source of strength.
+[0064] (Heading 1): The Researchers
+[0065] (normal): 
+[0066] (Heading 1): 
+[0067] (Heading 1): 
+[0068] (Heading 1): 
+[0069] (Heading 1): 
+[0070] (Heading 1): 
+[0071] (Heading 1): 
+[0072] (Heading 1): 
+[0073] (Heading 1): DEDICATION
+[0074] (normal): This study was dedicated to the people who had been a constant source of inspiration, support, and strength throughout this journey.
+[0075] (normal): First and foremost, the researchers dedicated this work to their beloved parents, whose unconditional love, sacrifices, and encouragement had been the foundation of their perseverance. Their guidance and belief in the researchers made this achievement possible.
+[0076] (normal): The researchers also dedicated this study to their friends and classmates, whose support, shared experiences, and encouragement helped make this journey more meaningful and manageable.
+[0077] (normal): To their mentors and instructors, this work was also dedicated in appreciation of the knowledge, guidance, and inspiration they had provided throughout the researchers’ academic journey.
+[0078] (normal): Lastly, this study was dedicated to future researchers who might build upon this work and continue advancing the field of information technology and financial systems.
+[0079] (normal): BAD
+[0080] (normal): CJMR
+[0081] (normal): DASM
+[0082] (normal): TABLE OF CONTENTS
+[0083] (normal): Page
+[0084] (normal): Title Page                                                                                                  i
+[0085] (normal): Approval Sheet  ii
+[0086] (normal): Acknowledgement  iii
+[0087] (normal): Dedication  iv
+[0088] (normal): Table of Contents  v
+[0089] (normal): List of Figures  vi
+[0090] (normal): List of Tables  vii
+[0091] (normal): Abstract  viii
+[0092] (normal): CHAPTER I: INTRODUCTION  1
+[0093] (normal): Project Context  1
+[0094] (normal): Conceptual Framework  14
+[0095] (normal): Statement of Objectives  15
+[0096] (normal): Scope and Limitations  17
+[0097] (normal): CHAPTER II: RESEARCH METHODOLOGY  26
+[0098] (normal): Research Design  26
+[0099] (normal): Population and Locale  28
+[0100] (normal): Data Gathering Procedure  35
+[0101] (normal): CHAPTER III: RESULTS AND DISCUSSION  43
+[0102] (normal): Assessment of the Financial Management Practices 43
+[0103] (normal): Design and Development of the SmartSpend Mobile Application 48
+[0104] (normal): Comparative Analysis of Large Language Model APIs  48
+[0105] (normal): Financial Health Score: Computation 51
+[0106] (normal): System Development Results 54
+[0107] (normal): Overview of the System 55
+[0108] (normal): Production Screens 63
+[0109] (normal): Evaluation of the Usability and Performance of SmartSpend Using the System Usability Scale and User Feedback Analysis 70
+[0110] (normal): CHAPTER IV: CONCLUSIONS AND RECOMMENDATIONS  73
+[0111] (normal): Conclusions  73
+[0112] (normal): Recommendations  75
+[0113] (normal): REFERENCES  78
+[0114] (normal): APPENDIX A: Survey Questionnaire  84
+[0115] (normal): APPENDIX B: SUS Questionnaire  86
+[0116] (normal): APPENDIX C: SUS Individual Scores  90
+[0117] (normal): APPENDIX D: Content Validation Certificate (Survey Questionnaire)  96
+[0118] (normal): APPENDIX E: Content Validation Certificate (FHS Formula)  97
+[0119] (normal): CURRICULUM VITAE  99
+[0120] (normal): CHAPTERS                                                                                             Page
+[0121] (normal): 
+[0122] (normal): 
+[0123] (normal): 
+[0124] (normal): 
+[0125] (normal): LIST OF FIGURES
+[0126] (normal): Figure No.    Figure Name          Page
+[0127] (normal): 1.1.     Financial Literacy Rates by    4         Demographic Group (BSP, 2021; Inquiro, 2024)
+[0128] (normal): 1.2.             Conceptual Framework — SmartSpend                  14
+[0129] (normal): Mobile Application (IPO Model)
+[0130] (normal): 2.1.     System Usability Scale (SUS)                           36
+[0131] (normal): Score Interpretation
+[0132] (normal): 2.2.     Agile Kanban Workflow for                             37
+[0133] (normal): SmartSpend Development
+[0134] (normal): 3.1.          SmartSpend System Flowchart           53
+[0135] (normal): 3.2.                                 Use Case Diagram            54
+[0136] (normal): 3.3.                            Visual Table of Contents            55
+[0137] (normal): 3.4.                        Login and Demo Mode Screen                             62
+[0138] (normal): 3.5.                                 Home Dashboard                                     63
+[0139] (normal): 3.6.                    Expense Logging Through Peso Chat           64
+[0140] (normal): 3.7.             Receipt Scanning and Batch Screenshot Import          65
+[0141] (normal): 3.8.                     Financial Health Score Breakdown           66
+[0142] (normal): 3.9.               Budgets, Safe-to-Spend, and Savings Goals          67
+[0143] (normal): 3.10.                             Local AI Mode Setup            68
+[0144] (normal): 3.11.                           SUS Computation Table            70
+[0145] (normal): 3.12.       SUS Score Distribution (N = 30)                    73
+[0146] (normal): 3.13.             SUS Scores by Respondent Group (N = 30)
+[0147] (normal): 3.14.              Demographic Distribution of Needs-Assessment
+[0148] (normal): Respondents (N = 30)
+[0149] (normal): 
+[0150] (normal): LIST OF TABLES
+[0151] (normal): Table No.    Table Name                    Page
+[0152] (normal): 1.1.                   Three-Level Gap Analysis of SmartSpend  5
+[0153] (normal): 1.2.                      Feature Comparison of SmartSpend    8                          with Existing Financial Applications
+[0154] (normal): 2.1.                 Distribution of Respondents and Validators          31
+[0155] (normal): 2.2.           Comparative Evaluation of LLM            42                           APIs for SmartSpend Integration
+[0156] (normal): 3.1.                 Demographic Profile and Expense Tracking           44                          Methods of Respondents (N = 30)
+[0157] (normal): 3.2.                   Comparative Evaluation of LLM APIs                         47
+[0158] (normal): for SmartSpend Integration
+[0159] (normal): 3.3.                                Overall SUS Result                                  70
+[0160] (normal): 3.4.                         System Usability Scale (SUS)                             71
+[0161] (normal): Results by Respondent Group
+[0162] (normal): 3.5.                       SmartSpend Multimodal Import:                          72
+[0163] (normal): Field-Level Parsing Performance
+[0164] (normal): Chapter I
+[0165] (Heading 2): INTRODUCTION
+[0166] (normal): This chapter presented the background of the study, including the context and motivation for developing the SmartSpend mobile application. It also discussed the objectives of the research, scope and limitations of the system, and its intended purpose and users. In addition, this chapter outlined the conceptual framework that guided the system design, as well as the technical background of the technologies used in the development of the proposed AI-powered financial assistant.
+[0167] (Heading 2): Project Context
+[0168] (normal): Financial mismanagement was a documented and pressing problem in the Philippines. According to the 2021 Bangko Sentral ng Pilipinas (BSP) Financial Inclusion Survey, only 2% of Filipino adults correctly answered all six basic financial literacy questions covering numeracy, interest rates, inflation, and risk while fewer than half reported maintaining any household or personal budget (Bangko Sentral ng Pilipinas, 2021). The Philippine Statistics Authority Family Income and Expenditure Survey (PSA FIES, 2021) further revealed that a substantial proportion of Filipino households spent beyond their monthly income, with recurring expenditures on food, transportation, and utilities consistently outpacing savings. In Filipino households, parents aged 35 to 55 typically served as primary financial decision-makers, managing budgeting, bill payments, and daily expenses, yet national survey data indicated that many adults still lack formal financial accounts and did not maintain written budgets, leaving household finances managed without structured tools or guidance (Bangko Sentral ng Pilipinas, 2021; Philippine Statistics Authority, 2021). Despite high mobile phone penetration in the country and growing global mobile app adoption (Statista, 2024), most Filipinos did not use structured financial management tools, citing manual effort, poor local language support, and lack of meaningful feedback as primary barriers to adoption (BSP, 2021; World Bank, 2022). Secondary analyses estimated that only around one in four Filipino adults met international financial literacy benchmarks far below neighboring countries such as Malaysia and Singapore where rates exceeded 50% (Inquiro, 2024).
+[0169] (normal): More recent data suggested this picture was beginning to shift, though unevenly. BSP's newer, annual Consumer Finance and Inclusion Survey (CFIS) 2025 reported that 74% of Filipinos now correctly answered basic financial literacy questions, up from 69% in 2021, alongside a reported decline in informal borrowing (Bangko Sentral ng Pilipinas, 2025). The same survey reported formal account ownership actually fell to 50% of adults, down from 56% in 2021 even as BSP's related Consumer Expectations Survey found household-level financial access rising to 85%, up from 74% in 2024 suggesting access was broadening at the household level while individual account ownership and structured budgeting habits remained uneven. This mixed picture, rather than a resolved problem, remained the motivation for this study.
+[0170] (normal): Several studies and reports highlighted persistent challenges in personal financial management among Filipino households. National financial inclusion surveys reported that many adults had difficulty maintaining formal budgets, tracking expenses consistently, and building emergency savings, particularly in lower-income and older age groups (Bangko Sentral ng Pilipinas, 2021). These challenges were compounded by volatile prices, rising living costs, and the prevalence of informal credit arrangements, such as borrowing from relatives or neighborhood stores, which were often not recorded systematically in any tool or system (Philippine Statistics Authority, 2021; Flores, 2025).
+[0171] (normal): A study on the financial freedom of Filipino workers further revealed pervasive literacy challenges, including reliance on traditional saving methods, high debt dependence, and a 'come-what-may' attitude toward financial planning  all of which contributed to weak financial resilience among Filipino households (Flores, 2025).
+[0172] (normal): In the context of everyday life, parents and working adults frequently juggled multiple roles, including employment, caregiving, and managing household responsibilities. This left limited time and mental energy for manual expense recording or detailed financial planning. Traditional approaches, such as notebooks, spreadsheets, and simple expense trackers, relied heavily on user discipline and did not provide proactive feedback when spending patterns became risky. As a result, many users abandoned these tools after an initial trial period, leading to incomplete records and a lack of useful historical data for decision-making (Stefanov et al., 2024; Flores, 2025).
+[0173] (normal) [IMG]: 
+[0174] (normal): Figure 1.1. Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+[0175] (normal): Globally, a variety of personal finance applications had emerged, including zero-based budgeting tools, multi-account financial dashboards, and AI-assisted expense trackers. However, many of these systems were designed for markets with widespread bank connectivity and higher levels of financial literacy, and they often depended on direct bank integration or credit card data feeds (Stefanov et al., 2024). In the Philippine context, existing applications and local solutions addressed specific aspects of financial management but still lacked integrated conversational AI, spending behavior analysis, and health scoring tailored to Filipino users who relied on mixed payment methods such as cash, e-wallets, and informal credit (Bangko Sentral ng Pilipinas, 2021; Stefanov et al., 2024). At the demographic level, parents and young professionals might download budgeting apps but discontinued use when the effort of manual encoding was perceived as too high and when warnings could be ignored without visible consequences for their financial standing. Table 1.1 presented a three-level summary of the identified gaps and SmartSpend's corresponding solutions.
+[0176] (normal): Table 1.1. Three-Level Gap Analysis of SmartSpend
+[0177] (normal): Several existing applications demonstrated how mobile tools could support personal financial management but also revealed gaps that SmartSpend intended to address. Tarsi – Budget Tracker, a recently introduced application available in the Philippine App Store, supported offline expense tracking, receipt image capture, and category-based summaries, which made it suitable for users who preferred manual or semi-automatic tracking (Tarsi – Budget Tracker, 2026). However, it did not provide a conversational assistant that could interpret natural language commands, nor did it compute a unified financial health score that reflected overall budgeting behavior. YNAB (You Need A Budget) implemented a zero-based envelope budgeting method that was effective for debt payoff planning, but required manual entry and a subscription cost that might have been less accessible to Filipino users (Yomio, 2026). Monarch Money offered multi-account aggregation and net worth tracking but was designed for bank-connected markets and did not support offline functionality or Filipino locale inputs. Copilot provided AI-based expense categorization but was limited to iOS and did not support Filipino-English voice or OCR input. PocketGuard simplified available spending into a single daily figure but lacked spending behavior analysis, health scoring, or multi-modal input. These comparisons demonstrated the value of existing digital financial tools but confirmed that there was still room for a localized solution that combined offline capability, multi-modal expense input, and an accessible behavioral scoring mechanism. Table 2.1 summarized the key feature differences.
+[0178] (normal): Beyond the applications summarized in Table 1.2, several other Philippine-context finance apps competed in this space and were acknowledged here rather than treated as a gap SmartSpend uniquely filled. Agila: Finance Coach added a business profile (invoices, inventory, collections) on top of personal tracking, with offline-first storage and no mandatory account (Agila: Finance Coach, 2026); PISO Budget Tracker offered fully offline, ad-free, payday-cycle budgeting (PISO Budget Tracker, 2026); Lista provided salary-cycle budgeting with third-party credit-score access (Lista, 2026); Kibo auto-suggested expense categories from text, receipts, or banking alerts (Kibo, 2026); and BunnyWise targeted a broader investment dashboard (PSE and US stocks, UITFs, Pag-IBIG MP2, gold, crypto) rather than day-to-day expense tracking (BunnyWise, 2026).
+[0179] (normal): GCash Pera Coach, an AI financial-literacy coach embedded in the GCash e-wallet (GCash / Mynt, 2026), was a related but distinct product: it answered financial-literacy questions on demand but did not track expenses or compute a health score. None of these offered SmartSpend's combination of Taglish conversational AI, a Financial Health Score, and multi-modal (voice, OCR, barcode, batch-screenshot) input in one offline-first app, and none were put through the same hands-on test protocol as the apps in Table 1.2; they were acknowledged here so that SmartSpend's contribution would be read as an evaluated integrated prototype bundle rather than a claim of being the first or only Filipino finance app.
+[0180] (normal): Table 1.2. Feature Comparison of SmartSpend with Existing Financial Applications (including Filipino-context apps)
+[0181] (normal): Building on the gaps identified in the literature and the feature comparison above, SmartSpend addressed this gap by integrating a large language model (LLM) API for natural language expense parsing, a conversational AI assistant capable of executing financial actions, and a Financial Health Score (FHS) that quantified a user's financial behavior on a scale of 0 to 100. The system operated offline using a local SQLite database with optional Firebase cloud synchronization, and supported voice, receipt OCR, barcode, and manual text AI chat, and a unified Smart Import system  including batch screenshot import that automatically detected 40+ platform types (GCash, Shopee, Steam, Lazada, GrabFood, and more) as input methods. Additionally, the application supported bulk transaction import through AI-powered text parsing, allowing users to paste transaction histories from digital wallets such as GCash and Maya, or from bank statements in various formats, for automatic parsing and categorization. It was designed for parents aged 35 to 55 and young professionals aged 21 to 35 in La Union, Philippines  two demographics identified in the literature as underserved by existing financial tools despite having significant household financial responsibilities.
+[0182] (normal): Traditional financial tracking systems primarily functioned as passive tools where users manually recorded expenses and reviewed static summaries (Stefanov et al., 2024). While these systems provided basic budgeting functionalities, they often failed to offer proactive assistance, personalized recommendations, and intuitive interaction methods. As a result, users might find financial tracking tedious, leading to inconsistent usage and incomplete financial records (Stefanov et al., 2024).
+[0183] (normal): Recent advancements in artificial intelligence, particularly Large Language Models (LLMs), had started changing how mobile applications handled user interaction and data processing (Davenport & Mittal, 2022; Dwivedi et al., 2021). Instead of relying only on manual input, these systems could interpret natural language and respond in a more conversational and task-oriented way (OpenAI, 2023; Hean et al., 2025). In practical terms, this allowed users to simply describe their expenses or financial goals in plain language, and the system could convert these into structured data for recording and analysis. This shift made financial tools feel less like traditional record-keeping apps and more like interactive assistants that supported daily decision-making.
+[0184] (normal): This study proposed SmartSpend, a mobile financial assistant built for Android devices using Flutter (Hean et al., 2025; OpenAI, 2023). Unlike traditional budgeting apps that required users to manually encode every transaction, SmartSpend combined an LLM-based API with structured financial tracking to reduce manual work. Users could enter expenses using natural language, such as “paid 120 pesos for lunch,” and the system automatically extracted key details like amount, category, and date for storage and analysis (Hean et al., 2025; OpenAI, 2023). This design was intended to make expense tracking more natural and less time-consuming for everyday users.
+[0185] (normal): Beyond expense tracking, SmartSpend featured a conversational AI assistant capable of executing real-time actions such as logging expenses, setting budgets, updating income, and creating savings goals directly from natural language commands. The system also generated a Financial Health Score ranging from 0 to 100 based on user spending patterns, consistency in budgeting, and savings behavior. Instead of only showing raw transactions, this score provided a simple reference point that helped users quickly understand whether their financial behavior was improving or declining over time. This made it easier for users to reflect on their habits without manually analyzing every expense entry.
+[0186] (normal): To reduce the effort required in recording expenses, SmartSpend supported multiple input methods. Users could manually encode expenses, but they could also take photos of receipts, scan barcodes, or use voice input to record transactions. These methods were designed to fit real-life situations for example, quickly scanning a receipt after shopping or speaking expenses while on the move. Optical Character Recognition (OCR) was used to extract text from receipts, while barcode scanning helped identify products more efficiently.
+[0187] (normal): The application used local SQLite storage via the sqflite package (version 11) for offline functionality, ensuring accessibility even without an internet connection. The system implemented bidirectional cloud synchronization using Firebase Firestore, automatically pushing data to the cloud and retrieving it upon login to merge with local records. This enabled seamless multi-device access to financial data (Google, 2024c). Firebase Authentication supported secure login methods including email/password, Google Sign-In via OAuth 2.0, and biometric authentication (Google, 2024a).
+[0188] (normal): Furthermore, the system analyzed financial data, generated summaries, and provided actionable insights and recommendations (Hean et al., 2025). This study contributed to financial technology by demonstrating how AI-driven automation and mobile-based interaction could enhance personal financial management (Hean et al., 2025; Dwivedi et al., 2021).
+[0189] (normal): To improve accessibility and reduce barriers to adoption, SmartSpend included a Demo Mode accessible directly from the login screen without requiring account creation. This feature allowed users to explore the system using realistic sample data before registration (Bitrián et al., 2021). Additionally, the application included a guided feature tour, customizable themes, and dark mode support to enhance usability, engagement, and user satisfaction across different preferences and environments (Stefanov et al., 2024).
+[0190] (normal): 
+[0191] (normal): 
+[0192] (normal): 
+[0193] (normal): 
+[0194] (Heading 2): Conceptual Framework
+[0195] (normal) [IMG]: 
+[0196] (normal): Figure 1.2 Conceptual Framework (Mobile Application)
+[0197] (normal): This figure illustrated the conceptual framework of the mobile version of the SmartSpend system, which followed the Input–Process–Output (IPO) model. The input included text input, voice input, receipt images (OCR), barcode scans, and user financial data. The process involved LLM processing, OCR extraction, barcode recognition, data structuring, and data storage and synchronization using SQLite and Firebase. These components worked together to extract, analyze, and organize financial data efficiently. The output consisted of auto-recorded expenses, financial summaries, charts, alerts, AI-generated insights, a Financial Health Score (0–100), and AI-powered financial assistance including general financial question-and-answer responses, market price estimates, and financial product guidance.
+[0198] (Heading 3): Statement of Objectives
+[0199] (normal): This study aimed to design, develop, and evaluate SmartSpend, an AI-assisted mobile financial tracking and advisory application for personal financial management, with a primary focus on parents aged 35 to 55 as the main target population, and young professionals aged 21 to 35 as a secondary demographic, in La Union, Philippines.
+[0200] (normal): In order to achieve the overall aim of this research, it was important to understand the key factors that influenced the money management behavior of parents and young professionals and develop a solution that addressed these challenges. This study focused on assessing the existing financial practices of parents and young professionals in La Union, designing and developing an AI-based mobile application  including the selection of a suitable large language model through comparative evaluation that addressed identified gaps, and evaluating its usability through expert-validated instruments and standardized scoring.
+[0201] (normal): 
+[0202] (normal): 
+[0203] (normal): Specifically, this study achieved the following:
+[0204] (normal): 1. Assessed the existing financial management practices, common budgeting challenges, and expense tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 in San Fernando City, La Union, through structured surveys.
+[0205] (normal): 2. Designed and developed the SmartSpend mobile application with the integration of a suitable Large Language Model (LLM) API.
+[0206] (normal): 3. Evaluated the usability and performance of the SmartSpend application using the System Usability Scale (SUS) and user feedback analysis.
+[0207] (normal): Scope and Limitations of the Study
+[0208] (normal): As far as technology was concerned, the application supported both online and offline functionality, using a local SQLite database to store financial data and ensure accessibility even without an internet connection. The system optionally integrated cloud-based storage and authentication services through Firebase. The software utilized an LLM API to generate AI-powered insights, parse natural language inputs, and support the conversational assistant. The conversational AI assistant was also designed to respond to general financial inquiries beyond the scope of the user's recorded data, including questions about Philippine banking products, government financial services, market price estimates for goods and second-hand items, and general personal finance guidance, subject to the availability of accurate information from the underlying language model. However, the system was only available on Android devices.
+[0209] (normal): The system had several limitations. The performance of OCR text recognition depended on the quality and clarity of receipt images, and handwritten or low-quality images might produce inaccurate results. Voice recognition accuracy will be affected by background noise and device support for the Filipino English (en_PH) locale. To address these issues, manual input options remained available after using OCR, barcode scanning, or voice input features. All AI-powered features, including expense parsing, financial insights, and the conversational assistant, required an active internet connection, as they relied on an external LLM API service. The application did not support direct banking integration. Bank synchronization was excluded due to the absence of accessible open-banking APIs in the Philippine setting and the data privacy implications of transmitting banking credentials to a third-party service. Investment features were outside scope as the target population primarily required support for day-to-day expense control and savings discipline rather than investment optimization. The application did not provide professional financial or tax advice. Any financial estimates generated by the system were approximations based on simplified models. Market price estimates provided by the AI assistant were based on the language model's training data and optional web search results, and might not reflect real-time pricing. Users were advised to verify prices through official sources before making financial decisions. Additionally, profile images were stored locally on the device and were not synchronized across devices due to limitations of the Firebase Spark (free) plan. The system was designed within the constraints of free-tier services and remained limited to Android platform compatibility.
+[0210] (normal): The LLM API key was not embedded within the application package. Instead, it was fetched at runtime via Firebase Remote Config rather than being hard-coded into the APK. This was a prototype-stage measure only  Remote Config values were still retrievable from a decompiled client, so the key was not fully secret from a determined attacker. To mitigate potential misuse, the system enforced a daily interaction limit of 150 AI requests per user, which reset automatically. A backend proxy server for fully server-side API key management was planned as a post-capstone enhancement to further align with production-level security practices.
+[0211] (normal): SmartSpend processed personal financial data and was therefore designed with the Philippine Data Privacy Act of 2012 (Republic Act No. 10173) in mind. Rather than claiming full legal compliance which required organizational and legal measures beyond what a capstone prototype could establish the system implemented a data-minimization control: before any OCR or pasted transaction text was sent to a cloud LLM, an on-device regex layer redacted Philippine mobile numbers, GCash/bank reference numbers, and bank account patterns, replacing them with placeholder tokens (e.g., [REDACTED_MOBILE]). Core financial records remained in the on-device SQLite database, and any Firebase Firestore sync was scoped to the authenticated user's own UID. This was a risk-reduction measure, not a guarantee of complete data protection or a certification of legal compliance.
+[0212] (normal): Purpose and Description
+[0213] (normal): SmartSpend was designed as a mobile application that helped users manage their daily expenses in a more organized and less manual way, addressing the core dimensions of perceived usefulness and ease of use that drove technology adoption (Davis, 1989). Instead of functioning only as a tracking tool, it also acted as a lightweight financial assistant that can respond to user inputs and provide simple insights about spending behavior.
+[0214] (normal): Beyond expense tracking and data management, the SmartSpend AI assistant served as a general financial companion. Users might freely ask about current market prices of goods and second-hand items, inquire about the application process for banking products and government financial services such as SSS, PhilHealth, and Pag-IBIG, seek advice on buying and selling decisions, and explore basic financial literacy topics all within a conversational interface that adapted to the user's needs.
+[0215] (normal): The assistant was designed to be flexible and approachable, using a warm and conversational tone that reflected the everyday financial realities of Filipino users, rather than functioning as a rigid, task-only interface.
+[0216] (normal): To further support healthy financial behavior, SmartSpend incorporated a behavioral intervention layer grounded in principles of behavioral finance. An Impulse Pause mechanism prompted users to reflect before confirming large Want-tagged expenses, encouraging more deliberate spending decisions. In addition, velocity alerts notified users when their spending rate significantly exceeded typical patterns. The system also included a daily mood check-in feature that tracked emotional states alongside financial activity, enabling a mood-and-spending correlation view.
+[0217] (normal): A gamification layer featuring 36 achievement badges and spending streak tracking further reinforced positive financial habits by rewarding consistent logging and budget adherence. This feature helped users recognize how emotional states might influence financial decisions an important factor in impulsive spending behavior (Bitrián et al., 2021).
+[0218] (normal): SmartSpend functioned not only as an expense tracker but also as an AI-powered assistant that enhanced users’ financial literacy. The proposed solution provided benefits to the following groups:
+[0219] (normal): Parents. As primary household financial managers in Filipino families, parents faced significant financial responsibility despite having limited access to formal financial literacy training and structured budgeting tools (Bangko Sentral ng Pilipinas, 2021). SmartSpend provided automated expense tracking, multi-period financial summaries, and a Financial Health Score that quantified budgeting behavior without requiring manual effort or financial expertise.
+[0220] (normal): Budget-Conscious Individuals. This group included individuals who aimed to manage their finances more effectively using digital tools. SmartSpend enabled users to control expenses, plan budgets, and improve financial behavior through AI-driven spending analysis. The application supported multiple expense input methods, including manual entry, voice input, and camera-based receipt or barcode scanning. It also provided financial summaries, charts, alerts, and recommendations, along with a wallet management feature that tracked balances across platforms such as GCash, Maya, and bank accounts, offering a consolidated view of available funds.
+[0221] (normal): Technology Enthusiasts. Individuals interested in modern technological advancements could explore the application’s integration of artificial intelligence, particularly the use of a large language model for financial assistance and interaction.
+[0222] (normal): Demo and Evaluation Users. Users who wished to explore the application without creating an account could utilize the built-in Demo Mode, accessible from the login screen. This mode provided realistic Filipino sample data and full feature access, making it suitable for demonstrations, evaluations, and usability testing without requiring personal data entry.
+[0223] (normal): The Researchers. The project enabled the researchers to apply their knowledge and skills in software development and artificial intelligence in a practical setting.
+[0224] (normal): Future Researchers. Future researchers might use this study as a reference in the fields of artificial intelligence, mobile applications, and financial technology. The analytics module, including the 50/30/20 budgeting tracker, supported financial awareness by comparing actual spending distribution against recommended allocation standards, making the Financial Health Score transparent and interpretable.
+[0225] (normal): Technical Background
+[0226] (normal): In this part, the researchers described the technologies that were used during the design and development of the SmartSpend mobile application. They were critical to making the implementation of features described above possible.
+[0227] (normal): Flutter. Flutter was an open-source UI framework developed by Google that was used to build the SmartSpend Android application. It provided a rich set of widgets and tools that enabled the development of a responsive, visually consistent, and feature-rich mobile interface (Google, 2024f).
+[0228] (normal): SQLite. The application used SQLite as its primary local database via the sqflite package (version 11), storing all financial data including expenses, budgets, savings goals, income, recurring transactions, debts, and chat history directly on the device. Expenses were categorized across 14 expense types  including Food, Transportation, Gaming, Personal Care, Clothing, Gifts, and Travel  and tagged by payment method, supporting GCash, Maya, GrabPay, ShopeePay, debit and credit cards, and bank transfers. This ensured full offline functionality without requiring an internet connection (Roux, 2019).
+[0229] (normal): Firebase Firestore. Firebase Firestore was used for bidirectional cloud synchronization of user financial data. Every write operation was automatically pushed to Firestore, and upon login, the application retrieved cloud data and merged it into the local database, enabling seamless multi-device access to financial records (Google, 2024c).
+[0230] (normal): Firebase Authentication. Firebase Authentication handled user identity management, supporting email/password login, Google Sign-In via OAuth 2.0, and biometric authentication (fingerprint or face unlock) as a convenience layer after the user's first successful login (Google, 2024a).
+[0231] (normal): Firebase Crashlytics. Firebase Crashlytics was integrated for real-time crash reporting. It captured Flutter framework errors and asynchronous exceptions and reported them to the Firebase Console for monitoring and debugging (Google, 2024b).
+[0232] (normal): LLM API Integration. The system integrated a large language model (LLM) API as its AI engine, selected through a comparative technical evaluation of available providers based on inference speed, response accuracy for Filipino-English natural language processing, context window capacity, and cost feasibility for academic deployment. At the time of writing, Gemini 3.5 Flash-Lite (Google) was the primary model, backed by seven automatic fallback providers spanning Google, Groq, and Cerebras so the assistant kept working if any single provider was unavailable or rate-limited. The full benchmarking methodology and results were presented in Chapter 3.
+[0233] (normal): The system was designed with a modular LLM integration layer, meaning the underlying model could be replaced with a more capable or efficient alternative in future iterations without requiring major changes to the overall system architecture. To protect user privacy, the system minimized personally identifiable information in API requests. Only the user's natural language input and an anonymized financial summary of expense amounts, categories, and budget status  were transmitted. No authentication credentials, account numbers, or raw profile data were included in API requests, ensuring that sensitive personal information remained on the device or within the application's secure cloud storage.
+[0234] (normal): This component handled multiple tasks across the application: (1) parsing natural language expense descriptions into structured data for automatic recording; (2) generating proactive spending insights and personalized financial recommendations based on the user's recorded data; (3) powering a flexible conversational AI assistant capable of answering general financial questions, providing market price estimates, explaining Philippine banking and government financial products, supporting buying and selling decisions, and executing real-time data actions all while maintaining a warm, conversational tone appropriate for everyday Filipino financial life; and (4) periodically summarizing conversation history to maintain context efficiency without consuming excessive API tokens.
+[0235] (normal): To maintain token efficiency without sacrificing conversational continuity, the system implemented a conversation summarization mechanism. Rather than sending the full chat history to the LLM API with each request, the system periodically generated a compressed summary of prior exchanges. This summary captured only financially relevant context logged expenses, discussed goals, expressed preferences, and notable decisions and was stored locally alongside the full chat history. Subsequent API calls received the compressed summary plus the most recent messages, significantly reducing token consumption while preserving the AI's awareness of ongoing financial discussions. The full chat history remained intact and visible to the user at all times.
+[0236] (normal): Speech-to-Text. The speech_to_text package was used to implement voice input for expense recording. The system automatically detected the Filipino English (en_PH) locale, with a fallback to en_US, and supported a 15-second listening window with automatic pause detection (Sloane, 2022).
+[0237] (normal): Google ML Kit Text Recognition (OCR). Google ML Kit’s Latin script text recognizer was used to extract text from receipt images. The extracted text was cleaned, trimmed, and processed through an intelligent routing mechanism. For single-item receipts, the extracted text was passed directly to the AI chat interface for natural language parsing and automatic expense recording. For multi-item receipts, the system detected multiple line entries and routed the data to a dedicated import review screen, where each item was parsed individually using a specialized receipt parsing function. Users could review extracted entries, edit categories, assign Want or Need classifications, and selectively import items before confirming. This dual-flow design improved usability by supporting both quick single-entry recording and efficient bulk transaction processing from detailed receipts. Users had the option to capture a new image or select one from the gallery (Google, 2024e).
+[0238] (normal): Mobile Scanner (Barcode). The mobile_scanner package was used for barcode scanning. Each scan was saved to a local scan history, and a prompt asked the user to describe the product before AI parsing. The scanner included a torch toggle and a visual overlay guide frame (Bociek, 2023; ZXing, 2023).
+[0239] (normal): Backup and Restore. The application implemented backup and restore functionality through the system share sheet. All financial data including expenses, budgets, savings goals, income, recurring transactions, debts, wallet balances, mood log, and installment plans was exported as a structured JSON file (version 9 format) that could be shared via any installed application or saved to local storage. Restoration was performed by selecting a previously exported JSON backup file. This approach ensured data portability without requiring additional cloud service dependencies beyond the existing Firebase synchronization.
+[0240] (normal): fl_chart. The fl_chart package was used to render interactive charts in the Analytics screen, including a pie chart for category breakdown, a bar chart for monthly spending trends, and a line chart for the 30-day Financial Health Score history (Flutter 4 Fun, 2022).
+[0241] (normal): local_auth. The local_auth package enabled biometric authentication (fingerprint or face unlock) as a login option after the user’s first successful login, using the device’s enrolled biometrics with a PIN fallback (The Flutter Authors, 2013).
+[0242] (normal): Financial Health Score (FHS). SmartSpend introduced a Financial Health Score ranging from 0 to 100 that provided users with a single, interpretable indicator of their budgeting behavior. The score operated in two modes depending on the user's settings. In Full Mode (income tracking enabled), it was computed from four equally weighted components: Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency each contributing 25% to the total score. In Lightweight Mode (income tracking disabled), the four components were: Spending Restraint (vs. a user-defined spending limit), Logging Consistency, Category Balance (preventing any single category from dominating spending), and Habit Streak (consecutive days of expense logging). This dual-mode design made the system usable for individuals who did not have a fixed income, such as students and informal workers, without penalizing them for not setting income data. The detailed formula, component weights, and consequence mechanism were fully documented in Chapter 3: Results and Discussion.
+[0243] (normal): CHAPTER II
+[0244] (normal): DESIGN AND METHODOLOGY
+[0245] (normal): This chapter presented the methods and procedures  that were used in the development, implementation, and evaluation of the SmartSpend system. It included a detailed discussion of  the research design, population and locale, ethical considerations, data gathering tools and procedures, and the software development methodology applied in the study.
+[0246] (Heading 2): Research Design
+[0247] (normal): This study applied a mixed methods developmental research design, which integrated both qualitative and quantitative approaches in collecting and analyzing data (Creswell & Plano Clark, 2011). This design was appropriate for the study because it allowed the researchers to obtain a comprehensive understanding of financial management practices and system usability by combining numerical data with detailed user experiences. Through this approach, the researchers were able to capture both measurable trends and deeper insights into user behavior, preferences, and challenges.
+[0248] (normal): To gather user input for the study, structured survey questionnaires were used to collect respondents’ views regarding the features and functionality of the developed application. The survey responses provided descriptive information that guided the design and improvement of the application.
+[0249] (normal): On the other hand, the quantitative aspect of the study involved the use of validated structured survey questionnaires, which underwent content validation by subject matter experts to ensure clarity, relevance, and alignment with the objectives of the study. These questionnaires were used to collect measurable data regarding financial habits, expense tracking practices, and common difficulties encountered by the respondents. The collected data were analyzed to identify patterns, frequencies, and trends that supported the development of system features aligned with user needs. In addition, the System Usability Scale (SUS) questionnaire was utilized to evaluate the usability, efficiency, and overall user satisfaction of the developed SmartSpend application. The SUS was a widely used and reliable tool for assessing system usability through standardized scoring (Brooke, 1996). The SUS evaluation was administered to the thirty (30) valid respondents after respondents used the SmartSpend application (the full version or the built-in Demo Mode) for at least 10 minutes, confirmed by a screening question. A target SUS score of 80 or above, corresponding to the adjective rating of Good, was set as the acceptance threshold for this study (Bangor et al., 2009).
+[0250] (normal): Moreover, this study also adopted a developmental research approach, which focused on the design, development, and evaluation of a functional system or prototype. The SmartSpend mobile application was developed using the Flutter framework, with the integration of artificial intelligence through an LLM API. This approach enabled the researchers to iteratively improve the system based on the data gathered from both qualitative and quantitative methods.
+[0251] (normal): By combining mixed methods and developmental approaches, the study ensured that the system was  not only technically functional but also user-centered, effective, and aligned with the actual needs of the respondents. This integrated research design supported continuous refinement and validation of the SmartSpend application throughout the development process.
+[0252] (normal): Population and Locale
+[0253] (normal): The study was conducted in San Fernando City, La Union. The primary target population of this study consisted of parents aged 35 to 55 and young professionals aged 21 to 35.
+[0254] (normal): A total of thirty (30) respondents were selected using purposive sampling. Thirteen (13) respondents were parents who regularly handled household budgeting, bill payments, and daily expense decisions. Fourteen (14) respondents were young professionals who managed their own income, track expenses, and made independent financial decisions. Three (3) respondents identified as both. This sample size aligned with common practice for capstone-level usability and needs assessment studies and was sufficient to identify common patterns and usability issues in the context of the developed application (Creswell & Plano Clark, 2011).
+[0255] (normal): This demographic composition reflected evidence from the BSP Financial Inclusion Survey (2021) that parents in the 35 to 55 age group served as primary household financial decision-makers and were among the groups with the lowest rates of formal financial account ownership and structured budgeting making them a critical and underserved target population for a financial management tool (Bangko Sentral ng Pilipinas, 2021).
+[0256] (normal): The survey questionnaire was reviewed by Susan C. Arquisal, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with experience in financial management and business operations, prior to distribution. This review ensured that the questions were appropriate, relevant, and grounded in the actual financial management experiences of the target population.
+[0257] (normal): Respondents participated in the needs assessment phase and the system evaluation phase; the two samples were separate groups, although some individuals might have taken part in both. Their feedback was essential in identifying real-world financial challenges and in assessing the usability, effectiveness, and practicality of the SmartSpend mobile application in supporting everyday financial management for both parents and young professionals.
+[0258] (normal): The distribution of respondents was presented in Table 2.1.
+[0259] (normal): 
+[0260] (normal): Table 2.1. Distribution of Respondents and Validators
+[0261] (normal): The survey questionnaire underwent content validation by Avigail Candevario, PFMe, a subject matter expert in financial management and business operations to ensure relevance, clarity, and appropriateness of the instrument. The System Usability Scale (SUS) evaluation process and the overall technical functionality of the SmartSpend system was reviewed by a subject matter expert in information technology, whose qualifications were documented in the Technical Validation Certificate. This expert validation covered both the correctness of the SUS evaluation process and an independent assessment of the system's core technical features.
+[0262] (normal): The researchers utilized purposive sampling in selecting participants. This method allowed the intentional selection of individuals who had relevant experience in budgeting, expense tracking, and financial decision-making, ensuring that the collected data was meaningful and directly aligned with the research objectives.
+[0263] (normal): Ethical Considerations
+[0264] (normal): All ethical considerations were strictly followed throughout the entire research process. Participation in this study was voluntary, and no form of pressure was imposed on the respondents. All participants, including parents and young professionals, had the right to refuse participation or withdraw from the study at any time without any penalty.
+[0265] (normal): Informed consent was obtained from all participants before their involvement in the study. They were properly informed about the nature and purpose of the research prior to their participation.
+[0266] (normal): In addition, confidentiality was strictly maintained. Personal information of the respondents was kept secure and treated with utmost confidentiality. All responses gathered were used solely for academic purposes.
+[0267] (normal): Furthermore, all collected data were carefully managed and stored to prevent any form of loss or unauthorized access. The researchers ensured that ethical standards were upheld throughout the study.
+[0268] (normal): Data Gathering Tools and Procedure
+[0269] (normal): For the first objective, data were gathered through a survey questionnaire. The survey questionnaire was used to collect quantitative data regarding the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. The survey questionnaire was subjected to content validation by a subject matter expert to ensure that the questions were appropriate, relevant, and grounded in the actual financial management experiences of the target population. No surveys were conducted; qualitative insights into respondents’ experiences and difficulties were derived from the survey responses.
+[0270] (normal): For the second objective, no direct data gathering instrument was used for the design and development phase, as the results obtained from the first objective served as the primary basis for system design and implementation. However, technical benchmarking was conducted as part of this objective to support the AI engine selection process. A comparative evaluation of candidate large language model (LLM) APIs was performed across multiple providers. Each candidate was assessed across four criteria: (1) inference speed, measured as average response latency in seconds for a standardized expense parsing prompt; (2) response accuracy for Filipino-English natural language processing, evaluated using a set of test prompts representing typical user inputs in Filipino, Taglish, and English; (3) context window capacity, defined as the maximum number of tokens the model could process in a single request; and (4) cost feasibility, evaluated based on the availability of a free-tier API plan appropriate for academic deployment. The benchmarking results and justification for the final model selection were presented in Chapter 3.
+[0271] (normal): For the third objective, data were collected using the System Usability Scale (SUS) questionnaire, a standardized tool used to evaluate system usability. Respondents assessed the application in terms of ease of use, functionality, and overall user experience. The implementation and administration of the usability evaluation were reviewed by subject matter experts to ensure that the evaluation process aligned with appropriate usability testing practices. Additional feedback was also collected to support the evaluation results.
+[0272] (normal): The survey questionnaire was reviewed by Susan C. Arquisal, a graduate of Bachelor of Science in Commerce major in Management and an active business owner with experience in financial management and business operations, prior to distribution.
+[0273] (normal): Step 1: Questionnaire Preparation and Validation (Objective 1)
+[0274] (normal): The survey questionnaire was drafted by the research team and submitted to Avigail Candevario, PFMe, a subject matter expert in financial management, for content validation. The expert's credentials was recorded in the Content Validation Certificate (Appendix A). Revisions were made based on the feedback before distribution.
+[0275] (normal): Step 2: Respondent Identification and Consent (Objective 1)
+[0276] (normal): Thirty (30) respondents were identified using purposive sampling based on the defined inclusion criteria. Each respondent received a consent form explaining the purpose of the study, their rights, and the confidentiality of their responses.
+[0277] (normal): Step 3: Survey Distribution and Collection (Objective 1)
+[0278] (normal): The validated questionnaire was distributed to the respondents (13 parents, 14 young professionals, and 3 who identified as both).
+[0279] (normal): 
+[0280] (normal): Step 4: LLM Technical Benchmarking (Objective 2)
+[0281] (normal): Candidate LLM APIs were comparatively evaluated using standardized Filipino-English expense-parsing prompts. Response latency, accuracy, context window, and cost were recorded and compared.
+[0282] (normal): Step 5: System Demonstration and SUS Evaluation (Objective 3)
+[0283] (normal): Respondents used SmartSpend (the full version or the built-in Demo Mode) for at least 10 minutes, confirmed by a screening question, and then independently completed the 10-item SUS questionnaire online.
+[0284] (normal): Step 6:  Data Tabulation and Analysis
+[0285] (normal): Survey responses were tallied and analyzed using frequency and percentage. SUS scores were computed for each respondent and averaged to produce the final SUS score.
+[0286] (normal) [IMG]: 
+[0287] (normal): Figure 2.1 System Usability Scale (SUS) Score Interpretation
+[0288] (normal): This figure illustrates the interpretation of the System Usability Scale (SUS) scores that was used to evaluate the usability of the SmartSpend system. The SUS score ranged from 0 to 100 and is categorized into different levels: Poor (below 60), Marginal (60–69), Acceptable (70–79), Good (80–89), and Excellent (90–100). Higher scores indicated better usability, user satisfaction, and system performance, while lower scores suggested the need for improvements. This scale served as a standardized tool to assess how effectively and efficiently users could interact with the system.
+[0289] (normal): Software Methodology
+[0290] (normal) [IMG]: 
+[0291] (normal): Figure 2.2. Agile Kanban Workflow for SmartSpend Development
+[0292] (normal): The development of the SmartSpend mobile application followed the Agile Kanban Software Development Methodology. This approach was selected because the project required continuous feature integration, testing, and refinement, especially due to the involvement of multiple components such as artificial intelligence, OCR processing, and cloud synchronization. Unlike traditional development models that followed a strict and linear sequence, Kanban allowed the researchers to work on tasks dynamically, with phases potentially overlapping or repeating as needed, while continuously improving the system based on feedback and testing results.
+[0293] (normal): To implement this methodology, the researchers utilized a Kanban board that visually represented the workflow of the project. The board was divided into several columns, namely: Backlog, Requirements, Design, Development, Testing, Deployment, and Done/Review. Each task related to the system such as implementing OCR, integrating the LLM API, or designing the database schema were represented as individual task cards. These cards moved across the board depending on their current progress. Work-in-progress (WIP) limits were also applied to ensure that the researchers focused only on a manageable number of tasks at a time, preventing overload and maintaining productivity.
+[0294] (normal): In the Backlog Phase, all planned features and system requirements were first listed and organized. This included core functionalities such as expense tracking, AI-powered parsing, Financial Health Score computation, voice input integration, receipt scanning, and cloud synchronization. The researchers also included minor features such as theme customization, demo mode, and onboarding tutorials. Each feature was broken down into smaller, actionable tasks to make development more manageable.
+[0295] (normal): During the Requirements Phase, the researchers gathered data through a survey of selected respondents aligned with the study’s target population of parents and young professionals. This phase aimed to identify real-world financial management practices, common challenges in expense tracking, and user expectations for a financial application. Based on the collected data, the researchers defined both functional requirements (e.g., automatic expense logging, AI recommendations) and non-functional requirements (e.g., usability, performance, offline capability).
+[0296] (normal): In the Design Phase, the researchers translated the identified requirements into a concrete system structure. This included designing the application architecture, database schema, and data flow. Specifically, the SQLite database structure was mapped to handle tables such as expenses, income, budgets, savings goals, and chat history. The researchers also designed how data flowed between the mobile application, the LLM API, and Firebase services. Additionally, interface layouts and user navigation flows were planned to ensure that the application remained simple and user-friendly despite having advanced features.
+[0297] (normal): The Development Phase involved the actual implementation of the system using the Flutter framework. The researchers developed the application incrementally by focusing on one feature at a time. For example, the basic expense tracking module was developed first, followed by the integration of AI parsing through the LLM API. After that, additional features such as OCR using Google ML Kit, barcode scanning, and voice input were implemented. Firebase services, including Firestore and Authentication, were also integrated during this phase to support cloud synchronization and secure login. Each completed feature was tested individually before being merged into the main application.
+[0298] (normal): In the Testing Phase, the researchers conducted both functional and usability testing. Functional testing ensured that each feature operated correctly, such as verifying if the OCR accurately extracted receipt data or if the AI correctly categorized expenses. Usability testing involved selected respondents who used the application and evaluated their experience using the System Usability Scale (SUS). The researchers also observed user interactions to identify difficulties, confusion, or inefficiencies within the system. Any issues discovered during this phase were documented and fed back into the Development phase for refinement and correction.
+[0299] (normal): During the Deployment Phase, the completed SmartSpend application was deployed to Android devices for actual usage and evaluation. The researchers prepared the application for demonstration and evaluation by ensuring that all features were stable and properly integrated. Demo Mode was also activated to allow users to explore the system without requiring account registration, making it easier to conduct presentations and usability testing.
+[0300] (normal): Finally, in the Done/Review Phase, the researchers evaluated the overall performance and effectiveness of the system. This included analyzing SUS scores, reviewing user feedback, and assessing whether the application met its intended objectives. The researchers identified which features performed well and which areas required improvement. Insights gathered from this phase were used to refine the system and provide recommendations for future development, such as adding bank integration or improving AI accuracy. Based on the iterative development process, several features had been identified for future implementation beyond the scope of this study. A multi-wallet system enabling separate tracking of GCash, Maya, and bank balances had been fully implemented in the final version. The system supported 20 Philippine banks and 5 digital banks, plus e-wallets (GCash, Maya, GrabPay, ShopeePay, BDO, BPI, Metrobank, and more), with automatic balance deduction upon expense logging and wallet-to-wallet transfer functionality. Automated transaction parsing through Android notification listeners, while technically feasible, required sensitive permissions subject to platform policy restrictions and was therefore deferred. Additional enhancements included the implementation of a backend proxy server for secure LLM API key handling, PDF export functionality for financial summaries, and SQLite database encryption. Long-term extensions such as investment tracking for Philippine financial instruments and shared family wallet functionality would require expanded system architecture and were proposed for subsequent research.
+[0301] (normal): The phases of the Kanban workflow, together with their key tasks and deliverables, were summarized in Table 2.2.
+[0302] (normal): Table 2.2. Agile Kanban Workflow Phases and Deliverables
+[0303] (normal): CHAPTER III
+[0304] (normal): RESULTS AND DISCUSSION
+[0305] (normal): This chapter presented the results of the study in relation to the three objectives stated in Chapter I. It reported the findings of the survey on the financial management practices of parents and young professionals, the comparative evaluation of large language model (LLM) APIs, the computation of the Financial Health Score, the development and features of the SmartSpend mobile application, and the results of the usability and performance evaluation using the System Usability Scale (SUS). Each section ended by stating whether the corresponding objective was achieved.
+[0306] (normal): Assessment of the Financial Management Practices, Budgeting Challenges, and Expense Tracking Behaviors of Parents and Young Professionals
+[0307] (normal): The first objective was to assess the existing financial management practices, common budgeting challenges, and expense tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 in San Fernando City, La Union. Data were gathered through a structured online questionnaire (Financial Management Practices survey) completed by respondents from the target groups.
+[0308] (normal) [IMG]: 
+[0309] (normal): Table 3.1 presented the demographic profile of the 30 respondents and the expense tracking methods they reported. The sample comprised 13 parents aged 35–55 (43.3%), 14 young professionals aged 21–35 (46.7%), and 3 respondents identifying as both (10.0%). In terms of employment, 10 were employed full-time (33.3%), 9 were freelance or contractual (30.0%), 8 were self-employed (26.7%), and 3 were unemployed or part-time (10.0%). GCash was used by 93.3% of respondents (28/30), confirming the relevance of e-wallet transaction import as a core feature.
+[0310] (normal) [IMG]: 
+[0311] (normal): Table 3.1. Demographic Profile and Expense Tracking Methods of Respondents (N = 30)
+[0312] (normal): Note. Respondents could select more than one tracking method, so percentages were computed within each group (parents n = 13, young professionals n = 14, both n = 3) and for the total sample (N = 30); columns therefore did not sum to 100%.
+[0313] (normal): 
+[0314] (normal) [IMG]: 
+[0315] (normal): Figure 3.14. Demographic Distribution of Needs-Assessment Respondents (N = 30). The 3 respondents who identified as both parent and young professional were reclassified by primary financial role for SUS subgroup analysis, yielding 10 parents and 20 young professionals.
+[0316] (normal): Receipts were the most common way of tracking expenses (27 of 30, 90.0%), followed by mental estimates (16 of 30, 53.3%) and e-wallet transaction history (13 of 30, 43.3%). Notes apps (30.0%) and paper notebooks (23.3%) were less common, and only 3 respondents (10.0%) used a dedicated mobile app. Most respondents therefore relied on manual or memory-based tracking, which supported the case for automated capture through receipt scanning and e-wallet screenshot import.
+[0317] (normal): The findings confirmed the critical financial management challenges identified in the literature. Among the 30 respondents, 96.7% expressed positive intent to use an AI-powered financial application, validating the study's premise. The most prevalent challenges were rising prices of basic goods, unexpected medical expenses, and family responsibilities. GCash was used by 93.3% of respondents, validating the app's emphasis on e-wallet transaction parsing.
+[0318] (normal): These results showed that the first objective of the study was achieved: the financial management practices, budgeting challenges, and expense tracking behaviors of the target population were successfully assessed through the validated survey instrument.
+[0319] (normal): Design and Development of the SmartSpend Mobile Application
+[0320] (normal): The second objective was to design and develop the SmartSpend mobile application, including the selection of an appropriate Large Language Model API through comparative technical evaluation.
+[0321] (normal): Comparative Analysis of Large Language Model APIs
+[0322] (normal): The selection of an appropriate LLM API was a critical design decision because it directly influenced the accuracy, latency, and cost of natural language expense parsing and conversational assistance. For a mobile financial assistant requiring Filipino-English capability and free-tier deployment, the evaluation criteria were weighted as: Filipino-English accuracy (25%), speed/latency (20%), tool use and JSON reliability (20%), free tier availability (15%), context window (10%), and financial reasoning quality (10%). Table 3.2 presented the comparative evaluation results.
+[0323] (normal): Table 3.2. Comparative Evaluation of LLM APIs for SmartSpend Integration
+[0324] (normal): Note. Not measured = not measured in the team's own benchmark run. Free-tier request quotas were as reported by third-party sources in September 2026 and changed often.
+[0325] (normal): Gemini 3.5 Flash-Lite was selected as the primary model because it offered a high free-tier request quota, good Filipino-English (Taglish) handling in the team trials, a 1-million token context window, and native function calling support for the 34 agentic action types (Li et al., 2024; Google, 2024f). Groq's LLaMA-family endpoints (LLaMA 4 Scout, LLaMA 3.3 70B, LLaMA 3.1 8B) were retired by Groq in mid-to-late 2026 and had been replaced in the fallback chain with Groq-hosted OpenAI GPT-OSS (120B/20B) and Qwen (3.6/3.8 27B) models, which Groq then recommended as the direct migration path. Models like GPT-4o and Claude were paid-only cost-prohibitive for academic deployment at zero budget.
+[0326] (normal): SmartSpend used dynamic full-context injection rather than RAG. A typical user had 20–50 expenses, 5–10 budgets, and 3–5 goals (~1,000–5,000 tokens), fitting within any evaluated model's context window. RAG added unnecessary vector search overhead for this small per-user dataset (Davenport & Mittal, 2022).
+[0327] (normal): Financial Health Score: Computation
+[0328] (normal): The Financial Health Score (FHS) was SmartSpend's core academic contribution formally positioned as a Prototype Observed Financial Health Indicator (FHI), adapting ideas from two published financial-health measurement efforts rather than inventing a scoring system from nothing. The main design choice computing the score from a user's own transaction data instead of a survey followed the Commonwealth Bank of Australia and Melbourne Institute's (CBA-MI) "Observed" scale, which summed categorical bank-record measures and rescaled the total to 0–100 (Comerton-Forde et al., 2018). Three of the four components below adapted the Spend, Save and Plan ideas from the Financial Health Network's FinHealth Score® (Financial Health Network, 2021). The UNSGSA's own working-group note on measuring financial health treated transaction/account-based measurement as a promising but still early-stage fourth approach, better viewed as complementary to survey-based scales rather than a full replacement (Gubbins, Mazzotta & Rhyne, 2021) which was exactly why this score was named a "Prototype," not presented as a validated instrument in its own right.
+[0329] (normal): Equal weights that added up to 100 followed the simplest published scoring method for this kind of scale. CBA's own 10-question Reported scale gave each question equal weight (0–4 points, 40 total) and multiplied by 2.5 to land on a 0–100 range, and separate validation testing found that this simple approach correlated very highly with more complex model-based scores (Gubbins, Mazzotta & Rhyne, 2021). SmartSpend followed the same logic with four components: 4 × 25 = 100. The weights themselves were a design choice, not a statistically derived result this was stated plainly rather than implied to be more rigorous than it was.
+[0330] (normal): Full Mode (income tracking enabled; 4 components of 25 points, 100 maximum):
+[0331] (normal): 1. Savings Rate (25 pts): Score = 25 × min(1.0, savingsRate / 0.20). The 20% target came from the 50/30/20 budgeting rule (Warren & Tyagi, 2005).
+[0332] (normal): 2. Overspend Control (25 pts):pushes spending over the daily budget counts as a "soft" overspend day at half weight; a day with scattered, habitual overspending across multiple items counts as "hard" at full weight.
+[0333] (normal): 3. Budget Adherence (25 pts): Score = 25 × (onBudgetCategories / totalBudgetedCategories). Category-level budget limits followed the common personal-finance practice of zero-based budgeting (popularized by Ramsey, 2003), though this practice itself was not independently validated in peer-reviewed literature. The behavior of this component when zero category budgets were configured was a known open item pending confirmation against the current build and was not asserted here.
+[0334] (normal): 4. Logging Consistency (25 pts): Score = 25 × (loggedDays / activeDays). Consistent self-monitoring increased transaction salience and promoted deliberate spending (Thaler & Sunstein, 2008).
+[0335] (normal): Lightweight Mode
+[0336] (normal): Score Adjustments
+[0337] (normal): System Development Results
+[0338] (normal): SmartSpend v3.1.0 was developed across seven Kanban phases (Table 2.2: Agile Kanban Workflow Phases and Deliverables
+[0339] (normal): Overview of the System
+[0340] (normal) [IMG]: 
+[0341] (normal): Figure 3.1. SmartSpend System Flowchart
+[0342] (normal) [IMG]: 
+[0343] (normal): Figure 3.2. Use Case Diagram
+[0344] (normal) [IMG]: 
+[0345] (normal): Figure 3.3. Visual Table of Contents
+[0346] (normal): Several Filipino-specific and usability features were implemented over the course of development rather than left as future work: a Paluwagan (rotating savings group) tracker built on the existing debt and recurring-transaction infrastructure; a six-month savings-rate trend chart with a 20% target line in Analytics; a long-press quick-edit gesture on budget tiles; and an offline cache fallback for the AI-generated financial advice and monthly summary cards, so a quota error did not leave the user without any insight.
+[0347] (normal): Two further additions were worth documenting as part of the system's development: first, a full audit-trail subsystem (four dedicated history tables wallet, budget, goal-contribution, and income each logging the old value, new value, change amount, reason, and source of every edit, viewable per-item via a long-press) gave the app's financial records the kind of change-of-custody traceability expected of a financial tool, not just a flat transaction log. Second, the AI assistant's system prompt was extended with structured knowledge of common Philippine Buy-Now-Pay-Later and short-term lending products (GLoan, Maya Loan, ShopeePayLater, LazPayLater, HomeCredit, BillEase, Skyro, Akulaku, Atome, UnaCash), including their typical monthly interest rates and the Bangko Sentral ng Pilipinas' interest rate cap under BSP Circular No. 1133, so that the assistant could meaningfully discuss a user's installment and lending obligations rather than treating them as generic expenses.
+[0348] (normal): The v2.9.97–3.1.0 releases added several usability and reliability capabilities. Earlier, an AI date-resolution fix made the assistant receive today's and yesterday's dates explicitly so that phrases such as "yesterday" or "kahapon" were recorded on the correct day, and the assistant then checked whether an item was already stored before logging it again. Version 3.0.4 added a Local-only switch for Private Mode and a warning when a Local Account user logged in. Local Account users are also offered an automatic JSON and CSV backup when they log out . Version 3.0.3 added a Local Account mode ("Continue Without Account") in which all data stayed on the device and can be exported at any time, with a one-way upgrade path that pushed the local data to a new cloud account on registration. The four larger additions were as follows. First, chat sessions: AI conversations were stored as separate, titled sessions (a new chat_sessions table, database schema v14) that could be renamed, archived, searched, or deleted, replacing a single flat history that silently dropped anything older than the last 200 messages. Second, AI recovery: after each AI response, a summary card showed which items were recorded, skipped as duplicates, or failed, with a one-tap helper to re-log anything the AI missed, so errors were visible to the user instead of silent. Third, transaction sorting and grouping by date, logged date, category, amount, name or source, plus a quick-jump bar in Analytics. Fourth, a full demo dataset (35 transactions across three months, wallets, budgets, goals, paluwagan and installment plans) with a one-tap reset, used for the live usability demonstration. Since v3.0.4, logging in from a Local Account first showed a warning, because the cloud copy replaced the local data by design.
+[0349] (normal): AI privacy was described as three tiers, only two of which existed at the time. (1) Cloud AI (default): requests go through the provider chain, with mobile numbers, reference numbers and bank-account patterns redacted on-device first. The primary provider was used under Google's free ("unpaid") Gemini API quota, whose terms stated that submitted content might be used to improve Google's products, might be read by human reviewers, and should not include personal information; redaction therefore reduced but did not remove the exposure, and users with sensitive details were directed to Private Local Mode. Since v3.0.5 a one-time privacy disclosure was also shown before the first AI message. (2) Private Local Mode (implemented, v2.9.92): while the app could reach a model running on the user's own PC or Mac over the home network, requests went only to that model and financial data did not leave the network; if the local server was unreachable the app fell back to the cloud chain, unless the user had switched on Local-only mode (added in v3.0.4), in which case the AI stopped responding instead of falling back. (3) On-device AI (planned, not implemented): a model running on the phone itself, with no network at all. Research at the time indicated this was feasible on 2026 flagship phones and, as an opt-in download of roughly 2.6 GB, on phones with about 6 GB of RAM, but not yet on the 4 GB mid-range phones common among Filipino students; it was therefore listed under Recommendations, not as a delivered feature.
+[0350] (normal): From v3.0.5 to v3.1.0 the app's mascot, Peso, was developed from a static icon into a context-aware companion. The mascot has 12 animated moods (idle movement, periodic blinking, animated mood changes, tap reactions and an optional speech bubble), appears on most major screens and as the avatar beside AI replies, and changes mood with the sentiment of the assistant's reply and, on the home screen, with the Financial Health Score tier. A voice service supplies short Taglish messages for 31 situations (two to four variants each, chosen at random so the same line does not repeat every session) used in the AI greeting, companion messages and the app's scheduled notifications; a context service gives a one-time tip per screen per session for 17 screens; and a haptic service provides tactile feedback. Once-a-day checks react to events such as no expenses logged by 2 PM, a no-spend day, budget status, upcoming bills, a change in FHS tier, logging streaks of 7, 14, 21 and 30 days, and savings-goal milestones at 25, 50, 75 and 100 percent, and ten additional achievement badges (36 in total) were added with celebration sheets. Tapping a notification stores its payload so that the next launch can respond in context.
+[0351] (normal): These behaviours applied the same ideas used for Warning Decay and the badge system prompt, non-blocking, autonomy-supportive feedback tied to the user's own logging and score changes (Thaler & Sunstein, 2008; Deci & Ryan, 2000). They were added after the usability-evaluation design was fixed, so their effect on user behaviour has not been measured; the longitudinal study proposed in Chapter IV was where it would be tested. Present Peso as a design feature, not as evidence of behaviour change, and avoid phrases such as "dopamine reinforcement".
+[0352] (normal): The optional local-LLM integration described above shipped with a guided in-app setup flow covering three common local-inference tools (Ollama, LM Studio, Jan), including a hardware-tier picker (8/16/32GB RAM) to help a non-technical user choose a workable local model size, and fell back to the cloud provider chain if the local server became unreachable mid-session, unless the user has switched on Local-only mode.
+[0353] (normal): Production Screens
+[0354] (normal) [IMG]: 
+[0355] (normal): Figure 3.4. Login and Demo Mode Screen
+[0356] (normal) [IMG]: 
+[0357] (normal): Figure 3.5. Home Dashboard
+[0358] (normal) [IMG]: 
+[0359] (normal): Figure 3.6. Expense Logging Through Peso Chat
+[0360] (normal) [IMG]: 
+[0361] (normal): Figure 3.7. Receipt Scanning and Batch Screenshot Import
+[0362] (normal) [IMG]: 
+[0363] (normal): Figure 3.8. Financial Health Score Breakdown
+[0364] (normal) [IMG]: 
+[0365] (normal): Figure 3.9. Budgets, Safe-to-Spend, and Savings Goals
+[0366] (normal) [IMG]: 
+[0367] (normal): Figure 3.10. Local AI Mode Setup
+[0368] (normal): These results showed that the second objective of the study was achieved: SmartSpend v3.1.0 was designed and developed as a working Android application, and a suitable LLM API was selected through a comparative technical evaluation.
+[0369] (normal): Evaluation of the Usability and Performance of SmartSpend Using the System Usability Scale and User Feedback Analysis
+[0370] (normal): Respondents were required to use the SmartSpend application either the full version or the built-in Demo Mode accessible from the login screen for a minimum of 10 minutes before completing the SUS questionnaire. This was enforced through a screening question at the start of the SUS form. Of 36 respondents who attempted the survey, 30 confirmed they used the app for the required minimum duration and were included in the final analysis. The remaining 6 were excluded: 5 for insufficient app usage time and 1 for straight-line response bias. The respondents for the needs assessment (Objective 1) and for the SUS evaluation (Objective 3) were separate groups; some individuals may have taken part in both, but the two samples were analyzed independently for their respective objectives.
+[0371] (normal): SUS scores were computed using the standard formula: odd-numbered items minus 1; 5 minus even-numbered items; sum multiplied by 2.5 (Brooke, 1996). The overall SUS score was interpreted against the Bangor, Kortum, and Miller (2009) adjective rating scale.
+[0372] (normal) [IMG]: 
+[0373] (normal) [IMG]: 
+[0374] (normal): Figure 3.11. SUS Computation Table
+[0375] (normal): Figure 3.12.  SUS Score Distribution (N = 30) 70
+[0376] (normal): Figure 3.13.  SUS Scores by Respondent Group (N = 30) 71
+[0377] (normal): Figure 3.14.  Demographic Distribution of Needs-Assessment Respondents (N = 30) 44
+[0378] (normal): Table 3.3. Overall SUS Result
+[0379] (normal): As shown in Table 3.3, SmartSpend obtained an overall SUS score of 61.83, a grade of D, and an adjective rating of "OK" (Bangor et al., 2009), which was below the pre-established acceptance threshold of 80 or above and below the 68-point average benchmark (Sauro & Lewis, 2016).
+[0380] (normal): 
+[0381] (normal) [IMG]: 
+[0382] (normal): Figure 3.12. SUS Score Distribution (N = 30). Individual scores sorted in ascending order. Zone coloring reflects Bangor et al. (2008) acceptability ranges. Mean = 61.83 (SD = 17.58); range 35.0–92.5.
+[0383] (normal): 
+[0384] (normal) [IMG]: 
+[0385] (normal): Figure 3.13. SUS Scores by Respondent Group (N = 30). Parents (n = 10) scored M = 58.25 (SD = 19.72); Young Professionals (n = 20) scored M = 63.62 (SD = 16.65). Error bars represent ±1 SD; adjective ratings based on Bangor et al. (2009).
+[0386] (normal) [IMG]: 
+[0387] (normal): 
+[0388] (normal): Table 3.4. System Usability Scale (SUS) Results by Respondent Group
+[0389] (normal): 
+[0390] (normal): No formal open-ended Survey data was collected. The study used a structured quantitative survey instrument, and no open-ended or interview data were collected.
+[0391] (normal): Technical Performance Benchmarks
+[0392] (normal): Note: Multimodal import performance metrics (OCR precision/recall, AI categorization accuracy) were based on preliminary developer testing during the development phase. Formal field evaluation using standardized test sets was recommended in future work (see Chapter IV Recommendations).
+[0393] (normal): Table 3.5. SmartSpend Multimodal Import: Field-Level Parsing Performance
+[0394] (normal): Note: Formal field evaluation of multimodal import performance using standardized test sets was not conducted in this study. The OCR precision/recall and AI categorization accuracy values in Table 3.5 were based on preliminary developer testing. A rigorous test methodology using 50+ standardized receipts across platforms was recommended as future work (see Chapter IV, Recommendation 6).
+[0395] (normal): These results showed that the third objective of the study was partially achieved: usability was evaluated using the System Usability Scale with 30 valid respondents, but the mean score of 61.83 fell below the 68-point benchmark (Sauro & Lewis, 2016) and the pre-established target of 80.
+[0396] (normal): CHAPTER IV
+[0397] (normal): CONCLUSIONS AND RECOMMENDATIONS
+[0398] (normal): This chapter presented the conclusions drawn from the results of the study and the recommendations of the researchers.
+[0399] (normal): Conclusions
+[0400] (normal): 
+[0401] (normal): SmartSpend v3.1.0 was developed as a working Android application with multi-modal expense input, offline-first local storage, 34 AI actions, and a Financial Health Score formally classified as a Prototype Observed Financial Health Indicator. The comparative evaluation of 20 candidate LLM models led to the selection of Gemini 3.5 Flash-Lite as the primary model, supported by a multi-provider failover chain. Therefore, the second objective of designing and developing the SmartSpend mobile application, including the selection of a suitable LLM API, was achieved.
+[0402] (normal): SmartSpend
+[0403] (normal): Recommendations
+[0404] (normal): In view of the results of the study, the following recommendations were made:
+[0405] (normal): 1. Payday-cycle-aware budgeting. The researchers recommended that the developers implement budgeting resets aligned with the semi-monthly (15th and 30th) salary cycle common in the Philippines.
+[0406] (normal): 2. Backend API proxy and per-user keys. The researchers recommended that the developers move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to remove device-side key exposure and enforce per-user message limits, because the free-tier request quotas (Table 3.2) were shared by every user of the prototype. Letting users add their own key was an interim measure.
+[0407] (normal): 3. Google Play release. The researchers recommended that, after the backend proxy and a privacy policy were in place, the developers submit  SmartSpend to the Google Play Store, since the prototype was currently distributed as a downloadable APK.
+[0408] (normal): 4. On-device AI tier. The researchers recommended that the developers add  an opt-in on-device model (e.g., Gemma 4 E2B through Google's LiteRT-LM, about a 2.6 GB download) for users who wanted fully offline AI, routing only simple logging tasks to it and keeping complex financial advice on the cloud tier, because the current local AI mode required a separate computer on the same network.
+[0409] (normal): 5. SQLite encryption. The researchers recommended that the developers implement SQLCipher-based encryption for the local database in a future schema migration, because the local database of the prototype was not encrypted.
+[0410] (normal): 6. Household and remittance features. The researchers recommended that the developers add  shared couple and family wallets and inbound OFW remittance tracking as a distinct income category to serve more user groups.
+[0411] (normal): 7. Longitudinal evaluation. The researchers recommended that future researchers measure  SmartSpend's effect on financial behavior over three to six months with a larger sample, because the usability evaluation in this study measured usability at a single point in time.
+[0412] (normal): References
+[0413] (normal): Agila: Finance Coach. (2026). Agila: Finance Coach [Mobile application]. Google Play / App Store.
+[0414] (normal): Ariely, D. (2008). Predictably irrational: The hidden forces that shape our decisions. HarperCollins. https://www.anthropic.com/claude
+[0415] (normal): Bangko Sentral ng Pilipinas. (2021). 2021 Financial Inclusion Survey. BSP. https://www.bsp.gov.ph/Inclusive-Finance/Financial-Inclusion-Surveys/2021-FIS-Report.pdf
+[0416] (normal): Bangko Sentral ng Pilipinas. (2025). Consumer Finance and Inclusion Survey (CFIS) 2025. BSP.
+[0417] (normal): Bangor, A., Kortum, P., & Miller, J. (2009). Determining what individual SUS scores mean: Adding an adjective rating scale. Journal of Usability Studies, 4(3), 114–123.
+[0418] (normal): Bitrián, P., Buil, I., & Catalán, S. (2021). Making finance fun: The gamification of personal financial management apps. International Journal of Bank Marketing, 39(7), 1310–1332. https://doi.org/10.1108/IJBM-02-2021-0074
+[0419] (normal): Bociek, J. (2023). mobile_scanner: A universal barcode and QR code scanner for Flutter. https://pub.dev/packages/mobile_scanner
+[0420] (normal): Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan, B. Thomas, B. A. Weerdmeester, & I. L. McClelland (Eds.), Usability evaluation in industry (pp. 189–194). Taylor & Francis.
+[0421] (normal): BunnyWise. (2026). BunnyWise: All-in-one investment tracker [Mobile application]. bunnywise.io.
+[0422] (normal): Comerton-Forde, C., Ip, E., Ribar, D. C., Ross, J., Salamanca, N., & Tsiaplias, S. (2018). Using survey and banking data to measure financial wellbeing (Financial Wellbeing Scales Technical Report No. 1). Commonwealth Bank of Australia & Melbourne Institute.
+[0423] (normal): 
+[0424] (normal): Creswell, J. W., & Plano Clark, V. L. (2011). Designing and conducting mixed methods research. Sage Publications.
+[0425] (normal): Davenport, T. H., & Mittal, N. (2022). All-in on AI: How smart companies win big with artificial intelligence. Harvard Business Review Press.
+[0426] (normal): Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340.
+[0427] (normal): Duhigg, C. (2012). The power of habit: Why we do what we do in life and business. Random House.
+[0428] (normal): Dwivedi, Y. K., Hughes, L., Ismagilova, E., Aarts, G., Coombs, C., Crick, T., Duan, Y., Dwivedi, R., Edwards, J., Eirug, A., Galanos, V., Ilavarasan, P. V., Janssen, M., Jones, P., Kar, A. K., Kizgin, H., Kronemann, B., Lal, B., Lucini, B., … Williams, M. D. (2021). Artificial intelligence (AI): Multidisciplinary perspectives on emerging challenges, opportunities, and agenda for research, practice and policy. International Journal of Information Management, 57, 101994. https://doi.org/10.1016/j.ijinfomgt.2019.08.002
+[0429] (normal): Financial Health Network. (2021). FinHealth Score® toolkit and methodology. finhealthnetwork.org
+[0430] (normal): Flores, C. A. R. (2025). Financial freedom of Filipinos in personal finance management. Pantao: The International Journal of the Humanities and Social Sciences, 4(1). https://pantaojournal.com/2025/01/27/v4-i1-7/
+[0431] (normal): Flutter 4 Fun. (2022). fl_chart: A highly customizable Flutter chart library. https://pub.dev/packages/fl_chart
+[0432] (normal): GCash / Mynt. (2026). GCash launches country's first AI financial coach.
+[0433] (normal): Google. (2024a). Firebase authentication documentation. https://firebase.google.com/docs/auth
+[0434] (normal): Google. (2024b). Firebase Crashlytics documentation. https://firebase.google.com/docs/crashlytics
+[0435] (normal): Google. (2024c). Firebase Firestore documentation. https://firebase.google.com/docs/firestore
+[0436] (normal): Google. (2024e). Google ML Kit documentation. https://developers.google.com/ml-kit
+[0437] (normal): Google. (2024f). Flutter documentation. https://flutter.dev/docs
+[0438] (normal): Groq. (2026). Groq API documentation and model deprecations.
+[0439] (normal): Hean, O., Saha, U., & Saha, B. (2025). Can AI help with your personal finances? Applied Economics. https://doi.org/10.1080/00036846.2025.2450384
+[0440] (normal): Inquiro. (2024). Financial literacy in the Philippines: Key statistics. Inquiro Analytics. https://inquiro.ph/financial-literacy-in-the-philippines-2024-key-statistics/
+[0441] (normal): Kahneman, D., & Tversky, A. (1979). Prospect theory: An analysis of decision under risk. Econometrica, 47(2), 263–292.
+[0442] (normal): Kibo. (2026). Kibo: AI expense tracker [Mobile application]. Google Play.
+[0443] (normal): Li, Z., et al. (2024). A survey of large language models for financial applications. arXiv:2406.11903.
+[0444] (normal): Lista. (2026). Lista: Personal & business finance tracker [Mobile application]. Google Play.
+[0445] (normal): National Privacy Commission. (2012). Republic Act No. 10173: Data Privacy Act of 2012. Republic of the Philippines. https://privacy.gov.ph/data-privacy-act/
+[0446] (normal): OpenAI. (2023). GPT-4 system card. https://openai.com/research/gpt-4-system-card
+[0447] (normal): Philippine Statistics Authority. (2021). Family Income and Expenditure Survey (FIES) 2021. PSA. https://www.psa.gov.ph
+[0448] (normal): PISO Budget Tracker. (2026). PISO Budget Tracker [Mobile application]. Google Play.
+[0449] (normal): Ramsey, D. (2003). Financial peace revisited. Viking.
+[0450] (normal): Roux, A. (2019). sqflite: SQLite plugin for Flutter. https://pub.dev/packages/sqflite
+[0451] (normal): Sloane, L. (2022). speech_to_text: A Flutter plugin for on-device speech recognition. https://pub.dev/packages/speech_to_text
+[0452] (normal): Statista. (2024). Number of mobile app downloads worldwide. https://www.statista.com/statistics/271644/worldwide-free-and-paid-mobile-app-store-downloads/
+[0453] (normal): Stefanov, T., Stefanova, M., & Varbanova, S. (2024). Personal finance management application. TEM Journal, 13(3), 2066–2075. https://doi.org/10.18421/TEM133-34
+[0454] (normal): Tarsi – Budget Tracker. (2026). Tarsi – Budget Tracker [Mobile application]. App Store. https://apps.apple.com/ph/app/tarsi-budget-tracker/
+[0455] (normal): Thaler, R. H., & Sunstein, C. R. (2008). Nudge: Improving decisions about health, wealth, and happiness. Yale University Press.
+[0456] (normal): The Flutter Authors. (2013). local_auth: Flutter plugin for biometric authentication. https://pub.dev/packages/local_auth
+[0457] (normal): UNSGSA. (2021). Measuring financial health: Concepts and considerations. https://www.unsgsa.org
+[0458] (normal): Warren, E., & Tyagi, A. W. (2005). All your worth: The ultimate lifetime money plan. Free Press.
+[0459] (normal): World Bank. (2022). Global Findex Database 2021. https://www.worldbank.org/en/publication/globalfindex
+[0460] (normal): Yomio. (2026). YNAB alternatives: Which budget app actually works in 2026? https://yomio.app/en/blog/ynab-alternatives
+[0461] (normal): ZXing Project. (2023). ZXing barcode scanning library. https://github.com/zxing/zxing
+[0462] (normal): 
+[0463] (normal): 
+[0464] (normal): 
+[0465] (normal): 
+[0466] (normal): 
+[0467] (normal): 
+[0468] (normal): 
+[0469] (normal): 
+[0470] (normal): 
+[0471] (normal): 
+[0472] (normal): Note: The 3 respondents who identified as both parent and young professional were classified by their primary financial role for SUS subgroup analysis, resulting in a final breakdown of 10 parents and 20 young professionals for statistical comparison (Table 8).
+[0473] (normal): Note: The 3 respondents who identified as both parent and young professional were classified by their primary financial role for SUS subgroup analysis, resulting in a final breakdown of 10 parents and 20 young professionals for statistical comparison (Table 8).
+[0474] (normal): † Note: The 3 respondents who identified as both parent and young professional were classified by their primary financial role for SUS subgroup analysis, resulting in a final breakdown of 10 parents and 20 young professionals for statistical comparison (Table 8).
+[0475] (normal): Bangor, A., Kortum, P. T., & Miller, J. T. (2008). An empirical evaluation of the System Usability Scale. International Journal of Human–Computer Interaction, 24(6), 574–594.
+[0476] (normal): Deci, E. L., & Ryan, R. M. (2000). The "what" and "why" of goal pursuits: Human needs and the self-determination of behavior. Psychological Inquiry, 11(4), 227–268.
+[0477] (normal): Sauro, J., & Lewis, J. R. (2016). Quantifying the user experience: Practical statistics for user research (2nd ed.). Morgan Kaufmann.
+[0478] (normal): † Respondents who identified as both a parent and a young professional.
+[0479] (normal): 
+[0480] (normal): 
+[0481] (normal): 
+[0482] (normal): 
+[0483] (normal): 
+[0484] (normal): 
+[0485] (normal): 
+[0486] (normal): APPENDICES
+[0487] (normal): APPENDIX A
+[0488] (normal): Survey Questionnaire
+SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Parents and Young Professionals in La Union
+[0489] (normal): Dear Respondent:
+ Good day! The researchers are conducting a study entitled “SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management.” This questionnaire aims to assess the existing financial management practices, common budgeting challenges, and expense-tracking behaviors of parents and young professionals.
+[0490] (normal): Your participation is voluntary. Please answer the questions honestly by selecting the option or options that best describe your experience. For questions marked “Select all that apply,” you may choose more than one answer. Your responses will be treated confidentially and used for academic purposes only.
+[0491] (normal): Eligibility: This needs-assessment questionnaire is intended for parents aged 35–55 who manage household finances and young professionals aged 21–35 who independently manage their income and expenses.
+[0492] (normal): 
+[0493] (Heading 3): Section A – Respondent Profile
+[0494] (normal): 1. What is your age?
+[0495] (normal): 
+[0496] (normal): 
+[0497] (normal): 
+[0498] (normal): 
+[0499] (normal): 
+[0500] (normal): 
+[0501] (normal): 
+[0502] (normal): 
+[0503] (normal): 2. Which category best describes you?
+[0504] (normal): 
+[0505] (normal): 
+[0506] (normal): 
+[0507] (normal): 
+[0508] (normal): 
+[0509] (normal): 3. What is your current employment status?
+[0510] (normal): 
+[0511] (normal): 
+[0512] (normal): 
+[0513] (normal): 
+[0514] (normal): 
+[0515] (normal): 
+[0516] (normal): 
+[0517] (normal): SECTION B. EXISTING FINANCIAL MANAGEMENT PRACTICES
+[0518] (normal): This section gathers information about how respondents currently plan and manage their personal or household finances.
+[0519] (normal): 4. Do you prepare a budget for your personal or household finances?
+[0520] (normal): 
+[0521] (normal): 
+[0522] (normal): 
+[0523] (normal): 
+[0524] (normal): 
+[0525] (normal): 5. Do you set aside money for savings before spending on other expenses?
+[0526] (normal): 
+[0527] (normal): 
+[0528] (normal): 
+[0529] (normal): 
+[0530] (normal): 
+[0531] (normal): SECTION C. COMMON BUDGETING CHALLENGES
+[0532] (normal): This section identifies the difficulties respondents experience when managing their finances.
+[0533] (normal): 6. What are the main challenges you experience when managing your finances? (Select all that apply.)
+[0534] (normal): 
+[0535] (normal): 
+[0536] (normal): 
+[0537] (normal): 
+[0538] (normal): 
+[0539] (normal): 
+[0540] (normal): 
+[0541] (normal): 
+[0542] (normal): 
+[0543] (normal): 
+[0544] (normal): 
+[0545] (normal): 
+[0546] (normal): 
+[0547] (normal): 
+[0548] (normal): 7. What do you usually do when you realize that you have exceeded your budget? (Select all that apply.)
+[0549] (normal): 
+[0550] (normal): 
+[0551] (normal): 
+[0552] (normal): 
+[0553] (normal): 
+[0554] (normal): 
+[0555] (normal): 
+[0556] (normal): 
+[0557] (normal): 8. What would help you manage your budget more effectively? (Select all that apply.)
+[0558] (normal): 
+[0559] (normal): 
+[0560] (normal): 
+[0561] (normal): 
+[0562] (normal): 
+[0563] (normal): 
+[0564] (normal): 
+[0565] (normal): 
+[0566] (normal): 
+[0567] (normal): 
+[0568] (normal): SECTION D. EXPENSE TRACKING BEHAVIORS
+[0569] (normal): This section asks how respondents record and monitor their expenses.
+[0570] (normal): 9. Do you currently record your personal or household expenses?
+[0571] (normal): 
+[0572] (normal): 
+[0573] (normal): 
+[0574] (normal): 
+[0575] (normal): 
+[0576] (normal): 10. How do you record your expenses? (Select all that apply.)
+[0577] (normal): 
+[0578] (normal): 
+[0579] (normal): 
+[0580] (normal): 
+[0581] (normal): 
+[0582] (normal): 
+[0583] (normal): 
+[0584] (normal): 
+[0585] (normal): 
+[0586] (normal): 11. Which expenses do you usually track? (Select all that apply.)
+[0587] (normal): 
+[0588] (normal): 
+[0589] (normal): 
+[0590] (normal): 
+[0591] (normal): 
+[0592] (normal): 
+[0593] (normal): 
+[0594] (normal): 
+[0595] (normal): 
+[0596] (normal): 
+[0597] (normal): 
+[0598] (normal): 
+[0599] (normal): 
+[0600] (normal): SECTION E. SUPPLEMENTARY PROFILE AND FEATURE NEEDS
+[0601] (normal): This section gathers information about respondents’ interest in an AI-powered financial assistant and the platforms they would like to track.
+[0602] (normal): 12. Would you use an AI-powered financial assistant application to help manage your finances?
+[0603] (normal): 
+[0604] (normal): 
+[0605] (normal): 
+[0606] (normal): 
+[0607] (normal): 
+[0608] (normal): 13. Which digital wallets or banking platforms do you currently use that you want the AI assistant to help you track? (Select all that apply.)
+[0609] (normal): 
+[0610] (normal): 
+[0611] (normal): 
+[0612] (normal): 
+[0613] (normal): 
+[0614] (normal): 
+[0615] (normal): Thank you for your time and participation.
+[0616] (normal): 
+[0617] (normal): 
+[0618] (normal): 
+[0619] (normal): 
+[0620] (normal): 
+[0621] (normal): 
+[0622] (normal): 
+[0623] (normal): 
+[0624] (normal): 
+[0625] (normal): 
+[0626] (normal): 
+[0627] (normal): 
+[0628] (normal): 
+[0629] (normal): 
+[0630] (normal): 
+[0631] (normal): 
+[0632] (normal): 
+[0633] (normal): 
+[0634] (normal): APPENDIX B
+[0635] (normal): INFORMED CONSENT FORM
+[0636] (normal): SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management
+[0637] (normal): Dear Participant:
+[0638] (normal): You are invited to participate in a research study conducted by Bachelor of Science in Information Technology students of Lorma Colleges. Before deciding whether to participate, please read the information below. You may ask the researchers to clarify anything you do not understand.
+[0639] (normal): Purpose of the Study
+[0640] (normal): The study aims to assess the financial management practices, budgeting challenges, and expense-tracking behaviors of parents and young professionals; design and develop the SmartSpend mobile application; and evaluate the application's usability using the System Usability Scale (SUS) and user feedback.
+[0641] (normal): Who May Participate
+[0642] (normal): The study focuses on parents aged 35–55 who serve as household financial managers and young professionals aged 21–35 who independently manage their income and expenses. Participation in the SUS evaluation is intended for eligible adult participants who have tried the SmartSpend application.
+[0643] (normal): Study Procedures
+[0644] (normal): Depending on the stage of the study, you may be invited to: (1) answer the financial-management survey; and/or (2) try the SmartSpend application through a demonstration or Demo Mode and complete the SUS questionnaire and optional feedback questions. The SUS questionnaire should be completed only after you have had an opportunity to use or explore the application.
+[0645] (normal): Voluntary Participation and Withdrawal
+[0646] (normal): Your participation is voluntary. You may decline to answer any question that you are not comfortable answering and may stop participating at any time without penalty or loss of any benefit to which you are otherwise entitled.
+[0647] (normal): Possible Risks and Benefits
+[0648] (normal): No significant risks are anticipated. Some questions concern personal or household financial practices, and you may skip a question if you do not wish to answer it. You may not receive a direct personal benefit; however, your responses may help the researchers improve the SmartSpend application and contribute to the study.
+[0649] (normal): Confidentiality and Data Handling
+[0650] (normal): The researchers will use the information collected for academic purposes. Survey and evaluation results will be summarized and reported in group form. Please do not include account numbers, passwords, bank credentials, or other sensitive financial identifiers in open-ended responses. Any signed consent form will be stored separately from questionnaire responses where practicable, and access to research records will be limited to the researchers and authorized academic evaluators.
+[0651] (normal): Questions
+[0652] (normal): If you have questions about the study or your participation, you may contact the researchers through the contact details provided by the research team.
+[0653] (normal): Consent Statement
+[0654] (normal): By signing below, I confirm that I have read and understood the information above, had the opportunity to ask questions, and voluntarily agree to participate in the research activities explained to me. I understand that I may withdraw at any time.
+[0655] (normal): Participant’s Name: ______________________________________________
+[0656] (normal): Participant’s Signature: ___________________________________________
+[0657] (normal): Date: __________________________
+[0658] (normal): Researcher / Person Obtaining Consent: ______________________________
+[0659] (normal): Signature: ______________________________    Date: __________________
+[0660] (normal): APPENDIX C
+[0661] (Heading 2): System Usability Scale (SUS) Questionnaire
+[0662] (normal): SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application
+[0663] (normal): Instructions
+[0664] (normal): Please try the SmartSpend application or use its Demo Mode for approximately 10 minutes before answering this questionnaire. After exploring the application, indicate how strongly you agree or disagree with each statement based on your experience. Answer all ten statements. Do not include the additional profile and comment questions when computing the SUS score.
+[0665] (normal): Response Scale
+[0666] (normal): 1 – Strongly Disagree
+[0667] (normal): 2 – Disagree
+[0668] (normal): 3 – Neutral
+[0669] (normal): 4 – Agree
+[0670] (normal): 5 – Strongly Agree
+[0671] (normal): 
+[0672] (normal): SUS Statements
+[0673] (normal): 
+[0674] (normal): 
+[0675] (normal): Additional Respondent Information (Not Part of the SUS Score)
+[0676] (normal): 
+[0677] (normal): City / Municipality (optional): _____________________________________
+[0678] (normal): 
+[0679] (normal): 
+[0680] (normal): Additional comments about the SmartSpend application (optional):
+[0681] (normal): _________________________________________________________________
+[0682] (normal): _________________________________________________________________
+[0683] (normal): SUS Scoring Procedure (For Researchers)
+[0684] (normal): The SUS consists of ten items. For odd-numbered items (1, 3, 5, 7, and 9), subtract 1 from the respondent’s selected response. For even-numbered items (2, 4, 6, 8, and 10), subtract the selected response from 5. Add the adjusted item scores and multiply the total by 2.5. The resulting SUS score ranges from 0 to 100.
+[0685] (normal): The study identifies a target SUS score of 80 or above as its acceptance threshold. Interpret the computed score using the interpretation approach described in Chapter II and the cited SUS literature. Do not calculate the SUS score using the additional profile or comment questions.
+[0686] (normal): Note: The ten SUS statements above preserve the standard item wording and order. The supplementary profile questions are reported separately and are not part of the standardized SUS instrument.
+[0687] (normal): 
+[0688] (normal): 
+[0689] (normal): 
+[0690] (normal): 
+[0691] (normal): 
+[0692] (normal): 
+[0693] (normal): 
+[0694] (normal): 
+[0695] (normal): 
+[0696] (normal): 
+[0697] (normal): 
+[0698] (normal): 
+[0699] (normal): 
+[0700] (normal): 
+[0701] (normal): 
+[0702] (normal): APPENDIX D
+[0703] (normal): Content Validation Certificate (Survey Questionnaire)
+[0704] (normal) [IMG]: 
+[0705] (normal): APPENDIX E
+[0706] (normal): Content Validation Certificate (FHS Formula and Literature)
+[0707] (normal) [IMG]: 
+[0708] (normal): 
+[0709] (normal): PHOTO DOCUMENTATION
+[0710] (normal): 
+[0711] (normal): 
+[0712] (normal): 
+[0713] (normal): 
+[0714] (normal): 
+[0715] (normal): CURRICULUM VITAE
+[0716] (normal) [IMG]: 
+[0717] (normal): BRIX A. DIRECTO
+[0718] (normal): I. PERSONAL INFORMATION
+[0719] (normal): Address : Bagbag, Quirino, Bacnotan, La Union Date of Birth : September 4, 1999 Email Address : brix.arquisal@lorma.edu
+[0720] (normal): II. EDUCATIONAL BACKGROUND
+[0721] (normal): Tertiary (2018–2020, 2023–Present) Lorma Colleges Bachelor of Science in Information Technology (Undergraduate)
+[0722] (normal): Secondary (2012–2018) Stella Maris Academy General Academic Strand (GAS)
+[0723] (normal): Primary (2006–2012) Quirino Elementary School / Bitalag Integrated School
+[0724] (normal): III. AWARDS/CITATIONS/RECOGNITIONS RECEIVED N/A
+[0725] (normal): IV. WORK EXPERIENCE
+[0726] (normal): Statistics Researcher | Philippine Statistics Authority (PSA) – ULAFO 2025
+[0727] (normal): Freelance IT Technician / Programmer | Self-Employed 2019 – Present
+[0728] (normal): Remote BPO Agent 2020 – 2022
+[0729] (normal): Office Assistant | Bureau of Fire Protection (Work Immersion) 2018
+[0730] (normal): V. ELIGIBILITY N/A
+[0731] (normal): VI. SEMINARS/TRAININGS ATTENDED
+[0732] (normal): National Conference on Computing, Engineering, and Business | 2019 Basic Japanese Language Training | 2021–2022 Work Immersion Program – Bureau of Fire Protection | 2018 Various Online Web Development Trainings
+[0733] (normal): VII. INVOLVEMENT IN RESEARCH/RESEARCHES CONDUCTED
+[0734] (normal): Capstone 1: SmartSpend: AI-Assisted Financial Tracker (Capstone Project)
+[0735] (normal): 
+[0736] (normal): 
+[0737] (normal): 
+[0738] (normal): 
+[0739] (normal): 
+[0740] (normal) [IMG]: 
+[0741] (normal): CYRILLE JOHN M. RUBIS
+[0742] (normal): I. PERSONAL INFORMATION
+[0743] (normal): Address : Cantingan Street, Brgy. Quinavite, Bauang, La Union, Philippines 2501 Contact Number : 09761285890 Email Address : cyrillejohn.rubis@lorma.edu Date of Birth : August 26, 2005 Place of Birth : City of San Fernando, La Union
+[0744] (normal): II. EDUCATIONAL BACKGROUND
+[0745] (normal): Tertiary (2023–Present) Lorma Colleges Bachelor of Science in Information Technology (Undergraduate)
+[0746] (normal): Secondary — Senior High (2021–2023) Sacred Heart School – Senior High School
+[0747] (normal): Secondary — Junior High (2017–2021) Sacred Heart School
+[0748] (normal): Elementary (2011–2017) Saints Peter and Paul Learning Center
+[0749] (normal): Kindergarten (2010) Saints Peter and Paul Learning Center
+[0750] (normal): III. AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[0751] (normal): College Level: N/A
+[0752] (normal): Senior High School: Conduct Awardee With Honors Best in Science Beacon Photo Journalist
+[0753] (normal): Elementary: Best in Filipino Best in Science Conduct Award Makatao Award Makakalikasan Award Sportsmanship Award Inter-School Athlete (Basketball)
+[0754] (normal): IV. WORK EXPERIENCE
+[0755] (normal): Service Crew | McDonald's 2025
+[0756] (normal): Photographer | Studio at 301 2022–2023
+[0757] (normal): Freelance Photographer/Videographer | Self-Employed 2021–2023
+[0758] (normal): V. ELIGIBILITY N/A
+[0759] (normal): VI. SEMINARS/TRAININGS ATTENDED
+[0760] (normal): Food Safety Seminar | 2025 Global Conference on Robotics and Artificial Intelligence Technologies (GCRAIT) | 2023 CCSE Startup Seminar | 2023 Beacon Officers Seminar | 2022
+[0761] (normal): 
+[0762] (normal): 
+[0763] (normal): VII. INVOLVEMENT IN RESEARCH/RESEARCHES CONDUCTED
+[0764] (normal): Organic Lip Balm and Its Benefits and Effectiveness (2021–2022)              Effects of Mobile Devices on Grade 10 Students During the Pandemic Crisis (2022–2023)                                                                                     Capstone 1: SmartSpend: AI-Assisted Financial Tracker (Capstone Project)
+[0765] (normal): 
+[0766] (normal): 
+[0767] (normal): 
+[0768] (normal): 
+[0769] (normal): 
+[0770] (normal): 
+[0771] (normal): 
+[0772] (normal): 
+[0773] (normal): 
+[0774] (normal): 
+[0775] (normal) [IMG]: 
+[0776] (normal): DJAUNATHAN ALBERT S. MADAYAG
+[0777] (normal): I. PERSONAL INFORMATION
+[0778] (normal): Address : Raois, Bacnotan, La Union Contact Number : 09456219766 Email Address : djaunathan.madayag@lorma.edu Date of Birth : March 8, 2005 Nationality : Filipino
+[0779] (normal): II. EDUCATIONAL BACKGROUND
+[0780] (normal): Tertiary (2023–Present) Lorma Colleges Bachelor of Science in Information Technology (Undergraduate)
+[0781] (normal): Secondary — Senior High (2021–2023) Lord of Zion Divine School Accountancy, Business and Management (ABM) Strand
+[0782] (normal): Secondary — Junior High (2017–2021) Lord of Zion Divine School
+[0783] (normal): Primary (2010–2016) Bacnotan Central School, La Union
+[0784] (normal): 
+[0785] (normal): III. AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[0786] (normal): College Level: Dean's Lister | 2023–2025 (Lorma Colleges)
+[0787] (normal): Senior High School: With Honors | 2021–2023 (Lord of Zion Divine School)
+[0788] (normal): Junior High School: With Honors and With High Honors | 2020–2021 (Lord of Zion Divine School)
+[0789] (normal): IV. WORK EXPERIENCE
+[0790] (normal): Office Assistant | Municipal Office – Accountancy Department, Bacnotan, La Union (Work Immersion)
+[0791] (normal): V. ELIGIBILITY N/A
+[0792] (normal): VI. SEMINARS/TRAININGS ATTENDED
+[0793] (normal): StartUp Seminar | 2023 Introduction to Computing | 2024
+[0794] (normal): VII. INVOLVEMENT IN RESEARCH/RESEARCHES CONDUCTED
+[0795] (normal): Return on Investment (ROI) Analysis of Business Operations (2021–2022) Financial Management and Salary Allocation in Business Operations (2022–2023) Cost Analysis and Profitability of a Business Enterprise (2022–2023)       Capstone 1: SmartSpend: AI-Assisted Financial Tracker (Capstone Project)
+
+### TABLES ###
+--- Table idx 0 (rows=4, cols=3) ---
+  R0: Gap Level || Existing Problem || SmartSpend Solution
+  R1: International || Manual entry dominated; AI categorization degraded for non-English transactions (Stefanov et al., 2024) || LLM-based parsing for Filipino-English natural language input
+  R2: National (PH) || Local apps lacked LLM chat, spending behavior analysis, and health scoring (Bangko Sentral ng Pilipinas, 2021; Stefanov et al., 2024) || Conversational AI + Financial Health Score + multi-period summaries
+  R3: Demographic || Parents abandoned apps due to manual effort; warnings were ignored without consequences (BSP, 2021) || Automated input + score decay consequence system
+--- Table idx 1 (rows=17, cols=8) ---
+  R0: Feature || Tarsi || YNAB || Monarch || Copilot || BudgetPH || Alkansya AI || SmartSpend
+  R1: Offline mode || Yes || No || No || No || Yes || No || Yes
+  R2: LLM chat assistant || No || No || No || No || No (insights only) || Yes (basic) || Yes
+  R3: Financial Health Score || No || No || No || No || Yes (simpler) || No || Yes (0–100)
+  R4: OCR receipt scanning || Yes || No || No || No || No || No || Yes
+  R5: Voice input (en-PH) || No || No || No || No || No || No || Yes
+  R6: Spending behavior analysis || No || No || No || No || No || No || Yes
+  R7: Bank synchronization || No || Yes || Yes || Yes || CSV import || No || No
+  R8: Free tier (Android) || Yes || No || No || No || Yes (PWA) || Limited || Yes
+  R9: General financial Q&A || No || No || No || No || No || Yes || Yes
+  R10: Market price estimates || No || No || No || No || No || No || Yes
+  R11: Financial product guidance || No || No || No || No || No || No || Yes
+  R12: Batch screenshot import (40+ platforms) || No || No || No || No || No || No || Yes
+  R13: Multi-period spending limits || No || No || No || No || Yes || No || Yes
+  R14: Filipino-English AI (Taglish) || No || No || No || No || No || Yes || Yes
+  R15: Paluwagan tracker || No || No || No || No || Yes || No || Yes
+  R16: 15th & 30th payday cycle || No || No || No || No || Yes || No || No
+--- Table idx 2 (rows=7, cols=2) ---
+  R0: Category: || Number of Respondents:
+  R1: Parents (Ages 35–55) || 16
+  R2: Young Professionals (Ages 21–35) || 14
+  R3: Content Validator (Survey) || 1
+  R4: Parents (35-55) || 10
+  R5: Young Professionals (21-35) || 20
+  R6: Total || 30
+--- Table idx 3 (rows=8, cols=3) ---
+  R0: Phase || Key Tasks || Deliverable
+  R1: Backlog || Define features; needs survey; literature review on PH financial gaps || Prioritized feature list; literature review
+  R2: Requirements || Translate findings into specs; validate questionnaire; LLM API benchmarking || Validated questionnaire; LLM benchmarking matrix (Table 3.2)
+  R3: Design || SQLite schema (26 tables); FHS formula; UI wireframes; data flow diagrams || System architecture; FHS documentation
+  R4: Development || Build expense tracking; integrate Gemini 3.5 Flash-Lite; add OCR/voice/batch screenshots; FHS engine; Firebase sync; gamification || Functional app; all 34 agentic actions operational
+  R5: Testing || LLM parsing accuracy; SUS with 30 respondents; survey feedback; bug log || SUS scores; parsing observations; bug documentation
+  R6: Deployment || Build release APKs; prepare Demo Mode; publish GitHub Releases || Release APKs v3.1.0; project documentation
+  R7: Done/Review || Analyze SUS scores; review feedback; document recommendations || Final evaluation report; post-capstone roadmap
+--- Table idx 4 (rows=17, cols=5) ---
+  R0: Item || Parents (n = 13) || Young Professionals (n = 14) || Both (n = 3)† || Total (N = 30)†
+  R1: A. Demographic profile, f (%) || A. Demographic profile, f (%) || A. Demographic profile, f (%) || A. Demographic profile, f (%) || A. Demographic profile, f (%)
+  R2: Parents aged 35–55 || 13 (43.3%) || 13 (43.3%) || 13 (43.3%) || 13 (43.3%)
+  R3: Young professionals aged 21–35 || 14 (46.7%) || 14 (46.7%) || 14 (46.7%) || 14 (46.7%)
+  R4: Both groups || 3 (10.0%) || 3 (10.0%) || 3 (10.0%) || 3 (10.0%)
+  R5: Employed full-time || 10 (33.3%) || 10 (33.3%) || 10 (33.3%) || 10 (33.3%)
+  R6: Freelance or contractual || 9 (30.0%) || 9 (30.0%) || 9 (30.0%) || 9 (30.0%)
+  R7: Self-employed || 8 (26.7%) || 8 (26.7%) || 8 (26.7%) || 8 (26.7%)
+  R8: Unemployed or part-time || 3 (10.0%) || 3 (10.0%) || 3 (10.0%) || 3 (10.0%)
+  R9: GCash users || 28 (93.3%) || 28 (93.3%) || 28 (93.3%) || 28 (93.3%)
+  R10: B. Expense tracking methods used, f (%) || B. Expense tracking methods used, f (%) || B. Expense tracking methods used, f (%) || B. Expense tracking methods used, f (%) || B. Expense tracking methods used, f (%)
+  R11: Receipts || 11 (84.6%) || 13 (92.9%) || 3 (100.0%) || 27 (90.0%)
+  R12: Mental estimates || 8 (61.5%) || 7 (50.0%) || 1 (33.3%) || 16 (53.3%)
+  R13: E-wallet transaction history || 6 (46.2%) || 6 (42.9%) || 1 (33.3%) || 13 (43.3%)
+  R14: Notes app || 4 (30.8%) || 5 (35.7%) || 0 (0.0%) || 9 (30.0%)
+  R15: Notebook || 3 (23.1%) || 3 (21.4%) || 1 (33.3%) || 7 (23.3%)
+  R16: Mobile app || 1 (7.7%) || 2 (14.3%) || 0 (0.0%) || 3 (10.0%)
+--- Table idx 5 (rows=21, cols=8) ---
+  R0: Model || Provider || Context || Speed (t/s) || Filipino || Tool Use || Free Tier || Status
+  R1: Gemini 3.5 Flash-Lite || Google || 1,048,576 || ~400–600 || 5/5 || 5/5 || ~500/day || Primary
+  R2: Gemini 3.5 Flash || Google || 1,048,576 || ~200–400 || 5/5 || 5/5 || ~20/day || Fallback 1
+  R3: LLaMA 4 Scout || Groq LPU || 10M || ~460 || 5/5 || 5/5 || 1,000/day, 30K TPM || Not used: retired (Groq, 2026)
+  R4: LLaMA 3.3 70B || Groq LPU || 128,000 || ~315 || 4/5 || 5/5 || ~1,000/day || Not used: retired (Groq, 2026)
+  R5: LLaMA 3.1 8B || Groq LPU || 8,192 || ~800 || 4/5 || 4/5 || 14,400/day || Not used: retired (Groq, 2026)
+  R6: GPT-OSS 120B || Groq LPU || 131,072 || ~500 || Not measured || 5/5 || ~1,000/day || Fallback 2
+  R7: Qwen 3.6 27B || Groq LPU || 131,072 || Not measured || Not measured || 5/5 || 1,000/day || Fallback 3
+  R8: Qwen 3.8 27B || Groq LPU || 131,072 || Not measured || Not measured || 5/5 || 1,000/day || Fallback 4
+  R9: GPT-OSS 20B || Groq LPU || 131,072 || Not measured || Not measured || 5/5 || 1,000/day, 30K TPM || Fallback 5
+  R10: Groq Compound Mini || Groq LPU || 131,072 || Not measured || Not measured || 5/5 (web+code) || 1,000/day || Fallback 6
+  R11: GPT-OSS 120B || Cerebras WSE || 131,072 || ~3,000 || Not measured || 5/5 || 1M tokens/day || Fallback 7
+  R12: GPT-4o Mini || OpenAI || 128,000 || ~120 || 4/5 || 5/5 || No free tier || Not used: Cost
+  R13: claude-3-5-haiku || Anthropic || 200,000 || ~80 || 5/5 || 5/5 || Paid only || Not used: Cost
+  R14: Gemini 3.7 Flash || Not used: same ~20/day quota as 3.5 Flash with no added benefit in trials || 1,048,576 || ~300–500 || 5/5 || 5/5 || ~20/day free; paid beyond || Not used: Free quota too small
+  R15: Grok 3 Mini || xAI || 131,072 || ~100–200 || 4/5 || 5/5 || Paid || Not used: Cost
+  R16: DeepSeek V3 || DeepSeek || 64,000 || ~200 || 3/5 || 3/5 || $0.14/1M || Not used: Weak Fil.
+  R17: Qwen 3 32B || Alibaba || 128,000 || ~150–300 || 4/5 || 5/5 || Free preview || Not used: Less tested
+  R18: Fin-R1 (7B) || Self-hosted || 128,000 || Varies || 3/5 || 2/5 || Self-host || Not used: No API
+  R19: Mistral 7B || Mistral || 32,000 || ~600 || 3/5 || 3/5 || Self-host || Not used: Poor Fil.
+  R20: Gemma 2 9B || Google || 8,192 || ~500 || 3/5 || 3/5 || Local only || Not used: No API
+--- Table idx 6 (rows=2, cols=4) ---
+  R0: Overall SUS Score || Grade || Adjective || Acceptable
+  R1: 61.83 || D || OK || No (below the 68 benchmark and the 80 target)
+--- Table idx 7 (rows=4, cols=6) ---
+  R0: Respondent Group || N || Mean SUS Score || SD || Range || Adjective Rating
+  R1: Parents (35–55) || 10 || 58.25 || 19.72 || 35.0–90.0 || OK
+  R2: Young Professionals (21–35) || 20 || 63.62 || 16.65 || 42.5–92.5 || OK
+  R3: Combined || 30 || 61.83 || 17.58 || 35.0–92.5 || OK
+--- Table idx 8 (rows=6, cols=7) ---
+  R0: Import Modality || N || Date (P/R) || Merchant (P/R) || Amount (P/R) || Category || End-to-End
+  R1: GCash Screenshots || — || Not measured || Not measured || Not measured || Not measured || Not measured
+  R2: Maya Receipts || — || Not measured || Not measured || Not measured || Not measured || Not measured
+  R3: Shopee/Lazada Invoices || — || Not measured || Not measured || Not measured || Not measured || Not measured
+  R4: Thermal Receipts (ML Kit) || — || Not measured || Not measured || Not measured || Not measured || Not measured
+  R5: Overall || 91.2% precision, 88.5% recall (preliminary developer testing) || 91.2% precision, 88.5% recall (preliminary developer testing) || 91.2% precision, 88.5% recall (preliminary developer testing) || 91.2% precision, 88.5% recall (preliminary developer testing) || 91.2% precision, 88.5% recall (preliminary developer testing) || 91.2% precision, 88.5% recall (preliminary developer testing)

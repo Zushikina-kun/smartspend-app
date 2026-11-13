@@ -1,0 +1,1480 @@
+[0000] [Heading 2]  LigTask: A 2D Game-Based Learning Platform for Enhancing Disaster Awareness and Preparedness
+[0001] [normal]  
+[0002] [normal]  
+[0003] [normal]  
+[0004] [normal]  A Capstone Project Presented to the Faculty of the
+[0005] [normal]  College of Computer Studies and Engineering Lorma Colleges
+[0006] [normal]  
+[0007] [normal]  
+[0008] [normal]  
+[0009] [normal]  
+[0010] [normal]  
+[0011] [normal]  
+[0012] [normal]  In Partial Fulfillment
+[0013] [normal]  of the requirements for the Degree
+[0014] [normal]  of Bachelor of Science in Information Technology
+[0015] [normal]  
+[0016] [normal]  
+[0017] [normal]  
+[0018] [normal]  
+[0019] [normal]  
+[0020] [normal]  
+[0021] [normal]  By:
+[0022] [normal]  Mary Anne C. Abenoja Aimee Rachelle J. Arellano Janine Marielle G. Reyes Ellen F. Mangaoang, MIT
+[0023] [normal]  
+[0024] [normal]  
+[0025] [normal]  
+[0026] [normal]  
+[0027] [normal]  
+[0028] [normal]  
+[0029] [normal]  
+[0030] [normal]  
+[0031] [normal]  
+[0032] [normal]  December 2025
+[0033] [normal] [IMG] College of Computer Studies and Engineering LORMA COLLEGES
+[0034] [normal]  City of San Fernando, La Union
+[0035] [normal]  Tel. No. (072) 888-2616 loc. 325 and Fax No. (072) 242-3628
+[0036] [normal]  Center of Development for Excellence in I.T Education in Region I
+[0037] [normal]  
+[0038] [Heading 1]  APPROVAL SHEET
+[0039] [normal]  
+[0040] [normal]  This is to certify that we have supervised the preparation of the Capstone Project and read the manuscript prepared by Mary Anne C. Abenoja, Aimee Rachelle J. Arellano, and Janine Marielle G. Reyes en
+[0041] [normal]  
+[0042] [normal]  
+[0043] [normal] [IMG] 
+[0044] [Heading 2]  Ellen F. Mangaoang, MIT
+[0045] [normal]  Capstone Project Adviser
+[0046] [Heading 2]  Janelli M. Mendez, DIT
+[0047] [normal]  Capstone Teacher-in-Charge
+[0048] [normal]  
+[0049] [normal]  As members of the Oral Examination Committee, we certify that we have examined the capstone project and manuscript, presented before the committee on November 20, 2025 and hereby recommended that it b
+[0050] [normal]  
+[0051] [normal]  
+[0052] [normal] [IMG] 
+[0053] [Heading 2]  Jeoffrey B. Layco, MIS
+[0054] [normal]  Chairperson
+[0055] [normal]  
+[0056] [normal]  
+[0057] [normal]  
+[0058] [normal] [IMG] 
+[0059] [Heading 2]  Fe Marie Binas-o, MIS, LPT
+[0060] [normal]  Member
+[0061] [Heading 2]  Johnny F. Verzola, MTS
+[0062] [normal]  Member
+[0063] [normal]  This capstone project is hereby approved and accepted by the College of Computer Studies and Engineering in partial fulfillment of the requirements for the degree in Bachelor of Science in Information
+[0064] [normal]  
+[0065] [normal]  
+[0066] [normal] [IMG] 
+[0067] [Heading 2]  Jeoffrey B. Layco, MIS
+[0068] [normal]  Dean, CCSE
+[0069] [Heading 1]  ABSTRACT
+[0070] [normal]  
+[0071] [normal]  Disasters are constant threats to people, particularly in highly vulnerable nations such as the Philippines, where natural hazards often interrupt lives, livelihoods, and education. This study aimed a
+[0072] [normal]  The teachers had a higher level of disaster awareness and preparedness as compared to the students, as evidenced with the mean ratings of 3.86 to 4.86 respectively. The game was developed using Unity 
+[0073] [normal]  LigTask shows how a 2D gamified approach can effectively increase disaster awareness and preparedness by making learning engaging and dynamic. By
+[0074] [normal]  educating players how to react responsibly in emergency circumstances, the game supports DRRM operations in schools and communities. With LigTask, students and teachers have a better understanding of 
+[0075] [Title]  Keywords: Disaster Preparedness, Disaster awareness, 2D Educational Game, Mini-games, MEEGA+, Usability, Game Development Life Cycle (GDLC) , Disaster
+[0076] [Heading 1]  ACKNOWLEDGEMENT
+[0077] [normal]  The researchers would like to express their sincere and deepest gratitude and appreciation to those who have contributed to the progress of this study.
+[0078] [normal]  First and foremost, they thank their beloved Almighty God for His abundant blessings, for always guiding them, and for giving them faith, courage, wisdom, and the willingness to continue this study.
+[0079] [normal]  To the Dean of the College of Computer Studies and Engineering and chairperson, Mr. Jeoffrey B. Layco, for his insightful contributions, exceptional leadership, and patience.
+[0080] [normal]  To their capstone adviser, Ellen F. Mangaoang, for sharing her knowledge with them and providing her full support, as well as for believing in their abilities to move forward with this study.
+[0081] [normal]  To their teacher in charge, Dr. Janelli M. Mendez, who offered clear direction throughout the requirement process and consistently guided them in aligning their work with academic standards.
+[0082] [normal]  To their panelists, Ms. Fe Marie Binas-O and Mr. Johnny F. Verzola, for their generous time and commitment in evaluating the LigTask project. Their insightful feedback, constructive critiques, and pro
+[0083] [normal]  guidance played a vital role in strengthening the overall quality, relevance, and effectiveness of the project.
+[0084] [normal]  To the College of Computer Studies and Engineering Department, the department’s dedication to academic advancement has equipped the researchers with the necessary tools and expertise for their future 
+[0085] [normal]  Finally, the researchers humbly thank their family and friends for their unwavering support and encouragement throughout this study. Their understanding and motivation played a vital role in helping t
+[0086] [normal]  The Researchers
+[0087] [Heading 1]  DEDICATION
+[0088] [normal]  
+[0089] [normal]  We dedicate this study to the individuals whose ongoing support and encouragement have played a crucial role in the progress we have made so far. First and foremost, we express our deepest gratitude t
+[0090] [normal]  We also acknowledge the invaluable contributions of our friends, whose support, shared knowledge, and companionship have been crucial in the development of this work. Their encouragement and insights 
+[0091] [normal]  Lastly, we extend our thanks to our mentors, and the disaster management professionals, whose support, shared knowledge, and guidance have been crucial as we continue to explore and refine the foundat
+[0092] [normal]  MACA ARJA JMGR
+[0093] [normal]  
+[0094] [normal]  CHAPTERS
+[0095] [normal]  
+[0096] [normal]  INTRODUCTION
+[0097] [normal]  Project Context	1
+[0098] [normal]  Statement of Objectives	8
+[0099] [normal]  Scope and Limitation	9
+[0100] [normal]  Purpose and Description	10
+[0101] [normal]  Technical Background	11
+[0102] [normal]  DESIGN AND METHODOLOGY
+[0103] [normal]  Research Design	13
+[0104] [normal]  Population and Locale	14
+[0105] [normal]  Ethical Considerations	17
+[0106] [normal]  Data Gathering Tools and Procedures	17
+[0107] [normal]  Software Methodology	19
+[0108] [normal]  RESULTS AND DISCUSSION
+[0109] [normal]  Assessment on the Level of Disaster Awareness and	29
+[0110] [normal]  
+[0111] [normal]  
+[0112] [normal]  PHOTO DOCUMENTATION	80
+[0113] [normal]  CURRICULUM VITAE	88
+[0114] [normal]  LIST OF FIGURES
+[0115] [normal]  
+[0116] [normal]  
+[0117] [normal]  LIST OF TABLES
+[0118] [normal]  
+[0119] [normal]  
+[0120] [normal]  
+[0121] [normal] [IMG] 
+[0122] [Heading 1]  CHAPTER I
+[0123] [normal]  
+[0124] [normal]  INTRODUCTION
+[0125] [normal]  
+[0126] [normal]  This chapter contained the background of this study, the project context, the conceptual framework, and the statement of objectives. This chapter also discussed the scope and limitations, and the tech
+[0127] [Heading 2]  Project Context
+[0128] [normal]  
+[0129] [normal]  A disaster, according to the International Federation of Red Cross and Red Crescent Societies, emerged from natural alongside man-made and technological hazards which surpassed a community's ability t
+[0130] [normal]  Some catastrophic events have occurred in recent years. Hurricane Laura struck the southern part of the United States in 2020, destroying nearly 10,000 homes, causing chemical plant fires, and leaving
+[0131] [normal]  In the same year, an earthquake with a magnitude ranging from 6.6 to 7.0
+[0132] [normal]  struck in the Aegean Sea Earthquake struck near the Greek island of Samos, affecting both the countries Greece and Turkey. There were 117 deaths in Turkey, and two (2) in Greece, with over 1,600 other
+[0133] [normal]  Due to its geographic location, the Philippines is a country prone to hazards. The Pacific Ring of Fire, together with its Pacific Typhoon Belt position, exposed the country to constant threats of vol
+[0134] [normal]  The 2021 Philippine Disaster Report showed the Philippines suffered 80 natural disasters that led to property damage as well as human casualties, including fatalities. A notable example was Typhoon Od
+[0135] [normal]  Aside from typhoons, the Philippines is also highly vulnerable to other natural disasters such as earthquakes, as evidenced by the 2013 Bohol earthquake and subsequent seismic events in Cebu and nearb
+[0136] [normal]  A strong magnitude 6.9 earthquake occurred on 30 September 2025 of the coast of northern Cebu, Philippines, and is considered to be one of the strongest quakes in the area, leading to massive destruct
+[0137] [normal]  Tropical cyclone Kalmaegi (locally known as Tino) struck the Philippines in early November 2025, causing catastrophic rainfall and terrible flash flooding in the central provinces, especially in Cebu 
+[0138] [normal]  Jr. to hasten the provision of relief and mobilization funds. The powerful rains of the storm hit the communities, which were still recovering from other disasters, and the imperfection of flood contr
+[0139] [normal]  Reports in the local government after the occurrence of Typhoon Tino said that it was the most severe flash flood in the history of Cebu because the heavy rains fell on river systems and low-lying pla
+[0140] [normal]  These events demonstrated the destructive nature of how hazards can be when they escalate into disasters, emphasizing the importance of disaster preparedness in preventing such casualties.
+[0141] [normal]  Disaster preparedness is the proactive measures that people, communities, and organizations undertake along with governments to optimize responses to disaster scenarios, aiming to reduce casualty numb
+[0142] [normal]  ensure a faster recovery to communities.
+[0143] [normal]  
+[0144] [normal]  Being one of the critical issues due to the significant vulnerability of the country such as the Philippines, it was necessary to determine novel and interesting methods of teaching people about this 
+[0145] [normal]  Educational video games provide dynamic, user-centered learning environments that allow users to experiment with problems, get quick feedback, and reflect on their choices. According to Utoyo (2021), 
+[0146] [normal]  Martinez et al. (2022) demonstrated that entertainment video games linked to supplementary activities lead to enhanced engagement levels as well as learning results, engagement, and motivations to sub
+[0147] [normal]  LigTask: A 2D Game-Based Learning Platform to Enhance Disaster Awareness and Preparedness, aimed at designing and developing a series of entertaining and educational mini-games that would raise the di
+[0148] [normal]  LigTask is aligned with four (4) essential Sustainable Development Goals: SDG 4 for Quality Education, SDG 11 about Sustainable Cities and Communities, SDG 13 on Climate Action, and SDG 17 concerning 
+[0149] [normal]  The developed game comprised short mini-games that put a fun and playful spin on real disaster situations. These games test how well players can make the right decisions in different disaster situatio
+[0150] [normal]  Moreover, the game is consistent with the efforts to mitigate the effects of climate change as it helps to increase awareness about disasters and encourage people to prepare in advance. It equipped us
+[0151] [normal]  collaboration with the disaster risk management agencies to ensure that the game is technically correct, relevant, and accurate. Cooperation with the responders and organizations contributed to maximi
+[0152] [normal]  The conceptual framework of LigTask as seen in figure 1 shows how different parts of the game work together to promote disaster preparedness. It starts with user interactions and decisions, which lead
+[0153] [normal] [IMG] 
+[0154] [normal]  
+[0155] [normal]  Figure 1. Conceptual Framework of LigTask
+[0156] [normal]  These mini-games are designed to test the player's reflexes and decision-making under pressure, especially as the timer speeds up each round. Informational facts and tips are integrated into the gamep
+[0157] [normal]  The mini-games are categorized per disaster type and further divided into Before, During, and After stages, ensuring players gain knowledge across different phases of disaster management. Each mini-ga
+[0158] [Heading 2]  Statement of Objectives
+[0159] [normal]  This study achieved to design and develop a disaster-readiness game that is both entertaining and educational to promote correct actions before, during, and after natural disasters. The game offers fu
+[0160] [normal]  Specifically, the study achieved the following objectives:
+[0161] [normal]  Assessed the level of disaster awareness and preparedness of students and teachers in the La Union;
+[0162] [normal]  Designed and developed an interactive 2D educational game that enhances preparedness for the most common disasters in the Philippines; and
+[0163] [normal]  Determined the usability of the developed game using MEEGA+.
+[0164] [normal]  
+[0165] [Heading 2]  Scope and Limitation
+[0166] [normal]  The objective of this study was to develop LigTask, a 2D mobile game that utilized simple and interactive mini-games to enhance disaster preparedness. To make learning enjoyable and convenient, the ga
+[0167] [normal]  Players participated in mini-games that required them to make decisions such as identifying an emergency go bag, duck, cover, and hold drills, and turning off electrical switches during storms. The mi
+[0168] [normal]  The game was designed and developed for Android devices only, using simple graphics and a user-friendly interface. Instead of aiming for high-end
+[0169] [normal]  graphics or lifelike simulations, it primarily focused on being educative and engaging. Individual-level preparedness is the primary focus because such advanced topics as professional rescue activitie
+[0170] [Heading 2]  Purpose and Description
+[0171] [normal]  
+[0172] [normal]  LigTask was designed to educate users about disaster preparedness through an engaging and scenario-based mini-game. LigTask served not only as a game but also as an educational tool to improve awarene
+[0173] [normal]  Students. LigTask helped students learn disaster preparedness in a fun and engaging way. Through mini-games and short quizzes, students can better understand the important steps they should take befor
+[0174] [normal]  Teachers. LigTask was utilized as a supplementary teaching tool to introduce disaster preparedness more effectively by encouraging student participation and assessing understanding through interactive
+[0175] [normal]  Disaster Awareness Advocates and Educators. Disaster response organizations and educators applied the game with the purpose of supporting the awareness campaign, particularly in the case of addressing
+[0176] [normal]  The Researchers. This study allowed the researchers to apply their skills in game development and ideas on the possible application of games as a learning tool. It is also an experience that they coul
+[0177] [normal]  Future Researchers. The project served as a reference or foundation for future studies related to educational games, disaster preparedness tools, or mobile learning applications. It inspires further i
+[0178] [Heading 2]  Technical Background
+[0179] [normal]  
+[0180] [normal]  The tools utilized in the design and development of the disaster awareness and preparedness game LigTask are discussed in this section. All the tools are important in developing the features, graphics
+[0181] [normal]  Unity. Unity is the primary platform for LigTask development. Unity's built-in tools and features were used to create game scenes, control gameplay mechanics, and handle animations. Scripts were writt
+[0182] [normal]  Figma. Figma was used for designing the user interface (UI), and a plan for the layout of various screens in the game was made. It assisted in developing wireframes and prototyping to structure the fl
+[0183] [normal]  IbisPaint X. IbisPaint X was used to paint in order to draw and design the graphic aspects of the game. It consists of characters, backgrounds, and icons, among others. A wide range of brushes and too
+[0184] [normal]  SQLite. SQLite was used as the local database system of the game. Since SQLite is lightweight and runs directly on the device, it is a practical choice for storing important data such as the total sco
+[0185] [normal] [IMG] 
+[0186] [Heading 1]  CHAPTER II
+[0187] [normal]  
+[0188] [normal]  DESIGN AND METHODOLOGY
+[0189] [normal]  This chapter presented the discussion on the procedures that were conducted in this study in terms of research design, population and locale, sampling method, data gathering tools and procedures, ethi
+[0190] [Heading 2]  Research Design
+[0191] [normal]  
+[0192] [normal]  The researchers employed a mixed-method research design for the development of the study. Mixed-methods research design was an approach that integrates both qualitative and quantitative data collectio
+[0193] [normal]  For the qualitative methodology, interviews with disaster responders on disaster preparedness were conducted to gather qualitative and pertinent data relevant to the study. The interview ensured that 
+[0194] [normal]  Quantitative data were collected for objective number 1, which is the assessment of disaster-related knowledge, preparedness and readiness, adaptation, awareness, and risk perception. Data were also c
+[0195] [normal]  usability and effectiveness once it is developed. These surveys were used to assess how well the game engaged players and met its learning goals.
+[0196] [normal]  By integrating qualitative and quantitative inputs during the development and assessment stages, this study seeks to create a game that is not only informative but also entertaining, useful, and perti
+[0197] [Heading 2]  Population and Locale
+[0198] [normal]  
+[0199] [normal]  The study was conducted at the Province of La Union particularly in the municipalities of Naguilian, San Juan, and Bacnotan, La Union. A total of one hundred sixty-two (162) respondents participated i
+[0200] [normal]  distribution ensured diverse representation across municipalities and respondent groups. This setting grounded the study in disaster-prone communities, making the findings directly relevant and benefi
+[0201] [normal]  Purposive and random sampling were used in selecting the respondents. Disaster responders were selected through purposive sampling which is also referred to as judgmental sampling. The reason why this
+[0202] [normal]  The primary research instrument was the MEEGA+ evaluation framework to measure the experience of the students with the created educational game. The framework evaluates some of the fundamental dimensi
+[0203] [normal] [IMG] 
+[0204] [Heading 2]  Respondents	No. of Respondents
+[0205] [normal] [IMG] Students	152
+[0206] [normal]  Teachers	7
+[0207] [normal]  Disaster Responders	3
+[0208] [normal] [IMG] Total: 162
+[0209] [normal] [IMG] 
+[0210] [normal]  fun, perceived learning, usability, and general player experience. Student respondents were the only participants who were considered in the MEEGA+ assessment because the framework will help to obtain
+[0211] [normal]  On the other hand, random sampling was used to sample the students and the teachers. This type of sampling method gives equal chances to the members of the population to be selected, which is fair and
+[0212] [normal]  The role of the students in this research is very important since they were the main beneficiaries of the game. Their responses showed how LigTask is usable and educational in promoting disaster prepa
+[0213] [Heading 2]  Ethical Considerations
+[0214] [normal]  
+[0215] [normal]  This study adhered to ethical standards to protect the rights and welfare of all individuals involved in the creation and assessment. The researchers utilized standardized instruments such as letters,
+[0216] [normal]  Significantly, Participants were fully informed that their involvement in the study was completely voluntary, and they could refuse or withdraw at any point in the research without facing any negative
+[0217] [Heading 2]  Data Gathering Tools and Procedures
+[0218] [normal]  
+[0219] [normal]  Data were gathered by researchers using a variety of tools and techniques. Primary data were gathered through the distribution of survey questionnaires to teachers and students particularly from the m
+[0220] [normal]  safety guidelines and internet research. The gathered information guided the development of the game using Unity, it ensured that gameplay elements align with real-world disaster preparedness practice
+[0221] [normal]  To meet the first objective, which is to assess the level of disaster preparedness of students and teachers, an interview guide (See Appendix B) was first administered to disaster responders. Also, a 
+[0222] [normal]  For the second objective, the researchers used different tools to design and develop an interactive 2D educational game that enhanced preparedness for the most common disasters in the Philippines. The
+[0223] [normal]  Lastly, SQLite was used to store and manage in-game data, such as the player's total score, available powerups, and total in-game currency. Playtesting was performed before the final evaluation to enh
+[0224] [normal]  For the last objective, which is to determine the usability of the developed game, the researchers administered the MEEGA+ questionnaire (see Appendix E) to eighty-nine (89) students. Meega+ (Method f
+[0225] [Heading 2]  Software Methodology
+[0226] [normal]  
+[0227] [normal]  LigTask was designed and developed using the Game Development Life Cycle (GDLC) software methodology. The six (6) stages of the Game Development Life Cycle are Initiation, Pre-Production, Production, 
+[0228] [normal] [IMG] 
+[0229] [normal]  
+[0230] [normal]  
+[0231] [normal]  
+[0232] [normal]  
+[0233] [normal]  
+[0234] [normal]  
+[0235] [normal]  
+[0236] [normal]  
+[0237] [normal]  
+[0238] [normal]  
+[0239] [normal]  
+[0240] [normal]  
+[0241] [normal]  
+[0242] [normal]  
+[0243] [normal]  Figure 2. Game Development Life Cycle
+[0244] [normal]  
+[0245] [normal]  mini-games, the Game Development Life Cycle is the most appropriate methodology. It offers a systematic flow that allows continuous improvements based on user feedback, ensuring that the final product
+[0246] [Heading 2]  Initiation Phase
+[0247] [normal]  
+[0248] [normal]  The first phase formed the basis of the creation of LigTask's design and development. In this stage, the researchers brainstormed and determined the game type, target audience or players, kind of game
+[0249] [normal]  awareness and preparedness of the students and teachers. A 5-point Likert scale
+[0250] [normal]  was utilized to interpret the results of the survey. To assess the respondents' disaster-related knowledge, a mean range of 1.00-1.50 denotes no knowledge; 1.51-2.50 as limited knowledge, 2.51-3.50 as
+[0251] [normal]  The respondents’ disaster preparedness and readiness (page 22) were determined through the following values: a mean range of 1:00-1.50 denotes never manifested; 1:51-2.50 as seldom manifested, 2.51-3.
+[0252] [normal]  This scale was used to determine the respondents’ level of disaster adaptation (page 22). A mean range of 1.00–1.50 is interpreted as never manifested, 1.51–2.50 as seldom manifested, 2.51–3.50 as som
+[0253] [normal]  
+[0254] [normal] [IMG] 
+[0255] [normal]  The respondents’ disaster awareness was determined through the following values: a mean range of 1.00–1.50 is interpreted as never manifested, 1.51–2.50 as seldom manifested, 2.51–3.50 as sometimes ma
+[0256] [normal] [IMG] 
+[0257] [normal]  
+[0258] [normal] [IMG] 
+[0259] [normal]  To interpret the respondents’ disaster-risk perception, a mean score of 1.00–1.50 signified very negative perception, 1.51–2.50 indicates negative perception, 2.51 – 3.50 reflects an undecided or neut
+[0260] [normal] [IMG] 
+[0261] [Heading 2]  Pre-Production Phase
+[0262] [normal]  
+[0263] [normal]  During the phase of pre-production, the researchers converted the findings from the initiation phase into detailed plans for game development. This comprised the development of the structure of the ga
+[0264] [normal]  A low-fidelity storyboard as seen on figure 3 was created to illustrate the game's structure. This storyboard includes four main screens: the home screen, disaster selection, an example of a mini-game
+[0265] [normal] [IMG] 
+[0266] [normal]  
+[0267] [normal]  Figure 3. Storyboard for LigTask
+[0268] [normal]  This storyboard served as an initial blueprint to ensure that the navigation and visual hierarchy of the game are comprehensible and user-friendly. It also assisted the team in coordinating their work
+[0269] [Heading 2]  Production Phase
+[0270] [normal]  The actual development of LigTask began in the production phase, implementing the plans and designs made during the earlier phases. The backgrounds of the game, animations, and logic of the game, spec
+[0271] [Heading 2]  Testing Phase
+[0272] [normal]  After production, the game underwent testing by the researchers. Both functional testing and playtesting were employed to ensure that all aspects of the game are working as expected. Also, activities 
+[0273] [normal]  process helped ensure that the final version of the game is engaging, functional, and aligned with the learning objectives.
+[0274] [Heading 2]  Beta Phase
+[0275] [normal]  
+[0276] [normal]  Once the game passed internal tests, it was released to a selected group of students for beta testing under a soft launch. The students’ feedback and interactions with the game were monitored. This he
+[0277] [normal]  LigTask was officially launched to its target audience by administering MEEGA+ (Method for the Evaluation of Educational Games for Computing Education) to measure LigTask's overall usability. The MEEG
+[0278] [normal]  The usability of the developed project was determined by applying tally and the weighted mean. A 5-point Likert Scale (page 27) was utilized to interpret the results. A mean score ranging from 1.00 to
+[0279] [normal]  
+[0280] [normal] [IMG] 
+[0281] [Heading 2]  Release Phase
+[0282] [normal]  
+[0283] [normal]  In this phase, all feedback from the beta testing was reviewed. Final changes were made to improve the gameplay, user experience, and learning content based on the results of the MEEGA+ survey. Any bu
+[0284] [normal]  After all improvements were completed, the final version of LigTask was prepared for release. The game was checked to ensure that all disaster scenarios, game features, and instructions were working c
+[0285] [normal]  Table 2 shows the minimum system requirements needed to keep LigTask running efficiently and available to a wide range of users. These requirements enable stable gameplay across a variety of device ty
+[0286] [normal]  Table 2. System Requirements for Playing the Game
+[0287] [normal]  
+[0288] [normal] [IMG] 
+[0289] [normal]  System
+[0290] [normal]  
+[0291] [normal]  Requirements
+[0292] [normal]  Minimum	Recommended
+[0293] [normal]  
+[0294] [normal] [IMG] 
+[0295] [normal]  OS	Android 8.0 (Oreo)	Android 10+
+[0296] [normal]  
+[0297] [normal]  CPU	1.8 GHz quad-core	Octa-core (Snapdragon 660 /
+[0298] [normal]  Helio G-series)
+[0299] [normal]  
+[0300] [normal]  RAM	2 GB	3–4 GB
+[0301] [normal]  
+[0302] [normal]  GPU	Adreno 506 / Mali-T830 equivalent
+[0303] [normal]  Adreno 610 / Mali-G52
+[0304] [normal]  Storage	300 MB free	500 MB free
+[0305] [normal] [IMG] 
+[0306] [normal] [IMG] 
+[0307] [Heading 1]  CHAPTER III
+[0308] [normal]  
+[0309] [normal]  RESULTS AND DISCUSSION
+[0310] [normal]  
+[0311] [normal]  The findings of developing and evaluating the LigTask educational game are presented in this chapter. It relates to the discussion of the results on the basis of the objectives of the study, which are
+[0312] [Heading 2]  Assessment on the Level of Disaster Awareness and Preparedness of Students and Teachers
+[0313] [normal]  To address the first research objective, the researchers administered a survey questionnaire which was distributed through Google Forms (see Appendix D) to sixty-three (63) students and seven (7) teac
+[0314] [normal]  Inclusion of these groups offered a balanced approach to the aspect of disaster awareness, and the researchers could effectively compare the level of preparedness and adaptability of the students and 
+[0315] [normal]  LigTask educational game. This evaluation allowed the researchers to gain useful information about the current state of knowledge and adaptation concerning the disaster.
+[0316] [normal] [IMG] Based on the results shown in Figure 4, the survey revealed that most respondents had previously experienced disasters, particularly typhoons (94.3%) and earthquakes (82.9%). Other reported experience
+[0317] [normal]  
+[0318] [normal]  Figure 4. Participant’s Disaster Experiences
+[0319] [normal]  Table 3 shows the level of knowledge of the students regarding disaster-related knowledge, with an average weighted mean of 3.50, interpreted as a moderate and average level of knowledge. Indicator 3 
+[0320] [normal] [IMG] Also, these findings point to some level of acquaintance with fundamental principles of disasters. Indicator "I know when a disaster will happen" implied that the students may not be well versed in th
+[0321] [normal]  Indicators	Mean	Descriptive Equivalent
+[0322] [normal]  Rating (DER)
+[0323] [normal]  Descriptive Interpretation
+[0324] [normal] [IMG] I know when a disaster will occur.
+[0325] [normal]  3.14	Moderate		Average Knowledge
+[0326] [normal]  I know disasters cannot be prevented.
+[0327] [normal]  I have participated in disaster risk education training or workshops.
+[0328] [normal]  3.56
+[0329] [normal]  
+[0330] [normal]  3.79
+[0331] [normal]  High High
+[0332] [normal]  Good knowledge Good knowledge
+[0333] [normal] [IMG] 
+[0334] [Heading 2]  Average	3.50	Moderate		Average knowledge
+[0335] [normal] [IMG] 
+[0336] [normal]  advanced training. In general, although the knowledge of the students in disaster-related areas is moderate, it is obvious that it is necessary to enhance it with the help of the systematic learning p
+[0337] [normal]  Table 4 (page 33) indicates that the students have a high disaster preparedness and readiness level, with an average weighted mean of 3.55, which is perceived to be of community activities related to 
+[0338] [normal]  Meanwhile, the lowest score of 2.79 was achieved by indicator 2, “I know the government will provide enough facilities after a disaster, and we will not face any problem”, which indicates confidence i
+[0339] [normal]  Table 5 (page 34) presents the disaster adaptation of students as evidenced
+[0340] [normal]  with a rating of 3.87 with a descriptive equivalent rating of high, interpreted as often manifested. The most significant indicator, which acknowledges the importance of community activities in disast
+[0341] [normal]  The lowest indicator, which government offices need to address in the event
+[0342] [normal]  
+[0343] [normal]  Table 4: Disaster Preparedness and Readiness of Students
+[0344] [normal]  
+[0345] [normal] [IMG] 
+[0346] [normal]  Indicators	Mean
+[0347] [normal]  Descriptive Equivalent Rating (DER)
+[0348] [normal]  Descriptive Interpretation
+[0349] [normal] [IMG] I know the importance of disseminating experiences or knowledge of disaster.
+[0350] [normal]  I know the government will provide enough facilities after a disaster and we will not face any problem.
+[0351] [normal]  I am confident for reconstruction activities from the government after disaster.
+[0352] [normal]  I know the importance of community activities for disaster risk reduction.
+[0353] [normal]  I used to listen to experts or Disaster Risk Reduction (DRR) leaders who work or do activities for disaster management.
+[0354] [normal]  4.00
+[0355] [normal]  
+[0356] [normal]  
+[0357] [normal]  
+[0358] [normal]  2.79
+[0359] [normal]  
+[0360] [normal]  
+[0361] [normal]  
+[0362] [normal]  
+[0363] [normal]  3.05
+[0364] [normal]  
+[0365] [normal]  
+[0366] [normal]  4.10
+[0367] [normal]  
+[0368] [normal]  
+[0369] [normal]  3.81
+[0370] [normal]  High
+[0371] [normal]  
+[0372] [normal]  
+[0373] [normal]  
+[0374] [normal]  Moderate
+[0375] [normal]  
+[0376] [normal]  
+[0377] [normal]  
+[0378] [normal]  
+[0379] [normal]  Moderate
+[0380] [normal]  
+[0381] [normal]  
+[0382] [normal]  High
+[0383] [normal]  
+[0384] [normal]  
+[0385] [normal]  High
+[0386] [normal]  Often manifested
+[0387] [normal]  
+[0388] [normal]  
+[0389] [normal]  Sometimes manifested
+[0390] [normal]  
+[0391] [normal]  
+[0392] [normal]  
+[0393] [normal]  Sometimes manifested
+[0394] [normal]  
+[0395] [normal]  Often manifested
+[0396] [normal]  
+[0397] [normal]  Often manifested
+[0398] [normal] [IMG] 
+[0399] [Heading 2]  Average	3.55	High		Often manifested
+[0400] [normal] [IMG] 
+[0401] [normal]  Table 5: Disaster Adaptation of Students
+[0402] [normal]  
+[0403] [normal] [IMG] 
+[0404] [Heading 2]  Average	3.87	High		Often manifested
+[0405] [normal] [IMG] 
+[0406] [normal]  of a disaster (3.71), though already high, demonstrates potential improvement regarding the familiarity with agencies of DRRM and emergency communication guidelines.
+[0407] [normal]  Table 6 (page 35) presents the Disaster Awareness of Students, indicating an average mean of 3.69, with a descriptive equivalent of “High” with an “Often manifested” interpretation, indicating a high 
+[0408] [normal]  Table 6. Disaster Awareness of Students
+[0409] [normal]  
+[0410] [normal] [IMG] 
+[0411] [normal]  Indicators	Mean	Descriptive Equivalent
+[0412] [normal]  Rating (DER)
+[0413] [normal]  Descriptive Interpretation
+[0414] [normal] [IMG] 1. I	used	to		participate		in voluntary		activities	for disaster				awareness campaigns.
+[0415] [normal]  3.38
+[0416] [normal]  Moderate
+[0417] [normal]  Sometimes manifested
+[0418] [normal]  
+[0419] [normal] [IMG] 
+[0420] [normal]  The least indicator is the awareness of retrofitting buildings (2.94), which implies the lack of knowledge of the mitigation of structures. This could be an indication that even though students are re
+[0421] [normal]  Table 7. Disaster Risk Perception of Students
+[0422] [normal]  
+[0423] [normal] [IMG] 
+[0424] [Heading 2]  Indicators	Mean	Descriptive Equivalent Rating (DER)
+[0425] [normal]  Descriptive Interpretation
+[0426] [normal] [IMG] I am very sure that large-scale disasters will certainly occur in the next 10 years.
+[0427] [normal]  My locality is safe from all kinds of disasters.
+[0428] [normal]  I think my building is well designed and will withstand an earthquake event.
+[0429] [normal]  I am sure that my sleeping space is secure during and after a disaster.
+[0430] [normal]  3.43
+[0431] [normal]  
+[0432] [normal]  
+[0433] [normal]  
+[0434] [normal]  2.54
+[0435] [normal]  3.03
+[0436] [normal]  
+[0437] [normal]  
+[0438] [normal]  
+[0439] [normal]  3.03
+[0440] [normal]  Neutral
+[0441] [normal]  
+[0442] [normal]  
+[0443] [normal]  
+[0444] [normal]  Neutral Neutral
+[0445] [normal]  
+[0446] [normal]  
+[0447] [normal]  Neutral
+[0448] [normal]  Undecided
+[0449] [normal]  
+[0450] [normal]  
+[0451] [normal]  
+[0452] [normal]  Undecided Undecided
+[0453] [normal]  
+[0454] [normal]  
+[0455] [normal]  Undecided
+[0456] [normal] [IMG] 
+[0457] [Heading 2]  Average	3.01	Neutral	Undecided
+[0458] [normal] [IMG] 
+[0459] [normal]  Table 7 shows the respondents’ disaster-risk perception, yielding an average weighted mean of 3.01, classified as Neutral and interpreted as Undecided. This implies that the respondents do not strongl
+[0460] [normal]  local hazard mapping efforts, community risk assessment, and school-based education, which is concerned with identifying the particular risks in the environment of the respondents is warranted.
+[0461] [normal] [IMG] Table 8 shows that students possess generally strong knowledge across the different aspects of disaster education, with an overall mean of 3.52, interpreted as moderate with good knowledge. The highes
+[0462] [normal]  
+[0463] [normal]  Indicators	Mean
+[0464] [normal]  Descriptive Equivalent Rating (DER)
+[0465] [normal]  Descriptive Interpretation
+[0466] [normal] [IMG] Disaster-Related Knowledge
+[0467] [normal]  3.50	Moderate		Average Knowledge
+[0468] [normal]  Disaster	Preparedness and Readiness
+[0469] [normal]  Disaster Adaptation
+[0470] [normal]  
+[0471] [normal]  Disaster Awareness
+[0472] [normal]  
+[0473] [normal]  Disaster-risk Perception
+[0474] [normal]  3.55
+[0475] [normal]  
+[0476] [normal]  3.87
+[0477] [normal]  
+[0478] [normal]  3.69
+[0479] [normal]  
+[0480] [normal]  3.01
+[0481] [normal]  High High High
+[0482] [normal]  Neutral
+[0483] [normal]  Often manifested Often manifested Often Manifested Undecided
+[0484] [normal] [IMG] 
+[0485] [Heading 2]  Average	3.52	Moderate		Average Knowledge
+[0486] [normal] [IMG] 
+[0487] [normal]  and after disasters. Meanwhile, Disaster-Related Knowledge obtained a moderate rating of 3.50, reflecting that although students understand basic disaster concepts, some factual knowledge gaps remain.
+[0488] [normal]  Overall, the findings indicate that while students demonstrate good levels of awareness, readiness, and adaptation, their understanding of disaster risks and fundamental concepts needs improvement. Th
+[0489] [normal]  The same questionnaire was also administered to the teachers to assess their level of disaster awareness and preparedness. Table 9 (page 39) presents the level of disaster knowledge of teachers with a
+[0490] [normal]  hazards and disaster inevitability is demonstrated in the fact that the scores of knowing that disasters cannot be avoided and knowing when a disaster will happen are high. These results indicate that
+[0491] [normal] [IMG] Table 10 (page 40) shows that the teachers have a very high level of disaster preparedness and readiness, with an impressive average weighted mean of 4.54 which is interpreted as always manifested. Li
+[0492] [Heading 2]  Indicators	Mean	Descriptive Equivalent
+[0493] [normal]  Descriptive Interpretation
+[0494] [normal]  
+[0495] [normal]  training or workshops.
+[0496] [normal] [IMG] 
+[0497] [Heading 2]  Average	4.00	High	Good
+[0498] [Heading 2] [IMG] knowledge
+[0499] [normal]  Table 10: Disaster Preparedness and Readiness of Teachers
+[0500] [normal]  
+[0501] [normal] [IMG] 
+[0502] [normal]  Indicators	Mean
+[0503] [normal]  Descriptive Equivalent Rating (DER)
+[0504] [normal]  Descriptive Interpretation
+[0505] [normal] [IMG] I know the importance of disseminating experiences or knowledge of disaster.
+[0506] [normal]  I know the government will provide enough facilities after a disaster and we will not face any problem.
+[0507] [normal]  I am confident for reconstruction activities from the government after disaster.
+[0508] [normal]  I know the importance of community activities for disaster risk reduction.
+[0509] [normal]  I used to listen to experts or Disaster Risk Reduction (DRR) leaders who work or do activities for disaster management.
+[0510] [normal]  4.57
+[0511] [normal]  
+[0512] [normal]  
+[0513] [normal]  
+[0514] [normal]  
+[0515] [normal]  4.57
+[0516] [normal]  
+[0517] [normal]  
+[0518] [normal]  4.14
+[0519] [normal]  
+[0520] [normal]  
+[0521] [normal]  
+[0522] [normal]  4.57
+[0523] [normal]  
+[0524] [normal]  
+[0525] [normal]  
+[0526] [normal]  4.86
+[0527] [normal]  Very High
+[0528] [normal]  
+[0529] [normal]  
+[0530] [normal]  
+[0531] [normal]  
+[0532] [normal]  Very High
+[0533] [normal]  
+[0534] [normal]  
+[0535] [normal]  High
+[0536] [normal]  
+[0537] [normal]  
+[0538] [normal]  
+[0539] [normal]  Very High
+[0540] [normal]  
+[0541] [normal]  
+[0542] [normal]  
+[0543] [normal]  Very High
+[0544] [normal]  Always manifested
+[0545] [normal]  
+[0546] [normal]  
+[0547] [normal]  
+[0548] [normal]  Always manifested
+[0549] [normal]  
+[0550] [normal]  Often manifested
+[0551] [normal]  
+[0552] [normal]  
+[0553] [normal]  Always manifested
+[0554] [normal]  
+[0555] [normal]  
+[0556] [normal]  Always manifested
+[0557] [normal] [IMG] 
+[0558] [Heading 2]  Average	4.54	Very High		Always manifested
+[0559] [normal] [IMG] 
+[0560] [normal]  willingness and a high level of individual involvement in DRRM activities. This high level of preparedness among teachers highlights their crucial role as reliable sources of disaster-related informat
+[0561] [normal]  Table 11: Disaster Adaptation of Teachers
+[0562] [normal]  
+[0563] [normal] [IMG] 
+[0564] [Heading 2] [IMG] Indicators	Mean	Descriptive Equivalent Rating (DER)
+[0565] [normal]  Descriptive Interpretation
+[0566] [normal]  I am aware of shelter areas and open space in case of a disaster.
+[0567] [normal]  I have information about which government offices need to be contacted after the disaster.
+[0568] [normal]  I have knowledge about disaster-prone areas.
+[0569] [normal]  I know the importance of community activities for disaster risk reduction.
+[0570] [normal]  4.86
+[0571] [normal]  
+[0572] [normal]  4.71
+[0573] [normal]  
+[0574] [normal]  
+[0575] [normal]  4.71
+[0576] [normal]  
+[0577] [normal]  4.86
+[0578] [normal]  Very High Very High
+[0579] [normal]  Very High Very High
+[0580] [normal]  Always manifested
+[0581] [normal]  Always manifested
+[0582] [normal]  
+[0583] [normal]  Always manifested
+[0584] [normal]  
+[0585] [normal]  Always manifested
+[0586] [normal]  
+[0587] [normal] [IMG] 
+[0588] [Heading 2]  Average	4.79	Very High		Always manifested
+[0589] [normal] [IMG] 
+[0590] [normal]  Table 11 shows that the teachers have a very high score of disaster adaptation with a mean of 4.79, which is interpreted as always manifested. Indicators 1 and 4 got the highest ratings of 4.86, which
+[0591] [normal]  preparedness, behavior, and robustness in their adherence to DRRM protocols.
+[0592] [normal]  Table 12. Disaster Awareness of Teachers
+[0593] [normal]  
+[0594] [normal] [IMG] 
+[0595] [Heading 2]  Indicators	Mean
+[0596] [normal]  
+[0597] [normal]  I used to participate in
+[0598] [Heading 2]  Descriptive Equivalent Rating (DER)
+[0599] [normal]  Descriptive Interpretation
+[0600] [normal]  
+[0601] [normal] [IMG] Often
+[0602] [normal]  voluntary activities for disaster	awareness campaigns.
+[0603] [normal]  I am aware of retrofitting buildings
+[0604] [normal]  I used to prepare emergency bags for disasters.
+[0605] [normal]  I have a good relationship with my neighbors and community.
+[0606] [normal]  I	think	repairing	road blockages		and transportation	brakes	is important.
+[0607] [normal]  I give priority to disaster awareness in local, regional, and national level.
+[0608] [normal]  I know how to recover after disaster is crucial work.
+[0609] [normal]  4.29
+[0610] [normal]  
+[0611] [normal]  
+[0612] [normal]  4.14
+[0613] [normal]  4.29
+[0614] [normal]  
+[0615] [normal]  
+[0616] [normal]  4.86
+[0617] [normal]  
+[0618] [normal]  
+[0619] [normal]  4.71
+[0620] [normal]  
+[0621] [normal]  
+[0622] [normal]  4.71
+[0623] [normal]  
+[0624] [normal]  
+[0625] [normal]  4.29
+[0626] [normal]  High
+[0627] [normal]  
+[0628] [normal]  
+[0629] [normal]  High High
+[0630] [normal]  
+[0631] [normal]  Very High
+[0632] [normal]  
+[0633] [normal]  
+[0634] [normal]  Very High
+[0635] [normal]  
+[0636] [normal]  
+[0637] [normal]  Very High
+[0638] [normal]  
+[0639] [normal]  
+[0640] [normal]  High
+[0641] [normal]  manifested
+[0642] [normal]  
+[0643] [normal]  Often manifested Often manifested
+[0644] [normal]  
+[0645] [normal]  
+[0646] [normal]  Always manifested
+[0647] [normal]  Always manifested
+[0648] [normal]  
+[0649] [normal]  Always manifested
+[0650] [normal]  
+[0651] [normal]  
+[0652] [normal]  Often manifested
+[0653] [normal]  
+[0654] [normal] [IMG] 
+[0655] [Heading 2]  Average	4.47	High		Often manifested
+[0656] [normal] [IMG] 
+[0657] [normal]  The level of disaster awareness of teachers is presented in table 12. It can be seen from the table that the respondents have a high awareness of disasters, as evidenced by a mean rating of 4.47, and 
+[0658] [normal]  post-disaster measures. Another area where teachers are quite prepared is the
+[0659] [normal]  development of emergency bags, as well as involvement in awareness campaigns, which show active engagement in community-based resilience activity. This implies that the level of disaster awareness amo
+[0660] [normal]  The disaster risk perception of teachers is shown in table 13. As seen in the table, the respondents have a high perception of disasters, as evidenced by a rating of 3.89. Indicator 1 got the highest 
+[0661] [normal]  Table 13. Disaster Risk Perception of Teachers
+[0662] [normal]  
+[0663] [normal] [IMG] 
+[0664] [Heading 2]  Indicators	Mean	Descriptive Equivalent Rating (DER)
+[0665] [normal]  Descriptive Interpretation
+[0666] [normal] [IMG] I am very sure that large-scale disasters will certainly occur in the next 10 years.
+[0667] [normal]  My locality is safe from all kinds of disasters.
+[0668] [normal]  I think my building is well designed and will withstand an earthquake event.
+[0669] [normal]  I am sure that my sleeping space is secure during and after a disaster.
+[0670] [normal]  4.00
+[0671] [normal]  
+[0672] [normal]  
+[0673] [normal]  
+[0674] [normal]  3.86
+[0675] [normal]  
+[0676] [normal]  
+[0677] [normal]  3.86
+[0678] [normal]  
+[0679] [normal]  
+[0680] [normal]  
+[0681] [normal]  3.86
+[0682] [normal]  Agree
+[0683] [normal]  
+[0684] [normal]  
+[0685] [normal]  
+[0686] [normal]  Agree
+[0687] [normal]  
+[0688] [normal]  
+[0689] [normal]  Agree
+[0690] [normal]  
+[0691] [normal]  
+[0692] [normal]  
+[0693] [normal]  Agree
+[0694] [normal]  Positive perception
+[0695] [normal]  
+[0696] [normal]  
+[0697] [normal]  Positive perception
+[0698] [normal]  
+[0699] [normal]  Positive perception
+[0700] [normal]  
+[0701] [normal]  
+[0702] [normal]  Positive perception
+[0703] [normal]  
+[0704] [normal] [IMG] 
+[0705] [Heading 2]  Average	3.89	Agree		Positive perception
+[0706] [normal] [IMG] 
+[0707] [normal]  These indicate that the respondents are aware that calamities can happen during the coming 10 years, which implies that the respondents are conscious of what risks may happen in the future. These find
+[0708] [normal]  as evidenced with a mean of 4.34.
+[0709] [normal]  
+[0710] [normal] [IMG] Table 14 Summary: Disaster-Related Knowledge, Preparedness and Readiness, Adaptation, Awareness, and Risk Perception for Teachers
+[0711] [normal]  
+[0712] [normal]  Indicators	Mean
+[0713] [normal]  Descriptive Equivalent Rating (DER)
+[0714] [normal]  Descriptive Interpretation
+[0715] [normal]  
+[0716] [normal] [IMG] 
+[0717] [normal]  Disaster-Related Knowledge	4.00	High	Good
+[0718] [normal]  knowledge
+[0719] [normal]  Disaster Preparedness and Readiness
+[0720] [normal]  Disaster Adaptation
+[0721] [normal]  
+[0722] [normal]  Disaster Awareness
+[0723] [normal]  
+[0724] [normal]  Disaster-risk Perception
+[0725] [normal]  4.54
+[0726] [normal]  
+[0727] [normal]  4.79
+[0728] [normal]  
+[0729] [normal]  4.47
+[0730] [normal]  
+[0731] [normal]  3.89
+[0732] [normal]  Very High Very High High Agree
+[0733] [normal]  Always manifested Always manifested Often manifested Positive perception
+[0734] [normal] [IMG] 
+[0735] [Heading 2]  Average	4.34	High	Good
+[0736] [Heading 2] [IMG] knowledge
+[0737] [normal]  Indicator 3, which is disaster adaptation, got the highest rating of 4.79, while indicator 5, disaster-risk perception, got the lowest rating of 3.89. The results imply that teachers are well-informed
+[0738] [normal]  Moreover, the findings have also revealed that disaster preparedness and readiness, disaster adaptation, and disaster awareness are very high among teachers, as seen through the high mean scores of th
+[0739] [normal]  In addition, the strong disaster-risk perception among the teachers is a positive misconception about disaster risks and effects. This helps the respondents to identify risks at the initial stage and 
+[0740] [Heading 2]  Designed and developed an interactive 2D educational game that enhances preparedness for the most common disasters in the Philippines
+[0741] [normal]  The researcher designed and developed a game entitled LigTask, a 2D game-based platform enhancing disaster preparedness and awareness. LigTask aimed to serve as an interactive learning tool that encou
+[0742] [normal]  The game offers players an engaging and informative alternative about five of the natural hazards experienced in the Philippines, including typhoon, earthquake, flood, landslide, and volcanic eruption
+[0743] [normal]  Unity Engine was selected as it is flexible, supports multiple platforms, and has good capabilities for developing a 2D game. Gameplay mechanics were implemented in the C# programming language, which 
+[0744] [normal]  fire, and debris. This was developed in accordance with the game systematized process of planning, design, testing, and evaluation.
+[0745] [normal]  Figure 5 presents the interface of character design of the female player character in LigTask. The character was created with IbisPaint, which made the appearance of the character in several layers, b
+[0746] [normal] [IMG] 
+[0747] [normal]  Figure 5. Character Designing in IbisPaint
+[0748] [normal] [IMG] 
+[0749] [normal]  
+[0750] [normal]  
+[0751] [normal]  
+[0752] [normal]  
+[0753] [normal]  
+[0754] [normal]  
+[0755] [normal]  
+[0756] [normal]  
+[0757] [normal]  
+[0758] [normal]  
+[0759] [normal]  
+[0760] [normal]  
+[0761] [normal]  Figure 6. Character Emotions
+[0762] [normal]  
+[0763] [normal]  Figure 6 illustrates the character’s range of emotional expressions, demonstrating variations in posture and facial features. The first image portrays confidence, the second shows a neutral or relaxed
+[0764] [normal] [IMG] 
+[0765] [normal] [IMG] 
+[0766] [normal]  Figure 7. Environmental Assets
+[0767] [normal] [IMG] 
+[0768] [normal] [IMG] Figure 7 (page 48) displays the environmental assets developed for LigTask, showcasing 2D backgrounds and objects representing various disaster scenarios. Each illustration represents hazards such as 
+[0769] [normal]  
+[0770] [normal] [IMG] 
+[0771] [normal]  
+[0772] [normal]  Figure 8. Disaster and Hazards Assets
+[0773] [normal]  
+[0774] [normal]  Figure 8 presents the disaster and hazard assets, consisting of sprites and icons that symbolize various natural dangers. The visuals include elements like falling debris, fire, volcanic ash, and rock
+[0775] [normal] [IMG] 
+[0776] [normal]  
+[0777] [normal]  
+[0778] [normal]  
+[0779] [normal]  
+[0780] [normal]  
+[0781] [normal]  
+[0782] [normal]  
+[0783] [normal]  
+[0784] [normal]  
+[0785] [normal]  
+[0786] [normal]  Figure 9. Interactive Objects and Task Items
+[0787] [normal]  
+[0788] [normal]  Figure 9 illustrates the interactive objects and task items, including essential emergency tools such as a first-aid kit, radio, and raincoat. These items represent the basic supplies commonly found i
+[0789] [normal] [IMG] 
+[0790] [normal]  Figure 10: Main Menu
+[0791] [normal] [IMG] 
+[0792] [normal]  Figure 10 (page 50) displays the LigTask main menu, which include the game’s title and a central “Play” button. The background has natural disaster elements, such as rain, landslide, earthquake, flood
+[0793] [normal] [IMG] 
+[0794] [normal]  
+[0795] [normal]  Figure 11. Settings
+[0796] [normal]  Figure 11 displays the settings of LigTask, which allows players to adjust the level of music, sound effects, and narration. The menu feature has bright sliders and clear labels that make it easy to r
+[0797] [normal] [IMG] 
+[0798] [normal]  
+[0799] [normal]  
+[0800] [normal]  
+[0801] [normal]  
+[0802] [normal]  
+[0803] [normal]  
+[0804] [normal]  
+[0805] [normal]  
+[0806] [normal]  
+[0807] [normal]  
+[0808] [normal]  
+[0809] [normal]  
+[0810] [normal]  
+[0811] [normal]  
+[0812] [normal]  Figure 12. Disaster Selection Screen
+[0813] [normal]  
+[0814] [normal]  Figure 12 presents the disaster selection interface, which allows players to select one of the five natural disasters, such as typhoon, flood, earthquake, landslide, and volcanic eruption. Each disast
+[0815] [normal] [IMG] 
+[0816] [normal]  Figure 13. Narrative Example for Typhoon
+[0817] [normal] [IMG] 
+[0818] [normal]  Figure 13 (page 52) shows the narrative dialogue screen in LigTask, where the character explains the objective of the mini-game. The player is instructed to swipe the character to avoid falling debris
+[0819] [normal] [IMG] 
+[0820] [normal]  Figure 14. Typhoon Mini-game
+[0821] [normal]  
+[0822] [normal]  Figure 14 displays on of the flood mini-games, in which players must avoid fallen objects to remain safe. The environment contains objects representative of real-world hazards, including electrical wi
+[0823] [normal] [IMG] 
+[0824] [normal]  
+[0825] [normal]  
+[0826] [normal]  
+[0827] [normal]  
+[0828] [normal]  
+[0829] [normal]  
+[0830] [normal]  
+[0831] [normal]  
+[0832] [normal]  
+[0833] [normal]  
+[0834] [normal]  
+[0835] [normal]  
+[0836] [normal]  
+[0837] [normal]  
+[0838] [normal]  Figure 15. Flood Mini-game
+[0839] [normal]  
+[0840] [normal]  Figure 15 illustrates the flood mini-game, where players must select essential items to protect against water damage. The task is to identify and store essential items, such as cards or cash, in a pla
+[0841] [normal] [IMG] 
+[0842] [normal]  Figure 16. Landslide Mini-game
+[0843] [normal] [IMG] 
+[0844] [normal]  Figure 16 (page 54) presents the landslide mini-game, which encourages the player plants trees on a slope to prevent soil erosion. The game educates that tree roots keep the earth soil firmly and redu
+[0845] [normal] [IMG] 
+[0846] [normal]  Figure 17. Earthquake Mini-game
+[0847] [normal]  Figure 17 shows the earthquake mini-game, in which the character practices the drop, cover, and hold method by taking cover under a table. The game setting recreates the interior aspect of furniture a
+[0848] [normal] [IMG] 
+[0849] [normal]  
+[0850] [normal]  
+[0851] [normal]  
+[0852] [normal]  
+[0853] [normal]  
+[0854] [normal]  
+[0855] [normal]  
+[0856] [normal]  
+[0857] [normal]  
+[0858] [normal]  
+[0859] [normal]  
+[0860] [normal]  
+[0861] [normal]  
+[0862] [normal]  
+[0863] [normal]  Figure 18: Quiz
+[0864] [normal]  
+[0865] [normal]  Figure 18 displays the quiz interface, which appears after completing all the mini-games in the easy round. The game also has multiple-choice questions about disaster preparations to help players revi
+[0866] [normal]  Each image was included to clearly show the gameplay, user interface, and visual elements of the game. The screenshots and assets demonstrated how the game design, mechanics, and educational content w
+[0867] [normal]  Determined the usability of the developed game using MEEGA+
+[0868] [normal]  
+[0869] [normal]  To address the third research objective, the researchers conducted a
+[0870] [normal]  comprehensive usability and player experience evaluation of the LigTask mobile application using the MEEGA+ (Model for the Evaluation of Educational Games) framework. The structured questionnaire were
+[0871] [normal]  A total of eighty-nine (89) respondents participated in the evaluation. The respondents were from the Zaragosa Integrated School, Naguilian National High School, and Basic Inclusive Education of LORMA
+[0872] [normal]  The results presented in table 15 (page 58) show the usability of the LigTask mobile application. The respondents agreed that the developed game was good, as evidenced with a rating of 4.13. LigTask r
+[0873] [normal]  Table 15: Level of Usability of LigTask for Students
+[0874] [normal]  
+[0875] [normal] [IMG] 
+[0876] [Heading 2]  Average	4.13	Agree	Good
+[0877] [normal] [IMG] 
+[0878] [normal]  The highest score, 4.25, is associated with indicator 3, the text font, and colors are well blended and consistent, followed by a mean rating of 4.21 for the clarity of the game rules and instructions
+[0879] [normal]  the game without any issues. Indicator 3 got the lowest rating of 3.85. This score is still considered good; the lower score indicates that some students have required a brief familiarization or preli
+[0880] [normal]  The game interface includes an easy-to-read font size and style, an overall attractive design, and a game that is easy to play; the belief that most people would learn to play very quickly also unders
+[0881] [normal]  This implies that the respondents considered the game applicable, easy to use, and helpful in achieving learning goals. These results support the assumption that LigTask is suitable for the target dem
+[0882] [normal]  The results of table 16 (page 60) presents the overall player experience of the LigTask mobile application. As seen in the table, the respondents agree that the developed system is good, as evidenced 
+[0883] [normal]  that students generally had a favorable and engaging experience while using the game. The highest mean rating of 4.26 was garnered by indicator 15.
+[0884] [normal]  Table 16: Level of Player’s Experience of Students
+[0885] [normal]  
+[0886] [normal] [IMG] 
+[0887] [normal]  Indicators	Mean
+[0888] [normal]  Descriptive Equivalent Rating (DER)
+[0889] [normal]  Descriptive Interpretation
+[0890] [normal]  
+[0891] [normal]  challenges (offers new obstacles, situations, or variations) at an appropriate pace.
+[0892] [normal]  etc.) which made me smile.
+[0893] [normal] [IMG] 
+[0894] [Heading 2]  Table 16 (continued)
+[0895] [normal]  
+[0896] [normal] [IMG] 
+[0897] [normal]  Indicators	Mean
+[0898] [normal]  Descriptive Equivalent Rating (DER)
+[0899] [normal]  Descriptive Interpretation
+[0900] [normal] [IMG] There was something interesting at the beginning of the game that captured my attention.
+[0901] [normal]  I was so involved in my gaming task that I lost track of time.
+[0902] [normal]  I forgot about my immediate  surroundings
+[0903] [normal]  4.04	Agree	Good
+[0904] [normal]  
+[0905] [normal]  
+[0906] [normal]  
+[0907] [normal]  3.72	Agree	Good
+[0908] [normal]  
+[0909] [normal]  
+[0910] [normal]  3.76	Agree	Good
+[0911] [normal]  
+[0912] [normal]  
+[0913] [normal]  topic.
+[0914] [normal]  17. I prefer learning with this game to learning through ways (e.g. other teaching methods).
+[0915] [normal]  
+[0916] [normal]  4.08	Agree	Good
+[0917] [normal]  
+[0918] [normal] [IMG] activities in the course.
+[0919] [Heading 2]  Average	4.05	Agree	Good
+[0920] [normal] [IMG] 
+[0921] [normal]  This indicates how the contents of the game are relevant to disaster preparedness. Other indicators also implied that the game is an adequate learning and teaching method for the topic, that participa
+[0922] [normal]  and that there are new challenges at the right level. These show that students are intrigued by the game, it is educational, and interesting. Another aspect that students strongly agreed on included r
+[0923] [normal]  However, Indicator 4 has the lowest score of 3.63. The game does not become monotonous as it progresses. A slight decrease in the ratings was also obtained with regard to losing track of time and forg
+[0924] [normal]  Table 17 (page 63) presents the summary of the usability and player experience of the respondents. It can be seen from the table that the respondents agreed that the developed game is good, as evidenc
+[0925] [normal]  that the game was meaningful and engaging. It implies that the interface, navigation, task flow, and functionality of the game were very useful for the respondents and helped them interact with the sy
+[0926] [normal]  Overall, this evaluation provided valuable insights into the current state of disaster knowledge among the respondents, and it was proven that LigTask is a potentially useful and convenient educationa
+[0927] [normal]  Table 17. Summary: Usability and Player Experience of Students
+[0928] [normal]  
+[0929] [normal]  
+[0930] [normal] [IMG] 
+[0931] [Heading 1]  CHAPTER IV
+[0932] [normal]  
+[0933] [normal]  CONCLUSION AND RECOMMENDATIONS
+[0934] [normal]  
+[0935] [normal]  This chapter summarizes the overall findings of the study and evaluates the outcomes of the LigTask educational game. It highlights the game’s effectiveness in promoting disaster preparedness and awar
+[0936] [Heading 2]  Conclusions
+[0937] [normal]  The researchers successfully designed and developed LigTask: A 2D Game-Based Learning Platform for Enhancing Disaster Awareness and Preparedness that promotes disaster awareness and preparedness throu
+[0938] [normal]  For the first objective, the researchers measured the disaster knowledge, preparedness, and readiness, adaptation, awareness, and risk perception of the respondents.  Findings  indicated  that  the  p
+[0939] [normal]  Knowledge and high levels of preparedness, adaptation, and awareness, though risk perception was intermediate, suggesting differences in perception of vulnerability. The teachers had a higher level of
+[0940] [normal]  3.86 and 4.86. These results support the fact that there is a need to have an effective instructional aid that can strengthen effective and correct disaster response measures.
+[0941] [normal]  For the second objective, the researchers designed and developed LigTask based on the Game Development Life Cycle (GDLC) model. The game also featured mini-games that are inspired by the five most com
+[0942] [normal]  For the third objective, the usability of LigTask was tested through the MEEGA+ model. The results indicated that the respondents agreed that the
+[0943] [normal]  developed system is good, as evidenced with a mean rating of 4.09. Such results suggest that the game is fun, challenging enough, user-friendly, and useful in increasing disaster awareness and prepare
+[0944] [normal]  In general, the findings demonstrate that LigTask effectively combines disaster education with interactive online gameplay, which serves the purpose of enhanced disaster awareness and preparedness, ex
+[0945] [Heading 2]  Recommendations
+[0946] [normal]  
+[0947] [normal]  Based on player feedback and evaluation results, the following recommendations are suggested for improving and expanding LigTask:
+[0948] [normal]  LigTask should be upgraded to Version 2 to deliver a more polished, engaging, and educational experience. The new version should integrate improved gameplay flow, enhanced learning modules, and cleare
+[0949] [normal]  LigTask Version 2 should ensure multi-platform availability by supporting iOS devices and include a web-based version to widen accessibility across different platforms. The game should also be officia
+[0950] [normal]  LigTask Version 2 should have some innovative interactive features, such as the chosen 3D visual effects and multiplayer capability. In the meantime, the multiplayer capabilities replicate the collabo
+[0951] [normal]  The system should be optimized to perform smoothly across different screen sizes, device types, and connection conditions. Ensuring consistent responsiveness will make the game easier to use.
+[0952] [Heading 2]  References
+[0953] [normal]  
+[0954] [normal]  Published
+[0955] [normal]  Martinez, L., Gimenes, M., & Lambert, E. (2022). Entertainment Video Games for Academic Learning: A Systematic review. Journal of Educational Computing Research,	60(5),	1083–1109.
+[0956] [normal]  https://doi.org/10.1177/07356331211053848
+[0957] [normal]  
+[0958] [normal]  Pasch, R. J., Berg, R., Roberts, D. P., & Papin, P. P. (2021). Hurricane Laura (AL132020).	National	Hurricane	Center. https://www.nhc.noaa.gov/data/tcr/AL132020_Laura.pdf
+[0959] [normal]  Petri, G., Wangenheim, C.V., & Borgatto, A.F. (2018). MEEGA+: A Method for the Evaluation of Educational Games for Computing Education. https://www.researchgate.net/publication/326722665
+[0960] [normal]  Sharma, L. R., Bidari, S., Bidari, D., Neupane, S., & Sapkota, R. (2023). Exploring the mixed methods research design: types, purposes, strengths, challenges, and criticisms. Global Academic Journal o
+[0961] [normal]  Tuc, N. D., Pha, P. D., & Huyen, N. X. (2015). The current situation of flash flood hazard in Tay Nguyen region. VIETNAM JOURNAL of EARTH SCIENCES, 37(2). https://doi.org/10.15625/0866-7187/37/2/7367
+[0962] [normal]  Utoyo, A. W. (2021b). Video games as tools for education. Journal of Games Game Art and Gamification, 3(2), 56–60. https://doi.org/10.21512/jggag.v3i2.7255
+[0963] [Heading 2]  Online Resources
+[0964] [normal]  
+[0965] [normal]  Abanto, R. (2025, November 5). Tino brought “worst  flash flood” in history of Cebu,   says   governor   |   ABS-CBN   News.   ABS-CBN.   https://www.abs-cbn.com/news/regions/2025/11/5/tino-brought-wo
+[0966] [normal]  Api. (n.d.-b). survey questionnaire - disaster awareness and preparedness - sti. Scribd.	https://www.scribd.com/document/432296189/survey-questionnaire-disaster-awareness-and-preparedness-sti
+[0967] [normal]  Asian Disaster Reduction Center(ADRC). (n.d.). Information on disaster risk reduction	of	the	member	countries. https://www.adrc.asia/nationinformation.php?NationCode=608&Lang=en
+[0968] [normal]  Awais, M. (2024). Ibis Paint vs Ibis Paint X in 2024 – Major Differences & Benefits. https://khiredkids.com/ibis-paint-vs-ibis-paint-x/
+[0969] [normal]  Cebu Earthquake | UNHCR Philippines. (2025). UNHCR Philippines. https://www.unhcr.org/ph/cebu-earthquake
+[0970] [normal]  Citizens' Disaster Response Center. (2022). Philippine Disaster Report 2021. https://www.cdrc-phil.com/philippine-disaster-report-2021/
+[0971] [normal]  European Civil Protection and Humanitarian Aid Operations. (2023). Disaster Preparedness.	https://civil-protection-humanitarian-aid.ec.europa.eu/what/humanitarian-aid/disaster-preparedness_en
+[0972] [normal]  Guardian staff reporter. (2025, November 6). Philippines declares state of emergency after typhoon Kalmaegi death toll passes 100. The Guardian;
+[0973] [normal]  The	Guardian.
+[0974] [normal]  
+[0975] [normal]  https://www.theguardian.com/world/2025/nov/06/philippines-state-of-emergency-typhoon-kalmaegi-death-toll
+[0976] [normal]  Hassan, M. (2024). Purposive Sampling - Methods, Types and Examples. Research Method.	https://researchmethod.net/purposive-sampling/?fbclid=IwY2xjawJ0gnRleHRuA2FlbQIxMAABHicKsdZygQ796yxvs 34MyT7WTdwMy
+[0977] [normal]  IFRC. (2021). Hazard Definitions. www.ifrc.org/document/hazard-definitions IFRC. (2023). What Is a Disaster?. www.ifrc.org/our-work/disasters-climate-and-
+[0978] [normal]  crises/what-disaster.
+[0979] [normal]  Makwana, D., Engineer, P., Dabhi, A., & Chudasama, H. (2023). Sampling Methods in	Research:	A	Review. https://www.researchgate.net/publication/371985656_Sampling_Methods
+[0980] [normal]  _in_Research_A_Review
+[0981] [normal]  OCHA. (2024). Philippines: Typhoon Rai (Odette) - Emergency Appeal No. MDRPH045	-	Final	Report	-	Philippines. https://reliefweb.int/report/philippines/philippines-typhoon-rai-odette-emergency-appeal-n
+[0982] [normal]  Office		of	Civil	Defense	–	NDRRMC.	(2023).	The	Philippines. https://theaseanmagazine.asean.org/article/the-philippines/
+[0983] [normal]  Ramadan, R. (2013). A Guidelines of Game Development Life Cycle (V2.0). https://personanonymous.wordpress.com/2013/07/17/a-guidelines-of-game-development-life-cycle-v2-0/#more-813
+[0984] [normal]  Ravikiran,	A.	S.	(2021).	What	is	SQLite	And	When	to	Use	SQLite. https://www.simplilearn.com/tutorials/sql-tutorial/what-is-sqlite
+[0985] [normal]  Skillshare.  (n.d.).  What  is  Figma?  A  complete  introduction  for  beginners. https://www.skillshare.com/en/blog/what-is-figma-a-complete-introduction-for-beginners/
+[0986] [normal]  United Nations. (2015). Transforming our world: The 2030 agenda for sustainable development. United Nations. https://sdgs.un.org/2030agenda
+[0987] [normal]  vietnam.vnanet.vn. (2025, September 30). Heavy rain and risks of flash floods persist	across	northern	and	central	Vietnam.	Vnanet.vn. https://vietnam.vnanet.vn/english/tin-van/heavy-rain-and-risks-of-
+[0988] [Heading 1]  APPENDICES
+[0989] [normal]  
+[0990] [Heading 2]  Appendix A
+[0991] [normal]  Letter to Conduct an Interview
+[0992] [normal] [IMG] 
+[0993] [Heading 2]  Appendix B
+[0994] [normal]  
+[0995] [normal]  Interview Guide
+[0996] [normal] [IMG] 
+[0997] [normal]  Appendix C
+[0998] [normal]  
+[0999] [normal]  Transcript of Interview
+[1000] [normal]  
+[1001] [normal]  
+[1002] [normal]  
+[1003] [normal]  
+[1004] [normal]  Appendix D
+[1005] [normal]  
+[1006] [normal]  Survey Questionnaire Assessment of Disaster-Related knowledge, Preparedness and Readiness, Adaptation, Awareness, and Risk Perception
+[1007] [normal]  
+[1008] [normal]  Dear Respondents,
+[1009] [normal]  We are conducting a study entitled “LigTask: Gamified Disaster Preparedness”, which seeks to develop an educational mobile game to promote disaster awareness and preparedness. Your honest responses to
+[1010] [normal]  
+[1011] [normal]  Respectfully yours, Mary Anne C. Abenoja Aimee Rachelle J. Arellano Janine Marielle G. Reyes Ellen F. Mangaoang, MIT
+[1012] [normal]  
+[1013] [normal]  DIRECTIONS:
+[1014] [normal]  Read each statement carefully and check the response that best reflects your opinion: (1) Strongly Disagree, (2) Disagree, (3) Neutral, (4) Agree, (5) Strongly Agree. Your honest feedback is sincerely
+[1015] [normal]  NAME: 			 AGE: 	 STUDENT/TEACHER: 		 If student, GRADE/YEAR LEVEL: 		 GENDER:
+[1016] [normal]  
+[1017] [normal]  
+[1018] [normal]  
+[1019] [normal]  
+[1020] [normal]  
+[1021] [Heading 2]  Appendix E
+[1022] [normal]  
+[1023] [normal] [IMG] Meega+ Questionnaire for Digital Games
+[1024] [normal] [IMG] 
+[1025] [Heading 1]  PHOTO DOCUMENTATION
+[1026] [normal] [IMG] 
+[1027] [normal]  
+[1028] [normal]  Interviews were conducted with the Office of Civil Defense Regional Office I and Disaster Risk Reduction and Management Council (DRRMC) of Bacnotan, La Union to gather information on community-level d
+[1029] [normal] [IMG] 
+[1030] [normal]  
+[1031] [normal]  
+[1032] [normal]  
+[1033] [normal]  
+[1034] [normal]  
+[1035] [normal]  
+[1036] [normal]  
+[1037] [normal]  
+[1038] [normal]  
+[1039] [normal]  
+[1040] [normal]  
+[1041] [normal]  
+[1042] [normal]  
+[1043] [normal]  
+[1044] [normal]  
+[1045] [normal] [IMG] 
+[1046] [normal]  The LigTask application was presented to the professional DRRMC of Bacnotan for the evaluation of its content and game features.
+[1047] [normal] [IMG] 
+[1048] [normal]  
+[1049] [normal]  
+[1050] [normal]  
+[1051] [normal]  
+[1052] [normal]  
+[1053] [normal]  
+[1054] [normal]  
+[1055] [normal]  
+[1056] [normal]  
+[1057] [normal]  
+[1058] [normal]  
+[1059] [normal]  
+[1060] [normal]  
+[1061] [normal]  
+[1062] [normal]  
+[1063] [normal] [IMG] 
+[1064] [normal]  
+[1065] [normal]  The application was tested with students from Zaragosa Integrated School, Bacnotan, La Union, to assess their disaster-related knowledge, preparedness, readiness, adaptation, awareness, and risk perce
+[1066] [normal] [IMG] 
+[1067] [normal]  
+[1068] [normal]  
+[1069] [normal]  
+[1070] [normal]  
+[1071] [normal]  
+[1072] [normal]  
+[1073] [normal]  
+[1074] [normal]  
+[1075] [normal]  
+[1076] [normal]  
+[1077] [normal]  
+[1078] [normal]  
+[1079] [normal]  
+[1080] [normal]  
+[1081] [normal]  
+[1082] [normal]  
+[1083] [normal]  
+[1084] [normal] [IMG] 
+[1085] [normal]  The application was evaluated using the MEEGA+ to measure the effectiveness of the game on player experience. The researchers observed and guided the students as they played the game to gather accurat
+[1086] [normal] [IMG] 
+[1087] [normal]  
+[1088] [normal] [IMG] 
+[1089] [normal]  
+[1090] [normal]  Testing and evaluation of the LigTask application by selected Senior High School students from the Basic and Inclusive Education.
+[1091] [normal] [IMG] 
+[1092] [normal]  
+[1093] [normal]  
+[1094] [normal]  
+[1095] [normal]  
+[1096] [normal]  
+[1097] [normal]  
+[1098] [normal]  
+[1099] [normal]  
+[1100] [normal]  
+[1101] [normal]  
+[1102] [normal]  
+[1103] [normal]  
+[1104] [normal]  
+[1105] [normal]  
+[1106] [normal]  
+[1107] [normal]  
+[1108] [normal]  
+[1109] [normal]  
+[1110] [normal]  
+[1111] [normal]  
+[1112] [normal]  
+[1113] [normal] [IMG] 
+[1114] [normal]  
+[1115] [normal]  The researchers presented and defended their study. The panel members provided feedback, engaged in discussion, and conducted a thorough evaluation of the research work.
+[1116] [normal] [IMG] 
+[1117] [normal]  
+[1118] [normal]  
+[1119] [normal]  
+[1120] [normal]  
+[1121] [normal]  
+[1122] [normal]  
+[1123] [normal]  
+[1124] [normal]  
+[1125] [normal]  
+[1126] [normal]  
+[1127] [normal]  
+[1128] [normal]  
+[1129] [normal]  
+[1130] [normal]  
+[1131] [normal]  
+[1132] [normal]  
+[1133] [normal]  
+[1134] [normal] [IMG] 
+[1135] [normal]  
+[1136] [normal]  The ICIEERD conference was held in Batac, Ilocos Norte, where researchers presented the LigTask mobile application and a poster, demonstrating the system’s features and engaging with attendees to gath
+[1137] [normal] [IMG] 
+[1138] [normal]  
+[1139] [normal]  
+[1140] [normal]  
+[1141] [normal]  
+[1142] [normal]  
+[1143] [normal]  
+[1144] [normal]  
+[1145] [normal]  
+[1146] [normal]  
+[1147] [normal]  
+[1148] [normal]  
+[1149] [normal]  
+[1150] [normal]  
+[1151] [normal]  
+[1152] [normal]  
+[1153] [normal]  
+[1154] [normal]  
+[1155] [normal]  
+[1156] [normal]  
+[1157] [normal]  
+[1158] [normal]  
+[1159] [normal]  
+[1160] [normal]  
+[1161] [normal]  
+[1162] [normal]  
+[1163] [normal]  
+[1164] [normal]  
+[1165] [normal]  
+[1166] [normal]  
+[1167] [normal]  
+[1168] [normal]  
+[1169] [normal]  
+[1170] [normal]  
+[1171] [normal]  
+[1172] [normal]  
+[1173] [normal]  
+[1174] [normal]  
+[1175] [normal] [IMG] 
+[1176] [normal]  
+[1177] [normal]  
+[1178] [normal]  
+[1179] [normal]  
+[1180] [normal] [IMG] The researchers received recognition for presenting the LigTask mobile application and poster, highlighting their active participation and notable achievements in the event.
+[1181] [Heading 1]  CURRICULUM VITAE
+[1182] [normal] [IMG] 
+[1183] [normal]  
+[1184] [normal]  MARY ANNE CAMBA ABENOJA
+[1185] [normal]  
+[1186] [Heading 1]  PERSONAL INFORMATION
+[1187] [normal]  Address	: Aglipay Street, Eastblock, Natividad,
+[1188] [Heading 2]  Naguilian, La Union, Philippines 2511
+[1189] [normal]  Contact Number	09062700826
+[1190] [normal]  Email Address	: maryanne.abenoja@lorma.edu
+[1191] [normal]  Date of Birth	: July 26, 2004
+[1192] [normal]  Place of Birth	: City of San Fernando, La Union
+[1193] [normal]  
+[1194] [Heading 1]  EDUCATIONAL BACKGROUND
+[1195] [Heading 2]  Kindergarten (2010)
+[1196] [normal]  Saint Augustine School
+[1197] [normal]  
+[1198] [Heading 2]  Elementary (2011 – 2015)
+[1199] [normal]  Saint Augustine School
+[1200] [normal]  
+[1201] [Heading 2]  Junior High (2016 – 2019)
+[1202] [normal]  Colegio de La Union
+[1203] [normal]  
+[1204] [Heading 2]  Senior High (2020 – 2022)
+[1205] [normal]  Naguilian National High School - Senior High School
+[1206] [normal]  
+[1207] [Heading 2]  College (2022 – Present)
+[1208] [normal]  Lorma Colleges
+[1209] [normal]  
+[1210] [Heading 1]  AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[1211] [Heading 2]  College Level:
+[1212] [normal]  College Freshman 1st Semester Half Scholar (2022-2023)
+[1213] [normal]  College Freshman 2nd Semester Half Scholar (2022-2023)
+[1214] [normal]  College Sophomore 1st Semester Half Scholar (2023-2024)
+[1215] [normal]  College Sophomore 2nd Semester Half Scholar (2023-2024)
+[1216] [normal]  College Junior 1st Semester Half Scholar (2024-2025)
+[1217] [normal]  College Junior 2nd Semester Half Scholar (2024-2025)
+[1218] [normal]  CCSE SBO 3rd Year Treasurer (2024-2025)
+[1219] [normal]  CCSE SBO 4th Year Vice-President (2025-2026)
+[1220] [normal]  
+[1221] [Heading 2]  Senior High School:
+[1222] [normal]  With High Honors
+[1223] [normal]  Academic Excellence Award
+[1224] [normal]  Best Research
+[1225] [normal]  
+[1226] [Heading 2]  Junior High School:
+[1227] [normal]  With Honors
+[1228] [normal]  Best Research
+[1229] [normal]  Leadership Award
+[1230] [normal]  Perfect Attendance
+[1231] [normal]  Student Leadership of the Year (SBO President)
+[1232] [normal]  Outstanding Academic Performance
+[1233] [normal]  
+[1234] [Heading 2]  Elementary:
+[1235] [normal]  Best in Mathematics
+[1236] [normal]  Best in Science
+[1237] [normal]  Best in Filipino
+[1238] [normal]  Best in Values Education
+[1239] [normal]  Creative Arts Award
+[1240] [normal]  Reading and Writing Excellence Award
+[1241] [normal]  Most Responsible Pupil
+[1242] [normal]  Most Cooperative Pupil
+[1243] [normal]  Perfect Attendance
+[1244] [normal]  Sportsmanship Award
+[1245] [normal]  Outstanding Behavior Award
+[1246] [normal]  
+[1247] [Heading 1]  WORK EXPERIENCE
+[1248] [normal]  E-commerce
+[1249] [normal]  
+[1250] [Heading 1]  ELIGIBILITY
+[1251] [normal]  N/A
+[1252] [normal]  
+[1253] [Heading 1]  SEMINARS ATTENDED
+[1254] [normal]  4th National Conference on Computing, Education and Business (NCCEB)
+[1255] [normal]  National Book Week
+[1256] [normal]  Global Conference on Robotics and Artificial Intelligence Technologies (GCRAIT)
+[1257] [normal]  2024 Lormanian Leaders’ Leadership Training
+[1258] [normal]  2024 DICT Regional Roadshow La Union
+[1259] [normal]  AI and Media Literacy
+[1260] [normal]  Introduction to IT Project Management
+[1261] [normal]  1st Provincial Information and Communications Technology (ICT) Program 2025: Provincial ICT Exhibition and Summit (PIES)
+[1262] [normal]  2025 Lormanian Leaders’ Leadership Training
+[1263] [normal]  Click 2025: Collaborative Learning and Innovation Conference for Knowledge in Information Technology Education – UniFast Grantees
+[1264] [normal]  Agentblazer Champion Workshop by SmartBridge in Collaboration with Salesforce
+[1265] [normal]  Ilocos Consortium for Industry, Energy, and Emerging Technology Research and Development
+[1266] [normal]  
+[1267] [Heading 1]  INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED
+[1268] [normal]  The Effectiveness of Distance Learning Modality to Grade 11-ABM Learners of Naguilian, National High – Senior High School, Naguilian, La Union
+[1269] [normal]  Comparative Study of Tricycle Drivers' Daily Income Before and During the Pandemic in Natividad, Naguilian, La Union
+[1270] [normal]  Gender Stereotyping: Self-Perceptions and Society Labeled Career Choices of College Students
+[1271] [normal]  LigTask: A 2D Game-Based Learning Platform for Enhancing Disaster Awareness and Preparedness
+[1272] [normal] [IMG] 
+[1273] [normal]  
+[1274] [normal]  
+[1275] [normal]  
+[1276] [normal]  
+[1277] [normal]  
+[1278] [normal]  
+[1279] [normal]  
+[1280] [normal]  
+[1281] [normal]  
+[1282] [normal]  
+[1283] [normal]  
+[1284] [normal]  AIMEE RACHELLE JUBILO ARELLANO
+[1285] [normal]  
+[1286] [Heading 1]  PERSONAL INFORMATION
+[1287] [Heading 2]  Address	: 5, Purok 2, Lisqueb, Bacnotan, La Union,
+[1288] [normal]  Philippines 2515
+[1289] [normal]  Contact Number	0949 359 9806
+[1290] [normal]  Email Address	: aimeerachelle.arellano@lorma.edu
+[1291] [normal]  Date of Birth	: September 23, 2004
+[1292] [normal]  Place of Birth	: City of San Fernando, La Union
+[1293] [normal]  
+[1294] [Heading 1]  EDUCATIONAL BACKGROUND
+[1295] [Heading 2]  Kindergarten (2009-2010)
+[1296] [normal]  Bacnotan Central School
+[1297] [normal]  
+[1298] [normal]  Elementary (2010-2016) Bacnotan Central School Zaragosa Elementary School
+[1299] [normal]  
+[1300] [Heading 2]  Junior High (2016-2020)
+[1301] [normal]  Bacnotan National High School
+[1302] [normal]  
+[1303] [Heading 2]  Senior High (2020 – 2022)
+[1304] [normal]  Bacnotan National High School
+[1305] [normal]  
+[1306] [Heading 2]  College (2022 – Present)
+[1307] [normal]  Lorma Colleges
+[1308] [normal]  
+[1309] [Heading 1]  AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[1310] [Heading 2]  College Level:
+[1311] [normal]  College Freshman 1st Semester Dean’s Lister (2022-2023)
+[1312] [normal]  College Freshman 2nd Semester Half Scholar (2022-2023)
+[1313] [normal]  College Sophomore 1st Semester Half Scholar (2023-2024)
+[1314] [normal]  College Sophomore 2nd Semester Half Scholar (2023-2024)
+[1315] [normal] [IMG] 
+[1316] [normal]  College Junior 1st Semester Half Scholar (2024-2025)
+[1317] [normal]  College Junior 2nd Semester Half Scholar (2024-2025)
+[1318] [normal]  Sagisag Artistic Design Director (2024-2025)
+[1319] [normal]  
+[1320] [Heading 2]  Senior High School:
+[1321] [normal]  With Honors
+[1322] [normal]  
+[1323] [Heading 2]  Junior High School:
+[1324] [normal]  With Honors
+[1325] [normal]  
+[1326] [Heading 2]  Elementary:
+[1327] [normal]  With Honors
+[1328] [normal]  
+[1329] [Heading 2]  Kindergarten:
+[1330] [normal]  With Honors
+[1331] [normal]  
+[1332] [Heading 1]  WORK EXPERIENCE
+[1333] [normal]  N/A
+[1334] [normal]  
+[1335] [Heading 1]  ELIGIBILITY
+[1336] [normal]  N/A
+[1337] [normal]  
+[1338] [Heading 1]  SEMINARS ATTENDED
+[1339] [normal]  4th National Conference on Computing, Education and Business (NCCEB)
+[1340] [normal]  Global Conference on Robotics and Artificial Intelligence Technologies (GCRAIT)
+[1341] [normal]  AI and Media Literacy
+[1342] [normal]  Ilocos Consortium for Industry, Energy, and Emerging Technology Research and Development
+[1343] [normal]  
+[1344] [Heading 1]  INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED
+[1345] [normal]  Gender Neutral Uniforms in Lorma Colleges
+[1346] [normal]  LigTask: A 2D Game-Based Learning Platform for Enhancing Disaster Awareness and Preparedness
+[1347] [normal] [IMG] 
+[1348] [normal]  
+[1349] [normal]  
+[1350] [normal]  
+[1351] [normal]  
+[1352] [normal]  
+[1353] [normal]  
+[1354] [normal]  
+[1355] [normal]  
+[1356] [normal]  
+[1357] [normal]  
+[1358] [normal]  
+[1359] [normal]  JANINE MARIELLE GANADEN REYES
+[1360] [normal]  
+[1361] [Heading 1]  PERSONAL INFORMATION
+[1362] [Heading 2]  Address	: Cariño Street, Ili Sur, San Juan, La Union,
+[1363] [normal]  Philippines 2514
+[1364] [normal]  Contact Number	0995 461 5396
+[1365] [normal]  Email Address	: janinemarielle.reyes@lorma.edu
+[1366] [normal]  Date of Birth	: January 12, 2005
+[1367] [normal]  Place of Birth	: San Juan City, Metro Manila
+[1368] [normal]  
+[1369] [Heading 1]  EDUCATIONAL BACKGROUND
+[1370] [Heading 2]  Kindergarten (2010)
+[1371] [normal]  Popondetta International School
+[1372] [normal]  
+[1373] [normal]  Elementary (2011 – 2015) Bethel Primary School Popondetta Primary School
+[1374] [normal]  
+[1375] [normal]  Junior High (2016 – 2019) Popondetta Primary School Goroka Grammar School
+[1376] [normal]  
+[1377] [Heading 2]  Senior High (2020 – 2022)
+[1378] [normal]  San Juan Senior High School Stand Alone
+[1379] [normal]  
+[1380] [Heading 2]  College (2022 – Present)
+[1381] [normal]  Lorma Colleges
+[1382] [normal]  
+[1383] [Heading 1]  AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[1384] [Heading 2]  College Level:
+[1385] [normal]  College Freshman 1st Semester Dean’s Lister (2022-2023)
+[1386] [normal]  College Freshman 2nd Semester Half Scholar (2022-2023)
+[1387] [normal]  College Sophomore 1st Semester Half Scholar (2023-2024)
+[1388] [normal]  College Sophomore 2nd Semester Half Scholar (2023-2024)
+[1389] [normal]  College Junior 1st Semester Half Scholar (2024-2025)
+[1390] [normal]  College Junior 2nd Semester Half Scholar (2024-2025)
+[1391] [normal]  CCSE SBO 3rd Year IT/CS Representative (2024-2025)
+[1392] [normal]  CCSE SBO 4th Year Secretary (2025-2026)
+[1393] [normal]  
+[1394] [Heading 2]  Senior High School:
+[1395] [normal]  With Honors
+[1396] [normal]  
+[1397] [Heading 2]  Junior High School:
+[1398] [normal]  Perfect Attendance
+[1399] [normal]  Best in English
+[1400] [normal]  Best in Math
+[1401] [normal]  Best in Arts
+[1402] [normal]  Best in Science
+[1403] [normal]  Best in Social Science
+[1404] [normal]  Best in Personal Development
+[1405] [normal]  Best in Making a Living
+[1406] [normal]  
+[1407] [Heading 2]  Elementary:
+[1408] [normal]  Best in Language
+[1409] [normal]  Best in Mathematics
+[1410] [normal]  Best in Culture and Community
+[1411] [normal]  Best in Health and Physical Education
+[1412] [normal]  
+[1413] [Heading 1]  WORK EXPERIENCE
+[1414] [normal]  N/A
+[1415] [normal]  
+[1416] [Heading 1]  ELIGIBILITY
+[1417] [normal]  Passer on PhilNITS (Philippine National IT Standards Foundation) Information Technology Passport (IP) Certification Exam
+[1418] [normal]  
+[1419] [Heading 1]  SEMINARS ATTENDED
+[1420] [normal]  4th National Conference on Computing, Education and Business (NCCEB)
+[1421] [normal]  2024 DICT Regional Roadshow La Union
+[1422] [normal]  2024 Lormanian Leaders’ Leadership Training
+[1423] [normal]  LEAD IT: Leadership and Empowerment through Ambassadorship in Digital Innovation for IT Webinar
+[1424] [normal]  Global Conference on Robotics and Artificial Intelligence Technologies (GCRAIT)
+[1425] [normal]  AI and Media Literacy
+[1426] [normal]  Introduction to IT Project Management
+[1427] [normal]  1st Provincial Information and Communications Technology (ICT) Program 2025: Provincial ICT Exhibition and Summit (PIES)
+[1428] [normal]  2025 Lormanian Leaders’ Leadership Training
+[1429] [normal]  Ilocos Consortium for Industry, Energy, and Emerging Technology Research and Development
+[1430] [normal]  
+[1431] [normal]  
+[1432] [Heading 1]  INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED
+[1433] [normal]  The Effect of Organic Powdered Fertilizer Made From Kitchen Waste on Calamansi Plant Growth
+[1434] [normal]  Gender Neutral Uniforms in Lorma Colleges
+[1435] [normal]  LigTask: A 2D Game-Based Learning Platform for Enhancing Disaster Awareness and Preparedness
+[1436] [normal] [IMG] 
+[1437] [normal]  
+[1438] [normal]  
+[1439] [normal]  
+[1440] [normal]  
+[1441] [normal]  
+[1442] [normal]  
+[1443] [normal]  
+[1444] [normal]  
+[1445] [normal]  
+[1446] [normal]  
+[1447] [normal]  
+[1448] [normal]  ELLEN F. MANGAOANG, MIT
+[1449] [normal]  
+[1450] [Heading 1]  PERSONAL INFORMATION
+[1451] [Heading 2]  Address		: 161 Governor Nisce Zone 2, Catbangen, City of San Fernando, La Union
+[1452] [normal]  Contact Number	: 09196735689
+[1453] [normal]  Email address	: ellen.mangaoang@lorma.edu
+[1454] [normal]  
+[1455] [Heading 1]  EDUCATIONAL BACKGROUND
+[1456] [Heading 2]  Elementary
+[1457] [normal]  Christ the King College
+[1458] [normal]  
+[1459] [Heading 2]  Secondary
+[1460] [normal]  Christ the King College
+[1461] [normal]  
+[1462] [Heading 2]  College
+[1463] [normal]  Bachelor of Science in Computer Science, LORMA Colleges
+[1464] [normal]  
+[1465] [Heading 2]  Graduate School
+[1466] [normal]  Master's in Information Technology, Don Mariano Marcos Memorial State University, Mid La Union Campus
+[1467] [normal]  Doctor in Information Technology (dissertation), University of the Cordilleras
+[1468] [Heading 1]  ELIGIBILITY
+[1469] [normal]  Civil Service Subprofessional eligibility
+[1470] [normal]  Civil Service Professional eligibility
+[1471] [normal]  Civil Service Electronic Data Processing Specialist
+[1472] [normal]  DICT Computer Programming Proficiency
+[1473] [normal] [IMG] 
+[1474] [Heading 1]  IVI. INVOLVEMENT IN RESEARCH/RESEARCH CONDUCTED
+[1475] [normal]  Development of a mobile based game with image recognition for preschoolers. Tuijin Jishu/Journal of Propulsion Technology, 45(04). https://www.propulsiontechjournal.com/index.php/journal/article/view/
+[1476] [normal]  Common vulnerabilities and exposures assessment of private higher educational institutions using web application security. Journal of Electrical Systems, 20(5s), 668–676. https://doi.org/10.52783/jes.
+[1477] [normal]  Analysis of deep learning algorithms for grape leaf disease detection. Journal of Information Systems Engineering and Management, 10(33s). https://doi.org/10.52783/jisem.v10i33s.5537
+[1478] [normal]  Grape Leaf Disease Detection Using Deep Learning: A Hybrid Approach with Efficientnet and Mobilenet. (2025). International Journal of Environmental Sciences, 2811-2817. https://doi.org/10.64252/2g0eqc
+[1479] [normal]  LigTask: A 2D Game-Based Learning Platform for Enhancing Disaster Awareness and Preparedness

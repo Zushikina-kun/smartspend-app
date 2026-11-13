@@ -1,0 +1,82 @@
+[0000] [Heading 2] SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management
+[0026] [normal] APPROVAL SHEET
+[0027] [Heading 1] This is to certify that we have supervised the preparation of the Capstone Project and read the manuscript prepared by DIRECTO, BRIX A., RUBIS, CYRILLE JOHN M., and MADAYAG, DJAUNATHAN ALBERT S. entitled SMARTSPEND: AN AI-ASSISTED MOBILE FINANCIAL TRACKING AND ADVISORY APPLICATION FOR PERSONAL FINANCIAL MANAGEMENT and that the said capstone project has been submitted for final examination by the Oral Examination Committee.
+[0030] [Heading 2] Ellen F. Mangaoang, DIT
+[0035] [Heading 1] As members of the Oral Examination Committee, we certify that we have examined this capstone project presented before the committee and hereby recommend that it be accepted in partial fulfillment of the capstone requirements for the degree in Bachelor of Science in Information Technology.
+[0037] [normal] _______________________________
+[0041] [normal] _________________     _________________
+[0045] [Heading 1] This capstone project is hereby approved and accepted by the College of Computer Studies and Engineering in partial fulfillment of the requirements for the degree in Bachelor of Science in Information Technology.
+[0047] [normal] _______________________________
+[0050] [normal] ABSTRACT
+[0055] [normal] ACKNOWLEDGEMENT
+[0064] [Heading 1] The Researchers
+[0066] [Heading 1] 
+[0067] [Heading 1] 
+[0068] [Heading 1] 
+[0069] [Heading 1] 
+[0070] [Heading 1] 
+[0071] [Heading 1] 
+[0072] [Heading 1] 
+[0073] [Heading 1] DEDICATION
+[0080] [normal] CJMR
+[0081] [normal] DASM
+[0082] [normal] TABLE OF CONTENTS
+[0092] [normal] CHAPTER I: INTRODUCTION 	1
+[0097] [normal] CHAPTER II: RESEARCH METHODOLOGY 	26
+[0101] [normal] CHAPTER III: RESULTS AND DISCUSSION 	43
+[0110] [normal] CHAPTER IV: CONCLUSIONS AND RECOMMENDATIONS 	73
+[0113] [normal] REFERENCES 	78
+[0119] [normal] CURRICULUM VITAE 	99
+[0125] [normal] LIST OF FIGURES
+[0143] [normal] LIST OF TABLES
+[0155] [Heading 2] INTRODUCTION
+[0157] [Heading 2] Project Context
+[0184] [Heading 2] Conceptual Framework
+[0188] [Heading 3] Statement of Objectives
+[0225] [normal] CHAPTER II
+[0226] [normal] DESIGN AND METHODOLOGY
+[0228] [Heading 2] Research Design
+[0273] [normal] CHAPTER III
+[0274] [normal] RESULTS AND DISCUSSION
+[0361] [normal] CHAPTER IV
+[0362] [normal] CONCLUSIONS AND RECOMMENDATIONS
+[0449] [normal] APPENDICES
+[0450] [normal] APPENDIX A
+[0456] [Heading 3] Section A – Respondent Profile
+[0480] [normal] SECTION B. EXISTING FINANCIAL MANAGEMENT PRACTICES
+[0494] [normal] SECTION C. COMMON BUDGETING CHALLENGES
+[0531] [normal] SECTION D. EXPENSE TRACKING BEHAVIORS
+[0563] [normal] SECTION E. SUPPLEMENTARY PROFILE AND FEATURE NEEDS
+[0597] [normal] APPENDIX B
+[0598] [normal] INFORMED CONSENT FORM
+[0623] [normal] APPENDIX C
+[0624] [Heading 2] System Usability Scale (SUS) Questionnaire
+[0644] [normal] _________________________________________________________________
+[0645] [normal] _________________________________________________________________
+[0665] [normal] APPENDIX D
+[0668] [normal] APPENDIX E
+[0672] [normal] CURRICULUM VITAE
+[0674] [normal] BRIX A. DIRECTO
+[0675] [normal] I. PERSONAL INFORMATION
+[0677] [normal] II. EDUCATIONAL BACKGROUND
+[0681] [normal] III. AWARDS/CITATIONS/RECOGNITIONS RECEIVED N/A
+[0682] [normal] IV. WORK EXPERIENCE
+[0687] [normal] V. ELIGIBILITY N/A
+[0688] [normal] VI. SEMINARS/TRAININGS ATTENDED
+[0690] [normal] VII. INVOLVEMENT IN RESEARCH/RESEARCHES CONDUCTED
+[0698] [normal] CYRILLE JOHN M. RUBIS
+[0699] [normal] I. PERSONAL INFORMATION
+[0701] [normal] II. EDUCATIONAL BACKGROUND
+[0707] [normal] III. AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[0711] [normal] IV. WORK EXPERIENCE
+[0715] [normal] V. ELIGIBILITY N/A
+[0716] [normal] VI. SEMINARS/TRAININGS ATTENDED
+[0720] [normal] VII. INVOLVEMENT IN RESEARCH/RESEARCHES CONDUCTED
+[0733] [normal] DJAUNATHAN ALBERT S. MADAYAG
+[0734] [normal] I. PERSONAL INFORMATION
+[0736] [normal] II. EDUCATIONAL BACKGROUND
+[0742] [normal] III. AWARDS/CITATIONS/RECOGNITIONS RECEIVED
+[0746] [normal] IV. WORK EXPERIENCE
+[0748] [normal] V. ELIGIBILITY N/A
+[0749] [normal] VI. SEMINARS/TRAININGS ATTENDED
+[0751] [normal] VII. INVOLVEMENT IN RESEARCH/RESEARCHES CONDUCTED

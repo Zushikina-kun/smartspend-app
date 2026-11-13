@@ -1,0 +1,58 @@
+
+============================================================
+image2.jpg — Figure 2: Conceptual Framework
+  Size: 1536x2048 px
+  Top strip dark pixel ratio: 0.000
+  Bottom strip dark pixel ratio: 0.029
+  Looks clean — no obvious text strips detected
+  Dominant color range: R=212 G=207 B=203
+
+============================================================
+image3.png — Figure 3: SUS Score Interpretation
+  Size: 192x97 px
+  Top strip dark pixel ratio: 0.659
+  Bottom strip dark pixel ratio: 0.413
+  *** TOP STRIP likely has text (ratio=0.659)
+  *** BOTTOM STRIP likely has text (ratio=0.413)
+  Dominant color range: R=100 G=162 B=133
+
+============================================================
+image4.png — Figure 4: Agile Kanban Workflow
+  Size: 169x172 px
+  Top strip dark pixel ratio: 0.467
+  Bottom strip dark pixel ratio: 0.141
+  *** TOP STRIP likely has text (ratio=0.467)
+  *** BOTTOM STRIP likely has text (ratio=0.141)
+  Dominant color range: R=169 G=158 B=153
+
+============================================================
+image7.png — Figure 6: System Flowchart
+  Size: 2048x1536 px
+  Top strip dark pixel ratio: 0.000
+  Bottom strip dark pixel ratio: 0.505
+  *** BOTTOM STRIP likely has text (ratio=0.505)
+  Dominant color range: R=155 G=153 B=152
+
+============================================================
+image8.png — Figure 7: Use Case Diagram
+  Size: 2048x1536 px
+  Top strip dark pixel ratio: 0.000
+  Bottom strip dark pixel ratio: 0.190
+  *** BOTTOM STRIP likely has text (ratio=0.190)
+  Dominant color range: R=189 G=190 B=185
+
+============================================================
+image9.png — Figure 8: Visual Table of Contents
+  Size: 2048x1536 px
+  Top strip dark pixel ratio: 0.021
+  Bottom strip dark pixel ratio: 0.697
+  *** BOTTOM STRIP likely has text (ratio=0.697)
+  Dominant color range: R=116 G=118 B=123
+
+============================================================
+image17.png — Figure 16: SUS Computation Table
+  Size: 2048x1536 px
+  Top strip dark pixel ratio: 0.009
+  Bottom strip dark pixel ratio: 0.001
+  Looks clean — no obvious text strips detected
+  Dominant color range: R=210 G=199 B=180

@@ -1,0 +1,60 @@
+=== FIGURE CAPTIONS ===
+[0127] [normal] Figure 1.	Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+[0128] [normal] Figure 2.	Conceptual Framework (Mobile Application)
+[0129] [normal] Figure 3.	System Usability Scale (SUS) Score Interpretation
+[0130] [normal] Figure 4.	Agile Kanban Workflow for SmartSpend Development
+[0131] [normal] Figure 5.	Demographic Distribution of Needs-Assessment Respondents (N = 30).
+[0132] [normal] Figure 6.	SmartSpend System Flowchart
+[0133] [normal] Figure 7.	Use Case Diagram
+[0134] [normal] Figure 8.	Visual Table of Contents
+[0135] [normal] Figure 9.	Login and Demo Mode Screen
+[0136] [normal] Figure 10.	Home Dashboard
+[0137] [normal] Figure 11.	Expense Logging Through Peso Chat
+[0138] [normal] Figure 12.	Receipt Scanning and Batch Screenshot Import
+[0139] [normal] Figure 13.	Financial Health Score Breakdown
+[0140] [normal] Figure 14.	Budgets, Safe-to-Spend, and Savings Goals
+[0141] [normal] Figure 15.	Local AI Mode Setup
+[0142] [normal] Figure 16.	SUS Computation Table
+[0164] [normal] Figure 1.  Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024).
+[0186] [normal] Figure 2. Conceptual Framework (Mobile Application)
+[0256] [normal] Figure 3. System Usability Scale (SUS) Score Interpretation
+[0262] [normal] Figure 4.  Agile Kanban Workflow for SmartSpend Development
+[0285] [normal] Figure 5.  Demographic Distribution of Needs-Assessment Respondents (N = 30).
+[0308] [normal] Figure 6.  SmartSpend System Flowchart
+[0310] [normal] Figure 7.  Use Case Diagram
+[0313] [normal] Figure 8.  Visual Table of Contents
+[0323] [normal] Figure 9.  Login and Demo Mode Screen
+[0324] [normal] Figure 9 shows the login screen of SmartSpend, which also provided access to Demo Mode for first-time users. Users could sign in with their account or explore the application without registration.
+[0326] [normal] Figure 10.  Home Dashboard
+[0327] [normal] Figure 10 presents the Home Dashboard of SmartSpend, which displayed the user's Financial Health Score, recent transactions, and spending insights. The dashboard served as the main navigation screen, allowing users to quickly view their financial status and access key features of the application.
+[0329] [normal] Figure 11.  Expense Logging Through Peso Chat
+[0330] [normal] Figure 11 presents the Peso Chat interface, where users logged expenses through natural language input in Filipino, English, or Taglish. The AI assistant parsed the input and automatically recorded the transaction.
+[0332] [normal] Figure 12.  Receipt Scanning and Batch Screenshot Import
+[0333] [normal] Figure 12 shows the receipt scanning feature of SmartSpend, which used OCR to extract transaction details from physical receipts and e-wallet screenshots. Users could review and confirm the extracted data before it was recorded.
+[0335] [normal] Figure 13.  Financial Health Score Breakdown
+[0336] [normal] Figure 13 displays the Financial Health Score breakdown screen, showing the user's individual score components and overall financial health status.
+[0338] [normal] Figure 14.  Budgets, Safe-to-Spend, and Savings Goals
+[0339] [normal] Figure 14 shows the budgets screen, which allowed users to set spending limits per category and monitor their adherence throughout the month.
+[0341] [normal] Figure 15.  Local AI Mode Setup
+[0342] [normal] Figure 15 presents the local AI mode setup screen, which guided users in configuring an offline AI model for private use without internet connectivity.
+[0349] [normal] Figure 16.  SUS Computation Table
+
+=== TABLE CAPTIONS ===
+[0145] [normal] Table 1.	Three-Level Gap Analysis of SmartSpend
+[0146] [normal] Table 2.	Feature Comparison of SmartSpend with Existing Financial Applications (including Filipino-context apps)
+[0147] [normal] Table 3.	Distribution of Respondents and Validators
+[0148] [normal] Table 4.	Agile Kanban Workflow Phases and Deliverables
+[0149] [normal] Table 5. Demographic Distribution of Needs-Assessment Respondents (N = 30)
+[0150] [normal] Table 6.	Demographic Profile and Expense Tracking Methods of Respondents (N = 30)
+[0151] [normal] Table 7.	Comparative Evaluation of LLM APIs for SmartSpend Integration
+[0152] [normal] Table 8.	Overall SUS Result
+[0153] [normal] Table 9.	System Usability Scale (SUS) Results by Respondent Group
+[0166] [normal] Table 1.  Three-Level Gap Analysis of SmartSpend
+[0170] [normal] Table 2.  Feature Comparison of SmartSpend with Existing Financial Applications (including Filipino-context apps)
+[0236] [normal] Table 3.  Distribution of Respondents and Validators
+[0272] [normal] Table 4.  Agile Kanban Workflow Phases and Deliverables
+[0279] [normal] Table 6 presented the demographic profile of the 30 respondents and the expense tracking methods they reported. The sample comprised 13 parents aged 35–55 (43.3%), 14 young professionals aged 21–35 (46.7%), and 3 respondents identifying as both (10.0%). In terms of employment, 10 were employed full-time (33.3%), 9 were freelance or contractual (30.0%), 8 were self-employed (26.7%), and 3 were unemployed or part-time (10.0%). GCash was used by 93.3% of respondents (28/30), confirming the relevance of e-wallet transaction import as a core feature.
+[0281] [normal] Table 6.  Demographic Profile and Expense Tracking Methods of Respondents (N = 30)
+[0293] [normal] Table 7.  Comparative Evaluation of LLM APIs for SmartSpend Integration
+[0351] [normal] Table 8.  Overall SUS Result
+[0357] [normal] Table 9.  System Usability Scale (SUS) Results by Respondent Group
