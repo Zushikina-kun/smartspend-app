@@ -16,14 +16,16 @@
 
 | ✅ SAY | ❌ DON'T SAY |
 |--------|-------------|
-| "quantitative descriptive developmental" | "quantitative descriptive developmental" |
+| "quantitative descriptive developmental" | "mixed methods" (no interviews were conducted) |
 | "random sampling was used" (for respondents) | "interviews were conducted" |
 | "purposive sampling was used" (for content validator) | "proposed" (the app exists) |
-| "16 parents and 14 young professionals" (needs assessment, 30 total) | "16 parents" (old count) |
-| "10 parents and 20 young professionals" (SUS sample, 30 total, separate) | — |
+| "16 parents and 14 young professionals" (needs assessment, 30 total) | "13 parents" (old count) |
+| "10 parents and 20 young professionals" (SUS sample, 30 total, separate) | "failed" for Objective 3 |
 | "partially achieved" for Objective 3 — always | "fully achieved" for Objective 3 |
 | "61.83, below the 68 benchmark and the 80 target" | "passed the SUS threshold" |
-| "Grade D, adjective OK" | "failed the usability test" |
+| "Grade D, adjective OK" | "seven recommendations" (there are 9) |
+| "eight candidate LLM APIs were evaluated" | "20 candidate models" |
+| "Gemini 3.5 Flash-Lite" | "Gemini 1.5" |
 
 ---
 
@@ -101,7 +103,7 @@ Let me walk through five key screens. The Login and Demo Mode screen allows user
 
 ### Slide 12 — LLM Selection
 
-Selecting the right Large Language Model was a critical design decision. We evaluated 20 candidate models across six providers — assessing inference speed, response accuracy for Filipino-English natural language processing, context window capacity, and cost feasibility for a free-tier prototype. We selected **Gemini 3.5 Flash-Lite** because it offered a one-million-token context window, native function calling for all 34 AI actions, strong Taglish performance in our trials, and the highest free-tier request quota. The selection was systematic and comparative — not arbitrary.
+Selecting the right Large Language Model was a critical design decision. We evaluated **eight candidate LLM APIs** across multiple providers — assessing inference speed, response accuracy for Filipino-English natural language processing, context window capacity, and cost feasibility for a free-tier prototype. We selected **Gemini 3.5 Flash-Lite** because it offered a one-million-token context window, native function calling for all 34 AI actions, strong Taglish performance in our trials, and the highest free-tier request quota. The selection was systematic and comparative — not arbitrary.
 
 ---
 
@@ -135,7 +137,7 @@ Three conclusions follow directly from our results.
 
 **Objective 1 — Achieved.** The needs assessment successfully identified the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. 96.7% of respondents expressed intent to use an AI-powered financial app, and 93.3% already used GCash, confirming the target population and feature priorities.
 
-**Objective 2 — Achieved.** SmartSpend version 3.1.0 was successfully designed and developed as a working Android application, with 34 AI actions, 7 input modalities, offline-first SQLite storage, and a suitable LLM API selected through comparative technical evaluation of 20 candidates.
+**Objective 2 — Achieved.** SmartSpend version 3.1.0 was successfully designed and developed as a working Android application, with 34 AI actions, 7 input modalities, offline-first SQLite storage, and a suitable LLM API selected through comparative technical evaluation of eight candidate APIs.
 
 **Objective 3 — Partially achieved.** Usability was evaluated using the System Usability Scale with 30 valid respondents. The mean score of 61.83 falls below the 68-point benchmark and our 80 target. The app demonstrates promise as a prototype, but UI/UX improvements are needed before it reaches the target usability threshold.
 
@@ -181,7 +183,7 @@ That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang 
 
 ### Q1 — Why only 61.83?
 
-"Our SUS score of 61.83 falls below the 68-point benchmark established by Bangor, Kortum, and Miller and below our pre-established target of 80, which is precisely why Objective 3 is **partially achieved** rather than fully achieved. This is a prototype-stage finding — it tells us exactly where to improve. Specifically, respondents cited interface complexity and navigation consistency as concerns, which is directly addressed by **Recommendation 1**, which calls for a UI/UX redesign with simplified navigation and improved onboarding for first-time users."
+"Our SUS score of 61.83 falls below the 68-point benchmark established by Bangor, Kortum, and Miller and below our pre-established target of 80, which is precisely why Objective 3 is **partially achieved** rather than fully achieved. This is a prototype-stage finding — it tells us exactly where to improve. Specifically, respondents cited interface complexity and navigation consistency as concerns, which is directly addressed by **Recommendation 8**, which calls for a UI/UX redesign with simplified navigation and improved onboarding for first-time users."
 
 ---
 
@@ -205,13 +207,13 @@ That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang 
 
 ### Q5 — Why is the score below 68? What caused it?
 
-"Respondents specifically cited two concern areas in the SUS items: interface consistency — Question 6 — and perceived complexity — Questions 2 and 4. SmartSpend is feature-dense by design, because the needs assessment showed users needed AI chat, receipt scanning, budget tracking, health scoring, and gamification in one app. That density created a learning curve that the current onboarding flow does not fully resolve. **Recommendation 1** directly addresses this: a UI/UX redesign focused on simplified navigation and a more guided onboarding experience for new users."
+"Respondents specifically cited two concern areas in the SUS items: interface consistency — Question 6 — and perceived complexity — Questions 2 and 4. SmartSpend is feature-dense by design, because the needs assessment showed users needed AI chat, receipt scanning, budget tracking, health scoring, and gamification in one app. That density created a learning curve that the current onboarding flow does not fully resolve. **Recommendation 8** directly addresses this: a UI/UX redesign focused on simplified navigation and a more guided onboarding experience for new users."
 
 ---
 
 ### Q6 — What LLM did you use?
 
-"We used **Gemini 3.5 Flash-Lite**. We evaluated 20 candidate models across six providers — including models from OpenAI, Anthropic, Groq, Mistral, and Google — and selected Gemini 3.5 Flash-Lite based on four criteria: response quality for Filipino-English input, inference latency on mobile, cost feasibility for a free-tier prototype, and context window capacity. It offered a one-million-token context window, native function calling for our 34 AI actions, and the highest free-tier request quota of all evaluated providers."
+"We used **Gemini 3.5 Flash-Lite**. We evaluated **eight candidate LLM APIs** — including models from Google, Groq, and Cerebras — and selected Gemini 3.5 Flash-Lite based on four criteria: response quality for Filipino-English input, inference latency on mobile, cost feasibility for a free-tier prototype, and context window capacity. It offered a one-million-token context window, native function calling for our 34 AI actions, and the highest free-tier request quota of all evaluated providers."
 
 ---
 
@@ -259,5 +261,7 @@ All nine are grounded in the specific limitations of the current prototype that 
 > - If asked about sampling, say "random sampling" for respondents, "purposive sampling" for the validator.
 > - The needs assessment had 16 parents + 14 young professionals = 30.
 > - The SUS evaluation had 10 parents + 20 young professionals = 30 (separate group).
-> - Don't say "quantitative descriptive developmental" — the study is purely quantitative.
+> - Always say "quantitative descriptive developmental" — the study is purely quantitative, no interviews.
 > - Don't say "proposed" — SmartSpend is built and tested.
+> - Say "eight candidate LLM APIs" not "20 candidate models."
+> - Rec 8 = UI/UX refinement, Rec 9 = Formal parsing evaluation.

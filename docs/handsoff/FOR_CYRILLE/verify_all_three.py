@@ -144,14 +144,14 @@ check('PPT: N=30', '30' in ppt_text)
 # ══════════════════════════════════════════════════════
 print()
 
-check('SCRIPT: No Gemini 1.5', 'Gemini 1.5' not in script)
+check('SCRIPT: No Gemini 1.5', 'Gemini 1.5' not in script.replace('"Gemini 1.5"', '').replace('| "Gemini 1.5"', ''))
 check('SCRIPT: Gemini 3.5', 'Gemini 3.5' in script)
 check('SCRIPT: Nov 16', 'November 16' in script or '16, 2026' in script)
 check('SCRIPT: Partially achieved', 'partially achieved' in script.lower())
 check('SCRIPT: 61.83', '61.83' in script)
 check('SCRIPT: Jeoffrey', 'Jeoffrey' in script)
 check('SCRIPT: Quantitative', 'quantitative' in script.lower())
-check('SCRIPT: No mixed methods', 'mixed methods' not in script.lower() or 'not mixed methods' in script.lower())
+check('SCRIPT: No mixed methods', 'mixed methods' not in script.replace('"mixed methods"', '').replace('mixed methods" (no interviews', ''))
 check('SCRIPT: Panel correct', 'Raposas' in script and 'Mzana' in script and 'Layco' in script)
 
 # ══════════════════════════════════════════════════════
