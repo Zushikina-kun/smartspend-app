@@ -16,10 +16,10 @@
 
 | ✅ SAY | ❌ DON'T SAY |
 |--------|-------------|
-| "quantitative descriptive developmental" | "mixed methods" |
+| "quantitative descriptive developmental" | "quantitative descriptive developmental" |
 | "random sampling was used" (for respondents) | "interviews were conducted" |
 | "purposive sampling was used" (for content validator) | "proposed" (the app exists) |
-| "16 parents and 14 young professionals" (needs assessment, 30 total) | "13 parents" (old count) |
+| "16 parents and 14 young professionals" (needs assessment, 30 total) | "16 parents" (old count) |
 | "10 parents and 20 young professionals" (SUS sample, 30 total, separate) | — |
 | "partially achieved" for Objective 3 — always | "fully achieved" for Objective 3 |
 | "61.83, below the 68 benchmark and the 80 target" | "passed the SUS threshold" |
@@ -185,7 +185,7 @@ That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang 
 
 ---
 
-### Q2 — Why quantitative and not mixed methods?
+### Q2 — Why quantitative and not quantitative descriptive developmental?
 
 "Our study is **purely quantitative descriptive developmental**. We used validated structured survey questionnaires for both the needs assessment and the usability evaluation — no interviews were conducted, so there is no qualitative component. The surveys captured all the data we needed: frequency distributions of financial behaviors for the needs assessment, and SUS scores for usability evaluation. The 'developmental' component refers to the design and development of the SmartSpend prototype itself."
 
@@ -259,5 +259,5 @@ All nine are grounded in the specific limitations of the current prototype that 
 > - If asked about sampling, say "random sampling" for respondents, "purposive sampling" for the validator.
 > - The needs assessment had 16 parents + 14 young professionals = 30.
 > - The SUS evaluation had 10 parents + 20 young professionals = 30 (separate group).
-> - Don't say "mixed methods" — the study is purely quantitative.
+> - Don't say "quantitative descriptive developmental" — the study is purely quantitative.
 > - Don't say "proposed" — SmartSpend is built and tested.
