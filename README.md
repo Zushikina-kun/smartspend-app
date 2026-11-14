@@ -55,7 +55,6 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 </p>
 
 <p align="center">
-  <img src="docs/images/screenshots/Figure_3.7_Batch_Import_GCash.jpg" width="200" alt="Batch Import"/>
   <img src="docs/images/screenshots/Figure_3.8_FHS_Breakdown.jpg" width="200" alt="FHS Breakdown"/>
   <img src="docs/images/screenshots/Figure_3.9_Budgets_Savings_Goals.jpg" width="200" alt="Budgets & Goals"/>
   <img src="docs/images/screenshots/Figure_3.10_Local_AI_Setup.jpg" width="200" alt="Local AI Setup"/>
@@ -198,6 +197,11 @@ flutter run
 ```bash
 flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
 ```
+
+**Output:** Three optimized APKs in `build/app/outputs/flutter-apk/`:
+- `app-armeabi-v7a-release.apk` (ARM 32-bit)
+- `app-arm64-v8a-release.apk` (ARM 64-bit, most common)
+- `app-x86_64-release.apk` (x86 64-bit)
 
 **CI/CD — Automated Release Pipeline:**
 ```bash
