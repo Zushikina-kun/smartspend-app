@@ -6,21 +6,19 @@
 <title>SmartSpend — Defense Reviewer</title>
 <meta name="description" content="Capstone defense reviewer for SmartSpend. November 16, 2026 · LORMA Colleges CCSE.">
 <style>
-:root {
-  --green:#1a7a4a; --green2:#2d9e63; --green-light:#e8f5ee; --green-dark:#0f4d2e;
-  --red:#c0392b; --orange:#e67e22; --blue:#2471a3; --purple:#7d3c98;
-  --dark:#0f172a; --dark2:#1e293b; --card:#fff; --bg:#f1f5f2;
-  --border:#cce0d4; --text:#1e293b; --muted:#64748b;
-  --warn-bg:#fffbeb; --warn-b:#f59e0b;
-  --danger-bg:#fef2f2; --danger-b:#ef4444;
-  --info-bg:#eff6ff; --info-b:#3b82f6;
-  --radius:12px; --shadow:0 1px 6px rgba(0,0,0,.08);
+:root{
+  --green:#1a7a4a;--green2:#2d9e63;--green-light:#e8f5ee;--green-dark:#0f4d2e;
+  --red:#c0392b;--orange:#e67e22;--blue:#2471a3;--purple:#7d3c98;
+  --dark:#0f172a;--dark2:#1e293b;--card:#fff;--bg:#f1f5f2;
+  --border:#cce0d4;--text:#1e293b;--muted:#64748b;
+  --warn-bg:#fffbeb;--warn-b:#f59e0b;
+  --danger-bg:#fef2f2;--danger-b:#ef4444;
+  --info-bg:#eff6ff;--info-b:#3b82f6;
+  --radius:12px;--shadow:0 1px 6px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;font-size:15px}
-
-/* ── NAV ─────────────────────────────────────── */
 nav{background:var(--dark);color:#fff;padding:0 20px;display:flex;align-items:center;gap:4px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.4);flex-wrap:wrap}
 .nav-brand{font-weight:800;font-size:1rem;padding:13px 0;color:#4ade80;white-space:nowrap;margin-right:12px}
 .nav-brand span{color:#94a3b8;font-weight:400}
@@ -29,16 +27,12 @@ nav a:hover{color:#4ade80}
 .nav-pill{margin-left:auto;background:#c0392b;color:#fff;padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:700;white-space:nowrap;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.75}}
 #countdown{background:var(--dark2);color:#4ade80;text-align:center;padding:8px;font-size:.82rem;font-weight:600;letter-spacing:.5px;border-bottom:1px solid #334155}
-
-/* ── LAYOUT ──────────────────────────────────── */
 .wrap{max-width:1140px;margin:0 auto;padding:32px 18px}
 section{margin-bottom:52px;scroll-margin-top:72px}
 h1{font-size:1.9rem;color:var(--green);font-weight:800;margin-bottom:4px}
 h2{font-size:1.2rem;color:var(--dark);font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px}
 h3{font-size:.95rem;color:var(--green);font-weight:700;margin-bottom:8px}
 .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:28px}
-
-/* ── CARDS ───────────────────────────────────── */
 .card{background:var(--card);border-radius:var(--radius);padding:22px;margin-bottom:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -46,30 +40,15 @@ h3{font-size:.95rem;color:var(--green);font-weight:700;margin-bottom:8px}
 .stat-box{background:var(--card);border-radius:10px;padding:16px 14px;border:1px solid var(--border);text-align:center;box-shadow:var(--shadow)}
 .stat-box .n{font-size:1.9rem;font-weight:800;color:var(--green);line-height:1.1}
 .stat-box .l{font-size:.73rem;color:var(--muted);margin-top:3px;line-height:1.3}
-.stat-box.r .n{color:var(--red)}
-.stat-box.o .n{color:var(--orange)}
-.stat-box.b .n{color:var(--blue)}
-.stat-box.p .n{color:var(--purple)}
-
-/* ── STAT GRID ───────────────────────────────── */
+.stat-box.r .n{color:var(--red)}.stat-box.o .n{color:var(--orange)}.stat-box.b .n{color:var(--blue)}.stat-box.p .n{color:var(--purple)}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px}
-
-/* ── ALERTS ──────────────────────────────────── */
 .alert{padding:11px 15px;border-radius:8px;margin-bottom:12px;font-size:.86rem;line-height:1.5}
 .alert-warn{background:var(--warn-bg);border-left:4px solid var(--warn-b)}
 .alert-danger{background:var(--danger-bg);border-left:4px solid var(--danger-b)}
 .alert-ok{background:var(--green-light);border-left:4px solid var(--green)}
 .alert-info{background:var(--info-bg);border-left:4px solid var(--info-b)}
-
-/* ── BADGES ──────────────────────────────────── */
 .b{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.72rem;font-weight:700}
-.b-g{background:var(--green-light);color:var(--green)}
-.b-r{background:var(--danger-bg);color:var(--red)}
-.b-o{background:#fff7ed;color:#c2410c}
-.b-b{background:var(--info-bg);color:var(--blue)}
-.b-gray{background:#f1f5f9;color:#475569}
-
-/* ── TABLES ──────────────────────────────────── */
+.b-g{background:var(--green-light);color:var(--green)}.b-r{background:var(--danger-bg);color:var(--red)}.b-o{background:#fff7ed;color:#c2410c}.b-b{background:var(--info-bg);color:var(--blue)}.b-gray{background:#f1f5f9;color:#475569}
 .tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;font-size:.83rem}
 thead th{background:var(--dark2);color:#e2e8f0;padding:9px 11px;text-align:left;font-weight:600}
@@ -77,97 +56,59 @@ td{padding:8px 11px;border-bottom:1px solid #f1f5f1;vertical-align:top}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#f8fdf9}
 td.hl{color:var(--green);font-weight:700}
-
-/* ── OBJECTIVES ──────────────────────────────── */
 .obj-row{display:grid;grid-template-columns:36px 1fr auto;gap:14px;align-items:start;padding:14px 0;border-bottom:1px solid var(--border)}
 .obj-row:last-child{border-bottom:none}
 .obj-n{background:var(--green);color:#fff;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-size:.9rem;margin-top:2px}
-
-/* ── Q&A ─────────────────────────────────────── */
 .qa{margin-bottom:12px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
 .qa-q{background:var(--dark2);color:#94a3b8;padding:11px 16px;font-weight:600;font-size:.85rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s;user-select:none}
 .qa-q:hover{background:#263148}
 .qa-q .cat{background:#334155;color:#94a3b8;padding:1px 7px;border-radius:12px;font-size:.7rem;margin-right:8px;font-weight:400}
-.qa-a{background:var(--card);padding:0;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .2s}
-.qa-a.open{padding:14px 16px;max-height:600px}
+.qa-a{background:var(--card);padding:0;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .2s}
+.qa-a.open{padding:14px 16px;max-height:800px}
 .qa-a p{margin-bottom:9px;font-size:.86rem;line-height:1.6}
 .qa-a p:last-child{margin-bottom:0}
 .qa-a strong{color:var(--green-dark)}
 .chev{transition:transform .2s;color:#64748b;flex-shrink:0}
 .chev.open{transform:rotate(180deg)}
-
-/* ── RECS ────────────────────────────────────── */
 .rec{display:flex;gap:13px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start}
 .rec:last-child{border-bottom:none}
 .rec-n{background:var(--green-light);color:var(--green);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.82rem;flex-shrink:0;margin-top:1px}
 .rec strong{font-size:.88rem;color:var(--dark)}
 .rec p{font-size:.8rem;color:var(--muted);margin-top:2px;line-height:1.5}
-
-/* ── PROGRESS ────────────────────────────────── */
 .pb-wrap{background:#e2e8f0;border-radius:20px;height:8px}
 .pb{height:8px;border-radius:20px}
-.pb-g{background:var(--green)}
-.pb-o{background:var(--orange)}
-.pb-r{background:var(--red)}
-.pb-gray{background:#94a3b8}
-
-/* ── SACRED ──────────────────────────────────── */
+.pb-g{background:var(--green)}.pb-o{background:var(--orange)}.pb-r{background:var(--red)}.pb-gray{background:#94a3b8}
 .sacred{background:#fffbeb;border:2px dashed var(--warn-b);border-radius:var(--radius);padding:18px 20px}
 .sacred h3{color:#92400e}
 .sacred-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px;margin-top:12px}
 .si{background:#fff;border:1px solid var(--warn-b);border-radius:6px;padding:9px 13px;font-size:.83rem}
 .si strong{display:block;color:#92400e;font-size:.7rem;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
-.si.red-si{border-color:var(--red)}
-.si.red-si strong{color:var(--red)}
-
-/* ── DO/DONT ─────────────────────────────────── */
 .do-dont{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .do-box{border-radius:var(--radius);padding:18px;border:1px solid}
 .do-box.do{background:#f0fdf4;border-color:#86efac}
 .do-box.dont{background:#fef2f2;border-color:#fca5a5}
 .do-box h3{margin-bottom:10px}
-.do-box.do h3{color:#15803d}
-.do-box.dont h3{color:var(--red)}
+.do-box.do h3{color:#15803d}.do-box.dont h3{color:var(--red)}
 .do-box ul{padding-left:16px;font-size:.84rem;line-height:2.1}
-
-/* ── TIMELINE ────────────────────────────────── */
 .timeline{position:relative;padding-left:28px}
 .timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--border)}
 .tl-item{position:relative;margin-bottom:16px}
 .tl-dot{position:absolute;left:-24px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid #fff;box-shadow:0 0 0 2px var(--green)}
 .tl-item strong{font-size:.87rem;color:var(--dark)}
 .tl-item p{font-size:.8rem;color:var(--muted);margin-top:2px;line-height:1.5}
-
-/* ── PRINT ───────────────────────────────────── */
-@media print{
-  nav,#countdown,.print-hide{display:none!important}
-  .qa-a{max-height:none!important;padding:14px 16px!important;display:block!important}
-  body{font-size:12px}
-  .wrap{padding:12px}
-  section{page-break-inside:avoid}
-}
-
-/* ── MOBILE ──────────────────────────────────── */
-@media(max-width:700px){
-  nav a:not(.nav-brand){display:none}
-  .grid2,.grid3,.grid4,.do-dont{grid-template-columns:1fr}
-  .stats-grid{grid-template-columns:1fr 1fr}
-  h1{font-size:1.4rem}
-}
-
-/* ── MISC ────────────────────────────────────── */
 .tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
 .chip{background:var(--green-light);color:var(--green);padding:3px 11px;border-radius:20px;font-size:.78rem;font-weight:600}
-.chip.r{background:#fef2f2;color:var(--red)}
-.chip.b{background:var(--info-bg);color:var(--blue)}
-.chip.o{background:#fff7ed;color:#c2410c}
-hr.div{border:none;border-top:1px solid var(--border);margin:20px 0}
+.chip.r{background:#fef2f2;color:var(--red)}.chip.b{background:var(--info-bg);color:var(--blue)}.chip.o{background:#fff7ed;color:#c2410c}
+.fig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:8px}
+.fig-item{background:var(--green-light);border-radius:8px;padding:10px 13px;font-size:.82rem}
+.fig-item strong{display:block;color:var(--green-dark);font-size:.7rem;font-weight:700;text-transform:uppercase;margin-bottom:2px}
+@media print{nav,#countdown{display:none!important}.qa-a{max-height:none!important;padding:14px 16px!important;display:block!important}body{font-size:12px}.wrap{padding:12px}section{page-break-inside:avoid}}
+@media(max-width:700px){nav a:not(.nav-brand){display:none}.grid2,.grid3,.grid4,.do-dont{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}h1{font-size:1.4rem}}
 footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);margin-top:48px}
 </style>
 </head>
 <body>
 
-<!-- countdown bar -->
 <div id="countdown">⏳ Calculating time to defense...</div>
 
 <nav>
@@ -177,6 +118,7 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
   <a href="#methodology">Methodology</a>
   <a href="#results">Results</a>
   <a href="#system">System</a>
+  <a href="#figures">Figures</a>
   <a href="#recs">Recs</a>
   <a href="#qa">Q&amp;A</a>
   <a href="#never">🔒 Protected</a>
@@ -185,27 +127,26 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
 </nav>
 
 <div class="wrap">
-
-<!-- HEADER -->
 <h1>SmartSpend — Defense Reviewer</h1>
-<p class="subtitle">Complete quick-reference for the Nov 16 defense. Works offline — share the link or the file with your team. Click any Q&amp;A to expand the scripted answer.</p>
+<p class="subtitle">Complete quick-reference for the Nov 16 defense. Works offline. Click any Q&amp;A to expand the scripted answer. Last updated from final source-of-truth manuscript.</p>
+<div class="alert alert-warn">⚠️ <strong>CRITICAL:</strong> The <a href="#never" style="color:inherit;font-weight:700;">🔒 Protected Values</a> must be quoted exactly — never rounded, never changed. Panelists verify numbers directly against the manuscript.</div>
 
-<div class="alert alert-warn">
-  ⚠️ <strong>CRITICAL:</strong> The protected values in the <a href="#never" style="color:inherit;font-weight:700;">🔒 Protected Values</a> section must be quoted <em>exactly</em> — never rounded, never changed. Panelists will verify numbers directly against the manuscript.
-</div>
-
-<!-- ═══ KEY STATS ═══════════════════════════════ -->
+<!-- KEY STATS -->
 <section id="overview">
-<h2>🔑 Key Numbers</h2>
+<h2>🔑 Key Numbers at a Glance</h2>
 <div class="stats-grid">
-  <div class="stat-box"><div class="n">61.83</div><div class="l">SUS Score<br>Grade D · "OK"</div></div>
-  <div class="stat-box r"><div class="n">17.58</div><div class="l">SUS Std Dev (SD)</div></div>
+  <div class="stat-box"><div class="n">61.83</div><div class="l">SUS Score · Grade D · "OK"</div></div>
+  <div class="stat-box r"><div class="n">17.58</div><div class="l">SUS Standard Deviation</div></div>
   <div class="stat-box"><div class="n">30</div><div class="l">Valid Respondents (N)<br>screened from 36</div></div>
-  <div class="stat-box b"><div class="n">96.7%</div><div class="l">Intent to use AI app<br>29 out of 30</div></div>
-  <div class="stat-box b"><div class="n">93.3%</div><div class="l">Already use GCash<br>28 out of 30</div></div>
-  <div class="stat-box o"><div class="n">34</div><div class="l">Agentic AI Actions</div></div>
+  <div class="stat-box b"><div class="n">96.7%</div><div class="l">Intent to use AI app · 29/30</div></div>
+  <div class="stat-box b"><div class="n">93.3%</div><div class="l">Already use GCash · 28/30</div></div>
+  <div class="stat-box o"><div class="n">90.0%</div><div class="l">Use receipts for tracking · 27/30</div></div>
+  <div class="stat-box o"><div class="n">10.0%</div><div class="l">Already use a budgeting app<br>→ confirms the gap</div></div>
+  <div class="stat-box"><div class="n">34</div><div class="l">Agentic AI Actions</div></div>
   <div class="stat-box"><div class="n">9</div><div class="l">Recommendations</div></div>
-  <div class="stat-box p"><div class="n">8</div><div class="l">LLM Providers<br>in failover chain</div></div>
+  <div class="stat-box p"><div class="n">10</div><div class="l">LLM Candidates Evaluated<br>→ Gemini 3.5 Flash-Lite selected</div></div>
+  <div class="stat-box"><div class="n">8</div><div class="l">Model Failover Chain<br>(1 primary + 7 fallbacks)</div></div>
+  <div class="stat-box b"><div class="n">17</div><div class="l">Figures in Manuscript<br>(Figs 1–17)</div></div>
 </div>
 
 <div class="card">
@@ -217,43 +158,36 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
     <tr><td style="color:var(--muted);font-size:.82rem">Adviser</td><td>Ellen Flores Mangaoang, DIT</td></tr>
     <tr><td style="color:var(--muted);font-size:.82rem">Panel Chair</td><td>Jeoffrey B. Layco, MIS</td></tr>
     <tr><td style="color:var(--muted);font-size:.82rem">Panel Members</td><td>Shekiro R. Raposas, MTS, MIS &nbsp;·&nbsp; Mary-Ann Mzana, MTS</td></tr>
-    <tr><td style="color:var(--muted);font-size:.82rem">Content Validator</td><td>Avigail Candevario, PFMe — selected via <strong>purposive sampling</strong></td></tr>
-    <tr><td style="color:var(--muted);font-size:.82rem">Research Design</td><td><strong>Quantitative Descriptive Developmental</strong> (NOT mixed-methods)</td></tr>
-    <tr><td style="color:var(--muted);font-size:.82rem">Respondent Sampling</td><td><strong>Random sampling</strong></td></tr>
-    <tr><td style="color:var(--muted);font-size:.82rem">Primary AI Model</td><td><strong>Gemini 3.5 Flash-Lite</strong> (Google) — 7 automatic fallback providers</td></tr>
+    <tr><td style="color:var(--muted);font-size:.82rem">Content Validator</td><td>Avigail Candevario, PFMe — <strong>purposive sampling</strong> (expertise-based)</td></tr>
+    <tr><td style="color:var(--muted);font-size:.82rem">Research Design</td><td><strong>Quantitative Descriptive Developmental</strong> (NOT mixed-methods — no interviews)</td></tr>
+    <tr><td style="color:var(--muted);font-size:.82rem">Respondent Sampling</td><td><strong>Random sampling</strong> — any parent 35–55 or YP 21–35 who met inclusion criteria</td></tr>
+    <tr><td style="color:var(--muted);font-size:.82rem">Needs-Assessment Split</td><td><strong>16 parents + 14 YP = 30</strong> (3 who answered "both" classified with parents by Q1 age bracket 35–55)</td></tr>
+    <tr><td style="color:var(--muted);font-size:.82rem">SUS Evaluation Split</td><td><strong>10 parents + 20 YP = 30</strong> (separate group, self-reported on SUS form)</td></tr>
+    <tr><td style="color:var(--muted);font-size:.82rem">Primary AI Model</td><td><strong>Gemini 3.5 Flash-Lite</strong> (Google) — selected from <strong>10 candidate models from 4 providers</strong></td></tr>
+    <tr><td style="color:var(--muted);font-size:.82rem">Failover Chain</td><td><strong>Eight-model cloud failover chain</strong> — Gemini 3.5 Flash-Lite as primary, seven fallbacks across Google, Groq, Cerebras</td></tr>
     <tr><td style="color:var(--muted);font-size:.82rem">App Version</td><td>SmartSpend v3.1.0 (evaluated) · v3.1.2 (current)</td></tr>
     <tr><td style="color:var(--muted);font-size:.82rem">Platform</td><td>Android (Flutter) · Offline-first · SQLite + Firebase</td></tr>
   </table></div>
 </div>
 </section>
 
-<!-- ═══ OBJECTIVES ══════════════════════════════ -->
+<!-- OBJECTIVES -->
 <section id="objectives">
 <h2>🎯 Research Objectives &amp; Status</h2>
 <div class="card">
   <div class="obj-row">
     <div class="obj-n">1</div>
     <div>
-      <strong>Assess financial management practices, budgeting challenges, and expense tracking behaviors</strong> of parents aged 35–55 and young professionals aged 21–35 in San Fernando City, La Union, through structured surveys.
-      <div class="tag-row" style="margin-top:6px">
-        <span class="chip">Survey questionnaire (Appendix A)</span>
-        <span class="chip">Avigail Candevario, PFMe validated it</span>
-        <span class="chip">Frequency &amp; percentage</span>
-        <span class="chip r">No interviews — quantitative only</span>
-      </div>
+      <strong>Assess financial management practices, budgeting challenges, and expense tracking behaviors</strong> of parents 35–55 and young professionals 21–35 in San Fernando City, La Union, through structured surveys.
+      <div class="tag-row" style="margin-top:6px"><span class="chip">Survey questionnaire (Appendix A)</span><span class="chip">Avigail Candevario, PFMe validated</span><span class="chip">Frequency &amp; percentage</span><span class="chip r">No interviews — quantitative only</span></div>
     </div>
     <div style="padding-top:2px"><span class="b b-g">✅ ACHIEVED</span></div>
   </div>
   <div class="obj-row">
     <div class="obj-n">2</div>
     <div>
-      <strong>Design and develop SmartSpend</strong> as an Android mobile application with integration of a suitable Large Language Model (LLM) API selected through comparative technical evaluation.
-      <div class="tag-row" style="margin-top:6px">
-        <span class="chip">Agile Kanban methodology</span>
-        <span class="chip">Flutter · SQLite · Firebase</span>
-        <span class="chip">8 LLMs evaluated → Gemini 3.5 Flash-Lite</span>
-        <span class="chip">34 agentic actions · v3.1.0 delivered</span>
-      </div>
+      <strong>Design and develop SmartSpend</strong> as an Android mobile application with integration of a suitable LLM API selected through comparative technical evaluation.
+      <div class="tag-row" style="margin-top:6px"><span class="chip">Agile Kanban methodology</span><span class="chip">Flutter · SQLite · Firebase</span><span class="chip">10 LLMs evaluated → Gemini 3.5 Flash-Lite</span><span class="chip">34 agentic actions · v3.1.0 delivered</span></div>
     </div>
     <div style="padding-top:2px"><span class="b b-g">✅ ACHIEVED</span></div>
   </div>
@@ -261,46 +195,40 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
     <div class="obj-n">3</div>
     <div>
       <strong>Determine the usability of SmartSpend</strong> using the System Usability Scale (SUS).
-      <div class="tag-row" style="margin-top:6px">
-        <span class="chip o">Mean SUS = 61.83</span>
-        <span class="chip o">Grade D · "OK"</span>
-        <span class="chip r">Below 68 avg. benchmark</span>
-        <span class="chip r">Below 80 pre-set target</span>
-      </div>
+      <div class="tag-row" style="margin-top:6px"><span class="chip o">Mean SUS = 61.83</span><span class="chip o">Grade D · "OK"</span><span class="chip r">Below 68 avg. benchmark</span><span class="chip r">Below 80 pre-set target</span></div>
     </div>
     <div style="padding-top:2px"><span class="b b-o">⚠️ PARTIALLY ACHIEVED</span></div>
   </div>
 </div>
-<div class="alert alert-warn">
-  💬 Always say <strong>"partially achieved"</strong> for Objective 3 — NEVER say "failed" or "not achieved." The evaluation was completed successfully; the score just fell below the pre-set acceptance threshold. This is a valid, honest research finding.
-</div>
+<div class="alert alert-warn">💬 Always say <strong>"partially achieved"</strong> for Objective 3 — NEVER say "failed." The evaluation completed successfully; the score fell below target. This is a valid, honest research finding.</div>
 </section>
 
-<!-- ═══ METHODOLOGY ═════════════════════════════ -->
+<!-- METHODOLOGY -->
 <section id="methodology">
 <h2>🔬 Methodology</h2>
-
 <div class="grid2">
 <div class="card" style="margin:0">
   <h3>Objective 1 — Needs Assessment</h3>
-  <ul style="font-size:.85rem;padding-left:17px;line-height:2.1">
-    <li>Validated survey questionnaire (see Appendix A)</li>
+  <ul style="font-size:.85rem;padding-left:17px;line-height:2.2">
+    <li>Validated survey questionnaire (Appendix A)</li>
     <li>Content validated by Avigail Candevario, PFMe</li>
-    <li>N = 30 respondents — <strong>random sampling</strong></li>
-    <li><strong>16 parents</strong> (35–55) + <strong>14 young professionals</strong> (21–35)</li>
+    <li>N = 30 — <strong>random sampling</strong></li>
+    <li><strong>16 parents</strong> (35–55) + <strong>14 YP</strong> (21–35)</li>
+    <li>3 "both" classified with parents by Q1 age bracket</li>
     <li>Analysis: frequency and percentage</li>
     <li><strong>No interviews</strong> — purely quantitative</li>
   </ul>
 </div>
 <div class="card" style="margin:0">
   <h3>Objective 2 — System Development</h3>
-  <ul style="font-size:.85rem;padding-left:17px;line-height:2.1">
-    <li>Agile Kanban: Backlog → Requirements → Design → Dev → Testing → Deploy → Review</li>
-    <li>Flutter (Android) · SQLite (26 tables) · Firebase</li>
-    <li>8 candidate LLM APIs evaluated → Gemini 3.5 Flash-Lite</li>
+  <ul style="font-size:.85rem;padding-left:17px;line-height:2.2">
+    <li>Agile Kanban: 7 phases</li>
+    <li>Flutter (Android) · SQLite 26 tables · Firebase</li>
+    <li><strong>10 candidate LLM models from 4 providers</strong> evaluated</li>
+    <li>Gemini 3.5 Flash-Lite selected as primary</li>
     <li>34 agentic actions · 7 input modalities · 45 screens</li>
     <li>FHS: 4 components × 25 pts = 0–100</li>
-    <li>Offline-first · 8-provider AI failover chain</li>
+    <li>Offline-first · 8-model failover chain</li>
   </ul>
 </div>
 </div>
@@ -309,267 +237,230 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
   <h3>Objective 3 — SUS Evaluation</h3>
   <div class="grid2" style="gap:20px">
     <div>
-      <ul style="font-size:.85rem;padding-left:17px;line-height:2.1">
+      <ul style="font-size:.85rem;padding-left:17px;line-height:2.2">
         <li>36 attempted → <strong>30 valid</strong> (6 excluded)</li>
-        <li>Excluded: 5 &lt; 10 min use · 1 straight-line bias</li>
-        <li>Min. <strong>10 minutes</strong> app use required (screening question)</li>
+        <li>Excluded: 5 &lt;10 min use · 1 straight-line bias</li>
+        <li>Min <strong>10 minutes</strong> app use required (screened)</li>
         <li>Separate group from needs-assessment respondents</li>
-        <li>SUS formula: Brooke (1996) · 10 items · ×2.5 multiplier</li>
+        <li>SUS formula: Brooke (1996) · 10 items · ×2.5</li>
+        <li>Target: ≥80 (adjective "Good", Bangor et al. 2009)</li>
       </ul>
     </div>
     <div>
-      <div style="font-size:.84rem;margin-bottom:12px">
+      <div style="font-size:.84rem;margin-bottom:10px">
         <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>SmartSpend: <strong>61.83</strong></span><span class="b b-o">OK · Grade D</span></div>
         <div class="pb-wrap"><div class="pb pb-o" style="width:61.83%"></div></div>
       </div>
-      <div style="font-size:.84rem;margin-bottom:12px">
+      <div style="font-size:.84rem;margin-bottom:10px">
         <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>Avg. benchmark: <strong>68</strong></span><span style="color:var(--muted);font-size:.78rem">Sauro &amp; Lewis, 2016</span></div>
         <div class="pb-wrap"><div class="pb pb-gray" style="width:68%"></div></div>
       </div>
-      <div style="font-size:.84rem">
+      <div style="font-size:.84rem;margin-bottom:10px">
         <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>Pre-set target: <strong>80</strong></span><span style="color:var(--muted);font-size:.78rem">Bangor et al., 2009</span></div>
         <div class="pb-wrap"><div class="pb" style="width:80%;background:#cbd5e1"></div></div>
+      </div>
+      <div style="font-size:.8rem;color:var(--muted);margin-top:8px;line-height:1.6">
+        <strong>Parents (n=10):</strong> 58.25 · SD 19.72 · range 35–90<br>
+        <strong>Young Professionals (n=20):</strong> 63.62 · SD 16.65 · range 42.5–92.5<br>
+        Both groups: adjective "OK", Grade D
       </div>
     </div>
   </div>
 </div>
 
 <div class="card">
-  <h3>Financial Health Score (FHS) — 4 Components × 25 Points Each</h3>
+  <h3>Financial Health Score — 4 Components × 25 Points</h3>
   <div class="grid4" style="margin-top:8px">
-    <div style="background:var(--green-light);border-radius:8px;padding:12px">
-      <div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">1. Savings Rate</div>
-      <div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">Score based on 20% savings target (50/30/20 rule, Warren &amp; Tyagi 2005)</div>
-    </div>
-    <div style="background:var(--green-light);border-radius:8px;padding:12px">
-      <div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">2. Overspend Control</div>
-      <div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">Tracks habitual vs. one-off overspend days (half-weight for one-offs)</div>
-    </div>
-    <div style="background:var(--green-light);border-radius:8px;padding:12px">
-      <div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">3. Budget Adherence</div>
-      <div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">On-budget categories ÷ total budgeted categories for the period</div>
-    </div>
-    <div style="background:var(--green-light);border-radius:8px;padding:12px">
-      <div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">4. Logging Consistency</div>
-      <div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">Logged days ÷ active days this period (promotes daily habit)</div>
-    </div>
+    <div style="background:var(--green-light);border-radius:8px;padding:12px"><div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">1. Savings Rate</div><div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">Based on 20% savings target (50/30/20 rule)</div></div>
+    <div style="background:var(--green-light);border-radius:8px;padding:12px"><div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">2. Overspend Control</div><div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">Habitual vs one-off overspend days (half-weight for one-offs)</div></div>
+    <div style="background:var(--green-light);border-radius:8px;padding:12px"><div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">3. Budget Adherence</div><div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">On-budget categories ÷ total budgeted categories</div></div>
+    <div style="background:var(--green-light);border-radius:8px;padding:12px"><div style="font-size:.82rem;font-weight:700;color:var(--green-dark)">4. Logging Consistency</div><div style="font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.5">Logged days ÷ active days (promotes daily habit)</div></div>
   </div>
-  <div class="alert alert-info" style="margin-top:14px;margin-bottom:0">
-    FHS is formally classified as a <strong>Prototype Observed Financial Health Indicator</strong> — adapted from CBA-MI (Comerton-Forde et al., 2018) and FinHealth Network (2021). It is NOT a validated psychometric instrument. This is stated explicitly throughout the manuscript.
-  </div>
+  <div class="alert alert-info" style="margin-top:14px;margin-bottom:0">FHS is formally classified as a <strong>Prototype Observed Financial Health Indicator</strong> — adapted from CBA-MI (Comerton-Forde et al., 2018) and FinHealth Network (2021). It is NOT a validated psychometric instrument. Lightweight Mode (no income tracking) uses: Spending Restraint + Logging Consistency + Category Balance + Habit Streak.</div>
 </div>
 </section>
 
-<!-- ═══ RESULTS ══════════════════════════════════ -->
+<!-- RESULTS -->
 <section id="results">
 <h2>📊 Results</h2>
-
 <div class="card">
-  <h3>Objective 1 — Needs Assessment Findings</h3>
+  <h3>Objective 1 — Needs Assessment Findings (Table 5)</h3>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Finding</th><th>Value</th><th>What it validates</th></tr></thead>
     <tr><td>Intent to use an AI financial app</td><td class="hl">96.7% (29/30)</td><td>Core study premise</td></tr>
     <tr><td>Already use GCash</td><td class="hl">93.3% (28/30)</td><td>GCash import feature priority</td></tr>
-    <tr><td>Already use a dedicated budgeting app</td><td class="hl">10.0% (3/30)</td><td>Market gap exists</td></tr>
     <tr><td>Use physical receipts for tracking</td><td class="hl">90.0% (27/30)</td><td>OCR receipt scanning feature</td></tr>
     <tr><td>Use mental estimates</td><td class="hl">53.3% (16/30)</td><td>AI natural language logging</td></tr>
     <tr><td>Use e-wallet transaction history</td><td class="hl">43.3% (13/30)</td><td>Batch screenshot import</td></tr>
-    <tr><td>Parents (35–55) in sample</td><td class="hl">16 (53.3%)</td><td>Primary demographic</td></tr>
+    <tr><td>Already use a dedicated budgeting app</td><td class="hl">10.0% (3/30)</td><td>Confirms the market gap</td></tr>
+    <tr><td>Parents (35–55) in sample</td><td class="hl">16 (53.3%)</td><td>Primary demographic (incl. 3 reclassified)</td></tr>
     <tr><td>Young Professionals (21–35) in sample</td><td class="hl">14 (46.7%)</td><td>Secondary demographic</td></tr>
   </table></div>
 </div>
 
 <div class="card">
-  <h3>Objective 3 — SUS Results by Respondent Group</h3>
+  <h3>Objective 3 — SUS Results by Group (Table 8)</h3>
   <div class="tbl-wrap"><table>
-    <thead><tr><th>Group</th><th>N</th><th>Mean SUS</th><th>SD</th><th>Range</th><th>Rating</th><th>Grade</th></tr></thead>
-    <tr><td>Parents (35–55)</td><td>10</td><td class="hl">58.25</td><td>19.72</td><td>35.0–90.0</td><td><span class="b b-o">OK</span></td><td>D</td></tr>
-    <tr><td>Young Professionals (21–35)</td><td>20</td><td class="hl">63.62</td><td>16.65</td><td>42.5–92.5</td><td><span class="b b-o">OK</span></td><td>D</td></tr>
-    <tr><td><strong>Combined (all)</strong></td><td><strong>30</strong></td><td class="hl"><strong>61.83</strong></td><td><strong>17.58</strong></td><td>35.0–92.5</td><td><span class="b b-o"><strong>OK</strong></span></td><td><strong>D</strong></td></tr>
+    <thead><tr><th>Group</th><th>N</th><th>Mean SUS</th><th>SD</th><th>Range</th><th>Rating</th></tr></thead>
+    <tr><td>Parents (35–55)</td><td>10</td><td class="hl">58.25</td><td>19.72</td><td>35.0–90.0</td><td><span class="b b-o">OK · D</span></td></tr>
+    <tr><td>Young Professionals (21–35)</td><td>20</td><td class="hl">63.62</td><td>16.65</td><td>42.5–92.5</td><td><span class="b b-o">OK · D</span></td></tr>
+    <tr><td><strong>Combined</strong></td><td><strong>30</strong></td><td class="hl"><strong>61.83</strong></td><td><strong>17.58</strong></td><td>35.0–92.5</td><td><span class="b b-o"><strong>OK · D</strong></span></td></tr>
   </table></div>
-  <div style="font-size:.82rem;color:var(--muted);margin-top:10px;line-height:1.6">
-    <strong>Highest SUS items:</strong> Q1 — Intent to use frequently (mean 4.35/5) · Q9 — Felt confident (mean 4.19/5)<br>
-    <strong>Lowest SUS items:</strong> Q6 — Consistency (high inconsistency reported) · Q2 &amp; Q4 — Complexity — these inform Recs 8 &amp; 9
+  <div style="font-size:.82rem;color:var(--muted);margin-top:10px;line-height:1.7">
+    Median = <strong>55.00</strong> · <strong>Q1</strong> (use frequently) mean: 4.35/5 · <strong>Q9</strong> (confidence) mean: 4.19/5<br>
+    Main concerns: <strong>Q6</strong> consistency · <strong>Q2 &amp; Q4</strong> complexity → inform Recommendations 8 and 9
   </div>
 </div>
 </section>
 
-<!-- ═══ SYSTEM ════════════════════════════════════ -->
+<!-- SYSTEM -->
 <section id="system">
 <h2>⚙️ System Overview</h2>
-
 <div class="stats-grid">
   <div class="stat-box"><div class="n">34</div><div class="l">Agentic AI Actions</div></div>
   <div class="stat-box b"><div class="n">7</div><div class="l">Input Modalities</div></div>
   <div class="stat-box"><div class="n">26</div><div class="l">SQLite Tables</div></div>
   <div class="stat-box o"><div class="n">45</div><div class="l">App Screens</div></div>
-  <div class="stat-box p"><div class="n">40+</div><div class="l">Screenshot Platforms<br>Supported</div></div>
-  <div class="stat-box"><div class="n">8</div><div class="l">LLM API Providers<br>in failover chain</div></div>
+  <div class="stat-box p"><div class="n">40+</div><div class="l">Screenshot Platforms</div></div>
+  <div class="stat-box"><div class="n">36</div><div class="l">Achievement Badges</div></div>
 </div>
 
 <div class="card">
-  <h3>LLM API Comparative Evaluation — Why Gemini 3.5 Flash-Lite</h3>
+  <h3>LLM Evaluation — 10 Candidate Models from 4 Providers (Table 6)</h3>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Model</th><th>Provider</th><th>Filipino-EN</th><th>Speed</th><th>Tool Use</th><th>Free Tier</th><th>Context</th></tr></thead>
-    <tr style="background:#f0fdf4"><td><strong>Gemini 3.5 Flash-Lite ✅</strong></td><td>Google</td><td class="hl">5/5</td><td>400–600 t/s</td><td class="hl">5/5</td><td class="hl">~500/day</td><td>1M tokens</td></tr>
+    <tr style="background:#f0fdf4"><td><strong>✅ Gemini 3.5 Flash-Lite</strong></td><td>Google</td><td class="hl">5/5</td><td>400–600 t/s</td><td class="hl">5/5</td><td class="hl">~500/day</td><td>1M tokens</td></tr>
     <tr><td>Gemini 3.5 Flash</td><td>Google</td><td>5/5</td><td>200–400 t/s</td><td>5/5</td><td>~20/day</td><td>1M tokens</td></tr>
-    <tr><td>GPT-OSS 120B</td><td>Groq LPU</td><td>—</td><td>~500 t/s</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
-    <tr><td>GPT-OSS 20B</td><td>Groq LPU</td><td>—</td><td>~500 t/s</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
-    <tr><td>Qwen 3.6 27B</td><td>Groq LPU</td><td>—</td><td>—</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
-    <tr><td>Qwen 3.8 27B</td><td>Groq LPU</td><td>—</td><td>—</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
-    <tr><td>Groq Compound Mini</td><td>Groq LPU</td><td>—</td><td>—</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
-    <tr><td>GPT-OSS 120B</td><td>Cerebras WSE</td><td>—</td><td>~3,000 t/s</td><td>5/5</td><td>1M tokens/day</td><td>131K</td></tr>
+    <tr><td>GPT-OSS 120B</td><td>Groq</td><td>—</td><td>~500 t/s</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
+    <tr><td>GPT-OSS 20B</td><td>Groq</td><td>—</td><td>—</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
+    <tr><td>Qwen 3.6 27B</td><td>Groq</td><td>—</td><td>—</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
+    <tr><td>Qwen 3.8 27B</td><td>Groq</td><td>—</td><td>—</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
+    <tr><td>Groq Compound Mini</td><td>Groq</td><td>—</td><td>—</td><td>5/5</td><td>1,000/day</td><td>131K</td></tr>
+    <tr><td>GPT-OSS 120B</td><td>Cerebras</td><td>—</td><td>~3,000 t/s</td><td>5/5</td><td>1M tokens/day</td><td>131K</td></tr>
+    <tr><td>Mistral 7B</td><td>Mistral</td><td>3/5</td><td>~600 t/s</td><td>3/5</td><td>Self-host</td><td>32K</td></tr>
+    <tr><td>Gemma 2 9B</td><td>Google</td><td>3/5</td><td>~500 t/s</td><td>3/5</td><td>Local only</td><td>8K</td></tr>
   </table></div>
-  <div style="font-size:.8rem;color:var(--muted);margin-top:8px">Selection criteria weighted: Filipino-EN accuracy 25% · Speed 20% · Tool use/JSON 20% · Free tier 15% · Context window 10% · Financial reasoning 10%</div>
+  <div style="font-size:.8rem;color:var(--muted);margin-top:8px">Selection criteria: Filipino-EN accuracy 25% · Speed 20% · Tool use/JSON 20% · Free tier 15% · Context window 10% · Financial reasoning 10%</div>
 </div>
 
 <div class="card">
-  <h3>Key Technologies — How Each Was Used in SmartSpend</h3>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Technology</th><th>How Used in SmartSpend</th></tr></thead>
-    <tr><td><strong>Flutter</strong></td><td>Built the entire Android UI — all 45 screens, navigation, animations, responsive layout</td></tr>
-    <tr><td><strong>SQLite (sqflite)</strong></td><td>Local offline database with 26 tables storing expenses, budgets, goals, wallets, chat history, FHS data</td></tr>
-    <tr><td><strong>Firebase Firestore</strong></td><td>Cloud sync of financial data across devices when user is online; scoped to authenticated user's UID</td></tr>
-    <tr><td><strong>Firebase Auth</strong></td><td>Email/password, Google Sign-In (OAuth 2.0), and biometric login after first successful sign-in</td></tr>
-    <tr><td><strong>LLM API (Gemini 3.5 Flash-Lite)</strong></td><td>AI engine for natural language expense parsing, 34 agentic actions, Taglish financial assistance</td></tr>
-    <tr><td><strong>Google ML Kit OCR</strong></td><td>Extracts text from receipt photos; routes to AI for parsing; supports single-item and multi-item receipt flows</td></tr>
-    <tr><td><strong>Speech-to-Text</strong></td><td>Filipino English (en-PH) voice input for expense recording; 15-second window with auto-pause detection</td></tr>
-    <tr><td><strong>Mobile Scanner</strong></td><td>Barcode scanning with torch toggle and overlay guide; each scan prompts AI to log the product</td></tr>
-    <tr><td><strong>fl_chart</strong></td><td>Renders pie charts (category breakdown), bar charts (monthly spending), and FHS history line chart</td></tr>
-    <tr><td><strong>local_auth</strong></td><td>Fingerprint/face unlock convenience layer after first login; PIN fallback</td></tr>
-  </table></div>
-</div>
-
-<div class="card">
-  <h3>Agile Kanban — 7 Phases</h3>
+  <h3>Agile Kanban — 7 Phases (Figure 4)</h3>
   <div class="timeline">
-    <div class="tl-item"><div class="tl-dot"></div><strong>Backlog</strong><p>Define all features and requirements; needs survey; literature review on Philippine financial gaps</p></div>
+    <div class="tl-item"><div class="tl-dot"></div><strong>Backlog</strong><p>Define all features; needs survey; literature review on Philippine financial gaps</p></div>
     <div class="tl-item"><div class="tl-dot"></div><strong>Requirements</strong><p>Translate findings into specs; validate survey questionnaire; LLM API benchmarking (Table 6)</p></div>
-    <div class="tl-item"><div class="tl-dot"></div><strong>Design</strong><p>SQLite schema (26 tables); FHS formula; UI wireframes; system architecture and data flow diagrams</p></div>
-    <div class="tl-item"><div class="tl-dot"></div><strong>Development</strong><p>Build expense tracking; integrate Gemini 3.5 Flash-Lite; add OCR/voice/barcode/batch screenshots; FHS engine; Firebase sync; gamification</p></div>
-    <div class="tl-item"><div class="tl-dot"></div><strong>Testing</strong><p>Functional testing (unit &amp; integration); SUS evaluation with 30 respondents; bug documentation</p></div>
+    <div class="tl-item"><div class="tl-dot"></div><strong>Design</strong><p>SQLite schema (26 tables); FHS formula; UI wireframes; system architecture and data flow</p></div>
+    <div class="tl-item"><div class="tl-dot"></div><strong>Development</strong><p>Build expense tracking; integrate Gemini 3.5 Flash-Lite; add OCR/voice/barcode/batch screenshots; FHS engine; Firebase sync</p></div>
+    <div class="tl-item"><div class="tl-dot"></div><strong>Testing</strong><p>Functional + usability testing; SUS evaluation with 30 respondents; bug documentation</p></div>
     <div class="tl-item"><div class="tl-dot"></div><strong>Deployment</strong><p>Build release APKs; prepare Demo Mode; install on Android devices for evaluation</p></div>
     <div class="tl-item"><div class="tl-dot"></div><strong>Done / Review</strong><p>Analyze SUS scores; review user feedback; document recommendations for future development</p></div>
   </div>
 </div>
 </section>
 
-<!-- ═══ RECOMMENDATIONS ══════════════════════════ -->
+<!-- FIGURES -->
+<section id="figures">
+<h2>🖼️ Figures &amp; Tables Quick Reference</h2>
+<div class="card">
+  <h3>All 17 Figures — Sequential Numbering</h3>
+  <div class="fig-grid">
+    <div class="fig-item"><strong>Figure 1</strong>Financial Literacy Rates by Demographic Group (BSP, 2021; Inquiro, 2024) — Chapter I</div>
+    <div class="fig-item"><strong>Figure 2</strong>Conceptual Framework — SmartSpend IPO Model — Chapter I</div>
+    <div class="fig-item"><strong>Figure 3</strong>SUS Score Interpretation Framework — Chapter II (Research Design)</div>
+    <div class="fig-item"><strong>Figure 4</strong>Agile Kanban Workflow for SmartSpend Development — Chapter II</div>
+    <div class="fig-item"><strong>Figure 5</strong>Demographic Distribution of Needs-Assessment Respondents (N=30) — Chapter III</div>
+    <div class="fig-item"><strong>Figure 6</strong>SmartSpend System Flowchart — Chapter III</div>
+    <div class="fig-item"><strong>Figure 7</strong>Use Case Diagram — Chapter III</div>
+    <div class="fig-item"><strong>Figure 8</strong>Visual Table of Contents (Navigation Map) — Chapter III</div>
+    <div class="fig-item"><strong>Figure 9</strong>Login and Demo Mode Screen — Chapter III</div>
+    <div class="fig-item"><strong>Figure 10</strong>Home Dashboard — Chapter III</div>
+    <div class="fig-item"><strong>Figure 11</strong>Expense Logging Through Peso Chat — Chapter III</div>
+    <div class="fig-item"><strong>Figure 12</strong>Receipt Scanning and Batch Screenshot Import — Chapter III</div>
+    <div class="fig-item"><strong>Figure 13</strong>Financial Health Score Breakdown — Chapter III</div>
+    <div class="fig-item"><strong>Figure 14</strong>Budgets, Safe-to-Spend, and Savings Goals — Chapter III</div>
+    <div class="fig-item"><strong>Figure 15</strong>Local AI Mode Setup — Chapter III</div>
+    <div class="fig-item"><strong>Figure 16</strong>SUS Computation Table (sample respondent, score 75.0) — Chapter III</div>
+    <div class="fig-item"><strong>Figure 17</strong>SUS Scores by Respondent Group (N=30) — Chapter III</div>
+  </div>
+</div>
+<div class="card">
+  <h3>All 9 Tables — Sequential Numbering</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Table</th><th>Name</th><th>Chapter</th></tr></thead>
+    <tr><td class="hl">Table 1</td><td>Three-Level Gap Analysis of SmartSpend</td><td>I</td></tr>
+    <tr><td class="hl">Table 2</td><td>Feature Comparison of SmartSpend with Existing Financial Applications</td><td>I</td></tr>
+    <tr><td class="hl">Table 3</td><td>Distribution of Respondents and Validators</td><td>II</td></tr>
+    <tr><td class="hl">Table 4</td><td>Agile Kanban Workflow Phases and Deliverables</td><td>II</td></tr>
+    <tr><td class="hl">Table 5</td><td>Demographic Profile and Expense Tracking Methods of Respondents (N=30)</td><td>III</td></tr>
+    <tr><td class="hl">Table 6</td><td>Comparative Evaluation of LLM APIs for SmartSpend Integration</td><td>III</td></tr>
+    <tr><td class="hl">Table 7</td><td>Overall SUS Result</td><td>III</td></tr>
+    <tr><td class="hl">Table 8</td><td>System Usability Scale (SUS) Results by Respondent Group</td><td>III</td></tr>
+    <tr><td class="hl">Table 9</td><td>SmartSpend Multimodal Import: Field-Level Parsing Performance</td><td>III</td></tr>
+  </table></div>
+</div>
+</section>
+
+<!-- RECOMMENDATIONS -->
 <section id="recs">
 <h2>💡 9 Recommendations</h2>
 <div class="card">
   <div class="rec"><div class="rec-n">1</div><div><strong>Payday-cycle-aware budgeting</strong><p>Implement budget resets aligned with the Philippine semi-monthly (15th and 30th) salary cycle to better match the financial rhythm of target users.</p></div></div>
-  <div class="rec"><div class="rec-n">2</div><div><strong>Backend API proxy and per-user keys</strong><p>Move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to remove device-side key exposure. Free-tier quotas are currently shared by all users.</p></div></div>
+  <div class="rec"><div class="rec-n">2</div><div><strong>Backend API proxy and per-user keys</strong><p>Move LLM API key management to a server-side proxy (e.g., Firebase Cloud Function) to remove device-side key exposure. Free-tier quotas are currently shared by all users of the prototype.</p></div></div>
   <div class="rec"><div class="rec-n">3</div><div><strong>Google Play release</strong><p>After backend proxy and privacy policy are in place, submit SmartSpend to the Google Play Store. Currently distributed as a downloadable APK.</p></div></div>
   <div class="rec"><div class="rec-n">4</div><div><strong>On-device AI tier</strong><p>Add an opt-in on-device model (e.g., Gemma 4 E2B via Google's LiteRT-LM, ~2.6 GB download) for users who want fully offline AI without any network dependency.</p></div></div>
   <div class="rec"><div class="rec-n">5</div><div><strong>SQLite encryption</strong><p>Implement SQLCipher-based encryption for the local database in a future schema migration. The current prototype database is unencrypted.</p></div></div>
   <div class="rec"><div class="rec-n">6</div><div><strong>Household and remittance features</strong><p>Add shared couple/family wallets and OFW remittance tracking as a distinct income category to serve a broader range of Filipino household structures.</p></div></div>
   <div class="rec"><div class="rec-n">7</div><div><strong>Longitudinal evaluation</strong><p>Conduct a follow-up study measuring SmartSpend's effect on actual financial behavior over 3–6 months with a larger sample. Current SUS measured usability at a single point in time.</p></div></div>
   <div class="rec"><div class="rec-n">8</div><div><strong>UI/UX refinement</strong> <span class="b b-o" style="margin-left:4px">From SUS</span><p>Address the main usability concerns from SUS: system consistency (Q6) and complexity (Q2, Q4) through interface redesign in future iterations.</p></div></div>
-  <div class="rec"><div class="rec-n">9</div><div><strong>Formal parsing evaluation</strong><p>Develop a benchmark of 50+ standardized receipt images across multiple platforms and formally measure OCR and AI parsing precision and recall.</p></div></div>
+  <div class="rec"><div class="rec-n">9</div><div><strong>Formal parsing evaluation</strong><p>Develop a benchmark of standardized receipt images across multiple platforms and formally measure OCR and AI parsing precision and recall to establish a performance baseline.</p></div></div>
 </div>
 </section>
 
-<!-- ═══ PANEL Q&A ════════════════════════════════ -->
+<!-- PANEL Q&A -->
 <section id="qa">
 <h2>❓ Anticipated Panel Questions</h2>
 <p style="font-size:.83rem;color:var(--muted);margin-bottom:16px">Click any question to reveal the scripted answer. Study these before the defense.</p>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">SUS / Results</span>Why did SmartSpend score only 61.83 — is that a failure?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>The score of 61.83 falls within the <strong>Marginal range</strong> (Bangor et al., 2008) and corresponds to an adjective rating of <strong>"OK"</strong> (Bangor et al., 2009). While it is below our pre-established target of 80 and below the 68-point average benchmark (Sauro & Lewis, 2016), it does not constitute a failure.</p>
-    <p>SmartSpend is a <strong>prototype</strong>, and prototype-stage systems commonly yield Marginal SUS scores. The evaluation successfully identified specific areas for improvement — particularly <strong>system consistency (Q6)</strong> and <strong>complexity (Q2 and Q4)</strong> — which directly informed Recommendations 8 and 9.</p>
-    <p>The third objective was <strong>partially achieved</strong>: usability was evaluated with 30 valid respondents, scores were computed and analyzed, and the gap from target is documented and addressed in our recommendations.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">SUS / Results</span>Why did SmartSpend score only 61.83 — is that a failure?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>The score of 61.83 falls within the <strong>Marginal range</strong> (Bangor et al., 2008) and corresponds to an adjective rating of <strong>"OK"</strong> (Bangor et al., 2009). It is below our pre-established target of 80 and below the 68-point average benchmark (Sauro & Lewis, 2016), but it does not constitute a failure.</p><p>SmartSpend is a <strong>prototype</strong>, and prototype-stage systems commonly yield Marginal SUS scores. The evaluation successfully identified specific areas for improvement — particularly <strong>system consistency (Q6)</strong> and <strong>complexity (Q2 and Q4)</strong> — which directly informed Recommendations 8 and 9.</p><p>The third objective was <strong>partially achieved</strong>: usability was evaluated with 30 valid respondents, scores were computed and analyzed, and the gap from target is documented and addressed in our recommendations.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">Methodology</span>Why only 30 respondents? Is that statistically sufficient?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>Thirty respondents is <strong>aligned with established practice for capstone-level usability and needs-assessment studies</strong> (Creswell & Plano Clark, 2011). For SUS specifically, Nielsen (1993) demonstrated that as few as 5 respondents can identify the majority of usability issues, and studies published in Atlantis Press (2026) support 20–30 as sufficient for formative usability evaluation.</p>
-    <p>Of the 36 respondents who attempted the SUS survey, <strong>30 were validated</strong> after screening — 5 were excluded for insufficient app usage time (less than 10 minutes) and 1 for straight-line response bias. This screening process ensures data quality and validity.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Methodology</span>Why only 30 respondents? Is that statistically sufficient?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>Thirty respondents is <strong>aligned with established practice for capstone-level usability and needs-assessment studies</strong>. For SUS specifically, Nielsen (1993) demonstrated that as few as 5 respondents can identify the majority of usability issues.</p><p>Of the 36 respondents who attempted the SUS survey, <strong>30 were validated</strong> after screening — 5 were excluded for insufficient app usage time and 1 for straight-line response bias. This screening ensures data quality.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">Methodology</span>Why is it quantitative descriptive developmental and not mixed-methods?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>Mixed-methods research integrates both quantitative <em>and</em> qualitative data collection — typically combining surveys with <strong>interviews, focus groups, or observations</strong>. This study collected <strong>no qualitative data</strong>. No interviews were conducted. All instruments were structured questionnaires yielding numerical data analyzed through frequency, percentage, and SUS scoring.</p>
-    <p>The design is correctly described as <strong>quantitative descriptive developmental</strong>: quantitative because all data are numerical, descriptive because it describes financial practices and usability through survey data, and developmental because it involves the design, development, and evaluation of a working system (Creswell & Plano Clark, 2011).</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Methodology</span>Why is it quantitative descriptive developmental and not mixed-methods?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>Mixed-methods research integrates both quantitative and qualitative data — typically combining surveys with <strong>interviews, focus groups, or observations</strong>. This study collected <strong>no qualitative data</strong>. No interviews were conducted. All instruments were structured questionnaires yielding numerical data analyzed through frequency, percentage, and SUS scoring.</p><p>The design is correctly described as <strong>quantitative descriptive developmental</strong>: quantitative because all data are numerical, descriptive because it describes financial practices and usability through survey data, and developmental because it involves the design, development, and evaluation of a working system.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">FHS</span>What is the Financial Health Score and is it a validated instrument?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>The Financial Health Score is a composite indicator ranging from 0 to 100 computed from four equally weighted components: <strong>Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency</strong> — each contributing 25 points.</p>
-    <p>It is formally classified as a <strong>Prototype Observed Financial Health Indicator</strong> — it is NOT a validated psychometric instrument. Its design adapts two published frameworks: the Commonwealth Bank of Australia and Melbourne Institute's observed scale (Comerton-Forde et al., 2018), which uses transaction records rather than surveys, and the Financial Health Network's FinHealth Score® (2021). Equal weighting mirrors CBA's own published methodology.</p>
-    <p>We explicitly state its prototype status throughout the manuscript to avoid overstating its validity.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Respondents</span>Why are there 16 parents and 14 young professionals if three said "both"?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>Three of our 30 respondents answered "Both a parent and a young professional" in Question 2 of the survey. For analysis and reporting purposes, we classified them with the parent group based on their <strong>Q1 age bracket — all three fell in the 35–55 age range</strong>, which is the parent demographic in this study.</p><p>This classification is stated explicitly in the Table 5 footnote and the Figure 5 chart footnote. For the SUS evaluation, the grouping was self-reported by the respondents on the SUS form, yielding 10 parents and 20 young professionals as a separate group.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">AI / Tech</span>Why Gemini 3.5 Flash-Lite specifically? Why not ChatGPT or Claude?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>Eight candidate LLM APIs were evaluated using standardized Filipino-English prompts across five criteria: <strong>Filipino-English accuracy (25%), speed/latency (20%), tool use and JSON reliability (20%), free tier availability (15%), context window (10%)</strong>, and financial reasoning (10%).</p>
-    <p>Gemini 3.5 Flash-Lite was selected because it offered the <strong>highest free-tier request quota (~500 requests/day)</strong>, a 1-million token context window, native function calling for all 34 agentic action types, and the best Filipino-English (Taglish) handling in team trials.</p>
-    <p>GPT-4o and Claude were <strong>paid-only</strong> with no meaningful free tier — cost-prohibitive for academic zero-budget deployment. The 7 fallback providers in the chain ensure availability if Gemini is rate-limited.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">FHS</span>What is the Financial Health Score and is it a validated instrument?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>The Financial Health Score is a composite indicator ranging from 0 to 100 computed from four equally weighted components: <strong>Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency</strong> — each contributing 25 points.</p><p>It is formally classified as a <strong>Prototype Observed Financial Health Indicator</strong> — it is NOT a validated psychometric instrument. Its design adapts two published frameworks: the Commonwealth Bank of Australia and Melbourne Institute's observed scale (Comerton-Forde et al., 2018) and the Financial Health Network's FinHealth Score® (2021). We explicitly state its prototype status throughout the manuscript.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">Privacy</span>How does SmartSpend handle data privacy and RA 10173?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>SmartSpend implements <strong>on-device redaction</strong> before any data is sent to a cloud AI provider. Philippine mobile numbers, GCash/bank reference numbers, and account patterns are automatically masked with placeholder tokens (e.g., [REDACTED_MOBILE]) before transmission.</p>
-    <p>Users who prefer full privacy can enable <strong>Local AI Mode</strong>, which routes all AI requests to a model on their own home network — no financial data leaves the device. A one-time privacy disclosure is shown before the user's first AI message.</p>
-    <p>This is a <strong>risk-reduction measure</strong> — not a claim of full legal compliance with RA 10173 (Data Privacy Act of 2012), which requires organizational and legal measures beyond what a capstone prototype can establish.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">AI / Tech</span>Why Gemini 3.5 Flash-Lite? Why not ChatGPT or Claude?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>We evaluated <strong>ten candidate models from four providers</strong> — Google, Groq, Cerebras, and Mistral — using standardized Filipino-English prompts across five criteria: Filipino-English accuracy (25%), speed/latency (20%), tool use and JSON reliability (20%), free tier availability (15%), and context window (10%).</p><p>Gemini 3.5 Flash-Lite was selected because it offered the <strong>highest free-tier request quota (~500 requests/day)</strong>, a 1-million token context window, native function calling for all 34 agentic action types, and the best Filipino-English (Taglish) handling in team trials.</p><p>GPT-4o and Claude were <strong>paid-only</strong> with no meaningful free tier — cost-prohibitive for academic zero-budget deployment.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">Scope</span>What are the main limitations?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>SmartSpend is limited to <strong>Android devices only</strong>. Direct banking integration was excluded due to the absence of open-banking APIs in the Philippine setting and data privacy concerns. The application does not provide professional financial or investment advice.</p>
-    <p>OCR accuracy depends on receipt image quality. Voice recognition is affected by background noise. All AI features require an active internet connection unless Local AI Mode is configured. The study used structured surveys only — no interviews were conducted.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Privacy</span>How does SmartSpend handle data privacy?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>SmartSpend implements <strong>on-device redaction</strong> before any data is sent to a cloud AI provider. Philippine mobile numbers, GCash/bank reference numbers, and account patterns are automatically masked with placeholder tokens before transmission.</p><p>Users who prefer full privacy can enable <strong>Local AI Mode</strong>, which routes all AI requests to a model on their own home network — no financial data leaves the device. A one-time privacy disclosure is shown before the user's first AI message.</p><p>This is a <strong>risk-reduction measure</strong> — not a claim of full legal compliance with RA 10173, which requires organizational measures beyond a capstone prototype's scope.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">Comparison</span>What makes SmartSpend different from GCash Pera Coach and other apps?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p><strong>GCash Pera Coach</strong> answers financial literacy questions on demand but does not track expenses or compute a health score. <strong>Tarsi</strong> supports offline OCR receipt tracking but has no conversational AI. <strong>YNAB</strong> requires manual entry and a paid subscription. <strong>Monarch Money</strong> requires bank integration unavailable in the Philippines.</p>
-    <p>SmartSpend's unique combination is: <strong>Taglish conversational AI + Financial Health Score + multi-modal input (voice, OCR, barcode, batch screenshots) + offline-first operation</strong> — in a single free Android application evaluated with real users. No other compared app offered all four together and was put through the same hands-on test protocol.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Scope</span>What are the main limitations?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>SmartSpend is limited to <strong>Android devices only</strong>. Direct banking integration was excluded due to the absence of open-banking APIs in the Philippine setting and data privacy concerns. The application does not provide professional financial or investment advice. OCR accuracy depends on receipt image quality. Voice recognition is affected by background noise. All AI features require an active internet connection unless Local AI Mode is configured. The study used structured surveys only — no interviews were conducted.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">Sampling</span>Why different sampling for respondents vs. content validator?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>The <strong>30 respondents</strong> were selected through <strong>random sampling</strong> — any parent aged 35–55 or young professional aged 21–35 who met the inclusion criteria was eligible, with no specific expertise required.</p>
-    <p>The <strong>content validator</strong> (Avigail Candevario, PFMe) was selected through <strong>purposive sampling</strong> because content validation requires a subject matter expert in financial management. Her specific credentials — BS Commerce graduate, active business owner with financial management experience — were the selection basis.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Comparison</span>What makes SmartSpend different from GCash Pera Coach and other apps?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p><strong>GCash Pera Coach</strong> answers financial literacy questions on demand but does not track expenses or compute a health score. <strong>Tarsi</strong> supports offline OCR receipt tracking but has no conversational AI. <strong>YNAB</strong> requires manual entry and a paid subscription. <strong>Monarch Money</strong> requires bank integration unavailable in the Philippines.</p><p>SmartSpend's unique combination is: <strong>Taglish conversational AI + Financial Health Score + multi-modal input (voice, OCR, barcode, batch screenshots) + offline-first operation</strong> — in a single free Android application. No other compared app offered all four together and was put through the same hands-on test protocol.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">Results</span>What does "partially achieved" mean for Objective 3?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>The third objective was to <strong>determine the usability</strong> of SmartSpend. It was <strong>partially achieved</strong> because: (1) the evaluation was successfully conducted with 30 valid respondents; (2) SUS scores were computed using the standard Brooke (1996) formula; (3) results are fully documented and analyzed. However, the mean score of 61.83 fell <strong>below the pre-established acceptance threshold of 80</strong> and below the 68-point average benchmark.</p>
-    <p>Partial achievement acknowledges that the process was completed correctly but the outcome criterion was not met — which is a valid research finding, not a failure of methodology.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Sampling</span>Why different sampling for respondents vs. content validator?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>The <strong>30 respondents</strong> were selected through <strong>random sampling</strong> — any parent aged 35–55 or young professional aged 21–35 who met the inclusion criteria was eligible, with no specific expertise required.</p><p>The <strong>content validator</strong> (Avigail Candevario, PFMe) was selected through <strong>purposive sampling</strong> because content validation requires a subject matter expert in financial management. Her specific credentials were the selection basis.</p></div></div>
 
-<div class="qa">
-  <div class="qa-q" onclick="tog(this)"><span><span class="cat">AI / Tech</span>What about the token exhaustion issue with long messages?</span><span class="chev">▼</span></div>
-  <div class="qa-a">
-    <p>When users send long paragraphs to Peso, the context payload (~7,600+ prompt tokens from 278 expenses, payment plans, goals, and chat history) leaves only 39–95 completion tokens — not enough to execute multiple agentic actions in one response.</p>
-    <p>This is a known constraint of the current context injection approach. <strong>Workarounds</strong>: send one item per message, use quick-log chips for repeat expenses, keep messages short and structured. This is documented as a limitation in Recommendation 2 (backend proxy) and Recommendation 7 (longitudinal evaluation with larger-scale testing).</p>
-    <p>A proper fix would involve context summarization or a sliding window for older expenses — this is noted as a post-capstone engineering improvement.</p>
-  </div>
-</div>
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Results</span>What does "partially achieved" mean for Objective 3?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>The third objective was to <strong>determine the usability</strong> of SmartSpend. It was <strong>partially achieved</strong> because: (1) the evaluation was successfully conducted with 30 valid respondents; (2) SUS scores were computed using the standard Brooke (1996) formula; (3) results are fully documented and analyzed. However, the mean score of 61.83 fell <strong>below the pre-established acceptance threshold of 80</strong> and below the 68-point average benchmark.</p><p>Partial achievement acknowledges that the process was completed correctly but the outcome criterion was not met — which is a valid research finding, not a failure of methodology.</p></div></div>
+
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">AI / Tech</span>Why is there a token exhaustion issue with long messages?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>When users send long paragraphs to Peso, the context payload (~7,600+ prompt tokens from 278 expenses, payment plans, goals, and chat history) leaves only 39–95 completion tokens — not enough to execute multiple agentic actions in one response.</p><p>This is a known constraint of the current context injection approach. <strong>Workarounds</strong>: send one item per message, use quick-log chips for repeat expenses. This is documented as a limitation in Recommendation 2 (backend proxy) which would allow smarter context management server-side.</p></div></div>
+
+<div class="qa"><div class="qa-q" onclick="tog(this)"><span><span class="cat">Figures</span>What is Figure 3 — why is it in Chapter II?</span><span class="chev">▼</span></div>
+<div class="qa-a"><p>Figure 3 is the <strong>SUS Score Interpretation Framework</strong> chart. It is placed in Chapter II (Research Design section) because that is where we explain the SUS scoring methodology used to evaluate Objective 3. The chart shows the three acceptability zones (Not Acceptable, Marginal, Acceptable), the adjective labels, the 68-point average benchmark, the 80 pre-set target, and SmartSpend's score of 61.83 marked with a red line in the Marginal zone.</p><p>Placing it in Research Design — before the results — allows readers to understand the interpretation scale before seeing the actual score.</p></div></div>
 </section>
 
-<!-- ═══ NEVER CHANGE ══════════════════════════════ -->
+<!-- PROTECTED VALUES -->
 <section id="never">
 <h2>🔒 Protected Values — Never Misquote</h2>
 <div class="sacred">
@@ -577,16 +468,21 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
   <div class="sacred-grid">
     <div class="si"><strong>SUS Score</strong>61.83</div>
     <div class="si"><strong>SUS Standard Deviation</strong>SD = 17.58</div>
+    <div class="si"><strong>SUS Median</strong>55.00</div>
     <div class="si"><strong>SUS Grade</strong>Grade D</div>
     <div class="si"><strong>SUS Adjective Rating</strong>"OK"</div>
     <div class="si"><strong>SUS Outcome (Obj. 3)</strong>Partially achieved</div>
     <div class="si"><strong>Valid Respondents</strong>N = 30 (screened from 36)</div>
     <div class="si"><strong>Needs-Assessment Split</strong>16 parents + 14 YP = 30</div>
+    <div class="si"><strong>3 "both" classification</strong>Classified with parents by Q1 age bracket (35–55)</div>
     <div class="si"><strong>SUS Group Split</strong>10 parents + 20 YP = 30</div>
     <div class="si"><strong>AI Intent (Obj. 1)</strong>96.7% = 29 out of 30</div>
     <div class="si"><strong>GCash Users (Obj. 1)</strong>93.3% = 28 out of 30</div>
+    <div class="si"><strong>Receipt tracking</strong>90.0% = 27 out of 30</div>
+    <div class="si"><strong>Dedicated app use</strong>10.0% = 3 out of 30</div>
     <div class="si"><strong>Primary AI Model</strong>Gemini 3.5 Flash-Lite</div>
-    <div class="si"><strong>Failover Chain</strong>8 providers · 7 fallbacks</div>
+    <div class="si"><strong>LLM Candidates</strong>10 models from 4 providers</div>
+    <div class="si"><strong>Failover Chain</strong>8 models · 7 fallbacks</div>
     <div class="si"><strong>Agentic Actions</strong>34</div>
     <div class="si"><strong>Recommendations</strong>9 (not 7)</div>
     <div class="si"><strong>Research Design</strong>Quantitative descriptive developmental</div>
@@ -601,13 +497,12 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
     <div class="si"><strong>App Version Evaluated</strong>SmartSpend v3.1.0</div>
   </div>
 </div>
-
 <div class="alert alert-danger" style="margin-top:16px">
-  <strong>🚫 NEVER SAY:</strong> "Gemini 1.5" · "mixed methods" · "seven recommendations" · "failed" for Obj. 3 · "proposed system" · "six-provider chain" · "20 LLM models" · "purposive sampling for respondents"
+  <strong>🚫 NEVER SAY:</strong> "Gemini 1.5" · "mixed methods" · "seven recommendations" · "failed" for Obj. 3 · "proposed system" · "eight candidate LLM APIs" (it's ten) · "purposive sampling for respondents" · "primary financial role" (say Q1 age bracket)
 </div>
 </section>
 
-<!-- ═══ TIPS ══════════════════════════════════════ -->
+<!-- TIPS -->
 <section id="tips">
 <h2>🗣️ Delivery Tips</h2>
 <div class="do-dont">
@@ -620,9 +515,11 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
       <li>"random sampling" for respondents</li>
       <li>"purposive sampling" for the content validator</li>
       <li>"Gemini 3.5 Flash-Lite"</li>
+      <li>"ten candidate models from four providers"</li>
       <li>"prototype" when describing the FHS</li>
       <li>"No interviews were conducted"</li>
       <li>"nine recommendations"</li>
+      <li>"classified with parents based on Q1 age bracket"</li>
     </ul>
   </div>
   <div class="do-box dont">
@@ -633,27 +530,26 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
       <li>"Gemini 1.5" — it's 3.5 Flash-Lite</li>
       <li>"seven recommendations" — there are 9</li>
       <li>"proposed system" — it's built and evaluated</li>
-      <li>"six-provider chain" — it's 8 providers</li>
-      <li>"20 LLM models" — only 8 were evaluated</li>
+      <li>"eight candidate LLM APIs" — it's ten</li>
       <li>"purposive sampling" for respondents</li>
       <li>"~62" — always say 61.83 exactly</li>
+      <li>"primary financial role" for the 3 "both" respondents</li>
     </ul>
   </div>
 </div>
 <div class="card" style="margin-top:16px">
   <h3>📋 If asked something you don't know</h3>
-  <p style="font-size:.86rem;line-height:1.7;margin-top:4px">It's okay to say: <em>"That is a valid point. That detail is beyond the current scope of our prototype and is noted as a recommendation for future development."</em> — then reference the most relevant recommendation (1–9). Never guess at a number or claim something you haven't verified.</p>
+  <p style="font-size:.86rem;line-height:1.7;margin-top:4px">"That is a valid point. That detail is beyond the current scope of our prototype and is noted as a recommendation for future development." Then reference the most relevant recommendation (1–9). Never guess at a number or claim something you haven't verified.</p>
 </div>
 </section>
 
-</div><!-- /wrap -->
+</div>
 
 <footer>
-  SmartSpend Defense Reviewer &nbsp;·&nbsp; Generated Nov 13, 2026 &nbsp;·&nbsp; LORMA Colleges CCSE<br>
+  SmartSpend Defense Reviewer &nbsp;·&nbsp; Updated November 14, 2026 &nbsp;·&nbsp; LORMA Colleges CCSE<br>
   Directo · Rubis · Madayag &nbsp;·&nbsp; Adviser: Ellen Flores Mangaoang, DIT
   <div style="margin-top:8px">
     <a href="#overview" style="color:var(--muted);text-decoration:none;font-size:.78rem;margin:0 8px">Top ↑</a>
-    <span style="color:var(--border)">|</span>
     <span style="font-size:.75rem;color:var(--border);margin-left:8px">Share:
       <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:.72rem">htmlpreview.github.io/?https://github.com/Zushikina-kun/smartspend-app/blob/master/docs/handsoff/FOR_CYRILLE/defense_reviewer.html</code>
     </span>
@@ -661,13 +557,7 @@ footer{text-align:center;padding:28px 20px;color:var(--muted);font-size:.78rem;b
 </footer>
 
 <script>
-// Q&A toggle
-function tog(el){
-  const a=el.nextElementSibling, c=el.querySelector('.chev');
-  a.classList.toggle('open'); c.classList.toggle('open');
-}
-
-// Countdown
+function tog(el){const a=el.nextElementSibling,c=el.querySelector('.chev');a.classList.toggle('open');c.classList.toggle('open')}
 function tick(){
   const defense=new Date('2026-11-16T15:00:00');
   const now=new Date();
@@ -678,9 +568,9 @@ function tick(){
   const h=Math.floor((diff%86400000)/3600000);
   const m=Math.floor((diff%3600000)/60000);
   const s=Math.floor((diff%60000)/1000);
-  el.textContent=`⏳ Defense in: ${d}d ${h}h ${m}m ${s}s — November 16, 2026 · 3:00 PM · LORMA Colleges`;
+  el.textContent='⏳ Defense in: '+d+'d '+h+'h '+m+'m '+s+'s — November 16, 2026 · 3:00 PM · LORMA Colleges';
 }
-tick(); setInterval(tick,1000);
+tick();setInterval(tick,1000);
 </script>
 </body>
 </html>
