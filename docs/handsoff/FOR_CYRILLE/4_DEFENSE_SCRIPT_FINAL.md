@@ -55,7 +55,7 @@ The Philippines continues to face a serious financial literacy challenge. Accord
 
 ### Slide 4 — Gap Analysis
 
-The gap we identified operates at three levels. At the international level, manual entry dominates most financial apps, and AI categorization breaks down when users input transactions in Filipino or Taglish — common in our target population. At the national level, existing Philippine apps lack conversational AI, spending behavior analysis, and financial health scoring. At the demographic level, parents specifically tend to abandon apps because of the effort required for manual entry, and existing warning systems have no consequence mechanism to reinforce behavior change. SmartSpend directly addresses each of these three gaps, as shown in Table 2 of our manuscript.
+The gap we identified operates at three levels. At the international level, manual entry dominates most financial apps, and AI categorization breaks down when users input transactions in Filipino or Taglish — common in our target population. At the national level, existing Philippine apps lack conversational AI, spending behavior analysis, and financial health scoring. At the demographic level, parents specifically tend to abandon apps because of the effort required for manual entry, and existing warning systems have no consequence mechanism to reinforce behavior change. SmartSpend directly addresses each of these three gaps, as shown in Table 1 of our manuscript.
 
 ---
 
@@ -85,7 +85,7 @@ This study employed a **quantitative descriptive developmental research design**
 
 ### Slide 9 — Objective 1 Results: Needs Assessment
 
-Objective 1 asked us to assess the financial management practices of our target population, and the results validated the need for SmartSpend. Among the 30 respondents, **96.7% — that is, 29 of 30 — expressed positive intent to use an AI-powered financial application**. **93.3%, or 28 of 30, reported they already used GCash**, confirming that our target population is comfortable with mobile financial tools and validating our GCash-linked feature priorities. Only 10%, or 3 out of 30, already used a dedicated mobile app for budgeting — confirming the market gap. The most common tracking method was physical receipts at 90%, followed by mental estimates at 53.3% and e-wallet transaction history at 43.3%. Only 10% — 3 of 30 — already used a dedicated budgeting app, which confirms the market gap., followed by mental estimates at 53.3%. These findings directly informed the features we built into SmartSpend and confirm that Objective 1 was **achieved**.
+Objective 1 asked us to assess the financial management practices of our target population, and the results validated the need for SmartSpend. Among the 30 respondents, **96.7% — that is, 29 of 30 — expressed positive intent to use an AI-powered financial application**. **93.3%, or 28 of 30, reported they already used GCash**, confirming that our target population is comfortable with mobile financial tools and validating our GCash-linked feature priorities. Only 10%, or 3 out of 30, already used a dedicated mobile app for budgeting — confirming the market gap. The most common tracking method was physical receipts at 90%, followed by mental estimates at 53.3% and e-wallet transaction history at 43.3%. These findings directly informed the features we built into SmartSpend and confirm that Objective 1 was **achieved**. These findings directly informed the features we built into SmartSpend and confirm that Objective 1 was **achieved**.
 
 ---
 
@@ -137,7 +137,7 @@ Three conclusions follow directly from our results.
 
 **Objective 1 — Achieved.** The needs assessment successfully identified the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. 96.7% of respondents expressed intent to use an AI-powered financial app, and 93.3% already used GCash, confirming the target population and feature priorities.
 
-**Objective 2 — Achieved.** SmartSpend version 3.1.0 was successfully designed and developed as a working Android application, with 34 AI actions, 7 input modalities, offline-first SQLite storage, and a suitable LLM API selected through comparative technical evaluation of eight candidate APIs.
+**Objective 2 — Achieved.** SmartSpend version 3.1.0 was successfully designed and developed as a working Android application, with 34 AI actions, 7 input modalities, offline-first SQLite storage, and a suitable LLM API selected through comparative technical evaluation of ten candidate models from four providers.
 
 **Objective 3 — Partially achieved.** Usability was evaluated using the System Usability Scale with 30 valid respondents. The mean score of 61.83 falls below the 68-point benchmark and our 80 target. The app demonstrates promise as a prototype, but UI/UX improvements are needed before it reaches the target usability threshold.
 
