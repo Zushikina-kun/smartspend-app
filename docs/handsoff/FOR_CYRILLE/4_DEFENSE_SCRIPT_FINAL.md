@@ -76,9 +76,9 @@ Three objectives guided this study. First, to assess the existing financial mana
 
 ---
 
-### Slide 7 — What is SmartSpend?
+### Slide 7 — SmartSpend: The Proposed Solution
 
-Before we dive into the methodology and results, let me briefly explain what SmartSpend is. SmartSpend is an AI-powered Android mobile application for personal financial management, specifically built for Filipino parents and young professionals who struggle with manual expense tracking. It supports natural language expense logging in Taglish — users can type or speak "nag-lunch ako 150 pesos" and the app records it automatically. The app offers multi-modal input: voice, text, OCR receipt scanning, and batch screenshot import from over 40 platforms such as GCash, Maya, and Shopee. At its core is a Financial Health Score from 0 to 100 that motivates users toward better spending habits. The app is offline-first, meaning core features work without internet and sync to the cloud when connected.
+Before we dive into the methodology and results, let me briefly introduce our proposed solution. SmartSpend is an AI-powered Android mobile application for personal financial management, specifically built for Filipino parents and young professionals who struggle with manual expense tracking. It supports natural language expense logging in Taglish — users can type or speak "nag-lunch ako 150 pesos" and the app records it automatically. The app offers multi-modal input: voice, text, OCR receipt scanning, and batch screenshot import from over 40 platforms such as GCash, Maya, and Shopee. At its core is a Financial Health Score from 0 to 100 that motivates users toward better spending habits. The app is offline-first, meaning core features work without internet and sync to the cloud when connected. This is the solution we designed, developed, and evaluated in this study.
 
 ---
 

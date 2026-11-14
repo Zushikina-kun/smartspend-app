@@ -76,9 +76,9 @@ Three objectives guided this study. First, to assess the existing financial mana
 
 ---
 
-### Slide 7 — What is SmartSpend?
+### Slide 7 — SmartSpend: The Proposed Solution
 
-Before we dive into the methodology and results, let me briefly explain what SmartSpend is. SmartSpend is an AI-powered Android mobile application for personal financial management, specifically built for Filipino parents and young professionals who struggle with manual expense tracking. It supports natural language expense logging in Taglish — users can type or speak "nag-lunch ako 150 pesos" and the app records it automatically. The app offers multi-modal input: voice, text, OCR receipt scanning, and batch screenshot import from over 40 platforms such as GCash, Maya, and Shopee. At its core is a Financial Health Score from 0 to 100 that motivates users toward better spending habits. The app is offline-first, meaning core features work without internet and sync to the cloud when connected.
+Before we dive into the methodology and results, let me briefly introduce our proposed solution. SmartSpend is an AI-powered Android mobile application for personal financial management, specifically built for Filipino parents and young professionals who struggle with manual expense tracking. It supports natural language expense logging in Taglish — users can type or speak "nag-lunch ako 150 pesos" and the app records it automatically. The app offers multi-modal input: voice, text, OCR receipt scanning, and batch screenshot import from over 40 platforms such as GCash, Maya, and Shopee. At its core is a Financial Health Score from 0 to 100 that motivates users toward better spending habits. The app is offline-first, meaning core features work without internet and sync to the cloud when connected. This is the solution we designed, developed, and evaluated in this study.
 
 ---
 
@@ -94,7 +94,7 @@ This study employed a **quantitative descriptive developmental research design**
 
 ---
 
-### Slide 9 — Objective 1 Results: Needs Assessment
+### Slide 10 — Objective 1 Results: Needs Assessment
 
 Objective 1 asked us to assess the financial management practices of our target population. Among the 30 respondents, **96.7%, or 29 of 30, expressed positive intent to use an AI-powered financial application**. **93.3%, or 28 of 30, already used GCash**, which supports our focus on e-wallet transaction import. Only 10%, or 3 of 30, already used a dedicated mobile app to track expenses. The most common tracking method was physical receipts at 90%, followed by mental estimates at 53.3% and e-wallet transaction history at 43.3%. These results informed the receipt scanning, natural-language logging, and screenshot import features we built, and they confirm that Objective 1 was **achieved**.
 
