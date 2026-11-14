@@ -172,8 +172,6 @@ All nine come from the specific limitations of the current prototype.
 
 ---
 
-### Slide 20 — Closing
-
 That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang for her guidance throughout this study, and we thank the panel, Dean Layco, Sir Raposas, and Ma'am Mzana, for your time and expertise today. We now open the floor for the panel's questions and comments.
 
 ---
