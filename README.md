@@ -33,7 +33,7 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 - 📱 **Improved Accessibility** — Fixed scrolling issues in AI model selector for devices under 5.5"
 - 🔗 **Direct Portal Links** — Quick access to sss.gov.ph, philhealth.gov.ph, and pagibigfund.gov.ph from within the app
 
-[View Full Changelog](CHANGELOG.md)
+[View Full Changelog](CHANGELOG.md) | [Feature Roadmap (Post-Defense)](docs/handsoff/FEATURE_ROADMAP_POST_DEFENSE.md)
 
 **Developed by Lucid Frame:**
 - Brix A. Directo — Lead Developer
