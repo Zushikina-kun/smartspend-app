@@ -1,9 +1,9 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.1.2 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 3.2.0 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.1.2-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.2.0-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
 > **Note on screenshots and demo:** The website screenshots were taken during development (v3.0.4) and the interactive demo shows a simplified prototype of the general concept. The actual app has been significantly updated since — animations, Peso mascot interactions, UI polish, and features have all been improved. Download the latest APK for the full experience.
@@ -27,6 +27,13 @@ SmartSpend is free right now. Source Available License (Non-Commercial) — see 
 SmartSpend is a free AI-powered personal finance tracker for Android, built for everyday Filipino users. It helps you record, analyze, and manage your spending with minimal effort — using voice, camera, or just typing naturally in Taglish or English.
 
 The app is actively developed and regularly updated. Features, UI, and Peso mascot interactions evolve with each release.
+
+**✨ What's New in v3.2.0:**
+- 🏛️ **Government Contributions Tracker** — First Filipino finance app to track SSS, PhilHealth, and Pag-IBIG contributions with year-to-date totals and SSS pension estimator
+- 📱 **Improved Accessibility** — Fixed scrolling issues in AI model selector for devices under 5.5"
+- 🔗 **Direct Portal Links** — Quick access to sss.gov.ph, philhealth.gov.ph, and pagibigfund.gov.ph from within the app
+
+[View Full Changelog](CHANGELOG.md)
 
 **Developed by Lucid Frame:**
 - Brix A. Directo — Lead Developer
@@ -87,7 +94,12 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 ### Filipino-Specific Features
 - 💳 **Installment Plans** — ShopeePayLater, GCash GLoan, HomeCredit, any fixed monthly payment
-- 🏛️ **Government Contributions** — SSS, PhilHealth, Pag-IBIG with due date tracking
+- 🏛️ **Government Contributions Tracker** ⭐ NEW in v3.2.0
+  - Track SSS, PhilHealth, and Pag-IBIG contributions year-to-date
+  - SSS pension estimator calculator
+  - Dashboard integration with auto-hiding total expenses widget
+  - Direct links to official government portals
+  - Year selector for viewing historical contribution data
 - 🏦 **PH Banks Database** — 20 banks, 5 digital banks, e-wallets, investment options comparison
 - 🏅 **Paluwagan Tracker** — rotating savings group management
 - 💱 **57 currencies** with live exchange rates
@@ -157,6 +169,7 @@ Data collection for the formal evaluation is complete. Thank you to all responde
 
 | Version | Highlights |
 |---------|-----------|
+| **3.2.0** | 🆕 Government contributions tracker (SSS/PhilHealth/Pag-IBIG) with YTD totals, pension estimator, portal links; scrolling fixes for small screens |
 | **3.1.2** | UX polish — clearSnackBars, FHS tier ring, setup CTA, quick input bar prominence, weekly notification fix |
 | **3.1.1** | Peso gestures (double-tap, long-press, idle timer), AI transaction save fix, site factual corrections |
 | **3.1.0** | FHS tier change announcements, streak milestones, notification tap reaction, session tips |

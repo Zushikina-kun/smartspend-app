@@ -2,6 +2,41 @@
 
 All notable changes to SmartSpend are documented here.
 
+## [3.2.0] - 2024-11-15
+
+### Added
+- **Government Contributions Tracker** — Filipino-specific feature for tracking mandatory government contributions
+  - SSS (Social Security System) contribution tracking with year-to-date totals
+  - PhilHealth (Philippine Health Insurance) contribution tracking
+  - Pag-IBIG (Home Development Mutual Fund) contribution tracking
+  - Three new expense categories: SSS, PhilHealth, Pag-IBIG (auto-available in all expense logging flows)
+  - Dashboard widget showing total government expenses YTD (auto-hides when no contributions logged)
+  - Full-featured Government Contributions screen (448 lines) with year selector
+  - Simple SSS pension estimator calculator
+  - Direct portal links to official government websites (sss.gov.ph, philhealth.gov.ph, pagibigfund.gov.ph)
+  - Integrated into Tools hub under Quick Access on Home screen
+
+### Fixed
+- AI model selector bottom sheet scrolling overflow on small screens (<5.5")
+- Layout improvements for accessibility on compact displays
+
+### Changed
+- Version bump from 3.1.2+110 to 3.2.0+111
+
+### Technical
+- New screen: `lib/screens/gov_contributions_screen.dart` (448 lines)
+- Modified: `lib/screens/home_screen.dart` (158 line addition), `lib/services/category_service.dart` (+3 categories)
+- Code analysis: `flutter analyze` clean (info-level lints only)
+- Build output: Release APK 119.8 MB
+- Build type: ProGuard/R8 enabled, tree-shaking applied (MaterialIcons reduced 97.8%)
+
+### Context
+- Addresses thesis recommendation F11 (Filipino-specific financial features)
+- Defense-ready build with accessibility improvements
+- Post-defense release (defense date: November 10, 2026)
+
+---
+
 ## [3.1.2] - November 2026
 ### UX Polish + Final Capstone Release
 - **Peso home ring** — colored tier ring (green/orange/red) around Peso on Home screen FHS card
