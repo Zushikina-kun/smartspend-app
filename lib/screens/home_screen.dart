@@ -56,6 +56,7 @@ import 'chat_history_screen.dart';
 import 'data_quality_screen.dart';
 import 'help_screen.dart';
 import 'debt_payoff_screen.dart';
+import 'gov_contributions_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
@@ -1889,6 +1890,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "Avalanche vs snowball — see which saves you more interest",
             Colors.deepPurple,
             () => _go(const DebtPayoffScreen())
+          ),
+          (
+            Icons.account_balance_outlined,
+            "Gov Contributions",
+            "Track SSS, PhilHealth, Pag-IBIG year-to-date totals",
+            Colors.blue,
+            () => _go(const GovContributionsScreen())
           ),
           (
             Icons.category_outlined,
@@ -6287,6 +6295,10 @@ class _DashboardState extends State<Dashboard> {
                   );
                 },
               ),
+
+              // Government Contributions Mini Card
+              _GovContributionsMiniCard(),
+
               if (_lastMonthTotal > 0 &&
                   _totalSpent > 0 &&
                   _lastMonthExpenseCount >= 5)
@@ -9445,6 +9457,152 @@ class _PriorityBannerTile extends StatelessWidget {
                 ),
                 if (onTap != null)
                   Icon(Icons.chevron_right, color: color, size: 18),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── GOVERNMENT CONTRIBUTIONS MINI CARD ────────────────────────────────────────
+/// Shows a quick summary of YTD government contributions (SSS, PhilHealth, Pag-IBIG)
+/// with a link to the full screen
+class _GovContributionsMiniCard extends StatefulWidget {
+  const _GovContributionsMiniCard();
+
+  @override
+  State<_GovContributionsMiniCard> createState() =>
+      _GovContributionsMiniCardState();
+}
+
+class _GovContributionsMiniCardState extends State<_GovContributionsMiniCard> {
+  bool _loading = true;
+  double _totalYTD = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTotal();
+  }
+
+  Future<void> _loadTotal() async {
+    setState(() => _loading = true);
+    try {
+      final db = await DBService.getDB();
+      final year = DateTime.now().year.toString();
+
+      final result = await db.rawQuery('''
+        SELECT COALESCE(SUM(amount), 0) as total 
+        FROM expenses 
+        WHERE category IN ('SSS', 'PhilHealth', 'Pag-IBIG')
+        AND strftime('%Y', date) = ?
+      ''', [year]);
+
+      final total = (result.first['total'] as num).toDouble();
+
+      if (mounted) {
+        setState(() {
+          _totalYTD = total;
+          _loading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) return const SizedBox.shrink();
+    if (_totalYTD == 0)
+      return const SizedBox.shrink(); // Hide if no contributions yet
+
+    final cs = Theme.of(context).colorScheme;
+    final year = DateTime.now().year;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.blue.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const GovContributionsScreen(),
+              ),
+            );
+          },
+          borderRadius: BorderRadius.circular(14),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.blue.withOpacity(0.25)),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.blue.withOpacity(0.15),
+                  child: const Icon(
+                    Icons.account_balance_outlined,
+                    color: Colors.blue,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$year Government Contributions',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'SSS, PhilHealth, Pag-IBIG',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: cs.onSurface.withOpacity(0.6),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      CurrencyService.format(_totalYTD),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    Text(
+                      'YTD Total',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: cs.onSurface.withOpacity(0.5),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.chevron_right,
+                  color: cs.onSurface.withOpacity(0.4),
+                  size: 18,
+                ),
               ],
             ),
           ),

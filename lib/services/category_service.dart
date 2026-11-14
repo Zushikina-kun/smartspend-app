@@ -20,6 +20,9 @@ class CategoryService {
     'Gifts',
     'Travel',
     'Pets',
+    'SSS',
+    'PhilHealth',
+    'Pag-IBIG',
     'Others',
   ];
 
