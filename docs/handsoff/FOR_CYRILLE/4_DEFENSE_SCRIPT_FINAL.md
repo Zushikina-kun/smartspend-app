@@ -76,67 +76,73 @@ Three objectives guided this study. First, to assess the existing financial mana
 
 ---
 
-### Slide 7 — Conceptual Framework (IPO)
+### Slide 7 — What is SmartSpend?
+
+Before we dive into the methodology and results, let me briefly explain what SmartSpend is. SmartSpend is an AI-powered Android mobile application for personal financial management, specifically built for Filipino parents and young professionals who struggle with manual expense tracking. It supports natural language expense logging in Taglish — users can type or speak "nag-lunch ako 150 pesos" and the app records it automatically. The app offers multi-modal input: voice, text, OCR receipt scanning, and batch screenshot import from over 40 platforms such as GCash, Maya, and Shopee. At its core is a Financial Health Score from 0 to 100 that motivates users toward better spending habits. The app is offline-first, meaning core features work without internet and sync to the cloud when connected.
+
+---
+
+### Slide 8 — Conceptual Framework (IPO)
 
 Our study used an Input-Process-Output framework. The inputs are text, voice, receipt images, barcode scans, and the user's financial data. The process layer includes LLM parsing, OCR, barcode recognition, data structuring, local SQLite storage, and Firebase synchronization. The outputs are automatically recorded expenses, financial summaries, charts, alerts, AI-generated insights, the Financial Health Score from 0 to 100, and AI-powered financial assistance such as general financial Q&A, market price estimates, and financial product guidance.
 
 ---
 
-### Slide 8 — Research Design and Methodology
+### Slide 9 — Research Design and Methodology
 
 This study employed a **quantitative descriptive developmental research design**. The developmental component refers to the design and development of SmartSpend as a working prototype, built using an Agile Kanban workflow. The quantitative descriptive component refers to validated structured survey instruments used to assess needs and to evaluate usability. No interviews were conducted. **Random sampling was used** for the needs assessment, which involved 30 respondents: 16 parents and 14 young professionals. Three of the 16 parents answered "both" in the survey and were counted with the parent group by their age bracket. A separate group completed the SUS evaluation: 30 valid responses out of 36, made up of 10 parents and 20 young professionals, after using the app for at least 10 minutes. **Purposive sampling was used** only for the content validator, Avigail Candevario, PFMe, who was chosen for her expertise in personal finance and financial education to validate our survey instrument.
 
 ---
 
-### Slide 9 — Objective 1 Results: Needs Assessment
+### Slide 10 — Objective 1 Results: Needs Assessment
 
 Objective 1 asked us to assess the financial management practices of our target population. Among the 30 respondents, **96.7%, or 29 of 30, expressed positive intent to use an AI-powered financial application**. **93.3%, or 28 of 30, already used GCash**, which supports our focus on e-wallet transaction import. Only 10%, or 3 of 30, already used a dedicated mobile app to track expenses. The most common tracking method was physical receipts at 90%, followed by mental estimates at 53.3% and e-wallet transaction history at 43.3%. These results informed the receipt scanning, natural-language logging, and screenshot import features we built, and they confirm that Objective 1 was **achieved**.
 
 ---
 
-### Slide 10 — System Overview
+### Slide 11 — System Overview
 
 SmartSpend version 3.1.0 is a working Android application built with Flutter, with offline-first SQLite storage. At a glance: **34 autonomous AI actions**, a 12-mood Peso mascot, batch screenshot import for **40-plus platforms**, a **26-table** SQLite schema, support for 20 Philippine banks and 5 digital banks, **36 achievement badges**, and 31 Taglish situations that Peso can respond to. The AI side has eight cloud models in a failover chain, plus the optional Private Local Mode, for nine AI options in total. Core features work without internet and sync to Firebase when connected; the AI features need a connection unless the user runs a local model. The Financial Health Score is formally classified as a Prototype Observed Financial Health Indicator, which is a design choice, not a statistically validated instrument.
 
 ---
 
-### Slide 11 — App Screenshots
+### Slide 12 — App Screenshots
 
 Let me walk through five key screens, Figures 9 to 13 in the manuscript. The Login and Demo Mode screen lets users explore SmartSpend with pre-loaded Filipino sample data, or continue without an account, before committing. The Home Dashboard shows the Financial Health Score, budgets, and a spending summary at a glance, with the Peso chat input at the bottom. Expense Logging Through Peso Chat shows natural-language input: here the user typed "nag-lunch ako 150 pesos" and Peso recorded it in one step. Receipt Scanning shows OCR text that the user can review and edit before sending it to the AI. Finally, the Financial Health Score Breakdown shows the overall score and the four scored components, with tips where a component needs work. The manuscript also includes the Budgets screen, Figure 14, and the Local AI setup screen, Figure 15, if the panel would like to see them.
 
 ---
 
-### Slide 12 — LLM Selection
+### Slide 13 — LLM Selection
 
 Selecting the right LLM was a critical design decision. We evaluated **ten candidate models from four providers** against six weighted criteria: Filipino-English accuracy at 25%, speed at 20%, tool use and JSON reliability at 20%, free-tier availability at 15%, context window at 10%, and financial reasoning quality at 10%. These results are in Table 6. We selected **Gemini 3.5 Flash-Lite** because it offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. Our fallback chain adds seven more models across Google, Groq, and Cerebras, so the assistant keeps working if one is down or rate-limited. We also used full-context injection rather than RAG, because a typical user's data is only about 1,000 to 5,000 tokens.
 
 ---
 
-### Slide 13 — Financial Health Score
+### Slide 14 — Financial Health Score
 
 The Financial Health Score is a prototype indicator on a 0-to-100 scale. It has two modes. In Full Mode, which needs income tracking, it has four equally weighted components of 25 points each: Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency. In Lightweight Mode, for users without a fixed income, it uses Spending Restraint, Logging Consistency, Category Balance, and Habit Streak. Two adjustments apply: a Warning Decay of up to 15 points for discretionary overspending, and a Gap Adjustment of plus 2 for a confirmed no-spend day and minus 3 for an unlogged day. The final score is clamped between 0 and 100. We want to be transparent with the panel: the equal weights are a design choice, not a statistically derived result, and the score is formally classified as a Prototype Observed Financial Health Indicator, not a validated measurement instrument.
 
 ---
 
-### Slide 14 — Privacy Tiers
+### Slide 15 — Privacy Tiers
 
 SmartSpend has three AI privacy tiers, and two are implemented. Tier 1 is Cloud AI, the default. Mobile numbers, reference numbers, and account patterns are redacted on the device before a request is sent, and a one-time privacy disclosure appears before the first AI message. We are honest that our primary provider runs on Google's free Gemini quota, whose terms say content may be used to improve Google's products. Redaction reduces that exposure but does not remove it. Tier 2 is Private Local Mode: requests go only to a model on the user's own PC or Mac, using tools such as Ollama, LM Studio, or Jan. If the local server is unreachable, the app falls back to the cloud, unless the user switches on Local-only mode, in which case the AI simply stops responding instead of falling back. Tier 3, an on-device model running on the phone itself, is **not implemented**. A roughly 2.6-gigabyte model is not yet feasible on the 4 GB phones common among Filipino students, so it is Recommendation 4.
 
 ---
 
-### Slide 15 — SUS Results (Objective 3)
+### Slide 16 — SUS Results (Objective 3)
 
 The System Usability Scale was administered to **30 valid respondents**, 10 parents and 20 young professionals, as a separate group from the needs assessment. Six of the 36 who attempted the survey were excluded: five for insufficient usage time and one for straight-line responding. The mean SUS score is **61.83**, with a standard deviation of **17.58**, a median of **55.0**, and a range of **35.0 to 92.5**. Under the Bangor, Kortum, and Miller (2009) adjective scale, this is **Grade D, adjective "OK"**. It is below the 68-point average benchmark and below our pre-established target of 80. Parents averaged 58.25 and young professionals 63.62, and both groups were below the benchmark and the target. Respondents scored high on intent to use the system frequently, at 4.35 out of 5, and on confidence, at 4.19 out of 5. The weaker items were consistency, Question 6, and complexity, Questions 2 and 4. For this reason, Objective 3 is **partially achieved**. This is not a failure of the study; it is an honest finding that drives Recommendation 8.
 
 ---
 
-### Slide 16 — Limitations
+### Slide 17 — Limitations
 
 We acknowledge several limitations. The SUS score of 61.83 is below both the 68 benchmark and the 80 target. SmartSpend is Android only, and its cloud AI features need an internet connection. Security is at prototype level: the API key is stored on the device because there is no server-side proxy yet, and the local database is not encrypted. These are addressed in Recommendations 2 and 5. Parsing accuracy in Table 9 comes from development-phase testing, not an independent audit: overall amount accuracy was 88.2%, and date accuracy was the weakest at 70.4%. The gamification elements, Peso and the badges, were added after the evaluation instrument was designed, so their effect on behavior has not been measured. And the 30 SUS respondents came from one locale, which limits generalizability.
 
 ---
 
-### Slide 17 — Conclusions
+### Slide 18 — Conclusions
 
 Three conclusions follow directly from our results.
 
@@ -148,7 +154,7 @@ Three conclusions follow directly from our results.
 
 ---
 
-### Slide 18 — Recommendations
+### Slide 19 — Recommendations
 
 In view of these results, we make nine recommendations.
 
@@ -166,7 +172,7 @@ All nine come from the specific limitations of the current prototype.
 
 ---
 
-### Slide 19 — Closing
+### Slide 20 — Closing
 
 That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang for her guidance throughout this study, and we thank the panel, Dean Layco, Sir Raposas, and Ma'am Mzana, for your time and expertise today. We now open the floor for the panel's questions and comments.
 
