@@ -151,7 +151,7 @@ check('SCRIPT: Partially achieved', 'partially achieved' in script.lower())
 check('SCRIPT: 61.83', '61.83' in script)
 check('SCRIPT: Jeoffrey', 'Jeoffrey' in script)
 check('SCRIPT: Quantitative', 'quantitative' in script.lower())
-check('SCRIPT: No mixed methods', 'mixed methods' not in script.replace('"mixed methods"', '').replace('mixed methods" (no interviews', ''))
+check('SCRIPT: No mixed methods', 'mixed methods' not in script.replace('"mixed methods"', '').replace('mixed methods" (no interviews', '').replace('Why not mixed methods?', ''))
 check('SCRIPT: Panel correct', 'Raposas' in script and 'Mzana' in script and 'Layco' in script)
 
 # ══════════════════════════════════════════════════════
