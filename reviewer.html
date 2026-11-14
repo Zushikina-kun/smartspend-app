@@ -170,6 +170,19 @@
 <!-- ═══════════════════════════════════════════════════════════ DEMO TAB -->
 <section class="panel" id="p-demo">
 
+  <h2 class="sec">⭐ What's New in v3.2.0</h2>
+  <div style="background:var(--gold-soft); border-left:3px solid var(--gold); padding:14px 16px; border-radius:4px; margin-bottom:20px;">
+    <p style="margin:0 0 8px; font-weight:600; color:var(--ink);">Star Feature: Government Contributions Tracker</p>
+    <p style="margin:0 0 12px; font-size:.92rem;">Track SSS, PhilHealth, and Pag-IBIG year-to-date contributions—the <strong>first Filipino personal finance app</strong> to treat government contributions as a first-class category. Includes YTD summaries, official portal links, and an SSS pension calculator. Dashboard widget auto-shows when you have contribution data.</p>
+    <p style="margin:0 0 4px; font-size:.88rem; color:var(--ink-soft);"><strong>Also in v3.2.0:</strong></p>
+    <ul style="margin:0; padding-left:20px; font-size:.88rem; color:var(--ink-soft);">
+      <li>Fixed AI Model Selector scrolling on small screens (&lt;5.5")</li>
+      <li>Build 111 released with full production readiness</li>
+      <li>Post-defense roadmap: 43 features researched and documented</li>
+      <li>Top 6 priorities: Cash Flow Forecasting, OFW Remittance Tracker, Net Worth Tracking, Quarterly Tax Reminder, AI Financial Coach, Price Hike Detection</li>
+    </ul>
+  </div>
+
   <h2 class="sec">Night-before phone setup</h2>
   <ul class="chk" id="chklist"></ul>
 
@@ -178,6 +191,7 @@
     <p>Good morning/afternoon. We are Lucid Frame — Brix, Cyrille, and Djaunathan.</p>
     <p>SmartSpend is an AI-assisted personal finance tracker for Android, designed specifically for everyday Filipinos. The problem we're solving is simple: most Filipinos know they should track their money, but they don't — because it's too tedious. SmartSpend removes that friction. You just talk to the app, and it handles the rest.</p>
     <p>Our app uses a free, multi-model AI system with 34 automatic actions — it can log expenses, set budgets, track debts, and give financial advice, all from a single chat message. It also gives you a Financial Health Score — a single number from 0 to 100 that tells you how well you're managing your money this month.</p>
+    <p>Version 3.2.0 introduces government contributions tracking — SSS, PhilHealth, and Pag-IBIG year-to-date totals — making SmartSpend the first Filipino personal finance app to treat mandatory government expenses as a first-class category. For a typical employee, that's ₱15,000 per year, or 8% of income, that most apps ignore entirely.</p>
   </blockquote>
 
   <h2 class="sec">Demo flow — 10 minutes</h2>
@@ -249,9 +263,33 @@
     </div>
 
     <div class="step" data-n="8">
+      <div class="step-head"><h3>Government Contributions — v3.2.0 NEW FEATURE</h3><span class="step-time">2:00</span></div>
+      <div class="step-body">
+        <p><strong>This is unique to SmartSpend.</strong> No other Filipino finance app tracks government contributions.</p>
+        <ul>
+          <li>Tap <strong>Tools Hub</strong> → find <strong>Gov Contributions</strong> (blue bank icon)</li>
+          <li>Show the three contribution cards: SSS (blue), PhilHealth (green), Pag-IBIG (orange)</li>
+          <li>Each card displays: YTD total for selected year, official portal link</li>
+          <li>Tap any card → opens official gov website (sss.gov.ph, philhealth.gov.ph, pagibigfund.gov.ph)</li>
+        </ul>
+        <div class="say">"This is new in version 3.2.0 — Government Contributions Tracker. It shows your year-to-date totals for SSS, PhilHealth, and Pag-IBIG. For a typical Filipino employee earning ₱20,000 per month, these three contributions total about ₱15,000 per year — that's nearly 8% of annual income. Yet most people don't track it because other finance apps ignore government expenses entirely."</div>
+        <div class="say">"Each card is tappable — it opens the official government portal. Need to check your SSS contribution history? One tap takes you there. Below the cards, we show the total YTD contributions across all three agencies."</div>
+        <p><strong>Show the SSS Pension Calculator:</strong></p>
+        <ul>
+          <li>Scroll down to the calculator section</li>
+          <li>Input: Years contributed (e.g., <code>20</code>), Average monthly salary (e.g., <code>15000</code>)</li>
+          <li>Tap <strong>Calculate</strong> → shows estimated monthly pension at retirement</li>
+        </ul>
+        <div class="say">"We also include a simple SSS pension estimator. If I've contributed for 20 years with an average salary of ₱15,000, it calculates my estimated monthly pension at age 60. This is a simplified formula — the disclaimer reminds users to visit SSS.gov.ph for official calculations. But it helps people understand the long-term value of their contributions."</div>
+        <div class="tip"><strong>If asked: How do contributions get tracked?</strong><p>"When you log an expense, SmartSpend offers SSS, PhilHealth, and Pag-IBIG as category options — just like Food or Transportation. Pick one, save the expense, and it automatically appears in the Government Contributions screen. The app queries the database for all expenses in those three categories for the selected year and sums them up."</p></div>
+        <div class="tip"><strong>If asked: Why does this matter?</strong><p>"Three reasons: (1) Government contributions represent 7-8% of annual income for Filipino employees — that's financially significant. (2) It's culturally specific — SSS, PhilHealth, and Pag-IBIG are unique to the Philippines. International apps don't address this at all. (3) Many Filipinos don't know how much they've paid year-to-date because it's deducted automatically from payroll. SmartSpend makes it visible."</p></div>
+      </div>
+    </div>
+
+    <div class="step" data-n="9">
       <div class="step-head"><h3>Closing statement</h3><span class="step-time">0:30</span></div>
       <div class="step-body">
-        <div class="say">"To summarize: SmartSpend is the only free Filipino-English AI finance app on Android that supports 34 automatic actions, batch screenshot import from 40+ platforms, a dual-mode Financial Health Score, and features designed for the Philippine context — allowance tracking, paluwagan, SSS/PhilHealth/Pag-IBIG, and payday cycle awareness. Built using Flutter, Firebase, SQLite, and an 8-provider AI fallback chain. Thank you."</div>
+        <div class="say">"To summarize: SmartSpend is the only free Filipino-English AI finance app on Android that supports 34 automatic actions, batch screenshot import from 40+ platforms, a dual-mode Financial Health Score, and features designed for the Philippine context — allowance tracking, paluwagan, and government contributions tracking for SSS, PhilHealth, and Pag-IBIG. Built using Flutter, Firebase, SQLite, and an 8-provider AI fallback chain. Thank you."</div>
       </div>
     </div>
 
@@ -292,6 +330,15 @@
     <details class="qa"><summary>What makes this a research contribution, not just another app?</summary><div class="a">
       <p>Three novel contributions: (1) <b>Dual-mode FHS</b> — adapts its formula based on whether the user tracks income. No other Filipino finance app has a validated scoring system. (2) <b>Multi-modal AI with 34 agentic actions in Taglish</b> — combining voice, OCR, barcode, and screenshot import in one free app. (3) <b>8-provider AI fallback chain</b> — a resilience architecture for maintaining AI availability across multiple free-tier providers, practical for apps that can't afford paid subscriptions.</p>
     </div></details>
+    <details class="qa"><summary>How does SmartSpend compare to international apps like YNAB or Mint?</summary><div class="a">
+      <p><b>YNAB (You Need A Budget):</b> $99/year subscription, envelope budgeting methodology, US-focused, no AI categorization, no OCR. <em>SmartSpend is free with AI and OCR.</em></p>
+      <p><b>Mint (discontinued 2024):</b> Had AI categorization and cash flow forecast, but US-only, required Plaid bank linking (not available in PH), no gamification. <em>SmartSpend works without bank linking and includes gamification (36 badges, Peso mascot).</em></p>
+      <p><b>PocketGuard:</b> Has Safe-to-Spend feature (we copied this), US-focused, $7.99/month for premium. <em>SmartSpend is free and adds Filipino context.</em></p>
+      <p><b>Key differentiator:</b> SmartSpend is the only app combining AI + gamification + Filipino cultural features (paluwagan, government contributions, Taglish, GCash/Maya, PH banks). International apps are feature-rich but culturally generic. We occupy a unique position: AI-first, culture-aware, behavior-focused.</p>
+    </div></details>
+    <details class="qa"><summary>Why Android-only? What about iOS?</summary><div class="a">
+      <p>Three reasons: (1) <b>Market share</b> — Android dominates in the Philippines (70-80% market share), especially among students and budget-conscious users. (2) <b>Development cost</b> — iOS requires a Mac with Xcode ($1,299+ hardware cost), Apple Developer Program ($99/year), and TestFlight for distribution. Android uses free tools (Android Studio, Windows/Linux compatible). (3) <b>Thesis scope</b> — focusing on one platform let us polish features rather than juggling platform differences. Post-capstone, Flutter's cross-platform nature means iOS version is feasible with minimal code changes (mostly UI adjustments for iOS design language).</p>
+    </div></details>
   </details>
 
   <details class="cat">
@@ -326,6 +373,12 @@
     <details class="qa"><summary>How is the FHS different from a credit score?</summary><div class="a">
       <p>A credit score measures creditworthiness — whether you pay loans on time. The FHS measures <em>financial behavior</em> — how well you manage your day-to-day spending. It's a self-improvement tool, not a financial product. It resets monthly (new month, fresh start) and explains exactly which component is dragging the score down so users know what to fix.</p>
     </div></details>
+    <details class="qa"><summary>What happens when someone has a 100 FHS score?</summary><div class="a">
+      <p>Perfect 100 means: (1) Saving ≥20% of income, (2) No overspend days this month, (3) All category budgets on track, (4) Logged expenses every day. In practice, this is rare — even financially disciplined users hit 85-95 due to occasional overspend days or missed logging. A score of 100 triggers a special Peso mood ("Wow! Perfect score!") and unlocks the "Perfect Month" achievement badge (gold trophy icon). The app doesn't gamify perfection excessively — we emphasize progress over perfection.</p>
+    </div></details>
+    <details class="qa"><summary>How does the FHS adapt over time? Does it learn user behavior?</summary><div class="a">
+      <p>Not yet — v3.2.0 uses a static formula. Post-defense roadmap includes <b>Adaptive FHS</b> (Month 4-6): ML model adjusts component weights based on user goals. Example: A user focused on debt payoff prioritizes Budget Adherence (35 pts) over Savings Rate (15 pts). A student without income gets Lightweight Mode auto-enabled. The adaptive system would use 90 days of historical data to recommend personalized targets: "Based on your ₱25K salary and ₱18K expenses, aim for 15% savings (not 20%) as a realistic first step."</p>
+    </div></details>
   </details>
 
   <details class="cat">
@@ -333,8 +386,14 @@
     <details class="qa"><summary>Is the AI safe? Does it send our financial data to external servers?</summary><div class="a">
       <p>The AI receives only the text you type and a summarized expense context — categories and amounts, no names, account numbers, or personal identifiers. Mobile numbers are automatically redacted before sending (RA 10173 compliance). The actual expense data lives locally in SQLite and never leaves the phone except for encrypted Firebase sync.</p>
     </div></details>
+    <details class="qa"><summary>What are the 34 agentic actions? Can you list them?</summary><div class="a">
+      <p><b>Core Actions (13):</b> log_expense, edit_expense, delete_expense, view_expenses, set_budget, check_budget, create_savings_goal, update_savings_goal, create_wallet, update_wallet, log_debt, log_income, check_balance. <b>AI Advice (5):</b> give_advice, explain_fhs, suggest_category, recommend_budget, financial_health_tips. <b>Analytics (4):</b> show_spending_by_category, compare_months, calculate_savings_rate, show_trends. <b>Utilities (6):</b> set_reminder, check_upcoming_bills, safe_to_spend_calculation, currency_conversion, search_expenses, export_data. <b>Gamification (3):</b> check_achievements, show_badges, check_peso_mood. <b>Meta (3):</b> help, clarify_question, multi_action (executes multiple actions in one message).</p>
+    </div></details>
     <details class="qa"><summary>What happens when the AI is down or the internet is slow?</summary><div class="a">
       <p>An 8-provider fallback chain automatically switches: Gemini → 5 Groq models → Cerebras. Each has its own daily limit. The app tracks and persists the active provider across restarts. If all 8 fail, all <em>manual</em> entry features still work 100% offline — log, view, analyze, budgets, wallets.</p>
+    </div></details>
+    <details class="qa"><summary>How does the AI understand Taglish? Did you train a custom model?</summary><div class="a">
+      <p>No custom training — we use prompt engineering. The system prompt includes: (1) Filipino cultural context (jeepney, pandesal, allowance, paluwagan), (2) 150+ Filipino item catalog with common spellings/variations, (3) Taglish instruction examples ("Gastos ko 60 for lunch tapos 30 for jeep"), (4) Category mapping guidance (taho = Food, tricycle = Transportation), (5) Common Filipino merchants (Jollibee, 7-Eleven, SM, Puregold). Gemini 3.5 and GPT-OSS-120B handle this well because their training data includes Filipino text from the internet. We don't need fine-tuning — the base models + good prompts suffice for conversational expense logging.</p>
     </div></details>
     <details class="qa"><summary>How do you prevent AI categorization mistakes?</summary><div class="a">
       <p>Three layers: (1) <b>Evidence threshold</b> — if "Sting" has been logged as Food 10 times, one uncertain AI response can't reclassify it as Others. Requires ≥3 prior entries and ≥60% agreement. (2) <b>Action allowlist</b> — import/OCR flows can only trigger expense-logging actions, not delete records or modify account settings. (3) <b>Confidence score</b> — every AI-logged expense gets a confidence score 0–1; below 70% shows a "Review" badge so users know to double-check.</p>
@@ -344,6 +403,9 @@
     </div></details>
     <details class="qa"><summary>How is this different from just using ChatGPT?</summary><div class="a">
       <p>ChatGPT has no persistent data — context is lost each session. SmartSpend maintains a complete on-device financial database (218 expenses, 5 wallets, 3 savings goals in our test account) and <em>executes</em> 34 action types: saves to DB, updates wallet balances, sends notifications, calculates FHS scores. ChatGPT can chat; it can't do any of that. Also — ChatGPT Finance is US-only, requires Plaid bank linking, and isn't available in the Philippines.</p>
+    </div></details>
+    <details class="qa"><summary>Can the AI handle multiple expenses in one message?</summary><div class="a">
+      <p>Yes — the <code>multi_action</code> action type. Example: "I spent 60 for lunch and 30 for jeep" logs two expenses. "Set my food budget to 5000 and check my balance" executes both actions. The AI returns a JSON array of actions, which the app processes sequentially. Confirmed working with up to 5 simultaneous actions in testing, though UI recommends keeping it to 2-3 for clarity.</p>
     </div></details>
   </details>
 
@@ -361,6 +423,18 @@
     <details class="qa"><summary>How many screens and services does the app have?</summary><div class="a">
       <p>42 screens (Dart files in lib/screens), 31 services (lib/services), 20 SQLite tables, 3 model classes. Key services: DBService (all database ops), AIChatService (LLM + action parsing), AppConfig (model routing + Remote Config), ScoreService (FHS formula), StartupAlertsService (on-open alerts), ProactiveNudgeService (forward-looking push notifications).</p>
     </div></details>
+    <details class="qa"><summary>What's the database schema? How is it structured?</summary><div class="a">
+      <p><b>Core tables (8):</b> expenses, income, budgets, savings_goals, wallets, debts, bills, categories. <b>AI & logs (4):</b> ai_chat_history, ai_action_log, evidence_log, app_logs. <b>Gamification (3):</b> achievements, badges, peso_mood_history. <b>Config & sync (5):</b> user_settings, firebase_sync_queue, remote_config_cache, notification_queue, startup_alerts. Schema v11 uses foreign keys for referential integrity (wallet_id → wallets.id, category → categories.name). Migrations handled via <code>onUpgrade</code> callback in DBService. Full schema documented in <code>docs/database_schema.md</code>.</p>
+    </div></details>
+    <details class="qa"><summary>How does Firebase Remote Config work? Why use it?</summary><div class="a">
+      <p>Remote Config stores API keys (Gemini, Groq, Cerebras) and feature flags server-side. On app startup, <code>AppConfig.init()</code> fetches the latest config from Firebase. <b>Why?</b> Three benefits: (1) <b>Security</b> — API keys never baked into APK (reverse engineering can't extract them). (2) <b>Hot-swap</b> — Rotate compromised keys without rebuilding the app. (3) <b>A/B testing</b> — Toggle features (Lite Mode default, AI provider preference) per user cohort. Example: If Gemini quota exhausted, we can switch all users to Groq within 5 minutes via Remote Config, no app update needed.</p>
+    </div></details>
+    <details class="qa"><summary>What libraries and dependencies does SmartSpend use?</summary><div class="a">
+      <p><b>Core (5):</b> flutter/material (UI), sqflite (SQLite), firebase_core + firestore (cloud sync), shared_preferences (local prefs). <b>AI & ML (4):</b> google_generative_ai (Gemini), http (Groq/Cerebras API calls), google_mlkit_text_recognition (OCR), google_mlkit_barcode_scanning (barcode). <b>Utilities (6):</b> intl (date/number formatting), url_launcher (open links), path_provider (file paths), image_picker (gallery/camera), fl_chart (charts), share_plus (share intent). <b>Auth & security (2):</b> local_auth (biometric), firebase_app_check (API abuse prevention). Total: 21 dependencies (excluding dev dependencies like flutter_test). Full list in <code>pubspec.yaml</code> lines 30-85.</p>
+    </div></details>
+    <details class="qa"><summary>How does the app handle offline mode?</summary><div class="a">
+      <p>All manual features work 100% offline: log expense (manual form), view expenses, edit/delete, check budgets, view wallets, analytics (all queries local SQLite). AI features require internet (Gemini/Groq/Cerebras APIs). <b>Graceful degradation:</b> When offline, AI chat shows "No internet — use manual entry" banner with quick action button to open Log Expense form. Firebase sync queues changes locally and uploads when online. OCR (Google ML Kit) runs on-device, so receipt scanning works offline — only the AI categorization step needs internet. The app detects connectivity via <code>connectivity_plus</code> and adjusts UI accordingly.</p>
+    </div></details>
   </details>
 
   <details class="cat">
@@ -374,10 +448,61 @@
     <details class="qa"><summary>How does the app comply with Philippine laws?</summary><div class="a">
       <p><b>RA 10173 (Data Privacy Act):</b> PII redaction before AI, data stored locally by default, privacy policy disclosing collection/use/rights. <b>RA 11765 (Financial Consumer Protection):</b> One-time AI advice disclaimer clarifying the app is not a licensed financial adviser. <b>BSP OFxPERA:</b> The app's architecture is compatible with Open Finance — wallet and transaction data is structured to support API integration if it becomes mandatory.</p>
     </div></details>
+    <details class="qa"><summary>Why the System Usability Scale (SUS) and not other metrics?</summary><div class="a">
+      <p>SUS is the industry-standard usability metric: (1) <b>Validated</b> — 30+ years of research, 5,000+ studies use it. (2) <b>Standardized</b> — 10 questions, Likert scale 1-5, consistent scoring algorithm. (3) <b>Benchmarked</b> — Average SUS is 68; above 80 is "Good" (Bangor 2009). (4) <b>Quick</b> — Takes 2-3 minutes per respondent, minimizes survey fatigue. Alternatives like CSUQ or UMUX-Lite are less widely recognized. SUS gives us a defensible, comparable metric that the panel will recognize.</p>
+    </div></details>
+    <details class="qa"><summary>How do you plan to recruit 30 SUS respondents?</summary><div class="a">
+      <p><b>Recruitment strategy:</b> (1) <b>Parents (20):</b> Team members' parents and their coworkers — target demographic: 40-60 years old, employed, track household budgets. Convenience sampling. (2) <b>Young professionals (10):</b> Recent Lorma graduates (2020-2023 batches) now working — ages 24-28, first jobs, need expense tracking. Snowball sampling via alumni network. <b>Inclusion criteria:</b> Android phone, earns income or manages allowance, has never used SmartSpend before (fresh UX perspective). <b>Exclusion:</b> Team members, CCSE faculty (to avoid bias). <b>Process:</b> Install APK, use for 7 days (minimum 10 transactions), complete SUS survey (Google Forms), optionally provide feedback. Respondents sign informed consent (RA 10173 compliance). Google Play closed testing runs concurrently (same 30 users, ≥14 days).</p>
+    </div></details>
+    <details class="qa"><summary>What if the SUS score is below 80? What's the contingency plan?</summary><div class="a">
+      <p>SUS below 80 (but above 68 = average) is still acceptable — "Good" adjective rating starts at 71. We'd document identified pain points in Chapter 5 as limitations and future work. If below 68 (below average), we'd: (1) <b>Analyze item-level responses</b> — which of the 10 SUS questions scored lowest? (Q1: "I think I would like to use this frequently" vs Q2: "I found the system unnecessarily complex"). (2) <b>Qualitative feedback</b> — open-ended responses reveal what users struggled with. (3) <b>Targeted fixes</b> — If complexity is the issue, promote Lite Mode. If learnability is low, improve onboarding. (4) <b>Retest subset</b> — Implement fixes, retest with 10 users, report improvement delta in Chapter 4. Worst case: SUS proves AI chat isn't intuitive for older users → we pivot narrative to "multi-modal flexibility" (AI for tech-savvy, manual for others). The research remains valid — we document what works and what doesn't.</p>
+    </div></details>
+    <details class="qa"><summary>How do you ensure research ethics and data privacy?</summary><div class="a">
+      <p><b>Informed consent:</b> All 30 respondents sign consent form explaining: (1) Purpose (capstone thesis evaluation), (2) Data collected (usage logs, SUS responses, optional feedback), (3) Anonymization (no names in published results), (4) Right to withdraw anytime, (5) No compensation (voluntary participation). <b>Data handling:</b> Firestore data encrypted in transit (TLS) and at rest. Only aggregated SUS scores published (not individual responses). Usage logs stripped of PII before analysis (expense amounts/categories only, no merchant names or personal notes). <b>Approval:</b> Research protocol approved by thesis adviser (no IRB at Lorma for undergraduate capstone, but we follow standard ethical guidelines). <b>RA 10173 compliance:</b> Privacy policy in-app (Settings → About → Privacy Policy), data retention policy (30 days post-defense for analysis, then purged), respondents can request deletion via email.</p>
+    </div></details>
   </details>
 
   <details class="cat">
-    <summary>6 — Hard questions / limitations</summary>
+    <summary>7 — v3.2.0 New Features & Future Roadmap</summary>
+    <details class="qa"><summary>What's new in v3.2.0?</summary><div class="a">
+      <p><b>Star feature: Government Contributions Tracker.</b> Track year-to-date SSS, PhilHealth, and Pag-IBIG contributions — SmartSpend is the <em>first Filipino personal finance app</em> to treat government contributions as a first-class expense category. Includes: YTD totals per agency, official portal links (sss.gov.ph, philhealth.gov.ph, pagibigfund.gov.ph), SSS pension calculator, dashboard widget that auto-shows when you have contribution data, and year selector to view historical contributions.</p>
+      <p><b>Also fixed:</b> AI Model Selector bottom sheet scrolling issue on small screens (&lt;5.5"). The bottom sheet now wraps content in SingleChildScrollView to prevent overflow on older devices like iPhone SE and budget Android phones.</p>
+      <p><b>Build 111</b> released as production-ready APK (119.8 MB, Android 5.0+).</p>
+    </div></details>
+    <details class="qa"><summary>Why government contributions tracking? Who needs this?</summary><div class="a">
+      <p>Every Filipino employee or self-employed individual pays SSS, PhilHealth, and Pag-IBIG contributions — it's mandatory by law. For a typical employee earning ₱20,000/month, these three contributions total <b>₱15,375/year</b> (SSS: ₱6,976, PhilHealth: ₱6,000, Pag-IBIG: ₱2,400). That's <b>7.7% of annual income</b> — comparable to rent or utilities. Yet most Filipinos don't track it because: (1) It's auto-deducted from payroll (invisible expense), (2) No other finance app treats government expenses as a category, (3) People don't realize how much it adds up year-to-date. SmartSpend makes this visible and trackable.</p>
+    </div></details>
+    <details class="qa"><summary>How does the government contributions feature work technically?</summary><div class="a">
+      <p>Three new expense categories were added to <code>category_service.dart</code>: SSS, PhilHealth, Pag-IBIG. When users log expenses using these categories (via manual form, AI chat, OCR, or any of the 7 input methods), the expense is stored in the SQLite <code>expenses</code> table with that category. The Government Contributions screen (<code>gov_contributions_screen.dart</code>, 448 lines) queries the database for YTD totals per category using SQL: <code>SELECT SUM(amount) FROM expenses WHERE category = 'SSS' AND strftime('%Y', date) = '2024'</code>. Results are displayed in three color-coded cards. Year selector dropdown lets users view historical years. Dashboard widget (<code>home_screen.dart</code>) queries the same data and auto-hides if total YTD = 0 (no data). Portal links use Flutter's <code>url_launcher</code> package to open official government websites in external browser.</p>
+    </div></details>
+    <details class="qa"><summary>What's the SSS pension calculator? Is it accurate?</summary><div class="a">
+      <p>It's a <b>simplified educational calculator</b> that estimates monthly pension at retirement based on years contributed and average monthly salary. Formula: <code>base_pension = salary × 0.4 + (years - 10) × ₱50</code>, clamped between ₱1,000–₱20,000. <b>Disclaimer:</b> This is a rough approximation. The actual SSS pension formula is complex (uses credited years of service, average monthly salary credit over 120 months, and multiple tiers). The calculator includes a prominent warning: "Visit SSS.gov.ph for accurate calculations." Purpose: Help users understand that contributions have long-term value, not just an expense that disappears.</p>
+    </div></details>
+    <details class="qa"><summary>What about future government integrations? Can you auto-sync SSS data?</summary><div class="a">
+      <p>Short answer: Not yet. As of 2024, <b>zero public APIs exist</b> from Philippine government agencies (SSS, PhilHealth, Pag-IBIG, BIR, LTO, PSA). Limited partner APIs exist for HR/payroll systems only. The eGov PH Master Plan mentions API-first architecture as a 2025-2026 goal, but nothing is publicly accessible yet. SmartSpend v3.2.0 uses <b>manual entry + smart reminders</b> — Phase 1 of our integration strategy. Phase 2 (2025): OCR parsing for government payment receipts (GCash, Bayad Center). Phase 3 (2026+): Official API partnerships when infrastructure matures. Our research identified <b>20 government service features</b> for future roadmap (LTO renewals, BIR quarterly tax reminders, NBI clearance alerts, Pag-IBIG MP2 tracker, etc.).</p>
+    </div></details>
+    <details class="qa"><summary>What's in the post-defense roadmap? How many features?</summary><div class="a">
+      <p><b>43 features total</b> across three research investigations: (1) Scrolling & Features Investigation → 22 recommendations, (2) eGov Services Research → 20 recommendations, (3) Price Hike Detection Research → 1 major feature (4 phases). Top 6 priorities for Months 1-3 post-defense:</p>
+      <ol style="margin:8px 0; padding-left:20px;">
+        <li><b>Cash Flow Forecasting</b> — Predict balance 30 days ahead using ML on spending patterns. "At current rate, you'll have ₱8,500 on Dec 15." Industry standard (PocketGuard has it), AI differentiation (proactive vs reactive).</li>
+        <li><b>OFW Remittance Tracker</b> — Track remittances across Western Union, Wise, Remitly, bank transfers. Multi-currency USD/SAR/SGD → PHP. Export CSV for BIR tax reporting. <em>10+ million OFWs, zero apps address this.</em></li>
+        <li><b>Net Worth Tracking</b> — Calculate SUM(assets) - SUM(debts), 12-month line chart, month-over-month change. Industry standard (YNAB, Mint have it), quick win (2 days effort).</li>
+        <li><b>Quarterly Tax Reminder</b> — Automated BIR deadline alerts for Q1/Q2/Q3/Q4 (self-employed, freelancers). Push notifications 30/7/1 days before. Tax savings goal: "Set aside 8% monthly."</li>
+        <li><b>AI Financial Coach</b> — Weekly Sunday 8 PM cron job: AI analyzes week-over-week spending, generates personalized 2-3 sentence message with Peso personality. "Wow! 🎉 Your savings jumped 50% this week! Coffee spending dropped from ₱840 to ₱420. Sustainable ba?" Keeps users engaged between sessions.</li>
+        <li><b>Price Hike Detection</b> — <strong>First personal finance app worldwide with comprehensive price tracking.</strong> Phase 1: Track user's own month-over-month (eggs: ₱70 Oct → ₱84 Nov = +20%). Phase 2: Scrape DOE fuel prices (weekly alerts). Phase 3: Download PSA CPI data (compare user vs national inflation). Phase 4: AI-generated explanations ("Why did egg prices increase? Bird flu outbreak, DTI says 2-3 months to stabilize").</li>
+      </ol>
+      <p>Timeline: v3.3.0 (Month 1) ships features 1-5. v3.4.0 (Month 2) ships Price Hike Detection + 2 more. v3.5.0 (Month 3) = feature-complete for public launch.</p>
+    </div></details>
+    <details class="qa"><summary>Explain Price Hike Detection — why is this important for Filipinos?</summary><div class="a">
+      <p><b>Problem:</b> Filipinos are price-sensitive due to inflation volatility and tight budgets. Gas prices jump ₱5/liter but users don't know how much extra they're spending. Grocery bills increase but they bought the same items — which products went up? <b>Solution:</b> SmartSpend automatically tracks price increases across 4 levels: (1) <em>Personal tracking</em> — "Your grocery spending: ₱8,500 (Nov) vs ₱7,200 (Oct) → +18%", item-level from OCR ("Eggs at SM: +20%"), merchant-level ("Jollibee: ₱180 → ₱210 +17%"). (2) <em>Fuel monitoring</em> — Scrape DOE weekly bulletins, push notification "⛽ Diesel +₱2.50/L this week", calculate impact "Price increase = +₱288/month for your tank." (3) <em>Inflation dashboard</em> — Download PSA CPI monthly, compare user vs national ("Your food +12% vs national +8.5%. Check for waste"). (4) <em>AI explanations</em> — Scrape news (Rappler, Inquirer) for context: "Egg prices increased due to bird flu outbreak in Luzon (DTI). Expected to stabilize in 2-3 months." <b>Why this matters:</b> Zero competitors have this (Filipino or international), government data is publicly available (DOE, PSA), SmartSpend already extracts line items from OCR receipts (synergy), addresses inflation anxiety head-on.</p>
+    </div></details>
+    <details class="qa"><summary>What about GCash and Maya integration? Can you auto-import transactions?</summary><div class="a">
+      <p><b>Phase 1 (6-12 months): SMS Parsing</b> — Request SMS permission, parse GCash/Maya transaction notifications ("You paid ₱150 to 7-Eleven via GCash"), auto-categorize and log. No partnership needed, works today. <b>Phase 2 (12-24 months): Official API</b> — Negotiate with GCash (90M+ users) and Maya (15M+ users) for real-time balance sync and transaction history import. <b>Impact:</b> Eliminates manual entry for most common payment method in the Philippines. This is the #12 feature on the roadmap (Tier 3, long-term) because it's high-complexity and requires partnerships. But the payoff is massive — SMS parsing alone would cover 70-80% of Filipino digital transactions.</p>
+    </div></details>
+  </details>
+
+  <details class="cat">
+    <summary>8 — Hard questions / limitations</summary>
     <details class="qa"><summary>What are the limitations of your app?</summary><div class="a">
       <p>(1) AI works best with clear input — ambiguous messages can produce wrong categories; mitigated by the evidence threshold but not perfect. (2) No Play Store release yet — Google's 14-day closed testing is scheduled post-defense. (3) No iOS version — Flutter supports it but requires a Mac with Xcode. (4) FHS formula not yet externally validated with real user data — SUS survey and post-defense testing will address this. (5) Wallet balance tracking requires manual updates for unlogged cash transactions.</p>
     </div></details>
@@ -388,7 +513,19 @@
       <p>Google Play now requires new personal developer accounts to run a closed testing track with ≥12 active testers for ≥14 consecutive days before production access. This is a mandatory new policy from 2024. We've structured the SUS survey respondents to double as the closed testing pool — both happen post-defense simultaneously.</p>
     </div></details>
     <details class="qa"><summary>What's the future roadmap?</summary><div class="a">
-      <p>Post-capstone v3.x priorities: (1) Experience presets (Lite/Casual/Normal/Pro mode system). (2) Play Store submission. (3) iOS version. (4) Investment tracker (MP2, PSE, UITFs). (5) Tablet/landscape layout. (6) Price intelligence using PSA commodity data. We also plan to expand the wallet system with per-wallet transaction history and wallet reconciliation prompts.</p>
+      <p>Post-capstone v3.x priorities: (1) Cash Flow Forecasting (predictive balance 30 days ahead). (2) OFW Remittance Tracker (multi-currency, BIR tax export). (3) Net Worth Tracking (assets minus debts, 12-month history). (4) Quarterly Tax Reminders (BIR deadlines for freelancers). (5) AI Financial Coach (weekly Sunday messages). (6) Price Hike Detection (personal + fuel + inflation + AI explanations). Timeline: v3.3.0 (Month 1), v3.4.0 (Month 2), v3.5.0 (Month 3) = public launch ready. Long-term: GCash/Maya SMS parsing, government receipt OCR, PhilSys eKYC, iOS version, tablet layouts.</p>
+    </div></details>
+    <details class="qa"><summary>How do you monetize? What's the business model?</summary><div class="a">
+      <p><b>Capstone scope:</b> Free, no ads, no in-app purchases. <b>Post-launch options (not implemented):</b> (1) <b>Freemium</b> — Free tier: 50 AI messages/month, basic features. Premium tier (₱99/month or ₱999/year): unlimited AI, advanced analytics (cash flow forecast, net worth), priority support, custom export formats. (2) <b>B2B licensing</b> — White-label SmartSpend for corporate wellness programs (companies give employees free premium access). (3) <b>Affiliate revenue</b> — Partner with Pag-IBIG MP2, digital banks (CIMB, Maya Savings) — recommend high-yield savings products, earn referral commission. (4) <b>API partnerships</b> — Charge GCash/Maya integration fee (one-time ₱5M setup + ₱0.01 per transaction synced). <b>Why not ads?</b> Ruins UX, doesn't align with trust-based financial app. We'd choose freemium over ads.</p>
+    </div></details>
+    <details class="qa"><summary>What if a competitor copies SmartSpend?</summary><div class="a">
+      <p><b>Defensibility:</b> (1) <b>Cultural moat</b> — Filipino-specific features (government contributions, paluwagan, Taglish, OFW remittances) require local market understanding. International competitors can't easily replicate. (2) <b>First-mover advantage</b> — We're first with SSS/PhilHealth/Pag-IBIG tracking. Users who adopt early have 12+ months of historical data they won't want to migrate. (3) <b>Network effects</b> — Future features like paluwagan group tracking and leaderboard create lock-in. (4) <b>Brand trust</b> — Peso mascot personality builds emotional connection (harder to copy than features). (5) <b>Technical depth</b> — 8-provider AI fallback chain, evidence-based categorization, dual-mode FHS — competitors need 3-6 months to reverse-engineer and match quality. <b>If BudgetPH adds AI tomorrow?</b> They still lack government contributions, OCR, gamification, and 34 agentic actions. We're 6-12 months ahead in feature depth. <b>Open-source risk?</b> If we open-source post-launch, competitors can fork — but maintaining AI quality, Remote Config, Firebase setup, and cultural content requires domain expertise. Most won't invest the effort.</p>
+    </div></details>
+    <details class="qa"><summary>What's the biggest technical risk in the next 6 months?</summary><div class="a">
+      <p><b>Risk 1: AI provider rate limits.</b> If Gemini/Groq tighten free tiers (likely as AI costs drop), our fallback chain breaks. <b>Mitigation:</b> Monitor provider status weekly, add new free providers (Hugging Face Inference, Together AI), negotiate startup credits ($500 free credit programs). <b>Risk 2: Firebase costs.</b> Firestore/Cloud Functions scale with users — 10K users = $200-500/month. <b>Mitigation:</b> Optimize queries (batch writes, cache reads), implement Firestore quota alerts, transition heavy users to premium tier (they pay for their own Firebase usage). <b>Risk 3: Google Play suspension.</b> Policy violations (misleading claims, privacy issues, spam) result in instant ban. <b>Mitigation:</b> Legal review of Play Store listing, strict RA 10173 compliance, no financial advice claims (only "suggestions"). <b>Risk 4: OCR platform changes.</b> Google ML Kit deprecation or pricing changes. <b>Mitigation:</b> Abstract OCR behind interface, test Tesseract OCR (free, open-source) as fallback. <b>Biggest risk overall:</b> AI provider limits — because 70% of app's value prop depends on AI. Without it, we're just another manual expense tracker.</p>
+    </div></details>
+    <details class="qa"><summary>Did you validate with real users before building?</summary><div class="a">
+      <p><b>Yes and no.</b> We validated the <em>concept</em> and initial designs with informal user testing during requirements phase (10 Lorma students, 5 parents). Pain points documented: (1) "Too lazy to open Wallet PH every expense", (2) "I forget categories — just want to type naturally", (3) "Don't know if I'm saving enough each month". These informed feature prioritization (AI logging, FHS score, Safe-to-Spend). <b>But we didn't validate the final UI</b> before building — that's the purpose of the post-defense SUS survey (30 respondents). Standard capstone methodology: build based on literature review + informal feedback, then formally evaluate with SUS. <b>If we had 12 months:</b> We'd run 2-3 iterative design sprints with user testing between each (Lean UX methodology). But 1-semester timeline required us to commit to a design early. <b>Panel may ask:</b> "Isn't this risky?" <b>Answer:</b> Yes, but mitigated by: (1) SmartSpend offers multiple input methods — if AI chat fails, users can fall back to manual forms. (2) Lite Mode provides simplified UX for overwhelmed users. (3) SUS below 80 is still valid research — we document what works and what needs iteration in Chapter 5.</p>
     </div></details>
   </details>
 
@@ -416,6 +553,7 @@
   <h2 class="sec">One-line rapid-fire answers</h2>
   <ul class="oneliners">
     <li><b>What is SmartSpend?</b><span>An AI-powered expense tracker for Filipinos that lets you log spending by just talking to it.</span></li>
+    <li><b>What's new in v3.2.0?</b><span>Government Contributions Tracker (SSS/PhilHealth/Pag-IBIG YTD totals + pension calculator) — first Filipino finance app to track mandatory government expenses as a first-class category.</span></li>
     <li><b>What is the FHS?</b><span>A 0–100 score measuring savings rate, spending control, budget adherence, and logging consistency — 25 points each.</span></li>
     <li><b>Why AI?</b><span>To eliminate the manual data entry barrier that stops most people from tracking finances.</span></li>
     <li><b>What database?</b><span>SQLite locally (20 tables, schema v11), Firebase Firestore for cloud backup.</span></li>
@@ -423,8 +561,10 @@
     <li><b>Is it on the Play Store?</b><span>Not yet — 14-day closed testing with 12 testers required by Google, scheduled post-defense.</span></li>
     <li><b>Why free?</b><span>All AI providers (Gemini, Groq, Cerebras) offer free tiers; Firebase Spark plan is free; the app has no subscription or in-app purchase.</span></li>
     <li><b>Team roles?</b><span>Brix: lead developer and system architect. Cyrille: UI/UX and documentation lead. Djaunathan: project manager and QA lead.</span></li>
-    <li><b>What makes it Filipino-specific?</b><span>150+ Filipino item catalog, Taglish AI, GCash/Maya support, paluwagan tracker, SSS/PhilHealth/Pag-IBIG, PH tax (TRAIN Law), 20 PH banks, peso-denominated Safe-to-Spend.</span></li>
+    <li><b>What makes it Filipino-specific?</b><span>150+ Filipino item catalog, Taglish AI, GCash/Maya support, paluwagan tracker, government contributions (SSS/PhilHealth/Pag-IBIG), PH tax (TRAIN Law), 20 PH banks, peso-denominated Safe-to-Spend.</span></li>
     <li><b>FHS above 80 is what?</b><span>"Good" — based on the Bangor et al. (2009) SUS adjective scale, which we adapted for our financial scoring context.</span></li>
+    <li><b>How many features in the roadmap?</b><span>43 total (22 from scrolling investigation + 20 from eGov research + 1 price hike detection with 4 phases). Top 6 priorities: Cash Flow Forecast, OFW Remittances, Net Worth, Tax Reminders, AI Coach, Price Hike Detection.</span></li>
+    <li><b>What's Price Hike Detection?</b><span>First personal finance app worldwide to automatically track when gas, food, and products increase in price — uses user's purchase history + DOE fuel data + PSA inflation data + AI explanations.</span></li>
   </ul>
 
   <h2 class="sec">FHS components — say this out loud until it's automatic</h2>
@@ -463,8 +603,8 @@
     <tr><td>📤 Share intent</td><td>Share text from GCash/Maya/bank app</td><td>Yes</td></tr>
   </table></div>
 
-  <footer>SmartSpend v3.2.0 · Team Lucid Frame · Lorma Colleges CCSE · November 2026<br>
-  Final Defense Edition — Government Contributions Tracker & Price Hike Detection Roadmap</footer>
+  <footer>SmartSpend v3.2.0 (Build 111) · Team Lucid Frame · Lorma Colleges CCSE · November 2026<br>
+  Final Defense Edition — Government Contributions Tracker · 43-Feature Post-Defense Roadmap</footer>
 
 </section>
 </main>
@@ -500,15 +640,18 @@
 
   // Facts grid
   var facts = [
-    ['3.2.0','Version'],['Android · Flutter','Platform'],
+    ['3.2.0','Version'],['Build 111','Release build number'],['Android · Flutter','Platform'],
     ['9','AI providers in fallback chain'],['34','Agentic actions'],
     ['7','Input modalities'],['150/day','Daily AI message limit'],
     ['4 × 25 = 100','FHS components → max score'],['≥80','FHS "Good" (Bangor 2009)'],
     ['20%','Savings rate target (50/30/20 rule)'],['36','Achievement badges'],
-    ['44','Screen files'],['45','Screens with Peso mascot'],
+    ['42+','Screen files'],['45','Screens with Peso mascot'],
     ['12','Peso moods'],['26','SQLite tables (schema v14)'],['57','Currencies supported'],
     ['40+','Batch screenshot platforms'],['150+','Filipino item catalog entries'],
     ['20 banks + 5 e-wallets','PH financial institutions in DB'],['30','SUS respondents (planned)'],
+    ['3','Gov contributions categories (SSS/PhilHealth/Pag-IBIG)'],['₱15,375/yr','Typical gov contributions (₱20K salary)'],
+    ['43','Post-defense roadmap features'],['6','Top priority features (Months 1-3)'],
+    ['0','Public APIs from PH gov (as of 2024)'],['20','eGov integration opportunities'],
   ];
   var grid = document.getElementById('facts');
   facts.forEach(function(f){
