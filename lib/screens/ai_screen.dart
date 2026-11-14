@@ -2486,80 +2486,84 @@ class _AIScreenState extends State<AIScreen> {
       builder: (_) => StatefulBuilder(
         builder: (ctx, setSheet) => Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2))),
-              ),
-              const SizedBox(height: 16),
-              const Text("AI Model",
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              const Text(
-                  "Choose your AI engine. Auto-fallback switches models when daily limit is reached.",
-                  style: TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 16),
-              ...AppConfig.availableModels.map((m) {
-                final isActive = AppConfig.activeModelId == m.$1;
-                final isGroqLimited =
-                    m.$1.startsWith('groq_') && AppConfig.groqLimitReached;
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: CircleAvatar(
-                    backgroundColor: isActive
-                        ? Theme.of(ctx)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.15)
-                        : Colors.grey.withValues(alpha: 0.1),
-                    child: Icon(
-                      isActive ? Icons.check : Icons.radio_button_unchecked,
-                      size: 18,
-                      color: isActive
-                          ? Theme.of(ctx).colorScheme.primary
-                          : Colors.grey,
-                    ),
-                  ),
-                  title: Text(m.$2,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 14)),
-                  subtitle: Text(
-                      isGroqLimited ? '🟡 Daily limit reached' : m.$3,
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: isGroqLimited ? Colors.orange : Colors.grey)),
-                  onTap: () {
-                    AppConfig.setModel(m.$1);
-                    AIChatService.clearHistory();
-                    Navigator.pop(ctx);
-                    setState(() {});
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text("Switched to ${m.$2}"),
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 2),
-                    ));
-                  },
-                );
-              }),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(ctx).colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(8),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2))),
                 ),
-                child: const Text(
-                    "💡 Keys managed in Firebase Remote Config: gemini_api_key / groq_api_key / cerebras_api_key. Auto mode tries Gemini first, falls back to Groq → Cerebras.",
-                    style: TextStyle(fontSize: 11, height: 1.4)),
-              ),
-            ],
+                const SizedBox(height: 16),
+                const Text("AI Model",
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                const Text(
+                    "Choose your AI engine. Auto-fallback switches models when daily limit is reached.",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const SizedBox(height: 16),
+                ...AppConfig.availableModels.map((m) {
+                  final isActive = AppConfig.activeModelId == m.$1;
+                  final isGroqLimited =
+                      m.$1.startsWith('groq_') && AppConfig.groqLimitReached;
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: CircleAvatar(
+                      backgroundColor: isActive
+                          ? Theme.of(ctx)
+                              .colorScheme
+                              .primary
+                              .withValues(alpha: 0.15)
+                          : Colors.grey.withValues(alpha: 0.1),
+                      child: Icon(
+                        isActive ? Icons.check : Icons.radio_button_unchecked,
+                        size: 18,
+                        color: isActive
+                            ? Theme.of(ctx).colorScheme.primary
+                            : Colors.grey,
+                      ),
+                    ),
+                    title: Text(m.$2,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 14)),
+                    subtitle: Text(
+                        isGroqLimited ? '🟡 Daily limit reached' : m.$3,
+                        style: TextStyle(
+                            fontSize: 11,
+                            color:
+                                isGroqLimited ? Colors.orange : Colors.grey)),
+                    onTap: () {
+                      AppConfig.setModel(m.$1);
+                      AIChatService.clearHistory();
+                      Navigator.pop(ctx);
+                      setState(() {});
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Switched to ${m.$2}"),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 2),
+                      ));
+                    },
+                  );
+                }),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Theme.of(ctx).colorScheme.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                      "💡 Keys managed in Firebase Remote Config: gemini_api_key / groq_api_key / cerebras_api_key. Auto mode tries Gemini first, falls back to Groq → Cerebras.",
+                      style: TextStyle(fontSize: 11, height: 1.4)),
+                ),
+              ],
+            ),
           ),
         ),
       ),
