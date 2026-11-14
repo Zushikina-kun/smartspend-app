@@ -24,7 +24,7 @@
 | "partially achieved" for Objective 3 — always | "fully achieved" for Objective 3 |
 | "61.83, below the 68 benchmark and the 80 target" | "passed the SUS threshold" |
 | "Grade D, adjective OK" | "seven recommendations" (there are 9) |
-| "eight candidate LLM APIs were evaluated" | "20 candidate models" |
+| "ten candidate models from four providers were evaluated" | "20 candidate models" |
 | "Gemini 3.5 Flash-Lite" | "Gemini 1.5" |
 
 ---
@@ -85,7 +85,7 @@ This study employed a **quantitative descriptive developmental research design**
 
 ### Slide 9 — Objective 1 Results: Needs Assessment
 
-Objective 1 asked us to assess the financial management practices of our target population, and the results validated the need for SmartSpend. Among the 30 respondents, **96.7% — that is, 29 of 30 — expressed positive intent to use an AI-powered financial application**. **93.3%, or 28 of 30, reported they already used GCash**, confirming that our target population is comfortable with mobile financial tools and validating our GCash-linked feature priorities. Only 10%, or 3 out of 30, already used a dedicated mobile app for budgeting — confirming the market gap. The most common tracking method was physical receipts at 90%, followed by mental estimates at 53.3%. These findings directly informed the features we built into SmartSpend and confirm that Objective 1 was **achieved**.
+Objective 1 asked us to assess the financial management practices of our target population, and the results validated the need for SmartSpend. Among the 30 respondents, **96.7% — that is, 29 of 30 — expressed positive intent to use an AI-powered financial application**. **93.3%, or 28 of 30, reported they already used GCash**, confirming that our target population is comfortable with mobile financial tools and validating our GCash-linked feature priorities. Only 10%, or 3 out of 30, already used a dedicated mobile app for budgeting — confirming the market gap. The most common tracking method was physical receipts at 90%, followed by mental estimates at 53.3% and e-wallet transaction history at 43.3%. Only 10% — 3 of 30 — already used a dedicated budgeting app, which confirms the market gap., followed by mental estimates at 53.3%. These findings directly informed the features we built into SmartSpend and confirm that Objective 1 was **achieved**.
 
 ---
 
@@ -97,13 +97,13 @@ SmartSpend version 3.1.0 is a working Android application built with Flutter for
 
 ### Slide 11 — App Screenshots
 
-Let me walk through five key screens. The Login and Demo Mode screen allows users to explore SmartSpend with pre-loaded Filipino sample data before committing to an account — this addresses the engagement barrier we identified in the needs assessment. The Home Dashboard gives an at-a-glance financial picture. The Expense Logging through Peso Chat shows natural-language input — users type or speak in Tagalog or English and the AI parses the transaction. Receipt Scanning supports both single-item and multi-item receipts via OCR. Finally, the Financial Health Score Breakdown shows users their composite score across four components, giving them a concrete number to work toward. Each of these screens maps back to a specific need identified in our survey.
+Let me walk through five key screens. The Login and Demo Mode screen allows users to explore SmartSpend with pre-loaded Filipino sample data before committing to an account — this addresses the engagement barrier we identified in the needs assessment. The Home Dashboard gives an at-a-glance financial picture. The Expense Logging through Peso Chat shows natural-language input — users type or speak in Tagalog or English and the AI parses the transaction. Receipt Scanning supports both single-item and multi-item receipts via OCR. Finally, the Financial Health Score Breakdown shows users their composite score across four components, giving them a concrete number to work toward. Each of these screens maps back to a specific need identified in our survey. Figures 14 and 15 show the Budgets screen and Local AI Mode — the budgets screen directly addresses the finding that respondents struggled to stay within spending limits, while Local AI Mode addresses privacy concerns raised in Recommendation 2.
 
 ---
 
 ### Slide 12 — LLM Selection
 
-Selecting the right Large Language Model was a critical design decision. We evaluated **eight candidate LLM APIs** across multiple providers — assessing inference speed, response accuracy for Filipino-English natural language processing, context window capacity, and cost feasibility for a free-tier prototype. We selected **Gemini 3.5 Flash-Lite** because it offered a one-million-token context window, native function calling for all 34 AI actions, strong Taglish performance in our trials, and the highest free-tier request quota. The selection was systematic and comparative — not arbitrary.
+Selecting the right Large Language Model was a critical design decision. We evaluated **ten candidate models from four providers** across multiple providers — assessing inference speed, response accuracy for Filipino-English natural language processing, context window capacity, and cost feasibility for a free-tier prototype. We selected **Gemini 3.5 Flash-Lite** because it offered a one-million-token context window, native function calling for all 34 AI actions, strong Taglish performance in our trials, and the highest free-tier request quota. The selection was systematic and comparative — not arbitrary.
 
 ---
 
@@ -213,7 +213,7 @@ That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang 
 
 ### Q6 — What LLM did you use?
 
-"We used **Gemini 3.5 Flash-Lite**. We evaluated **eight candidate LLM APIs** — including models from Google, Groq, and Cerebras — and selected Gemini 3.5 Flash-Lite based on four criteria: response quality for Filipino-English input, inference latency on mobile, cost feasibility for a free-tier prototype, and context window capacity. It offered a one-million-token context window, native function calling for our 34 AI actions, and the highest free-tier request quota of all evaluated providers."
+"We used **Gemini 3.5 Flash-Lite**. We evaluated **ten candidate models from four providers** — including models from Google, Groq, and Cerebras — and selected Gemini 3.5 Flash-Lite based on four criteria: response quality for Filipino-English input, inference latency on mobile, cost feasibility for a free-tier prototype, and context window capacity. It offered a one-million-token context window, native function calling for our 34 AI actions, and the highest free-tier request quota of all evaluated providers."
 
 ---
 
@@ -253,6 +253,12 @@ All nine are grounded in the specific limitations of the current prototype that 
 
 ---
 
+
+### Q — Why are there 16 parents and 14 young professionals if three respondents identified as both?
+
+"Three of our 30 respondents answered 'Both a parent and a young professional' in Question 2 of the survey. For analysis and reporting purposes, we classified them with the parent group based on their Q1 age bracket — all three fell in the 35–55 age range, which is the parent demographic in this study. This classification is consistent with Maam Ellen's guidance to adjust the counts based on actual data, and it is stated explicitly in the Table 5 footnote and the Figure 5 chart footnote. For the SUS evaluation, the grouping was self-reported by the respondents on the SUS form itself, yielding 10 parents and 20 young professionals as a separate group."
+
+---
 ## End of Script
 
 > **Reminders for delivery:**
@@ -263,5 +269,5 @@ All nine are grounded in the specific limitations of the current prototype that 
 > - The SUS evaluation had 10 parents + 20 young professionals = 30 (separate group).
 > - Always say "quantitative descriptive developmental" — the study is purely quantitative, no interviews.
 > - Don't say "proposed" — SmartSpend is built and tested.
-> - Say "eight candidate LLM APIs" not "20 candidate models."
+> - Say "ten candidate models from four providers" not "20 candidate models."
 > - Rec 8 = UI/UX refinement, Rec 9 = Formal parsing evaluation.
