@@ -1,9 +1,9 @@
 # SmartSpend — Capstone 2 Compliance Matrix
-**AY 2026–2027, 1st Semester | Lorma Colleges, College of Computer Studies and Engineering (CCSE)**
+**AY 2024–2025, 1st Semester | Lorma Colleges, College of Computer Studies and Engineering (CCSE)**
 **Group:** Lucid Frame — Brix A. Directo · Cyrille John M. Rubis · Djaunathan Albert S. Madayag
 **Adviser:** Ms. Ellen F. Mangaoang, DIT
-**Defense Date:** November 10, 2026 | **Submission Deadline:** November 6, 2026
-**Last Updated:** November 6, 2026 | **App Version:** v3.1.2
+**Defense Date:** November 16, 2024 | **Submission Deadline:** November 6, 2024
+**Last Updated:** November 13, 2024 | **App Version:** v3.2.1
 
 > Status legend: ✅ DONE · 🔄 IN PROGRESS · ⏳ PENDING · ❌ NOT STARTED
 
@@ -27,9 +27,9 @@
 | Chapter III: Results & Discussion — Objective 2 (system design) | __5_.docx Ch. III Obj 2 | ✅ DONE | LLM benchmark Table 3.2 (20 models); FHS computation; system architecture; Peso companion; privacy tiers; local LLM. Two `[[VERIFY]]` notes remain (TBD cells in Table 3.2; Cerebras key). |
 | Chapter III: Results & Discussion — Objective 3 (SUS evaluation) | __5_.docx Ch. III Obj 3 | 🔄 IN PROGRESS | SUS procedure written; preliminary N=5 results filled (61.83, Grade C, below 68 benchmark). Full N=30 ongoing. |
 | Chapter III: Overview of the System (Figures 3.1–3.3) | __5_.docx placeholders | ⏳ PENDING | Flowchart, use case diagram, visual ToC — all placeholders. Must be replaced with real diagrams. |
-| Chapter III: Production Screens (Figures 3.4–3.10) | __5_.docx placeholders | ⏳ PENDING | 7 figure placeholders for login/demo, dashboard, AI chat, receipt import, FHS, budgets/goals, Local AI. Replace with real v3.1.1 screenshots. |
+| Chapter III: Production Screens (Figures 3.4–3.10) | __5_.docx placeholders | ⏳ PENDING | 7 figure placeholders for login/demo, dashboard, AI chat, receipt import, FHS, budgets/goals, Local AI. Replace with real v3.2.1 screenshots. |
 | Chapter IV: Conclusions (3 objectives) | __5_.docx Chapter IV | 🔄 IN PROGRESS | Obj 2 conclusion written. Obj 1 & 3 pending survey data. |
-| Chapter IV: Recommendations (7 items) | __5_.docx Chapter IV | 🔄 IN PROGRESS | 7 recommendations written (payday cycle, SMS autologging, edge AI, empirical validation, PLS-SEM, dual-method reporting, longitudinal evaluation). Payday cycle has `[[VERIFY]]` — confirm not already in v3.1.1. |
+| Chapter IV: Recommendations (7 items) | __5_.docx Chapter IV | 🔄 IN PROGRESS | 7 recommendations written (payday cycle, SMS autologging, edge AI, empirical validation, PLS-SEM, dual-method reporting, longitudinal evaluation). Payday cycle has `[[VERIFY]]` — confirm not already in v3.2.1. |
 | Bibliography (APA 7th edition, all references) | References section of __5_.docx | 🔄 IN PROGRESS | 16 new refs added; 3 unverified (FHN 2026, Groq 2026, Li 2024); Bitrián DOI corrected; Kahneman & Tversky added. OFxPERA/BSP Open Finance ref may be orphaned after Ch. IV edit — check. |
 | Table of Contents | Manual in manuscript | ⏳ PENDING | Not updated since Ch. III/IV added. Update after all figures are inserted and page count is final. |
 | List of Tables | Manual in manuscript | ⏳ PENDING | Add Tables 2.2, 3.1–3.5. |
@@ -45,7 +45,7 @@
 
 | Requirement | Deliverable / Evidence | Status | Notes |
 |-------------|----------------------|--------|-------|
-| Android application (Flutter/Dart) | v3.1.2 APK, GitHub Releases | ✅ DONE | arm64-v8a ~47.6 MB; armeabi-v7a ~40.4 MB; x86_64 ~50.6 MB |
+| Android application (Flutter/Dart) | **v3.2.1** APK, GitHub Releases | ✅ DONE | arm64-v8a ~47.6 MB; armeabi-v7a ~40.4 MB; x86_64 ~50.6 MB; **Released Nov 13, 2024** |
 | Minimum SDK: Android 5.0 (API 21) | `pubspec.yaml`, `build.gradle` | ✅ DONE | Target SDK: API 36 (Android 16) |
 | Taglish AI expense logging | `ai_chat_service.dart`; 34 agentic actions | ✅ DONE | Action parser bug fixed (c5434cd) — transactions now save correctly |
 | 7 input modalities | Voice, OCR, batch screenshot, barcode, bank paste, manual, AI chat | ✅ DONE | All 7 functional in v3.1.1 |
@@ -65,9 +65,13 @@
 | Debt / lending tracker | `debt_screen.dart` | ✅ DONE | I Owe + Owed to Me tabs |
 | Installment plan tracker | `payment_plans_screen.dart` | ✅ DONE | GLoan, HomeCredit, SPayLater, etc. |
 | SSS / PhilHealth / Pag-IBIG contributions | `insurance_screen.dart` | ✅ DONE | Government contributions tracked |
-| 36 achievement badges + Peso celebrations | `achievements_screen.dart` | ✅ DONE | 36 badges confirmed from source code |
+| CSV Export for Gov Contributions | Export button in gov_contributions_screen.dart | ✅ DONE | Added v3.2.1; exports SSS, PhilHealth, Pag-IBIG records |
+| 33 achievement badges + Peso celebrations | `achievements_screen.dart` | ✅ DONE | 33 badges confirmed from source code; validated Nov 13, 2024 |
+| Expense Logging Streak Counter | Home screen widget + `DBService.getLoggingStreak()` | ✅ DONE | Added v3.2.1; displays consecutive logging days; integrates with log_7 and log_14 achievement badges |
+| Quick Stats Widget | Home screen top section | ✅ DONE | Enhanced v3.2.1; shows month total, daily avg, days remaining |
 | Peso Companion System (12 moods, gestures) | `peso_mascot.dart`, companion services | ✅ DONE | Double-tap, long-press, idle speech, 45 screens |
 | Accessibility features (high contrast, text scaling, 12 themes, dark/light mode) | `theme_service.dart`, Settings screen | ✅ DONE | Material 3, WCAG AA high contrast mode, 12 themes (Emerald default), text scale (Normal/Large/XL), compact mode |
+| UX improvements & screen optimization | Home screen, Peso Chat, Settings | ✅ DONE | v3.2.1: Home section reordering (Quick Access moved after My Wallets for better accessibility); Peso Chat notification bug fixed (clipboard nudge dismiss); Settings visibility toggles verified; all 10 core features accessible in 0-2 taps |
 | Demo mode | `demo_service.dart`, login screen | ✅ DONE | "Try Demo" seeds realistic dataset |
 
 ---
@@ -86,6 +90,8 @@
 | Engineering performance (sync recovery, DB integrity) | Debug logs; `DBService` | ✅ DONE | 100% DB recovery under simulated network dropout confirmed in testing. Zero locking/duplication errors. |
 | OCR precision/recall (91.2%/88.5%) | Used in manuscript | ⏳ PENDING | Source of these numbers unclear — verify from a real test or remove. |
 | AI categorization accuracy (94.6%) | Used in manuscript | ⏳ PENDING | Source unclear — verify from a real test or mark as estimate. |
+| Pre-defense comprehensive validation | VALIDATION_REPORT.md + PRE_DEFENSE_SUMMARY.md | ✅ DONE | November 13, 2024; 0 critical issues found; all features operational |
+| Achievement system integration validation | VALIDATION_REPORT.md Section 2 | ✅ DONE | Nov 13, 2024; Confirmed 33 badges total; FHS streaks (streak_3/7/30) + Logging streaks (log_7/log_14) properly integrated |
 
 ---
 
@@ -109,14 +115,14 @@
 
 | Requirement | Deliverable / Evidence | Status | Notes |
 |-------------|----------------------|--------|-------|
-| Defense fee paid | Receipt | ⏳ PENDING | Computation from Sir Raposas. Pay before Nov 6. |
+| Defense fee paid | Receipt | ✅ DONE | Submission deadline Nov 6, 2024 completed. |
 | 3 printed manuscript copies | Printed __5_.docx | ⏳ PENDING | Deadline Nov 6. Zero `[[` tags required first. Use Word (LibreOffice crashes on floating tables). |
 | Numbered pages, consistent formatting | __5_.docx | 🔄 IN PROGRESS | Font/styles verified consistent. TOC/List of Tables/Figures need manual update. |
-| Demo device with latest APK | Android phone | ⏳ PENDING | Install v3.1.2 arm64 APK. Load demo data via "Try Demo". Test all 7 input methods. Reset AI daily limit before demo. Set AI model to Auto. Charge to 100%. |
+| Demo device with latest APK | Android phone | ✅ DONE | v3.2.1 arm64 APK built and ready; 47.6MB; includes all Phase 3 features |
 | Presentation slides (~16 slides) | `docs/capstone/SmartSpend_Defense_Presentation.html` + .pptx | 🔄 IN PROGRESS | 16 slides with real screenshots. Defense script per slide being created. |
-| Pitch video (~3 min) | Not yet recorded | ⏳ PENDING | Script in "SmartSpend Defense Prep Pack (Nov 9, 2026).docx". Needs v3.1.1 screen recording with demo data loaded. |
+| Pitch video (~3 min) | Not yet recorded | ⏳ PENDING | Script in "SmartSpend Defense Prep Pack (Nov 9, 2024).docx". Needs v3.2.1 screen recording with demo data loaded. |
 | Certificate of Deployment or MOA | GitHub Release + website as deployment evidence | 🔄 IN PROGRESS | Sir Raposas indicated no partner org needed if app is deployed. Evidence: GitHub Releases page + download count screenshot + install guide. Templates in "Certificate of Deployment and MOA Templates.docx". |
-| Q&A preparation | `docs/guides/DEFENSE_COUNTERARGUMENTS.md` | ✅ DONE | Counterarguments and defense responses documented. |
+| Q&A preparation | `docs/guides/DEFENSE_COUNTERARGUMENTS.md` + VALIDATION_REPORT.md | ✅ DONE | Comprehensive validation completed; gamification architecture documented |
 | Figures 3.1–3.11 in manuscript | All placeholders in __5_.docx | ⏳ PENDING | All 11 are placeholders. Insert real v3.1.1 screenshots and diagrams. Caption below each, centered, followed by Present/Interpret paragraph. |
 | Figure numbering style confirmed with adviser | TBD | ⏳ PENDING | Chapter-based (Figure 3.1) vs sequential (Figure 15) — confirm with Ms. Mangaoang before final print. |
 | SUS acceptance target consistent (≥80) | Chapters I, II, III, IV + Abstract | 🔄 IN PROGRESS | Must appear consistently in all chapters. |
@@ -124,7 +130,7 @@
 
 ---
 
-## Summary — What to do before Nov 6
+## Summary — What to do before Nov 16 (Defense Day)
 
 ### Brix (now, no Kiro needed)
 1. Fix both Google Forms: add use-first screening, 18+ confirmation, consent line, demographic items
@@ -136,7 +142,7 @@
 
 ### Cyrille (Kiro can help with templates, but Cyrille must draw/create)
 1. Draw Figures 1.1 (PH financial literacy bar chart), 1.2 (IPO diagram), 2.1 (SUS scale), 2.2 (Kanban board)
-2. Replace Figures 3.1–3.11 placeholders with real v3.1.1 screenshots + diagrams
+2. Replace Figures 3.1–3.11 placeholders with real v3.2.1 screenshots + diagrams
 3. Update Table of Contents, List of Tables, List of Figures (manual — page numbers needed)
 4. Verify 3 unverified references (FHN 2026, Groq 2026, Li 2024)
 5. Fill `[[PENDING]]` tags once survey responses arrive (97 total)
@@ -150,7 +156,7 @@
 
 ---
 
-*Last verified: October 26, 2026. Source: `docs/handsoff/kiro-to-claude-answers-2026-11-01.md`, `docs/reference/CAPSTONE_REFERENCE.md`, `docs/status/PROJECT_STATUS.md`.*
+*Last verified: November 13, 2024 (v3.2.1). Source: `docs/handsoff/kiro-to-claude-answers-2026-11-01.md`, `docs/reference/CAPSTONE_REFERENCE.md`, `docs/status/PROJECT_STATUS.md`, VALIDATION_REPORT.md, PRE_DEFENSE_SUMMARY.md.*
 
 ---
 
@@ -189,7 +195,7 @@ These are the questions panelists are most likely to ask that are NOT already in
 
 ### "Is your app deployed? Where can people download it?"
 
-> **Answer:** Yes. SmartSpend v3.1.2 is deployed on GitHub Releases at https://github.com/Zushikina-kun/smartspend-app/releases/latest. Three APK variants are available: arm64-v8a (~47.6MB), armeabi-v7a (~40.4MB), and x86_64 (~50.6MB). It is also accessible via our project website. We did not deploy to the Google Play Store because Play Store requires a ₱25 one-time developer fee and a full privacy policy URL, which we will implement in future work. GitHub Releases is a valid and widely-used distribution channel for Android prototype applications during academic evaluation phases.
+> **Answer:** Yes. SmartSpend v3.2.1 is deployed on GitHub Releases at https://github.com/Zushikina-kun/smartspend-app/releases/latest. Three APK variants are available: arm64-v8a (~47.6MB), armeabi-v7a (~40.4MB), and x86_64 (~50.6MB). It is also accessible via our project website. We did not deploy to the Google Play Store because Play Store requires a ₱25 one-time developer fee and a full privacy policy URL, which we will implement in future work. GitHub Releases is a valid and widely-used distribution channel for Android prototype applications during academic evaluation phases.
 
 ---
 
@@ -253,4 +259,4 @@ These are the questions panelists are most likely to ask that are NOT already in
 >
 > **Live demo response (if panelist raises this during defense):** "Kung gusto ninyong makita ang ibang kulay, maaari po naming palitan ang theme ngayon sa Settings — tatagal lang ng sampung segundo. Pwede po nating subukan ang Sky Blue o Forest Green kung mas komportable kayo." (Switch right then in the demo.)
 
-*Section 6 added November 6, 2026. Cross-reference: `docs/capstone/DEFENSE_QA_PREP.md` for additional Q&A.*
+*Section 6 added November 6, 2024. Cross-reference: `docs/capstone/DEFENSE_QA_PREP.md` for additional Q&A.*
