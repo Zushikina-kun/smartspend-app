@@ -958,6 +958,12 @@
     }
   </style></head>
 <body>
+
+<!-- Defense Success Banner -->
+<div style="background:linear-gradient(135deg,rgba(0,200,150,0.12),rgba(37,99,235,0.08));border-bottom:2px solid var(--primary);padding:12px 20px;text-align:center;font-size:14px;color:var(--text);position:sticky;top:0;z-index:1000;backdrop-filter:blur(10px)">
+  <strong style="color:var(--primary)">🎓 Pre-Finals Defense Complete!</strong> SmartSpend v3.1.0 was successfully defended on <strong>November 16, 2026</strong> at Lorma Colleges CCSE. <a href="#research-findings" style="color:var(--primary);text-decoration:underline">View research findings →</a>
+</div>
+
 <!-- SVG sprite — Peso mascot -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="peso-sprite">
   <symbol id="peso-face" viewBox="0 0 120 140">
@@ -1097,7 +1103,7 @@
         <span class="hero-survey-text">We need your feedback for our capstone research!</span>
         <a href="#research" class="hero-survey-link">Take the survey →</a>
       </div>
-      <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.2.0 · Free</div>
+      <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.1.0 · Free & Open Source</div>
     </div>
     <div class="hero-right">
       <div class="hero-peso-wrap">
@@ -1111,10 +1117,10 @@
 
 <div class="stats-card">
 <div class="stats">
-  <div class="stat"><div class="stat-number" data-target="34">0</div><div class="stat-label">AI Agentic Actions</div></div>
+  <div class="stat"><div class="stat-number" data-target="30">0</div><div class="stat-label">Research Respondents</div></div>
+  <div class="stat"><div class="stat-number" data-target="62">0</div><div class="stat-label">SUS Score (v3.1.0)</div></div>
   <div class="stat"><div class="stat-number" data-target="7">0</div><div class="stat-label">Input Modalities</div></div>
   <div class="stat"><div class="stat-number" data-target="9">0</div><div class="stat-label">AI Providers</div></div>
-  <div class="stat"><div class="stat-number" data-target="45">0</div><div class="stat-label">Screens</div></div>
   <div class="stat"><div class="stat-number" data-target="36">0</div><div class="stat-label">Achievement Badges</div></div>
   <div class="stat"><div class="stat-number" data-target="57">0</div><div class="stat-label">Currencies</div></div>
 </div>
@@ -1341,7 +1347,7 @@
 </section>
 <section class="screenshots-section" id="screenshots">
   <div class="section-title">See it in action</div>
-  <div class="section-sub">Real screenshots from the app (v3.0.4–v3.2.0). Click any screenshot to zoom. <strong>Defense screenshots below.</strong></div>
+  <div class="section-sub">Real screenshots from SmartSpend v3.1.0 — the version evaluated in our capstone research. Click any screenshot to zoom.</div>
   <div class="ss-tabs">
     <div class="ss-tab active" onclick="filterSlides('all', this)">All</div>
     <div class="ss-tab" onclick="filterSlides('ai', this)">🤖 AI &amp; Chat</div>
@@ -1401,6 +1407,60 @@
   <button class="lb-next" id="lbNext" aria-label="Next screenshot">&#x203a;</button>
   <div class="lb-counter" id="lbCounter"></div>
 </div>
+
+<!-- RESEARCH FINDINGS -->
+<section class="section" id="research-findings" style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px;margin:0">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="section-eyebrow">🎓 Capstone Research Study</div>
+    <div class="section-title">SmartSpend v3.1.0 Research Findings</div>
+    <p class="section-sub">SmartSpend was evaluated by 30 Filipino respondents (10 parents, 20 young professionals) using the System Usability Scale (SUS) — a standardized 10-question usability assessment used in academic research worldwide.</p>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px">
+        <div style="font-size:3rem;font-weight:800;color:var(--primary);margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">61.83</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px">SUS Score (out of 100)</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.6">Grade D — "OK" acceptability. This places SmartSpend below the 68 industry benchmark and below our 80 target, signaling that <strong>UI/UX refinement is critical</strong> for future releases.</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px">
+        <div style="font-size:3rem;font-weight:800;color:#f59e0b;margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">Partial</div>
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px">Objective 3 Achievement</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.6"><strong>Objective 3 was partially achieved.</strong> While SmartSpend successfully delivered all core features, the SUS score indicates usability improvements are needed before wide adoption.</div>
+      </div>
+    </div>
+
+    <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px">
+      <div style="font-weight:700;font-size:14px;color:#f87171;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif">📋 Panel Recommendations (Title Defense)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;color:var(--text-muted);line-height:1.6">
+        <div>
+          <strong style="color:var(--text);display:block;margin-bottom:6px">Machine Demonstrations:</strong>
+          <ul style="padding-left:18px;margin:0">
+            <li>Fix all API-related errors during live demo</li>
+            <li>"Wala dapat hindi gumagana" — all features must work</li>
+            <li>Add more features to expand functionality</li>
+            <li>Resolve UI/UX color pollution issues</li>
+          </ul>
+        </div>
+        <div>
+          <strong style="color:var(--text);display:block;margin-bottom:6px">Paper/Manuscript:</strong>
+          <ul style="padding-left:18px;margin:0">
+            <li>Clarify main aim regarding "millions of Filipinos"</li>
+            <li>Improve visual data presentation (bar charts)</li>
+            <li>Base conclusions on evidence, not opinion</li>
+            <li>Add competitor app comparison table</li>
+            <li>Justify LLM model selection</li>
+            <li>Explain FHS formula origin and validation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--primary-glow);border:1px solid var(--border-strong);border-radius:12px;padding:20px 24px">
+      <div style="font-weight:700;font-size:14px;color:var(--primary);margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">✅ What's Next</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin:0">The development team is actively addressing panel feedback. <strong>v3.2.0 and beyond</strong> will focus on UI/UX refinement (Recommendation #8), stability improvements, and feature expansion based on user testing insights. <a href="#feedback" style="color:var(--primary)">Your feedback helps shape SmartSpend's future.</a></p>
+    </div>
+  </div>
+</section>
+
 <section id="demo" style="max-width:900px;margin:0 auto 70px;padding:0 24px;">
   <div class="section-title" style="display:flex;align-items:center;gap:10px;">
     <svg class="peso-mascot" style="--peso-size:40px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
@@ -1907,7 +1967,8 @@
     </tbody>
   </table>
   <div class="version-note">
-    Current version: <strong>v3.2.0</strong> &#x00B7;
+    Latest version: <strong>v3.2.0</strong> &#x00B7;
+    Research-evaluated version: <strong>v3.1.0</strong> &#x00B7;
     <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">All releases &#x2192;</a> &#x00B7;
     Not sure which APK? Install the arm64-v8a version first.
   </div>
@@ -2111,9 +2172,9 @@
     </div>
     <div class="institution-divider"></div>
     <div style="text-align:center">
-      <p style="font-size:0.9rem;color:var(--text-muted)">Advised by <strong style="color:var(--text)">Ellen F. Mangaoang, MIT</strong></p>
-      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:4px">Panel: Shekiro R. Raposas · Mary-Ann Mzana</p>
-      <p style="font-size:0.8rem;color:var(--text-dim);margin-top:2px">Capstone Project 2026</p>
+      <p style="font-size:0.9rem;color:var(--text-muted)">Advised by <strong style="color:var(--text)">Dr. Ellen F. Mangaoang, DIT</strong></p>
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:4px">Panel: Jeoffrey B. Layco (Chair) · Shekiro R. Raposas · Mary-Ann Mzana</p>
+      <p style="font-size:0.8rem;color:var(--text-dim);margin-top:2px">Content Validator: Avigail Candevario, PFMe | Capstone 2026</p>
     </div>
   </div>
 </section>
