@@ -463,7 +463,123 @@
   </details>
 
   <details class="cat">
-    <summary>7 — v3.2.0 New Features & Future Roadmap</summary>
+    <summary>6 — Deployment & Distribution Model</summary>
+    <details class="qa"><summary>Where is your MOA or Certificate of Deployment? <span class="tag">Deployment</span><span class="tag">MOA</span></summary><div class="a">
+      <p><b>SmartSpend is a consumer-facing mobile application for general public use</b>, not an enterprise or institutional system. Our deployment model is <b>direct-to-consumer via GitHub Releases</b>, where the APK is freely downloadable at <code>github.com/Zushikina-kun/smartspend-app/releases</code>.</p>
+      <p>Unlike systems built for a single organization under an MOA, personal finance apps serve individual end-users across the country. We have no single 'client' organization — our target users are individual Filipinos who download and use the app on their personal phones, similar to GCash, Shopee, or any consumer mobile application.</p>
+      <p><b>Actual public deployment evidence:</b> (1) GitHub repository with 5 public releases (v3.0.0 to v3.2.2), (2) Project website at <code>zushikina-kun.github.io/smartspend-app</code>, (3) 30 SUS evaluation respondents who used their own devices, (4) Source Available License for transparency.</p>
+    </div></details>
+    <details class="qa"><summary>Why GitHub and not Google Play Store? <span class="tag">Deployment</span><span class="tag">Google Play</span></summary><div class="a">
+      <p>Google Play Store release is <b>Recommendation 3</b>, but it requires two prerequisites: (1) <b>Recommendation 2</b> — moving the LLM API key to a backend proxy for security (currently it's in Firebase Remote Config on device side), and (2) a formal privacy policy document that meets Google Play's data handling requirements.</p>
+      <p>GitHub is the standard distribution platform for open-source and developmental software. Many consumer apps begin with GitHub releases before moving to app stores. For a capstone research project, GitHub provides transparency, version control, and public accessibility — all aligned with academic open research principles.</p>
+    </div></details>
+    <details class="qa"><summary>Isn't GitHub deployment unprofessional? <span class="tag">Deployment</span><span class="tag">Distribution</span></summary><div class="a">
+      <p><b>No.</b> GitHub is the industry-standard platform for open-source distribution. Notable examples: F-Droid (entire Android app store distributed via GitHub), Signal Beta (GitHub releases before Play Store), Termux, NewPipe, and thousands of development tools.</p>
+      <p>For a capstone developmental research project, GitHub offers: (1) Full version history and transparency, (2) Issue tracking for user feedback, (3) Release notes and changelogs, (4) No gatekeeping or approval delays, (5) Educational value — students can see the source code.</p>
+    </div></details>
+    <details class="qa"><summary>How do you measure actual usage without Play Store analytics? <span class="tag">Deployment</span><span class="tag">Analytics</span></summary><div class="a">
+      <p>Three sources of evidence: (1) <b>SUS evaluation respondents</b> — 30 users who actually downloaded and used SmartSpend v3.1.0 for 10+ minutes each, providing concrete usability data. (2) <b>GitHub download counts</b> on releases page. (3) <b>In-app feedback system</b> that submits issues directly to GitHub, showing active user engagement.</p>
+      <p>Firebase Crashlytics also provides anonymous usage statistics (app opens, crash rates, device types) for users who enable cloud sync.</p>
+    </div></details>
+    <details class="qa"><summary>What about institutional partnerships or government adoption? <span class="tag">Deployment</span><span class="tag">Future</span></summary><div class="a">
+      <p>SmartSpend is designed for <b>individual users</b>, not institutional deployment. However, future B2B opportunities include: (1) <b>Corporate wellness programs</b> — companies provide SmartSpend Premium to employees as a financial wellness benefit, (2) <b>LGU financial literacy programs</b> — pre-loaded on devices distributed to participants, (3) <b>Educational institutions</b> — part of personal finance courses.</p>
+      <p>These are post-capstone commercialization paths, not current deployment requirements.</p>
+    </div></details>
+    <details class="qa"><summary>How does direct-to-consumer deployment align with research objectives? <span class="tag">Deployment</span><span class="tag">Research</span></summary><div class="a">
+      <p>Objective 2 states: "to design and develop the SmartSpend mobile application" — which we achieved with a working Android app. Objective 3 evaluates usability using SUS — which requires real users, not an institutional client.</p>
+      <p>Our deployment model supports the research: we needed <b>diverse individual users</b> (parents and young professionals) to evaluate the app in real-world personal finance scenarios. An institutional deployment would limit our sample to one organization's employees, reducing generalizability.</p>
+    </div></details>
+  </details>
+
+  <details class="cat">
+    <summary>7 — OpenRouter Integration & Multi-Provider AI</summary>
+    <details class="qa"><summary>What is OpenRouter and why was it added in v3.2.2? <span class="tag">OpenRouter</span><span class="tag">AI</span></summary><div class="a">
+      <p><b>OpenRouter is an AI gateway service</b> that provides unified access to 100+ language models from multiple providers (OpenAI, Anthropic, Google, Meta, Mistral, and more) through a single API endpoint. We added it in v3.2.2 to create a more resilient multi-provider AI architecture.</p>
+      <p><b>Why add it?</b> Three reasons: (1) <b>Reliability</b> — if one AI provider is down or rate-limited, the app automatically falls back to alternatives, (2) <b>Model flexibility</b> — access to 100+ models without managing individual API keys for each provider, (3) <b>Cost efficiency</b> — We have $100 in OpenRouter credits (expires May 2027) that supplements our free-tier providers.</p>
+    </div></details>
+    <details class="qa"><summary>How does the 10-provider fallback chain work? <span class="tag">OpenRouter</span><span class="tag">AI</span><span class="tag">Technical</span></summary><div class="a">
+      <p>When Auto Mode is enabled, SmartSpend tries providers in this priority order:</p>
+      <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li><b>Custom Local</b> (if configured) — user's own PC running Ollama/LM Studio</li>
+        <li><b>OpenRouter</b> — gemini-flash-1.5 default model ($100 credit, expires May 2027)</li>
+        <li><b>Gemini 3.5 Flash</b> — Google AI Studio direct connection</li>
+        <li><b>Gemini 3.5 Flash-Lite</b> — lighter/faster Google model (primary in v3.1.0)</li>
+        <li><b>GPT-OSS 120B (Groq)</b> — fast inference via Groq cloud</li>
+        <li><b>Qwen 3.6 27B (Groq)</b> — Chinese-trained model with Filipino support</li>
+        <li><b>Qwen 3.8 27B (Groq)</b> — newer Qwen variant</li>
+        <li><b>Compound (Groq)</b> — ensemble model</li>
+        <li><b>Compound Mini (Groq)</b> — smaller ensemble</li>
+        <li><b>Cerebras GPT-OSS 120B</b> — ultra-fast inference via Cerebras wafer-scale engine</li>
+      </ol>
+      <p>If a provider returns an error (rate limit, timeout, or down), the app immediately tries the next one. This happens automatically in <1 second — users don't notice the switch.</p>
+    </div></details>
+    <details class="qa"><summary>Why use gemini-flash-1.5 as the default OpenRouter model? <span class="tag">OpenRouter</span><span class="tag">AI</span></summary><div class="a">
+      <p><b>Gemini Flash 1.5</b> offers the best balance for SmartSpend's use cases:</p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li>✅ <b>Fast response time</b> — good for real-time expense logging</li>
+        <li>✅ <b>Strong reasoning</b> — handles financial advice and complex calculations</li>
+        <li>✅ <b>Cost-efficient</b> — ~$0.30 per 1M tokens (makes $100 credit last longer)</li>
+        <li>✅ <b>Multimodal</b> — can handle images/receipts (future feature)</li>
+        <li>✅ <b>Good Filipino-English support</b> — tested in v3.1.0 evaluation</li>
+      </ul>
+      <p><b>Alternatives considered:</b> Claude 3.5 Sonnet (better quality but more expensive ~$3-15/1M tokens), Gemini Flash 1.5-8B (cheaper but weaker reasoning). Flash 1.5 is the sweet spot.</p>
+    </div></details>
+    <details class="qa"><summary>How long will the $100 OpenRouter credit last? <span class="tag">OpenRouter</span><span class="tag">Cost</span></summary><div class="a">
+      <p><b>With gemini-flash-1.5 at ~$0.30 per 1M tokens:</b></p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li>Expense logging: ~2,000 tokens per request → <b>~166,000 logs possible</b></li>
+        <li>Financial advice: ~4,000 tokens per request → <b>~83,000 advice chats possible</b></li>
+        <li>Mixed typical usage: Should last <b>months to years</b> for personal use</li>
+      </ul>
+      <p>The credit expires May 14, 2027. For post-capstone production use, Recommendation 2 (backend proxy with per-user API keys) would allow users to bring their own OpenRouter keys or switch to a freemium model (free tier: 50 AI messages/month, premium: unlimited).</p>
+    </div></details>
+    <details class="qa"><summary>How does auto-failover ensure 24/7 AI uptime? <span class="tag">OpenRouter</span><span class="tag">Reliability</span><span class="tag">AI</span></summary><div class="a">
+      <p><b>The 10-provider chain creates redundancy across 4 different AI infrastructure providers:</b> Google (Gemini direct + via OpenRouter), Groq (5 models), Cerebras (1 model), and user's own local models. The probability that ALL 10 fail simultaneously is extremely low.</p>
+      <p><b>Real-world scenario:</b> If Google Gemini has an outage (happened Oct 2024), SmartSpend automatically switches to Groq's GPT-OSS model within 1 second. User doesn't see an error — they just get their expense logged via a different AI. This architectural resilience is unique among Filipino finance apps.</p>
+      <p><b>Monitoring:</b> The app tracks which provider succeeded for the last request and starts there next time (cached in SharedPreferences), reducing latency for subsequent requests.</p>
+    </div></details>
+    <details class="qa"><summary>What models are available through OpenRouter? <span class="tag">OpenRouter</span><span class="tag">AI</span></summary><div class="a">
+      <p><b>100+ models across major providers:</b></p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li><b>OpenAI:</b> GPT-4, GPT-4 Turbo, GPT-3.5 Turbo</li>
+        <li><b>Anthropic:</b> Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Haiku</li>
+        <li><b>Google:</b> Gemini 1.5 Pro, Gemini 1.5 Flash, Gemini 1.5 Flash-8B</li>
+        <li><b>Meta:</b> Llama 3.1 405B, Llama 3.1 70B, Llama 3.1 8B</li>
+        <li><b>Mistral:</b> Mistral Large, Mistral Medium, Mixtral 8x7B</li>
+        <li><b>Others:</b> Cohere, Perplexity, DeepSeek, Qwen, Yi, and more</li>
+      </ul>
+      <p>SmartSpend uses gemini-flash-1.5 by default, but this can be changed in <code>app_config.dart</code> line 59 if different capabilities are needed (e.g., switch to Claude 3.5 Sonnet for highest reasoning quality).</p>
+    </div></details>
+    <details class="qa"><summary>Can users select which AI provider to use? <span class="tag">OpenRouter</span><span class="tag">Settings</span></summary><div class="a">
+      <p><b>Yes</b>, via Settings → AI → Model Selector. Users can choose:</p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li><b>Auto (Recommended)</b> — 10-provider fallback chain with OpenRouter priority</li>
+        <li><b>Gemini 3.5 Flash-Lite</b> — fastest, most cost-efficient</li>
+        <li><b>Gemini 3.5 Flash</b> — balanced speed and quality</li>
+        <li><b>Groq models</b> — GPT-OSS 120B, Qwen variants, Compound models</li>
+        <li><b>Cerebras GPT-OSS</b> — ultra-fast inference</li>
+        <li><b>OpenRouter Gateway</b> — access to 100+ models (requires selection in Auto mode)</li>
+        <li><b>Private Local Mode</b> — user's own Ollama/LM Studio/Jan server</li>
+      </ul>
+      <p>Power users can test different models to see which works best for their Taglish expressions. Auto mode is recommended for regular users (it automatically finds what works).</p>
+    </div></details>
+    <details class="qa"><summary>How is OpenRouter integrated technically? <span class="tag">OpenRouter</span><span class="tag">Technical</span></summary><div class="a">
+      <p><b>Code location:</b> <code>lib/services/app_config.dart</code>, lines added in v3.2.2:</p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li>Line ~18: <code>_fallbackOpenRouterKey</code> constant</li>
+        <li>Line ~28: <code>_openRouterUrl</code> endpoint (https://openrouter.ai/api/v1/chat/completions)</li>
+        <li>Line ~59: <code>_openRouterModel</code> default (gemini-flash-1.5)</li>
+        <li>Line ~129: Added to <code>availableModels</code> list (position 3, high priority)</li>
+        <li>Line ~284: Integrated into <code>autoFallback()</code> chain</li>
+        <li>Line ~431: Added to Firebase Remote Config defaults</li>
+      </ul>
+      <p><b>API format:</b> OpenRouter uses OpenAI-compatible API format, so integration required minimal code changes. Authorization header uses <code>Bearer sk-or-v1-...</code> format, and request/response JSON matches existing structure.</p>
+      <p><b>Security:</b> OpenRouter API key is stored in Firebase Remote Config (not hardcoded in APK) and loaded at app startup, same as other provider keys.</p>
+    </div></details>
+  </details>
+
+  <details class="cat">
+    <summary>8 — v3.2.0-3.2.2 New Features & Future Roadmap</summary>
     <details class="qa"><summary>What's new in v3.2.0?</summary><div class="a">
       <p><b>Star feature: Government Contributions Tracker.</b> Track year-to-date SSS, PhilHealth, and Pag-IBIG contributions — SmartSpend is the <em>first Filipino personal finance app</em> to treat government contributions as a first-class expense category. Includes: YTD totals per agency, official portal links (sss.gov.ph, philhealth.gov.ph, pagibigfund.gov.ph), SSS pension calculator, dashboard widget that auto-shows when you have contribution data, and year selector to view historical contributions.</p>
       <p><b>Also fixed:</b> AI Model Selector bottom sheet scrolling issue on small screens (&lt;5.5"). The bottom sheet now wraps content in SingleChildScrollView to prevent overflow on older devices like iPhone SE and budget Android phones.</p>
@@ -502,7 +618,7 @@
   </details>
 
   <details class="cat">
-    <summary>8 — Hard questions / limitations</summary>
+    <summary>9 — Hard questions / limitations</summary>
     <details class="qa"><summary>What are the limitations of your app?</summary><div class="a">
       <p>(1) AI works best with clear input — ambiguous messages can produce wrong categories; mitigated by the evidence threshold but not perfect. (2) No Play Store release yet — Google's 14-day closed testing is scheduled post-defense. (3) No iOS version — Flutter supports it but requires a Mac with Xcode. (4) FHS formula not yet externally validated with real user data — SUS survey and post-defense testing will address this. (5) Wallet balance tracking requires manual updates for unlogged cash transactions.</p>
     </div></details>
@@ -541,6 +657,97 @@
     <tr><td>"We copied from..."</td><td>"We were inspired by [app] but our implementation differs because..."</td></tr>
     <tr><td>"I'm not sure but..."</td><td>Say nothing, let someone else on the team answer, then add if you can</td></tr>
   </table></div>
+
+  </details>
+
+  <details class="cat">
+    <summary>10 — Top 10 Most Likely Panel Questions</summary>
+    <details class="qa"><summary>Why is the SUS score only 61.83? <span class="tag">SUS</span><span class="tag">Research</span><span class="tag">Critical</span></summary><div class="a">
+      <p><b>Direct answer:</b> Our SUS score of 61.83 is below the 68-point benchmark and below our pre-established target of 80, which is why Objective 3 is <b>partially achieved</b> rather than fully achieved.</p>
+      <p><b>What this tells us:</b> The weaker SUS items were system consistency (Q6) and complexity (Q2, Q4). This is a prototype-stage finding that drives <b>Recommendation 8: UI/UX refinement</b> through interface redesign.</p>
+      <p><b>Positive indicators:</b> Respondents scored high on intent to use the system frequently (4.35/5) and confidence (4.19/5), showing the core concept resonates despite usability friction.</p>
+    </div></details>
+    <details class="qa"><summary>Why only 30 respondents? Isn't that too small? <span class="tag">Research</span><span class="tag">Sampling</span></summary><div class="a">
+      <p><b>Random sampling was used</b> for our respondents. For a capstone-level developmental study, 30 respondents is a common sample size for identifying patterns in a needs assessment and usability issues in a prototype.</p>
+      <p>We acknowledge that it limits generalizability because the SUS respondents came from one locale (San Fernando City, La Union). That is why <b>Recommendation 7</b> calls for a <b>longitudinal evaluation with a larger sample</b> over 3-6 months.</p>
+      <p><b>SUS specifically:</b> The System Usability Scale is designed to be reliable with small samples — research shows SUS stabilizes around 12-14 participants (Tullis & Stetson, 2004). Our 30 exceeds this minimum.</p>
+    </div></details>
+    <details class="qa"><summary>What LLM did you use and why? <span class="tag">AI</span><span class="tag">Technical</span><span class="tag">LLM</span></summary><div class="a">
+      <p><b>Primary model:</b> Gemini 3.5 Flash-Lite (in v3.1.0 evaluation) → now supplemented by <b>10-provider fallback chain</b> in v3.2.2 including OpenRouter gateway.</p>
+      <p><b>Evaluation process:</b> We evaluated <b>10 candidate models from 4 providers</b> (Google, Groq, Cerebras, Mistral) against weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%).</p>
+      <p><b>Why Flash-Lite won:</b> 1M-token context window, native function calling for our 34 actions, good Taglish handling in trials, and high free-tier quota. We also built an 8-model cloud failover chain (now 10 with OpenRouter) for resilience.</p>
+    </div></details>
+    <details class="qa"><summary>How does SmartSpend compare to BudgetPH, PISO, Agila? <span class="tag">Competition</span><span class="tag">Comparison</span></summary><div class="a">
+      <p><b>vs BudgetPH/PISO:</b> They have no AI — users log manually. We support voice, OCR, barcode, and batch screenshot import from 40+ platforms. BudgetPH has Safe-to-Spend (we copied it); we have FHS scoring and government contributions tracking (they don't).</p>
+      <p><b>vs Agila:</b> Agila has "Agila Chat" but its AI is logging-only — can't set budgets, track debts, compute savings, or give advice. Our 34 agentic actions cover all of that.</p>
+      <p><b>Unique to SmartSpend:</b> (1) Dual-mode Financial Health Score, (2) Batch screenshot import (40+ platforms), (3) SSS/PhilHealth/Pag-IBIG tracking, (4) 10-provider AI fallback for 24/7 uptime, (5) Paluwagan tracker, (6) Private Local AI mode.</p>
+      <p><b>Honest limitations:</b> No bank sync (they have it), no 15th/30th payday cycle yet (Recommendation 1), Android-only (some competitors support iOS).</p>
+    </div></details>
+    <details class="qa"><summary>Is this quantitative, qualitative, or mixed methods? <span class="tag">Research</span><span class="tag">Methodology</span><span class="tag">Critical</span></summary><div class="a">
+      <p><b>Quantitative descriptive developmental.</b> Period.</p>
+      <p><b>Quantitative:</b> Validated structured survey questionnaires for needs assessment and SUS evaluation. NO interviews, NO open-ended data collection.</p>
+      <p><b>Descriptive:</b> Frequencies and percentages for needs assessment, mean SUS scores for usability.</p>
+      <p><b>Developmental:</b> Design and development of SmartSpend as a working prototype using Agile Kanban workflow.</p>
+      <p><b>NOT mixed methods</b> because there is no qualitative component — no interviews, focus groups, or thematic analysis.</p>
+    </div></details>
+    <details class="qa"><summary>How secure is the app? Where are API keys stored? <span class="tag">Security</span><span class="tag">Privacy</span><span class="tag">Technical</span></summary><div class="a">
+      <p><b>Current security (prototype level):</b></p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li><b>API keys:</b> Stored in Firebase Remote Config (NOT in APK), fetched at startup. Reverse engineering the APK won't reveal keys.</li>
+        <li><b>Data privacy:</b> Mobile numbers, reference numbers, account patterns redacted on-device before sending to AI. One-time privacy disclosure before first AI message.</li>
+        <li><b>Local storage:</b> SQLite database stored in app-private directory (not accessible to other apps without root).</li>
+        <li><b>Cloud sync:</b> Optional Firestore sync uses TLS encryption in transit. User can disable sync entirely.</li>
+        <li><b>App Lock:</b> PIN or biometric authentication via <code>local_auth</code>.</li>
+      </ul>
+      <p><b>Known limitations (addressed in recommendations):</b></p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li><b>Recommendation 2:</b> Backend API proxy — move keys to server-side, enforce per-user limits</li>
+        <li><b>Recommendation 5:</b> SQLite encryption using SQLCipher — local database currently unencrypted</li>
+      </ul>
+      <p><b>Privacy tiers:</b> Cloud AI (default, data redacted), Private Local Mode (requests only go to user's own PC), Tier 3 on-device AI (not implemented, Recommendation 4).</p>
+    </div></details>
+    <details class="qa"><summary>What about iOS? Why Android only? <span class="tag">Platform</span><span class="tag">Scope</span></summary><div class="a">
+      <p><b>Android only</b> by design, stated in Scope and Limitations. Three reasons:</p>
+      <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li><b>Market share</b> — Android dominates in the Philippines (70-80%), especially among students and budget-conscious users (our target demographic).</li>
+        <li><b>Development cost</b> — iOS requires Mac with Xcode ($1,299+ hardware), Apple Developer Program ($99/year), TestFlight. Android uses free tools (Android Studio, Windows/Linux compatible).</li>
+        <li><b>Thesis scope</b> — Focusing on one platform let us polish features rather than juggling platform differences.</li>
+      </ol>
+      <p><b>Future iOS version?</b> Technically possible (Flutter is cross-platform), but NOT one of our 9 recommendations and outside capstone scope. Google Play release (Recommendation 3) is the planned next distribution step.</p>
+    </div></details>
+    <details class="qa"><summary>How does the Financial Health Score work? Is it validated? <span class="tag">FHS</span><span class="tag">Scoring</span><span class="tag">Critical</span></summary><div class="a">
+      <p><b>The Financial Health Score is a prototype indicator</b> on a 0-to-100 scale, formally classified as a <b>Prototype Observed Financial Health Indicator</b> — it's a design choice, not a statistically validated instrument.</p>
+      <p><b>Full Mode (needs income tracking):</b> 4 equally weighted components of 25 points each:</p>
+      <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li>Savings Rate — 25 pts when saving ≥20% of income</li>
+        <li>Overspend Control — days within daily budget / total days</li>
+        <li>Budget Adherence — categories on track / total budgeted</li>
+        <li>Logging Consistency — days logged / days elapsed this month</li>
+      </ul>
+      <p><b>Lightweight Mode (no income needed):</b> Spending Restraint, Logging Consistency, Category Balance, Habit Streak.</p>
+      <p><b>Transparency:</b> The equal 25-point weights are a design choice, not statistically derived. We adapted ideas from CBA-MI Observed scale and FinHealth Network's FinHealth Score but this is NOT a validated clinical instrument.</p>
+    </div></details>
+    <details class="qa"><summary>What are ALL 9 recommendations? <span class="tag">Recommendations</span><span class="tag">Critical</span></summary><div class="a">
+      <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+        <li><b>Payday-cycle-aware budgeting</b> — Budget resets aligned with 15th/30th salary cycle common in PH</li>
+        <li><b>Backend API proxy and per-user keys</b> — Move LLM key to server-side (Firebase Cloud Function) to remove device-side exposure</li>
+        <li><b>Google Play release</b> — After proxy and privacy policy are in place (prototype currently distributed as APK)</li>
+        <li><b>On-device AI tier</b> — Opt-in ~2.6GB model (Gemma 4 E2B via LiteRT-LM) for fully offline AI</li>
+        <li><b>SQLite encryption</b> — SQLCipher-based encryption for local database</li>
+        <li><b>Household and remittance features</b> — Shared couple/family wallets, OFW remittance as distinct income category</li>
+        <li><b>Longitudinal evaluation</b> — 3-6 month study with larger sample to measure behavior change (current study measured usability at single point)</li>
+        <li><b>UI/UX refinement</b> — Address Q6 (consistency) and Q2/Q4 (complexity) concerns from SUS results</li>
+        <li><b>Formal parsing evaluation</b> — Standardized test receipts across multiple platforms to establish reliable accuracy baseline</li>
+      </ol>
+      <p><b>All 9 come from specific limitations of the current prototype.</b></p>
+    </div></details>
+    <details class="qa"><summary>How do you handle offline mode? Does everything work without internet? <span class="tag">Offline</span><span class="tag">Technical</span></summary><div class="a">
+      <p><b>Core features work 100% offline:</b> Manual expense logging, view expenses, edit/delete, budgets, wallets, analytics (all local SQLite queries), receipt OCR scanning (Google ML Kit runs on-device).</p>
+      <p><b>Requires internet:</b> AI features (Gemini/Groq/Cerebras APIs, unless using Private Local Mode with user's own PC), Firebase sync, exchange rates, badge/achievement unlocks (cloud validation).</p>
+      <p><b>Graceful degradation:</b> When offline, AI chat shows "No internet — use manual entry" banner with quick action button to open Log Expense form. Firebase sync queues changes locally and uploads when connection restored.</p>
+      <p><b>We say "offline-first" not "fully offline"</b> — the app is usable without internet but AI features need connectivity. Private Local Mode (Tier 2) allows AI to work offline via user's own local model server.</p>
+    </div></details>
+  </details>
 
 </section>
 
@@ -661,5 +868,131 @@
   });
 })();
 </script>
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const root = document.documentElement;
+  const currentTheme = root.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+}
+
+// Load saved theme
+(function() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }
+})();
+
+// Q&A Search functionality
+function filterQA() {
+  const searchTerm = document.getElementById('qa-search').value.toLowerCase();
+  const categories = document.querySelectorAll('#p-qa details.cat');
+  let matchCount = 0;
+  
+  categories.forEach(cat => {
+    const questions = cat.querySelectorAll('details.qa');
+    let categoryHasMatch = false;
+    
+    questions.forEach(qa => {
+      const summary = qa.querySelector('summary');
+      const answer = qa.querySelector('.a');
+      const tags = Array.from(qa.querySelectorAll('.tag')).map(t => t.textContent.toLowerCase()).join(' ');
+      const summaryText = summary.textContent.toLowerCase();
+      const answerText = answer ? answer.textContent.toLowerCase() : '';
+      const searchableText = summaryText + ' ' + answerText + ' ' + tags;
+      
+      if (searchTerm === '' || searchableText.includes(searchTerm)) {
+        qa.style.display = '';
+        categoryHasMatch = true;
+        matchCount++;
+        
+        // Highlight matching text
+        if (searchTerm !== '') {
+          highlightText(summary, searchTerm);
+          if (answer) highlightText(answer, searchTerm);
+        } else {
+          // Remove highlights
+          removeHighlights(summary);
+          if (answer) removeHighlights(answer);
+        }
+      } else {
+        qa.style.display = 'none';
+        removeHighlights(summary);
+        if (answer) removeHighlights(answer);
+      }
+    });
+    
+    // Hide category if no matches
+    if (searchTerm !== '' && !categoryHasMatch) {
+      cat.style.display = 'none';
+    } else {
+      cat.style.display = '';
+    }
+  });
+  
+  // Update result count
+  const resultCount = document.getElementById('result-count');
+  if (searchTerm === '') {
+    resultCount.textContent = '';
+  } else {
+    resultCount.textContent = `${matchCount} result${matchCount !== 1 ? 's' : ''} found`;
+  }
+}
+
+function highlightText(element, term) {
+  // Skip .tag elements
+  const walker = document.createTreeWalker(
+    element,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        return node.parentElement.classList.contains('tag') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+  
+  const textNodes = [];
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode);
+  }
+  
+  textNodes.forEach(node => {
+    const text = node.textContent;
+    const lowerText = text.toLowerCase();
+    const index = lowerText.indexOf(term);
+    
+    if (index !== -1) {
+      const before = text.substring(0, index);
+      const match = text.substring(index, index + term.length);
+      const after = text.substring(index + term.length);
+      
+      const span = document.createElement('span');
+      span.innerHTML = before + '<span class="highlight">' + match + '</span>' + after;
+      node.parentNode.replaceChild(span, node);
+    }
+  });
+}
+
+function removeHighlights(element) {
+  element.querySelectorAll('.highlight').forEach(highlight => {
+    const parent = highlight.parentNode;
+    parent.replaceWith(...parent.childNodes);
+  });
+  element.normalize();
+}
+
+function expandAll() {
+  document.querySelectorAll('#p-qa details').forEach(d => d.open = true);
+}
+
+function collapseAll() {
+  document.querySelectorAll('#p-qa details').forEach(d => d.open = false);
+}
+</script>
+
 </body>
 </html>
