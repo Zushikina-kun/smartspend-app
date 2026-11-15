@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:csv/csv.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 
@@ -110,6 +113,86 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
     }
   }
 
+  /// Feature #2: Export Government Contributions to CSV
+  Future<void> _exportCSV() async {
+    setState(() => _loading = true);
+    try {
+      final db = await DBService.getDB();
+
+      // Query all gov contributions for selected year
+      final rows = await db.rawQuery('''
+        SELECT 
+          date,
+          category,
+          amount,
+          merchant,
+          notes
+        FROM expenses 
+        WHERE category IN ('SSS', 'PhilHealth', 'Pag-IBIG')
+        AND strftime('%Y', date) = ?
+        ORDER BY date ASC
+      ''', [_selectedYear.toString()]);
+
+      if (rows.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No contributions found for this year'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        setState(() => _loading = false);
+        return;
+      }
+
+      // Build CSV
+      final csvData = [
+        ['Date', 'Agency', 'Amount', 'Merchant', 'Notes'],
+        ...rows.map((r) => [
+              r['date'],
+              r['category'],
+              r['amount'].toString(),
+              r['merchant'] ?? '',
+              r['notes'] ?? '',
+            ]),
+      ];
+
+      final csv = const ListToCsvConverter().convert(csvData);
+
+      // Write to file
+      final dir = await getTemporaryDirectory();
+      final file =
+          File('${dir.path}/SmartSpend_Gov_Contributions_$_selectedYear.csv');
+      await file.writeAsString(csv);
+
+      // Share
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: 'Government Contributions $_selectedYear',
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Exported ${rows.length} contributions'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -118,6 +201,11 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
       appBar: AppBar(
         title: const Text('Gov Contributions'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.file_download_outlined),
+            onPressed: _loading ? null : _exportCSV,
+            tooltip: 'Export to CSV',
+          ),
           PopupMenuButton<int>(
             icon: Icon(Icons.calendar_today, color: cs.onSurface),
             tooltip: 'Select Year',

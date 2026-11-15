@@ -2377,6 +2377,9 @@ class _DashboardState extends State<Dashboard> {
   int _lastInsightExpenseCount = -1; // only refresh insight when data changes
   int _streak = 0; // consecutive days under budget
   List<String> _earnedBadges = [];
+  // Feature #3: Logging streak for consecutive days with expenses
+  int _loggingStreak = 0;
+  int _daysLoggedThisMonth = 0;
   // BF-2: Plain-language score narrative
   String _scoreNarrative = '';
 
@@ -3265,10 +3268,19 @@ class _DashboardState extends State<Dashboard> {
         badges.insert(0, '📝 $logStreak-day logging streak');
       }
 
+      // Feature #3: Calculate days logged this month for streak counter
+      final currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
+      final monthExpenses =
+          _expenses.where((e) => e.date.startsWith(currentMonth));
+      final daysLoggedThisMonth =
+          monthExpenses.map((e) => e.date.substring(0, 10)).toSet().length;
+
       if (mounted) {
         setState(() {
           _streak = streak;
           _earnedBadges = badges.take(3).toList();
+          _loggingStreak = logStreak;
+          _daysLoggedThisMonth = daysLoggedThisMonth;
         });
       }
     } catch (_) {}
@@ -5042,6 +5054,212 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Feature #1: Quick Stats Widget - This Month at a Glance
+  Widget _buildQuickStatsCard(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final now = DateTime.now();
+    final monthStart =
+        DateTime(now.year, now.month, 1).toIso8601String().substring(0, 10);
+
+    // Query expenses for this month
+    final monthExpenses =
+        _expenses.where((e) => e.date.compareTo(monthStart) >= 0).toList();
+
+    if (monthExpenses.isEmpty) return const SizedBox.shrink();
+
+    final totalSpent =
+        monthExpenses.fold<double>(0, (sum, e) => sum + e.amount);
+    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+    final daysLogged =
+        monthExpenses.map((e) => e.date.substring(0, 10)).toSet().length;
+    final avgPerDay =
+        daysLogged > 0 ? (totalSpent / daysLogged).toDouble() : 0.0;
+
+    // Top category
+    final catTotals = <String, double>{};
+    for (final e in monthExpenses) {
+      catTotals[e.category] = (catTotals[e.category] ?? 0) + e.amount;
+    }
+    final topCat = catTotals.entries.isEmpty
+        ? 'N/A'
+        : (catTotals.entries.reduce((a, b) => a.value > b.value ? a : b).key);
+
+    return Card(
+      margin: const EdgeInsets.fromLTRB(0, 8, 0, 12),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: cs.outline.withValues(alpha: 0.12)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.calendar_month, color: cs.primary, size: 20),
+                const SizedBox(width: 8),
+                const Text(
+                  'This Month at a Glance',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatItem(
+                    context,
+                    'Total Spent',
+                    CurrencyService.format(totalSpent),
+                    Icons.payments_outlined,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatItem(
+                    context,
+                    'Avg/Day',
+                    CurrencyService.format(avgPerDay),
+                    Icons.today_outlined,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatItem(
+                    context,
+                    'Top Category',
+                    topCat,
+                    Icons.category_outlined,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatItem(
+                    context,
+                    'Days Logged',
+                    '$daysLogged / $daysInMonth',
+                    Icons.check_circle_outline,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+      BuildContext context, String label, String value, IconData icon) {
+    final cs = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 14, color: cs.onSurface.withValues(alpha: 0.6)),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: cs.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
+  }
+
+  /// Feature #3: Expense Streak Badge - Shows consecutive days with logged expenses
+  Widget _buildStreakBadge(BuildContext context) {
+    if (_loggingStreak < 2) return const SizedBox.shrink();
+
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.orange.shade400,
+            Colors.deepOrange.shade500,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const Text('🔥', style: TextStyle(fontSize: 22)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$_loggingStreak-day logging streak',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$_daysLoggedThisMonth days logged this month',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              _loggingStreak >= 30
+                  ? '🏆'
+                  : _loggingStreak >= 14
+                      ? '💪'
+                      : '⭐',
+              style: const TextStyle(fontSize: 18),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Builds the Safe-to-Spend card
   Widget _buildSafeToSpendCard(BuildContext context) {
     if (!_incomeWalletMode) return const SizedBox.shrink();
@@ -6367,6 +6585,12 @@ class _DashboardState extends State<Dashboard> {
               if (!_incomeWalletMode && _expenses.length < 5)
                 _buildSetupCta(context),
               if (_showForecast || _showPrediction) _buildOutlookCard(context),
+
+              // Feature #1: Quick Stats Widget
+              _buildQuickStatsCard(context),
+
+              // Feature #3: Expense Streak Counter
+              if (_loggingStreak >= 2) _buildStreakBadge(context),
               Row(
                 children: [
                   Expanded(
