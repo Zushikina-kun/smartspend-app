@@ -70,8 +70,8 @@ class DemoService {
         'custom_needs_cats', 'Food,Transportation,Bills,Health,School');
     await DBService.setSetting(
         'custom_wants_cats', 'Entertainment,Shopping,Personal Care,Gaming');
-    // Monthly income — ₱6,600 (₱300/day × 22 school days)
-    await DBService.setMonthlyIncome(6600, source: 'demo');
+    // Monthly income — ₱15,000 (₱8,000 from parents + ₱7,000 part-time)
+    await DBService.setMonthlyIncome(15000, source: 'demo');
 
     // ── 4. WALLETS ───────────────────────────────────────────────────────────
     // Clear existing wallets, then seed 3 realistic ones.
@@ -121,7 +121,7 @@ class DemoService {
         'old': 2812.50,
         'new': 1312.50,
         'delta': -1500.0,
-        'reason': 'Part-time income',
+        'reason': 'Transferred to savings',
         'source': 'manual',
         'days': 7
       },
@@ -205,7 +205,7 @@ class DemoService {
         'want': 0
       },
       {
-        'item_name': 'Canteen Lunch',
+        'item_name': 'Tapsilog Lunch - Rodic\'s',
         'category': 'Food',
         'amount': 65.0,
         'shop': 'School Canteen',
@@ -276,7 +276,7 @@ class DemoService {
         'want': 1
       },
       {
-        'item_name': 'Mang Inasal Dinner',
+        'item_name': 'Family Dinner - Mang Inasal',
         'category': 'Food',
         'amount': 155.0,
         'shop': 'Mang Inasal',
@@ -307,7 +307,7 @@ class DemoService {
         'want': 1
       },
       {
-        'item_name': '7-Eleven Snacks',
+        'item_name': 'Merienda - Ministop',
         'category': 'Food',
         'amount': 78.0,
         'shop': '7-Eleven',
@@ -584,12 +584,12 @@ class DemoService {
     for (int m = 0; m < 3; m++) {
       final d = DateTime(now.year, now.month - m, 1);
       await DBService.insertIncome({
-        'title': 'Monthly Allowance',
-        'amount': 6600.0,
+        'title': 'Monthly Allowance + Part-time',
+        'amount': 15000.0,
         'category': 'Allowance',
         'date': fmt.format(d),
         'is_recurring': 1,
-        'notes': 'From parents — ₱300/day × 22 days',
+        'notes': 'From parents (₱8,000) + freelance encoding (₱7,000)',
       });
     }
     await DBService.insertIncome({
@@ -734,41 +734,13 @@ class DemoService {
       'created_at': now.toIso8601String(),
     });
 
-    // ── 13. INSURANCE & CONTRIBUTIONS ────────────────────────────────────────
+    // ── 13. INSURANCE & CONTRIBUTIONS (ADJUSTED FOR STUDENTS) ────────────────
     await db.delete('insurance_policies');
-    await DBService.insertInsurancePolicy({
-      'name': 'SSS Voluntary Contribution',
-      'provider': 'SSS',
-      'type': 'government',
-      'premium_amount': 1400.0,
-      'frequency': 'monthly',
-      'next_due_date': fmt.format(now.add(const Duration(days: 12))),
-      'last_paid_date': fmt.format(now.subtract(const Duration(days: 18))),
-      'created_at': now.toIso8601String(),
-      'notes': 'RS-5 contribution bracket',
-    });
-    await DBService.insertInsurancePolicy({
-      'name': 'PhilHealth Contribution',
-      'provider': 'PhilHealth',
-      'type': 'government',
-      'premium_amount': 500.0,
-      'frequency': 'monthly',
-      'next_due_date': fmt.format(now.add(const Duration(days: 5))),
-      'last_paid_date': fmt.format(now.subtract(const Duration(days: 25))),
-      'created_at': now.toIso8601String(),
-      'notes': 'Indirect contributor',
-    });
-    await DBService.insertInsurancePolicy({
-      'name': 'Pag-IBIG MP2 Savings',
-      'provider': 'Pag-IBIG',
-      'type': 'government',
-      'premium_amount': 500.0,
-      'frequency': 'monthly',
-      'next_due_date': fmt.format(now.subtract(const Duration(days: 3))),
-      'last_paid_date': fmt.format(now.subtract(const Duration(days: 33))),
-      'created_at': now.toIso8601String(),
-      'notes': 'Modified Pag-IBIG II — higher dividend rate',
-    });
+
+    // REMOVED: SSS ₱1,400, PhilHealth ₱500, Pag-IBIG ₱500
+    // Students are covered by parents' plans
+
+    // Keep only optional student insurance
     await DBService.insertInsurancePolicy({
       'name': 'Sun Life Student Term Plan',
       'provider': 'Sun Life',
@@ -980,12 +952,6 @@ class DemoService {
         'ai',
         '📊 **This month so far:**\n\n• Food: ₱1,134 / ₱2,000 (57%)\n• School: ₱3,620 / ₱4,500 (80%)\n• Bills: ₱4,203 / ₱5,000 (84%)\n• Transportation: ₱283 / ₱600 (47%)\n• Entertainment: ₱129 / ₱300 (43%)\n\n**Total spent:** ₱9,869\n**Remaining budget:** ₱1,131\n\nYou\'re doing well on Transportation and Entertainment! Watch your School and Bills budgets.',
         2
-      ),
-      ('user', 'How is my financial health score?', 1),
-      (
-        'ai',
-        '💚 Your **Financial Health Score is 80/100** — Great!\n\n**Breakdown:**\n• Savings Rate: 22/25 — Saving ~18% of income\n• Overspend Control: 21/25 — 2 soft-overspend days this month\n• Budget Adherence: 19/25 — Bills and School are at 80%+\n• Logging Consistency: 18/25 — You\'ve logged 18 of 22 days\n\nTip: Log expenses daily to maximize the Logging Consistency component! 📝',
-        1
       ),
     ];
     for (final c in chatSeed) {
