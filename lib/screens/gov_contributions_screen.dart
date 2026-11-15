@@ -132,8 +132,9 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
                 child: Text(
                   year.toString(),
                   style: TextStyle(
-                    fontWeight:
-                        year == _selectedYear ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: year == _selectedYear
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               );
@@ -160,7 +161,8 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
                   const SizedBox(height: 4),
                   Text(
                     'Track your SSS, PhilHealth, and Pag-IBIG contributions',
-                    style: TextStyle(fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
+                    style: TextStyle(
+                        fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
                   ),
                   const SizedBox(height: 24),
 
@@ -243,7 +245,8 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.calculate, size: 20, color: cs.primary),
+                              Icon(Icons.calculate,
+                                  size: 20, color: cs.primary),
                               const SizedBox(width: 8),
                               const Text(
                                 'SSS Pension Estimator',
@@ -315,7 +318,8 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
                                     'Est. Monthly Pension:',
@@ -375,9 +379,76 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 24),
+
+                  // Research Findings - Coming Soon
+                  _buildComingSoonSection(context),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildComingSoonSection(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cs.surfaceVariant.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: cs.outline.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.science_outlined, color: cs.primary),
+              const SizedBox(width: 8),
+              const Text(
+                '🔬 Research Findings',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'We researched 20 Philippine government services for future integration:',
+            style: TextStyle(fontSize: 13),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              'LTO Vehicle Registration',
+              'Driver\'s License Renewal',
+              'BIR Tax Filing',
+              'NBI Clearance',
+              'Passport Renewal',
+              'PhilSys National ID',
+              'eGov PH Integration',
+              'CTPL Insurance',
+            ]
+                .map((s) => Chip(
+                      label: Text(s, style: const TextStyle(fontSize: 11)),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '💡 Post-defense updates will add reminders, OCR receipt parsing, and tracking for these services.',
+            style: TextStyle(
+              fontSize: 12,
+              fontStyle: FontStyle.italic,
+              color: cs.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -438,7 +509,8 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
                   ],
                 ),
               ),
-              Icon(Icons.open_in_new, size: 18, color: cs.onSurface.withOpacity(0.4)),
+              Icon(Icons.open_in_new,
+                  size: 18, color: cs.onSurface.withOpacity(0.4)),
             ],
           ),
         ),

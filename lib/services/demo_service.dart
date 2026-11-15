@@ -195,7 +195,7 @@ class DemoService {
     final expenses = [
       // ── TODAY / YESTERDAY ────────────────────────────────────────────────
       {
-        'item_name': 'Jeepney Fare',
+        'item_name': 'Jeepney Fare - Home to School',
         'category': 'Transportation',
         'amount': 13.0,
         'shop': null,
@@ -225,7 +225,7 @@ class DemoService {
         'want': 1
       },
       {
-        'item_name': 'Tricycle Fare',
+        'item_name': 'Tricycle Fare - Back Home',
         'category': 'Transportation',
         'amount': 20.0,
         'shop': null,
@@ -327,7 +327,7 @@ class DemoService {
         'want': 0
       },
       {
-        'item_name': 'SM Grocery',
+        'item_name': 'Weekly Grocery - SM',
         'category': 'Food',
         'amount': 580.0,
         'shop': 'SM Supermarket',
@@ -398,7 +398,7 @@ class DemoService {
       },
       // ── LAST MONTH ───────────────────────────────────────────────────────
       {
-        'item_name': 'Jollibee Lunch',
+        'item_name': 'Jollibee Spicy Chickenjoy Meal',
         'category': 'Food',
         'amount': 185.0,
         'shop': 'Jollibee',
@@ -438,7 +438,7 @@ class DemoService {
         'want': 0
       },
       {
-        'item_name': 'Grocery Shopping',
+        'item_name': 'Weekly Grocery - Robinsons',
         'category': 'Food',
         'amount': 620.0,
         'shop': 'Robinsons',
@@ -468,7 +468,7 @@ class DemoService {
         'want': 1
       },
       {
-        'item_name': 'Mercury Drug — Meds',
+        'item_name': 'Mercury Drug — Biogesic & Vitamins',
         'category': 'Health',
         'amount': 95.0,
         'shop': 'Mercury Drug',
@@ -499,7 +499,7 @@ class DemoService {
         'want': 0
       },
       {
-        'item_name': 'Grocery Shopping',
+        'item_name': 'Family Grocery - SM',
         'category': 'Food',
         'amount': 540.0,
         'shop': 'SM Supermarket',
@@ -519,7 +519,7 @@ class DemoService {
         'want': 1
       },
       {
-        'item_name': 'Grab Food Delivery',
+        'item_name': 'GrabFood - Shawarma Rice',
         'category': 'Food',
         'amount': 220.0,
         'shop': 'GrabFood',
@@ -529,7 +529,7 @@ class DemoService {
         'want': 1
       },
       {
-        'item_name': 'Jeepney Fare',
+        'item_name': 'Jeepney Fares - Weekly Pass',
         'category': 'Transportation',
         'amount': 65.0,
         'shop': null,
