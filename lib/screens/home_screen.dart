@@ -6345,6 +6345,12 @@ class _DashboardState extends State<Dashboard> {
               // Wallet balances summary — only shown in income/wallet mode
               if (_incomeWalletMode) _buildWalletSummaryCard(context),
 
+              // ── FEATURE PORTALS (QUICK ACCESS) ────────────────────────────
+              // Positioned right after My Wallets for true "quick access" UX
+              _buildFeaturePortals(context),
+
+              const SizedBox(height: 12),
+
               // Quick "Log Allowance" button — only in income/wallet mode
               if (_incomeWalletMode) _buildLogAllowanceButton(context),
 
@@ -7324,12 +7330,6 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 );
               }),
-
-              const SizedBox(height: 12),
-
-              // ── FEATURE PORTALS ──────────────────────────────────────────
-              // Quick-access cards for the most useful features (moved up for better UX)
-              _buildFeaturePortals(context),
 
               const SizedBox(height: 12),
 
