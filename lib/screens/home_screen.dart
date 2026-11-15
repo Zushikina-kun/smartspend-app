@@ -7161,9 +7161,6 @@ class _DashboardState extends State<Dashboard> {
 
               const SizedBox(height: 12),
 
-              // ── FEATURE #1: QUICK STATS WIDGET ──────────────────────────────
-              _buildQuickStatsCard(context),
-
               // ── FEATURE #3: EXPENSE LOGGING STREAK COUNTER ─────────────────
               FutureBuilder<int>(
                 future: DBService.getLoggingStreak(),

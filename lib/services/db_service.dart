@@ -1030,6 +1030,30 @@ class DBService {
     return expenses.fold<double>(0.0, (sum, e) => sum + e.amount);
   }
 
+  /// Feature #3: Get consecutive days with logged expenses (streak counter)
+  /// Returns the current streak starting from today backwards
+  static Future<int> getLoggingStreak() async {
+    final expenses = await getExpenses();
+    if (expenses.isEmpty) return 0;
+
+    final now = DateTime.now();
+    final uniqueDates =
+        expenses.map((e) => e.date.substring(0, 10)).toSet().toList();
+
+    int streak = 0;
+    for (int dayOffset = 0; dayOffset < 365; dayOffset++) {
+      final checkDate = DateTime(now.year, now.month, now.day - dayOffset)
+          .toIso8601String()
+          .substring(0, 10);
+      if (uniqueDates.contains(checkDate)) {
+        streak++;
+      } else {
+        break; // streak broken
+      }
+    }
+    return streak;
+  }
+
   /// Returns the number of distinct expense records for a given YYYY-MM month.
   /// Used to guard velocity/comparison alerts so a near-empty month (< 5 expenses)
   /// doesn't produce a misleading spike percentage.
