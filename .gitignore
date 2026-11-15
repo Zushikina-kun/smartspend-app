@@ -61,6 +61,7 @@ docs/Ideas/
 
 # API keys and secrets — never commit these to a public repository
 lib/services/app_config.dart
+.openrouter_key.txt
 
 # Firebase config — contains real API keys, project IDs, OAuth client IDs.
 # Each developer must obtain their own google-services.json from Firebase Console.

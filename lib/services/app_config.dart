@@ -32,12 +32,15 @@ class AppConfig {
   // Update them there to rotate without a code change.
   // Empty strings here mean Gemini falls back to Groq when Remote Config
   // is unavailable. Set in Remote Config: groq_api_key, gemini_api_key,
-  // cerebras_api_key.
+  // cerebras_api_key, openrouter_api_key.
   static const _fallbackGroqKey =
       "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";
   static const _fallbackGeminiKey = ""; // Set in Firebase Remote Config
   static const _fallbackCerebrasKey =
       "csk-cwr9ye2pxwyhe89hmexm3t84e5fe3tykjd2d9c86p5vxjd94";
+  // OpenRouter key: Set in Firebase Remote Config for security
+  // Key format: sk-or-v1-... with $100 credit (expires May 14, 2027)
+  static const _fallbackOpenRouterKey = ""; // Set in Firebase Remote Config
 
   // ── API ENDPOINTS ──────────────────────────────────────────────────────────
   static const _groqUrl = "https://api.groq.com/openai/v1/chat/completions";
@@ -45,6 +48,7 @@ class AppConfig {
   static const _geminiUrl =
       "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
   static const _cerebrasUrl = "https://api.cerebras.ai/v1/chat/completions";
+  static const _openRouterUrl = "https://openrouter.ai/api/v1/chat/completions";
 
   // ── MODEL NAMES ────────────────────────────────────────────────────────────
   // Groq models — VERIFIED against account's allowed models list Sep 10, 2026
@@ -74,10 +78,19 @@ class AppConfig {
   // GPT-OSS 120B on Cerebras: replaces llama3.1-70b (deprecated Feb 2026)
   // 1M tokens/day free, 5 RPM free tier, ~3,000 t/s
 
+  // OpenRouter (unified API gateway to 100+ models)
+  // Best balance for SmartSpend: fast expense logging + quality financial advice
+  static const _openRouterModel = "google/gemini-flash-1.5";
+  // Alternative models available:
+  // - "anthropic/claude-3.5-sonnet" (best quality, higher cost)
+  // - "google/gemini-flash-1.5-8b" (fastest, cheapest)
+  // - "openai/gpt-4o-mini" (balanced alternative)
+
   // ── REMOTE KEYS (from Firebase Remote Config) ─────────────────────────────
   static String? _remoteGroqKey;
   static String? _remoteGeminiKey;
   static String? _remoteCerebrasKey;
+  static String? _remoteOpenRouterKey;
 
   // ── CUSTOM LOCAL LLM (user-configured) ─────────────────────────────────────
   // Set by user in Settings → AI → Local AI section.
@@ -167,12 +180,17 @@ class AppConfig {
     (
       'auto',
       'Auto (Recommended)',
-      '🤖 Picks the best model for each task — fast for logging, best for advice'
+      '🤖 Smart routing — OpenRouter for best balance, falls back as needed'
     ),
     (
       'custom_local',
       'Local AI (Your Computer)',
       '🏠 Your own LLM via WiFi — private, no cloud, configure in Local AI settings'
+    ),
+    (
+      'openrouter',
+      'OpenRouter Gateway',
+      '🌐 Access 100+ models — $100 credit, expires May 2027'
     ),
     (
       'gemini_flash',
@@ -232,16 +250,22 @@ class AppConfig {
   /// Internal: resolve which concrete model Auto mode routes to for a given task.
   static String _autoActualModel(String taskType) {
     final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
+    final hasOpenRouter = (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
+    
+    // Prioritize OpenRouter when available — $100 credit, unified gateway
     switch (taskType) {
       case 'fast':
         // Expense logging — Flash-Lite is fast + low cost
+        if (hasOpenRouter) return 'openrouter'; // Gemini Flash 1.5 via OpenRouter
         return hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
       case 'financial_advice':
         // Complex reasoning — use best available
+        if (hasOpenRouter) return 'openrouter'; // Best quality via OpenRouter
         return hasGemini ? 'gemini_flash' : 'groq_llama4_scout';
       case 'smart':
       default:
         // General chat — Flash-Lite is good default, falls back to Groq
+        if (hasOpenRouter) return 'openrouter'; // Balanced via OpenRouter
         return hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
     }
   }
@@ -254,12 +278,16 @@ class AppConfig {
   static bool get hasGroqKey => (_remoteGroqKey ?? _fallbackGroqKey).isNotEmpty;
   static bool get hasCerebrasKey =>
       (_remoteCerebrasKey ?? _fallbackCerebrasKey).isNotEmpty;
+  static bool get hasOpenRouterKey =>
+      (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
   /// The active API key for the current model
   static String get groqApiKey {
     switch (_activeModelId) {
       case 'custom_local':
         return _customLocalKey ?? '';
+      case 'openrouter':
+        return _remoteOpenRouterKey ?? _fallbackOpenRouterKey;
       case 'auto':
         return _remoteGeminiKey ?? _fallbackGeminiKey;
       case 'gemini_flash':
@@ -281,6 +309,8 @@ class AppConfig {
         // Strip trailing slash, ensure /v1 suffix for OpenAI compat
         final base = url.endsWith('/') ? url.substring(0, url.length - 1) : url;
         return base.endsWith('/v1') ? base : '$base/v1';
+      case 'openrouter':
+        return _openRouterUrl;
       case 'auto':
         // Auto mode defaults to Gemini endpoint
         return _geminiUrl;
@@ -299,6 +329,8 @@ class AppConfig {
     switch (_activeModelId) {
       case 'custom_local':
         return _customLocalModel ?? 'qwen3:7b';
+      case 'openrouter':
+        return _openRouterModel;
       case 'auto':
         // Auto mode defaults to Flash-Lite — task-specific routing handled
         // by modelForTask(); this getter is used for the system prompt header
@@ -367,6 +399,7 @@ class AppConfig {
   static bool autoFallback() {
     final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
     final hasCerebras = (_remoteCerebrasKey ?? _fallbackCerebrasKey).isNotEmpty;
+    final hasOpenRouter = (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
     // Auto mode: track failures internally; rotate preferred provider
     if (_activeModelId == 'auto') {
@@ -383,9 +416,9 @@ class AppConfig {
       return true;
     }
 
-    // 9-provider chain: Custom Local → Gemini Flash → Flash-Lite → GPT-OSS 120B (Groq) →
-    //                   Qwen3.6 27B → Qwen3.8 27B → Compound → Compound Mini →
-    //                   Cerebras GPT-OSS 120B
+    // 10-provider chain: Custom Local → OpenRouter → Gemini Flash → Flash-Lite →
+    //                    GPT-OSS 120B (Groq) → Qwen3.6 27B → Qwen3.8 27B →
+    //                    Compound → Compound Mini → Cerebras GPT-OSS 120B
     switch (_activeModelId) {
       case 'custom_local':
         // Local LLM failed/unreachable.
@@ -395,7 +428,11 @@ class AppConfig {
           return false; // signal: all providers exhausted, show error
         }
         // Default: fall back to cloud (convenient but data leaves device)
-        _activeModelId = hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
+        _activeModelId = hasOpenRouter ? 'openrouter' : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
+        _saveActiveModel();
+        return true;
+      case 'openrouter':
+        _activeModelId = hasGemini ? 'gemini_flash' : 'groq_llama4_scout';
         _saveActiveModel();
         return true;
       case 'gemini_flash':
@@ -431,6 +468,11 @@ class AppConfig {
         }
         if (hasGemini) {
           _activeModelId = 'gemini_flash_lite';
+          _saveActiveModel();
+          return true;
+        }
+        if (hasOpenRouter) {
+          _activeModelId = 'openrouter';
           _saveActiveModel();
           return true;
         }
@@ -531,6 +573,7 @@ class AppConfig {
         'groq_api_key': _fallbackGroqKey,
         'gemini_api_key': _fallbackGeminiKey,
         'cerebras_api_key': _fallbackCerebrasKey,
+        'openrouter_api_key': _fallbackOpenRouterKey,
       });
       bool fetched = false;
       try {
@@ -562,6 +605,8 @@ class AppConfig {
       }
       final rCerebras = rc.getString('cerebras_api_key');
       if (rCerebras.isNotEmpty) _remoteCerebrasKey = rCerebras;
+      final rOpenRouter = rc.getString('openrouter_api_key');
+      if (rOpenRouter.isNotEmpty) _remoteOpenRouterKey = rOpenRouter;
     } catch (_) {
       // Remote Config unavailable — fallback keys (set via setDefaults above)
       // are already active. AI works normally without network.
