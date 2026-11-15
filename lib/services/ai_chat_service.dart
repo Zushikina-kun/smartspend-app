@@ -1305,7 +1305,13 @@ PH BNPL/Loan Services (2026):
           await Future.delayed(Duration(milliseconds: delayMs + jitterMs));
           continue;
         }
+        // All retries exhausted — try fallback to next provider
         if (needsSwitch) AppConfig.setModel(originalModelId);
+        final switched = AppConfig.autoFallback();
+        if (switched && !isFallbackRetry) {
+          return sendMessage(message, isFallbackRetry: true);
+        }
+        // All providers exhausted or already in fallback retry
         throw Exception(
             "Couldn't reach the AI — looks like a slow or unstable connection. "
             "Check your internet and try again.");
