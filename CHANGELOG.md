@@ -2,6 +2,36 @@
 
 All notable changes to SmartSpend are documented here.
 
+## [3.2.2] - 2024-11-16
+
+### Added
+- **OpenRouter AI Gateway Integration** — Multi-provider AI architecture
+  - Access to 100+ AI models through unified OpenRouter gateway
+  - Default model: `google/gemini-flash-1.5` (optimal balance for all features)
+  - Auto mode now prioritizes OpenRouter for intelligent task-based routing
+  - 10-provider fallback chain ensures 24/7 AI uptime
+  - $100 API credit available (expires May 14, 2027)
+  - New provider option in Settings → AI: "🌐 OpenRouter Gateway"
+
+### Changed
+- Auto mode routing updated to prioritize OpenRouter when available
+- AI provider description: "Smart routing — OpenRouter for best balance"
+- Version bump from 3.2.1+112 to 3.2.2+113
+
+### Technical
+- Modified: `lib/services/app_config.dart` (+160 lines)
+- OpenRouter API key stored in Firebase Remote Config (not in code)
+- Compatible with all existing AI features (chat, advice, expense logging)
+- Uses OpenAI-compatible API format (Bearer token authentication)
+- Automatic failover on rate limits/errors to backup providers
+
+### Context
+- Enhances AI reliability and resilience
+- Multi-provider architecture for production readiness
+- Defense-ready implementation (Final Defense: November 16, 2026 at 3:00 PM)
+
+---
+
 ## [3.2.0] - 2024-11-15
 
 ### Added
