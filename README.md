@@ -1,9 +1,9 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.2.0 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 3.2.2 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.2.0-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.2.2-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
 > **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The interactive demo shows a simplified prototype of the general concept. The actual app has been significantly updated since — animations, Peso mascot interactions, UI polish, and features have all been improved. Download the latest APK (v3.2.0) for the full experience.
@@ -28,7 +28,12 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 The app is actively developed and regularly updated. Features, UI, and Peso mascot interactions evolve with each release.
 
-**✨ What's New in v3.2.0:**
+**✨ What's New in v3.2.2:**
+- 🌐 **OpenRouter AI Gateway** — Multi-provider AI architecture with access to 100+ models for enhanced reliability
+- 🤖 **10-Provider Fallback Chain** — Automatic failover ensures AI features work 24/7 even if a provider goes down
+- ⚡ **Intelligent Routing** — Auto mode uses OpenRouter for optimal balance of speed and quality across all AI features
+
+**Previous Release (v3.2.0):**
 - 🏛️ **Government Contributions Tracker** — First Filipino finance app to track SSS, PhilHealth, and Pag-IBIG contributions with year-to-date totals and SSS pension estimator
 - 📱 **Improved Accessibility** — Fixed scrolling issues in AI model selector for devices under 5.5"
 - 🔗 **Direct Portal Links** — Quick access to sss.gov.ph, philhealth.gov.ph, and pagibigfund.gov.ph from within the app
@@ -85,7 +90,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 ### Core Tracking
 - 🎙️ **7 Input Methods** — Voice, OCR receipt scan, barcode, manual entry, batch screenshots (40+ platforms), bank CSV paste, natural language chat
-- 🤖 **Peso AI** — **34 agentic action types** via natural language in Taglish or English (Gemini 3.5 Flash-Lite primary, **9-provider** auto-fallback chain)
+- 🤖 **Peso AI** — **34 agentic action types** via natural language in Taglish or English (Gemini 3.5 Flash-Lite primary, **10-provider** auto-fallback chain with OpenRouter gateway)
 - 📱 **Use Without Account** — start immediately, no sign-up required; data stays on device
 - 🔒 **Local AI Mode** — connect to Ollama, LM Studio, or Jan on your PC; zero cloud exposure
 
