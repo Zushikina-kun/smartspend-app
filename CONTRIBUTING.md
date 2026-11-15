@@ -430,7 +430,7 @@ SmartSpend is a capstone research project from Lorma Colleges (AY 2026-2027). Co
 - Cyrille John M. Rubis (UI/UX & Documentation)
 - Djaunathan Albert S. Madayag (PM & QA)
 
-**Adviser:** Dr. Janelli M. Raposas
+**Adviser:** Dr. Ellen F. Mangaoang, DIT
 
 ---
 

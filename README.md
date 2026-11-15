@@ -6,7 +6,7 @@ Version 3.2.0 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 [![Download](https://img.shields.io/badge/Download-v3.2.0-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
-> **Note on screenshots and demo:** The website screenshots were taken during development (v3.0.4) and the interactive demo shows a simplified prototype of the general concept. The actual app has been significantly updated since — animations, Peso mascot interactions, UI polish, and features have all been improved. Download the latest APK for the full experience.
+> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The interactive demo shows a simplified prototype of the general concept. The actual app has been significantly updated since — animations, Peso mascot interactions, UI polish, and features have all been improved. Download the latest APK (v3.2.0) for the full experience.
 
 ---
 
@@ -40,9 +40,13 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 - Cyrille John M. Rubis — UI/UX Designer & Documentation Lead
 - Djaunathan Albert S. Madayag — Project Manager & QA Lead
 
-**Adviser:** Dr. Janelli M. Raposas — Lorma Colleges, College of Computer Studies and Engineering (CCSE)
+**Adviser:** Dr. Ellen F. Mangaoang, DIT — Lorma Colleges, College of Computer Studies and Engineering (CCSE)
 
-**Defense Date:** November 10, 2026
+**Panel Chair:** Jeoffrey B. Layco, MIS — Dean, CCSE  
+**Panel Members:** Shekiro R. Raposas, MTS, MIS · Mary-Ann Mzana, MTS  
+**Content Validator:** Avigail Candevario, PFMe
+
+**Final Defense Date:** November 16, 2026
 
 ---
 
@@ -151,16 +155,17 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 SmartSpend is a capstone research project at Lorma Colleges (AY 2026-2027, 1st Semester). 
 
-**Defense:** November 10, 2026
+**Final Defense:** November 16, 2026 ✅ Complete
 
-**Final Evaluation Results:**
-- **System Usability Scale (SUS):** 61.83 (SD 17.58), Grade D, adjective "OK"
+**Research Evaluation Results (v3.1.0):**
+- **System Usability Scale (SUS):** 61.83/100 (SD 17.58), Grade D, "OK" acceptability
 - **Respondents:** N=30 (parents n=10, young professionals n=20)
 - **Score Range:** 35.0–92.5
-- **Interpretation:** Below the 68.0 benchmark; acknowledged as a prototype limitation
+- **Interpretation:** Below the 68.0 benchmark and 80.0 target; acknowledged as prototype limitation
+- **Objective 3 Status:** Partially achieved — system demonstrates functional capability but did not meet the target acceptability threshold
 - **Supporting Data:** 96.7% want AI financial app, 93.3% use GCash
 
-Data collection for the formal evaluation is complete. Thank you to all respondents!
+Data collection and defense complete. Thank you to all respondents and panelists!
 
 ---
 
@@ -244,8 +249,8 @@ git tag v3.0.X && git push origin v3.0.X
 ## 🎓 Defense Materials (November 2026)
 
 ### Final Thesis Defense
-**Date**: November 10, 2026  
-**Status**: ✅ **100% READY**
+**Date**: November 16, 2026  
+**Status**: ✅ **COMPLETE**
 
 All defense materials are located in: **`docs/handsoff/FOR_CYRILLE/`**
 
@@ -255,12 +260,12 @@ All defense materials are located in: **`docs/handsoff/FOR_CYRILLE/`**
 - **Defense Script**: `docs/handsoff/FOR_CYRILLE/4_DEFENSE_SCRIPT_FINAL.md`
 - **Complete Documentation**: `docs/handsoff/FOR_CYRILLE/00_START_HERE.md`
 
-#### What Was Verified (Nov 9, 2026)
-✅ All 8 figures inserted into manuscript  
-✅ All SUS numbers updated (61.83, Grade D, N=30)  
-✅ 6 critical blockers fixed (demographics, preliminary warnings)  
-✅ All documents cross-verified for consistency  
-✅ 17/17 automated verification checks passed
+#### Defense Results (Nov 16, 2026)
+✅ Final defense completed successfully  
+✅ System evaluated at v3.1.0 with N=30 respondents  
+✅ SUS score: 61.83/100 (Grade D, "OK" acceptability)  
+✅ Objective 3: Partially achieved (below 68 benchmark, system functional)  
+✅ Panel: Jeoffrey B. Layco (Chair), Shekiro R. Raposas, Mary-Ann Mzana
 
 See: `docs/handsoff/FOR_CYRILLE/MASTER_CHANGELOG.md` for complete change history
 

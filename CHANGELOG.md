@@ -33,7 +33,7 @@ All notable changes to SmartSpend are documented here.
 ### Context
 - Addresses thesis recommendation F11 (Filipino-specific financial features)
 - Defense-ready build with accessibility improvements
-- Post-defense release (defense date: November 10, 2026)
+- Post-defense release (defense date: November 16, 2026)
 
 ---
 

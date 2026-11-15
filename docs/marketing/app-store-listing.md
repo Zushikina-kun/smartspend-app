@@ -139,7 +139,7 @@ Our AI knows about:
 • Internet for AI features (optional Local AI mode available)
 
 **🎓 ACADEMIC RESEARCH PROJECT**
-SmartSpend was developed as a capstone research project at Lorma Colleges (AY 2026-2027) by the Lucid Frame team under the guidance of Dr. Janelli M. Raposas. The app has been formally evaluated with a System Usability Scale (SUS) score and is continuously improved based on user feedback.
+SmartSpend was developed as a capstone research project at Lorma Colleges (AY 2026-2027) by the Lucid Frame team under the guidance of Dr. Ellen F. Mangaoang, DIT. The app has been formally evaluated with a System Usability Scale (SUS) score and is continuously improved based on user feedback.
 
 **📢 YOUR FEEDBACK MATTERS**
 Use the in-app feedback feature (shake your device) to report bugs or suggest features. We actively listen and improve!
