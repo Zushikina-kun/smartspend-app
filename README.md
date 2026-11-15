@@ -46,7 +46,7 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 **Panel Members:** Shekiro R. Raposas, MTS, MIS · Mary-Ann Mzana, MTS  
 **Content Validator:** Avigail Candevario, PFMe
 
-**Final Defense Date:** November 16, 2026
+**Final Defense Date:** November 16, 2026 at 3:00 PM
 
 ---
 
@@ -155,7 +155,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 SmartSpend is a capstone research project at Lorma Colleges (AY 2026-2027, 1st Semester). 
 
-**Final Defense:** November 16, 2026 ✅ Complete
+**Final Defense:** November 16, 2026 at 3:00 PM 🎯 Ready
 
 **Research Evaluation Results (v3.1.0):**
 - **System Usability Scale (SUS):** 61.83/100 (SD 17.58), Grade D, "OK" acceptability
@@ -249,8 +249,8 @@ git tag v3.0.X && git push origin v3.0.X
 ## 🎓 Defense Materials (November 2026)
 
 ### Final Thesis Defense
-**Date**: November 16, 2026  
-**Status**: ✅ **COMPLETE**
+**Date**: November 16, 2026 at 3:00 PM  
+**Status**: 🎯 **READY** - All materials prepared and verified
 
 All defense materials are located in: **`docs/handsoff/FOR_CYRILLE/`**
 
