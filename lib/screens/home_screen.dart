@@ -7161,6 +7161,103 @@ class _DashboardState extends State<Dashboard> {
 
               const SizedBox(height: 12),
 
+              // ── FEATURE #1: QUICK STATS WIDGET ──────────────────────────────
+              _buildQuickStatsCard(context),
+
+              // ── FEATURE #3: EXPENSE LOGGING STREAK COUNTER ─────────────────
+              FutureBuilder<int>(
+                future: DBService.getLoggingStreak(),
+                builder: (context, snapshot) {
+                  final streak = snapshot.data ?? 0;
+                  if (streak == 0) return const SizedBox.shrink();
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.orange.withValues(alpha: 0.15),
+                            Colors.deepOrange.withValues(alpha: 0.10),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.orange.withValues(alpha: 0.3),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.local_fire_department,
+                              color: Colors.deepOrange,
+                              size: 24,
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      "Logging Streak",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    const InfoButton(
+                                      title: "Logging Streak",
+                                      body:
+                                          "Your current streak of consecutive days with logged expenses.\n\n"
+                                          "• Keep logging daily to maintain your streak\n"
+                                          "• Streaks help build consistent tracking habits\n"
+                                          "• Missing a day resets the counter\n\n"
+                                          "Consistency is key to financial awareness!",
+                                      size: 13,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "$streak day${streak == 1 ? '' : 's'} and counting! 🔥",
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.deepOrange[800],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            "$streak",
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.deepOrange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+
               // Spending Personality card
               Builder(builder: (ctx) {
                 final expenseData = _expenses
@@ -7230,6 +7327,12 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 );
               }),
+
+              const SizedBox(height: 12),
+
+              // ── FEATURE PORTALS ──────────────────────────────────────────
+              // Quick-access cards for the most useful features (moved up for better UX)
+              _buildFeaturePortals(context),
 
               const SizedBox(height: 12),
 
@@ -7313,12 +7416,6 @@ class _DashboardState extends State<Dashboard> {
                 ),
 
               // Quick Actions removed — use the + FAB button instead
-
-              const SizedBox(height: 20),
-
-              // ── FEATURE PORTALS ──────────────────────────────────────────
-              // Quick-access cards for the most useful features
-              _buildFeaturePortals(context),
 
               const SizedBox(height: 12),
 
