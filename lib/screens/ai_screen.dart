@@ -3528,11 +3528,15 @@ class _AIScreenState extends State<AIScreen> {
                               fontSize: 12, fontWeight: FontWeight.w600)),
                     ),
                     IconButton(
-                      icon: Icon(Icons.close, size: 14, color: cs.primary),
+                      icon: Icon(Icons.close, size: 16, color: cs.primary),
                       onPressed: () =>
                           setState(() => _clipboardNudgeDismissed = true),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+                      padding: const EdgeInsets.all(4),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
+                      tooltip: 'Dismiss',
                     ),
                   ],
                 ),

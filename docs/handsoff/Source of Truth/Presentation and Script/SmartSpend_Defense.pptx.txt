@@ -1,0 +1,336 @@
+SmartSpend
+An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management
+Directo, Brix A.
+Rubis, Cyrille John M.
+Madayag, Djaunathan Albert S.
+Adviser: Ellen Flores Mangaoang, DIT
+College of Computer Studies and Engineering, LORMA Colleges
+November 16, 2026  |  3:00 PM
+Panel: Jeoffrey B. Layco MIS (Chair)  |  Shekiro R. Raposas MTS/MIS  |  Mary-Ann Mzana MTS
+
+Opening Prayer
+
+SmartSpend  |  LORMA Colleges, CCSE
+Money is managed without a system
+2%
+of Filipino adults answered all six basic financial literacy questions correctly
+BSP Financial Inclusion Survey, 2021
+< 50%
+reported keeping any household or personal budget
+BSP Financial Inclusion Survey, 2021
+10%
+of our 30 respondents used a mobile app to track expenses
+SmartSpend needs assessment
+A mixed picture (BSP CFIS 2025): basic literacy rose from 69% to 74%, but formal account ownership fell from 56% to 50%.
+
+SmartSpend  |  LORMA Colleges, CCSE
+The gap exists at three levels
+International
+PROBLEM
+Manual entry dominates; AI categorization degrades for non-English transactions.
+SMARTSPEND
+LLM-based parsing for Filipino-English input
+National (PH)
+PROBLEM
+Local apps lack LLM chat, spending behavior analysis, and health scoring.
+SMARTSPEND
+Conversational AI, Financial Health Score, multi-period summaries
+Demographic
+PROBLEM
+Parents abandon apps due to manual effort; warnings are ignored without consequences.
+SMARTSPEND
+Automated input and a score decay consequence system
+
+SmartSpend  |  LORMA Colleges, CCSE
+What existing apps leave out
+Feature
+Tarsi
+YNAB
+Monarch
+Copilot
+BudgetPH
+Alkansya AI
+SmartSpend
+Offline mode
+✓
+–
+–
+–
+✓
+–
+✓
+LLM chat assistant
+–
+–
+–
+–
+Insights
+Basic
+✓
+Financial Health Score
+–
+–
+–
+–
+Simpler
+–
+✓
+OCR receipt scanning
+✓
+–
+–
+–
+–
+–
+✓
+Voice input (en-PH)
+–
+–
+–
+–
+–
+–
+✓
+Filipino-English AI
+–
+–
+–
+–
+–
+✓
+✓
+Batch screenshot import
+–
+–
+–
+–
+–
+–
+✓
+Bank synchronization
+–
+✓
+✓
+✓
+CSV
+–
+–
+Hands-on comparison of the apps in Table 2. Other PH apps (Agila, PISO Budget Tracker, Lista, Kibo, BunnyWise, GCash Pera Coach) are acknowledged; SmartSpend is an evaluated integrated prototype, not a claim to be first or only.
+
+SmartSpend  |  LORMA Colleges, CCSE
+Three objectives guided the study
+1
+Assess
+Financial management practices, budgeting challenges, and expense tracking behaviors of parents (35–55) and young professionals (21–35) in San Fernando City, La Union.
+2
+Design and develop
+The SmartSpend app: multi-modal input, cloud sync, and an LLM API selected through comparative technical evaluation.
+3
+Evaluate
+Usability of the developed system using the System Usability Scale (SUS).
+
+SmartSpend  |  LORMA Colleges, CCSE
+The Input-Process-Output framework
+Input
+Text, voice, receipt images, barcodes, user financial data
+Process
+LLM parsing, OCR, barcode recognition, SQLite storage, Firebase sync
+Output
+Auto-recorded expenses, charts, alerts, insights, Financial Health Score, AI Q&A
+
+SmartSpend  |  LORMA Colleges, CCSE
+Quantitative descriptive developmental, built with Agile Kanban
+30
+respondents (needs assessment), random sampling: 16 parents + 14 young professionals = 30
+2
+Separate SUS sample: 30 valid of 36 (10 parents, 20 young professionals)
+10
+item SUS questionnaire; self-directed use for 10+ minutes (screening confirmed)
+Note: Purposive sampling was used for the content validator (Avigail Candevario, PFMe) — selected based on her expertise in personal financial management. Random sampling was used for all 30 respondents.
+
+SmartSpend  |  LORMA Colleges, CCSE
+Objective 1: the need is real
+96.7%
+(29 of 30) intend to use an AI-powered financial app
+93.3%
+already used GCash (28 of 30)
+How respondents track expenses today (% of 30, multiple answers)
+Key tracking method findings (from Table 5):
+• 90% used physical receipts — validates OCR scanning as core feature
+• 53.3% used mental estimates — validates natural language AI logging
+• 43.3% used e-wallet transaction history — validates GCash import
+• Only 10% already used a dedicated budgeting app — confirms the gap
+• 93.3% use GCash — confirms e-wallet parsing as priority feature
+
+SmartSpend  |  LORMA Colleges, CCSE
+SmartSpend v3.1.0 at a glance
+34
+autonomous AI actions
+7
+input modalities
+40+
+screenshot platforms
+26
+SQLite tables
+45
+screens
+36
+achievement badges
+9
+AI providers (8 cloud + local)
+57
+currencies
+Flutter (Android)  •  SQLite offline-first  •  Firebase sync and auth  •  APK ≈ 47.5 MB
+
+SmartSpend  |  LORMA Colleges, CCSE
+The app in action
+Figure 9. Login and Demo Mode
+Figure 10. Home Dashboard
+Figure 11. Expense Logging Through Peso Chat
+Figure 12. Receipt Scanning and Batch Screenshot Import
+Figure 13. Financial Health Score Breakdown
+
+SmartSpend  |  LORMA Colleges, CCSE
+Choosing the AI engine
+Evaluation: 6 weighted criteria, 10 candidate models from 4 providers
+PRIMARY MODEL
+Gemini 3.5 Flash-Lite
+1M-token context, native function calling for 34 actions, strong Taglish in trials, high free-tier quota
+7 fallback providers across Google, Groq, and Cerebras keep the assistant running if one is down or rate-limited.
+Full-context injection, not RAG: a user's data is only ~1,000–5,000 tokens.
+
+SmartSpend  |  LORMA Colleges, CCSE
+Financial Health Score: 0 to 100
+Full Mode (income tracking on)
+25
+pts
+Savings Rate
+25
+pts
+Overspend Control
+25
+pts
+Budget Adherence
+25
+pts
+Logging Consistency
+Lightweight Mode (no income tracking)
+25
+pts
+Spending Restraint
+25
+pts
+Logging Consistency
+25
+pts
+Category Balance
+25
+pts
+Habit Streak
+Warning Decay up to −15   Gap Adjustment +2 no-spend / −3 unlogged day   Clamped 0–100
+FHS Score Adjustments (for panelist questions):
+• Warning Decay: up to −15 pts for discretionary overspend (loss aversion principle)
+• Gap Adjustment: +2/day confirmed no-spend, −3/day unlogged-but-presumed-spent
+• Final score clamped 0–100
+• Lightweight Mode for users without fixed income: Spending Restraint + Logging Consistency + Category Balance + Habit Streak
+
+SmartSpend  |  LORMA Colleges, CCSE
+Privacy by design: three AI tiers
+1
+Cloud AI (default)
+On-device redaction of mobile numbers, reference numbers, and account patterns. 150 AI requests per user per day. Disclosure shown before the first AI message.
+Implemented
+2
+Private Local Mode
+Requests go only to a model on the user's own PC (Ollama, LM Studio, Jan). Local-only switch blocks cloud fallback.
+Implemented
+3
+On-device AI
+A model running on the phone itself, with no network required. NOT yet built — presented as Recommendation 4. Most target-user devices lack the RAM to run a 2.6 GB model.
+Planned
+Designed with the Data Privacy Act of 2012 in mind. A risk-reduction measure, not a certification of legal compliance.
+
+SmartSpend  |  LORMA Colleges, CCSE
+Objective 3: usability scored 61.83 (OK)
+61.83
+Grade D, adjective "OK"
+SD 17.58, median 55.0
+Range 35.0–92.5
+Below 68 avg. benchmark (Sauro & Lewis) and 80 target
+Q1 intent to use often: 4.35 / 5
+Q9 felt confident: 4.19 / 5
+Concerns: consistency (Q6), complexity (Q2, Q4)
+Mean SUS score (N = 30 valid of 36 responses)
+Group breakdown (from Table 8):
+• Parents (35–55), n=10: Mean=58.25, SD=19.72, Range=35.0–90.0 — adjective: OK
+• Young Professionals (21–35), n=20: Mean=63.62, SD=16.65, Range=42.5–92.5 — adjective: OK
+• YP scored slightly higher, consistent with higher mobile familiarity
+• Both groups fell below the 68 benchmark and 80 target
+
+SmartSpend  |  LORMA Colleges, CCSE
+Limitations we acknowledge
+Usability below target
+SUS 61.83 is under the 68 avg. benchmark (Sauro & Lewis 2016) and the 80 target.
+Android and internet
+Android only; all AI features need a connection.
+Prototype-grade security
+API key via Remote Config; local database not encrypted.
+Parsing accuracy
+91.2% precision / 88.5% recall from developer testing.
+Behavior impact unmeasured
+Peso and badges were added after the evaluation was designed.
+Small, local sample
+30 SUS respondents from one locale; not generalizable.
+
+SmartSpend  |  LORMA Colleges, CCSE
+Conclusions
+1
+Needs assessment
+96.7% intent to use an AI finance app; 93.3% used GCash.
+Achieved
+2
+Design and development
+v3.1.0 working Android app: 34 AI actions, Gemini 3.5 Flash-Lite (selected from 10 candidate models) with failover, Financial Health Score.
+Achieved
+3
+Usability evaluation
+SUS 61.83: below the 68 average and the 80 target; UI/UX areas identified
+Partially achieved
+
+SmartSpend  |  LORMA Colleges, CCSE
+Recommendations
+1
+Payday-cycle budgeting
+Resets aligned to the 15th and 30th salary cycle
+2
+Backend API proxy
+Server-side keys and per-user limits; remove device-side key exposure
+3
+Google Play release
+After backend proxy and privacy policy are in place
+4
+On-device AI tier
+Opt-in ~2.6 GB model for fully offline AI
+5
+SQLite encryption
+SQLCipher for the local database
+6
+Household and remittance
+Shared wallets and OFW remittance as a distinct income category
+7
+Longitudinal evaluation
+3–6 months, larger sample, measure behavior change
+7
+Longitudinal evaluation
+3–6 months, larger sample, measure behavior change
+
+
+Recommendations 8 and 9 (say these after presenting 1–7):
+8. UI/UX refinement — Address consistency (Q6) and complexity (Q2) from SUS
+9. Formal parsing evaluation — 50+ standardized receipts for OCR/AI accuracy measurement
+
+Questions and discussion
+Salamat po!
+Directo, Rubis, Madayag
+Adviser: Ellen Flores Mangaoang, DIT
+github.com/Zushikina-kun/smartspend-app
