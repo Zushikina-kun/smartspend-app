@@ -190,7 +190,7 @@ class AppConfig {
     (
       'openrouter',
       'OpenRouter Gateway',
-      '🌐 Access 100+ models — $100 credit, expires May 2027'
+      r'🌐 Access 100+ models — $100 credit, expires May 2027'
     ),
     (
       'gemini_flash',
@@ -250,13 +250,15 @@ class AppConfig {
   /// Internal: resolve which concrete model Auto mode routes to for a given task.
   static String _autoActualModel(String taskType) {
     final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
-    final hasOpenRouter = (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
-    
+    final hasOpenRouter =
+        (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
+
     // Prioritize OpenRouter when available — $100 credit, unified gateway
     switch (taskType) {
       case 'fast':
         // Expense logging — Flash-Lite is fast + low cost
-        if (hasOpenRouter) return 'openrouter'; // Gemini Flash 1.5 via OpenRouter
+        if (hasOpenRouter)
+          return 'openrouter'; // Gemini Flash 1.5 via OpenRouter
         return hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
       case 'financial_advice':
         // Complex reasoning — use best available
@@ -399,7 +401,8 @@ class AppConfig {
   static bool autoFallback() {
     final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
     final hasCerebras = (_remoteCerebrasKey ?? _fallbackCerebrasKey).isNotEmpty;
-    final hasOpenRouter = (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
+    final hasOpenRouter =
+        (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
     // Auto mode: track failures internally; rotate preferred provider
     if (_activeModelId == 'auto') {
@@ -428,7 +431,9 @@ class AppConfig {
           return false; // signal: all providers exhausted, show error
         }
         // Default: fall back to cloud (convenient but data leaves device)
-        _activeModelId = hasOpenRouter ? 'openrouter' : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
+        _activeModelId = hasOpenRouter
+            ? 'openrouter'
+            : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
         _saveActiveModel();
         return true;
       case 'openrouter':
