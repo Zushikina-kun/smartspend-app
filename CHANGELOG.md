@@ -2,6 +2,23 @@
 
 All notable changes to SmartSpend are documented here.
 
+## [3.2.3] - 2024-11-16
+
+### Fixed
+- **CRITICAL:** AI timeout fallback - When all 3 retries timeout, now properly triggers provider fallback instead of hard failure
+- Improves resilience when OpenRouter/primary provider is slow or unreachable
+- Ensures Auto mode falls back through all 10 providers even on network timeouts
+
+### Technical
+- Modified: `lib/services/ai_chat_service.dart` - Added autoFallback() call in timeout exception handler
+- Fixes "All AI providers timed out" error when first provider is unresponsive
+
+### Context
+- Hotfix for Final Defense day - ensures AI always works even if OpenRouter is slow
+- Version bump from 3.2.2+113 to 3.2.3+114
+
+---
+
 ## [3.2.2] - 2024-11-16
 
 ### Added
