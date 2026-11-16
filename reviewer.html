@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SmartSpend &#8212; Defense Reviewer v3.2.3</title>
+<title>SmartSpend &#8212; Defense Reviewer v3.2.4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -53,12 +53,12 @@
   #t-demo:checked~header .tabs label[for="t-demo"],
   #t-qa:checked~header .tabs label[for="t-qa"],
   #t-numbers:checked~header .tabs label[for="t-numbers"],
-  #t-guide:checked~header .tabs label[for="t-guide"]{color:#fff; border-color:var(--gold);}
+  #t-script:checked~header .tabs label[for="t-script"]{color:#fff; border-color:var(--gold);}
   section.panel{display:none; padding-top:24px;}
   #t-demo:checked~main #p-demo{display:block;}
   #t-qa:checked~main #p-qa{display:block;}
   #t-numbers:checked~main #p-numbers{display:block;}
-  #t-guide:checked~main #p-guide{display:block;}
+  #t-script:checked~main #p-script{display:block;}
   .wrap{max-width:860px; margin:0 auto; padding:0 18px 72px;}
   h2.sec{font-size:1.1rem; color:var(--ledger); margin:34px 0 10px; padding-top:4px; border-top:1px solid var(--line);}
   h2.sec:first-child{margin-top:0; border-top:none;}
@@ -185,22 +185,22 @@
 <input type="radio" name="tab" id="t-demo" checked>
 <input type="radio" name="tab" id="t-qa">
 <input type="radio" name="tab" id="t-numbers">
-<input type="radio" name="tab" id="t-guide">
+<input type="radio" name="tab" id="t-script">
 
 <header class="top">
   <div class="top-inner">
     <div class="top-row">
       <div>
         <h1>SmartSpend Defense Reviewer</h1>
-        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Mon Nov 16, 2026 3:00 PM &nbsp;&middot;&nbsp; v3.2.3</div>
+        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Mon Nov 16, 2026 3:00 PM &nbsp;&middot;&nbsp; v3.2.4</div>
       </div>
       <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">&#127769; Dark</button>
     </div>
     <div class="tabs">
       <label for="t-demo">&#128203; Demo Script</label>
       <label for="t-qa">&#127908; Panel Q&amp;A</label>
-      <label for="t-numbers">&#128290; Quick Facts</label>
-      <label for="t-guide">&#128214; Complete Guide</label>
+      <label for="t-numbers">&#128290; Quick Facts &amp; Guide</label>
+      <label for="t-script">&#128221; Presentation Script</label>
     </div>
   </div>
 </header>
@@ -211,7 +211,7 @@
 <section class="panel" id="p-demo">
 
   <div class="jump-links">
-    <a href="#whats-new">What's New v3.2.3</a>
+    <a href="#whats-new">What's New v3.2.4</a>
     <a href="#night-before">Night-Before Checklist</a>
     <a href="#opening">Opening Statement</a>
     <a href="#demo-flow">Demo Flow</a>
@@ -221,9 +221,9 @@
     <a href="#roles">Role Split</a>
   </div>
 
-  <h2 class="sec" id="whats-new">&#11088; What's New in v3.2.3 Final</h2>
+  <h2 class="sec" id="whats-new">&#11088; What's New in v3.2.4 Final</h2>
   <div style="background:var(--gold-soft); border-left:3px solid var(--gold); padding:14px 16px; border-radius:4px; margin-bottom:20px;">
-    <p style="margin:0 0 8px; font-weight:600; color:var(--ink);">v3.2.3 — Final Defense Build</p>
+    <p style="margin:0 0 8px; font-weight:600; color:var(--ink);">v3.2.4 &mdash; Final Defense Build</p>
     <ul style="margin:0; padding-left:20px; font-size:.88rem; color:var(--ink-soft);">
       <li><b>OpenRouter AI Gateway</b> &#8212; Multi-provider AI architecture with 100+ model access via unified API endpoint</li>
       <li><b>10-Provider Fallback Chain</b> &#8212; Automatic failover ensures AI features work 24/7 (Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; 5 Groq models &#8594; Cerebras)</li>
@@ -345,14 +345,14 @@
     <tr><td>"13 parents"</td><td>"16 parents and 14 young professionals" (needs assessment, 30 total)</td></tr>
     <tr><td>"fully achieved" for Obj. 3</td><td>"Objective 3 was <b>partially achieved</b>"</td></tr>
     <tr><td>"passed" / "excellent" SUS</td><td>"61.83, below the 68 benchmark and the 80 target"</td></tr>
-    <tr><td>"eight-provider chain"</td><td>"8-model cloud failover chain" or "10-provider chain" (v3.2.3)</td></tr>
+    <tr><td>"eight-provider chain"</td><td>"8-model cloud failover chain" or "10-provider chain" (v3.2.4)</td></tr>
     <tr><td>"the highest free-tier quota"</td><td>"a high free-tier quota" (Table 6: Groq/Cerebras are higher)</td></tr>
     <tr><td>"fully offline"</td><td>"offline-first; core features work offline; cloud AI needs internet"</td></tr>
     <tr><td>"Recommendation 1 for UI/UX"</td><td>"UI/UX refinement is Recommendation 8"</td></tr>
     <tr><td>"proposed" (for the app)</td><td>"developed" / "built" (the app exists!)</td></tr>
     <tr><td>"seven recommendations"</td><td>"nine recommendations"</td></tr>
     <tr><td>"20 models" / "ten providers"</td><td>"ten candidate models from four providers" (evaluation)</td></tr>
-    <tr><td>"version 3.2.3"</td><td>"version 3.1.0 was evaluated"; "v3.2.3 is the current version"</td></tr>
+    <tr><td>"version 3.2.4"</td><td>"version 3.1.0 was evaluated"; "v3.2.4 is the current version"</td></tr>
   </table></div>
 
   <h2 class="sec" id="slide-notes">Slide-by-Slide Speaking Notes</h2>
@@ -375,7 +375,7 @@
     <p><b>Slide 7 &#8212; Conceptual Framework (IPO):</b> Inputs: text, voice, receipt images, barcode scans, user financial data. Process: LLM parsing, OCR, barcode recognition, data structuring, local SQLite storage, Firebase synchronization. Outputs: automatically recorded expenses, financial summaries, charts, alerts, AI-generated insights, the Financial Health Score from 0 to 100, and AI-powered financial assistance.</p>
     <p><b>Slide 8 &#8212; Methodology:</b> This study employed a <b>quantitative descriptive developmental research design</b>. No interviews were conducted. <b>Random sampling</b> for the needs assessment: 30 respondents (16 parents including 3 "both" + 14 young professionals). A separate group completed the SUS: 30 valid of 36 (10 parents + 20 young professionals). <b>Purposive sampling</b> only for the content validator: Avigail Candevario, PFMe.</p>
     <p><b>Slide 9 &#8212; Needs Assessment:</b> 96.7% (29/30) expressed intent to use an AI-powered financial app. 93.3% (28/30) already used GCash. Only 10% (3/30) used a dedicated expense tracking app. Most common tracking: physical receipts (90%), mental estimates (53.3%). Objective 1: <b>achieved</b>.</p>
-    <p><b>Slide 10 &#8212; System Overview:</b> SmartSpend v3.1.0: 34 autonomous AI actions, 12-mood Peso mascot, batch screenshot import for 40+ platforms, 26-table SQLite schema, 20 Philippine banks + 5 digital banks, 36 achievement badges, 31 Taglish situations. AI: 8-model cloud failover chain plus optional Private Local Mode (now 10 with OpenRouter in v3.2.3). Core features work offline; AI features need a connection unless using local mode.</p>
+    <p><b>Slide 10 &#8212; System Overview:</b> SmartSpend v3.1.0: 34 autonomous AI actions, 12-mood Peso mascot, batch screenshot import for 40+ platforms, 26-table SQLite schema, 20 Philippine banks + 5 digital banks, 36 achievement badges, 31 Taglish situations. AI: 8-model cloud failover chain plus optional Private Local Mode (now 10 with OpenRouter in v3.2.4). Core features work offline; AI features need a connection unless using local mode.</p>
     </div>
   </details>
 
@@ -383,7 +383,7 @@
     <summary>Slides 11&#8211;15: Screenshots, LLM Selection, FHS, Privacy, SUS Results</summary>
     <div class="a">
     <p><b>Slide 11 &#8212; Screenshots:</b> Walk through Figures 9&#8211;13. Login/Demo Mode, Home Dashboard, Peso Chat logging, Receipt Scanning, FHS Breakdown. The manuscript also includes Budgets (Fig 14) and Local AI setup (Fig 15).</p>
-    <p><b>Slide 12 &#8212; LLM Selection:</b> We evaluated <b>ten candidate models from four providers</b> against six weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Selected <b>Gemini 3.5 Flash-Lite</b>: 1M-token context window, native function calling, good Taglish handling, high free-tier quota. Added 8-model fallback chain &#8212; now 10-provider with OpenRouter in v3.2.3.</p>
+    <p><b>Slide 12 &#8212; LLM Selection:</b> We evaluated <b>ten candidate models from four providers</b> against six weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Selected <b>Gemini 3.5 Flash-Lite</b>: 1M-token context window, native function calling, good Taglish handling, high free-tier quota. Added 8-model fallback chain &#8212; now 10-provider with OpenRouter in v3.2.4.</p>
     <p><b>Slide 13 &#8212; Financial Health Score:</b> Prototype Observed Financial Health Indicator. Full Mode: 4 components &#215; 25 pts each. Lightweight Mode for no-income users. Warning Decay: up to -15 pts for overspending. Gap Adjustment: +2 for confirmed no-spend day, -3 for unlogged day. Equal weights are a design choice, not statistically derived.</p>
     <p><b>Slide 14 &#8212; Privacy Tiers:</b> Tier 1 (Cloud AI, default): PII redacted on-device, one-time privacy disclosure. Honest: free Gemini quota terms say content may improve Google products. Tier 2 (Private Local): requests go only to user&#8217;s own PC (Ollama/LM Studio/Jan). Tier 3 (on-device): <b>not implemented</b> &#8212; Recommendation 4.</p>
     <p><b>Slide 15 &#8212; SUS Results &#8212; CRITICAL:</b> 30 valid respondents (10 parents + 20 young professionals). Mean: <b>61.83</b>, SD: 17.58, Median: 55.0, Range: 35.0&#8211;92.5. <b>Grade D, adjective "OK"</b> (Bangor et al. 2009). Below 68 benchmark AND below 80 target. Parents: 58.25, Young professionals: 63.62. Weak items: consistency (Q6), complexity (Q2, Q4). Objective 3: <b>partially achieved</b>.</p>
@@ -533,7 +533,7 @@
   <p><b>Gamification (3):</b> check_achievements, show_badges, check_peso_mood. <b>Meta (3):</b> help, clarify_question, multi_action.</p>
   </div></details>
   <details class="qa"><summary>What happens when the AI is down or the internet is slow? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>A 10-provider fallback chain automatically switches (v3.2.3): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
+  <p>A 10-provider fallback chain automatically switches (v3.2.4): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
   </div></details>
   <details class="qa"><summary>How does the AI understand Taglish? Did you train a custom model? <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
   <p>No custom training &#8212; we use prompt engineering. The system prompt includes: (1) Filipino cultural context (jeepney, pandesal, allowance, paluwagan), (2) 150+ Filipino item catalog, (3) Taglish instruction examples, (4) Category mapping guidance (taho = Food, tricycle = Transportation), (5) Common Filipino merchants (Jollibee, 7-Eleven, SM, Puregold). Gemini 3.5 and GPT-OSS-120B handle this well because their training data includes Filipino text. We don&#8217;t need fine-tuning &#8212; the base models + good prompts suffice.</p>
@@ -651,14 +651,14 @@
   <details class="qa"><summary>What evidence of real deployment do you have? <span class="tag tag-deploy">deployment</span></summary><div class="a">
   <p>Four types of evidence:</p>
   <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-  <li><b>GitHub repository:</b> 5+ public releases (v3.0.0 to v3.2.3), 113+ commits, Source Available License</li>
+  <li><b>GitHub repository:</b> 5+ public releases (v3.0.0 to v3.2.4), 113+ commits, Source Available License</li>
   <li><b>Project website:</b> <code>zushikina-kun.github.io/smartspend-app</code> &#8212; research findings, download links, feature documentation</li>
   <li><b>Real user adoption:</b> 30 SUS evaluation respondents used the app on their own Android devices for 10+ minutes each</li>
   <li><b>Active maintenance:</b> Version releases addressing panel feedback (v3.2.x with OpenRouter + UI fixes), GitHub Issues for community feedback</li>
   </ol>
   </div></details>
   <details class="qa"><summary>How does GitHub releases distribution work? <span class="tag tag-deploy">deployment</span> <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>When we push a git tag (e.g., <code>v3.2.3</code>), GitHub Actions automatically builds and signs the APKs, then publishes them as a GitHub Release. Users visit the releases page, download the ARM64 APK for their phone, and install via side-loading (Enable Unknown Sources). GitHub provides download count tracking, version history, and release notes. This is the standard distribution model for open-source Android apps before Play Store release.</p>
+  <p>When we push a git tag (e.g., <code>v3.2.4</code>), GitHub Actions automatically builds and signs the APKs, then publishes them as a GitHub Release. Users visit the releases page, download the ARM64 APK for their phone, and install via side-loading (Enable Unknown Sources). GitHub provides download count tracking, version history, and release notes. This is the standard distribution model for open-source Android apps before Play Store release.</p>
   </div></details>
   <details class="qa"><summary>Is direct-to-consumer a valid deployment for capstone? <span class="tag tag-deploy">deployment</span> <span class="tag tag-research">research</span></summary><div class="a">
   <p>Yes. Objective 2 states: "to design and develop the SmartSpend mobile application" &#8212; achieved with a working Android app. Objective 3 evaluates usability using SUS &#8212; which requires real individual users, not an institutional client. Our deployment model supported the research: we needed diverse individual users (parents and young professionals) to evaluate the app in real-world personal finance scenarios. An institutional deployment would limit our sample to one organization&#8217;s employees, reducing generalizability.</p>
@@ -836,7 +836,7 @@
   <p><b>Random sampling was used</b> for respondents. For a capstone-level developmental study, 30 is a common sample size for identifying patterns in a needs assessment and usability issues in a prototype. SUS is designed to be reliable with small samples &#8212; Tullis &amp; Stetson (2004) show it stabilizes around 12&#8211;14 participants. Our 30 exceeds this minimum. We acknowledge it limits generalizability because SUS respondents came from one locale &#8212; Recommendation 7 calls for a longitudinal evaluation with a larger sample.</p>
   </div></details>
   <details class="qa"><summary>What LLM did you use and why? <span class="tag tag-ai">AI</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>Evaluated model:</b> Gemini 3.5 Flash-Lite (primary in v3.1.0 evaluation). We evaluated <b>ten candidate models from four providers</b> (Google, Groq, Cerebras, Mistral) against weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Flash-Lite won: 1M-token context, native function calling for 34 actions, good Taglish handling, high free-tier quota. <b>Current v3.2.3:</b> 10-provider chain with OpenRouter at position 2 for access to 100+ models.</p>
+  <p><b>Evaluated model:</b> Gemini 3.5 Flash-Lite (primary in v3.1.0 evaluation). We evaluated <b>ten candidate models from four providers</b> (Google, Groq, Cerebras, Mistral) against weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Flash-Lite won: 1M-token context, native function calling for 34 actions, good Taglish handling, high free-tier quota. <b>Current v3.2.4:</b> 10-provider chain with OpenRouter at position 2 for access to 100+ models.</p>
   </div></details>
   <details class="qa"><summary>How does SmartSpend compare to BudgetPH, PISO, Agila? <span class="tag tag-research">research</span></summary><div class="a">
   <p><b>vs BudgetPH/PISO:</b> No AI &#8212; manual logging only. We: voice, OCR, barcode, batch screenshot (40+ platforms).</p>
@@ -958,7 +958,7 @@
   <p>Three reasons: (1) <b>International appeal</b> &#8212; a Filipino-English name is accessible to both local and international users, supporting the goal of a consumer app that could grow beyond the Philippines. (2) <b>App store searchability</b> &#8212; English keywords have higher search volume on Google Play. (3) <b>Brand clarity</b> &#8212; "SmartSpend" immediately communicates the value proposition (smart management of spending) without requiring translation. The app remains Filipino-first in content and UX (Taglish, Filipino item catalog, government contributions) while having an accessible English name.</p>
   </div></details>
   <details class="qa"><summary>What if someone says your app was tested before it was finished? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>The SUS evaluation used <b>SmartSpend v3.1.0</b>, which was the complete, production-ready version at the time of evaluation. All 34 AI actions, the Financial Health Score, batch screenshot import, government contributions, and all core features were fully implemented and tested in v3.1.0. Subsequent versions (v3.2.0, v3.2.2, v3.2.3) added new features (Government Contributions Tracker, OpenRouter) but were released after the evaluation was complete. This is standard practice &#8212; evaluate a stable version, then continue development based on findings.</p>
+  <p>The SUS evaluation used <b>SmartSpend v3.1.0</b>, which was the complete, production-ready version at the time of evaluation. All 34 AI actions, the Financial Health Score, batch screenshot import, government contributions, and all core features were fully implemented and tested in v3.1.0. Subsequent versions (v3.2.0, v3.2.2, v3.2.4) added new features (Government Contributions Tracker, OpenRouter) but were released after the evaluation was complete. This is standard practice &#8212; evaluate a stable version, then continue development based on findings.</p>
   </div></details>
   <details class="qa"><summary>How did you choose Lorma Colleges as the sampling location? <span class="tag tag-research">research</span></summary><div class="a">
   <p>Convenience and accessibility sampling, as stated in the Scope and Limitations section of the manuscript. The researchers are enrolled at Lorma Colleges, and the target population (parents aged 35&#8211;55, young professionals aged 21&#8211;35) is accessible in San Fernando City, La Union, where the institution is located. We acknowledge this limits generalizability to other regions. Recommendation 7 (longitudinal evaluation with larger sample from multiple locales) addresses this limitation.</p>
@@ -1039,7 +1039,7 @@
   <h2 class="sec" id="oneliners-sec">One-line rapid-fire answers</h2>
   <ul class="oneliners">
     <li><b>What is SmartSpend?</b><span>An AI-powered expense tracker for Filipinos that lets you log spending by just talking to it in Taglish or English.</span></li>
-    <li><b>What&#8217;s new in v3.2.3?</b><span>OpenRouter AI Gateway (100+ models, $100 credit) + 10-provider fallback chain for 24/7 AI uptime. v3.2.0 added Government Contributions Tracker (SSS/PhilHealth/Pag-IBIG YTD + pension calculator).</span></li>
+    <li><b>What&#8217;s new in v3.2.4?</b><span>OpenRouter AI Gateway (100+ models, $100 credit) + 10-provider fallback chain for 24/7 AI uptime. v3.2.0 added Government Contributions Tracker (SSS/PhilHealth/Pag-IBIG YTD + pension calculator).</span></li>
     <li><b>What is the FHS?</b><span>A 0&#8211;100 prototype indicator measuring savings rate, spending control, budget adherence, and logging consistency &#8212; 25 points each. Formally: Prototype Observed Financial Health Indicator.</span></li>
     <li><b>Why AI?</b><span>To eliminate the manual data entry barrier that stops most people from tracking finances.</span></li>
     <li><b>What database?</b><span>SQLite locally (26 tables, schema v14), Firebase Firestore for optional cloud backup.</span></li>
@@ -1066,11 +1066,11 @@
     Clamped 0&#8211;100 | &ge;80 = Good (design choice, not statistically derived weights)
   </div>
 
-  <h2 class="sec" id="ai-chain">The 10-provider AI fallback chain (v3.2.3)</h2>
+  <h2 class="sec" id="ai-chain">The 10-provider AI fallback chain (v3.2.4)</h2>
   <div class="scroll"><table>
     <tr><th>#</th><th>Provider / Model</th><th>Limit</th><th>Notes</th></tr>
     <tr><td>1</td><td>Custom Local (if configured)</td><td>&#8734;</td><td>User&#8217;s own Ollama / LM Studio / Jan server</td></tr>
-    <tr><td>2</td><td><b>OpenRouter</b> (gemini-flash-1.5)</td><td>$100 credit</td><td>Gateway to 100+ models. Expires May 2027.</td></tr>
+    <tr><td>2</td><td><b>OpenRouter</b> (gemini-flash-1.5)</td><td>$100 credit</td><td>Gateway to 100+ models. Expires May 2027. (v3.2.4)</td></tr>
     <tr><td>3</td><td>Gemini 3.5 Flash</td><td>Free tier</td><td>Best reasoning, GA stable (Google direct)</td></tr>
     <tr><td>4</td><td>Gemini 3.5 Flash-Lite</td><td>Free tier</td><td>Fastest + cheapest 3.5. Primary in v3.1.0.</td></tr>
     <tr><td>5</td><td>GPT-OSS 120B (Groq)</td><td>1,000/day</td><td>Best open-source quality</td></tr>
@@ -1106,13 +1106,7 @@
     <li><b>Rec 9: Formal parsing evaluation</b><span>Standardized test receipts across multiple platforms for reliable accuracy baseline</span></li>
   </ul>
 
-  <footer>SmartSpend v3.2.3 (Final Defense Build) &middot; Team Lucid Frame &middot; Lorma Colleges CCSE &middot; November 16, 2026 3:00 PM<br>
-  Defense Reviewer &mdash; Search, 4 Tabs, 75+ Q&amp;A, OpenRouter Integration, Deployment Guide</footer>
-
-</section>
-
-<!-- ================================================================ GUIDE TAB -->
-<section class="panel" id="p-guide">
+  <h2 class="sec" style="margin-top:40px; border-top:3px solid var(--ledger); padding-top:16px;">&#128203; Complete Guide</h2>
 
   <div class="jump-links">
     <a href="#guide-panel">Panel &amp; Logistics</a>
@@ -1158,20 +1152,20 @@
     <tr><td>Positive intent to use AI app</td><td><b>96.7%</b> (29/30)</td><td>Needs assessment</td></tr>
     <tr><td>Already used GCash</td><td><b>93.3%</b> (28/30)</td><td>Supports e-wallet import focus</td></tr>
     <tr><td>Used dedicated expense app</td><td><b>10%</b> (3/30)</td><td>Confirms the gap SmartSpend addresses</td></tr>
-    <tr><td>SUS Mean Score</td><td><b>61.83 / 100</b></td><td>Grade D, adjective "OK". Below 68 benchmark AND below 80 target.</td></tr>
+    <tr><td>SUS Mean Score</td><td><b>61.83 / 100</b></td><td>Grade D, adjective &#8220;OK&#8221;. Below 68 benchmark AND below 80 target.</td></tr>
     <tr><td>SUS Standard Deviation</td><td><b>17.58</b></td><td></td></tr>
     <tr><td>SUS Median</td><td><b>55.0</b></td><td>Range: 35.0&#8211;92.5</td></tr>
     <tr><td>Parents avg SUS</td><td><b>58.25</b></td><td>Below 68 benchmark</td></tr>
     <tr><td>Young professionals avg SUS</td><td><b>63.62</b></td><td>Below 68 benchmark</td></tr>
     <tr><td>AI actions</td><td><b>34</b></td><td>Autonomous agentic actions</td></tr>
     <tr><td>AI failover chain (evaluated)</td><td><b>8-model cloud</b></td><td>Gemini 3.5 Flash-Lite primary + 7 fallbacks (v3.1.0)</td></tr>
-    <tr><td>AI failover chain (current)</td><td><b>10-provider</b></td><td>+ OpenRouter gateway (v3.2.3)</td></tr>
+    <tr><td>AI failover chain (current)</td><td><b>10-provider</b></td><td>+ OpenRouter gateway (v3.2.4)</td></tr>
     <tr><td>Candidate LLMs evaluated</td><td><b>10 models, 4 providers</b></td><td>Google, Groq, Cerebras, Mistral</td></tr>
     <tr><td>Primary model (evaluated)</td><td><b>Gemini 3.5 Flash-Lite</b></td><td>1M token context, native function calling</td></tr>
     <tr><td>Screenshot import platforms</td><td><b>40+</b></td><td></td></tr>
     <tr><td>Achievement badges</td><td><b>36</b></td><td>Per manuscript</td></tr>
     <tr><td>SQLite schema tables</td><td><b>26</b></td><td>Schema v14</td></tr>
-    <tr><td>UI themes</td><td><b>12</b></td><td>Addressing "color pollution" feedback from title defense</td></tr>
+    <tr><td>UI themes</td><td><b>12</b></td><td>Addressing &#8220;color pollution&#8221; feedback from title defense</td></tr>
     <tr><td>Parsing accuracy &#8212; amount</td><td><b>88.2%</b></td><td>Development-phase testing only (Table 9)</td></tr>
     <tr><td>Parsing accuracy &#8212; date</td><td><b>70.4%</b></td><td>Weakest field; Recommendation 9 addresses this</td></tr>
     <tr><td>Gov contributions (&#8369;20K salary)</td><td><b>&#8369;15,375/year</b></td><td>SSS + PhilHealth + Pag-IBIG = 7.7% of annual income</td></tr>
@@ -1179,30 +1173,30 @@
 
   <!-- SECTION 3: SAY / DON'T SAY -->
   <h2 class="sec" id="guide-saydo">&#128683; Section 3: SAY / DON&#8217;T SAY &#8212; CRITICAL</h2>
-  <div class="scroll"><table class="say-do">
+  <div class="scroll"><table>
     <tr><th>&#10060; NEVER SAY</th><th>&#9989; ALWAYS SAY</th></tr>
-    <tr><td>"mixed methods"</td><td>"quantitative descriptive developmental"</td></tr>
-    <tr><td>"stratified sampling"</td><td>"random sampling" (respondents) / "purposive" (validator only)</td></tr>
-    <tr><td>"interviews were conducted"</td><td>No interviews. Validated structured surveys only.</td></tr>
-    <tr><td>"13 parents"</td><td>"16 parents and 14 young professionals" (needs assessment)</td></tr>
-    <tr><td>"fully achieved" for Obj 3</td><td>"Objective 3 was <b>partially achieved</b>"</td></tr>
-    <tr><td>"passed" / "excellent" / "acceptable"</td><td>"61.83, below the 68 benchmark and the 80 target"</td></tr>
-    <tr><td>"eight-provider chain"</td><td>"8-model cloud failover chain" (v3.1.0) or "10-provider chain" (v3.2.3)</td></tr>
-    <tr><td>"the highest free-tier quota"</td><td>"a high free-tier quota" (Table 6: Groq/Cerebras are higher)</td></tr>
-    <tr><td>"fully offline"</td><td>"offline-first; core features work offline; cloud AI needs internet"</td></tr>
-    <tr><td>"Recommendation 1 for UI/UX"</td><td>"UI/UX refinement is <b>Recommendation 8</b>"</td></tr>
-    <tr><td>"proposed" (for the app)</td><td>"developed" / "built" (the app exists!)</td></tr>
-    <tr><td>"seven recommendations"</td><td>"<b>nine</b> recommendations"</td></tr>
-    <tr><td>"20 models" / "10 providers"</td><td>"10 candidate models from 4 providers" (evaluation)</td></tr>
-    <tr><td>"version 3.2.3" for evaluation</td><td>"version 3.1.0 was evaluated; v3.2.3 is current"</td></tr>
-    <tr><td>"validated instrument" (FHS)</td><td>"Prototype Observed Financial Health Indicator"</td></tr>
-    <tr><td>"33 badges"</td><td>"36 achievement badges"</td></tr>
+    <tr><td>&#8220;mixed methods&#8221;</td><td>&#8220;quantitative descriptive developmental&#8221;</td></tr>
+    <tr><td>&#8220;stratified sampling&#8221;</td><td>&#8220;random sampling&#8221; (respondents) / &#8220;purposive&#8221; (validator only)</td></tr>
+    <tr><td>&#8220;interviews were conducted&#8221;</td><td>No interviews. Validated structured surveys only.</td></tr>
+    <tr><td>&#8220;13 parents&#8221;</td><td>&#8220;16 parents and 14 young professionals&#8221; (needs assessment)</td></tr>
+    <tr><td>&#8220;fully achieved&#8221; for Obj 3</td><td>&#8220;Objective 3 was <b>partially achieved</b>&#8221;</td></tr>
+    <tr><td>&#8220;passed&#8221; / &#8220;excellent&#8221; / &#8220;acceptable&#8221;</td><td>&#8220;61.83, below the 68 benchmark and the 80 target&#8221;</td></tr>
+    <tr><td>&#8220;eight-provider chain&#8221;</td><td>&#8220;8-model cloud failover chain&#8221; (v3.1.0) or &#8220;10-provider chain&#8221; (v3.2.4)</td></tr>
+    <tr><td>&#8220;the highest free-tier quota&#8221;</td><td>&#8220;a high free-tier quota&#8221; (Table 6: Groq/Cerebras are higher)</td></tr>
+    <tr><td>&#8220;fully offline&#8221;</td><td>&#8220;offline-first; core features work offline; cloud AI needs internet&#8221;</td></tr>
+    <tr><td>&#8220;Recommendation 1 for UI/UX&#8221;</td><td>&#8220;UI/UX refinement is <b>Recommendation 8</b>&#8221;</td></tr>
+    <tr><td>&#8220;proposed&#8221; (for the app)</td><td>&#8220;developed&#8221; / &#8220;built&#8221; (the app exists!)</td></tr>
+    <tr><td>&#8220;seven recommendations&#8221;</td><td>&#8220;<b>nine</b> recommendations&#8221;</td></tr>
+    <tr><td>&#8220;20 models&#8221; / &#8220;10 providers&#8221;</td><td>&#8220;10 candidate models from 4 providers&#8221; (evaluation)</td></tr>
+    <tr><td>&#8220;version 3.2.4&#8221; for evaluation</td><td>&#8220;version 3.1.0 was evaluated; v3.2.4 is current&#8221;</td></tr>
+    <tr><td>&#8220;validated instrument&#8221; (FHS)</td><td>&#8220;Prototype Observed Financial Health Indicator&#8221;</td></tr>
+    <tr><td>&#8220;33 badges&#8221;</td><td>&#8220;36 achievement badges&#8221;</td></tr>
   </table></div>
 
   <!-- SECTION 4: OPENING -->
   <h2 class="sec" id="guide-opening">&#127908; Section 4: Opening Statement</h2>
   <blockquote>
-    <p>"Good afternoon, Dean Layco, Sir Raposas, Ma&#8217;am Mzana, and Dr. Mangaoang. We are Brix A. Directo, Cyrille John M. Rubis, and Djaunathan Albert S. Madayag from the College of Computer Studies and Engineering at LORMA Colleges. Our study is entitled <em>SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management</em>, under the guidance of our adviser, Dr. Ellen F. Mangaoang, DIT. We are grateful for this opportunity and hope you find our work worthy of your consideration."</p>
+    <p>&#8220;Good afternoon, Dean Layco, Sir Raposas, Ma&#8217;am Mzana, and Dr. Mangaoang. We are Brix A. Directo, Cyrille John M. Rubis, and Djaunathan Albert S. Madayag from the College of Computer Studies and Engineering at LORMA Colleges. Our study is entitled <em>SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management</em>, under the guidance of our adviser, Dr. Ellen F. Mangaoang, DIT. We are grateful for this opportunity and hope you find our work worthy of your consideration.&#8221;</p>
   </blockquote>
 
   <!-- SECTION 5: PHONE SETUP -->
@@ -1212,7 +1206,7 @@
     <li><input type="checkbox" id="p2"><label for="p2">Do Not Disturb ON</label></li>
     <li><input type="checkbox" id="p3"><label for="p3">WiFi / Data verified working</label></li>
     <li><input type="checkbox" id="p4"><label for="p4">SmartSpend latest version installed</label></li>
-    <li><input type="checkbox" id="p5"><label for="p5">Demo data loaded: tap "Try Demo" on login screen</label></li>
+    <li><input type="checkbox" id="p5"><label for="p5">Demo data loaded: tap &#8220;Try Demo&#8221; on login screen</label></li>
     <li><input type="checkbox" id="p6"><label for="p6">AI Model: Settings &#8594; AI &#8594; Auto (Recommended)</label></li>
     <li><input type="checkbox" id="p7"><label for="p7">Quick Presets: Settings &#8594; Normal (NOT Lite mode)</label></li>
     <li><input type="checkbox" id="p8"><label for="p8">AI daily limit reset: AI screen &#8594; &#8942; &#8594; Reset Daily Limit (150 messages)</label></li>
@@ -1227,28 +1221,28 @@
   <h2 class="sec" id="guide-demo">&#127919; Section 6: 10-Minute Live Demo Script</h2>
   <div class="scroll"><table>
     <tr><th>#</th><th>Step</th><th>Time</th><th>Key script line</th></tr>
-    <tr><td>1</td><td>Cold start</td><td>0:30</td><td>"This is SmartSpend &#8212; an AI-powered personal finance app built for Filipino users."</td></tr>
+    <tr><td>1</td><td>Cold start</td><td>0:30</td><td>&#8220;This is SmartSpend &#8212; an AI-powered personal finance app built for Filipino users.&#8221;</td></tr>
     <tr><td>2</td><td>AI Taglish logging</td><td>2:00</td><td>Type: <code>nag-gastos ako ng 65 sa canteen for lunch at 13 para sa jeep</code> &#8594; show 2 expenses logged</td></tr>
-    <tr><td>3</td><td>FHS Score</td><td>1:30</td><td>Tap FHS card &#8594; show 4 components. "Prototype Observed Financial Health Indicator."</td></tr>
+    <tr><td>3</td><td>FHS Score</td><td>1:30</td><td>Tap FHS card &#8594; show 4 components. &#8220;Prototype Observed Financial Health Indicator.&#8221;</td></tr>
     <tr><td>4</td><td>Batch Screenshot Import</td><td>2:00</td><td>AI tab &#8594; camera &#8594; Batch Screenshots &#8594; select 2&#8211;3 gallery screenshots</td></tr>
     <tr><td>5</td><td>Analytics</td><td>1:00</td><td>Show pie chart and 50/30/20 tracker</td></tr>
-    <tr><td>6</td><td>Safe-to-Spend</td><td>0:30</td><td>"How much you can freely spend before payday &#8212; one number, no guesswork."</td></tr>
+    <tr><td>6</td><td>Safe-to-Spend</td><td>0:30</td><td>&#8220;How much you can freely spend before payday &#8212; one number, no guesswork.&#8221;</td></tr>
     <tr><td>7</td><td>Gov Contributions</td><td>1:30</td><td>Tools Hub &#8594; Gov Contributions &#8594; show SSS/PhilHealth/Pag-IBIG cards</td></tr>
     <tr><td>8</td><td>Privacy Tiers</td><td>0:30</td><td>Settings &#8594; AI &#8594; Private Local Mode</td></tr>
-    <tr><td>9</td><td>Closing</td><td>0:30</td><td>"Thank you &#8212; we now open the floor for questions."</td></tr>
+    <tr><td>9</td><td>Closing</td><td>0:30</td><td>&#8220;Thank you &#8212; we now open the floor for questions.&#8221;</td></tr>
   </table></div>
 
   <!-- SECTION 7: EMERGENCIES -->
   <h2 class="sec" id="guide-emergencies">&#128680; Section 7: Emergency Responses</h2>
   <div class="scroll"><table>
     <tr><th>Problem</th><th>What to say/do</th></tr>
-    <tr><td><b>No internet / AI fails</b></td><td>"The AI requires internet, but let me show the offline features." Demo manual entry, analytics, FHS, goals.</td></tr>
-    <tr><td><b>App crashes</b></td><td>Restart app, tap "Try Demo" again. Have backup screenshots in gallery.</td></tr>
+    <tr><td><b>No internet / AI fails</b></td><td>&#8220;The AI requires internet, but let me show the offline features.&#8221; Demo manual entry, analytics, FHS, goals.</td></tr>
+    <tr><td><b>App crashes</b></td><td>Restart app, tap &#8220;Try Demo&#8221; again. Have backup screenshots in gallery.</td></tr>
     <tr><td><b>AI daily limit hit</b></td><td>AI screen &#8594; &#8942; &#8594; Reset Daily Limit</td></tr>
     <tr><td><b>Panel asks about numbers</b></td><td>Refer to manuscript. Never improvise statistics.</td></tr>
-    <tr><td><b>"Why only 61.83?"</b></td><td>"Below 68 benchmark and 80 target &#8212; Objective 3 partially achieved. Weakness: Q6 consistency, Q2/Q4 complexity. Recommendation 8 addresses through UI/UX redesign."</td></tr>
-    <tr><td><b>"What about bank sync?"</b></td><td>"Bank API integration is Recommendation 2 (backend proxy). Current version focuses on manual logging, receipt scanning, and screenshot import."</td></tr>
-    <tr><td><b>"Is this on iOS?"</b></td><td>"Android only. Scope and Limitations state designed exclusively for Android. Recommendation 3 is Google Play release."</td></tr>
+    <tr><td><b>&#8220;Why only 61.83?&#8221;</b></td><td>&#8220;Below 68 benchmark and 80 target &#8212; Objective 3 partially achieved. Weakness: Q6 consistency, Q2/Q4 complexity. Recommendation 8 addresses through UI/UX redesign.&#8221;</td></tr>
+    <tr><td><b>&#8220;What about bank sync?&#8221;</b></td><td>&#8220;Bank API integration is Recommendation 2 (backend proxy). Current version focuses on manual logging, receipt scanning, and screenshot import.&#8221;</td></tr>
+    <tr><td><b>&#8220;Is this on iOS?&#8221;</b></td><td>&#8220;Android only. Scope and Limitations state designed exclusively for Android. Recommendation 3 is Google Play release.&#8221;</td></tr>
   </table></div>
 
   <!-- SECTION 8: 9 RECOMMENDATIONS -->
@@ -1264,7 +1258,7 @@
     <li><b>8. UI/UX refinement</b><span>Address Q6 consistency and Q2/Q4 complexity from SUS. <b>NOT Recommendation 1.</b></span></li>
     <li><b>9. Formal parsing evaluation</b><span>Standardized test receipts across multiple platforms</span></li>
   </ul>
-  <div class="tip"><strong>Remember</strong><p>All 9 come from the specific limitations of the current prototype. Never say "7 recommendations" or put UI/UX as #1.</p></div>
+  <div class="tip"><strong>Remember</strong><p>All 9 come from the specific limitations of the current prototype. Never say &#8220;7 recommendations&#8221; or put UI/UX as #1.</p></div>
 
   <!-- SECTION 9: PANEL FAQ -->
   <h2 class="sec" id="guide-faq">&#10067; Section 9: Scripted Panel Q&amp;A</h2>
@@ -1272,52 +1266,339 @@
   <details class="cat">
     <summary>Scripted answers for most-asked questions</summary>
     <details class="qa"><summary>Q1 &#8212; Why only 61.83?</summary><div class="a">
-    <p>"Our SUS score of 61.83 is below the 68-point benchmark and below our pre-established target of 80, which is why Objective 3 is <b>partially achieved</b> rather than fully achieved. The weaker SUS items were system consistency, Question 6, and complexity, Questions 2 and 4. Recommendation 8 addresses these through interface redesign. Respondents also scored high on intent to use frequently (4.35/5) and confidence (4.19/5)."</p>
+    <p>&#8220;Our SUS score of 61.83 is below the 68-point benchmark and below our pre-established target of 80, which is why Objective 3 is <b>partially achieved</b> rather than fully achieved. This is a prototype-stage finding, and it tells us where to improve. The weaker SUS items were system consistency, Question 6, and complexity, Questions 2 and 4. Recommendation 8 addresses these through interface redesign. Respondents also scored high on intent to use frequently (4.35/5) and confidence (4.19/5).&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q2 &#8212; Why not mixed methods?</summary><div class="a">
-    <p>"Our study is <b>quantitative descriptive developmental</b>. We used validated structured survey questionnaires for both the needs assessment and the usability evaluation, and no interviews or open-ended data were collected, so there is no qualitative component. The surveys gave us frequencies and percentages for the needs assessment, and SUS scores for usability. The &#8216;developmental&#8217; part refers to the design and development of SmartSpend."</p>
+    <p>&#8220;Our study is <b>quantitative descriptive developmental</b>. We used validated structured survey questionnaires for both the needs assessment and the usability evaluation, and no interviews or open-ended data were collected, so there is no qualitative component. The surveys gave us frequencies and percentages for the needs assessment, and SUS scores for usability. The &#8216;developmental&#8217; part refers to the design and development of SmartSpend as a working prototype.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q3 &#8212; Why only 30 respondents?</summary><div class="a">
-    <p>"<b>Random sampling was used</b> for our respondents. For a capstone-level developmental study, 30 is a common sample size for identifying patterns in a needs assessment and usability issues in a prototype. We acknowledge it limits generalizability because SUS respondents came from one locale. That is why Recommendation 7 calls for a longitudinal evaluation with a larger sample."</p>
+    <p>&#8220;<b>Random sampling was used</b> for our respondents. For a capstone-level developmental study, 30 is a common sample size for identifying patterns in a needs assessment and usability issues in a prototype. SUS research shows reliable results with as few as 12&#8211;14 participants; our 30 exceeds that minimum. We acknowledge it limits generalizability because SUS respondents came from one locale &#8212; that is why Recommendation 7 calls for a longitudinal evaluation with a larger sample.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q4 &#8212; What is the Financial Health Score?</summary><div class="a">
-    <p>"The Financial Health Score is a <b>prototype indicator</b> on a 0-to-100 scale. In Full Mode it has four equally weighted components of 25 points: savings rate, overspend control, budget adherence, and logging consistency. Lightweight Mode uses spending restraint, logging consistency, category balance, and habit streak. The weights are a design choice, not a statistically derived result, and we formally classify the score as a Prototype Observed Financial Health Indicator, not a validated instrument."</p>
+    <p>&#8220;The Financial Health Score is a <b>prototype indicator</b> on a 0-to-100 scale. In Full Mode it has four equally weighted components of 25 points each: savings rate, overspend control, budget adherence, and logging consistency. Lightweight Mode, for users without income tracking, uses spending restraint, logging consistency, category balance, and habit streak. We adapted ideas from the CBA-MI Observed scale and the Financial Health Network&#8217;s FinHealth Score. The weights are a design choice, not a statistically derived result, and we formally classify the score as a Prototype Observed Financial Health Indicator, not a validated instrument.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q5 &#8212; What LLM did you use?</summary><div class="a">
-    <p>"We used <b>Gemini 3.5 Flash-Lite</b> as the primary model in v3.1.0. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral. Criteria weighted: Filipino-English accuracy 25%, speed 20%, tool use/JSON reliability 20%, free-tier availability 15%, context window 10%, financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling, and a high free-tier request quota. Our fallback chain adds seven more models."</p>
+    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b> as the primary model in v3.1.0. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral &#8212; against six weighted criteria: Filipino-English accuracy 25%, speed 20%, tool use/JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. Our fallback chain adds seven more models across Google, Groq, and Cerebras. In v3.2.4, we added OpenRouter as the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q6 &#8212; Why are there 16 parents and 14 young professionals if three said both?</summary><div class="a">
-    <p>"Three of our 30 respondents answered &#8216;Both a parent and a young professional&#8217; in Question 2. For analysis and reporting, we counted them with the parent group based on their Q1 age bracket, which was 35 to 55. This is stated in the notes to Tables 3 and 5 and the Figure 5 footnote. The SUS evaluation was a separate group: respondents self-identified, giving 10 parents and 20 young professionals."</p>
+    <p>&#8220;Three of our 30 respondents answered &#8216;Both a parent and a young professional&#8217; in Question 2. For analysis and reporting, we counted them with the parent group based on their Q1 age bracket, which was 35 to 55. This is stated in the notes to Tables 3 and 5 and the Figure 5 footnote. The SUS evaluation was a completely separate group where respondents self-identified, giving 10 parents and 20 young professionals.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q7 &#8212; Parsing accuracy looks low for dates. What is the evidence?</summary><div class="a">
-    <p>"Table 9 reports development-phase observations only. Overall field-level accuracy was 88.2% for amount, 79.9% for description, 70.4% for date (weakest), and 83.4% for category. We say plainly that this is not a formal benchmark. Recommendation 9 proposes a formal evaluation using standardized test receipts across multiple platforms."</p>
+    <p>&#8220;Table 9 reports development-phase observations only, not an independent audit. Overall field-level accuracy was 88.2% for amount, 79.9% for description, 70.4% for date (the weakest), and 83.4% for category. Date is weakest because receipts have varied formats &#8212; MM/DD, DD-MON, relative dates like &#8216;today&#8217;. We say plainly this is not a formal benchmark. Recommendation 9 proposes a formal evaluation using standardized test receipts across multiple platforms.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q8 &#8212; Is your data private?</summary><div class="a">
-    <p>"Yes, we are upfront about this. In Cloud AI mode, mobile numbers, reference numbers, and account patterns are redacted on the device first, and a one-time privacy disclosure appears before the first AI message. But the free Gemini quota&#8217;s terms say content may be used to improve Google&#8217;s products, so redaction reduces the exposure but does not remove it. Users with sensitive details can use Private Local Mode, where requests go only to their own PC. The local database is not encrypted, which is Recommendation 5."</p>
+    <p>&#8220;Yes, we are upfront about this. In Cloud AI mode, mobile numbers, reference numbers, and account patterns are redacted on the device first by regex, and a one-time privacy disclosure appears before the first AI message. But the free Gemini quota&#8217;s terms say content may be used to improve Google&#8217;s products, so redaction reduces the exposure but does not remove it entirely. Users who want zero cloud exposure can use Private Local Mode (Tier 2), where requests go only to their own PC running Ollama or LM Studio. The local database is currently unencrypted, which is Recommendation 5.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q9 &#8212; Why does SmartSpend not have an MOA?</summary><div class="a">
-    <p>"SmartSpend is a consumer-facing mobile application for general public use, not an enterprise or institutional system. Our deployment model is direct-to-consumer via GitHub Releases. Unlike systems built for a single organization under an MOA, personal finance apps serve individual end-users across the country. The comparison would be like asking why GCash doesn&#8217;t have an MOA with one specific barangay &#8212; because it serves millions of individual users. We have actual public deployment: GitHub repository with 5+ releases, project website, and 30 real users who evaluated v3.1.0."</p>
+    <p>&#8220;SmartSpend is a consumer-facing mobile application for general public use, not an enterprise or institutional system deployed to a single organization. Our deployment model is direct-to-consumer via GitHub Releases, freely downloadable at github.com/Zushikina-kun/smartspend-app/releases &#8212; the same distribution model as any consumer mobile app. Requiring an MOA would be like asking why GCash has no MOA with a single barangay: the app serves millions of individual users, not one client organization. We have verifiable public deployment: 5+ GitHub releases, a project website, and 30 real users who evaluated v3.1.0 on their own Android devices.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q10 &#8212; What are your recommendations?</summary><div class="a">
-    <p>"We have <b>nine recommendations</b>: (1) Payday-cycle-aware budgeting. (2) Backend API proxy and per-user keys. (3) Google Play release. (4) On-device AI tier (~2.6 GB). (5) SQLite encryption. (6) Household and remittance features. (7) Longitudinal evaluation over 3&#8211;6 months. (8) UI/UX refinement addressing Q6 and Q2. (9) Formal parsing evaluation. All nine come from the limitations of the current prototype."</p>
+    <p>&#8220;We have <b>nine recommendations</b>: (1) Payday-cycle-aware budgeting aligned to the 15th-and-30th salary cycle. (2) Backend API proxy and per-user keys to remove device-side key exposure. (3) Google Play release, after the proxy and a privacy policy are in place. (4) On-device AI tier, an opt-in model of about 2.6 gigabytes for fully offline AI. (5) SQLite encryption using SQLCipher. (6) Household and remittance features: shared wallets and OFW remittance as a distinct income category. (7) Longitudinal evaluation over 3&#8211;6 months with a larger sample. (8) UI/UX refinement addressing consistency in Q6 and complexity in Q2. (9) Formal parsing evaluation using standardized test receipts across multiple platforms. All nine come from the specific limitations of the current prototype.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q11 &#8212; What about OpenRouter? (v3.2.2+)</summary><div class="a">
-    <p>"We integrated OpenRouter as an AI gateway in v3.2.2. OpenRouter provides access to 100+ models from multiple providers through a single API endpoint. We added it as the second priority in our fallback chain &#8212; after the user&#8217;s local model, before direct Gemini. We have $100 in OpenRouter credits expiring May 2027. The default model is <code>google/gemini-flash-1.5</code>, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. This upgraded our chain from 8 to 10 providers, further improving 24/7 AI availability."</p>
+    <p>&#8220;We integrated OpenRouter as an AI gateway starting in v3.2.2. OpenRouter provides access to 100+ language models from multiple providers through a single OpenAI-compatible API endpoint. We added it as the second priority in our 10-provider fallback chain &#8212; after the user&#8217;s optional local model, before direct Gemini. The default model through OpenRouter is <code>google/gemini-flash-1.5</code>, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. We have $100 in OpenRouter credits expiring May 2027. This upgrade, included in v3.2.4, raised the chain from 8 to 10 providers, further improving 24/7 AI availability.&#8221;</p>
     </div></details>
   </details>
 
   <!-- SECTION 10: FINAL CHECKLIST -->
   <h2 class="sec" id="guide-checklist">&#9989; Section 10: Final Reminders</h2>
-  <div class="tip"><strong>Night Before Defense</strong>
+  <div class="tip"><strong>Night Before Final Defense</strong>
     <p>&#9744; Set up demo phone (phone setup checklist above) &nbsp;&#183;&nbsp; &#9744; Print this complete guide &nbsp;&#183;&nbsp; &#9744; Prepare 3 manuscript copies &nbsp;&#183;&nbsp; &#9744; Print 1 Compliance Matrix for signatures &nbsp;&#183;&nbsp; &#9744; Get defense fee receipt &nbsp;&#183;&nbsp; &#9744; Pack USB cable, charger, backup hotspot &nbsp;&#183;&nbsp; &#9744; Get good sleep!</p>
   </div>
-  <div class="tip"><strong>Morning of Defense</strong>
+  <div class="tip"><strong>Morning of Final Defense</strong>
     <p>&#9744; Eat breakfast &nbsp;&#183;&nbsp; &#9744; Arrive 30 minutes early &nbsp;&#183;&nbsp; &#9744; Test venue WiFi &nbsp;&#183;&nbsp; &#9744; Set phone to Do Not Disturb &nbsp;&#183;&nbsp; &#9744; Review SAY vs DON&#8217;T SAY table one more time &nbsp;&#183;&nbsp; &#9744; <b>Breathe &#8212; you&#8217;re prepared!</b></p>
   </div>
   <div style="background:var(--ledger-soft); border-left:3px solid var(--ledger); padding:14px 16px; border-radius:4px; margin-top:20px;">
     <p style="margin:0 0 4px; font-weight:600; color:var(--ink);">&#127919; You&#8217;ve got this!</p>
-    <p style="margin:0; font-size:.9rem; color:var(--ink-soft);">All 12 panel recommendations from Capstone 1 are DONE. SmartSpend v3.2.3 is ready. Your team is ready. Good luck on November 16, 2026 at 3:00 PM! &#128640;</p>
+    <p style="margin:0; font-size:.9rem; color:var(--ink-soft);">All 12 panel recommendations from Capstone 1 are DONE. SmartSpend v3.2.4 is ready. Your team is ready. Good luck on November 16, 2026 at 3:00 PM! &#128640;</p>
   </div>
+
+  <footer>SmartSpend v3.2.4 (Final Defense Build) &middot; Team Lucid Frame &middot; Lorma Colleges CCSE &middot; November 16, 2026 3:00 PM<br>
+  Defense Reviewer &mdash; Search, 4 Tabs, 75+ Q&amp;A, OpenRouter Integration, Complete Guide</footer>
+
+</section>
+
+<!-- ================================================================ SCRIPT TAB -->
+<section class="panel" id="p-script">
+
+
+  <div class="jump-links">
+    <a href="#script-meta">Defense Info</a>
+    <a href="#script-saydont">SAY / DON&#8217;T SAY</a>
+    <a href="#script-slides">Slide Notes</a>
+    <a href="#script-faq">Panel Q&amp;A</a>
+    <a href="#script-reminders">Reminders</a>
+  </div>
+
+  <!-- META -->
+  <h2 class="sec" id="script-meta">&#128221; Presentation Script &#8212; Final Defense</h2>
+  <div class="scroll"><table>
+    <tr><th>Field</th><th>Detail</th></tr>
+    <tr><td>Defense Date</td><td><b>Monday, November 16, 2026 &#8212; 3:00 PM</b></td></tr>
+    <tr><td>Chairperson</td><td>Dean Jeoffrey B. Layco, MIS</td></tr>
+    <tr><td>Member</td><td>Mr. Shekiro R. Raposas, MTS, MIS</td></tr>
+    <tr><td>Member</td><td>Ms. Mary-Ann Mzana, MTS</td></tr>
+    <tr><td>Adviser</td><td>Dr. Ellen Flores Mangaoang, DIT</td></tr>
+    <tr><td>Validator</td><td>Avigail Candevario, PFMe</td></tr>
+    <tr><td>Estimated speaking time</td><td>~15 minutes</td></tr>
+    <tr><td>Team</td><td>Brix A. Directo (Lead Dev) &middot; Cyrille John M. Rubis (UI/UX) &middot; Djaunathan Albert S. Madayag (PM/QA)</td></tr>
+  </table></div>
+
+  <div class="tip"><strong>Important</strong><p>Every number and claim in this script is taken from the manuscript (Chapters I&#8211;IV, Tables 1&#8211;9, Figures 1&#8211;17). If a panelist asks about something not in the manuscript, say so honestly and do not improvise a number.</p></div>
+
+  <!-- SAY / DON'T SAY -->
+  <h2 class="sec" id="script-saydont">&#128683; SAY / DON&#8217;T SAY &#8212; Quick Reference</h2>
+  <div class="scroll"><table>
+    <tr><th>&#9989; SAY</th><th>&#10060; DON&#8217;T SAY</th></tr>
+    <tr><td>&#8220;quantitative descriptive developmental&#8221;</td><td>&#8220;mixed methods&#8221; (no interviews were conducted)</td></tr>
+    <tr><td>&#8220;random sampling was used&#8221; (respondents)</td><td>&#8220;stratified sampling&#8221;</td></tr>
+    <tr><td>&#8220;purposive sampling was used&#8221; (content validator only)</td><td>&#8220;interviews were conducted&#8221; / &#8220;respondents said&#8230;&#8221;</td></tr>
+    <tr><td>&#8220;16 parents and 14 young professionals&#8221; (needs assessment, 30 total; includes 3 &#8220;both&#8221; counted with parents)</td><td>&#8220;13 parents&#8221; (old count)</td></tr>
+    <tr><td>&#8220;10 parents and 20 young professionals&#8221; (SUS sample, 30 valid of 36, separate group)</td><td>&#8220;failed&#8221; for Objective 3</td></tr>
+    <tr><td>&#8220;partially achieved&#8221; for Objective 3 &#8212; always</td><td>&#8220;fully achieved&#8221; / &#8220;passed the SUS threshold&#8221;</td></tr>
+    <tr><td>&#8220;61.83, below the 68 benchmark and the 80 target&#8221;</td><td>&#8220;acceptable for a prototype&#8221;</td></tr>
+    <tr><td>&#8220;Grade D, adjective OK&#8221;</td><td>&#8220;seven recommendations&#8221; (there are 9)</td></tr>
+    <tr><td>&#8220;ten candidate models from four providers&#8221;</td><td>&#8220;20 candidate models&#8221; / &#8220;eight candidate models&#8221;</td></tr>
+    <tr><td>&#8220;eight-model cloud failover chain (Gemini 3.5 Flash-Lite primary, seven fallbacks)&#8221;</td><td>&#8220;eight-provider chain&#8221;</td></tr>
+    <tr><td>&#8220;Gemini 3.5 Flash-Lite had a high free-tier quota&#8221;</td><td>&#8220;the highest free-tier quota&#8221; (Table 6: Groq and Cerebras are higher)</td></tr>
+    <tr><td>&#8220;offline-first; core features work offline; cloud AI needs internet&#8221;</td><td>&#8220;fully offline&#8221;</td></tr>
+    <tr><td>&#8220;UI/UX refinement is Recommendation 8&#8221;</td><td>&#8220;Recommendation 1&#8221; for UI/UX</td></tr>
+    <tr><td>&#8220;proposed&#8221; only for future work</td><td>&#8220;proposed&#8221; for the app (the app exists)</td></tr>
+  </table></div>
+
+  <!-- SLIDE NOTES -->
+  <h2 class="sec" id="script-slides">&#127916; Slide-by-Slide Speaking Notes</h2>
+
+  <div class="steps">
+
+    <div class="step" data-n="1">
+      <div class="step-head"><h3>Slide 1 &#8212; Title</h3></div>
+      <div class="step-body">
+        <div class="say">Good afternoon, Dean Layco, Sir Raposas, Ma&#8217;am Mzana, and Dr. Mangaoang. We are Brix Directo, Cyrille John Rubis, and Djaunathan Madayag, from the College of Computer Studies and Engineering here at LORMA Colleges. Our study is entitled <em>SmartSpend: An AI-Assisted Mobile Financial Tracking and Advisory Application for Personal Financial Management</em>, under the guidance of our adviser, Dr. Ellen Flores Mangaoang, DIT. We are grateful for this opportunity and we hope you find our work worthy of your consideration.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="2">
+      <div class="step-head"><h3>Slide 2 &#8212; Opening Prayer</h3></div>
+      <div class="step-body">
+        <div class="say">Before we begin, we would like to invite everyone to bow their heads as we offer a short opening prayer. <em>(Deliver or lead the prayer here.)</em></div>
+      </div>
+    </div>
+
+    <div class="step" data-n="3">
+      <div class="step-head"><h3>Slide 3 &#8212; Problem</h3></div>
+      <div class="step-body">
+        <div class="say">The Philippines continues to face a serious financial literacy challenge. According to the 2021 BSP Financial Inclusion Survey, only 2% of Filipino adults correctly answered all six basic financial literacy questions, and fewer than half reported keeping any household or personal budget. More recent BSP data from 2025 shows a mixed picture: basic literacy rose from 69% to 74%, but formal account ownership fell from 56% to 50%. In our own needs assessment of 30 respondents, only 10% reported that they already used a mobile app to track expenses. Most of our target population, parents and young professionals, relied on receipts and mental estimates instead. This is the problem SmartSpend was designed to address.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="4">
+      <div class="step-head"><h3>Slide 4 &#8212; Gap Analysis</h3></div>
+      <div class="step-body">
+        <div class="say">The gap we identified operates at three levels, as shown in Table 1 of our manuscript. At the international level, manual entry dominates, and AI categorization degrades for non-English transactions. At the national level, existing Philippine apps lack conversational AI, spending behavior analysis, and financial health scoring. At the demographic level, parents tend to abandon apps because of the effort of manual entry, and warnings are ignored when there is no consequence. SmartSpend answers each gap with LLM-based parsing for Filipino-English input, conversational AI with a Financial Health Score, and automated input with a score-decay consequence system.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="5">
+      <div class="step-head"><h3>Slide 5 &#8212; Feature Comparison (Table 2)</h3></div>
+      <div class="step-body">
+        <div class="say">Table 2 compares SmartSpend against Tarsi, YNAB, Monarch, Copilot, BudgetPH, and Alkansya AI. We also acknowledge other Philippine apps, such as Agila, PISO Budget Tracker, Lista, Kibo, BunnyWise, and GCash Pera Coach, as related work. The comparison shows that none of the apps we tested combines offline mode, LLM chat, a Financial Health Score, OCR receipt scanning, Filipino-English AI, and batch screenshot import in one app. We are not claiming to be the first or only Filipino finance app. SmartSpend is an evaluated, integrated prototype. We are also transparent that it has no bank synchronization and no 15th-and-30th payday cycle yet; the payday cycle is our Recommendation 1.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="6">
+      <div class="step-head"><h3>Slide 6 &#8212; Objectives</h3></div>
+      <div class="step-body">
+        <div class="say">Three objectives guided this study. First, to assess the existing financial management practices, common budgeting challenges, and expense tracking behaviors of parents aged 35 to 55 and young professionals aged 21 to 35 in San Fernando City, La Union, through structured surveys. Second, to design and develop the SmartSpend mobile application with the integration of a suitable Large Language Model API. Third, to determine the usability of the application using the System Usability Scale. Each objective has its own section in Chapter III, and each section ends by stating whether the objective was achieved.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="7">
+      <div class="step-head"><h3>Slide 7 &#8212; Conceptual Framework (IPO)</h3></div>
+      <div class="step-body">
+        <div class="say">Our study used an Input-Process-Output framework. The inputs are text, voice, receipt images, barcode scans, and the user&#8217;s financial data. The process layer includes LLM parsing, OCR, barcode recognition, data structuring, local SQLite storage, and Firebase synchronization. The outputs are automatically recorded expenses, financial summaries, charts, alerts, AI-generated insights, the Financial Health Score from 0 to 100, and AI-powered financial assistance such as general financial Q&amp;A, market price estimates, and financial product guidance.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="8">
+      <div class="step-head"><h3>Slide 8 &#8212; Research Design and Methodology</h3></div>
+      <div class="step-body">
+        <div class="say">This study employed a <b>quantitative descriptive developmental research design</b>. The developmental component refers to the design and development of SmartSpend as a working prototype, built using an Agile Kanban workflow. The quantitative descriptive component refers to validated structured survey instruments used to assess needs and to evaluate usability. No interviews were conducted. <b>Random sampling was used</b> for the needs assessment, which involved 30 respondents: 16 parents and 14 young professionals. Three of the 16 parents answered &#8220;both&#8221; in the survey and were counted with the parent group by their age bracket. A separate group completed the SUS evaluation: 30 valid responses out of 36, made up of 10 parents and 20 young professionals, after using the app for at least 10 minutes. <b>Purposive sampling was used</b> only for the content validator, Avigail Candevario, PFMe, who was chosen for her expertise in personal finance and financial education to validate our survey instrument.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="9">
+      <div class="step-head"><h3>Slide 9 &#8212; Objective 1 Results: Needs Assessment</h3></div>
+      <div class="step-body">
+        <div class="say">Objective 1 asked us to assess the financial management practices of our target population. Among the 30 respondents, <b>96.7%, or 29 of 30, expressed positive intent to use an AI-powered financial application</b>. <b>93.3%, or 28 of 30, already used GCash</b>, which supports our focus on e-wallet transaction import. Only 10%, or 3 of 30, already used a dedicated mobile app to track expenses. The most common tracking method was physical receipts at 90%, followed by mental estimates at 53.3% and e-wallet transaction history at 43.3%. These results informed the receipt scanning, natural-language logging, and screenshot import features we built, and they confirm that Objective 1 was <b>achieved</b>.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="10">
+      <div class="step-head"><h3>Slide 10 &#8212; System Overview</h3></div>
+      <div class="step-body">
+        <div class="say">SmartSpend version 3.1.0 is a working Android application built with Flutter, with offline-first SQLite storage. At a glance: <b>34 autonomous AI actions</b>, a 12-mood Peso mascot, batch screenshot import for <b>40-plus platforms</b>, a <b>26-table</b> SQLite schema, support for 20 Philippine banks and 5 digital banks, <b>36 achievement badges</b>, and 31 Taglish situations that Peso can respond to. The AI side has eight cloud models in a failover chain, plus the optional Private Local Mode, for nine AI options in total. Core features work without internet and sync to Firebase when connected; the AI features need a connection unless the user runs a local model. The Financial Health Score is formally classified as a Prototype Observed Financial Health Indicator, which is a design choice, not a statistically validated instrument.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="11">
+      <div class="step-head"><h3>Slide 11 &#8212; App Screenshots</h3></div>
+      <div class="step-body">
+        <div class="say">Let me walk through five key screens, Figures 9 to 13 in the manuscript. The Login and Demo Mode screen lets users explore SmartSpend with pre-loaded Filipino sample data, or continue without an account, before committing. The Home Dashboard shows the Financial Health Score, budgets, and a spending summary at a glance, with the Peso chat input at the bottom. Expense Logging Through Peso Chat shows natural-language input: here the user typed &#8220;nag-lunch ako 150 pesos&#8221; and Peso recorded it in one step. Receipt Scanning shows OCR text that the user can review and edit before sending it to the AI. Finally, the Financial Health Score Breakdown shows the overall score and the four scored components, with tips where a component needs work. The manuscript also includes the Budgets screen, Figure 14, and the Local AI setup screen, Figure 15, if the panel would like to see them.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="12">
+      <div class="step-head"><h3>Slide 12 &#8212; LLM Selection</h3></div>
+      <div class="step-body">
+        <div class="say">Selecting the right LLM was a critical design decision. We evaluated <b>ten candidate models from four providers</b> against six weighted criteria: Filipino-English accuracy at 25%, speed at 20%, tool use and JSON reliability at 20%, free-tier availability at 15%, context window at 10%, and financial reasoning quality at 10%. These results are in Table 6. We selected <b>Gemini 3.5 Flash-Lite</b> because it offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. Our fallback chain adds seven more models across Google, Groq, and Cerebras, so the assistant keeps working if one is down or rate-limited. We also used full-context injection rather than RAG, because a typical user&#8217;s data is only about 1,000 to 5,000 tokens.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="13">
+      <div class="step-head"><h3>Slide 13 &#8212; Financial Health Score</h3></div>
+      <div class="step-body">
+        <div class="say">The Financial Health Score is a prototype indicator on a 0-to-100 scale. It has two modes. In Full Mode, which needs income tracking, it has four equally weighted components of 25 points each: Savings Rate, Overspend Control, Budget Adherence, and Logging Consistency. In Lightweight Mode, for users without a fixed income, it uses Spending Restraint, Logging Consistency, Category Balance, and Habit Streak. Two adjustments apply: a Warning Decay of up to 15 points for discretionary overspending, and a Gap Adjustment of plus 2 for a confirmed no-spend day and minus 3 for an unlogged day. The final score is clamped between 0 and 100. We want to be transparent with the panel: the equal weights are a design choice, not a statistically derived result, and the score is formally classified as a Prototype Observed Financial Health Indicator, not a validated measurement instrument.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="14">
+      <div class="step-head"><h3>Slide 14 &#8212; Privacy Tiers</h3></div>
+      <div class="step-body">
+        <div class="say">SmartSpend has three AI privacy tiers, and two are implemented. Tier 1 is Cloud AI, the default. Mobile numbers, reference numbers, and account patterns are redacted on the device before a request is sent, and a one-time privacy disclosure appears before the first AI message. We are honest that our primary provider runs on Google&#8217;s free Gemini quota, whose terms say content may be used to improve Google&#8217;s products. Redaction reduces that exposure but does not remove it. Tier 2 is Private Local Mode: requests go only to a model on the user&#8217;s own PC or Mac, using tools such as Ollama, LM Studio, or Jan. If the local server is unreachable, the app falls back to the cloud, unless the user switches on Local-only mode, in which case the AI simply stops responding instead of falling back. Tier 3, an on-device model running on the phone itself, is <b>not implemented</b>. A roughly 2.6-gigabyte model is not yet feasible on the 4 GB phones common among Filipino students, so it is Recommendation 4.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="15">
+      <div class="step-head"><h3>Slide 15 &#8212; SUS Results (Objective 3) &#9888;&#65039; CRITICAL</h3></div>
+      <div class="step-body">
+        <div class="say">The System Usability Scale was administered to <b>30 valid respondents</b>, 10 parents and 20 young professionals, as a separate group from the needs assessment. Six of the 36 who attempted the survey were excluded: five for insufficient usage time and one for straight-line responding. The mean SUS score is <b>61.83</b>, with a standard deviation of <b>17.58</b>, a median of <b>55.0</b>, and a range of <b>35.0 to 92.5</b>. Under the Bangor, Kortum, and Miller (2009) adjective scale, this is <b>Grade D, adjective &#8220;OK&#8221;</b>. It is below the 68-point average benchmark and below our pre-established target of 80. Parents averaged 58.25 and young professionals 63.62, and both groups were below the benchmark and the target. Respondents scored high on intent to use the system frequently, at 4.35 out of 5, and on confidence, at 4.19 out of 5. The weaker items were consistency, Question 6, and complexity, Questions 2 and 4. For this reason, Objective 3 is <b>partially achieved</b>. This is not a failure of the study; it is an honest finding that drives Recommendation 8.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="16">
+      <div class="step-head"><h3>Slide 16 &#8212; Limitations</h3></div>
+      <div class="step-body">
+        <div class="say">We acknowledge several limitations. The SUS score of 61.83 is below both the 68 benchmark and the 80 target. SmartSpend is Android only, and its cloud AI features need an internet connection. Security is at prototype level: the API key is stored on the device because there is no server-side proxy yet, and the local database is not encrypted. These are addressed in Recommendations 2 and 5. Parsing accuracy in Table 9 comes from development-phase testing, not an independent audit: overall amount accuracy was 88.2%, and date accuracy was the weakest at 70.4%. The gamification elements, Peso and the badges, were added after the evaluation instrument was designed, so their effect on behavior has not been measured. And the 30 SUS respondents came from one locale, which limits generalizability.</div>
+      </div>
+    </div>
+
+    <div class="step" data-n="17">
+      <div class="step-head"><h3>Slide 17 &#8212; Conclusions</h3></div>
+      <div class="step-body">
+        <div class="say">Three conclusions follow directly from our results.</div>
+        <p><b>Objective 1 &#8212; Achieved.</b> The needs assessment identified the financial management practices, budgeting challenges, and expense tracking behaviors of parents and young professionals. 96.7% expressed intent to use an AI-powered financial app, and 93.3% already used GCash.</p>
+        <p><b>Objective 2 &#8212; Achieved.</b> SmartSpend version 3.1.0 was designed and developed as a working Android application with multi-modal expense input, offline-first storage, 34 AI actions, and a Financial Health Score. A comparative evaluation of ten candidate models from four providers led to Gemini 3.5 Flash-Lite as the primary model, supported by an eight-model failover chain.</p>
+        <p><b>Objective 3 &#8212; Partially achieved.</b> Usability was evaluated with the System Usability Scale using 30 valid respondents. The mean score of 61.83 is below the 68-point benchmark and below our 80 target, so UI/UX improvements are needed.</p>
+      </div>
+    </div>
+
+    <div class="step" data-n="18">
+      <div class="step-head"><h3>Slide 18 &#8212; Recommendations</h3></div>
+      <div class="step-body">
+        <div class="say">In view of these results, we make nine recommendations.</div>
+        <ul class="oneliners">
+          <li><b>1. Payday-cycle-aware budgeting.</b><span>Budgeting resets aligned with the semi-monthly 15th-and-30th salary cycle common in the Philippines.</span></li>
+          <li><b>2. Backend API proxy and per-user keys.</b><span>Move LLM key management to a server-side proxy, such as a Firebase Cloud Function, to remove device-side key exposure and enforce per-user message limits.</span></li>
+          <li><b>3. Google Play release.</b><span>After the backend proxy and a privacy policy are in place. The prototype is currently distributed as a downloadable APK.</span></li>
+          <li><b>4. On-device AI tier.</b><span>An opt-in on-device model, for example Gemma 4 E2B through Google&#8217;s LiteRT-LM, about a 2.6-gigabyte download, for users who want fully offline AI.</span></li>
+          <li><b>5. SQLite encryption.</b><span>SQLCipher-based encryption for the local database in a future schema migration.</span></li>
+          <li><b>6. Household and remittance features.</b><span>Shared couple and family wallets, and inbound OFW remittance tracking as a distinct income category.</span></li>
+          <li><b>7. Longitudinal evaluation.</b><span>Measure SmartSpend&#8217;s effect on financial behavior over three to six months with a larger sample.</span></li>
+          <li><b>8. UI/UX refinement.</b><span>Address the main SUS concerns, system consistency in Question 6 and complexity in Question 2, through interface redesign.</span></li>
+          <li><b>9. Formal parsing evaluation.</b><span>Evaluate OCR and AI parsing accuracy using standardized test receipts across multiple platforms to establish a reliable baseline.</span></li>
+        </ul>
+        <p>All nine come from the specific limitations of the current prototype.</p>
+      </div>
+    </div>
+
+    <div class="step" data-n="19">
+      <div class="step-head"><h3>Slide 19 &#8212; Closing</h3></div>
+      <div class="step-body">
+        <div class="say">That concludes our presentation of SmartSpend. We sincerely thank Dr. Mangaoang for her guidance throughout this study, and we thank the panel, Dean Layco, Sir Raposas, and Ma&#8217;am Mzana, for your time and expertise today. We now open the floor for the panel&#8217;s questions and comments.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <h2 class="sec" id="script-faq">&#10067; Frequently Asked Panel Questions</h2>
+  <div class="tip"><strong>Study these before the defense.</strong><p>Answers are scripted; feel free to shorten them in delivery.</p></div>
+
+  <details class="cat">
+    <summary>Panel Q&amp;A &#8212; Scripted Answers (Q1&#8211;Q13)</summary>
+
+    <details class="qa"><summary>Q1 &#8212; Why only 61.83?</summary><div class="a">
+    <p>&#8220;Our SUS score of 61.83 is below the 68-point benchmark and below our pre-established target of 80, which is why Objective 3 is <b>partially achieved</b> rather than fully achieved. This is a prototype-stage finding, and it tells us where to improve. The weaker SUS items were system consistency, Question 6, and complexity, Questions 2 and 4. Recommendation 8 addresses these through interface redesign. Respondents also scored high on intent to use the system frequently, at 4.35 out of 5, and on confidence, at 4.19 out of 5.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q2 &#8212; Why not mixed methods? Why is it purely quantitative?</summary><div class="a">
+    <p>&#8220;Our study is <b>quantitative descriptive developmental</b>. We used validated structured survey questionnaires for both the needs assessment and the usability evaluation, and no interviews or open-ended data were collected, so there is no qualitative component. The surveys gave us frequencies and percentages for the needs assessment, and SUS scores for usability. The &#8216;developmental&#8217; part refers to the design and development of the SmartSpend prototype itself.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q3 &#8212; Why only 30 respondents?</summary><div class="a">
+    <p>&#8220;<b>Random sampling was used</b> for our respondents. For a capstone-level developmental study, 30 respondents is a common sample size for identifying patterns in a needs assessment and usability issues in a prototype. SUS research shows reliable results with as few as 12&#8211;14 participants; our 30 exceeds that minimum. We acknowledge that it limits generalizability, because the SUS respondents came from one locale. That is why Recommendation 7 calls for a longitudinal evaluation with a larger sample.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q4 &#8212; What is the Financial Health Score?</summary><div class="a">
+    <p>&#8220;The Financial Health Score is a <b>prototype indicator</b> on a 0-to-100 scale. In Full Mode it has four equally weighted components of 25 points: savings rate, overspend control, budget adherence, and logging consistency. Lightweight Mode, for users without income tracking, uses spending restraint, logging consistency, category balance, and habit streak. We adapted ideas from the CBA-MI Observed scale and the Financial Health Network&#8217;s FinHealth Score. The weights are a design choice, not a statistically derived result, and we formally classify the score as a Prototype Observed Financial Health Indicator, not a validated instrument.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q5 &#8212; Why is the score below 68? What caused it?</summary><div class="a">
+    <p>&#8220;The SUS items point to two areas: system consistency, Question 6, and complexity, Questions 2 and 4. Our study did not collect open-ended feedback, so we cannot say with certainty why. Our interpretation is that SmartSpend is feature-dense, with AI chat, multi-modal input, budgeting, scoring, and badges in one app, and that can create a learning curve. Recommendation 8 targets consistency and complexity directly through interface redesign.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q6 &#8212; What LLM did you use?</summary><div class="a">
+    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b>. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral. The criteria were weighted: Filipino-English accuracy 25%, speed 20%, tool use and JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. We also built an eight-model failover chain across Google, Groq, and Cerebras. In v3.2.4, OpenRouter was added as the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q7 &#8212; Is the app available on iOS?</summary><div class="a">
+    <p>&#8220;Currently, SmartSpend runs on <b>Android only</b>, and our Scope and Limitations state that it was designed exclusively for Android. It was built with Flutter, so an iOS version is technically possible, but iOS support is not one of our nine recommendations and was outside the scope of this study. Our Google Play release, Recommendation 3, is the planned next distribution step.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q8 &#8212; Who validated the instrument?</summary><div class="a">
+    <p>&#8220;Our content validator was <b>Avigail Candevario, PFMe</b>, a subject matter expert in financial management and business operations. <b>Purposive sampling was used</b> for her selection, because her expertise in personal finance and financial education made her an appropriate validator for a financial management survey. She reviewed the needs-assessment questionnaire for relevance, clarity, and appropriateness. Her validation certificate is in Appendix D.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q9 &#8212; Why are there 16 parents and 14 young professionals if three respondents identified as both?</summary><div class="a">
+    <p>&#8220;Three of our 30 respondents answered &#8216;Both a parent and a young professional&#8217; in Question 2 of the survey. For analysis and reporting, we counted them with the parent group based on their Q1 age bracket, which was 35 to 55. This is stated in the notes to Table 3 and Table 5 and in the Figure 5 footnote. The SUS evaluation was a separate group, where respondents identified their own group on the SUS form, giving 10 parents and 20 young professionals.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q10 &#8212; Your parsing accuracy looks low for dates. What is the evidence?</summary><div class="a">
+    <p>&#8220;Table 9 reports development-phase observations only, not an independent audit. Overall field-level accuracy was 88.2% for amount, 79.9% for description, 70.4% for date (the weakest), and 83.4% for category. Date is weakest because receipts have varied formats &#8212; MM/DD, DD-MON, relative dates like &#8216;today&#8217;. We say plainly that this is not a formal benchmark. Recommendation 9 proposes a formal evaluation using standardized test receipts across multiple platforms.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q11 &#8212; Is your data private? Your primary AI provider is a free tier.</summary><div class="a">
+    <p>&#8220;Yes, we are upfront about this. In Cloud AI mode, mobile numbers, reference numbers, and account patterns are redacted on the device first, and a one-time privacy disclosure appears before the first AI message. But the free Gemini quota&#8217;s terms say content may be used to improve Google&#8217;s products, so redaction reduces the exposure but does not remove it. Users with sensitive details can use Private Local Mode, where requests go only to their own PC running Ollama or LM Studio. The local database is currently unencrypted, which is Recommendation 5.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q12 &#8212; What are your recommendations?</summary><div class="a">
+    <p>&#8220;We have <b>nine recommendations</b>: (1) Payday-cycle-aware budgeting, aligned to the 15th-and-30th salary cycle. (2) Backend API proxy and per-user keys, to remove device-side key exposure. (3) Google Play release, after the proxy and a privacy policy are in place. (4) On-device AI tier, an opt-in model of about 2.6 gigabytes for fully offline AI. (5) SQLite encryption using SQLCipher. (6) Household and remittance features: shared wallets and OFW remittance as a distinct income category. (7) Longitudinal evaluation over three to six months with a larger sample. (8) UI/UX refinement, addressing consistency in Q6 and complexity in Q2. (9) Formal parsing evaluation, using standardized test receipts across multiple platforms. All nine come from the limitations of the current prototype.&#8221;</p>
+    </div></details>
+
+    <details class="qa"><summary>Q13 &#8212; Why does SmartSpend not have an MOA?</summary><div class="a">
+    <p>&#8220;SmartSpend is a consumer-facing mobile application for general public use, not an enterprise or institutional system deployed to a single organization. Our deployment model is direct-to-consumer via GitHub Releases, freely downloadable at github.com/Zushikina-kun/smartspend-app/releases. An MOA is not applicable because there is no single client organization &#8212; our users are individual Filipinos. The comparison would be like asking why GCash has no MOA with one specific barangay. We have verifiable public deployment: 5+ GitHub releases, a project website, and 30 real users who evaluated v3.1.0 on their own Android devices.&#8221;</p>
+    </div></details>
+
+  </details>
+
+  <!-- REMINDERS -->
+  <h2 class="sec" id="script-reminders">&#128466; Reminders for Delivery</h2>
+  <ul class="oneliners">
+    <li><b>Always say &#8220;partially achieved&#8221; for Objective 3.</b><span>Never &#8220;passed&#8221;, &#8220;failed&#8221;, &#8220;acceptable&#8221;, or &#8220;fully achieved&#8221;.</span></li>
+    <li><b>Always say &#8220;61.83, below 68 and 80&#8221;.</b><span>Never round up or gloss over. The number is below both benchmarks.</span></li>
+    <li><b>Sampling: &#8220;random sampling&#8221; for respondents, &#8220;purposive sampling&#8221; for the validator only.</b><span>Never &#8220;stratified&#8221;.</span></li>
+    <li><b>Needs assessment: 16 parents (including 3 &#8220;both&#8221;) + 14 young professionals = 30.</b><span>SUS evaluation: 10 parents + 20 young professionals = 30 valid of 36 (separate group).</span></li>
+    <li><b>Always say &#8220;quantitative descriptive developmental&#8221;.</b><span>No interviews, so never say &#8220;respondents said&#8221; or &#8220;respondents cited&#8221;. Say &#8220;the SUS items showed&#8221;.</span></li>
+    <li><b>Don&#8217;t say &#8220;proposed&#8221; about the app.</b><span>It is built and tested.</span></li>
+    <li><b>&#8220;Ten candidate models from four providers&#8221; and &#8220;eight-model failover chain&#8221; (v3.1.0 evaluated).</b><span>&#8220;10-provider chain&#8221; for the current v3.2.4 build (adds OpenRouter).</span></li>
+    <li><b>Gemini had &#8220;a high free-tier quota&#8221;, not &#8220;the highest&#8221;.</b><span>Table 6: Groq and Cerebras are higher.</span></li>
+    <li><b>Rec 8 = UI/UX refinement. Rec 9 = Formal parsing evaluation.</b><span>Never swap these or say &#8220;seven recommendations&#8221;.</span></li>
+    <li><b>Don&#8217;t quote stats not in the manuscript.</b><span>No requests per day, APK size, screen count, currencies, or precision/recall unless they appear in the manuscript.</span></li>
+  </ul>
+
+  <footer>SmartSpend v3.2.4 (Final Defense Build) &middot; Team Lucid Frame &middot; Lorma Colleges CCSE &middot; November 16, 2026 3:00 PM<br>
+  Presentation Script &#8212; Slide Notes, Panel Q&amp;A, Delivery Reminders</footer>
 
 </section>
 
@@ -1327,7 +1608,7 @@
 (function(){
   // ---- CHECKLIST with localStorage persistence ----
   var items = [
-    "Install SmartSpend v3.2.3 APK (arm64-v8a) from GitHub releases",
+    "Install SmartSpend v3.2.4 APK (arm64-v8a) from GitHub releases",
     "Open app -> Settings -> Quick Presets -> Normal Mode (NOT Lite)",
     "Settings -> AI Model -> Auto (Recommended)",
     "AI screen -> menu -> Reset Daily Limit (150 messages)",
@@ -1356,8 +1637,8 @@
 
   // ---- FACTS GRID ----
   var facts = [
-    ["v3.2.3","Current version"],["Nov 16, 2026","Final defense date"],["v3.1.0","Evaluated version"],
-    ["Android · Flutter","Platform"],["10","AI providers in fallback chain (v3.2.3)"],
+    ["v3.2.4","Current version"],["Nov 16, 2026","Final defense date"],["v3.1.0","Evaluated version"],
+    ["Android · Flutter","Platform"],["10","AI providers in fallback chain (v3.2.4)"],
     ["8","AI models in original chain (v3.1.0)"],["34","Agentic action types"],
     ["7","Input modalities"],["150/day","AI message limit per user"],
     ["4 x 25 = 100","FHS components & max score"],[">=80","FHS Good (Bangor 2009)"],
