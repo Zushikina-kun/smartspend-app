@@ -79,12 +79,13 @@ class AppConfig {
   // 1M tokens/day free, 5 RPM free tier, ~3,000 t/s
 
   // OpenRouter (unified API gateway to 100+ models)
-  // Best balance for SmartSpend: fast expense logging + quality financial advice
-  static const _openRouterModel = "google/gemini-flash-1.5";
-  // Alternative models available:
-  // - "anthropic/claude-3.5-sonnet" (best quality, higher cost)
-  // - "google/gemini-flash-1.5-8b" (fastest, cheapest)
-  // - "openai/gpt-4o-mini" (balanced alternative)
+  // openrouter/free = auto-routes to best available free model at request time
+  // Fallback chain: nemotron-3-ultra (550B frontier) → gemma-4-31b → nemotron-3.5-lightning
+  static const _openRouterModel = "openrouter/free";
+  // Best explicit model if free routing is unavailable:
+  // "nvidia/nemotron-3-ultra-550b-a55b:free" — 550B frontier, 1M context, FREE
+  // "google/gemma-4-31b-it:free" — Google latest dense, 262K context, FREE
+  // "nvidia/nemotron-3.5-lightning:free" — fast MoE, 1M context, FREE
 
   // ── REMOTE KEYS (from Firebase Remote Config) ─────────────────────────────
   static String? _remoteGroqKey;
@@ -190,7 +191,7 @@ class AppConfig {
     (
       'openrouter',
       'OpenRouter Gateway',
-      r'🌐 Access 100+ models — $100 credit, expires May 2027'
+      r'🌐 Auto-routes to best free model (Nemotron 550B, Gemma 4, etc) — $100 credit'
     ),
     (
       'gemini_flash',
