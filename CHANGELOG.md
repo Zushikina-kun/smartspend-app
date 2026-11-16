@@ -2,7 +2,26 @@
 
 All notable changes to SmartSpend are documented here.
 
-## [3.2.3] - 2024-11-16
+## [3.2.4] - 2026-11-16
+
+### Fixed (Critical — Defense Day Hotfixes)
+- **AI auto mode immediate fallback** — `autoFallback()` now switches provider on first failure instead of silently retrying 3×35s = 105s wasted
+- **Firebase short cache on cold start** — `minimumFetchInterval` drops to 5 min on first open (was 1hr), so OpenRouter key loads immediately
+- **Empty-key provider skip** — Auto mode now detects and skips providers with no key, jumping straight to next available (Groq always has hardcoded key)
+- **OpenRouter HTTP headers** — Added required `HTTP-Referer` and `X-Title: SmartSpend` headers, fixing HTTP 400 errors from OpenRouter
+- **Context preserved on fallback** — Confirmed `_history` is static and survives provider switches; chat context no longer lost on fallback
+- **Same fixes applied to llm_service.dart** — OpenRouter headers and fallback logic consistent across both AI services
+- **kAppVersion updated to 3.2.4** — Debug log now shows correct version
+- **WhatsNew screen updated** — Shows OpenRouter, AI fallback fix, Gov Contributions as top features; new prefKey so existing users see update once
+
+### Technical
+- Modified: `lib/services/app_config.dart`, `lib/services/ai_chat_service.dart`, `lib/services/llm_service.dart`, `lib/services/debug_service.dart`, `lib/screens/whats_new_screen.dart`
+- `flutter analyze` on all modified files: 0 errors
+- Version bump from 3.2.3+114 to 3.2.4+115
+
+---
+
+## [3.2.3] - 2026-11-16
 
 ### Fixed
 - **CRITICAL:** AI timeout fallback - When all 3 retries timeout, now properly triggers provider fallback instead of hard failure

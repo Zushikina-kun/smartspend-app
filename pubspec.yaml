@@ -1,7 +1,7 @@
 name: smartspend_app
 description: Smart Spend - AI-Assisted Financial Tracking and Advisory
 
-version: 3.2.3+114
+version: 3.2.4+115
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
