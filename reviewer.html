@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SmartSpend &#8212; Defense Reviewer v3.2.4</title>
+<title>SmartSpend &#8212; Defense Reviewer v3.2.5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -164,6 +164,25 @@
   .formula-box .comment{color:var(--ink-soft); font-style:italic; font-family:"IBM Plex Sans",sans-serif; font-size:.82rem;}
   footer{text-align:center; font-size:.73rem; color:var(--ink-soft);
     margin-top:48px; padding-top:14px; border-top:1px solid var(--line);}
+  /* ---- PROGRESS BAR ---- */
+  #read-progress{position:fixed; top:0; left:0; width:0%; height:3px; background:var(--ledger); z-index:999; transition:width .1s linear; border-radius:0 2px 2px 0;}
+  /* ---- GLOBAL SEARCH OVERLAY ---- */
+  #gsearch-wrap{position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.55); z-index:200; display:none; align-items:flex-start; justify-content:center; padding-top:80px;}
+  #gsearch-wrap.open{display:flex;}
+  #gsearch-box{background:var(--card); border:1px solid var(--line); border-radius:8px; width:100%; max-width:640px; margin:0 16px; box-shadow:0 8px 32px rgba(0,0,0,.22); overflow:hidden;}
+  #gsearch-input{width:100%; padding:14px 16px; border:none; background:transparent; color:var(--ink); font-family:"IBM Plex Sans",sans-serif; font-size:1rem; outline:none;}
+  #gsearch-results{max-height:420px; overflow-y:auto; border-top:1px solid var(--line);}
+  .gs-item{padding:10px 16px; cursor:pointer; display:flex; gap:10px; align-items:flex-start; border-bottom:1px solid var(--line);}
+  .gs-item:hover{background:var(--ledger-soft);}
+  .gs-item:last-child{border-bottom:none;}
+  .gs-tab-badge{font-family:"IBM Plex Mono",monospace; font-size:.64rem; padding:2px 7px; border-radius:3px; background:var(--ledger-soft); color:var(--ledger); white-space:nowrap; flex-shrink:0; margin-top:2px;}
+  .gs-title{font-size:.9rem; color:var(--ink); line-height:1.4;}
+  .gs-snippet{font-size:.78rem; color:var(--ink-soft); margin-top:2px; line-height:1.3;}
+  #gsearch-hint{padding:10px 16px; font-size:.78rem; color:var(--ink-soft); border-top:1px solid var(--line);}
+  /* ---- SHORTCUT BADGE ---- */
+  #shortcuts-hint{position:fixed; bottom:16px; right:16px; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:7px 12px; font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--ink-soft); z-index:50; cursor:pointer; opacity:.7; transition:opacity .2s;}
+  #shortcuts-hint:hover{opacity:1;}
+  @media(max-width:480px){#shortcuts-hint{display:none;}}
   @media print{
     header.top{position:static;}
     .tabs,.theme-btn,.qa-toolbar,.jump-links{display:none !important;}
@@ -182,6 +201,21 @@
 </style>
 </head>
 <body>
+<div id="read-progress"></div>
+
+<!-- GLOBAL SEARCH OVERLAY -->
+<div id="gsearch-wrap" role="dialog" aria-modal="true" onclick="if(event.target===this)closeGSearch()">
+  <div id="gsearch-box">
+    <input id="gsearch-input" type="text" placeholder="Search all tabs… (Esc to close)" oninput="runGSearch(this.value)" autocomplete="off" spellcheck="false">
+    <div id="gsearch-results"></div>
+    <div id="gsearch-hint">&#8963;K or / to open &nbsp;&#183;&nbsp; 1&#8211;4 to switch tabs &nbsp;&#183;&nbsp; Esc to close</div>
+  </div>
+</div>
+
+<!-- SHORTCUTS HINT -->
+<div id="shortcuts-hint" title="Keyboard shortcuts" onclick="document.getElementById('shortcuts-hint').style.display='none'">
+  / or &#8963;K = search &nbsp;&#183;&nbsp; Esc = clear &nbsp;&#183;&nbsp; 1&#8211;4 = tabs
+</div>
 <input type="radio" name="tab" id="t-demo" checked>
 <input type="radio" name="tab" id="t-qa">
 <input type="radio" name="tab" id="t-numbers">
@@ -192,7 +226,7 @@
     <div class="top-row">
       <div>
         <h1>SmartSpend Defense Reviewer</h1>
-        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Mon Nov 16, 2026 3:00 PM &nbsp;&middot;&nbsp; v3.2.4</div>
+        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Mon Nov 16, 2026 3:00 PM &nbsp;&middot;&nbsp; v3.2.5</div>
       </div>
       <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">&#127769; Dark</button>
     </div>
@@ -211,7 +245,7 @@
 <section class="panel" id="p-demo">
 
   <div class="jump-links">
-    <a href="#whats-new">What's New v3.2.4</a>
+    <a href="#whats-new">What's New v3.2.5</a>
     <a href="#night-before">Night-Before Checklist</a>
     <a href="#opening">Opening Statement</a>
     <a href="#demo-flow">Demo Flow</a>
@@ -221,15 +255,15 @@
     <a href="#roles">Role Split</a>
   </div>
 
-  <h2 class="sec" id="whats-new">&#11088; What's New in v3.2.4 Final</h2>
+  <h2 class="sec" id="whats-new">&#11088; What's New in v3.2.5 Final</h2>
   <div style="background:var(--gold-soft); border-left:3px solid var(--gold); padding:14px 16px; border-radius:4px; margin-bottom:20px;">
-    <p style="margin:0 0 8px; font-weight:600; color:var(--ink);">v3.2.4 &mdash; Final Defense Build</p>
+    <p style="margin:0 0 8px; font-weight:600; color:var(--ink);">v3.2.5 &mdash; Final Defense Build</p>
     <ul style="margin:0; padding-left:20px; font-size:.88rem; color:var(--ink-soft);">
-      <li><b>OpenRouter AI Gateway</b> &#8212; Multi-provider AI architecture with 100+ model access via unified API endpoint</li>
-      <li><b>10-Provider Fallback Chain</b> &#8212; Automatic failover ensures AI features work 24/7 (Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; 5 Groq models &#8594; Cerebras)</li>
-      <li><b>Intelligent Auto Routing</b> &#8212; Auto mode selects optimal provider for speed and quality</li>
+      <li><b>OpenRouter AI Gateway</b> &#8212; Multi-provider AI architecture with 100+ model access via unified API endpoint; default model <code>openrouter/free</code> (auto-routes to best available free model)</li>
+      <li><b>10-Provider Fallback Chain</b> &#8212; Automatic failover ensures AI features work 24/7 (Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B &#8594; Qwen 3.6 &#8594; Qwen 3.8 &#8594; Compound &#8594; Compound Mini &#8594; Cerebras)</li>
+      <li><b>Intelligent Auto Routing</b> &#8212; Auto mode selects optimal provider for speed and quality; caches last successful provider</li>
       <li><b>Government Contributions Tracker</b> &#8212; First Filipino finance app with SSS/PhilHealth/Pag-IBIG YTD totals + SSS pension calculator</li>
-      <li><b>Fixed AI Model Selector scrolling</b> on small screens (&lt;5.5")</li>
+      <li><b>Defense Reviewer Upgrade</b> &#8212; Global search, keyboard shortcuts, reading progress bar, 140+ Q&amp;A questions</li>
     </ul>
   </div>
 
@@ -266,7 +300,7 @@
           <li>Watch it log 2 expenses simultaneously with Filipino/English parsing</li>
         </ul>
         <div class="say">"I just logged 2 expenses in one sentence in Taglish. The AI understood the items, amounts, categories, and dates &#8212; without me filling any form. This is what we call an agentic action &#8212; we have 34 types in total, from logging expenses to setting budgets to computing savings."</div>
-        <div class="say">If panel asks how it works: "The message goes to our AI engine. In Auto mode, it tries our 10-provider chain &#8212; starting with OpenRouter (which routes to openrouter/free (auto-routes to best free model)) then falling back through Gemini, 5 Groq models, and Cerebras. The AI returns a JSON action like <code>{type:'log_expense', item:'lunch', amount:65}</code> which the app then executes. Users type naturally in Filipino, English, or Taglish."</div>
+        <div class="say">If panel asks how it works: "The message goes to our AI engine. In Auto mode, it tries our 10-provider chain &#8212; starting with OpenRouter (which routes to <code>openrouter/free</code>, auto-selecting the best available free model) then falling back through Gemini, 5 Groq models, and Cerebras. The AI returns a JSON action like <code>{type:'log_expense', item:'lunch', amount:65}</code> which the app then executes. Users type naturally in Filipino, English, or Taglish."</div>
       </div>
     </div>
 
@@ -345,14 +379,14 @@
     <tr><td>"13 parents"</td><td>"16 parents and 14 young professionals" (needs assessment, 30 total)</td></tr>
     <tr><td>"fully achieved" for Obj. 3</td><td>"Objective 3 was <b>partially achieved</b>"</td></tr>
     <tr><td>"passed" / "excellent" SUS</td><td>"61.83, below the 68 benchmark and the 80 target"</td></tr>
-    <tr><td>"eight-provider chain"</td><td>"8-model cloud failover chain" or "10-provider chain" (v3.2.4)</td></tr>
+    <tr><td>"eight-provider chain"</td><td>"8-model cloud failover chain" or "10-provider chain" (v3.2.5)</td></tr>
     <tr><td>"the highest free-tier quota"</td><td>"a high free-tier quota" (Table 6: Groq/Cerebras are higher)</td></tr>
     <tr><td>"fully offline"</td><td>"offline-first; core features work offline; cloud AI needs internet"</td></tr>
     <tr><td>"Recommendation 1 for UI/UX"</td><td>"UI/UX refinement is Recommendation 8"</td></tr>
     <tr><td>"proposed" (for the app)</td><td>"developed" / "built" (the app exists!)</td></tr>
     <tr><td>"seven recommendations"</td><td>"nine recommendations"</td></tr>
     <tr><td>"20 models" / "ten providers"</td><td>"ten candidate models from four providers" (evaluation)</td></tr>
-    <tr><td>"version 3.2.4"</td><td>"version 3.1.0 was evaluated"; "v3.2.4 is the current version"</td></tr>
+    <tr><td>"version 3.2.4"</td><td>"version 3.1.0 was evaluated"; "v3.2.5 is the current version"</td></tr>
   </table></div>
 
   <h2 class="sec" id="slide-notes">Slide-by-Slide Speaking Notes</h2>
@@ -375,7 +409,7 @@
     <p><b>Slide 7 &#8212; Conceptual Framework (IPO):</b> Inputs: text, voice, receipt images, barcode scans, user financial data. Process: LLM parsing, OCR, barcode recognition, data structuring, local SQLite storage, Firebase synchronization. Outputs: automatically recorded expenses, financial summaries, charts, alerts, AI-generated insights, the Financial Health Score from 0 to 100, and AI-powered financial assistance.</p>
     <p><b>Slide 8 &#8212; Methodology:</b> This study employed a <b>quantitative descriptive developmental research design</b>. No interviews were conducted. <b>Random sampling</b> for the needs assessment: 30 respondents (16 parents including 3 "both" + 14 young professionals). A separate group completed the SUS: 30 valid of 36 (10 parents + 20 young professionals). <b>Purposive sampling</b> only for the content validator: Avigail Candevario, PFMe.</p>
     <p><b>Slide 9 &#8212; Needs Assessment:</b> 96.7% (29/30) expressed intent to use an AI-powered financial app. 93.3% (28/30) already used GCash. Only 10% (3/30) used a dedicated expense tracking app. Most common tracking: physical receipts (90%), mental estimates (53.3%). Objective 1: <b>achieved</b>.</p>
-    <p><b>Slide 10 &#8212; System Overview:</b> SmartSpend v3.1.0: 34 autonomous AI actions, 12-mood Peso mascot, batch screenshot import for 40+ platforms, 26-table SQLite schema, 20 Philippine banks + 5 digital banks, 36 achievement badges, 31 Taglish situations. AI: 8-model cloud failover chain plus optional Private Local Mode (now 10 with OpenRouter in v3.2.4). Core features work offline; AI features need a connection unless using local mode.</p>
+    <p><b>Slide 10 &#8212; System Overview:</b> SmartSpend v3.1.0: 34 autonomous AI actions, 12-mood Peso mascot, batch screenshot import for 40+ platforms, 26-table SQLite schema, 20 Philippine banks + 5 digital banks, 36 achievement badges, 31 Taglish situations. AI: 8-model cloud failover chain plus optional Private Local Mode (now 10 with OpenRouter in v3.2.5). Core features work offline; AI features need a connection unless using local mode.</p>
     </div>
   </details>
 
@@ -383,7 +417,7 @@
     <summary>Slides 11&#8211;15: Screenshots, LLM Selection, FHS, Privacy, SUS Results</summary>
     <div class="a">
     <p><b>Slide 11 &#8212; Screenshots:</b> Walk through Figures 9&#8211;13. Login/Demo Mode, Home Dashboard, Peso Chat logging, Receipt Scanning, FHS Breakdown. The manuscript also includes Budgets (Fig 14) and Local AI setup (Fig 15).</p>
-    <p><b>Slide 12 &#8212; LLM Selection:</b> We evaluated <b>ten candidate models from four providers</b> against six weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Selected <b>Gemini 3.5 Flash-Lite</b>: 1M-token context window, native function calling, good Taglish handling, high free-tier quota. Added 8-model fallback chain &#8212; now 10-provider with OpenRouter in v3.2.4.</p>
+    <p><b>Slide 12 &#8212; LLM Selection:</b> We evaluated <b>ten candidate models from four providers</b> against six weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Selected <b>Gemini 3.5 Flash-Lite</b>: 1M-token context window, native function calling, good Taglish handling, high free-tier quota. Added 8-model fallback chain &#8212; now 10-provider with OpenRouter in v3.2.5.</p>
     <p><b>Slide 13 &#8212; Financial Health Score:</b> Prototype Observed Financial Health Indicator. Full Mode: 4 components &#215; 25 pts each. Lightweight Mode for no-income users. Warning Decay: up to -15 pts for overspending. Gap Adjustment: +2 for confirmed no-spend day, -3 for unlogged day. Equal weights are a design choice, not statistically derived.</p>
     <p><b>Slide 14 &#8212; Privacy Tiers:</b> Tier 1 (Cloud AI, default): PII redacted on-device, one-time privacy disclosure. Honest: free Gemini quota terms say content may improve Google products. Tier 2 (Private Local): requests go only to user&#8217;s own PC (Ollama/LM Studio/Jan). Tier 3 (on-device): <b>not implemented</b> &#8212; Recommendation 4.</p>
     <p><b>Slide 15 &#8212; SUS Results &#8212; CRITICAL:</b> 30 valid respondents (10 parents + 20 young professionals). Mean: <b>61.83</b>, SD: 17.58, Median: 55.0, Range: 35.0&#8211;92.5. <b>Grade D, adjective "OK"</b> (Bangor et al. 2009). Below 68 benchmark AND below 80 target. Parents: 58.25, Young professionals: 63.62. Weak items: consistency (Q6), complexity (Q2, Q4). Objective 3: <b>partially achieved</b>.</p>
@@ -434,8 +468,9 @@
 
   <!-- SEARCH TOOLBAR -->
   <div class="qa-toolbar">
-    <input type="text" id="qa-search" placeholder="Search questions..." oninput="filterQA(this.value)" autocomplete="off">
+    <input type="text" id="qa-search" placeholder="&#128269; Search Q&amp;A tab… (use / or Ctrl+K for global search)" oninput="filterQA(this.value)" autocomplete="off">
     <span id="result-count"></span>
+    <button class="qa-btn" onclick="openGSearch()">&#127758; Global Search</button>
     <button class="qa-btn" onclick="expandAll()">&#8853; Expand All</button>
     <button class="qa-btn" onclick="collapseAll()">&#8854; Collapse All</button>
   </div>
@@ -533,7 +568,7 @@
   <p><b>Gamification (3):</b> check_achievements, show_badges, check_peso_mood. <b>Meta (3):</b> help, clarify_question, multi_action.</p>
   </div></details>
   <details class="qa"><summary>What happens when the AI is down or the internet is slow? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>A 10-provider fallback chain automatically switches (v3.2.4): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
+  <p>A 10-provider fallback chain automatically switches (v3.2.5): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
   </div></details>
   <details class="qa"><summary>How does the AI understand Taglish? Did you train a custom model? <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
   <p>No custom training &#8212; we use prompt engineering. The system prompt includes: (1) Filipino cultural context (jeepney, pandesal, allowance, paluwagan), (2) 150+ Filipino item catalog, (3) Taglish instruction examples, (4) Category mapping guidance (taho = Food, tricycle = Transportation), (5) Common Filipino merchants (Jollibee, 7-Eleven, SM, Puregold). Gemini 3.5 and GPT-OSS-120B handle this well because their training data includes Filipino text. We don&#8217;t need fine-tuning &#8212; the base models + good prompts suffice.</p>
@@ -651,14 +686,14 @@
   <details class="qa"><summary>What evidence of real deployment do you have? <span class="tag tag-deploy">deployment</span></summary><div class="a">
   <p>Four types of evidence:</p>
   <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-  <li><b>GitHub repository:</b> 5+ public releases (v3.0.0 to v3.2.4), 113+ commits, Source Available License</li>
+  <li><b>GitHub repository:</b> 5+ public releases (v3.0.0 to v3.2.5), 113+ commits, Source Available License</li>
   <li><b>Project website:</b> <code>zushikina-kun.github.io/smartspend-app</code> &#8212; research findings, download links, feature documentation</li>
   <li><b>Real user adoption:</b> 30 SUS evaluation respondents used the app on their own Android devices for 10+ minutes each</li>
   <li><b>Active maintenance:</b> Version releases addressing panel feedback (v3.2.x with OpenRouter + UI fixes), GitHub Issues for community feedback</li>
   </ol>
   </div></details>
   <details class="qa"><summary>How does GitHub releases distribution work? <span class="tag tag-deploy">deployment</span> <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>When we push a git tag (e.g., <code>v3.2.4</code>), GitHub Actions automatically builds and signs the APKs, then publishes them as a GitHub Release. Users visit the releases page, download the ARM64 APK for their phone, and install via side-loading (Enable Unknown Sources). GitHub provides download count tracking, version history, and release notes. This is the standard distribution model for open-source Android apps before Play Store release.</p>
+  <p>When we push a git tag (e.g., <code>v3.2.5</code>), GitHub Actions automatically builds and signs the APKs, then publishes them as a GitHub Release. Users visit the releases page, download the ARM64 APK for their phone, and install via side-loading (Enable Unknown Sources). GitHub provides download count tracking, version history, and release notes. This is the standard distribution model for open-source Android apps before Play Store release.</p>
   </div></details>
   <details class="qa"><summary>Is direct-to-consumer a valid deployment for capstone? <span class="tag tag-deploy">deployment</span> <span class="tag tag-research">research</span></summary><div class="a">
   <p>Yes. Objective 2 states: "to design and develop the SmartSpend mobile application" &#8212; achieved with a working Android app. Objective 3 evaluates usability using SUS &#8212; which requires real individual users, not an institutional client. Our deployment model supported the research: we needed diverse individual users (parents and young professionals) to evaluate the app in real-world personal finance scenarios. An institutional deployment would limit our sample to one organization&#8217;s employees, reducing generalizability.</p>
@@ -687,7 +722,7 @@
   <p>When Auto mode is enabled, SmartSpend tries providers in this priority order:</p>
   <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li><b>Custom Local</b> (if configured) &#8212; user&#8217;s own PC running Ollama/LM Studio/Jan</li>
-  <li><b>OpenRouter</b> &#8212; openrouter/free (auto-routes to best free model) default; $100 credit; routes to 100+ models</li>
+  <li><b>OpenRouter</b> &#8212; <code>openrouter/free</code> default; $100 credit; routes to 100+ models</li>
   <li><b>Gemini 3.5 Flash</b> &#8212; Google AI Studio direct connection</li>
   <li><b>Gemini 3.5 Flash-Lite</b> &#8212; lighter/faster Google model (primary in v3.1.0)</li>
   <li><b>GPT-OSS 120B (Groq)</b> &#8212; fast inference</li>
@@ -710,7 +745,7 @@
   <p>SmartSpend is designed so AI enhances the experience but is never a single point of failure. Core finance tracking works without AI.</p>
   </div></details>
   <details class="qa"><summary>How much does the AI cost to run? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Current cost: approximately $0 recurring.</b> All direct providers (Gemini, Groq, Cerebras) are on free tiers. OpenRouter credit: $100 available (expires May 14, 2027) &#8212; at $0.30/1M tokens for openrouter/free (auto-routes to best free model), that&#8217;s ~83,000 AI advice chats or ~166,000 expense logs possible from the credit alone. Per-user 150 message/day limit enforces zero-cost operation for a research prototype. For production scaling, Recommendation 2 (backend proxy) would implement per-user API keys and usage billing.</p>
+  <p><b>Current cost: approximately $0 recurring.</b> All direct providers (Gemini, Groq, Cerebras) are on free tiers. OpenRouter credit: $100 available (expires May 14, 2027) &#8212; at $0.30/1M tokens for <code>openrouter/free</code>, that&#8217;s ~83,000 AI advice chats or ~166,000 expense logs possible from the credit alone. Per-user 150 message/day limit enforces zero-cost operation for a research prototype. For production scaling, Recommendation 2 (backend proxy) would implement per-user API keys and usage billing.</p>
   </div></details>
   <details class="qa"><summary>Is user data sent to AI providers? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-security">security</span></summary><div class="a">
   <p>Only the text the user typed and a summarized financial context (categories and amounts, never names or account numbers). Mobile numbers, reference numbers, and account patterns are <b>redacted on-device</b> before any API call, using regex patterns. A one-time privacy disclosure appears before the first AI message. We are upfront that free Gemini quota terms say content may be used to improve Google&#8217;s products &#8212; redaction reduces but does not fully eliminate that exposure. Users who want zero exposure can use Private Local Mode (Tier 2) where requests go only to their own PC.</p>
@@ -719,7 +754,7 @@
   <p>The API key (<code>sk-or-v1-...</code>) is stored in Firebase Remote Config under the parameter <code>openrouter_api_key</code> &#8212; never hardcoded in the APK. The key is loaded at app startup via <code>AppConfig.init()</code>. Usage can be monitored at <code>openrouter.ai/workspaces/default/activity</code>. The credit expires May 14, 2027. Post-capstone, Recommendation 2 (backend proxy) would move to per-user API key management so each user&#8217;s usage is tracked separately, preventing one heavy user from exhausting the shared credit.</p>
   </div></details>
   <details class="qa"><summary>What model does OpenRouter use by default? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Default: <code>google/openrouter/free (auto-routes to best free model)</code></b> &#8212; chosen for SmartSpend because:</p>
+  <p><b>Default: <code>openrouter/free</code></b> &#8212; SmartSpend's OpenRouter model, chosen because it auto-routes to the best available free model on the OpenRouter network, providing:
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li>&#9989; Fast response time (good for real-time expense logging)</li>
   <li>&#9989; Strong reasoning (handles financial advice and calculations)</li>
@@ -737,7 +772,7 @@
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li>Line ~18: <code>_fallbackOpenRouterKey</code> constant</li>
   <li>Line ~28: <code>_openRouterUrl</code> (<code>https://openrouter.ai/api/v1/chat/completions</code>)</li>
-  <li>Line ~59: <code>_openRouterModel</code> default (<code>google/openrouter/free (auto-routes to best free model)</code>)</li>
+  <li>Line ~59: <code>_openRouterModel</code> default (<code>openrouter/free</code>)</li>
   <li>Line ~129: Added to <code>availableModels</code> list (3rd position)</li>
   <li>Line ~284: Integrated into <code>autoFallback()</code> chain (2nd position)</li>
   <li>Line ~431: Added to Firebase Remote Config defaults</li>
@@ -775,7 +810,7 @@
   <p><b>Also fixed:</b> AI Model Selector bottom sheet scrolling on small screens (&lt;5.5"). Build 111 released as production-ready APK (119.8 MB, Android 5.0+).</p>
   </div></details>
   <details class="qa"><summary>What's new in v3.2.2&#8211;3.2.3? <span class="tag tag-openrouter">OpenRouter</span></summary><div class="a">
-  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: openrouter/free (auto-routes to best free model).</p>
+  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: <code>openrouter/free</code> (auto-selects best available free model on OpenRouter network).</p>
   <p><b>10-provider fallback chain</b> &#8212; Upgraded from 8 to 10 providers. Auto mode now prioritizes OpenRouter for optimal model selection across any task type.</p>
   <p><b>Intelligent routing</b> &#8212; App caches last successful provider, reducing latency for repeat requests.</p>
   </div></details>
@@ -836,7 +871,7 @@
   <p><b>Random sampling was used</b> for respondents. For a capstone-level developmental study, 30 is a common sample size for identifying patterns in a needs assessment and usability issues in a prototype. SUS is designed to be reliable with small samples &#8212; Tullis &amp; Stetson (2004) show it stabilizes around 12&#8211;14 participants. Our 30 exceeds this minimum. We acknowledge it limits generalizability because SUS respondents came from one locale &#8212; Recommendation 7 calls for a longitudinal evaluation with a larger sample.</p>
   </div></details>
   <details class="qa"><summary>What LLM did you use and why? <span class="tag tag-ai">AI</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>Evaluated model:</b> Gemini 3.5 Flash-Lite (primary in v3.1.0 evaluation). We evaluated <b>ten candidate models from four providers</b> (Google, Groq, Cerebras, Mistral) against weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Flash-Lite won: 1M-token context, native function calling for 34 actions, good Taglish handling, high free-tier quota. <b>Current v3.2.4:</b> 10-provider chain with OpenRouter at position 2 for access to 100+ models.</p>
+  <p><b>Evaluated model:</b> Gemini 3.5 Flash-Lite (primary in v3.1.0 evaluation). We evaluated <b>ten candidate models from four providers</b> (Google, Groq, Cerebras, Mistral) against weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Flash-Lite won: 1M-token context, native function calling for 34 actions, good Taglish handling, high free-tier quota. <b>Current v3.2.5:</b> 10-provider chain with OpenRouter at position 2 for access to 100+ models.</p>
   </div></details>
   <details class="qa"><summary>How does SmartSpend compare to BudgetPH, PISO, Agila? <span class="tag tag-research">research</span></summary><div class="a">
   <p><b>vs BudgetPH/PISO:</b> No AI &#8212; manual logging only. We: voice, OCR, barcode, batch screenshot (40+ platforms).</p>
@@ -876,6 +911,72 @@
   <details class="qa"><summary>How do you handle offline mode? <span class="tag tag-tech">tech</span></summary><div class="a">
   <p><b>Works offline:</b> manual expense logging, view/edit/delete, budgets, wallets, analytics, receipt OCR (ML Kit on-device). <b>Needs internet:</b> AI features, Firebase sync, exchange rates. <b>Graceful degradation:</b> offline banner in AI chat with quick action to open manual Log Expense. Firebase queues changes locally and syncs when online. We say "offline-first" &#8212; never "fully offline."</p>
   </div></details>
+</details>
+
+<!-- ===== CAT 11.5: NEW TECHNICAL Q&A ===== -->
+<details class="cat" id="cat-newqa">
+  <summary>11.5 &#8212; Technical Deep-Dive: 15 New Q&amp;A</summary>
+
+  <details class="qa"><summary>What is the minimum Android version required? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p><b>Android 8.0 Oreo (API level 26)</b> is the minimum supported version. This covers devices released from 2017 onward and represents over 95% of active Android devices globally. The minimum was set at API 26 to access modern notification channels, WorkManager background processing, and SQLite WAL journal mode. SmartSpend was tested on Android 10 (API 29) through Android 15 (API 35) on physical devices during development. The APK is built with <code>--split-per-abi</code>, so users download only the slice matching their CPU (ARM64, ARM32, or x86_64), keeping the installed footprint smaller.</p>
+  </div></details>
+
+  <details class="qa"><summary>How does voice input work? <span class="tag tag-tech">tech</span> <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>Voice input uses the <b><code>speech_to_text</code> Flutter package</b>, which delegates to the device's on-device speech recognition engine — Android's SpeechRecognizer API. Processing happens locally on the device, so no audio leaves the phone during transcription. The transcribed text is then sent to the AI engine the same way a typed message is, with the full context prompt injected so the AI can parse Filipino, English, and Taglish speech. This means voice logging benefits from all 34 agentic actions: you can say "Nag-gastos ako ng dalawang daan sa grocery" and the AI will log the expense. Because transcription is on-device, it works in noisy environments and does not require a separate API key or cost.</p>
+  </div></details>
+
+  <details class="qa"><summary>What if the user loses their phone? Is data recoverable? <span class="tag tag-security">security</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>SmartSpend uses a <b>Firebase Firestore cloud sync + local SQLite backup export</b> strategy. If the user had cloud sync enabled, all expenses, budgets, wallets, goals, and settings are restored when they log in on a new phone. The sync queue in SQLite ensures any pending changes (made offline) are uploaded as soon as the original phone has internet, so data loss is minimal. Additionally, users can export a local backup as a JSON/CSV file from Settings &#8594; Backup &amp; Restore and store it on Google Drive or any external location. If neither sync nor export was used, data stored only in SQLite would be unrecoverable after factory reset or device loss — this is a known limitation acknowledged in the manuscript. Recommendation 2 (backend proxy) would also enable server-side snapshots per user.</p>
+  </div></details>
+
+  <details class="qa"><summary>Why Flutter over React Native or native Kotlin? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Three reasons drove the Flutter choice. First, <b>Google ML Kit integration</b> — Flutter's first-party ML Kit packages for OCR and barcode scanning were more mature and better documented than React Native alternatives at the time of development. Second, <b>UI rendering</b> — Flutter draws its own widgets on a GPU canvas rather than bridging to native controls, giving smoother animations for the Peso mascot's 12-mood system and custom chart widgets. Third, <b>Firebase synergy</b> — FlutterFire (the official Firebase SDK for Flutter) is maintained by Google and updated in sync with Firebase releases, making integration with Auth, Firestore, Remote Config, Crashlytics, and App Check straightforward. Native Kotlin would have been slightly faster but offered no path to iOS or web post-capstone; React Native's JavaScript bridge adds latency that matters for real-time AI response rendering. Flutter is built in Dart, which the team was trained in, eliminating additional language onboarding time.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is the app's offline capability in detail? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>SmartSpend follows a <b>local-first architecture</b>: all core financial data lives in a 26-table SQLite database on-device (schema v14). This means expense logging via manual form, viewing/editing/deleting expenses, budget management, wallet balances, savings goals, analytics charts, the Financial Health Score, and receipt OCR (Google ML Kit, on-device) all work with zero internet connection. The app queues Firebase sync changes locally and uploads them when connectivity is restored. AI features (Gemini, Groq, Cerebras, OpenRouter) require internet because they call external APIs. Private Local Mode is the only way to have AI offline — it routes requests to the user's own PC running Ollama or LM Studio. We describe the app as "offline-first" rather than "fully offline" to be precise: core tracking never fails due to connectivity, but AI-assisted input needs a connection in default mode.</p>
+  </div></details>
+
+  <details class="qa"><summary>How accurate is the OCR? What platforms are supported? <span class="tag tag-tech">tech</span> <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>OCR uses <b>Google ML Kit Text Recognition v2</b>, which runs entirely on-device using a pre-trained model — no internet is needed for text extraction. ML Kit's model handles printed text across Latin, Devanagari, Chinese, Japanese, and Korean scripts. For structured extraction (item, amount, date, merchant), the recognized text is passed to the AI with a template-matching prompt. SmartSpend ships with <b>keyword templates for 40+ platforms</b>: GCash, Maya, BDO, Metrobank, UnionBank, Shopee, Lazada, Grab, Jollibee, 7-Eleven, Steam, and others. These templates improve accuracy by guiding the AI to look for the right fields in the right positions. Development-phase testing (Table 9) showed overall field-level accuracy of 88.2% for amounts and 70.4% for dates. Date parsing is weakest because receipt date formats vary widely (e.g., "Nov 16, 2026" vs "11/16/2026" vs "Today"). Recommendation 9 calls for a formal evaluation with standardized test receipts.</p>
+  </div></details>
+
+  <details class="qa"><summary>What would you do differently with more time? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Five changes with the most impact: (1) <b>Two-round evaluation</b> — evaluate v1, incorporate UI/UX fixes, then evaluate v2. This iterative approach would likely push SUS above the 68 benchmark, addressing Objective 3 more convincingly. (2) <b>Backend proxy before evaluation</b> — completing Recommendation 2 (Firebase Cloud Function proxy) before the SUS study would eliminate the API key security limitation entirely. (3) <b>Longitudinal behavioral study</b> — measuring whether users actually saved more money after three months gives stronger evidence than a one-session SUS survey. (4) <b>Larger, geographically diverse sample</b> — 100+ respondents from Metro Manila, Visayas, and Mindanao would improve generalizability beyond La Union. (5) <b>Focus groups after the SUS</b> — open-ended qualitative data would explain why Q6 and Q2/Q4 scored low, providing specific UI targets rather than general categories. These are what Recommendations 7 and 8 propose for future research.</p>
+  </div></details>
+
+  <details class="qa"><summary>How did you validate the FHS formula? <span class="tag tag-fhs">FHS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>The FHS was <b>not externally validated</b> — this is stated transparently in the manuscript. We formally classify it as a <b>Prototype Observed Financial Health Indicator</b>. The formula was designed by adapting two established frameworks: the <b>CBA-MI Observed Financial Health scale</b> (which uses similar behavioral metrics) and the <b>Financial Health Network's FinHealth Score</b> (which decomposes financial health into measurable components). The equal 25-point weighting per component is a design decision, not a statistically derived result — we did not perform factor analysis or confirmatory factor analysis. The content validator, Avigail Candevario PFMe, reviewed the FHS concept for relevance and face validity in a Filipino personal finance context. Recommendation 7 (longitudinal evaluation) would eventually provide real-world outcome data to test whether users with higher FHS scores actually improve their financial behavior, enabling formal validation or weight adjustment.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is paluwagan and how does SmartSpend handle it? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p><b>Paluwagan</b> (also called "hulugan" or "kamustahan" in some regions) is a traditional Filipino rotating savings club. A fixed group of members each contribute a fixed amount every period (weekly or monthly). Each period, one member receives the entire pooled amount ("pot"), rotating until every member has received it once. It functions as a zero-interest, trust-based savings and lending mechanism widely used by Filipinos who lack access to formal bank loans or investment accounts. SmartSpend's paluwagan tracker stores: group name, number of members, contribution amount, cycle period, and each member's scheduled payout position. It auto-generates the full contribution schedule, tracks which members have paid each round, records when you receive your payout, calculates your net position (total paid vs. total received), and sends push reminders before each contribution due date. No international personal finance app offers paluwagan support — this is a culturally specific feature unique to SmartSpend.</p>
+  </div></details>
+
+  <details class="qa"><summary>How does Safe-to-Spend calculate its number exactly? <span class="tag tag-fhs">FHS</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>The formula is: <code>Safe-to-Spend = current_balance &minus; upcoming_bills &minus; savings_shortfall &minus; overdue_debts &minus; buffer</code>. Each component is defined precisely: <b>current_balance</b> is the sum of all wallet balances in the wallets table; <b>upcoming_bills</b> is the sum of bill amounts due within the next 7 days from the bills table; <b>savings_shortfall</b> is how much more needs to be saved this month to stay on track for all active savings goals (target_amount / months_remaining, minus amount_saved_this_month); <b>overdue_debts</b> is the minimum payment due on any debt past its due_date; and <b>buffer</b> is a user-configurable emergency reserve defaulting to 10% of monthly income. The result is shown on the Home screen in real time. A negative result shows in red with a "Warning: overspent" message; positive shows in green. The concept was inspired by PocketGuard's "In My Pocket" feature but extended to include debt and savings-goal considerations specific to Filipino financial patterns.</p>
+  </div></details>
+
+  <details class="qa"><summary>Full Mode vs Lightweight Mode FHS — what is the difference? <span class="tag tag-fhs">FHS</span></summary><div class="a">
+  <p><b>Full Mode</b> is the default and requires income tracking. Its four components are: Savings Rate (how close to 20% of income are you saving?), Overspend Control (how many days did spending stay within daily budget?), Budget Adherence (how many category budgets are on track?), and Logging Consistency (how many days this month did you log at least one expense?). All four are weighted 25 points each for a 100-point total. <b>Lightweight Mode</b> (toggled in Settings) replaces income-dependent components for users with no fixed income such as students or gig workers. Its four components are: Spending Restraint (did daily spending stay below a self-set daily cap?), Logging Consistency (same as Full Mode), Category Balance (is spending spread across essential categories rather than concentrated in one?), and Habit Streak (consecutive days with at least one logged expense). The toggle allows the same 0–100 scale to be meaningful regardless of whether the user earns a salary, an allowance, or irregular freelance income. This dual-mode design is one of the three novel contributions stated in the manuscript.</p>
+  </div></details>
+
+  <details class="qa"><summary>Did you do any testing beyond the SUS survey? <span class="tag tag-research">research</span> <span class="tag tag-sus">SUS</span></summary><div class="a">
+  <p>Yes — several additional testing activities are documented in the manuscript even though the SUS is the primary formal usability instrument. <b>Parsing accuracy testing</b> (Table 9) used development-phase inputs to measure field-level extraction accuracy across amount (88.2%), description (79.9%), date (70.4%), and category (83.4%) — though this was not an independent audit. <b>AI action testing</b> verified all 34 agentic actions against a test corpus of Filipino/English/Taglish inputs. <b>Fallback chain testing</b> confirmed automatic provider switching worked within &lt;1 second for each of the 10 providers. <b>OCR platform testing</b> covered 40+ screenshot formats to build the keyword templates. <b>Demo Mode testing</b> confirmed the pre-loaded Filipino sample data displayed correctly across all screens. These are not formal benchmarks, which is why Recommendation 9 (formal parsing evaluation with standardized receipts) remains in the manuscript as future work.</p>
+  </div></details>
+
+  <details class="qa"><summary>How does the app handle multiple currencies? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>SmartSpend supports <b>57 currencies</b> for display and manual entry. The primary operating currency is Philippine Peso (PHP), and all wallet balances, budgets, and analytics default to PHP. For multi-currency use, the app stores a currency code alongside each wallet — users can create a USD wallet for dollar savings, a EUR wallet for travel funds, etc. Exchange rates are fetched from a free exchange rate API when internet is available and cached locally for offline display. The AI understands currency mentions in Taglish messages ("nagbayad ako ng 20 dollars sa Steam") and converts to PHP at the cached rate before logging. Analytics and the FHS always compute in the user's home currency (PHP by default) using the cached conversion. Full multi-currency consolidation (live rates, automatic conversion on every transaction, consolidated net worth in one currency) is part of the post-capstone OFW remittance feature in the roadmap.</p>
+  </div></details>
+
+  <details class="qa"><summary>How many users currently use the app? <span class="tag tag-deploy">deployment</span></summary><div class="a">
+  <p>As of the November 2026 defense, SmartSpend has been formally tested by <b>30 SUS evaluation respondents</b> who each used the app for a minimum of 10 minutes on their own Android devices — this is the verifiable user count documented in the manuscript. Beyond the formal study, the app is publicly available via GitHub Releases at <code>github.com/Zushikina-kun/smartspend-app/releases</code>, and GitHub provides download count tracking for each release APK. Additional informal testers from the thesis team and their networks have used the app during development across builds v3.0.0 through v3.2.5. We do not claim active user counts beyond what is documented in the study, as unsupported user count claims would be speculative. Post-defense growth depends on completing Recommendation 3 (Google Play Store release), which removes the friction of APK side-loading and would enable tracking through the Play Console's install dashboard.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is the app download size (APK)? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>The release APK for the <b>ARM64 architecture</b> (arm64-v8a) is approximately <b>~46 MB</b>. This is the architecture used by most modern Android phones (2018 onward). The build uses <code>--split-per-abi</code>, so ARM32 (armeabi-v7a) and x86_64 builds are separate files, each smaller than a universal APK would be. Size breakdown: Flutter engine (~12 MB), app Dart code and assets (~8 MB), Google ML Kit OCR model (~18 MB), Firebase SDKs (~5 MB), and other dependencies (~3 MB). The ML Kit OCR model is the largest single contributor — it enables fully on-device receipt and screenshot text recognition without any API calls. Post-capstone, distributing via Google Play as an AAB (Android App Bundle) would allow Play Asset Delivery to serve only the ML Kit model slices needed for the specific device, potentially reducing the installed size to under 30 MB on most phones.</p>
+  </div></details>
+
 </details>
 
   <h2 class="sec">Phrases to avoid / use instead</h2>
@@ -958,7 +1059,7 @@
   <p>Three reasons: (1) <b>International appeal</b> &#8212; a Filipino-English name is accessible to both local and international users, supporting the goal of a consumer app that could grow beyond the Philippines. (2) <b>App store searchability</b> &#8212; English keywords have higher search volume on Google Play. (3) <b>Brand clarity</b> &#8212; "SmartSpend" immediately communicates the value proposition (smart management of spending) without requiring translation. The app remains Filipino-first in content and UX (Taglish, Filipino item catalog, government contributions) while having an accessible English name.</p>
   </div></details>
   <details class="qa"><summary>What if someone says your app was tested before it was finished? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>The SUS evaluation used <b>SmartSpend v3.1.0</b>, which was the complete, production-ready version at the time of evaluation. All 34 AI actions, the Financial Health Score, batch screenshot import, government contributions, and all core features were fully implemented and tested in v3.1.0. Subsequent versions (v3.2.0, v3.2.2, v3.2.4) added new features (Government Contributions Tracker, OpenRouter) but were released after the evaluation was complete. This is standard practice &#8212; evaluate a stable version, then continue development based on findings.</p>
+  <p>The SUS evaluation used <b>SmartSpend v3.1.0</b>, which was the complete, production-ready version at the time of evaluation. All 34 AI actions, the Financial Health Score, batch screenshot import, government contributions, and all core features were fully implemented and tested in v3.1.0. Subsequent versions (v3.2.0, v3.2.2, v3.2.5) added new features (Government Contributions Tracker, OpenRouter) but were released after the evaluation was complete. This is standard practice &#8212; evaluate a stable version, then continue development based on findings.</p>
   </div></details>
   <details class="qa"><summary>How did you choose Lorma Colleges as the sampling location? <span class="tag tag-research">research</span></summary><div class="a">
   <p>Convenience and accessibility sampling, as stated in the Scope and Limitations section of the manuscript. The researchers are enrolled at Lorma Colleges, and the target population (parents aged 35&#8211;55, young professionals aged 21&#8211;35) is accessible in San Fernando City, La Union, where the institution is located. We acknowledge this limits generalizability to other regions. Recommendation 7 (longitudinal evaluation with larger sample from multiple locales) addresses this limitation.</p>
@@ -1025,6 +1126,7 @@
 <section class="panel" id="p-numbers">
 
   <div class="jump-links">
+    <a href="#research-essentials">&#129504; Research Essentials</a>
     <a href="#key-numbers">Key Numbers</a>
     <a href="#oneliners-sec">One-liners</a>
     <a href="#fhs-formula">FHS Formula</a>
@@ -1033,13 +1135,179 @@
     <a href="#recs-list">9 Recommendations</a>
   </div>
 
+  <!-- ================================================================ RESEARCH ESSENTIALS -->
+  <div id="research-essentials" style="background:var(--ledger); color:#fff; border-radius:8px; padding:16px 20px; margin-bottom:28px;">
+    <div style="font-family:'Fraunces',serif; font-size:1.25rem; font-weight:700; margin-bottom:4px;">&#129504; Research Essentials</div>
+    <div style="font-size:.82rem; opacity:.8;">Read this once. You'll be able to answer any general research question naturally — no script needed.</div>
+  </div>
+
+  <!-- 1. THE BIG PICTURE -->
+  <h2 class="sec" style="border-top:none; margin-top:0;">&#127760; The Big Picture</h2>
+  <blockquote>
+    <p>SmartSpend researches whether AI-assisted finance tracking helps everyday Filipinos manage their money better. We built a real app, had 30 real Filipinos use it, and measured usability with the System Usability Scale. The result &#8212; usable but room to improve &#8212; is a completely valid research finding, and arguably more honest than most.</p>
+  </blockquote>
+
+  <!-- 2. WHY IT MATTERS -->
+  <h2 class="sec">&#10067; Why It Matters</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; margin:10px 0 20px;">
+    <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:14px 16px;">
+      <div style="font-size:1.4rem; margin-bottom:6px;">&#128561;</div>
+      <div style="font-weight:600; font-size:.9rem; color:var(--ink); margin-bottom:4px;">Most Filipinos don't track</div>
+      <div style="font-size:.82rem; color:var(--ink-soft);">Because existing tools are too tedious. Manual entry is a barrier, not a habit.</div>
+    </div>
+    <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:14px 16px;">
+      <div style="font-size:1.4rem; margin-bottom:6px;">&#129300;</div>
+      <div style="font-weight:600; font-size:.9rem; color:var(--ink); margin-bottom:4px;">Our research question</div>
+      <div style="font-size:.82rem; color:var(--ink-soft);">Can AI remove that friction? Can you just talk to your finance app in Taglish?</div>
+    </div>
+    <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:14px 16px;">
+      <div style="font-size:1.4rem; margin-bottom:6px;">&#128270;</div>
+      <div style="font-weight:600; font-size:.9rem; color:var(--ink); margin-bottom:4px;">Gap in literature</div>
+      <div style="font-size:.82rem; color:var(--ink-soft);">No other Filipino finance app had been formally studied with SUS at the time of our study.</div>
+    </div>
+  </div>
+
+  <!-- 3. WHAT WE DID -->
+  <h2 class="sec">&#128295; What We Did (Plain English)</h2>
+  <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:16px 18px; margin-bottom:20px;">
+    <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:10px;">
+      <span style="background:var(--ledger); color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:700; flex-shrink:0;">1</span>
+      <span style="font-size:.9rem; color:var(--ink-soft);">Built SmartSpend v3.1.0 &#8212; a real, working Android app with 34 AI actions, receipt scanning, and a Financial Health Score.</span>
+    </div>
+    <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:10px;">
+      <span style="background:var(--ledger); color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:700; flex-shrink:0;">2</span>
+      <span style="font-size:.9rem; color:var(--ink-soft);">Recruited 30 respondents (10 parents + 20 young professionals) from San Fernando City, La Union &#8212; random sampling.</span>
+    </div>
+    <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:10px;">
+      <span style="background:var(--ledger); color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:700; flex-shrink:0;">3</span>
+      <span style="font-size:.9rem; color:var(--ink-soft);">Each person used the app for a minimum of 10 minutes on their own Android device, then filled the 10-question SUS survey.</span>
+    </div>
+    <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:10px;">
+      <span style="background:var(--ledger); color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:700; flex-shrink:0;">4</span>
+      <span style="font-size:.9rem; color:var(--ink-soft);">Title defense panel gave <b>12 recommendations</b>: 4 machine-implemented (fully coded into the app) + 8 paper/documentation fixes.</span>
+    </div>
+    <div style="display:flex; gap:14px; align-items:flex-start;">
+      <span style="background:var(--ledger); color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:700; flex-shrink:0;">5</span>
+      <span style="font-size:.9rem; color:var(--ink-soft);">SUS mean: <b>61.83</b>. Identified weaknesses. Made 9 research recommendations. That's the whole study.</span>
+    </div>
+  </div>
+
+  <!-- 4. SUS VISUAL SCALE -->
+  <h2 class="sec">&#127919; SUS Score Visual &#8212; Where We Land</h2>
+  <div style="background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:12px;">
+    <div style="display:flex; flex-direction:column; gap:0;">
+      <div style="display:flex; align-items:center; padding:9px 14px; background:#1B4332; color:#fff; gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:48px;">90&#8211;100</span>
+        <span style="font-size:.88rem;">Best Imaginable &nbsp;<span style="background:rgba(255,255,255,.2); padding:1px 8px; border-radius:3px; font-size:.72rem;">A+</span></span>
+      </div>
+      <div style="display:flex; align-items:center; padding:9px 14px; background:#2D6A4F; color:#fff; gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:48px;">80&#8211;89</span>
+        <span style="font-size:.88rem;">Excellent &nbsp;<span style="background:rgba(255,255,255,.2); padding:1px 8px; border-radius:3px; font-size:.72rem;">A</span></span>
+      </div>
+      <div style="display:flex; align-items:center; padding:9px 14px; background:#52B788; color:#fff; gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:48px;">70&#8211;79</span>
+        <span style="font-size:.88rem;">Good &nbsp;<span style="background:rgba(255,255,255,.2); padding:1px 8px; border-radius:3px; font-size:.72rem;">B</span></span>
+      </div>
+      <div style="display:flex; align-items:center; padding:9px 14px; background:var(--warn-soft); border-left:4px solid var(--gold); gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:48px; color:var(--warn);">68.0</span>
+        <span style="font-size:.88rem; color:var(--warn);">&#9654; <b>Industry Average</b> (Bangor et al. 2009) &#8212; we are below this</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:11px 14px; background:var(--ledger-soft); border-left:4px solid var(--ledger); gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:48px; color:var(--ledger);">61.83</span>
+        <span style="font-size:.88rem; color:var(--ledger);">&#127919; <b>SmartSpend is HERE</b> &#8212; Grade D, adjective &#8220;OK / Acceptable&#8221; &mdash; Objective 3 partially achieved</span>
+      </div>
+      <div style="display:flex; align-items:center; padding:9px 14px; background:var(--bad-soft); gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:48px; color:var(--bad);">51&#8211;60</span>
+        <span style="font-size:.88rem; color:var(--bad);">Poor &nbsp;<span style="background:rgba(140,59,46,.12); padding:1px 8px; border-radius:3px; font-size:.72rem;">C</span></span>
+      </div>
+      <div style="display:flex; align-items:center; padding:9px 14px; background:var(--bad-soft); opacity:.7; gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:48px; color:var(--bad);">&lt; 51</span>
+        <span style="font-size:.88rem; color:var(--bad);">Awful &nbsp;<span style="background:rgba(140,59,46,.12); padding:1px 8px; border-radius:3px; font-size:.72rem;">F</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="tip" style="margin-bottom:20px;">
+    <strong>How to explain 61.83 to anyone</strong>
+    <p>61.83 is below average, but still <b>acceptable</b>. The &#8220;industry average&#8221; of 68 includes apps with million-dollar budgets and dedicated UX teams. SmartSpend is a first-version student capstone built in one semester. Our score is an honest finding, not a failure &#8212; and it drives 9 concrete recommendations for improvement.</p>
+  </div>
+
+  <!-- 5. OBJECTIVES STATUS -->
+  <h2 class="sec">&#9989; 3 Objectives &#8212; Achievement Status</h2>
+  <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+    <div style="display:flex; gap:12px; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:12px 14px;">
+      <span style="font-size:1.4rem; flex-shrink:0;">&#9989;</span>
+      <div>
+        <div style="font-weight:600; font-size:.9rem; color:var(--ink);">Objective 1 &#8212; Assess financial practices of target users</div>
+        <div style="font-size:.82rem; color:var(--ink-soft); margin-top:3px;">Needs assessment of 30 respondents completed. 96.7% want an AI finance app. 93.3% already use GCash. <b>ACHIEVED.</b></div>
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:12px 14px;">
+      <span style="font-size:1.4rem; flex-shrink:0;">&#9989;</span>
+      <div>
+        <div style="font-weight:600; font-size:.9rem; color:var(--ink);">Objective 2 &#8212; Design and develop SmartSpend with an LLM</div>
+        <div style="font-size:.82rem; color:var(--ink-soft); margin-top:3px;">v3.1.0 built, 10 candidate models evaluated, Gemini 3.5 Flash-Lite selected, 34 AI actions implemented. <b>ACHIEVED.</b></div>
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; background:var(--warn-soft); border:1px solid var(--gold); border-radius:6px; padding:12px 14px;">
+      <span style="font-size:1.4rem; flex-shrink:0;">&#9888;&#65039;</span>
+      <div>
+        <div style="font-weight:600; font-size:.9rem; color:var(--warn);">Objective 3 &#8212; Evaluate usability with SUS (target: &ge;68)</div>
+        <div style="font-size:.82rem; color:var(--ink-soft); margin-top:3px;">SUS mean = 61.83. Below 68 benchmark <em>and</em> below our 80 target. Grade D, adjective &#8220;OK&#8221; (Bangor et al. 2009). <b>PARTIALLY ACHIEVED.</b> Never say &#8220;failed&#8221; or &#8220;fully achieved.&#8221;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ONE-LINE ANSWER -->
+  <h2 class="sec">&#128172; The One-Line Answer (Memorize This)</h2>
+  <blockquote>
+    <p style="font-size:1.05rem;">&#8220;SmartSpend is a free AI-powered personal finance app for Android that lets Filipinos log expenses by talking to it in Taglish, gives them a Financial Health Score from 0&#8211;100, and was formally evaluated by 30 Filipino users with a usability score of 61.83 out of 100.&#8221;</p>
+  </blockquote>
+
+  <!-- 7. IF THEY ASK SOMETHING YOU DON'T KNOW -->
+  <div class="tip" style="margin-top:20px;">
+    <strong>&#129504; If they ask something you don't know</strong>
+    <p>Say: <em>&#8220;That specific detail isn&#8217;t something I have in front of me right now, but what I can tell you is&#8230;&#8221;</em> then bridge to something you DO know. Never just say &#8220;I don&#8217;t know&#8221; and stop &#8212; always pivot to a related fact or the nearest recommendation that addresses it.</p>
+  </div>
+
+  <!-- 8. KEY NUMBERS TO ALWAYS REMEMBER -->
+  <h2 class="sec">&#128290; Key Numbers &#8212; The 10 You Must Never Forget</h2>
+  <div class="facts-grid" style="margin-bottom:24px;">
+    <div class="fact"><div class="v">61.83</div><div class="k">SUS score (Grade D, OK)</div></div>
+    <div class="fact"><div class="v">30</div><div class="k">SUS respondents (valid)</div></div>
+    <div class="fact"><div class="v">3</div><div class="k">Objectives (2 achieved, 1 partial)</div></div>
+    <div class="fact"><div class="v">9</div><div class="k">Research recommendations</div></div>
+    <div class="fact"><div class="v">12</div><div class="k">Title defense recs (4 machine + 8 paper)</div></div>
+    <div class="fact"><div class="v">34</div><div class="k">AI agentic actions</div></div>
+    <div class="fact"><div class="v">7</div><div class="k">Input methods</div></div>
+    <div class="fact"><div class="v">36</div><div class="k">Achievement badges</div></div>
+    <div class="fact"><div class="v">10</div><div class="k">AI providers in chain</div></div>
+    <div class="fact"><div class="v">v3.1.0</div><div class="k">Version that was evaluated</div></div>
+    <div class="fact"><div class="v">v3.2.5</div><div class="k">Current version</div></div>
+    <div class="fact"><div class="v">68</div><div class="k">SUS industry average (we are below)</div></div>
+  </div>
+
+  <!-- 9. WHY OUR SCORE IS OK TO DEFEND -->
+  <div class="tip" style="margin-bottom:28px;">
+    <strong>&#128170; Why 61.83 is completely defensible</strong>
+    <p style="margin-bottom:6px;">Five reasons to be confident, not apologetic:</p>
+    <ol style="margin:0; padding-left:20px; font-size:.9rem;">
+      <li><b>It&#8217;s in the acceptable range.</b> Bangor et al. (2009) classify 61.83 as &#8220;OK&#8221; &#8212; not poor, not failing.</li>
+      <li><b>It&#8217;s a first-version student capstone.</b> Industry apps that score 70+ have UX teams, funding, and multiple iteration cycles. We had one semester.</li>
+      <li><b>We identified the gaps honestly.</b> Q6 (consistency) and Q2/Q4 (complexity) are specific, actionable findings &#8212; not vague &#8220;needs improvement.&#8221;</li>
+      <li><b>We have a roadmap.</b> Recommendation 8 directly addresses the SUS weaknesses through UI/UX redesign.</li>
+      <li><b>The research process was rigorous.</b> Random sampling, validated instrument, 30 respondents exceeding the SUS minimum, excluded 6 invalid responses, matched Bangor&#8217;s adjective scale &#8212; all done correctly.</li>
+    </ol>
+  </div>
+
+  <div style="border-top:2px solid var(--line); padding-top:20px; margin-bottom:28px;"></div>
+
   <h2 class="sec" id="key-numbers">Key numbers &#8212; memorize all of these</h2>
   <div class="facts-grid" id="facts"></div>
 
   <h2 class="sec" id="oneliners-sec">One-line rapid-fire answers</h2>
   <ul class="oneliners">
     <li><b>What is SmartSpend?</b><span>An AI-powered expense tracker for Filipinos that lets you log spending by just talking to it in Taglish or English.</span></li>
-    <li><b>What&#8217;s new in v3.2.4?</b><span>OpenRouter AI Gateway (100+ models, $100 credit) + 10-provider fallback chain for 24/7 AI uptime. v3.2.0 added Government Contributions Tracker (SSS/PhilHealth/Pag-IBIG YTD + pension calculator).</span></li>
+    <li><b>What&#8217;s new in v3.2.5?</b><span>OpenRouter AI Gateway (100+ models, $100 credit, default <code>openrouter/free</code>) + 10-provider fallback chain for 24/7 AI uptime. v3.2.0 added Government Contributions Tracker (SSS/PhilHealth/Pag-IBIG YTD + pension calculator).</span></li>
     <li><b>What is the FHS?</b><span>A 0&#8211;100 prototype indicator measuring savings rate, spending control, budget adherence, and logging consistency &#8212; 25 points each. Formally: Prototype Observed Financial Health Indicator.</span></li>
     <li><b>Why AI?</b><span>To eliminate the manual data entry barrier that stops most people from tracking finances.</span></li>
     <li><b>What database?</b><span>SQLite locally (26 tables, schema v14), Firebase Firestore for optional cloud backup.</span></li>
@@ -1066,11 +1334,11 @@
     Clamped 0&#8211;100 | &ge;80 = Good (design choice, not statistically derived weights)
   </div>
 
-  <h2 class="sec" id="ai-chain">The 10-provider AI fallback chain (v3.2.4)</h2>
+  <h2 class="sec" id="ai-chain">The 10-provider AI fallback chain (v3.2.5)</h2>
   <div class="scroll"><table>
     <tr><th>#</th><th>Provider / Model</th><th>Limit</th><th>Notes</th></tr>
     <tr><td>1</td><td>Custom Local (if configured)</td><td>&#8734;</td><td>User&#8217;s own Ollama / LM Studio / Jan server</td></tr>
-    <tr><td>2</td><td><b>OpenRouter</b> (openrouter/free (auto-routes to best free model))</td><td>$100 credit</td><td>Gateway to 100+ models. Expires May 2027. (v3.2.4)</td></tr>
+    <tr><td>2</td><td><b>OpenRouter</b> (<code>openrouter/free</code>)</td><td>$100 credit</td><td>Gateway to 100+ models. Auto-routes to best free model. Expires May 2027. (v3.2.5)</td></tr>
     <tr><td>3</td><td>Gemini 3.5 Flash</td><td>Free tier</td><td>Best reasoning, GA stable (Google direct)</td></tr>
     <tr><td>4</td><td>Gemini 3.5 Flash-Lite</td><td>Free tier</td><td>Fastest + cheapest 3.5. Primary in v3.1.0.</td></tr>
     <tr><td>5</td><td>GPT-OSS 120B (Groq)</td><td>1,000/day</td><td>Best open-source quality</td></tr>
@@ -1159,7 +1427,7 @@
     <tr><td>Young professionals avg SUS</td><td><b>63.62</b></td><td>Below 68 benchmark</td></tr>
     <tr><td>AI actions</td><td><b>34</b></td><td>Autonomous agentic actions</td></tr>
     <tr><td>AI failover chain (evaluated)</td><td><b>8-model cloud</b></td><td>Gemini 3.5 Flash-Lite primary + 7 fallbacks (v3.1.0)</td></tr>
-    <tr><td>AI failover chain (current)</td><td><b>10-provider</b></td><td>+ OpenRouter gateway (v3.2.4)</td></tr>
+    <tr><td>AI failover chain (current)</td><td><b>10-provider</b></td><td>+ OpenRouter gateway (v3.2.5)</td></tr>
     <tr><td>Candidate LLMs evaluated</td><td><b>10 models, 4 providers</b></td><td>Google, Groq, Cerebras, Mistral</td></tr>
     <tr><td>Primary model (evaluated)</td><td><b>Gemini 3.5 Flash-Lite</b></td><td>1M token context, native function calling</td></tr>
     <tr><td>Screenshot import platforms</td><td><b>40+</b></td><td></td></tr>
@@ -1181,14 +1449,14 @@
     <tr><td>&#8220;13 parents&#8221;</td><td>&#8220;16 parents and 14 young professionals&#8221; (needs assessment)</td></tr>
     <tr><td>&#8220;fully achieved&#8221; for Obj 3</td><td>&#8220;Objective 3 was <b>partially achieved</b>&#8221;</td></tr>
     <tr><td>&#8220;passed&#8221; / &#8220;excellent&#8221; / &#8220;acceptable&#8221;</td><td>&#8220;61.83, below the 68 benchmark and the 80 target&#8221;</td></tr>
-    <tr><td>&#8220;eight-provider chain&#8221;</td><td>&#8220;8-model cloud failover chain&#8221; (v3.1.0) or &#8220;10-provider chain&#8221; (v3.2.4)</td></tr>
+    <tr><td>&#8220;eight-provider chain&#8221;</td><td>&#8220;8-model cloud failover chain&#8221; (v3.1.0) or &#8220;10-provider chain&#8221; (v3.2.5)</td></tr>
     <tr><td>&#8220;the highest free-tier quota&#8221;</td><td>&#8220;a high free-tier quota&#8221; (Table 6: Groq/Cerebras are higher)</td></tr>
     <tr><td>&#8220;fully offline&#8221;</td><td>&#8220;offline-first; core features work offline; cloud AI needs internet&#8221;</td></tr>
     <tr><td>&#8220;Recommendation 1 for UI/UX&#8221;</td><td>&#8220;UI/UX refinement is <b>Recommendation 8</b>&#8221;</td></tr>
     <tr><td>&#8220;proposed&#8221; (for the app)</td><td>&#8220;developed&#8221; / &#8220;built&#8221; (the app exists!)</td></tr>
     <tr><td>&#8220;seven recommendations&#8221;</td><td>&#8220;<b>nine</b> recommendations&#8221;</td></tr>
     <tr><td>&#8220;20 models&#8221; / &#8220;10 providers&#8221;</td><td>&#8220;10 candidate models from 4 providers&#8221; (evaluation)</td></tr>
-    <tr><td>&#8220;version 3.2.4&#8221; for evaluation</td><td>&#8220;version 3.1.0 was evaluated; v3.2.4 is current&#8221;</td></tr>
+    <tr><td>&#8220;version 3.2.4&#8221; for evaluation</td><td>&#8220;version 3.1.0 was evaluated; v3.2.5 is current&#8221;</td></tr>
     <tr><td>&#8220;validated instrument&#8221; (FHS)</td><td>&#8220;Prototype Observed Financial Health Indicator&#8221;</td></tr>
     <tr><td>&#8220;33 badges&#8221;</td><td>&#8220;36 achievement badges&#8221;</td></tr>
   </table></div>
@@ -1278,7 +1546,7 @@
     <p>&#8220;The Financial Health Score is a <b>prototype indicator</b> on a 0-to-100 scale. In Full Mode it has four equally weighted components of 25 points each: savings rate, overspend control, budget adherence, and logging consistency. Lightweight Mode, for users without income tracking, uses spending restraint, logging consistency, category balance, and habit streak. We adapted ideas from the CBA-MI Observed scale and the Financial Health Network&#8217;s FinHealth Score. The weights are a design choice, not a statistically derived result, and we formally classify the score as a Prototype Observed Financial Health Indicator, not a validated instrument.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q5 &#8212; What LLM did you use?</summary><div class="a">
-    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b> as the primary model in v3.1.0. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral &#8212; against six weighted criteria: Filipino-English accuracy 25%, speed 20%, tool use/JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. Our fallback chain adds seven more models across Google, Groq, and Cerebras. In v3.2.4, we added OpenRouter as the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
+    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b> as the primary model in v3.1.0. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral &#8212; against six weighted criteria: Filipino-English accuracy 25%, speed 20%, tool use/JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. Our fallback chain adds seven more models across Google, Groq, and Cerebras. In v3.2.5, we added OpenRouter as the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q6 &#8212; Why are there 16 parents and 14 young professionals if three said both?</summary><div class="a">
     <p>&#8220;Three of our 30 respondents answered &#8216;Both a parent and a young professional&#8217; in Question 2. For analysis and reporting, we counted them with the parent group based on their Q1 age bracket, which was 35 to 55. This is stated in the notes to Tables 3 and 5 and the Figure 5 footnote. The SUS evaluation was a completely separate group where respondents self-identified, giving 10 parents and 20 young professionals.&#8221;</p>
@@ -1296,7 +1564,7 @@
     <p>&#8220;We have <b>nine recommendations</b>: (1) Payday-cycle-aware budgeting aligned to the 15th-and-30th salary cycle. (2) Backend API proxy and per-user keys to remove device-side key exposure. (3) Google Play release, after the proxy and a privacy policy are in place. (4) On-device AI tier, an opt-in model of about 2.6 gigabytes for fully offline AI. (5) SQLite encryption using SQLCipher. (6) Household and remittance features: shared wallets and OFW remittance as a distinct income category. (7) Longitudinal evaluation over 3&#8211;6 months with a larger sample. (8) UI/UX refinement addressing consistency in Q6 and complexity in Q2. (9) Formal parsing evaluation using standardized test receipts across multiple platforms. All nine come from the specific limitations of the current prototype.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q11 &#8212; What about OpenRouter? (v3.2.2+)</summary><div class="a">
-    <p>&#8220;We integrated OpenRouter as an AI gateway starting in v3.2.2. OpenRouter provides access to 100+ language models from multiple providers through a single OpenAI-compatible API endpoint. We added it as the second priority in our 10-provider fallback chain &#8212; after the user&#8217;s optional local model, before direct Gemini. The default model through OpenRouter is <code>google/openrouter/free (auto-routes to best free model)</code>, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. We have $100 in OpenRouter credits expiring May 2027. This upgrade, included in v3.2.4, raised the chain from 8 to 10 providers, further improving 24/7 AI availability.&#8221;</p>
+    <p>&#8220;We integrated OpenRouter as an AI gateway starting in v3.2.2. OpenRouter provides access to 100+ language models from multiple providers through a single OpenAI-compatible API endpoint. We added it as the second priority in our 10-provider fallback chain &#8212; after the user&#8217;s optional local model, before direct Gemini. The default model through OpenRouter is <code>openrouter/free</code>, which auto-selects the best available free model on the OpenRouter network, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. We have $100 in OpenRouter credits expiring May 2027. This upgrade, included in v3.2.5, raised the chain from 8 to 10 providers, further improving 24/7 AI availability.&#8221;</p>
     </div></details>
   </details>
 
@@ -1310,11 +1578,11 @@
   </div>
   <div style="background:var(--ledger-soft); border-left:3px solid var(--ledger); padding:14px 16px; border-radius:4px; margin-top:20px;">
     <p style="margin:0 0 4px; font-weight:600; color:var(--ink);">&#127919; You&#8217;ve got this!</p>
-    <p style="margin:0; font-size:.9rem; color:var(--ink-soft);">All 12 panel recommendations from Capstone 1 are DONE. SmartSpend v3.2.4 is ready. Your team is ready. Good luck on November 16, 2026 at 3:00 PM! &#128640;</p>
+    <p style="margin:0; font-size:.9rem; color:var(--ink-soft);">All 12 panel recommendations from Capstone 1 are DONE. SmartSpend v3.2.5 is ready. Your team is ready. Good luck on November 16, 2026 at 3:00 PM! &#128640;</p>
   </div>
 
-  <footer>SmartSpend v3.2.4 (Final Defense Build) &middot; Team Lucid Frame &middot; Lorma Colleges CCSE &middot; November 16, 2026 3:00 PM<br>
-  Defense Reviewer &mdash; Search, 4 Tabs, 75+ Q&amp;A, OpenRouter Integration, Complete Guide</footer>
+  <footer>SmartSpend v3.2.5 (Final Defense Build) &middot; Team Lucid Frame &middot; Lorma Colleges CCSE &middot; November 16, 2026 3:00 PM<br>
+  Defense Reviewer &mdash; Global Search, Keyboard Shortcuts, Progress Bar, 140+ Q&amp;A, OpenRouter Integration, Complete Guide</footer>
 
 </section>
 
@@ -1549,7 +1817,7 @@
     </div></details>
 
     <details class="qa"><summary>Q6 &#8212; What LLM did you use?</summary><div class="a">
-    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b>. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral. The criteria were weighted: Filipino-English accuracy 25%, speed 20%, tool use and JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. We also built an eight-model failover chain across Google, Groq, and Cerebras. In v3.2.4, OpenRouter was added as the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
+    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b>. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral. The criteria were weighted: Filipino-English accuracy 25%, speed 20%, tool use and JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. We also built an eight-model failover chain across Google, Groq, and Cerebras. In v3.2.5, OpenRouter was added as the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
     </div></details>
 
     <details class="qa"><summary>Q7 &#8212; Is the app available on iOS?</summary><div class="a">
@@ -1591,13 +1859,13 @@
     <li><b>Needs assessment: 16 parents (including 3 &#8220;both&#8221;) + 14 young professionals = 30.</b><span>SUS evaluation: 10 parents + 20 young professionals = 30 valid of 36 (separate group).</span></li>
     <li><b>Always say &#8220;quantitative descriptive developmental&#8221;.</b><span>No interviews, so never say &#8220;respondents said&#8221; or &#8220;respondents cited&#8221;. Say &#8220;the SUS items showed&#8221;.</span></li>
     <li><b>Don&#8217;t say &#8220;proposed&#8221; about the app.</b><span>It is built and tested.</span></li>
-    <li><b>&#8220;Ten candidate models from four providers&#8221; and &#8220;eight-model failover chain&#8221; (v3.1.0 evaluated).</b><span>&#8220;10-provider chain&#8221; for the current v3.2.4 build (adds OpenRouter).</span></li>
+    <li><b>&#8220;Ten candidate models from four providers&#8221; and &#8220;eight-model failover chain&#8221; (v3.1.0 evaluated).</b><span>&#8220;10-provider chain&#8221; for the current v3.2.5 build (adds OpenRouter).</span></li>
     <li><b>Gemini had &#8220;a high free-tier quota&#8221;, not &#8220;the highest&#8221;.</b><span>Table 6: Groq and Cerebras are higher.</span></li>
     <li><b>Rec 8 = UI/UX refinement. Rec 9 = Formal parsing evaluation.</b><span>Never swap these or say &#8220;seven recommendations&#8221;.</span></li>
     <li><b>Don&#8217;t quote stats not in the manuscript.</b><span>No requests per day, APK size, screen count, currencies, or precision/recall unless they appear in the manuscript.</span></li>
   </ul>
 
-  <footer>SmartSpend v3.2.4 (Final Defense Build) &middot; Team Lucid Frame &middot; Lorma Colleges CCSE &middot; November 16, 2026 3:00 PM<br>
+  <footer>SmartSpend v3.2.5 (Final Defense Build) &middot; Team Lucid Frame &middot; Lorma Colleges CCSE &middot; November 16, 2026 3:00 PM<br>
   Presentation Script &#8212; Slide Notes, Panel Q&amp;A, Delivery Reminders</footer>
 
 </section>
@@ -1608,7 +1876,7 @@
 (function(){
   // ---- CHECKLIST with localStorage persistence ----
   var items = [
-    "Install SmartSpend v3.2.4 APK (arm64-v8a) from GitHub releases",
+    "Install SmartSpend v3.2.5 APK (arm64-v8a) from GitHub releases",
     "Open app -> Settings -> Quick Presets -> Normal Mode (NOT Lite)",
     "Settings -> AI Model -> Auto (Recommended)",
     "AI screen -> menu -> Reset Daily Limit (150 messages)",
@@ -1637,8 +1905,8 @@
 
   // ---- FACTS GRID ----
   var facts = [
-    ["v3.2.4","Current version"],["Nov 16, 2026","Final defense date"],["v3.1.0","Evaluated version"],
-    ["Android · Flutter","Platform"],["10","AI providers in fallback chain (v3.2.4)"],
+    ["v3.2.5","Current version"],["Nov 16, 2026","Final defense date"],["v3.1.0","Evaluated version"],
+    ["Android · Flutter","Platform"],["10","AI providers in fallback chain (v3.2.5)"],
     ["8","AI models in original chain (v3.1.0)"],["34","Agentic action types"],
     ["7","Input modalities"],["150/day","AI message limit per user"],
     ["4 x 25 = 100","FHS components & max score"],[">=80","FHS Good (Bangor 2009)"],
@@ -1654,7 +1922,8 @@
     ["$100","OpenRouter credit (expires May 2027)"],["100+","Models via OpenRouter"],
     ["16+14=30","Needs assessment (parents+YP)"],["10+20=30","SUS evaluation (parents+YP)"],
     ["96.7%","Intent to use AI app (needs survey)"],["93.3%","Already use GCash"],
-    ["88.2%","AI amount parsing accuracy"],["70.4%","AI date parsing accuracy (weakest)"]
+    ["88.2%","AI amount parsing accuracy"],["70.4%","AI date parsing accuracy (weakest)"],
+    ["~46 MB","APK size arm64 (v3.2.5)"],["Android 8.0+","Min OS (API 26+)"]
   ];
   var grid = document.getElementById("facts");
   if(grid){
@@ -1764,6 +2033,217 @@ function expandAll() {
 function collapseAll() {
   document.querySelectorAll("#p-qa details").forEach(function(d){ d.open = false; });
 }
+
+// ============================================================
+// GLOBAL SEARCH
+// ============================================================
+var gSearchData = null;
+
+function buildGSearchIndex() {
+  if (gSearchData) return;
+  gSearchData = [];
+  var tabMap = {
+    "p-demo":    { label: "Demo Script",         radio: "t-demo" },
+    "p-qa":      { label: "Panel Q&A",            radio: "t-qa" },
+    "p-numbers": { label: "Quick Facts & Guide",  radio: "t-numbers" },
+    "p-script":  { label: "Presentation Script",  radio: "t-script" }
+  };
+
+  Object.keys(tabMap).forEach(function(panelId) {
+    var panel = document.getElementById(panelId);
+    if (!panel) return;
+    var tab = tabMap[panelId];
+
+    // Index all details.qa elements
+    panel.querySelectorAll("details.qa").forEach(function(qa) {
+      var sumEl = qa.querySelector("summary");
+      var ansEl = qa.querySelector(".a");
+      var title = sumEl ? sumEl.textContent.trim().replace(/\s+/g," ") : "";
+      var body  = ansEl ? ansEl.textContent.trim().replace(/\s+/g," ") : "";
+      if (!title) return;
+      gSearchData.push({ type:"qa", tab:tab, title:title, body:body, el:qa });
+    });
+
+    // Index step .say divs (Demo tab)
+    panel.querySelectorAll(".step").forEach(function(step) {
+      var h3 = step.querySelector("h3");
+      var title = h3 ? h3.textContent.trim() : "";
+      step.querySelectorAll(".say").forEach(function(say) {
+        var body = say.textContent.trim().replace(/\s+/g," ");
+        gSearchData.push({ type:"say", tab:tab, title:"Demo: "+title, body:body.slice(0,120)+"…", el:say });
+      });
+    });
+
+    // Index all h2.sec headings
+    panel.querySelectorAll("h2.sec").forEach(function(h2) {
+      var title = h2.textContent.trim();
+      var sib = h2.nextElementSibling;
+      var body = sib ? sib.textContent.trim().replace(/\s+/g," ").slice(0,120)+"…" : "";
+      gSearchData.push({ type:"section", tab:tab, title:"§ "+title, body:body, el:h2 });
+    });
+
+    // Index oneliners (Quick Facts tab)
+    panel.querySelectorAll(".oneliners li").forEach(function(li) {
+      var b = li.querySelector("b");
+      var s = li.querySelector("span");
+      var title = b ? b.textContent.trim() : li.textContent.trim();
+      var body  = s ? s.textContent.trim() : "";
+      if (!title) return;
+      gSearchData.push({ type:"fact", tab:tab, title:title, body:body, el:li });
+    });
+  });
+}
+
+function openGSearch() {
+  buildGSearchIndex();
+  var wrap = document.getElementById("gsearch-wrap");
+  var inp  = document.getElementById("gsearch-input");
+  wrap.classList.add("open");
+  inp.value = "";
+  document.getElementById("gsearch-results").innerHTML = "";
+  setTimeout(function(){ inp.focus(); }, 60);
+}
+
+function closeGSearch() {
+  document.getElementById("gsearch-wrap").classList.remove("open");
+}
+
+function runGSearch(val) {
+  buildGSearchIndex();
+  val = (val || "").trim().toLowerCase();
+  var results = document.getElementById("gsearch-results");
+  if (!val) { results.innerHTML = ""; return; }
+
+  var matches = [];
+  gSearchData.forEach(function(item) {
+    var score = 0;
+    var titleLow = item.title.toLowerCase();
+    var bodyLow  = item.body.toLowerCase();
+    if (titleLow.indexOf(val) !== -1) score += 3;
+    if (bodyLow.indexOf(val)  !== -1) score += 1;
+    if (score) matches.push({ item:item, score:score });
+  });
+
+  matches.sort(function(a,b){ return b.score - a.score; });
+  matches = matches.slice(0, 20);
+
+  if (!matches.length) {
+    results.innerHTML = "<div style='padding:14px 16px; font-size:.88rem; color:var(--ink-soft);'>No results for \""+val.replace(/</g,"&lt;")+"\"</div>";
+    return;
+  }
+
+  var escaped = val.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  var re = new RegExp("("+escaped+")", "gi");
+  var html = "";
+  matches.forEach(function(m, idx) {
+    var item = m.item;
+    var bodyIdx = item.body.toLowerCase().indexOf(val);
+    var snippet = bodyIdx !== -1
+      ? "&hellip;" + item.body.slice(Math.max(0,bodyIdx-40), bodyIdx+80).replace(/</g,"&lt;") + "&hellip;"
+      : item.body.slice(0,100).replace(/</g,"&lt;") + "&hellip;";
+    var titleHL = item.title.replace(/</g,"&lt;").replace(re, "<b>$1</b>");
+    var snipHL  = snippet.replace(re, "<b>$1</b>");
+    html += "<div class='gs-item' data-idx='"+idx+"'>"
+          + "<span class='gs-tab-badge'>"+item.tab.label+"</span>"
+          + "<div><div class='gs-title'>"+titleHL+"</div>"
+          + "<div class='gs-snippet'>"+snipHL+"</div></div>"
+          + "</div>";
+  });
+  results.innerHTML = html;
+
+  results.querySelectorAll(".gs-item").forEach(function(div) {
+    div.addEventListener("click", function() {
+      var idx = parseInt(div.getAttribute("data-idx"), 10);
+      var item = matches[idx].item;
+      var radio = document.getElementById(item.tab.radio);
+      if (radio) radio.checked = true;
+      closeGSearch();
+      setTimeout(function() {
+        var el = item.el;
+        // open parent details
+        var p = el.parentElement;
+        while (p && p !== document.body) {
+          if (p.tagName === "DETAILS") p.open = true;
+          p = p.parentElement;
+        }
+        el.scrollIntoView({ behavior:"smooth", block:"center" });
+        var prev = el.style.background;
+        el.style.transition = "background .3s";
+        el.style.background = "var(--gold-soft)";
+        setTimeout(function(){ el.style.background = prev || ""; }, 1400);
+      }, 80);
+    });
+  });
+}
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener("keydown", function(e) {
+  var tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : "";
+  var inInput = (tag === "input" || tag === "textarea" || tag === "select");
+  var gOpen = document.getElementById("gsearch-wrap").classList.contains("open");
+
+  if (e.key === "Escape") {
+    if (gOpen) { closeGSearch(); return; }
+    var qaSearch = document.getElementById("qa-search");
+    if (qaSearch && qaSearch.value) { qaSearch.value = ""; filterQA(""); qaSearch.blur(); }
+    return;
+  }
+
+  if ((e.ctrlKey && e.key === "k") || (e.key === "/" && !inInput && !gOpen)) {
+    e.preventDefault();
+    openGSearch();
+    return;
+  }
+
+  if (!inInput && !gOpen) {
+    var tabMap2 = { "1":"t-demo", "2":"t-qa", "3":"t-numbers", "4":"t-script" };
+    if (tabMap2[e.key]) {
+      var radio2 = document.getElementById(tabMap2[e.key]);
+      if (radio2) { radio2.checked = true; window.scrollTo({top:0, behavior:"smooth"}); }
+      return;
+    }
+  }
+
+  if (gOpen && e.key === "Enter") {
+    var first = document.querySelector("#gsearch-results .gs-item");
+    if (first) first.click();
+  }
+});
+
+// ============================================================
+// READING PROGRESS BAR
+// ============================================================
+(function() {
+  var bar = document.getElementById("read-progress");
+  if (!bar) return;
+
+  function updateProgress() {
+    var panelId = null;
+    document.querySelectorAll("input[name=tab]").forEach(function(r){
+      if (r.checked) panelId = r.id.replace("t-","p-");
+    });
+    var active = panelId ? document.getElementById(panelId) : null;
+    if (!active) { bar.style.width = "0%"; return; }
+
+    var scrollTop  = window.pageYOffset || document.documentElement.scrollTop;
+    var panelTop   = active.getBoundingClientRect().top + scrollTop;
+    var panelH     = active.offsetHeight;
+    var winH       = window.innerHeight;
+    var scrollable = panelH - winH;
+    if (scrollable <= 0) { bar.style.width = "100%"; return; }
+    var progress = Math.min(1, Math.max(0, (scrollTop - panelTop) / scrollable + 0.05));
+    bar.style.width = (progress * 100) + "%";
+  }
+
+  window.addEventListener("scroll", updateProgress, { passive:true });
+  window.addEventListener("resize", updateProgress, { passive:true });
+  document.querySelectorAll("input[name=tab]").forEach(function(r){
+    r.addEventListener("change", function(){ setTimeout(updateProgress, 50); });
+  });
+  updateProgress();
+})();
 </script>
 
 </body>
