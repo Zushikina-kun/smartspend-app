@@ -31,7 +31,7 @@
     --bad:#8C3B2E; --bad-soft:#F3E1DC; --warn:#7A5200; --warn-soft:#FDF0D5; --card:#FFFEFA;
   }
   *{box-sizing:border-box;}
-  html{scroll-padding-top:88px; height:100%;}
+  html{scroll-padding-top:120px; height:100%;}
   body{margin:0; background:var(--paper); color:var(--ink); font-family:"IBM Plex Sans",system-ui,sans-serif; line-height:1.55; min-height:100%;}
   h1,h2,h3{font-family:"Fraunces",Georgia,serif; font-weight:600; letter-spacing:-0.01em; margin:0;}
   code{font-family:"IBM Plex Mono",monospace; font-size:.85em; background:var(--ledger-soft); padding:1px 5px; border-radius:3px;}
@@ -198,6 +198,38 @@
     .top-inner h1{font-size:1.1rem;}
     .tabs label{font-size:.74rem; padding:8px 2px;}
   }
+
+  /* ── ALWAYS-VISIBLE GLOBAL SEARCH BAR ──────────────────────────────── */
+  .global-search-bar{display:flex; align-items:center; gap:8px; padding:8px 0 10px; margin-top:4px;}
+  #global-search-input{flex:1; padding:8px 12px; border:1.5px solid rgba(255,255,255,.25); border-radius:6px;
+    background:rgba(255,255,255,.12); color:#fff; font-family:'IBM Plex Sans',sans-serif; font-size:.88rem;
+    outline:none; transition:border .15s;}
+  #global-search-input::placeholder{color:rgba(255,255,255,.5);}
+  #global-search-input:focus{border-color:var(--gold); background:rgba(255,255,255,.18);}
+  #global-search-count{font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--gold);
+    white-space:nowrap; min-width:90px; text-align:right;}
+  .gsb-clear{background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.2); color:#fff;
+    width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:.85rem; line-height:1;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;}
+  .gsb-clear:hover{background:rgba(255,255,255,.3);}
+
+  /* ── GLOBAL SEARCH RESULTS PANEL ───────────────────────────────────── */
+  #gsearch-results-panel{position:absolute; top:100%; left:0; right:0; z-index:200;
+    background:var(--paper); border:1px solid var(--line); border-top:none;
+    box-shadow:0 8px 24px var(--shadow); max-height:60vh; overflow-y:auto; display:none;}
+  #gsearch-results-panel.open{display:block;}
+  .gsr-item{padding:10px 18px; border-bottom:1px solid var(--line); cursor:pointer; display:flex; gap:10px; align-items:flex-start;}
+  .gsr-item:hover{background:var(--ledger-soft);}
+  .gsr-tab{font-family:'IBM Plex Mono',monospace; font-size:.65rem; font-weight:700; padding:2px 7px;
+    border-radius:3px; background:var(--ledger); color:#fff; white-space:nowrap; flex-shrink:0; margin-top:2px;}
+  .gsr-text{font-size:.87rem; color:var(--ink); line-height:1.4;}
+  .gsr-text mark{background:var(--gold-soft); color:var(--ink); border-radius:2px; padding:0 1px;}
+  .gsr-empty{padding:16px 18px; color:var(--ink-soft); font-size:.88rem; text-align:center;}
+  header.top{position:relative;}
+
+  @media print{
+    .global-search-bar,#gsearch-results-panel,#gsearch-wrap,#shortcuts-hint,#read-progress{display:none!important;}
+  }
 </style>
 </head>
 <body>
@@ -236,7 +268,15 @@
       <label for="t-numbers">&#128290; Quick Facts &amp; Guide</label>
       <label for="t-script">&#128221; Presentation Script</label>
     </div>
+    <!-- ALWAYS-VISIBLE GLOBAL SEARCH BAR -->
+    <div class="global-search-bar">
+      <input type="text" id="global-search-input" placeholder="🔍 Search all tabs… (or press / )" oninput="runGlobalSearch(this.value)" autocomplete="off" spellcheck="false">
+      <span id="global-search-count"></span>
+      <button class="gsb-clear" onclick="clearGlobalSearch()" title="Clear search">✕</button>
+    </div>
   </div>
+  <!-- GLOBAL SEARCH RESULTS PANEL (drops below header) -->
+  <div id="gsearch-results-panel"></div>
 </header>
 
 <main class="wrap">
@@ -2243,6 +2283,147 @@ document.addEventListener("keydown", function(e) {
     r.addEventListener("change", function(){ setTimeout(updateProgress, 50); });
   });
   updateProgress();
+})();
+
+// ── ALWAYS-VISIBLE GLOBAL SEARCH ────────────────────────────────────────────
+// Indexes ALL 4 tabs and shows results in a dropdown panel under the header.
+(function(){
+  var TAB_LABELS = {
+    'p-demo': '📋 Demo',
+    'p-qa': '🎤 Q&A',
+    'p-numbers': '🔢 Facts',
+    'p-script': '📝 Script'
+  };
+  var TAB_IDS = {
+    'p-demo': 't-demo',
+    'p-qa': 't-qa',
+    'p-numbers': 't-numbers',
+    'p-script': 't-script'
+  };
+
+  function getTabText(panelId) {
+    var el = document.getElementById(panelId);
+    return el ? el.innerText : '';
+  }
+
+  function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+  function highlight(text, term) {
+    if (!term) return text;
+    var re = new RegExp('(' + escapeRe(term) + ')', 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  function switchToTab(tabId) {
+    var radio = document.getElementById(tabId);
+    if (radio) radio.checked = true;
+  }
+
+  window.runGlobalSearch = function(val) {
+    var panel = document.getElementById('gsearch-results-panel');
+    var count = document.getElementById('global-search-count');
+    val = (val || '').trim();
+    if (val.length < 2) {
+      panel.classList.remove('open');
+      panel.innerHTML = '';
+      count.textContent = '';
+      return;
+    }
+    var re = new RegExp(escapeRe(val), 'gi');
+    var results = [];
+    ['p-demo','p-qa','p-numbers','p-script'].forEach(function(pid){
+      var el = document.getElementById(pid);
+      if (!el) return;
+      // Search through text nodes and details summaries
+      var nodes = el.querySelectorAll('details.qa > summary, details.cat > summary, .step-head h3, .say, p, li, blockquote p, .a p, .fact .k, h2.sec, h3');
+      nodes.forEach(function(node){
+        var txt = node.innerText || node.textContent || '';
+        if (re.test(txt)) {
+          re.lastIndex = 0;
+          var snippet = txt.length > 120 ? txt.substring(0,120) + '…' : txt;
+          results.push({pid: pid, snippet: snippet, term: val});
+        }
+        re.lastIndex = 0;
+      });
+    });
+    // Deduplicate by snippet
+    var seen = new Set();
+    results = results.filter(function(r){
+      var key = r.pid + r.snippet;
+      if (seen.has(key)) return false;
+      seen.add(key); return true;
+    });
+    count.textContent = results.length ? results.length + ' result' + (results.length===1?'':'s') : 'No results';
+    if (!results.length) {
+      panel.innerHTML = '<div class="gsr-empty">No results for "' + val + '" across all tabs</div>';
+      panel.classList.add('open');
+      return;
+    }
+    panel.innerHTML = results.slice(0,30).map(function(r){
+      return '<div class="gsr-item" onclick="switchTab(\'' + TAB_IDS[r.pid] + '\',\'' + r.pid + '\',' + JSON.stringify(r.snippet) + ',' + JSON.stringify(r.term) + ')">'
+        + '<span class="gsr-tab">' + TAB_LABELS[r.pid] + '</span>'
+        + '<span class="gsr-text">' + highlight(r.snippet.replace(/</g,'&lt;').replace(/>/g,'&gt;'), r.term) + '</span>'
+        + '</div>';
+    }).join('');
+    panel.classList.add('open');
+  };
+
+  window.switchTab = function(tabId, panelId, snippet, term) {
+    switchToTab(tabId);
+    document.getElementById('gsearch-results-panel').classList.remove('open');
+    document.getElementById('global-search-count').textContent = '';
+    // Scroll to matching element in new tab
+    setTimeout(function(){
+      var panel = document.getElementById(panelId);
+      if (!panel) return;
+      var re = new RegExp(escapeRe(term), 'i');
+      var nodes = panel.querySelectorAll('details.qa > summary, .say, p, li, h2.sec, h3, blockquote p');
+      for (var i=0; i<nodes.length; i++){
+        if (re.test(nodes[i].innerText || nodes[i].textContent)){
+          nodes[i].scrollIntoView({behavior:'smooth', block:'center'});
+          // Open parent details if collapsed
+          var d = nodes[i].closest('details');
+          if (d) d.open = true;
+          var d2 = d && d.closest('details.cat');
+          if (d2) d2.open = true;
+          break;
+        }
+      }
+    }, 150);
+  };
+
+  window.clearGlobalSearch = function() {
+    var inp = document.getElementById('global-search-input');
+    if (inp) { inp.value = ''; }
+    var panel = document.getElementById('gsearch-results-panel');
+    if (panel) { panel.classList.remove('open'); panel.innerHTML = ''; }
+    var count = document.getElementById('global-search-count');
+    if (count) count.textContent = '';
+  };
+
+  // Also wire / key to focus the visible search bar
+  document.addEventListener('keydown', function(e){
+    if ((e.key === '/' && document.activeElement.tagName !== 'INPUT') ||
+        (e.key === 'k' && (e.ctrlKey || e.metaKey))) {
+      e.preventDefault();
+      var inp = document.getElementById('global-search-input');
+      if (inp) { inp.focus(); inp.select(); }
+    }
+    if (e.key === 'Escape') {
+      window.clearGlobalSearch();
+      var inp = document.getElementById('global-search-input');
+      if (inp) inp.blur();
+    }
+  });
+
+  // Close results when clicking outside
+  document.addEventListener('click', function(e){
+    var panel = document.getElementById('gsearch-results-panel');
+    var bar = document.querySelector('.global-search-bar');
+    if (panel && bar && !bar.contains(e.target) && !panel.contains(e.target)){
+      panel.classList.remove('open');
+    }
+  });
 })();
 </script>
 
