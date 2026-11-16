@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -266,7 +266,7 @@
           <li>Watch it log 2 expenses simultaneously with Filipino/English parsing</li>
         </ul>
         <div class="say">"I just logged 2 expenses in one sentence in Taglish. The AI understood the items, amounts, categories, and dates &#8212; without me filling any form. This is what we call an agentic action &#8212; we have 34 types in total, from logging expenses to setting budgets to computing savings."</div>
-        <div class="say">If panel asks how it works: "The message goes to our AI engine. In Auto mode, it tries our 10-provider chain &#8212; starting with OpenRouter (which routes to gemini-flash-1.5) then falling back through Gemini, 5 Groq models, and Cerebras. The AI returns a JSON action like <code>{type:'log_expense', item:'lunch', amount:65}</code> which the app then executes. Users type naturally in Filipino, English, or Taglish."</div>
+        <div class="say">If panel asks how it works: "The message goes to our AI engine. In Auto mode, it tries our 10-provider chain &#8212; starting with OpenRouter (which routes to openrouter/free (auto-routes to best free model)) then falling back through Gemini, 5 Groq models, and Cerebras. The AI returns a JSON action like <code>{type:'log_expense', item:'lunch', amount:65}</code> which the app then executes. Users type naturally in Filipino, English, or Taglish."</div>
       </div>
     </div>
 
@@ -687,7 +687,7 @@
   <p>When Auto mode is enabled, SmartSpend tries providers in this priority order:</p>
   <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li><b>Custom Local</b> (if configured) &#8212; user&#8217;s own PC running Ollama/LM Studio/Jan</li>
-  <li><b>OpenRouter</b> &#8212; gemini-flash-1.5 default; $100 credit; routes to 100+ models</li>
+  <li><b>OpenRouter</b> &#8212; openrouter/free (auto-routes to best free model) default; $100 credit; routes to 100+ models</li>
   <li><b>Gemini 3.5 Flash</b> &#8212; Google AI Studio direct connection</li>
   <li><b>Gemini 3.5 Flash-Lite</b> &#8212; lighter/faster Google model (primary in v3.1.0)</li>
   <li><b>GPT-OSS 120B (Groq)</b> &#8212; fast inference</li>
@@ -710,7 +710,7 @@
   <p>SmartSpend is designed so AI enhances the experience but is never a single point of failure. Core finance tracking works without AI.</p>
   </div></details>
   <details class="qa"><summary>How much does the AI cost to run? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Current cost: approximately $0 recurring.</b> All direct providers (Gemini, Groq, Cerebras) are on free tiers. OpenRouter credit: $100 available (expires May 14, 2027) &#8212; at $0.30/1M tokens for gemini-flash-1.5, that&#8217;s ~83,000 AI advice chats or ~166,000 expense logs possible from the credit alone. Per-user 150 message/day limit enforces zero-cost operation for a research prototype. For production scaling, Recommendation 2 (backend proxy) would implement per-user API keys and usage billing.</p>
+  <p><b>Current cost: approximately $0 recurring.</b> All direct providers (Gemini, Groq, Cerebras) are on free tiers. OpenRouter credit: $100 available (expires May 14, 2027) &#8212; at $0.30/1M tokens for openrouter/free (auto-routes to best free model), that&#8217;s ~83,000 AI advice chats or ~166,000 expense logs possible from the credit alone. Per-user 150 message/day limit enforces zero-cost operation for a research prototype. For production scaling, Recommendation 2 (backend proxy) would implement per-user API keys and usage billing.</p>
   </div></details>
   <details class="qa"><summary>Is user data sent to AI providers? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-security">security</span></summary><div class="a">
   <p>Only the text the user typed and a summarized financial context (categories and amounts, never names or account numbers). Mobile numbers, reference numbers, and account patterns are <b>redacted on-device</b> before any API call, using regex patterns. A one-time privacy disclosure appears before the first AI message. We are upfront that free Gemini quota terms say content may be used to improve Google&#8217;s products &#8212; redaction reduces but does not fully eliminate that exposure. Users who want zero exposure can use Private Local Mode (Tier 2) where requests go only to their own PC.</p>
@@ -719,7 +719,7 @@
   <p>The API key (<code>sk-or-v1-...</code>) is stored in Firebase Remote Config under the parameter <code>openrouter_api_key</code> &#8212; never hardcoded in the APK. The key is loaded at app startup via <code>AppConfig.init()</code>. Usage can be monitored at <code>openrouter.ai/workspaces/default/activity</code>. The credit expires May 14, 2027. Post-capstone, Recommendation 2 (backend proxy) would move to per-user API key management so each user&#8217;s usage is tracked separately, preventing one heavy user from exhausting the shared credit.</p>
   </div></details>
   <details class="qa"><summary>What model does OpenRouter use by default? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Default: <code>google/gemini-flash-1.5</code></b> &#8212; chosen for SmartSpend because:</p>
+  <p><b>Default: <code>google/openrouter/free (auto-routes to best free model)</code></b> &#8212; chosen for SmartSpend because:</p>
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li>&#9989; Fast response time (good for real-time expense logging)</li>
   <li>&#9989; Strong reasoning (handles financial advice and calculations)</li>
@@ -737,7 +737,7 @@
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li>Line ~18: <code>_fallbackOpenRouterKey</code> constant</li>
   <li>Line ~28: <code>_openRouterUrl</code> (<code>https://openrouter.ai/api/v1/chat/completions</code>)</li>
-  <li>Line ~59: <code>_openRouterModel</code> default (<code>google/gemini-flash-1.5</code>)</li>
+  <li>Line ~59: <code>_openRouterModel</code> default (<code>google/openrouter/free (auto-routes to best free model)</code>)</li>
   <li>Line ~129: Added to <code>availableModels</code> list (3rd position)</li>
   <li>Line ~284: Integrated into <code>autoFallback()</code> chain (2nd position)</li>
   <li>Line ~431: Added to Firebase Remote Config defaults</li>
@@ -775,7 +775,7 @@
   <p><b>Also fixed:</b> AI Model Selector bottom sheet scrolling on small screens (&lt;5.5"). Build 111 released as production-ready APK (119.8 MB, Android 5.0+).</p>
   </div></details>
   <details class="qa"><summary>What's new in v3.2.2&#8211;3.2.3? <span class="tag tag-openrouter">OpenRouter</span></summary><div class="a">
-  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: gemini-flash-1.5.</p>
+  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: openrouter/free (auto-routes to best free model).</p>
   <p><b>10-provider fallback chain</b> &#8212; Upgraded from 8 to 10 providers. Auto mode now prioritizes OpenRouter for optimal model selection across any task type.</p>
   <p><b>Intelligent routing</b> &#8212; App caches last successful provider, reducing latency for repeat requests.</p>
   </div></details>
@@ -1070,7 +1070,7 @@
   <div class="scroll"><table>
     <tr><th>#</th><th>Provider / Model</th><th>Limit</th><th>Notes</th></tr>
     <tr><td>1</td><td>Custom Local (if configured)</td><td>&#8734;</td><td>User&#8217;s own Ollama / LM Studio / Jan server</td></tr>
-    <tr><td>2</td><td><b>OpenRouter</b> (gemini-flash-1.5)</td><td>$100 credit</td><td>Gateway to 100+ models. Expires May 2027. (v3.2.4)</td></tr>
+    <tr><td>2</td><td><b>OpenRouter</b> (openrouter/free (auto-routes to best free model))</td><td>$100 credit</td><td>Gateway to 100+ models. Expires May 2027. (v3.2.4)</td></tr>
     <tr><td>3</td><td>Gemini 3.5 Flash</td><td>Free tier</td><td>Best reasoning, GA stable (Google direct)</td></tr>
     <tr><td>4</td><td>Gemini 3.5 Flash-Lite</td><td>Free tier</td><td>Fastest + cheapest 3.5. Primary in v3.1.0.</td></tr>
     <tr><td>5</td><td>GPT-OSS 120B (Groq)</td><td>1,000/day</td><td>Best open-source quality</td></tr>
@@ -1296,7 +1296,7 @@
     <p>&#8220;We have <b>nine recommendations</b>: (1) Payday-cycle-aware budgeting aligned to the 15th-and-30th salary cycle. (2) Backend API proxy and per-user keys to remove device-side key exposure. (3) Google Play release, after the proxy and a privacy policy are in place. (4) On-device AI tier, an opt-in model of about 2.6 gigabytes for fully offline AI. (5) SQLite encryption using SQLCipher. (6) Household and remittance features: shared wallets and OFW remittance as a distinct income category. (7) Longitudinal evaluation over 3&#8211;6 months with a larger sample. (8) UI/UX refinement addressing consistency in Q6 and complexity in Q2. (9) Formal parsing evaluation using standardized test receipts across multiple platforms. All nine come from the specific limitations of the current prototype.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q11 &#8212; What about OpenRouter? (v3.2.2+)</summary><div class="a">
-    <p>&#8220;We integrated OpenRouter as an AI gateway starting in v3.2.2. OpenRouter provides access to 100+ language models from multiple providers through a single OpenAI-compatible API endpoint. We added it as the second priority in our 10-provider fallback chain &#8212; after the user&#8217;s optional local model, before direct Gemini. The default model through OpenRouter is <code>google/gemini-flash-1.5</code>, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. We have $100 in OpenRouter credits expiring May 2027. This upgrade, included in v3.2.4, raised the chain from 8 to 10 providers, further improving 24/7 AI availability.&#8221;</p>
+    <p>&#8220;We integrated OpenRouter as an AI gateway starting in v3.2.2. OpenRouter provides access to 100+ language models from multiple providers through a single OpenAI-compatible API endpoint. We added it as the second priority in our 10-provider fallback chain &#8212; after the user&#8217;s optional local model, before direct Gemini. The default model through OpenRouter is <code>google/openrouter/free (auto-routes to best free model)</code>, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. We have $100 in OpenRouter credits expiring May 2027. This upgrade, included in v3.2.4, raised the chain from 8 to 10 providers, further improving 24/7 AI availability.&#8221;</p>
     </div></details>
   </details>
 
@@ -1768,3 +1768,4 @@ function collapseAll() {
 
 </body>
 </html>
+
