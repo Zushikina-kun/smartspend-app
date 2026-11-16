@@ -28,6 +28,13 @@ class LLMService {
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $_groqKey",
+            // Fix 6 / Fix 4: OpenRouter requires these headers for proper
+            // routing. Without them, OpenRouter may return HTTP 400.
+            // Added conditionally so other providers are unaffected.
+            if (AppConfig.activeModelId == 'openrouter') ...{
+              "HTTP-Referer": "https://zushikina-kun.github.io/smartspend-app/",
+              "X-Title": "SmartSpend",
+            },
           },
           body: jsonEncode({
             "model": _groqModel,

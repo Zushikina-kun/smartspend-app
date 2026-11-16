@@ -1283,6 +1283,14 @@ PH BNPL/Loan Services (2026):
               headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer ${_groqKey}",
+                // Fix 4: OpenRouter requires these headers for proper routing.
+                // Without HTTP-Referer + X-Title, OpenRouter may return 400.
+                // Added conditionally so other providers are unaffected.
+                if (AppConfig.activeModelId == 'openrouter') ...{
+                  "HTTP-Referer":
+                      "https://zushikina-kun.github.io/smartspend-app/",
+                  "X-Title": "SmartSpend",
+                },
               },
               body: jsonEncode({
                 "model": AppConfig.groqModel,
@@ -1309,6 +1317,14 @@ PH BNPL/Loan Services (2026):
         if (needsSwitch) AppConfig.setModel(originalModelId);
         final switched = AppConfig.autoFallback();
         if (switched && !isFallbackRetry) {
+          // Fix 3: Chat context is preserved across the provider switch.
+          // _history (conversation turns) is a static list that is NOT cleared
+          // by autoFallback(). The recursive call rebuilds `messages` from
+          // _history + systemContent + conversationSummary — all of which are
+          // unchanged. _groqUrl / _groqKey / AppConfig.groqModel are lazy
+          // getters that read the NEW provider from AppConfig after
+          // autoFallback() has updated _activeModelId, so the retry uses the
+          // correct endpoint and key automatically.
           return sendMessage(message, isFallbackRetry: true);
         }
         // All providers exhausted or already in fallback retry
@@ -1341,6 +1357,7 @@ PH BNPL/Loan Services (2026):
       if (response.statusCode == 429) {
         final switched = AppConfig.autoFallback();
         if (switched) {
+          // Fix 3: context preserved — see timeout fallback comment above.
           return sendMessage(message, isFallbackRetry: true);
         }
         // All providers exhausted — reset to Auto for next attempt
@@ -1360,6 +1377,7 @@ PH BNPL/Loan Services (2026):
         await Future.delayed(const Duration(milliseconds: 500));
         final switched = AppConfig.autoFallback();
         if (switched) {
+          // Fix 3: context preserved — see timeout fallback comment above.
           return sendMessage(message, isFallbackRetry: true);
         }
         // All providers exhausted — reset chain to Auto for next attempt

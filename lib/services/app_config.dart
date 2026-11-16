@@ -404,7 +404,11 @@ class AppConfig {
     final hasOpenRouter =
         (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
-    // Auto mode: track failures internally; rotate preferred provider
+    // Auto mode: on the FIRST failure, immediately switch away from the
+    // provider that _autoActualModel() chose so we don't waste 3 × 35 s
+    // retrying the same broken endpoint.
+    // Fix 1 & 5: skip OpenRouter entirely when key is empty; go straight
+    // to Gemini or Groq so an empty-key cold start never times out.
     if (_activeModelId == 'auto') {
       _consecutiveFailures++;
       if (_consecutiveFailures >= 3) {
@@ -416,6 +420,21 @@ class AppConfig {
         // fallback is session-only. Auto mode resumes on next cold start.
         return true;
       }
+      // First or second failure: detect which concrete provider was active
+      // and jump to its next-in-chain immediately.
+      // This prevents 3 × 35 s timeout cycles against the same broken endpoint.
+      final currentProvider = _autoActualModel('smart');
+      if (currentProvider == 'openrouter' || !hasOpenRouterKey) {
+        // OpenRouter was chosen (or key is empty) — skip it and go to Gemini
+        _activeModelId = hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
+      } else if (currentProvider == 'gemini_flash_lite' ||
+          currentProvider == 'gemini_flash') {
+        _activeModelId = 'groq_llama4_scout';
+      } else {
+        // Already on a Groq model — advance within the Groq chain
+        _activeModelId = 'groq_llama4_scout';
+      }
+      // Session-only switch — do NOT persist so auto mode resumes on restart
       return true;
     }
 
@@ -566,13 +585,37 @@ class AppConfig {
     //    they are not hardcoded here. Update keys there and publish to rotate.
     try {
       final rc = FirebaseRemoteConfig.instance;
+
+      // Fix 2: Use a short fetch interval on first load so the OpenRouter key
+      // loads quickly on cold start (rc_last_fetch_status == null means first
+      // open; stale > 1 hr means the last fetch was more than an hour ago).
+      // After the first successful fetch, the 1-hour default interval applies.
+      Duration fetchInterval = const Duration(hours: 1);
+      try {
+        final lastStatus = await DBService.getSetting('rc_last_fetch_status');
+        final lastFetchTs = await DBService.getSetting('rc_last_fetch_ts');
+        bool isFirstLoad = lastStatus == null;
+        bool isStale = false;
+        if (lastFetchTs != null) {
+          final lastFetch = DateTime.tryParse(lastFetchTs);
+          if (lastFetch != null) {
+            isStale = DateTime.now().difference(lastFetch).inMinutes > 60;
+          }
+        } else {
+          // No timestamp recorded yet — treat as stale
+          isStale = true;
+        }
+        if (isFirstLoad || isStale) {
+          fetchInterval = const Duration(minutes: 5);
+        }
+      } catch (_) {}
+
       await rc.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 15),
-        // 1-hour cache for production — balances freshness vs quota.
-        // Keys rarely change; daily rotation is fine. Staying at 1h means
-        // only the first open each hour hits Firebase; subsequent opens
-        // within the hour serve from the local cache.
-        minimumFetchInterval: const Duration(hours: 1),
+        // First load / stale cache: 5-minute interval so the OpenRouter key
+        // loads quickly instead of waiting out the 1-hour server-side cache.
+        // After first successful fetch the interval reverts to 1 hour.
+        minimumFetchInterval: fetchInterval,
       ));
       await rc.setDefaults({
         'groq_api_key': _fallbackGroqKey,
@@ -583,8 +626,12 @@ class AppConfig {
       bool fetched = false;
       try {
         fetched = await rc.fetchAndActivate();
+        final nowIso = DateTime.now().toUtc().toIso8601String();
         await DBService.setSetting(
             'rc_last_fetch_status', fetched ? 'fresh' : 'cached');
+        // Record timestamp so the next launch can decide whether to use
+        // the short interval (5 min) or the normal 1-hour interval.
+        await DBService.setSetting('rc_last_fetch_ts', nowIso);
       } catch (fetchErr) {
         // fetchAndActivate failed — log the error and continue with defaults
         await DBService.setSetting('rc_last_fetch_status',
