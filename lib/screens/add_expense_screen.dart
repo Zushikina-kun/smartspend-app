@@ -11,6 +11,7 @@ import '../services/item_catalog_service.dart';
 import '../services/merchant_normalization_service.dart';
 import '../services/event_bus.dart';
 import '../services/currency_service.dart';
+import '../services/budget_period_util.dart';
 import '../models/budget.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
@@ -108,11 +109,20 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     // Also load budgets for the category progress bar
     try {
       final budgets = await DBService.getBudgets();
-      final currentMonth = DateTime.now().toIso8601String().substring(0, 7);
+      final now = DateTime.now();
+      final currentMonth = now.toIso8601String().substring(0, 7);
       final expenses = await DBService.getExpenses(month: currentMonth);
+      // Payday-cycle scope: bimonthly users reset budgets on the 1st & 15th,
+      // so only count spending since the current budget period start.
+      final incomeFreq =
+          await DBService.getSetting('income_frequency') ?? 'monthly';
+      final periodStart =
+          budgetPeriodStart(now, incomeFreq).toIso8601String().substring(0, 10);
       final spent = <String, double>{};
       for (final e in expenses) {
-        spent[e.category] = (spent[e.category] ?? 0) + e.amount;
+        if (e.date.compareTo(periodStart) >= 0) {
+          spent[e.category] = (spent[e.category] ?? 0) + e.amount;
+        }
       }
       if (mounted)
         setState(() {
