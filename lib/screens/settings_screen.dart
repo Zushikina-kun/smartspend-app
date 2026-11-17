@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../services/db_service.dart';
 import '../services/app_config.dart';
 import '../services/app_lock_service.dart';
 import '../services/event_bus.dart';
 import '../services/theme_service.dart';
+import '../services/update_service.dart';
 import '../main.dart';
 import '../widgets/local_ai_setup_sheet.dart';
 import '../widgets/peso_mascot.dart';
@@ -25,6 +27,9 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _loading = true;
 
+  // ── Update checker ───────────────────────────────────────────────────────
+  bool _updateChecking = false;
+  UpdateInfo? _updateInfo;
   // ── Behavior ────────────────────────────────────────────────────────────────
   bool autoDeduct = true;
   bool walletConfirmDeduct = false; // opt-in: ask before deducting each expense
@@ -148,6 +153,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _localUrlCtrl.text = AppConfig.customLocalUrl;
     _localModelCtrl.text = AppConfig.customLocalModel;
     _localKeyCtrl.text = AppConfig.customLocalKey;
+    // Populate update info from cache (no network call on settings open)
+    _updateInfo = UpdateService.cached;
     if (mounted) setState(() => _loading = false);
   }
 
@@ -1315,6 +1322,90 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() => showMarketInsights = v);
                       _saveAndRefresh('show_market_insights', v);
                     },
+                  ),
+                ]),
+
+                // ── UPDATE CHECKER ───────────────────────────────────────
+                _sectionLabel('APP INFO'),
+                _sectionCard([
+                  InkWell(
+                    onTap: () async {
+                      final info = _updateInfo;
+                      if (info != null && info.hasUpdate) {
+                        await launchUrl(Uri.parse(info.releaseUrl),
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      child: Row(children: [
+                        Icon(Icons.system_update_outlined,
+                            size: 20, color: Colors.grey[600]),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('App version',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                                Text(
+                                  _updateInfo == null
+                                      ? 'v${UpdateService.cached?.currentVersion ?? '—'}'
+                                      : _updateInfo!.hasUpdate
+                                          ? 'v${_updateInfo!.currentVersion} — v${_updateInfo!.latestVersion} available'
+                                          : 'v${_updateInfo!.currentVersion} — Up to date ✓',
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: _updateInfo?.hasUpdate == true
+                                          ? Colors.orange[700]
+                                          : Colors.grey[500]),
+                                ),
+                              ]),
+                        ),
+                        if (_updateChecking)
+                          const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2))
+                        else
+                          IconButton(
+                            icon: const Icon(Icons.refresh, size: 18),
+                            tooltip: 'Check for updates',
+                            visualDensity: VisualDensity.compact,
+                            onPressed: () async {
+                              setState(() => _updateChecking = true);
+                              final info = await UpdateService.checkForUpdate(
+                                  forceRefresh: true);
+                              if (mounted) {
+                                setState(() {
+                                  _updateChecking = false;
+                                  _updateInfo = info;
+                                });
+                                if (info == null) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    content: Text(
+                                        'Could not reach GitHub — check your connection.'),
+                                    behavior: SnackBarBehavior.floating,
+                                  ));
+                                } else if (!info.hasUpdate) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                        'You\'re on the latest version (v${info.currentVersion}) ✓'),
+                                    behavior: SnackBarBehavior.floating,
+                                  ));
+                                }
+                              }
+                            },
+                          ),
+                        if (_updateInfo?.hasUpdate == true)
+                          Icon(Icons.chevron_right, color: Colors.grey[400]),
+                      ]),
+                    ),
                   ),
                 ]),
 

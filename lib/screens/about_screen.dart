@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/debug_service.dart' show kAppVersion;
+import '../services/update_service.dart';
 import '../widgets/peso_mascot.dart';
 import 'feedback_screen.dart';
 
@@ -37,6 +38,44 @@ class AboutScreen extends StatelessWidget {
               "Version $kAppVersion",
               style: const TextStyle(color: Colors.grey, fontSize: 13),
             ),
+            const SizedBox(height: 4),
+            Builder(builder: (ctx) {
+              final info = UpdateService.cached;
+              if (info == null) return const SizedBox.shrink();
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                decoration: BoxDecoration(
+                  color: info.hasUpdate
+                      ? Colors.orange.withValues(alpha: 0.15)
+                      : Colors.green.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: info.hasUpdate
+                        ? Colors.orange.withValues(alpha: 0.5)
+                        : Colors.green.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: GestureDetector(
+                  onTap: info.hasUpdate
+                      ? () => launchUrl(Uri.parse(info.releaseUrl),
+                          mode: LaunchMode.externalApplication)
+                      : null,
+                  child: Text(
+                    info.hasUpdate
+                        ? '🆕 v${info.latestVersion} available — tap to update'
+                        : '✓ Up to date',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: info.hasUpdate
+                          ? Colors.orange[800]
+                          : Colors.green[700],
+                    ),
+                  ),
+                ),
+              );
+            }),
             const SizedBox(height: 6),
             const Text(
               "AI-Assisted Financial Tracking & Advisory",

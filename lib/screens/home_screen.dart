@@ -63,6 +63,8 @@ import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
 import '../services/peso_context_service.dart';
 import '../services/peso_activity_log.dart';
+import '../services/update_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -2436,6 +2438,13 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
     _loadData();
     _checkDashboardGreeting();
+    // Check for app updates after a short delay so it doesn't block startup
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      UpdateService.checkForUpdate().then((_) {
+        if (mounted && UpdateService.hasUpdate) setState(() {});
+      });
+    });
     // Auto-refresh when any expense/budget/income/goal changes
     _eventSub = AppEventBus.instance.stream.listen((event) {
       if (event == AppEvent.expenseChanged ||
@@ -5283,6 +5292,121 @@ class _DashboardState extends State<Dashboard> {
   }
 
   /// Subtle section label between home screen card groups.
+  Widget _buildUpdateBanner(BuildContext context) {
+    final info = UpdateService.cached!;
+    final hasDirectDownload = info.apkDownloadUrl != null;
+    return StatefulBuilder(
+      builder: (ctx, setSt) {
+        final progress = UpdateService.downloadProgress;
+        final isDownloading = UpdateService.isDownloading;
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color:
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.35)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                const Text('🆕', style: TextStyle(fontSize: 18)),
+                const SizedBox(width: 10),
+                Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      Text('SmartSpend v${info.latestVersion} available',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                              color: Theme.of(context).colorScheme.primary)),
+                      Text(
+                        isDownloading
+                            ? 'Downloading... ${((progress?.percent ?? 0) * 100).toInt()}%'
+                            : progress?.done == true
+                                ? '✅ Download complete — tap Install'
+                                : progress?.failed == true
+                                    ? '❌ Download failed — tap to retry'
+                                    : 'You have v${info.currentVersion} — tap Update',
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.6)),
+                      ),
+                    ])),
+                if (!isDownloading)
+                  TextButton(
+                    onPressed: () async {
+                      if (hasDirectDownload) {
+                        setSt(() {});
+                        final ok = await UpdateService.downloadAndInstall(
+                          onProgress: (p) {
+                            if (mounted) setState(() {});
+                            setSt(() {});
+                          },
+                        );
+                        if (!ok && mounted) {
+                          // Fallback to browser
+                          await UpdateService.openReleasePage();
+                        }
+                      } else {
+                        await UpdateService.openReleasePage();
+                      }
+                    },
+                    child: Text(hasDirectDownload ? 'Update' : 'Open'),
+                  ),
+                if (isDownloading)
+                  TextButton(
+                    onPressed: () {
+                      UpdateService.cancelDownload();
+                      setSt(() {});
+                      setState(() {});
+                    },
+                    child: const Text('Cancel',
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                IconButton(
+                  onPressed: () {
+                    UpdateService.dismiss();
+                    setState(() {});
+                  },
+                  icon: const Icon(Icons.close, size: 16),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ]),
+              // Progress bar
+              if (isDownloading && (progress?.percent ?? 0) > 0) ...[
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: LinearProgressIndicator(
+                    value: progress!.percent,
+                    minHeight: 4,
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.15),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildSectionHeader(BuildContext context, String label) {
     final cs = Theme.of(context).colorScheme;
     return Padding(
@@ -5982,6 +6106,9 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
               const SizedBox(height: 12),
+
+              // Update banner — shown when a newer release is available
+              if (UpdateService.hasUpdate) _buildUpdateBanner(context),
 
               // Section: Your Finances
               _buildSectionHeader(context, 'YOUR FINANCES'),
