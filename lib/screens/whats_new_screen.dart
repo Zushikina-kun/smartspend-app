@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.2.5';
-  static const _prefKey = 'whats_new_seen_3_2_5';
+  static const _version = '3.3.0';
+  static const _prefKey = 'whats_new_seen_3_3_0';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,34 +21,34 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
-      '🌐',
-      'OpenRouter AI Gateway (v3.2.3)',
-      'SmartSpend now routes through OpenRouter — a unified gateway giving access to 100+ AI models. Auto mode intelligently picks the best available provider, with a 10-provider fallback chain for 24/7 reliability.',
+      '📅',
+      'Payday-cycle budgeting (v3.3.0)',
+      'Budgets now reset on your actual payday cycle. If you receive salary on the 15th and 30th (bi-monthly), your budget period starts on the 15th — not the 1st. Budget screen, FHS score, home alerts, and the add-expense bar all use your real pay cycle.',
     ),
     (
-      '🔄',
-      'Smarter AI fallback chain (v3.2.3)',
-      'Fixed a critical issue where timeouts would not trigger provider fallback. Now when any provider times out or fails, Peso automatically switches to the next available provider — no more stuck retries.',
+      '📊',
+      'Quick Stats — This Month at a Glance (v3.3.0)',
+      'A new home screen card shows your monthly snapshot instantly: total spent, average per day, top spending category, and days logged this month. No need to navigate to Analytics for a quick check.',
+    ),
+    (
+      '🔥',
+      'Logging streak badge (v3.3.0)',
+      'Log expenses every day and build a streak! The home screen now shows your consecutive daily logging streak. Keep it going to build the habit.',
+    ),
+    (
+      '🏷️',
+      'Home screen section headers (v3.3.0)',
+      'The home screen now has clear section labels — YOUR FINANCES, QUICK ACTIONS, GOALS & TRACKING — so you always know what each area is for.',
+    ),
+    (
+      '🌐',
+      'OpenRouter AI Gateway (v3.2.5)',
+      'SmartSpend now uses openrouter/free — auto-routes to the best available free AI model (Nemotron 550B, Gemma 4, etc.) with a 10-provider fallback chain for 24/7 reliability.',
     ),
     (
       '🏛️',
       'Government Contributions Tracker (v3.2.0)',
-      'Track your SSS, PhilHealth, and Pag-IBIG contributions year-to-date. The first Filipino finance app to treat mandatory government contributions as a first-class expense category. Includes an SSS pension estimator.',
-    ),
-    (
-      '🔗',
-      'Official gov portal links (v3.2.0)',
-      'Tap any government contribution card to open the official portal — sss.gov.ph, philhealth.gov.ph, or pagibigfund.gov.ph — directly from the app.',
-    ),
-    (
-      '🎨',
-      'FHS tier ring (v3.1.2)',
-      'Peso now wears a colored ring on the Home screen — green when your Financial Health Score is Good or better, orange for Fair, red for Poor.',
-    ),
-    (
-      '🐛',
-      'AI expenses now actually save (v3.1.1)',
-      'Fixed a critical bug where Peso said "Got it, logged!" but nothing was saved. This is now fixed — every expense Peso confirms is saved instantly.',
+      'Track SSS, PhilHealth, and Pag-IBIG year-to-date contributions. First Filipino finance app to treat mandatory government contributions as a first-class expense category.',
     ),
   ];
 

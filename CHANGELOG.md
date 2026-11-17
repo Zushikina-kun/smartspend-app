@@ -2,6 +2,22 @@
 
 All notable changes to SmartSpend are documented here.
 
+## [3.3.0] - 2026-11-17
+
+### Added
+- **Payday-cycle budget reset** (Recommendation 1) — Budgets reset on actual pay dates. Bi-monthly users (15th & 30th) get period start of 15th; all others keep 1st-of-month. Affects budget screen, FHS adherence, home alerts, add-expense bar.
+  - New: `lib/services/budget_period_util.dart` — `budgetPeriodStart(now, incomeFreq)`
+  - `score_service.dart` — FHS comp3 scoped to payday period; `incomeFrequency` threaded through all call sites
+- **Quick Stats "This Month at a Glance" home card** — total spent, avg/day, top category, days logged
+- **Expense logging streak badge** — 🔥 consecutive-day logging streak on home screen
+- **Home screen section headers** — "YOUR FINANCES", "QUICK ACTIONS", "GOALS & TRACKING" between card groups
+
+### Changed
+- WhatsNew screen updated to v3.3.0 | kAppVersion → 3.3.0
+- Version: 3.2.5+116 → 3.3.0+117 | `flutter analyze`: 0 errors
+
+---
+
 ## [3.2.4] - 2026-11-16
 
 ### Fixed (Critical — Defense Day Hotfixes)

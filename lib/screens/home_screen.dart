@@ -5216,7 +5216,6 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildStreakBadge(BuildContext context) {
     if (_loggingStreak < 2) return const SizedBox.shrink();
 
-    final cs = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 0, 12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
