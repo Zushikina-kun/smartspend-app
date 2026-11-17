@@ -1,7 +1,7 @@
 name: smartspend_app
 description: Smart Spend - AI-Assisted Financial Tracking and Advisory
 
-version: 3.3.0+117
+version: 3.3.1+118
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -56,3 +56,4 @@ flutter:
     - assets/Devs/BRIX A. DIRECTO.png
     - assets/Devs/CYRILLE JOHN M. RUBIS.png
     - assets/Devs/DJAUNATHAN ALBERT S. MADAYAG.png
+

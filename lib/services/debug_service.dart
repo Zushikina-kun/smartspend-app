@@ -9,7 +9,7 @@ import 'app_config.dart';
 import 'peso_activity_log.dart';
 
 /// Current app version — keep in sync with pubspec.yaml.
-const kAppVersion = '3.3.0';
+const kAppVersion = '3.3.1';
 
 /// Debug signing certificate SHA-1 fingerprint for this machine.
 /// Add this to Firebase Console → Project Settings → Android → SHA certificate fingerprints
@@ -601,3 +601,4 @@ class DebugService {
     );
   }
 }
+
