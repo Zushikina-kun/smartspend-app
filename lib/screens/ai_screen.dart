@@ -487,6 +487,8 @@ class _AIScreenState extends State<AIScreen> {
     final spendingLimit = tightest['limit'] as double;
     final spendingLimitPeriod = tightest['period'] as String;
     final spentInPeriod = tightest['spent'] as double;
+    final incomeFreq =
+        (await DBService.getSetting('income_frequency')) ?? 'monthly';
     final spentMap = <String, double>{};
     for (final e in monthExpenses) {
       spentMap[e.category] = (spentMap[e.category] ?? 0) + e.amount;
@@ -500,6 +502,7 @@ class _AIScreenState extends State<AIScreen> {
       expenseData,
       budgets: budgets,
       monthlyIncome: incomeWalletMode ? income : 0,
+      incomeFrequency: incomeFreq,
       lightweightMode: !incomeWalletMode,
       spendingLimit: spendingLimit,
       spendingLimitPeriod: spendingLimitPeriod,
@@ -509,6 +512,7 @@ class _AIScreenState extends State<AIScreen> {
       expenseData,
       budgets: budgets,
       monthlyIncome: incomeWalletMode ? income : 0,
+      incomeFrequency: incomeFreq,
       lightweightMode: !incomeWalletMode,
       spendingLimit: spendingLimit,
       spendingLimitPeriod: spendingLimitPeriod,

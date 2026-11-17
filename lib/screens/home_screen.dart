@@ -10,6 +10,7 @@ import 'dart:io';
 import '../models/expense.dart';
 import '../models/budget.dart';
 import '../services/db_service.dart';
+import '../services/budget_period_util.dart';
 import '../services/insight_service.dart';
 import '../services/score_service.dart';
 import '../services/currency_service.dart';
@@ -252,8 +253,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final expenses = await DBService.getExpenses();
       final now = DateTime.now();
+      final incomeFreq =
+          await DBService.getSetting('income_frequency') ?? 'monthly';
       final monthStart =
-          '${now.year}-${now.month.toString().padLeft(2, '0')}-01';
+          budgetPeriodStart(now, incomeFreq).toIso8601String().substring(0, 10);
 
       // Calculate spending per category this month
       final monthlySpending = <String, double>{};
@@ -2405,6 +2408,9 @@ class _DashboardState extends State<Dashboard> {
   double _reservedDebts = 0;
   bool _showSafeToSpend = true;
 
+  // Income frequency drives the budget period start (payday-cycle budgeting).
+  String _incomeFrequency = 'monthly';
+
   // ── SECTION VISIBILITY (user-controlled via App Settings) ────────────────
   bool _showSubscriptions = true;
   bool _showQuickLog = true;
@@ -2517,6 +2523,10 @@ class _DashboardState extends State<Dashboard> {
 
     // Load new lightweight mode + spending limit settings in parallel
     final incomeWalletMode = await DBService.getIncomeWalletMode();
+    // Income frequency drives the payday-cycle budget period (bimonthly =
+    // 15th & 30th resets budgets on the 1st and 15th).
+    final incomeFrequency =
+        await DBService.getSetting('income_frequency') ?? 'monthly';
     final tightest = await DBService.getTightestLimit();
     final spendingLimit = tightest['limit'] as double;
     final spendingLimitPeriod = tightest['period'] as String;
@@ -2524,6 +2534,12 @@ class _DashboardState extends State<Dashboard> {
     // Multi-period limits
     final allLimits = await DBService.getAllLimits();
     final allSpent = await DBService.getAllSpent();
+
+    // Payday-cycle budget period start (1st of month, or 15th for bimonthly
+    // users on/after the 15th). Used for budget-progress + FHS adherence.
+    final periodStartStr = budgetPeriodStart(DateTime.now(), incomeFrequency)
+        .toIso8601String()
+        .substring(0, 10);
 
     final expenseData = thisMonthExpenses
         .map(
@@ -2533,6 +2549,7 @@ class _DashboardState extends State<Dashboard> {
       expenseData,
       budgets: budgets,
       monthlyIncome: incomeWalletMode ? income : 0,
+      incomeFrequency: incomeFrequency,
       lightweightMode: !incomeWalletMode,
       spendingLimit: spendingLimit,
       spendingLimitPeriod: spendingLimitPeriod,
@@ -2576,6 +2593,7 @@ class _DashboardState extends State<Dashboard> {
       _score = score;
       _prevScore = prevScore;
       _monthlyIncome = income;
+      _incomeFrequency = incomeFrequency;
       // Lightweight mode & spending limit state
       _incomeWalletMode = incomeWalletMode;
       _spendingLimit = spendingLimit;
@@ -2599,7 +2617,10 @@ class _DashboardState extends State<Dashboard> {
       if (_insight == "Analyzing your expenses...") _loadingInsight = true;
       final spent = <String, double>{};
       for (final e in expenses) {
-        if (e.date.startsWith(_currentMonth)) {
+        // Budget progress counts spending since the payday-cycle period
+        // start (1st, or 15th for bimonthly users on/after the 15th).
+        if (e.date.startsWith(_currentMonth) &&
+            e.date.compareTo(periodStartStr) >= 0) {
           spent[e.category] = (spent[e.category] ?? 0) + e.amount;
         }
       }
@@ -2848,6 +2869,7 @@ class _DashboardState extends State<Dashboard> {
       expenseData,
       budgets: budgets,
       monthlyIncome: incomeWalletMode ? income : 0,
+      incomeFrequency: incomeFrequency,
       lightweightMode: !incomeWalletMode,
       spendingLimit: spendingLimit,
       spendingLimitPeriod: spendingLimitPeriod,
@@ -5058,8 +5080,9 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildQuickStatsCard(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final now = DateTime.now();
-    final monthStart =
-        DateTime(now.year, now.month, 1).toIso8601String().substring(0, 10);
+    final monthStart = budgetPeriodStart(now, _incomeFrequency)
+        .toIso8601String()
+        .substring(0, 10);
 
     // Query expenses for this month
     final monthExpenses =

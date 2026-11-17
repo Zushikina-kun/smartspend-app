@@ -144,6 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final rawScore = ScoreService.calculateScore(expenseData,
           budgets: budgets,
           monthlyIncome: iwMode ? income : 0,
+          incomeFrequency: incomeFreq,
           lightweightMode: !iwMode,
           spendingLimit: spendLimit,
           spendingLimitPeriod: spendPeriod);
@@ -151,6 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final breakdown = ScoreService.getBreakdown(expenseData,
           budgets: budgets,
           monthlyIncome: iwMode ? income : 0,
+          incomeFrequency: incomeFreq,
           lightweightMode: !iwMode,
           spendingLimit: spendLimit,
           spendingLimitPeriod: spendPeriod);

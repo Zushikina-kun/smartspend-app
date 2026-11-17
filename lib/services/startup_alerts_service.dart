@@ -364,6 +364,8 @@ class StartupAlertsService {
 
       // 4. Check FHS drop (compare to stored previous score)
       final prevScoreStr = await DBService.getSetting('prev_fhs_score');
+      final incomeFreq =
+          (await DBService.getSetting('income_frequency')) ?? 'monthly';
       final expenseData = expenses
           .map((e) =>
               {'amount': e.amount, 'category': e.category, 'date': e.date})
@@ -373,6 +375,7 @@ class StartupAlertsService {
         expenseData,
         budgets: budgets,
         monthlyIncome: incomeWalletModeOn ? income : 0,
+        incomeFrequency: incomeFreq,
         lightweightMode: !incomeWalletModeOn,
         spendingLimit: spendLimit,
         spendingLimitPeriod: spendPeriod,

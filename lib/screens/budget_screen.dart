@@ -7,6 +7,7 @@ import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
+import '../services/budget_period_util.dart';
 import '../widgets/history_sheet.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_screen_tip.dart';
@@ -49,9 +50,21 @@ class _BudgetScreenState extends State<BudgetScreen> {
       catTotals[e.category] = (catTotals[e.category] ?? 0) + e.amount;
     }
 
+    // Payday-cycle budget period: bimonthly users (15th & 30th) reset budgets
+    // on the 1st and 15th, so only count spending since the current period
+    // start. getExpenses(month:) already returns the current calendar month;
+    // for a bimonthly user on/after the 15th this filters out the 1st–14th.
+    final incomeFreq =
+        await DBService.getSetting('income_frequency') ?? 'monthly';
+    final periodStart = budgetPeriodStart(DateTime.now(), incomeFreq)
+        .toIso8601String()
+        .substring(0, 10);
+
     final spent = <String, double>{};
     for (final e in expenses) {
-      spent[e.category] = (spent[e.category] ?? 0) + e.amount;
+      if (e.date.compareTo(periodStart) >= 0) {
+        spent[e.category] = (spent[e.category] ?? 0) + e.amount;
+      }
     }
 
     // U8: compute monthly averages for suggestion (total ÷ months of data)

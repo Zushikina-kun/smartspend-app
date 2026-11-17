@@ -1,5 +1,6 @@
 import '../models/budget.dart';
 import 'db_service.dart';
+import 'budget_period_util.dart';
 import 'package:flutter/material.dart' show DateUtils;
 
 // Gap DB setting keys — defined here so both ScoreService and
@@ -49,6 +50,8 @@ class ScoreService {
     String spendingLimitPeriod = 'monthly',
     double spentInPeriod =
         -1, // actual spent in the limit's period (-1 = use expenses list)
+    // Income frequency drives the payday-cycle budget period for adherence.
+    String incomeFrequency = 'monthly',
   }) {
     if (lightweightMode) {
       return _computeLightweight(expenses,
@@ -58,7 +61,9 @@ class ScoreService {
           spentInPeriod: spentInPeriod)['score'] as int;
     }
     return _compute(expenses,
-        budgets: budgets, monthlyIncome: monthlyIncome)['score'] as int;
+        budgets: budgets,
+        monthlyIncome: monthlyIncome,
+        incomeFrequency: incomeFrequency)['score'] as int;
   }
 
   static List<Map<String, dynamic>> getBreakdown(
@@ -69,6 +74,7 @@ class ScoreService {
     double spendingLimit = 0,
     String spendingLimitPeriod = 'monthly',
     double spentInPeriod = -1,
+    String incomeFrequency = 'monthly',
   }) {
     if (lightweightMode) {
       return _computeLightweight(expenses,
@@ -79,7 +85,9 @@ class ScoreService {
           as List<Map<String, dynamic>>;
     }
     return _compute(expenses,
-            budgets: budgets, monthlyIncome: monthlyIncome)['breakdown']
+            budgets: budgets,
+            monthlyIncome: monthlyIncome,
+            incomeFrequency: incomeFrequency)['breakdown']
         as List<Map<String, dynamic>>;
   }
 
@@ -325,6 +333,7 @@ class ScoreService {
     List<Map<String, dynamic>> expenses, {
     List<Budget> budgets = const [],
     double monthlyIncome = 0,
+    String incomeFrequency = 'monthly',
   }) {
     final breakdown = <Map<String, dynamic>>[];
 
@@ -459,8 +468,15 @@ class ScoreService {
     double comp3 = 25.0;
     String comp3Reason;
     if (budgets.isNotEmpty) {
+      // Payday-cycle scope: only count spending since the current budget
+      // period start (1st, or 15th for bimonthly 15th & 30th users).
+      final periodStartStr = budgetPeriodStart(now, incomeFrequency)
+          .toIso8601String()
+          .substring(0, 10);
       final catTotals = <String, double>{};
       for (final e in expenses) {
+        final date = (e['date'] as String).substring(0, 10);
+        if (date.compareTo(periodStartStr) < 0) continue;
         final cat = e['category'] as String;
         catTotals[cat] = (catTotals[cat] ?? 0) + (e['amount'] as num);
       }

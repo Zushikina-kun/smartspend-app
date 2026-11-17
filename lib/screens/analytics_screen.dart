@@ -280,6 +280,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       final tightest = await DBService.getTightestLimit();
       final spendLimit = tightest['limit'] as double;
       final spendPeriod = tightest['period'] as String;
+      final incomeFreq =
+          (await DBService.getSetting('income_frequency')) ?? 'monthly';
       final now2 = DateTime.now();
       final currentMonth2 =
           "${now2.year}-${now2.month.toString().padLeft(2, '0')}";
@@ -295,6 +297,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         thisMonthExp,
         budgets: budgets,
         monthlyIncome: income,
+        incomeFrequency: incomeFreq,
         lightweightMode: !iwMode,
         spendingLimit: spendLimit,
         spendingLimitPeriod: spendPeriod,
@@ -304,6 +307,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         thisMonthExp,
         budgets: budgets,
         monthlyIncome: iwMode ? income : 0,
+        incomeFrequency: incomeFreq,
         lightweightMode: !iwMode,
         spendingLimit: spendLimit,
         spendingLimitPeriod: spendPeriod,
