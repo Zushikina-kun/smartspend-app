@@ -1,12 +1,12 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.2.5 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 3.3.1 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.2.5-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.3.1-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
-> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The actual app has been significantly updated since. Download the latest APK (v3.2.5) for the full experience.
+> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The actual app has been significantly updated since. Download the latest APK (v3.3.1) for the full experience.
 
 ---
 
@@ -28,15 +28,16 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 The app is actively developed and regularly updated. Features, UI, and Peso mascot interactions evolve with each release.
 
-**✨ What's New in v3.2.5:**
-- 🌐 **OpenRouter AI Gateway** — Unified gateway to 100+ models; uses `openrouter/free` to auto-route to best available free model (Nemotron 550B, Gemma 4, etc.)
-- 🔄 **10-Provider Fallback Chain** — Fully fixed auto-fallback: skips empty-key providers, preserves chat context, adds OpenRouter headers, Firebase 5-min cold-start cache
-- ⚡ **AI Reliability Hotfix** — Timeouts now trigger immediate provider fallback instead of hard failure
-- 🏛️ **Government Contributions Tracker** — SSS, PhilHealth, Pag-IBIG YTD tracking + SSS pension estimator (v3.2.0)
+**✨ What's New in v3.3.1:**
+- 📅 **Payday-cycle Budget Reset** (Recommendation 1) — Budgets now reset on actual pay dates for bi-monthly users (15th & 30th). Affects budget screen, FHS score, home alerts, and add-expense bar
+- 📊 **Quick Stats Card** — "This Month at a Glance" home screen card: total spent, avg/day, top category, days logged — now visible immediately at top of home screen
+- 🔥 **Logging Streak Badge** — Consecutive daily logging streak shown on home screen
+- 🏷️ **Home Screen Section Headers** — "YOUR FINANCES", "QUICK ACTIONS", "GOALS & TRACKING" for clearer navigation
+- 🌐 **OpenRouter AI Gateway** — Uses `openrouter/free` to auto-route to best free model (Nemotron 550B, Gemma 4, etc.) with 10-provider fallback chain
 
 **Final Defense Date:** November 20, 2026 at 3:00 PM *(rescheduled from Nov 16)*
 
-[View Full Changelog](CHANGELOG.md) | [Feature Roadmap (Post-Defense)](docs/handsoff/FEATURE_ROADMAP_POST_DEFENSE.md)
+[View Full Changelog](CHANGELOG.md) | [Feature Roadmap](docs/handsoff/FEATURE_ROADMAP_POST_DEFENSE.md) | [🌐 Website](https://zushikina-kun.github.io/smartspend-app/) | [📋 Defense Reviewer](https://zushikina-kun.github.io/smartspend-app/reviewer.html)
 
 **Developed by Lucid Frame:**
 - Brix A. Directo — Lead Developer
@@ -273,3 +274,4 @@ All defense materials are located in: **`docs/handsoff/FOR_CYRILLE/`**
 See: `docs/handsoff/FOR_CYRILLE/MASTER_CHANGELOG.md` for complete change history
 
 ---
+
