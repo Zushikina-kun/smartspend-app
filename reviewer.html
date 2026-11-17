@@ -258,7 +258,7 @@
     <div class="top-row">
       <div>
         <h1>SmartSpend Defense Reviewer</h1>
-        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Thu Nov 20, 2026 3:00 PM &nbsp;&middot;&nbsp; v3.3.1 &nbsp;&middot;&nbsp;
+        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Thu Nov 20, 2026 3:00 PM &nbsp;&middot;&nbsp; v3.3.2 &nbsp;&middot;&nbsp;
           <a href="https://zushikina-kun.github.io/smartspend-app/" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">🌐 Website</a> &nbsp;&middot;&nbsp;
           <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">📦 GitHub</a> &nbsp;&middot;&nbsp;
           <a href="https://github.com/Zushikina-kun/smartspend-app/releases/latest" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">⬇️ Latest APK</a>
@@ -1169,15 +1169,16 @@
   
 <!-- ===== CAT 12: WHAT'S NEW SINCE NOV 16 ===== -->
 <details class="cat" id="cat-whats-new-nov20">
-  <summary>12 &#8212; What&#8217;s New Since Nov 16 (v3.3.0)</summary>
+  <summary>12 &#8212; What&#8217;s New Since Nov 16 (v3.3.2)</summary>
 
   <details class="qa"><summary>What did you add between November 16 and November 20? <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>4 features in v3.3.0 (build 117):</b></p>
+  <p><b>5 features across v3.3.0–v3.3.2:</b></p>
   <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-    <li><b>Payday-cycle budget reset</b> (implementing Recommendation 1) &#8212; Budgets now reset on the 15th for bi-monthly salary users across budget screen, FHS score, home alerts, and add-expense bar. New helper: <code>budget_period_util.dart</code>.</li>
-    <li><b>Quick Stats &#8220;This Month at a Glance&#8221; home card</b> &#8212; total spent, avg/day, top spending category, days logged. Addresses SUS Q2 complexity.</li>
-    <li><b>Logging streak badge</b> &#128293; &#8212; consecutive-day expense logging streak shown on home screen. Addresses SUS Q8 engagement gap.</li>
-    <li><b>Home screen section headers</b> &#8212; &#8220;YOUR FINANCES&#8221;, &#8220;QUICK ACTIONS&#8221;, &#8220;GOALS &amp; TRACKING&#8221; labels between card groups. Addresses SUS Q6 inconsistency.</li>
+    <li><b>Payday-cycle budget reset</b> (Recommendation 1) &#8212; budgets reset on 15th for bi-monthly salary users across budget screen, FHS score, home alerts, and add-expense bar.</li>
+    <li><b>Quick Stats &#8220;This Month at a Glance&#8221; home card</b> &#8212; total spent, avg/day, top spending category, days logged. Addresses SUS Q2.</li>
+    <li><b>Logging streak badge</b> &#128293; &#8212; consecutive-day logging streak on home screen. Addresses SUS Q8.</li>
+    <li><b>Home screen section headers</b> &#8212; &#8220;YOUR FINANCES&#8221;, &#8220;QUICK ACTIONS&#8221;, &#8220;GOALS &amp; TRACKING&#8221;. Addresses SUS Q6.</li>
+    <li><b>In-app auto-update</b> &#8212; detects new releases from GitHub, downloads APK with progress bar, triggers Android installer. Users tap one button to update without leaving the app.</li>
   </ol>
   </div></details>
 
@@ -1205,6 +1206,12 @@
     <li><b>Streak badge &#8212; Q8 (want to use frequently):</b> Daily feedback loop directly encourages the habitual use that Q1 (intent to use frequently, 4.35/5) already shows users want.</li>
   </ul>
   <p>Together these represent a systematic response to the lowest-scoring SUS items identified in Chapter IV.</p>
+  </div></details>
+
+  <details class="qa"><summary>How does the in-app auto-update work? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>On startup (after a 3-second non-blocking delay), <code>UpdateService.checkForUpdate()</code> calls the GitHub Releases API (<code>api.github.com/repos/Zushikina-kun/smartspend-app/releases/latest</code>) and compares the returned <code>tag_name</code> against <code>kAppVersion</code>. If a newer version exists, the home screen shows a dismissible update banner.</p>
+  <p>When the user taps <b>Update</b>: the app downloads the <code>arm64-v8a</code> APK directly from GitHub into the app cache directory using <code>dio</code> with real-time progress updates. After download completes, Android's package installer is triggered &#8212; the user just taps <b>Install</b>. No browser required. If the direct download fails for any reason, the app falls back to opening the GitHub releases page.</p>
+  <p><b>Smart behavior:</b> Results are cached for 24 hours so the API is not called on every launch. The banner can be dismissed for the session. Download can be cancelled mid-way.</p>
   </div></details>
 
   <details class="qa"><summary>What would you build next if you had more time? <span class="tag tag-ai">AI</span></summary><div class="a">
@@ -2651,5 +2658,6 @@ document.addEventListener("keydown", function(e) {
 
 </body>
 </html>
+
 
 
