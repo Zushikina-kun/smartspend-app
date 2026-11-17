@@ -568,10 +568,12 @@
     <a href="#cat-hard">10. Hard Questions</a>
     <a href="#cat-top10">11. Top 10 Most Likely</a>
     <a href="#cat-whats-new-nov20">12. What&#8217;s New Since Nov 16</a>
+    <a href="#version-discrepancy" style="background:var(--bad-soft);color:var(--bad);border-color:var(--bad);">⚠️ Version Discrepancy</a>
+    <a href="#research-relevance" style="background:var(--gold-soft);color:var(--gold);border-color:var(--gold);">💡 Why Pass Us</a>
   </div>
 
 <!-- ===== RESEARCH RELEVANCE BLOCK ===== -->
-<div style="background:var(--gold-soft);border:2px solid var(--gold);border-radius:10px;padding:20px 22px;margin-bottom:28px;">
+<div id="research-relevance" style="background:var(--gold-soft);border:2px solid var(--gold);border-radius:10px;padding:20px 22px;margin-bottom:28px;">
   <div style="font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:14px;">💡 Why Our Research Matters — Read This Before the Defense</div>
   <p style="margin:0 0 10px;font-size:.93rem;color:var(--ink);">If the panel asks <em>"Why is this research relevant?"</em> or <em>"Why should we pass this?"</em> — this is your answer.</p>
 
@@ -610,6 +612,64 @@
       <li>Produced a <b>43-feature post-defense roadmap</b> showing the work is not abandoned</li>
       <li>App is <b>live on GitHub</b> with real download metrics — this is actual deployment</li>
     </ul>
+  </div>
+</div>
+
+<!-- ===== VERSION DISCREPANCY BLOCK ===== -->
+<div id="version-discrepancy" style="background:var(--bad-soft);border:2px solid var(--bad);border-radius:10px;padding:20px 22px;margin-bottom:28px;">
+  <div style="font-family:'Fraunces',serif;font-size:1.05rem;font-weight:700;color:var(--bad);margin-bottom:12px;">⚠️ Version Discrepancy — How to Answer This</div>
+  <p style="font-size:.92rem;color:var(--ink);margin:0 0 12px;">The panel may notice the manuscript, printed slides, and the actual app are on different versions. Here is exactly how to answer every variation of this question.</p>
+
+  <div style="display:grid;gap:10px;margin-bottom:16px;">
+
+    <div style="background:var(--card);border-radius:8px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:.87rem;color:var(--bad);margin-bottom:6px;">❓ "Your manuscript says v3.1.0 but your app shows v3.3.1 — which is correct?"</div>
+      <div style="font-size:.88rem;color:var(--ink-soft);">
+        <p style="margin:0 0 6px;"><b>Both are correct — they refer to different things.</b> The manuscript documents <b>v3.1.0</b>, which was the version formally evaluated by our 30 respondents for the SUS study. That is the research version — it cannot change after evaluation. The app on the phone is <b>v3.3.1</b>, which is the current development version that continues after the research phase. Think of it like a published study evaluating a product at a specific point in time — the product keeps evolving but the study findings remain valid for the version studied.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border-radius:8px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:.87rem;color:var(--bad);margin-bottom:6px;">❓ "Your printed slides show features that don't match what's on the app now."</div>
+      <div style="font-size:.88rem;color:var(--ink-soft);">
+        <p style="margin:0 0 6px;"><b>The slides were printed on November 16</b>, the original defense date. Between November 16 and today (November 20), we continued development based on our panel's recommendations — specifically implementing Recommendation 1 (payday-cycle budgeting) and three UI improvements. The slides reflect the state at the time of printing; the app reflects our active response to the research findings.</p>
+        <p style="margin:0;"><b>This is actually a strength:</b> it shows the team actively improves the system based on research feedback rather than treating the app as finished.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border-radius:8px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:.87rem;color:var(--bad);margin-bottom:6px;">❓ "Why does your manuscript describe fewer features than what the app has now?"</div>
+      <div style="font-size:.88rem;color:var(--ink-soft);">
+        <p style="margin:0 0 6px;">The manuscript documents the system <b>as evaluated in the study</b> (v3.1.0, October 2026). Features added after evaluation — Government Contributions Tracker (v3.2.0), OpenRouter AI gateway (v3.2.5), payday-cycle budgeting (v3.3.0) — are post-research enhancements that respond to our panel recommendations and roadmap. They are documented in our CHANGELOG and Feature Roadmap appendix, but are outside the scope of the formal evaluation chapter.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border-radius:8px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:.87rem;color:var(--bad);margin-bottom:6px;">❓ "The paper says 9 AI providers but the app shows 10 — which is accurate?"</div>
+      <div style="font-size:.88rem;color:var(--ink-soft);">
+        <p style="margin:0;">The manuscript was written and printed when the app had 9 providers. We integrated OpenRouter as a 10th provider on November 16, 2026 — after printing. The manuscript is accurate for the time it was written. The app reflects the current state. Both numbers are correct at their respective points in time.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border-radius:8px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:.87rem;color:var(--bad);margin-bottom:6px;">❓ "Your conclusion says Objective 3 was partially achieved — but you've made improvements. Does that change the conclusion?"</div>
+      <div style="font-size:.88rem;color:var(--ink-soft);">
+        <p style="margin:0 0 6px;">No — the conclusion is based on the formal evaluation of v3.1.0 and cannot be retroactively changed. The SUS score of 61.83 for v3.1.0 stands. However, v3.3.1 addresses the specific SUS weaknesses identified (Q2, Q4, Q6) through Quick Stats, section headers, and payday-cycle budgeting. A future follow-up evaluation of v3.3.x would likely show improvement. This is exactly what Recommendation 7 (longitudinal evaluation) proposes.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--card);border-radius:8px;padding:14px 16px;">
+      <div style="font-weight:700;font-size:.87rem;color:var(--bad);margin-bottom:6px;">❓ "If your app has improved so much, why didn't you re-evaluate with SUS?"</div>
+      <div style="font-size:.88rem;color:var(--ink-soft);">
+        <p style="margin:0;">Re-running the full SUS study would require recruiting 30 new respondents, administering the questionnaire, and analyzing results — a process that takes weeks. The timeline between our original defense (Nov 16) and rescheduled date (Nov 20) was only 4 days. More importantly, re-evaluating would change the research scope mid-study, which is methodologically unsound. The honest approach — which we took — is to document the current version's improvements in the CHANGELOG and propose a longitudinal evaluation as Recommendation 7.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:4px;padding:12px 14px;">
+    <div style="font-weight:700;font-size:.84rem;color:var(--warn);margin-bottom:5px;">💡 The Golden Rule for Version Questions</div>
+    <p style="font-size:.88rem;color:var(--ink);margin:0;">Always distinguish between <b>the research version (v3.1.0)</b> and <b>the current version (v3.3.1)</b>. The manuscript documents the research. The app demonstrates continuous improvement. Both are valid and both are correct — they just describe different moments in the same project timeline. Never apologize for the app being more advanced than the manuscript.</p>
   </div>
 </div>
 
