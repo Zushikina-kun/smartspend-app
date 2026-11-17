@@ -6635,13 +6635,15 @@ class _DashboardState extends State<Dashboard> {
               // Setup CTA for new users without income configured
               if (!_incomeWalletMode && _expenses.length < 5)
                 _buildSetupCta(context),
+
+              // ── Quick Stats + Streak — immediately visible after balance ──
+              _buildQuickStatsCard(context),
+              if (_loggingStreak >= 2) _buildStreakBadge(context),
+
               if (_showForecast || _showPrediction) _buildOutlookCard(context),
 
-              // Feature #1: Quick Stats Widget
-              _buildQuickStatsCard(context),
+              if (_showForecast || _showPrediction) _buildOutlookCard(context),
 
-              // Feature #3: Expense Streak Counter
-              if (_loggingStreak >= 2) _buildStreakBadge(context),
               Row(
                 children: [
                   Expanded(
