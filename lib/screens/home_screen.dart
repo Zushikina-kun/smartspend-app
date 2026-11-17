@@ -5283,6 +5283,23 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  /// Subtle section label between home screen card groups.
+  Widget _buildSectionHeader(BuildContext context, String label) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, bottom: 4),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.2,
+          color: cs.outline,
+        ),
+      ),
+    );
+  }
+
   /// Builds the Safe-to-Spend card
   Widget _buildSafeToSpendCard(BuildContext context) {
     if (!_incomeWalletMode) return const SizedBox.shrink();
@@ -5967,6 +5984,9 @@ class _DashboardState extends State<Dashboard> {
               ),
               const SizedBox(height: 12),
 
+              // Section: Your Finances
+              _buildSectionHeader(context, 'YOUR FINANCES'),
+
               // Balance Card
               Container(
                 width: double.infinity,
@@ -6369,6 +6389,9 @@ class _DashboardState extends State<Dashboard> {
               if (_incomeWalletMode) _buildWalletSummaryCard(context),
 
               // ── FEATURE PORTALS (QUICK ACCESS) ────────────────────────────
+              // Section: Quick Actions
+              _buildSectionHeader(context, 'QUICK ACTIONS'),
+
               // Positioned right after My Wallets for true "quick access" UX
               _buildFeaturePortals(context),
 
@@ -7438,6 +7461,9 @@ class _DashboardState extends State<Dashboard> {
               // Quick Actions removed — use the + FAB button instead
 
               const SizedBox(height: 12),
+
+              // Section: Goals & Tracking
+              _buildSectionHeader(context, 'GOALS & TRACKING'),
 
               // ── N2: GOALS TIMELINE ────────────────────────────────────────
               const _GoalsTimelineCard(),
