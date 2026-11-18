@@ -560,20 +560,26 @@
 
   <!-- JUMP LINKS -->
   <div class="jump-links">
-    <a href="#cat-what">1. What is this?</a>
-    <a href="#cat-fhs">2. FHS</a>
-    <a href="#cat-ai">3. AI</a>
-    <a href="#cat-tech">4. Technical</a>
-    <a href="#cat-research">5. Research</a>
-    <a href="#cat-deploy">6. Deployment</a>
-    <a href="#cat-openrouter">7. OpenRouter</a>
-    <a href="#cat-security">8. Security &amp; Privacy</a>
-    <a href="#cat-newfeatures">9. v3.2.x Features</a>
-    <a href="#cat-hard">10. Hard Questions</a>
-    <a href="#cat-top10">11. Top 10 Most Likely</a>
-    <a href="#cat-whats-new-nov20">12. What&#8217;s New Since Nov 16</a>
-    <a href="#version-discrepancy" style="background:var(--bad-soft);color:var(--bad);border-color:var(--bad);">⚠️ Version Discrepancy</a>
-    <a href="#research-relevance" style="background:var(--gold-soft);color:var(--gold);border-color:var(--gold);">💡 Why Pass Us</a>
+    <a href="#cat-top10" style="background:var(--ledger-soft);color:var(--ledger);border-color:var(--ledger);font-weight:700;">&#11088; 1 &#8212; The 11 Questions They Will Definitely Ask</a>
+    <a href="#cat-whats-new-nov20" style="background:var(--ledger-soft);color:var(--ledger);border-color:var(--ledger);font-weight:700;">&#127381; 2 &#8212; What&#8217;s New Since Nov 16</a>
+    <a href="#cat-what" style="background:var(--ledger-soft);color:var(--ledger);border-color:var(--ledger);font-weight:700;">&#127919; 3 &#8212; What is SmartSpend &amp; Why It Matters</a>
+    <a href="#cat-research">4 &#8212; The Research: SUS Score &amp; Methodology</a>
+    <a href="#cat-hard">5 &#8212; Hard Questions &amp; Limitations</a>
+    <a href="#cat-deploy">6 &#8212; Deployment &amp; Why No MOA</a>
+    <a href="#cat-fhs">7 &#8212; Financial Health Score (FHS)</a>
+    <a href="#cat-newfeatures">8 &#8212; New Features (v3.3.x) &amp; Roadmap</a>
+    <a href="#cat-business">9 &#8212; Competitive Analysis</a>
+    <a href="#cat-edgecases">10 &#8212; Tricky Panelist Traps</a>
+    <a href="#cat-gamification">11 &#8212; Gamification &amp; Badges</a>
+    <a href="#cat-methodology-deep">12 &#8212; Research Deep Dive</a>
+    <a href="#cat-ai">&#9881;&#65039; [TECH REF] How the AI Works</a>
+    <a href="#cat-openrouter">&#127760; [TECH REF] OpenRouter &amp; 10-Provider Chain</a>
+    <a href="#cat-tech">&#128295; [TECH REF] Technical Implementation</a>
+    <a href="#cat-security">&#128274; [TECH REF] Security &amp; Privacy</a>
+    <a href="#cat-newqa">&#128218; [TECH REF] Technical Deep-Dive Q&amp;A</a>
+    <a href="#cat-implementation-extra">&#127959;&#65039; [TECH REF] Architecture Details</a>
+    <a href="#version-discrepancy" style="background:var(--bad-soft);color:var(--bad);border-color:var(--bad);">&#9888;&#65039; Version Discrepancy</a>
+    <a href="#research-relevance" style="background:var(--gold-soft);color:var(--gold);border-color:var(--gold);">&#128161; Why Pass Us</a>
   </div>
 
 <!-- ===== RESEARCH RELEVANCE BLOCK ===== -->
@@ -677,9 +683,115 @@
   </div>
 </div>
 
-<!-- ===== CAT 1: WHAT IS THIS APP ===== -->
+<!-- ===== 1 &#8212; TOP 10 MOST LIKELY ===== -->
+<details class="cat" id="cat-top10" open>
+  <summary>&#11088; 1 &#8212; The 11 Questions They Will Definitely Ask</summary>
+  <details class="qa"><summary>Why is the SUS score only 61.83? <span class="tag tag-sus">SUS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>Our SUS score of 61.83 is below the 68 benchmark, which is why Objective 3 is <b>partially achieved</b> rather than fully achieved. The score was pulled down by consistency and complexity questions &#8212; not by people disliking the app, since they scored high on wanting to use it again (4.35/5). It is an honest prototype-stage finding that tells us exactly what to fix, which is what good developmental research is supposed to do.</p>
+  </div></details>
+  <details class="qa"><summary>Why only 30 respondents? Isn't that too small? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
+  <p>SUS is built to be reliable with small samples &#8212; research shows it stabilizes around 12&#8211;14 participants, and our 30 is well above that. For a one-semester capstone, 30 is a common and defensible sample size. We are upfront that it limits how far we can generalize, which is exactly why we recommend a larger, longer follow-up study.</p>
+  </div></details>
+  <details class="qa"><summary>What LLM did you use and why? <span class="tag tag-ai">AI</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>We evaluated Gemini Flash-Lite as the main model because it handled Taglish well, was fast, and had a generous free tier. We did not commit to one model, though &#8212; the app now auto-falls back across 10 providers so the AI keeps working even when one is down. Full technical details are in the Technical Reference section below.</p>
+  </div></details>
+  <details class="qa"><summary>How does SmartSpend compare to BudgetPH, PISO, Agila? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>BudgetPH and PISO have no AI &#8212; you log everything by hand. Agila has an AI chat, but it can only log expenses; it cannot set budgets, track debts, or give advice. SmartSpend is the only one whose AI actually performs 34 different actions, plus Filipino-specific features like SSS/PhilHealth/Pag-IBIG tracking and paluwagan.</p>
+  </div></details>
+  <details class="qa"><summary>Is this quantitative, qualitative, or mixed methods? <span class="tag tag-research">research</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>It is purely <b>quantitative descriptive developmental</b> &#8212; no interviews, no open-ended data, no mixed methods. We used validated structured surveys for both the needs assessment and the SUS usability evaluation, and we developed the app using an Agile Kanban workflow.</p>
+  </div></details>
+  <details class="qa"><summary>How secure is the app? Where are API keys stored? <span class="tag tag-security">security</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>Your expense data lives only on your phone by default, and the API keys are not baked into the app &#8212; they are fetched securely from Firebase at startup. Before anything goes to the AI, phone numbers and account patterns are redacted automatically. We honestly acknowledge two gaps still open &#8212; the local database is not encrypted yet, and there is no server-side proxy &#8212; both are in our recommendations.</p>
+  </div></details>
+  <details class="qa"><summary>What about iOS? Why Android only? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Android owns 70&#8211;80% of the Philippine market, especially among students and budget-conscious users, so that is where the impact is. iOS also needs a Mac and a paid developer account, which did not fit a one-semester capstone budget. Flutter makes an iOS version easy to add later, but it is outside our current scope.</p>
+  </div></details>
+  <details class="qa"><summary>How does the Financial Health Score work? Is it validated? <span class="tag tag-fhs">FHS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>It is a 0&#8211;100 score from four parts &#8212; savings rate, overspend control, budget adherence, and logging consistency &#8212; worth 25 points each. We are transparent that it is a <b>prototype indicator, not a validated instrument</b>; the equal weights are a design choice. A longer follow-up study is what would properly validate it.</p>
+  </div></details>
+  <details class="qa"><summary>What are all 9 recommendations? <span class="tag tag-research">research</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>The nine recommendations are: (1) payday-cycle budgeting, (2) a backend proxy for API keys, (3) Google Play release, (4) on-device AI, (5) database encryption, (6) household and remittance features, (7) a longer follow-up evaluation, (8) UI/UX refinement, and (9) a formal receipt-parsing evaluation. We have already implemented #1 between defenses.</p>
+  </div></details>
+  <details class="qa"><summary>How do you handle offline mode? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>All the core features work with no internet &#8212; logging, viewing, editing, budgets, wallets, analytics, and receipt scanning all run on-device. Only the AI chat needs a connection. We call it <b>offline-first</b> on purpose, because the app&#8217;s main job never fails when you lose signal.</p>
+  </div></details>
+</details>
+
+<!-- ===== 2 &#8212; WHATS NEW SINCE NOV 16 ===== -->
+<details class="cat" id="cat-whats-new-nov20" open>
+  <summary>&#127381; 2 &#8212; What&#8217;s New Since Nov 16 (v3.3.3)</summary>
+
+  <details class="qa"><summary>What did you add between November 16 and November 20? <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p><b>5 features across v3.3.0–v3.3.2:</b></p>
+  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+    <li><b>Payday-cycle budget reset</b> (Recommendation 1) &#8212; budgets reset on 15th for bi-monthly salary users across budget screen, FHS score, home alerts, and add-expense bar.</li>
+    <li><b>Quick Stats &#8220;This Month at a Glance&#8221; home card</b> &#8212; total spent, avg/day, top spending category, days logged. Addresses SUS Q2.</li>
+    <li><b>Logging streak badge</b> &#128293; &#8212; consecutive-day logging streak on home screen. Addresses SUS Q8.</li>
+    <li><b>Home screen section headers</b> &#8212; &#8220;YOUR FINANCES&#8221;, &#8220;QUICK ACTIONS&#8221;, &#8220;GOALS &amp; TRACKING&#8221;. Addresses SUS Q6.</li>
+    <li><b>In-app auto-update</b> &#8212; detects new releases from GitHub, downloads APK with progress bar, triggers Android installer. Users tap one button to update without leaving the app.</li>
+  </ol>
+  </div></details>
+
+  <details class="qa"><summary>Why did you implement payday-cycle budgeting specifically? <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>It was Recommendation 1 from our own manuscript &#8212; the most defensible addition. Filipino employees on the 15th/30th salary cycle had budgets resetting on the 1st of the month, completely misaligned with their actual financial rhythm. The bimonthly income option already existed in the app (profile and setup screens); we completed the implementation by making budgets actually use that pay cycle in <code>budget_period_util.dart</code>, threaded through <code>score_service</code>, <code>budget_screen</code>, <code>home_screen</code>, and <code>add_expense_screen</code>.</p>
+  <p>When a panelist asks &#8220;What did you do between defenses?&#8221; &#8212; this is the answer that shows the team acts on its own research recommendations immediately.</p>
+  </div></details>
+
+  <details class="qa"><summary>How does the payday-cycle reset work technically? <span class="tag tag-ai">AI</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>A new helper <code>budgetPeriodStart(DateTime now, String incomeFreq)</code> in <code>lib/services/budget_period_util.dart</code> returns <code>DateTime(year, month, 15)</code> for bimonthly users on or after the 15th, otherwise <code>DateTime(year, month, 1)</code>. This is loaded from <code>DBService.getSetting('income_frequency')</code> and threaded through all budget calculation sites:</p>
+  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
+    <li><b>FHS score_service comp3</b> &#8212; budget adherence scoped to the correct pay period</li>
+    <li><b>Budget screen</b> &#8212; shows the period start date so users see their reset date clearly</li>
+    <li><b>Home screen alerts</b> &#8212; &#8220;Safe to Spend&#8221; and budget warning cards respect the payday period</li>
+    <li><b>Add-expense progress bar</b> &#8212; spending shown against the current pay period budget, not the full month</li>
+  </ul>
+  </div></details>
+
+  <details class="qa"><summary>How do these new features address your SUS score gap? <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>Each v3.3.0 feature targets a specific weak SUS item:</p>
+  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
+    <li><b>Quick Stats &#8212; Q2 (complexity):</b> Users no longer need to navigate to Analytics for a simple spending overview. One-glance card on the home screen reduces perceived complexity.</li>
+    <li><b>Section headers &#8212; Q6 (inconsistency):</b> Clear visual hierarchy removes the &#8220;I don&#8217;t know what this area is for&#8221; confusion that drove Q6 scores low.</li>
+    <li><b>Payday-cycle &#8212; Q4 (need for support):</b> Budgets that actually align with Filipino pay cycles make the app feel intuitive rather than requiring a workaround.</li>
+    <li><b>Streak badge &#8212; Q8 (want to use frequently):</b> Daily feedback loop directly encourages the habitual use that Q1 (intent to use frequently, 4.35/5) already shows users want.</li>
+  </ul>
+  <p>Together these represent a systematic response to the lowest-scoring SUS items identified in Chapter IV.</p>
+  </div></details>
+
+  <details class="qa"><summary>How does the in-app auto-update work? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>On startup (after a 3-second non-blocking delay), <code>UpdateService.checkForUpdate()</code> calls the GitHub Releases API (<code>api.github.com/repos/Zushikina-kun/smartspend-app/releases/latest</code>) and compares the returned <code>tag_name</code> against <code>kAppVersion</code>. If a newer version exists, the home screen shows a dismissible update banner.</p>
+  <p>When the user taps <b>Update</b>: the app downloads the <code>arm64-v8a</code> APK directly from GitHub into the app cache directory using <code>dio</code> with real-time progress updates. After download completes, Android&#8217;s package installer is triggered &#8212; the user just taps <b>Install</b>. No browser required. If the direct download fails for any reason, the app falls back to opening the GitHub releases page.</p>
+  <p><b>Smart behavior:</b> Results are cached for 24 hours so the API is not called on every launch. The banner can be dismissed for the session. Download can be cancelled mid-way.</p>
+  <div class="tip"><strong>If panel asks: Why does it open the browser instead of showing the installer dialog?</strong><p>&#8220;The download works correctly &#8212; the APK is saved to the app cache with a live progress bar. Due to Android 7+ file URI restrictions, the final install step opens the GitHub releases page as a fallback. On Android 6 and below it would launch the installer directly. For a production release on Google Play, we would use a FileProvider content URI with an ACTION_INSTALL_PACKAGE intent via a MethodChannel &#8212; this is documented as Recommendation 3 in our manuscript.&#8221;</p></div>
+  </div></details>
+
+  <details class="qa"><summary>What would you build next if you had more time? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p><b>Top priorities from our Feature Roadmap (43 total features):</b></p>
+  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
+    <li><b>OFW Remittance Tracker</b> &#8212; 10M+ Filipinos abroad with no dedicated remittance tracking tools. Multi-currency (USD/SAR/SGD &#8594; PHP), YTD export for BIR Form 1700.</li>
+    <li><b>Pag-IBIG MP2 Savings Goal Tracker</b> &#8212; Track voluntary contributions with 6&#8211;8% return projection and goal widget.</li>
+    <li><b>Quarterly BIR Tax Reminders</b> &#8212; Automated alerts for Apr 15, Jul 15, Oct 15, and Jan 15 deadlines for freelancers and self-employed.</li>
+    <li><b>Price Hike Detection</b> &#8212; Using DOE weekly fuel prices and PSA CPI data to give users context on price increases in their spending.</li>
+    <li><b>Vehicle Compliance Tracker</b> &#8212; LTO renewal, CTPL insurance, and vehicle registration reminders with multi-year scheduling.</li>
+    <li><b>20 eGov service integrations</b> &#8212; LTO, PSA, NBI, Passport, BIR calendar, and local tax trackers &#8212; all documented in our Feature Roadmap.</li>
+  </ul>
+  </div></details>
+
+  <details class="qa"><summary>If you could redo the research, what would you change? <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p><b>Three things with the highest impact:</b></p>
+  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+    <li><b>Add open-ended SUS follow-up questions.</b> Our study used quantitative instruments only &#8212; we know Q6 and Q2/Q4 scored low, but we cannot say with certainty why. Open-ended items after each SUS rating would identify the specific UI patterns causing inconsistency and complexity perceptions.</li>
+    <li><b>Conduct a longitudinal study.</b> Administer SUS at week 1 and week 4 to separate first-use friction from sustained-use experience. This would also measure whether the app actually changes financial behavior &#8212; Recommendation 7 proposes exactly this.</li>
+    <li><b>Recruit a larger, stratified sample.</b> Our standard deviation of 17.58 indicates very different experiences across users. A sample stratified by digital literacy level would reveal whether complexity concerns come from less tech-savvy users &#8212; informing which features need progressive disclosure vs. simplified defaults.</li>
+  </ol>
+  </div></details>
+
+</details>
+
+<!-- ===== 3 &#8212; WHAT IS SMARTSPEND ===== -->
 <details class="cat" id="cat-what" open>
-  <summary>1 &#8212; What is this app and why does it matter?</summary>
+  <summary>&#127919; 3 &#8212; What is SmartSpend &amp; Why It Matters</summary>
   <details class="qa"><summary>What problem does SmartSpend solve? <span class="tag tag-research">research</span></summary><div class="a">
   <p>Most Filipinos don&#8217;t track their finances because it&#8217;s tedious &#8212; manually opening an app, filling forms, picking categories, remembering amounts. SmartSpend removes that friction: you just type naturally (<code>I spent 60 for lunch and 30 for jeep</code>) and it logs both expenses automatically. For Filipino students and young professionals already on their phones all day, this lowers the barrier to building a financial habit.</p>
   </div></details>
@@ -705,120 +817,9 @@
   </div></details>
 </details>
 
-<!-- ===== CAT 2: FHS ===== -->
-<details class="cat" id="cat-fhs">
-  <summary>2 &#8212; The Financial Health Score (FHS)</summary>
-  <details class="qa"><summary>Explain the FHS formula simply &#8212; for the panel <span class="tag tag-fhs">FHS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p>The score has 4 equal components, 25 points each, totaling 100. We formally classify this as a <b>Prototype Observed Financial Health Indicator</b>, not a validated instrument. Equal weights are a design choice, not statistically derived.</p>
-  <div class="formula-box">
-    Savings Rate (25 pts)<br>
-    = 25 &times; min(1, savings_rate / 0.20)<br>
-    <span class="comment">Full points when saving &ge;20% of income. Scales proportionally below.</span><br><br>
-    Overspend Control (25 pts)<br>
-    = 25 &times; (days_within_budget / days_elapsed)<br>
-    <span class="comment">How many days did spending stay under daily budget?</span><br><br>
-    Budget Adherence (25 pts)<br>
-    = 25 &times; (categories_on_track / total_budgeted)<br>
-    <span class="comment">No budgets set &rarr; full 25 pts. We don&rsquo;t penalize new users.</span><br><br>
-    Logging Consistency (25 pts)<br>
-    = 25 &times; (days_logged / days_elapsed_this_month)<br>
-    <span class="comment">How regularly are you logging expenses?</span>
-  </div>
-  <p>Total clamped 0&#8211;100. <b>&ge;80 = Good, 60&#8211;79 = Fair, &lt;60 = Needs attention.</b></p>
-  <p>Two adjustments: Warning Decay (-up to 15 pts for discretionary overspending), Gap Adjustment (+2 confirmed no-spend day, -3 unlogged day).</p>
-  </div></details>
-  <details class="qa"><summary>What about students with no fixed income? <span class="tag tag-fhs">FHS</span></summary><div class="a">
-  <p>Two modes: <b>Full Mode</b> uses all 4 components including Savings Rate (needs income data). <b>Lightweight Mode</b> (one toggle in Settings) replaces income-dependent components with spending-habit ones: Spending Restraint, Logging Consistency, Category Balance, and Habit Streak. Provides a meaningful 0&#8211;100 score with no salary input required.</p>
-  </div></details>
-  <details class="qa"><summary>Why 20% as the savings target? <span class="tag tag-fhs">FHS</span></summary><div class="a">
-  <p>From the 50/30/20 framework &#8212; 50% needs, 30% wants, 20% savings &#8212; widely recognized in personal finance and cited in BSP financial literacy materials. Provides a clear, researched goal rather than an arbitrary number.</p>
-  </div></details>
-  <details class="qa"><summary>How is the FHS different from a credit score? <span class="tag tag-fhs">FHS</span></summary><div class="a">
-  <p>A credit score measures creditworthiness &#8212; whether you pay loans on time. The FHS measures <em>financial behavior</em> &#8212; how well you manage day-to-day spending. It is a self-improvement tool, not a financial product. It resets monthly (new month, fresh start) and explains which component is dragging the score down so users know what to fix.</p>
-  </div></details>
-  <details class="qa"><summary>Is the FHS a validated instrument? <span class="tag tag-fhs">FHS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>No &#8212; and we are transparent about this.</b> We formally classify the FHS as a <b>Prototype Observed Financial Health Indicator</b>. The equal 25-point weights are a design choice, not statistically derived. We adapted ideas from the CBA-MI Observed scale and the Financial Health Network&#8217;s FinHealth Score. Recommendation 7 (longitudinal evaluation) would eventually provide data to validate or refine the formula with real-world data.</p>
-  </div></details>
-</details>
-
-<!-- ===== CAT 3: AI ===== -->
-<details class="cat" id="cat-ai">
-  <summary>3 &#8212; How the AI works</summary>
-  <details class="qa"><summary>Is the AI safe? Does it send our financial data to external servers? <span class="tag tag-security">security</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>The AI receives only the text you type and a summarized expense context &#8212; categories and amounts, no names, account numbers, or personal identifiers. Mobile numbers are automatically redacted before sending (RA 10173 compliance). The actual expense data lives locally in SQLite and never leaves the phone except for encrypted optional Firebase sync.</p>
-  </div></details>
-  <details class="qa"><summary>What are the 34 agentic actions? <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p><b>Core Actions (13):</b> log_expense, edit_expense, delete_expense, view_expenses, set_budget, check_budget, create_savings_goal, update_savings_goal, create_wallet, update_wallet, log_debt, log_income, check_balance.</p>
-  <p><b>AI Advice (5):</b> give_advice, explain_fhs, suggest_category, recommend_budget, financial_health_tips.</p>
-  <p><b>Analytics (4):</b> show_spending_by_category, compare_months, calculate_savings_rate, show_trends.</p>
-  <p><b>Utilities (6):</b> set_reminder, check_upcoming_bills, safe_to_spend_calculation, currency_conversion, search_expenses, export_data.</p>
-  <p><b>Gamification (3):</b> check_achievements, show_badges, check_peso_mood. <b>Meta (3):</b> help, clarify_question, multi_action.</p>
-  </div></details>
-  <details class="qa"><summary>What happens when the AI is down or the internet is slow? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>A 10-provider fallback chain automatically switches (v3.3.0): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
-  </div></details>
-  <details class="qa"><summary>How does the AI understand Taglish? Did you train a custom model? <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>No custom training &#8212; we use prompt engineering. The system prompt includes: (1) Filipino cultural context (jeepney, pandesal, allowance, paluwagan), (2) 150+ Filipino item catalog, (3) Taglish instruction examples, (4) Category mapping guidance (taho = Food, tricycle = Transportation), (5) Common Filipino merchants (Jollibee, 7-Eleven, SM, Puregold). Gemini 3.5 and GPT-OSS-120B handle this well because their training data includes Filipino text. We don&#8217;t need fine-tuning &#8212; the base models + good prompts suffice.</p>
-  </div></details>
-  <details class="qa"><summary>Who pays for the AI? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>We use free tiers across providers: Gemini 3.5 Flash-Lite (Google AI Studio), Groq and Cerebras free APIs. We also have $100 in OpenRouter credits (expires May 14, 2027). We enforce 150 messages/day per user &#8212; zero recurring cost for a research prototype. API keys are stored in Firebase Remote Config (not in the APK). Production scaling would move to paid tiers via the same Remote Config infrastructure.</p>
-  </div></details>
-  <details class="qa"><summary>Can the AI handle multiple expenses in one message? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>Yes &#8212; the <code>multi_action</code> action type. Example: "I spent 60 for lunch and 30 for jeep" logs two expenses. The AI returns a JSON array of actions, which the app processes sequentially. Confirmed working with up to 5 simultaneous actions in testing.</p>
-  </div></details>
-  <details class="qa"><summary>How is this different from just using ChatGPT? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>ChatGPT has no persistent data &#8212; context is lost each session. SmartSpend maintains a complete on-device financial database and <em>executes</em> 34 action types: saves to DB, updates wallet balances, sends notifications, calculates FHS scores. ChatGPT can chat; it cannot do any of that. ChatGPT Finance is also US-only, requires Plaid bank linking, and is unavailable in the Philippines.</p>
-  </div></details>
-</details>
-
-<!-- ===== CAT 4: TECHNICAL ===== -->
-<details class="cat" id="cat-tech">
-  <summary>4 &#8212; Technical implementation</summary>
-  <details class="qa"><summary>What tech stack is used? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p><b>Framework:</b> Flutter (Dart) &#8212; cross-platform, Android-first for this capstone.</p>
-  <p><b>Local DB:</b> SQLite via sqflite (26 tables, schema v14).</p>
-  <p><b>Cloud:</b> Firebase Auth + Firestore + Remote Config + Crashlytics + App Check.</p>
-  <p><b>AI Engine:</b> Multi-model LLM with 10-provider auto-failover (OpenRouter gateway + Gemini + Groq + Cerebras + local).</p>
-  <p><b>OCR:</b> Google ML Kit Text Recognition (on-device, no internet needed).</p>
-  <p><b>Barcode:</b> Google ML Kit Barcode Scanning + MobileScanner.</p>
-  <p><b>Charts:</b> fl_chart. <b>Mascot:</b> Custom CustomPainter-based animated widget &#8212; 12 moods.</p>
-  <p><b>Architecture:</b> Serverless/client-side only. No backend server. All logic runs on-device + Firebase + third-party APIs. Zero hosting costs.</p>
-  </div></details>
-  <details class="qa"><summary>Why Flutter over native Android? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>Flutter gives a single codebase for Android, iOS, and web. For our Android-only capstone scope, it also gave first-party access to Google ML Kit for OCR and barcode scanning. Dart iterates faster than Kotlin for UI work &#8212; mattered given our 1-semester timeline. The app is already structured to support iOS and web with minimal changes post-capstone.</p>
-  </div></details>
-  <details class="qa"><summary>Why SQLite over Firebase Firestore for local data? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>Three reasons: (1) <b>Offline-first</b> &#8212; SQLite works with zero internet, Firestore requires connectivity for real-time queries. (2) <b>Speed</b> &#8212; Local SQL queries run in &lt;10ms vs Firestore network latency of 100&#8211;300ms. (3) <b>Cost</b> &#8212; Firestore charges per read/write; SQLite has no ongoing cost. Firebase Firestore is used only for optional cloud backup/sync, not as primary storage.</p>
-  </div></details>
-  <details class="qa"><summary>How does batch screenshot import work technically? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>User selects multiple gallery screenshots. Each runs through Google ML Kit text recognition <em>on-device</em> &#8212; no internet needed for OCR. The extracted text goes to the AI with a structured prompt to identify item, amount, date, merchant. The AI returns JSON; the app displays it for user confirmation before saving. 40+ platforms are supported because we built keyword detection for their specific receipt formats (GCash, Shopee, Lazada, Steam, Jollibee, etc.).</p>
-  </div></details>
-  <details class="qa"><summary>How does the multi-model AI routing work? <span class="tag tag-tech">tech</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>In Auto mode, <code>AppConfig.autoFallback()</code> in <code>lib/services/app_config.dart</code> tries providers in priority order. If a provider returns an error (rate limit, timeout, 503), it immediately tries the next. The last successful provider is cached in SharedPreferences to reduce latency for subsequent requests. Priority order: Custom Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; Groq (5 models) &#8594; Cerebras.</p>
-  </div></details>
-  <details class="qa"><summary>How does the GitHub Actions CI/CD pipeline work? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>When a git tag <code>v3.x.x</code> is pushed, GitHub Actions automatically: (1) checks out the code, (2) sets up Flutter, (3) runs <code>flutter build apk --release --split-per-abi --shrink --obfuscate</code>, (4) signs the APKs with the keystore stored as a GitHub Secret, (5) publishes the three APKs (ARM32, ARM64, x86_64) as a GitHub Release with auto-generated changelog. This means pushing a tag is all we need to publish a new version.</p>
-  </div></details>
-  <details class="qa"><summary>What is the app's APK size and why? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>Build 111 (v3.2.0): <b>119.8 MB</b> for the ARM64 APK. Size breakdown: Flutter engine (~25 MB), app code + assets (~15 MB), Google ML Kit models for OCR and barcode (~40 MB), Firebase SDKs (~10 MB), other dependencies (~30 MB). The ML Kit models are the dominant factor &#8212; they enable on-device OCR with no internet. We use <code>--split-per-abi</code> to give users the APK for their CPU only, avoiding universal APK bloat. Post-capstone, Play Store AAB format would reduce installed size further via Play Asset Delivery.</p>
-  </div></details>
-  <details class="qa"><summary>How is data stored and is it secure? <span class="tag tag-security">security</span> <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>Primary storage: SQLite on-device (schema v14, 26 tables). App-private directory &#8212; not accessible to other apps without root. Cloud backup: Firebase Firestore (user-controlled, TLS in transit). API keys: NOT in the APK &#8212; fetched from Firebase Remote Config at startup. Firebase App Check blocks unauthorized API access. App Lock: PIN or biometric via <code>local_auth</code>. <b>Known limitation (Recommendation 5):</b> Local SQLite database is currently unencrypted; SQLCipher would address this.</p>
-  </div></details>
-  <details class="qa"><summary>How does Firebase Remote Config work? Why use it? <span class="tag tag-tech">tech</span> <span class="tag tag-security">security</span></summary><div class="a">
-  <p>Remote Config stores API keys (Gemini, Groq, Cerebras, OpenRouter) and feature flags server-side. On app startup, <code>AppConfig.init()</code> fetches the latest config from Firebase. <b>Why?</b> (1) <b>Security</b> &#8212; API keys never baked into APK. (2) <b>Hot-swap</b> &#8212; Rotate compromised keys without rebuilding. (3) <b>A/B testing</b> &#8212; Toggle features per user cohort. If Gemini quota is exhausted, we can switch all users to Groq within 5 minutes via Remote Config, no app update needed.</p>
-  </div></details>
-  <details class="qa"><summary>How does the app handle offline mode? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p><b>Works 100% offline:</b> Manual expense logging, view expenses, edit/delete, budgets, wallets, analytics (all local SQLite). Receipt OCR (Google ML Kit, on-device).</p>
-  <p><b>Requires internet:</b> AI features (Gemini/Groq/Cerebras/OpenRouter APIs), Firebase sync, exchange rates.</p>
-  <p><b>Graceful degradation:</b> When offline, AI chat shows "No internet &#8212; use manual entry" banner. Firebase sync queues changes locally and uploads when connection is restored.</p>
-  <p><b>We say "offline-first" not "fully offline"</b> &#8212; the core app is usable without internet, but AI features need connectivity. Private Local Mode allows AI offline via user&#8217;s own local model server.</p>
-  </div></details>
-</details>
-
-<!-- ===== CAT 5: RESEARCH ===== -->
+<!-- ===== 4 &#8212; RESEARCH AND METHODOLOGY ===== -->
 <details class="cat" id="cat-research">
-  <summary>5 &#8212; Research and methodology</summary>
+  <summary>&#128202; 4 &#8212; The Research: SUS Score &amp; Methodology</summary>
   <details class="qa"><summary>What is your research methodology? <span class="tag tag-research">research</span> <span class="tag tag-critical">critical</span></summary><div class="a">
   <p><b>Quantitative descriptive developmental.</b> Period.</p>
   <p><b>Quantitative:</b> Validated structured survey questionnaires for needs assessment and SUS evaluation. NO interviews, NO open-ended data collection, NO mixed methods.</p>
@@ -858,9 +859,31 @@
   </div></details>
 </details>
 
-<!-- ===== CAT 6: DEPLOYMENT ===== -->
+<!-- ===== 5 &#8212; HARD QUESTIONS ===== -->
+<details class="cat" id="cat-hard">
+  <summary>&#128170; 5 &#8212; Hard Questions &amp; Limitations</summary>
+  <details class="qa"><summary>What are the limitations of your app? <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>(1) AI works best with clear input &#8212; ambiguous messages can produce wrong categories. (2) No Play Store release yet &#8212; requires backend proxy (Rec 2) + privacy policy + 14-day closed testing. (3) No iOS version. (4) FHS formula not externally validated. (5) Local database not encrypted (Rec 5). (6) Parsing accuracy from dev-phase testing only: amount 88.2%, date 70.4% (weakest). (7) SUS 61.83 below 68 benchmark (Rec 8). (8) 30 SUS respondents from one locale (Rec 7).</p>
+  </div></details>
+  <details class="qa"><summary>Why isn't it on the Play Store yet? <span class="tag tag-deploy">deployment</span></summary><div class="a">
+  <p>Google Play now requires new personal developer accounts to run a closed testing track with &#8805;12 active testers for &#8805;14 consecutive days before production access (2024 policy). This is a mandatory requirement. Additionally, Play Store deployment requires the backend API proxy (Recommendation 2) for key security and a formal privacy policy. All three prerequisites are addressable post-capstone &#8212; Google Play release is Recommendation 3.</p>
+  </div></details>
+  <details class="qa"><summary>How do you handle the 150 message/day AI limit? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>A clear in-app message shows when the daily limit is reached, resetting midnight UTC. All manual features stay fully functional. The 150-message limit across the multi-provider chain means sufficient capacity for a research prototype. For production, Recommendation 2 (backend proxy) would move to per-user limits, ensuring one power user cannot exhaust the shared quota.</p>
+  </div></details>
+  <details class="qa"><summary>What if a competitor copies SmartSpend? <span class="tag tag-research">research</span></summary><div class="a">
+  <p><b>Defensibility:</b> (1) <b>Cultural moat</b> &#8212; Filipino-specific features require local market understanding. International competitors cannot easily replicate. (2) <b>First-mover advantage</b> &#8212; First with SSS/PhilHealth/Pag-IBIG tracking; early users have 12+ months of data they won&#8217;t migrate. (3) <b>Technical depth</b> &#8212; 10-provider AI chain, evidence-based categorization, dual-mode FHS &#8212; competitors need 3&#8211;6 months to match quality. (4) <b>Open-source risk?</b> Source Available license prevents commercial forks; maintaining AI quality + Remote Config + Firebase setup requires domain expertise most won&#8217;t invest in.</p>
+  </div></details>
+  <details class="qa"><summary>How does the app comply with Philippine laws? <span class="tag tag-security">security</span> <span class="tag tag-research">research</span></summary><div class="a">
+  <p><b>RA 10173 (Data Privacy Act):</b> PII redaction before AI, data stored locally by default, privacy policy disclosing collection/use/rights, right to deletion, informed consent from respondents.</p>
+  <p><b>RA 11765 (Financial Consumer Protection):</b> One-time AI advice disclaimer clarifying the app is not a licensed financial adviser.</p>
+  <p><b>Prototype-level compliance:</b> Local DB not encrypted (Rec 5), no server-side proxy (Rec 2). We acknowledge these gaps.</p>
+  </div></details>
+</details>
+
+<!-- ===== 6 &#8212; DEPLOYMENT ===== -->
 <details class="cat" id="cat-deploy">
-  <summary>6 &#8212; Deployment &amp; Distribution Model</summary>
+  <summary>&#128230; 6 &#8212; Deployment &amp; Why No MOA</summary>
   <details class="qa"><summary>Why no MOA or Certificate of Deployment? <span class="tag tag-deploy">deployment</span> <span class="tag tag-critical">critical</span></summary><div class="a">
   <p><b>SmartSpend is a consumer-facing mobile application for general public use</b>, not an enterprise or institutional system. Unlike enrollment systems, library systems, or barangay management systems that deploy to a single organization under an MOA, personal finance apps serve individual end-users across the country.</p>
   <p>An MOA is not applicable here because there is no single client organization &#8212; our users are individual Filipinos, similar to how GCash, Shopee, or any consumer mobile app is distributed. The comparison would be like asking why GCash doesn&#8217;t have an MOA with one specific barangay.</p>
@@ -893,9 +916,211 @@
   </div></details>
 </details>
 
-<!-- ===== CAT 7: OPENROUTER ===== -->
+<!-- ===== 7 &#8212; FINANCIAL HEALTH SCORE ===== -->
+<details class="cat" id="cat-fhs">
+  <summary>&#129518; 7 &#8212; Financial Health Score (FHS) Explained</summary>
+  <details class="qa"><summary>Explain the FHS formula simply &#8212; for the panel <span class="tag tag-fhs">FHS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>The score has 4 equal components, 25 points each, totaling 100. We formally classify this as a <b>Prototype Observed Financial Health Indicator</b>, not a validated instrument. Equal weights are a design choice, not statistically derived.</p>
+  <div class="formula-box">
+    Savings Rate (25 pts)<br>
+    = 25 &times; min(1, savings_rate / 0.20)<br>
+    <span class="comment">Full points when saving &ge;20% of income. Scales proportionally below.</span><br><br>
+    Overspend Control (25 pts)<br>
+    = 25 &times; (days_within_budget / days_elapsed)<br>
+    <span class="comment">How many days did spending stay under daily budget?</span><br><br>
+    Budget Adherence (25 pts)<br>
+    = 25 &times; (categories_on_track / total_budgeted)<br>
+    <span class="comment">No budgets set &rarr; full 25 pts. We don&rsquo;t penalize new users.</span><br><br>
+    Logging Consistency (25 pts)<br>
+    = 25 &times; (days_logged / days_elapsed_this_month)<br>
+    <span class="comment">How regularly are you logging expenses?</span>
+  </div>
+  <p>Total clamped 0&#8211;100. <b>&ge;80 = Good, 60&#8211;79 = Fair, &lt;60 = Needs attention.</b></p>
+  <p>Two adjustments: Warning Decay (-up to 15 pts for discretionary overspending), Gap Adjustment (+2 confirmed no-spend day, -3 unlogged day).</p>
+  </div></details>
+  <details class="qa"><summary>What about students with no fixed income? <span class="tag tag-fhs">FHS</span></summary><div class="a">
+  <p>Two modes: <b>Full Mode</b> uses all 4 components including Savings Rate (needs income data). <b>Lightweight Mode</b> (one toggle in Settings) replaces income-dependent components with spending-habit ones: Spending Restraint, Logging Consistency, Category Balance, and Habit Streak. Provides a meaningful 0&#8211;100 score with no salary input required.</p>
+  </div></details>
+  <details class="qa"><summary>Why 20% as the savings target? <span class="tag tag-fhs">FHS</span></summary><div class="a">
+  <p>From the 50/30/20 framework &#8212; 50% needs, 30% wants, 20% savings &#8212; widely recognized in personal finance and cited in BSP financial literacy materials. Provides a clear, researched goal rather than an arbitrary number.</p>
+  </div></details>
+  <details class="qa"><summary>How is the FHS different from a credit score? <span class="tag tag-fhs">FHS</span></summary><div class="a">
+  <p>A credit score measures creditworthiness &#8212; whether you pay loans on time. The FHS measures <em>financial behavior</em> &#8212; how well you manage day-to-day spending. It is a self-improvement tool, not a financial product. It resets monthly (new month, fresh start) and explains which component is dragging the score down so users know what to fix.</p>
+  </div></details>
+  <details class="qa"><summary>Is the FHS a validated instrument? <span class="tag tag-fhs">FHS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p><b>No &#8212; and we are transparent about this.</b> We formally classify the FHS as a <b>Prototype Observed Financial Health Indicator</b>. The equal 25-point weights are a design choice, not statistically derived. We adapted ideas from the CBA-MI Observed scale and the Financial Health Network&#8217;s FinHealth Score. Recommendation 7 (longitudinal evaluation) would eventually provide data to validate or refine the formula with real-world data.</p>
+  </div></details>
+</details>
+
+<!-- ===== 8 &#8212; NEW FEATURES AND ROADMAP ===== -->
+<details class="cat" id="cat-newfeatures">
+  <summary>&#10024; 8 &#8212; New Features (v3.3.x) &amp; Roadmap</summary>
+  <details class="qa"><summary>What's new in v3.2.0? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p><b>Star feature: Government Contributions Tracker.</b> Track year-to-date SSS, PhilHealth, and Pag-IBIG contributions &#8212; the <em>first Filipino personal finance app</em> to treat government contributions as a first-class expense category. Features: YTD totals per agency, official portal links, SSS pension calculator, dashboard widget that auto-shows when you have contribution data, year selector for historical views.</p>
+  <p><b>Also fixed:</b> AI Model Selector bottom sheet scrolling on small screens (&lt;5.5"). Build 111 released as production-ready APK (119.8 MB, Android 5.0+).</p>
+  </div></details>
+  <details class="qa"><summary>What's new in v3.2.2&#8211;3.2.3? <span class="tag tag-openrouter">OpenRouter</span></summary><div class="a">
+  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: <code>openrouter/free</code> (auto-selects best available free model on OpenRouter network).</p>
+  <p><b>10-provider fallback chain</b> &#8212; Upgraded from 8 to 10 providers. Auto mode now prioritizes OpenRouter for optimal model selection across any task type.</p>
+  <p><b>Intelligent routing</b> &#8212; App caches last successful provider, reducing latency for repeat requests.</p>
+  </div></details>
+  <details class="qa"><summary>Why government contributions tracking? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>Every Filipino employee or self-employed individual pays SSS, PhilHealth, and Pag-IBIG &#8212; it&#8217;s mandatory by law. For a typical employee earning &#8369;20,000/month, these total <b>&#8369;15,375/year</b> (SSS: &#8369;6,976, PhilHealth: &#8369;6,000, Pag-IBIG: &#8369;2,400) &#8212; <b>7.7% of annual income</b>. Yet most Filipinos don&#8217;t track it because: (1) it&#8217;s auto-deducted (invisible), (2) no other finance app treats it as a category, (3) people don&#8217;t realize how much it adds up. SmartSpend makes this visible.</p>
+  </div></details>
+  <details class="qa"><summary>What's in the post-defense roadmap? <span class="tag tag-research">research</span></summary><div class="a">
+  <p><b>43 features total</b> across three research investigations. Top 6 priorities for Months 1&#8211;3:</p>
+  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+  <li><b>Cash Flow Forecasting</b> &#8212; Predict balance 30 days ahead using ML on spending patterns</li>
+  <li><b>OFW Remittance Tracker</b> &#8212; Multi-currency (USD/SAR/SGD &#8594; PHP), CSV export for BIR. <em>10M+ OFWs, zero apps address this.</em></li>
+  <li><b>Net Worth Tracking</b> &#8212; SUM(assets) - SUM(debts), 12-month chart</li>
+  <li><b>Quarterly Tax Reminder</b> &#8212; BIR deadline alerts for Q1&#8211;Q4 (freelancers, self-employed)</li>
+  <li><b>AI Financial Coach</b> &#8212; Weekly Sunday AI message analyzing spending with Peso personality</li>
+  <li><b>Price Hike Detection</b> &#8212; <em>First personal finance app worldwide with comprehensive price tracking.</em> Uses user purchase history + DOE fuel data + PSA CPI + AI explanations</li>
+  </ol>
+  </div></details>
+  <details class="qa"><summary>What about monetization after capstone? <span class="tag tag-research">research</span></summary><div class="a">
+  <p><b>Capstone scope: free, no ads, no in-app purchases.</b></p>
+  <p><b>Post-launch options (not implemented):</b></p>
+  <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
+  <li><b>Freemium</b> &#8212; Free: 50 AI messages/month. Premium (&#8369;99/month): unlimited AI + advanced analytics</li>
+  <li><b>B2B licensing</b> &#8212; White-label SmartSpend for corporate wellness programs</li>
+  <li><b>Affiliate revenue</b> &#8212; Partner with Pag-IBIG MP2, digital banks (CIMB, Maya Savings)</li>
+  </ul>
+  </div></details>
+</details>
+
+<!-- ===== 9 &#8212; COMPETITIVE ANALYSIS ===== -->
+<details class="cat" id="cat-business">
+  <summary>&#127942; 9 &#8212; Competitive Analysis</summary>
+  <details class="qa"><summary>What is the business case for SmartSpend post-capstone? <span class="tag tag-research">research</span></summary><div class="a">
+  <p><b>Market opportunity:</b> 110M+ Filipinos, growing smartphone penetration (73% as of 2025), rising digital payments (GCash: 90M+ users, Maya: 15M+), BSP financial literacy as national agenda. The market is underserved &#8212; existing apps either lack AI (BudgetPH) or lack Filipino context (YNAB, Mint).</p>
+  <p><b>Path to revenue:</b> Freemium model &#8212; free tier (50 AI messages/month) + Premium (&#8369;99/month: unlimited AI + advanced analytics). With 100K active users at 10% conversion = 10K premium users = &#8369;990K/month recurring. B2B: corporate financial wellness programs. Affiliate: digital banks, MP2 investment products.</p>
+  <p><b>Competitive moat:</b> Government contributions tracking (first mover), Taglish AI (cultural moat), 10-provider AI chain (technical moat), Peso mascot (brand moat), 12+ months of user data lock-in.</p>
+  </div></details>
+  <details class="qa"><summary>How does SmartSpend address the BSP financial literacy agenda? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>The 2021 BSP Financial Inclusion Survey found only 2% of Filipino adults correctly answered all 6 basic financial literacy questions. BSP&#8217;s National Strategy for Financial Inclusion (NSFI 2022-2028) targets increased adoption of digital financial services and improved financial behavior. SmartSpend directly supports three NSFI goals: (1) <b>Digital payment adoption</b> &#8212; supports GCash/Maya transaction import. (2) <b>Savings behavior</b> &#8212; FHS Savings Rate component incentivizes saving 20%. (3) <b>Financial awareness</b> &#8212; analytics, 50/30/20 rule, government contributions visibility. Our research contributes to understanding how mobile AI can drive behavior change in this demographic.</p>
+  </div></details>
+  <details class="qa"><summary>What is paluwagan and why include a tracker? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>Paluwagan is a traditional Filipino rotating savings group &#8212; a fixed number of members each contribute a set amount every period (weekly, monthly), and one member receives the full pot per period until everyone has had a turn. It&#8217;s essentially a zero-interest, trust-based lending and savings mechanism widely used in Filipino communities, especially among those without access to formal banking. SmartSpend&#8217;s paluwagan tracker: (1) Tracks contribution schedule (who pays when), (2) Records received payouts vs. outstanding contributions, (3) Calculates net position (how much you&#8217;ve paid vs. received), (4) Sends reminders before contribution due dates. This is culturally specific &#8212; no international app has paluwagan support.</p>
+  </div></details>
+</details>
+
+<!-- ===== 10 &#8212; TRICKY PANELIST TRAPS ===== -->
+<details class="cat" id="cat-edgecases">
+  <summary>&#9888;&#65039; 10 &#8212; Tricky Panelist Traps</summary>
+  <details class="qa"><summary>Your Figure 16 shows 75.0. But you said 61.83. Which is correct? <span class="tag tag-sus">SUS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p><b>61.83 is the actual mean</b> across all 30 valid respondents. Figure 16 is a <b>sample computation</b> that shows how the SUS formula works for one illustrative respondent &#8212; that individual scored 75.0, but it is only the example in the manuscript. The mean SUS of 61.83 (SD 17.58) is in Table 8. Never confuse Figure 16&#8217;s example with the study result.</p>
+  </div></details>
+  <details class="qa"><summary>Isn&#8217;t 61.83 a failure? Should we be embarrassed? <span class="tag tag-sus">SUS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p><b>No &#8212; and here&#8217;s why:</b> (1) This is a <em>prototype</em> &#8212; the purpose of evaluation is to find what needs improvement, not to prove perfection. (2) Users scored high on intent to use (4.35/5) &#8212; they want to use it again. (3) The score is "OK" per Bangor et al. 2009 &#8212; not failing, just below our target. (4) The specific weaknesses (consistency, complexity) are addressable through Recommendation 8. (5) This is an honest finding &#8212; a research contribution is more credible when it acknowledges limitations rather than overstating success. <b>Frame it as: "Our evaluation identified specific areas for improvement &#8212; that is what good developmental research does."</b></p>
+  </div></details>
+  <details class="qa"><summary>Why is the app called "SmartSpend" and not something in Filipino? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Three reasons: (1) <b>International appeal</b> &#8212; a Filipino-English name is accessible to both local and international users, supporting the goal of a consumer app that could grow beyond the Philippines. (2) <b>App store searchability</b> &#8212; English keywords have higher search volume on Google Play. (3) <b>Brand clarity</b> &#8212; "SmartSpend" immediately communicates the value proposition (smart management of spending) without requiring translation. The app remains Filipino-first in content and UX (Taglish, Filipino item catalog, government contributions) while having an accessible English name.</p>
+  </div></details>
+  <details class="qa"><summary>What if someone says your app was tested before it was finished? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>The SUS evaluation used <b>SmartSpend v3.1.0</b>, which was the complete, production-ready version at the time of evaluation. All 34 AI actions, the Financial Health Score, batch screenshot import, government contributions, and all core features were fully implemented and tested in v3.1.0. Subsequent versions (v3.2.0, v3.2.2, v3.2.5, v3.3.0) added new features (Government Contributions Tracker, OpenRouter, payday-cycle budgeting, Quick Stats) but were released after the evaluation was complete. This is standard practice &#8212; evaluate a stable version, then continue development based on findings.</p>
+  </div></details>
+  <details class="qa"><summary>How did you choose Lorma Colleges as the sampling location? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Convenience and accessibility sampling, as stated in the Scope and Limitations section of the manuscript. The researchers are enrolled at Lorma Colleges, and the target population (parents aged 35&#8211;55, young professionals aged 21&#8211;35) is accessible in San Fernando City, La Union, where the institution is located. We acknowledge this limits generalizability to other regions. Recommendation 7 (longitudinal evaluation with larger sample from multiple locales) addresses this limitation.</p>
+  </div></details>
+  <details class="qa"><summary>How did the content validator evaluate the survey instrument? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Avigail Candevario, PFMe, reviewed the needs-assessment questionnaire for three criteria: (1) <b>Relevance</b> &#8212; does each item address the research objectives? (2) <b>Clarity</b> &#8212; are questions unambiguous and understandable to the target demographic? (3) <b>Appropriateness</b> &#8212; are the response options suitable for the type of information being gathered? She was selected via purposive sampling specifically for her expertise in personal finance and financial education. Her validation certificate is in Appendix D. The instrument was finalized after her feedback was incorporated.</p>
+  </div></details>
+  <details class="qa"><summary>What would you change if you had 12 months instead of 1 semester? <span class="tag tag-research">research</span></summary><div class="a">
+  <p>(1) <b>Two-round evaluation</b> &#8212; Evaluate v1, fix weaknesses, evaluate v2. This would likely improve SUS above 68. (2) <b>Larger sample</b> &#8212; 100+ respondents across multiple regions of the Philippines for better generalizability. (3) <b>Longitudinal study</b> &#8212; Measure actual behavior change over 3 months (did users save more? spend less?). (4) <b>Focus groups</b> &#8212; Qualitative insights from the demographic to validate feature prioritization. (5) <b>Server-side backend</b> &#8212; Complete Recommendation 2 before evaluation, eliminating the API key security limitation. These are exactly what Recommendations 7 and 8 propose for future research.</p>
+  </div></details>
+</details>
+
+<!-- ===== 11 &#8212; GAMIFICATION AND BADGES ===== -->
+<details class="cat" id="cat-gamification">
+  <summary>&#127941; 11 &#8212; Gamification &amp; Badges</summary>
+  <details class="qa"><summary>What is the Peso mascot and why include it? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>Peso is SmartSpend&#8217;s AI mascot &#8212; a friendly peso coin character who guides users through the app, celebrates financial wins, and nudges gently when something needs attention. <b>12 moods</b>: idle, happy, proud, worried, celebrating, thinking, sleeping, surprised, sad, excited, encouraging, disappointed. Peso appears on <b>45 screens</b>, reacts to actual financial data (proud when FHS is high, worried when budget is tight), speaks in Taglish (warm, non-judgmental), and is tappable anywhere for a bounce + mood reaction.</p>
+  <p><b>Why gamification matters:</b> The literature on behavior change (Fogg Behavior Model) shows that motivation + ability + prompt must converge for a behavior to happen. Peso serves as the prompt mechanism &#8212; daily nudges (no log by 2PM), budget warnings, goal celebrations &#8212; while making the app feel emotionally engaging rather than bureaucratic.</p>
+  </div></details>
+  <details class="qa"><summary>How do the 36 achievement badges work? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>Badges are earned by hitting financial milestones, logging streaks, and interacting with Peso. Categories: (1) <b>Expense logging streaks</b> (3-day, 7-day, 30-day), (2) <b>Budget milestones</b> (first budget set, full month on budget), (3) <b>Savings goals</b> (25%/50%/75%/100% milestones), (4) <b>AI interactions</b> (first AI log, 50 AI messages), (5) <b>Financial health</b> (FHS reaching 60/80/100), (6) <b>Peso interactions</b> (tap streak, long-press reactions). Each badge unlock triggers a Peso bottom sheet animation with a mood-matched celebration message. Badges are stored in the <code>badges</code> SQLite table and synced to Firestore.</p>
+  </div></details>
+  <details class="qa"><summary>What are Daily Quests? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>10 rotating quests that reset daily, designed to build financial habits: (1) Log an expense today, (2) Check your budget status, (3) Ask Peso for financial advice, (4) Review last week&#8217;s spending, (5) Update a savings goal progress, (6) Check your FHS score, (7) Set a bill reminder, (8) Try batch screenshot import, (9) Check your Safe-to-Spend amount, (10) Log a government contribution. Each completed quest earns a small badge progress. The goal is to make finance tracking feel like a daily routine rather than a chore.</p>
+  </div></details>
+  <details class="qa"><summary>How does the Financial Health Certificate work? <span class="tag tag-fhs">FHS</span></summary><div class="a">
+  <p>At the end of each month, users can generate a <b>Financial Health Certificate</b> &#8212; a shareable digital card showing: (1) Final month FHS score with tier label, (2) Top achievement unlocked that month, (3) Best financial stat (e.g., "Saved 23% of income"), (4) Peso mood matching the score, (5) SmartSpend branding with month/year. The certificate is generated as a PNG via Flutter&#8217;s <code>RepaintBoundary</code> and shared via the system share sheet. It&#8217;s a social proof element that encourages users to share progress with friends or family, creating organic word-of-mouth distribution.</p>
+  </div></details>
+</details>
+
+<!-- ===== 12 &#8212; RESEARCH DEEP DIVE ===== -->
+<details class="cat" id="cat-methodology-deep">
+  <summary>&#128300; 12 &#8212; Research Deep Dive</summary>
+  <details class="qa"><summary>How did you calculate the SUS score? Walk through the formula. <span class="tag tag-sus">SUS</span></summary><div class="a">
+  <p>SUS uses a 10-item questionnaire (Brooke, 1996). Each item is rated 1&#8211;5 (Strongly Disagree to Strongly Agree). Scoring: (1) For <b>odd-numbered items</b> (1,3,5,7,9): <code>response - 1</code>. (2) For <b>even-numbered items</b> (2,4,6,8,10): <code>5 - response</code>. (3) Sum all 10 contributions and multiply by 2.5. Formula: <code>SUS = 2.5 &times; (&Sigma;odd_contributions + &Sigma;even_contributions)</code>. Result range: 0&#8211;100. Our mean across 30 valid respondents: <b>61.83</b>.</p>
+  <p><b>Figure 16</b> in the manuscript shows a sample computation for one illustrative respondent that yielded 75.0 &#8212; this is <em>only the example</em>. The actual study mean is 61.83.</p>
+  </div></details>
+  <details class="qa"><summary>How do you justify 30 respondents statistically? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Three justifications: (1) <b>SUS validation literature</b> &#8212; Tullis &amp; Stetson (2004) found SUS produces reliable results with as few as 12&#8211;14 participants; our 30 is well above this. (2) <b>Capstone scope</b> &#8212; developmental research at this level commonly uses 20&#8211;30 respondents for prototype evaluation. (3) <b>Practical constraint</b> &#8212; recruiting participants who would use the app for 10+ minutes (minimum) and complete a formal survey is resource-intensive for a 1-semester project. We acknowledge this limits generalizability, hence Recommendation 7 (longitudinal study with larger sample).</p>
+  </div></details>
+  <details class="qa"><summary>Why use SUS and not a custom usability questionnaire? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
+  <p>SUS is the industry-standard usability metric: (1) <b>Validated</b> &#8212; 30+ years of research, 5,000+ studies. (2) <b>Standardized</b> &#8212; 10 questions, Likert 1&#8211;5, consistent algorithm. (3) <b>Benchmarked</b> &#8212; Average SUS = 68; &ge;80 = "Good" (Bangor 2009). (4) <b>Quick</b> &#8212; 2&#8211;3 minutes per respondent, minimizes survey fatigue. (5) <b>Panel-recognizable</b> &#8212; Panelists will know and trust SUS. A custom questionnaire would have no normative data for comparison and would require its own validation process.</p>
+  </div></details>
+  <details class="qa"><summary>How did you exclude the 6 invalid SUS respondents? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Exclusion criteria were defined before data collection: (1) <b>5 excluded for insufficient usage time</b> &#8212; respondents who completed the SUS survey but had not used the app for the required minimum of 10 minutes. Usage time was verified via self-report on the survey form and cross-checked against app session logs where available. (2) <b>1 excluded for straight-line responding</b> &#8212; a respondent who selected the same response (e.g., all 3s) for all 10 SUS items, indicating non-engagement with the instrument. This reduces the valid sample from 36 to 30.</p>
+  </div></details>
+  <details class="qa"><summary>What are the specific SUS item results? <span class="tag tag-sus">SUS</span></summary><div class="a">
+  <p><b>Strongest items (highest scores):</b></p>
+  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
+  <li>Q1 "I think I would like to use this system frequently" &#8212; mean 4.35/5 (intent to use)</li>
+  <li>Q3 "I thought the system was easy to use" &#8212; mean 4.19/5 (confidence)</li>
+  </ul>
+  <p><b>Weakest items (lowest scores, driving the score below benchmark):</b></p>
+  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
+  <li>Q6 "I thought there was too much inconsistency in this system" &#8212; weakness (consistency concerns)</li>
+  <li>Q2 "I found the system unnecessarily complex" &#8212; weakness (complexity)</li>
+  <li>Q4 "I think I would need the support of a technical person to be able to use this system" &#8212; weakness (complexity)</li>
+  </ul>
+  <p>These item-level results directly inform Recommendation 8 (UI/UX refinement targeting consistency and complexity).</p>
+  </div></details>
+  <details class="qa"><summary>How do you ensure research ethics and data privacy? <span class="tag tag-security">security</span> <span class="tag tag-research">research</span></summary><div class="a">
+  <p><b>Informed consent:</b> All 30 respondents signed consent forms explaining: (1) Purpose (capstone thesis evaluation), (2) Data collected (usage logs, SUS responses), (3) Anonymization (no names in published results), (4) Right to withdraw anytime, (5) No compensation (voluntary). <b>Data handling:</b> Firestore data encrypted in transit (TLS) and at rest. Only aggregated SUS scores published. Usage logs stripped of PII before analysis. <b>RA 10173 compliance:</b> Privacy policy in-app (Settings &#8594; About &#8594; Privacy Policy), data retention policy.</p>
+  </div></details>
+</details>
+
+<div style="margin:28px 0 16px;padding:10px 14px;background:var(--ledger-soft);border-radius:6px;border:1px solid var(--line);">
+  <span style="font-size:.8rem;font-weight:700;color:var(--ink-soft);letter-spacing:.08em;">&#9881;&#65039; TECHNICAL REFERENCE &#8212; Only if panel asks specific technical questions</span>
+</div>
+
+<!-- ===== [TECH REF] HOW THE AI WORKS ===== -->
+<details class="cat" id="cat-ai">
+  <summary>&#9881;&#65039; [TECH REF] How the AI Works</summary>
+  <details class="qa"><summary>Is the AI safe? Does it send our financial data to external servers? <span class="tag tag-security">security</span> <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>The AI receives only the text you type and a summarized expense context &#8212; categories and amounts, no names, account numbers, or personal identifiers. Mobile numbers are automatically redacted before sending (RA 10173 compliance). The actual expense data lives locally in SQLite and never leaves the phone except for encrypted optional Firebase sync.</p>
+  </div></details>
+  <details class="qa"><summary>What are the 34 agentic actions? <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p><b>Core Actions (13):</b> log_expense, edit_expense, delete_expense, view_expenses, set_budget, check_budget, create_savings_goal, update_savings_goal, create_wallet, update_wallet, log_debt, log_income, check_balance.</p>
+  <p><b>AI Advice (5):</b> give_advice, explain_fhs, suggest_category, recommend_budget, financial_health_tips.</p>
+  <p><b>Analytics (4):</b> show_spending_by_category, compare_months, calculate_savings_rate, show_trends.</p>
+  <p><b>Utilities (6):</b> set_reminder, check_upcoming_bills, safe_to_spend_calculation, currency_conversion, search_expenses, export_data.</p>
+  <p><b>Gamification (3):</b> check_achievements, show_badges, check_peso_mood. <b>Meta (3):</b> help, clarify_question, multi_action.</p>
+  </div></details>
+  <details class="qa"><summary>What happens when the AI is down or the internet is slow? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>A 10-provider fallback chain automatically switches (v3.3.0): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
+  </div></details>
+  <details class="qa"><summary>How does the AI understand Taglish? Did you train a custom model? <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>No custom training &#8212; we use prompt engineering. The system prompt includes: (1) Filipino cultural context (jeepney, pandesal, allowance, paluwagan), (2) 150+ Filipino item catalog, (3) Taglish instruction examples, (4) Category mapping guidance (taho = Food, tricycle = Transportation), (5) Common Filipino merchants (Jollibee, 7-Eleven, SM, Puregold). Gemini 3.5 and GPT-OSS-120B handle this well because their training data includes Filipino text. We don&#8217;t need fine-tuning &#8212; the base models + good prompts suffice.</p>
+  </div></details>
+  <details class="qa"><summary>Who pays for the AI? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>We use free tiers across providers: Gemini 3.5 Flash-Lite (Google AI Studio), Groq and Cerebras free APIs. We also have $100 in OpenRouter credits (expires May 14, 2027). We enforce 150 messages/day per user &#8212; zero recurring cost for a research prototype. API keys are stored in Firebase Remote Config (not in the APK). Production scaling would move to paid tiers via the same Remote Config infrastructure.</p>
+  </div></details>
+  <details class="qa"><summary>Can the AI handle multiple expenses in one message? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>Yes &#8212; the <code>multi_action</code> action type. Example: "I spent 60 for lunch and 30 for jeep" logs two expenses. The AI returns a JSON array of actions, which the app processes sequentially. Confirmed working with up to 5 simultaneous actions in testing.</p>
+  </div></details>
+  <details class="qa"><summary>How is this different from just using ChatGPT? <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>ChatGPT has no persistent data &#8212; context is lost each session. SmartSpend maintains a complete on-device financial database and <em>executes</em> 34 action types: saves to DB, updates wallet balances, sends notifications, calculates FHS scores. ChatGPT can chat; it cannot do any of that. ChatGPT Finance is also US-only, requires Plaid bank linking, and is unavailable in the Philippines.</p>
+  </div></details>
+</details>
+
+<!-- ===== [TECH REF] OPENROUTER AND 10-PROVIDER CHAIN ===== -->
 <details class="cat" id="cat-openrouter">
-  <summary>7 &#8212; OpenRouter &amp; AI Architecture (v3.2.2+, enhanced in v3.3.0)</summary>
+  <summary>&#127760; [TECH REF] OpenRouter &amp; 10-Provider Chain</summary>
   <details class="qa"><summary>Why add OpenRouter to the app? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
   <p><b>OpenRouter is an AI gateway service</b> that provides unified access to 100+ language models through a single API endpoint. We added it in v3.2.2 for three reasons:</p>
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
@@ -969,9 +1194,54 @@
   </div></details>
 </details>
 
-<!-- ===== CAT 8: SECURITY & PRIVACY ===== -->
+<!-- ===== [TECH REF] TECHNICAL IMPLEMENTATION ===== -->
+<details class="cat" id="cat-tech">
+  <summary>&#128295; [TECH REF] Technical Implementation</summary>
+  <details class="qa"><summary>What tech stack is used? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p><b>Framework:</b> Flutter (Dart) &#8212; cross-platform, Android-first for this capstone.</p>
+  <p><b>Local DB:</b> SQLite via sqflite (26 tables, schema v14).</p>
+  <p><b>Cloud:</b> Firebase Auth + Firestore + Remote Config + Crashlytics + App Check.</p>
+  <p><b>AI Engine:</b> Multi-model LLM with 10-provider auto-failover (OpenRouter gateway + Gemini + Groq + Cerebras + local).</p>
+  <p><b>OCR:</b> Google ML Kit Text Recognition (on-device, no internet needed).</p>
+  <p><b>Barcode:</b> Google ML Kit Barcode Scanning + MobileScanner.</p>
+  <p><b>Charts:</b> fl_chart. <b>Mascot:</b> Custom CustomPainter-based animated widget &#8212; 12 moods.</p>
+  <p><b>Architecture:</b> Serverless/client-side only. No backend server. All logic runs on-device + Firebase + third-party APIs. Zero hosting costs.</p>
+  </div></details>
+  <details class="qa"><summary>Why Flutter over native Android? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Flutter gives a single codebase for Android, iOS, and web. For our Android-only capstone scope, it also gave first-party access to Google ML Kit for OCR and barcode scanning. Dart iterates faster than Kotlin for UI work &#8212; mattered given our 1-semester timeline. The app is already structured to support iOS and web with minimal changes post-capstone.</p>
+  </div></details>
+  <details class="qa"><summary>Why SQLite over Firebase Firestore for local data? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Three reasons: (1) <b>Offline-first</b> &#8212; SQLite works with zero internet, Firestore requires connectivity for real-time queries. (2) <b>Speed</b> &#8212; Local SQL queries run in &lt;10ms vs Firestore network latency of 100&#8211;300ms. (3) <b>Cost</b> &#8212; Firestore charges per read/write; SQLite has no ongoing cost. Firebase Firestore is used only for optional cloud backup/sync, not as primary storage.</p>
+  </div></details>
+  <details class="qa"><summary>How does batch screenshot import work technically? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>User selects multiple gallery screenshots. Each runs through Google ML Kit text recognition <em>on-device</em> &#8212; no internet needed for OCR. The extracted text goes to the AI with a structured prompt to identify item, amount, date, merchant. The AI returns JSON; the app displays it for user confirmation before saving. 40+ platforms are supported because we built keyword detection for their specific receipt formats (GCash, Shopee, Lazada, Steam, Jollibee, etc.).</p>
+  </div></details>
+  <details class="qa"><summary>How does the multi-model AI routing work? <span class="tag tag-tech">tech</span> <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>In Auto mode, <code>AppConfig.autoFallback()</code> in <code>lib/services/app_config.dart</code> tries providers in priority order. If a provider returns an error (rate limit, timeout, 503), it immediately tries the next. The last successful provider is cached in SharedPreferences to reduce latency for subsequent requests. Priority order: Custom Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; Groq (5 models) &#8594; Cerebras.</p>
+  </div></details>
+  <details class="qa"><summary>How does the GitHub Actions CI/CD pipeline work? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>When a git tag <code>v3.x.x</code> is pushed, GitHub Actions automatically: (1) checks out the code, (2) sets up Flutter, (3) runs <code>flutter build apk --release --split-per-abi --shrink --obfuscate</code>, (4) signs the APKs with the keystore stored as a GitHub Secret, (5) publishes the three APKs (ARM32, ARM64, x86_64) as a GitHub Release with auto-generated changelog. This means pushing a tag is all we need to publish a new version.</p>
+  </div></details>
+  <details class="qa"><summary>What is the app's APK size and why? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Build 111 (v3.2.0): <b>119.8 MB</b> for the ARM64 APK. Size breakdown: Flutter engine (~25 MB), app code + assets (~15 MB), Google ML Kit models for OCR and barcode (~40 MB), Firebase SDKs (~10 MB), other dependencies (~30 MB). The ML Kit models are the dominant factor &#8212; they enable on-device OCR with no internet. We use <code>--split-per-abi</code> to give users the APK for their CPU only, avoiding universal APK bloat. Post-capstone, Play Store AAB format would reduce installed size further via Play Asset Delivery.</p>
+  </div></details>
+  <details class="qa"><summary>How is data stored and is it secure? <span class="tag tag-security">security</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Primary storage: SQLite on-device (schema v14, 26 tables). App-private directory &#8212; not accessible to other apps without root. Cloud backup: Firebase Firestore (user-controlled, TLS in transit). API keys: NOT in the APK &#8212; fetched from Firebase Remote Config at startup. Firebase App Check blocks unauthorized API access. App Lock: PIN or biometric via <code>local_auth</code>. <b>Known limitation (Recommendation 5):</b> Local SQLite database is currently unencrypted; SQLCipher would address this.</p>
+  </div></details>
+  <details class="qa"><summary>How does Firebase Remote Config work? Why use it? <span class="tag tag-tech">tech</span> <span class="tag tag-security">security</span></summary><div class="a">
+  <p>Remote Config stores API keys (Gemini, Groq, Cerebras, OpenRouter) and feature flags server-side. On app startup, <code>AppConfig.init()</code> fetches the latest config from Firebase. <b>Why?</b> (1) <b>Security</b> &#8212; API keys never baked into APK. (2) <b>Hot-swap</b> &#8212; Rotate compromised keys without rebuilding. (3) <b>A/B testing</b> &#8212; Toggle features per user cohort. If Gemini quota is exhausted, we can switch all users to Groq within 5 minutes via Remote Config, no app update needed.</p>
+  </div></details>
+  <details class="qa"><summary>How does the app handle offline mode? <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p><b>Works 100% offline:</b> Manual expense logging, view expenses, edit/delete, budgets, wallets, analytics (all local SQLite). Receipt OCR (Google ML Kit, on-device).</p>
+  <p><b>Requires internet:</b> AI features (Gemini/Groq/Cerebras/OpenRouter APIs), Firebase sync, exchange rates.</p>
+  <p><b>Graceful degradation:</b> When offline, AI chat shows "No internet &#8212; use manual entry" banner. Firebase sync queues changes locally and uploads when connection is restored.</p>
+  <p><b>We say "offline-first" not "fully offline"</b> &#8212; the core app is usable without internet, but AI features need connectivity. Private Local Mode allows AI offline via user&#8217;s own local model server.</p>
+  </div></details>
+</details>
+
+<!-- ===== [TECH REF] SECURITY AND PRIVACY ===== -->
 <details class="cat" id="cat-security">
-  <summary>8 &#8212; Security &amp; Privacy</summary>
+  <summary>&#128274; [TECH REF] Security &amp; Privacy</summary>
   <details class="qa"><summary>Where is user financial data stored? <span class="tag tag-security">security</span></summary><div class="a">
   <p><b>Primary:</b> SQLite database in the app&#8217;s private data directory (<code>/data/data/com.lucidframe.smartspend/databases/</code>). Not accessible to other apps without root. <b>Secondary (optional):</b> Firebase Firestore &#8212; user can enable cloud sync; data encrypted in transit (TLS) and at rest. <b>Not stored:</b> Server-side &#8212; SmartSpend has no backend server. All expense data stays on-device unless the user enables Firestore sync.</p>
   </div></details>
@@ -989,120 +1259,9 @@
   </div></details>
 </details>
 
-<!-- ===== CAT 9: NEW FEATURES ===== -->
-<details class="cat" id="cat-newfeatures">
-  <summary>9 &#8212; v3.2.x / v3.3.0 Features &amp; Future Roadmap</summary>
-  <details class="qa"><summary>What's new in v3.2.0? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Star feature: Government Contributions Tracker.</b> Track year-to-date SSS, PhilHealth, and Pag-IBIG contributions &#8212; the <em>first Filipino personal finance app</em> to treat government contributions as a first-class expense category. Features: YTD totals per agency, official portal links, SSS pension calculator, dashboard widget that auto-shows when you have contribution data, year selector for historical views.</p>
-  <p><b>Also fixed:</b> AI Model Selector bottom sheet scrolling on small screens (&lt;5.5"). Build 111 released as production-ready APK (119.8 MB, Android 5.0+).</p>
-  </div></details>
-  <details class="qa"><summary>What's new in v3.2.2&#8211;3.2.3? <span class="tag tag-openrouter">OpenRouter</span></summary><div class="a">
-  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: <code>openrouter/free</code> (auto-selects best available free model on OpenRouter network).</p>
-  <p><b>10-provider fallback chain</b> &#8212; Upgraded from 8 to 10 providers. Auto mode now prioritizes OpenRouter for optimal model selection across any task type.</p>
-  <p><b>Intelligent routing</b> &#8212; App caches last successful provider, reducing latency for repeat requests.</p>
-  </div></details>
-  <details class="qa"><summary>Why government contributions tracking? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>Every Filipino employee or self-employed individual pays SSS, PhilHealth, and Pag-IBIG &#8212; it&#8217;s mandatory by law. For a typical employee earning &#8369;20,000/month, these total <b>&#8369;15,375/year</b> (SSS: &#8369;6,976, PhilHealth: &#8369;6,000, Pag-IBIG: &#8369;2,400) &#8212; <b>7.7% of annual income</b>. Yet most Filipinos don&#8217;t track it because: (1) it&#8217;s auto-deducted (invisible), (2) no other finance app treats it as a category, (3) people don&#8217;t realize how much it adds up. SmartSpend makes this visible.</p>
-  </div></details>
-  <details class="qa"><summary>What's in the post-defense roadmap? <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>43 features total</b> across three research investigations. Top 6 priorities for Months 1&#8211;3:</p>
-  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-  <li><b>Cash Flow Forecasting</b> &#8212; Predict balance 30 days ahead using ML on spending patterns</li>
-  <li><b>OFW Remittance Tracker</b> &#8212; Multi-currency (USD/SAR/SGD &#8594; PHP), CSV export for BIR. <em>10M+ OFWs, zero apps address this.</em></li>
-  <li><b>Net Worth Tracking</b> &#8212; SUM(assets) - SUM(debts), 12-month chart</li>
-  <li><b>Quarterly Tax Reminder</b> &#8212; BIR deadline alerts for Q1&#8211;Q4 (freelancers, self-employed)</li>
-  <li><b>AI Financial Coach</b> &#8212; Weekly Sunday AI message analyzing spending with Peso personality</li>
-  <li><b>Price Hike Detection</b> &#8212; <em>First personal finance app worldwide with comprehensive price tracking.</em> Uses user purchase history + DOE fuel data + PSA CPI + AI explanations</li>
-  </ol>
-  </div></details>
-  <details class="qa"><summary>What about monetization after capstone? <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>Capstone scope: free, no ads, no in-app purchases.</b></p>
-  <p><b>Post-launch options (not implemented):</b></p>
-  <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-  <li><b>Freemium</b> &#8212; Free: 50 AI messages/month. Premium (&#8369;99/month): unlimited AI + advanced analytics</li>
-  <li><b>B2B licensing</b> &#8212; White-label SmartSpend for corporate wellness programs</li>
-  <li><b>Affiliate revenue</b> &#8212; Partner with Pag-IBIG MP2, digital banks (CIMB, Maya Savings)</li>
-  </ul>
-  </div></details>
-</details>
-
-<!-- ===== CAT 10: HARD QUESTIONS ===== -->
-<details class="cat" id="cat-hard">
-  <summary>10 &#8212; Hard questions / limitations</summary>
-  <details class="qa"><summary>What are the limitations of your app? <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p>(1) AI works best with clear input &#8212; ambiguous messages can produce wrong categories. (2) No Play Store release yet &#8212; requires backend proxy (Rec 2) + privacy policy + 14-day closed testing. (3) No iOS version. (4) FHS formula not externally validated. (5) Local database not encrypted (Rec 5). (6) Parsing accuracy from dev-phase testing only: amount 88.2%, date 70.4% (weakest). (7) SUS 61.83 below 68 benchmark (Rec 8). (8) 30 SUS respondents from one locale (Rec 7).</p>
-  </div></details>
-  <details class="qa"><summary>Why isn't it on the Play Store yet? <span class="tag tag-deploy">deployment</span></summary><div class="a">
-  <p>Google Play now requires new personal developer accounts to run a closed testing track with &#8805;12 active testers for &#8805;14 consecutive days before production access (2024 policy). This is a mandatory requirement. Additionally, Play Store deployment requires the backend API proxy (Recommendation 2) for key security and a formal privacy policy. All three prerequisites are addressable post-capstone &#8212; Google Play release is Recommendation 3.</p>
-  </div></details>
-  <details class="qa"><summary>How do you handle the 150 message/day AI limit? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>A clear in-app message shows when the daily limit is reached, resetting midnight UTC. All manual features stay fully functional. The 150-message limit across the multi-provider chain means sufficient capacity for a research prototype. For production, Recommendation 2 (backend proxy) would move to per-user limits, ensuring one power user cannot exhaust the shared quota.</p>
-  </div></details>
-  <details class="qa"><summary>What if a competitor copies SmartSpend? <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>Defensibility:</b> (1) <b>Cultural moat</b> &#8212; Filipino-specific features require local market understanding. International competitors cannot easily replicate. (2) <b>First-mover advantage</b> &#8212; First with SSS/PhilHealth/Pag-IBIG tracking; early users have 12+ months of data they won&#8217;t migrate. (3) <b>Technical depth</b> &#8212; 10-provider AI chain, evidence-based categorization, dual-mode FHS &#8212; competitors need 3&#8211;6 months to match quality. (4) <b>Open-source risk?</b> Source Available license prevents commercial forks; maintaining AI quality + Remote Config + Firebase setup requires domain expertise most won&#8217;t invest in.</p>
-  </div></details>
-  <details class="qa"><summary>How does the app comply with Philippine laws? <span class="tag tag-security">security</span> <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>RA 10173 (Data Privacy Act):</b> PII redaction before AI, data stored locally by default, privacy policy disclosing collection/use/rights, right to deletion, informed consent from respondents.</p>
-  <p><b>RA 11765 (Financial Consumer Protection):</b> One-time AI advice disclaimer clarifying the app is not a licensed financial adviser.</p>
-  <p><b>Prototype-level compliance:</b> Local DB not encrypted (Rec 5), no server-side proxy (Rec 2). We acknowledge these gaps.</p>
-  </div></details>
-</details>
-
-<!-- ===== CAT 11: TOP 10 MOST LIKELY ===== -->
-<details class="cat" id="cat-top10">
-  <summary>11 &#8212; Top 10 Most Likely Panel Questions</summary>
-  <details class="qa"><summary>Why is the SUS score only 61.83? <span class="tag tag-sus">SUS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>Scripted answer:</b> "Our SUS score of 61.83 is below the 68-point benchmark and below our pre-established target of 80, which is why Objective 3 is <b>partially achieved</b> rather than fully achieved. This is a prototype-stage finding, and it tells us where to improve. The weaker SUS items were system consistency, Question 6, and complexity, Questions 2 and 4. Recommendation 8 addresses these through interface redesign. Respondents also scored high on intent to use the system frequently, at 4.35 out of 5, and on confidence, at 4.19 out of 5."</p>
-  </div></details>
-  <details class="qa"><summary>Why only 30 respondents? Isn't that too small? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>Random sampling was used</b> for respondents. For a capstone-level developmental study, 30 is a common sample size for identifying patterns in a needs assessment and usability issues in a prototype. SUS is designed to be reliable with small samples &#8212; Tullis &amp; Stetson (2004) show it stabilizes around 12&#8211;14 participants. Our 30 exceeds this minimum. We acknowledge it limits generalizability because SUS respondents came from one locale &#8212; Recommendation 7 calls for a longitudinal evaluation with a larger sample.</p>
-  </div></details>
-  <details class="qa"><summary>What LLM did you use and why? <span class="tag tag-ai">AI</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>Evaluated model:</b> Gemini 3.5 Flash-Lite (primary in v3.1.0 evaluation). We evaluated <b>ten candidate models from four providers</b> (Google, Groq, Cerebras, Mistral) against weighted criteria: Filipino-English accuracy (25%), speed (20%), tool use/JSON reliability (20%), free-tier availability (15%), context window (10%), financial reasoning quality (10%). Results in Table 6. Flash-Lite won: 1M-token context, native function calling for 34 actions, good Taglish handling, high free-tier quota. <b>Current v3.3.0:</b> 10-provider chain with OpenRouter at position 2 for access to 100+ models.</p>
-  </div></details>
-  <details class="qa"><summary>How does SmartSpend compare to BudgetPH, PISO, Agila? <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>vs BudgetPH/PISO:</b> No AI &#8212; manual logging only. We: voice, OCR, barcode, batch screenshot (40+ platforms).</p>
-  <p><b>vs Agila:</b> AI logging-only (no budgets, no debts, no advice). We: 34 agentic actions.</p>
-  <p><b>Unique to SmartSpend:</b> (1) Dual-mode FHS, (2) Batch screenshot import (40+ platforms), (3) SSS/PhilHealth/Pag-IBIG tracking, (4) 10-provider AI for 24/7 uptime, (5) Paluwagan tracker, (6) Private Local AI mode.</p>
-  <p><b>Honest limitations:</b> No bank sync (they have it), no payday cycle yet (Rec 1), Android-only (some competitors support iOS).</p>
-  </div></details>
-  <details class="qa"><summary>Is this quantitative, qualitative, or mixed methods? <span class="tag tag-research">research</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>Quantitative descriptive developmental.</b> Period.</p>
-  <p>Quantitative: validated structured survey questionnaires only. NO interviews, NO open-ended data, NO mixed methods.</p>
-  <p>Descriptive: frequencies and percentages (needs assessment), mean SUS scores (usability).</p>
-  <p>Developmental: design and development of SmartSpend as a working prototype using Agile Kanban.</p>
-  </div></details>
-  <details class="qa"><summary>How secure is the app? Where are API keys stored? <span class="tag tag-security">security</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>Current security (prototype level):</b> API keys in Firebase Remote Config (not in APK). Data redacted before AI. App-private SQLite. Optional Firestore sync with TLS. App Lock (PIN/biometric). <b>Acknowledged gaps:</b> Local DB unencrypted (Rec 5), no server-side proxy (Rec 2). Privacy tiers: Cloud (default, redacted), Private Local (user&#8217;s own PC), on-device AI (Rec 4, not implemented).</p>
-  </div></details>
-  <details class="qa"><summary>What about iOS? Why Android only? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>Android only by design &#8212; stated in Scope and Limitations. Market share in PH: 70&#8211;80% Android. iOS requires Mac + Xcode ($1,299+) + Apple Developer Program ($99/year). Thesis scope: one platform = deeper feature quality. iOS is NOT one of our 9 recommendations. Google Play (Recommendation 3) is the planned next step. Flutter&#8217;s cross-platform nature makes iOS feasible post-capstone with minimal code changes.</p>
-  </div></details>
-  <details class="qa"><summary>How does the Financial Health Score work? Is it validated? <span class="tag tag-fhs">FHS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p>The FHS is a <b>Prototype Observed Financial Health Indicator</b> (not a validated instrument). Full Mode: 4 components &#215; 25 pts each (Savings Rate, Overspend Control, Budget Adherence, Logging Consistency). Lightweight Mode: 4 spending-habit components. Equal weights are a design choice, not statistically derived. We adapted ideas from CBA-MI Observed scale and FinHealth Network&#8217;s FinHealth Score. Validation would require the longitudinal study in Recommendation 7.</p>
-  </div></details>
-  <details class="qa"><summary>What are all 9 recommendations? <span class="tag tag-research">research</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-  <li>Payday-cycle-aware budgeting (15th/30th salary cycle)</li>
-  <li>Backend API proxy and per-user keys (Firebase Cloud Function)</li>
-  <li>Google Play release (after Rec 2 + privacy policy)</li>
-  <li>On-device AI tier (~2.6 GB, Gemma 4 E2B via LiteRT-LM)</li>
-  <li>SQLite encryption (SQLCipher)</li>
-  <li>Household and remittance features (OFW remittance as income category)</li>
-  <li>Longitudinal evaluation (3&#8211;6 months, larger sample)</li>
-  <li>UI/UX refinement (Q6 consistency, Q2/Q4 complexity)</li>
-  <li>Formal parsing evaluation (standardized test receipts)</li>
-  </ol>
-  <p>All 9 from limitations of the current prototype.</p>
-  </div></details>
-  <details class="qa"><summary>How do you handle offline mode? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p><b>Works offline:</b> manual expense logging, view/edit/delete, budgets, wallets, analytics, receipt OCR (ML Kit on-device). <b>Needs internet:</b> AI features, Firebase sync, exchange rates. <b>Graceful degradation:</b> offline banner in AI chat with quick action to open manual Log Expense. Firebase queues changes locally and syncs when online. We say "offline-first" &#8212; never "fully offline."</p>
-  </div></details>
-</details>
-
-<!-- ===== CAT 11.5: NEW TECHNICAL Q&A ===== -->
+<!-- ===== [TECH REF] TECHNICAL DEEP-DIVE QA ===== -->
 <details class="cat" id="cat-newqa">
-  <summary>11.5 &#8212; Technical Deep-Dive: 15 New Q&amp;A</summary>
+  <summary>&#128218; [TECH REF] Technical Deep-Dive Q&amp;A</summary>
 
   <details class="qa"><summary>What is the minimum Android version required? <span class="tag tag-tech">tech</span></summary><div class="a">
   <p><b>Android 8.0 Oreo (API level 26)</b> is the minimum supported version. This covers devices released from 2017 onward and represents over 95% of active Android devices globally. The minimum was set at API 26 to access modern notification channels, WorkManager background processing, and SQLite WAL journal mode. SmartSpend was tested on Android 10 (API 29) through Android 15 (API 35) on physical devices during development. The APK is built with <code>--split-per-abi</code>, so users download only the slice matching their CPU (ARM64, ARM32, or x86_64), keeping the installed footprint smaller.</p>
@@ -1166,187 +1325,9 @@
 
 </details>
 
-  
-<!-- ===== CAT 12: WHAT'S NEW SINCE NOV 16 ===== -->
-<details class="cat" id="cat-whats-new-nov20">
-  <summary>12 &#8212; What&#8217;s New Since Nov 16 (v3.3.2)</summary>
-
-  <details class="qa"><summary>What did you add between November 16 and November 20? <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>5 features across v3.3.0–v3.3.2:</b></p>
-  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-    <li><b>Payday-cycle budget reset</b> (Recommendation 1) &#8212; budgets reset on 15th for bi-monthly salary users across budget screen, FHS score, home alerts, and add-expense bar.</li>
-    <li><b>Quick Stats &#8220;This Month at a Glance&#8221; home card</b> &#8212; total spent, avg/day, top spending category, days logged. Addresses SUS Q2.</li>
-    <li><b>Logging streak badge</b> &#128293; &#8212; consecutive-day logging streak on home screen. Addresses SUS Q8.</li>
-    <li><b>Home screen section headers</b> &#8212; &#8220;YOUR FINANCES&#8221;, &#8220;QUICK ACTIONS&#8221;, &#8220;GOALS &amp; TRACKING&#8221;. Addresses SUS Q6.</li>
-    <li><b>In-app auto-update</b> &#8212; detects new releases from GitHub, downloads APK with progress bar, triggers Android installer. Users tap one button to update without leaving the app.</li>
-  </ol>
-  </div></details>
-
-  <details class="qa"><summary>Why did you implement payday-cycle budgeting specifically? <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p>It was Recommendation 1 from our own manuscript &#8212; the most defensible addition. Filipino employees on the 15th/30th salary cycle had budgets resetting on the 1st of the month, completely misaligned with their actual financial rhythm. The bimonthly income option already existed in the app (profile and setup screens); we completed the implementation by making budgets actually use that pay cycle in <code>budget_period_util.dart</code>, threaded through <code>score_service</code>, <code>budget_screen</code>, <code>home_screen</code>, and <code>add_expense_screen</code>.</p>
-  <p>When a panelist asks &#8220;What did you do between defenses?&#8221; &#8212; this is the answer that shows the team acts on its own research recommendations immediately.</p>
-  </div></details>
-
-  <details class="qa"><summary>How does the payday-cycle reset work technically? <span class="tag tag-ai">AI</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p>A new helper <code>budgetPeriodStart(DateTime now, String incomeFreq)</code> in <code>lib/services/budget_period_util.dart</code> returns <code>DateTime(year, month, 15)</code> for bimonthly users on or after the 15th, otherwise <code>DateTime(year, month, 1)</code>. This is loaded from <code>DBService.getSetting('income_frequency')</code> and threaded through all budget calculation sites:</p>
-  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
-    <li><b>FHS score_service comp3</b> &#8212; budget adherence scoped to the correct pay period</li>
-    <li><b>Budget screen</b> &#8212; shows the period start date so users see their reset date clearly</li>
-    <li><b>Home screen alerts</b> &#8212; &#8220;Safe to Spend&#8221; and budget warning cards respect the payday period</li>
-    <li><b>Add-expense progress bar</b> &#8212; spending shown against the current pay period budget, not the full month</li>
-  </ul>
-  </div></details>
-
-  <details class="qa"><summary>How do these new features address your SUS score gap? <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p>Each v3.3.0 feature targets a specific weak SUS item:</p>
-  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
-    <li><b>Quick Stats &#8212; Q2 (complexity):</b> Users no longer need to navigate to Analytics for a simple spending overview. One-glance card on the home screen reduces perceived complexity.</li>
-    <li><b>Section headers &#8212; Q6 (inconsistency):</b> Clear visual hierarchy removes the &#8220;I don&#8217;t know what this area is for&#8221; confusion that drove Q6 scores low.</li>
-    <li><b>Payday-cycle &#8212; Q4 (need for support):</b> Budgets that actually align with Filipino pay cycles make the app feel intuitive rather than requiring a workaround.</li>
-    <li><b>Streak badge &#8212; Q8 (want to use frequently):</b> Daily feedback loop directly encourages the habitual use that Q1 (intent to use frequently, 4.35/5) already shows users want.</li>
-  </ul>
-  <p>Together these represent a systematic response to the lowest-scoring SUS items identified in Chapter IV.</p>
-  </div></details>
-
-  <details class="qa"><summary>How does the in-app auto-update work? <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>On startup (after a 3-second non-blocking delay), <code>UpdateService.checkForUpdate()</code> calls the GitHub Releases API (<code>api.github.com/repos/Zushikina-kun/smartspend-app/releases/latest</code>) and compares the returned <code>tag_name</code> against <code>kAppVersion</code>. If a newer version exists, the home screen shows a dismissible update banner.</p>
-  <p>When the user taps <b>Update</b>: the app downloads the <code>arm64-v8a</code> APK directly from GitHub into the app cache directory using <code>dio</code> with real-time progress updates. After download completes, Android&#8217;s package installer is triggered &#8212; the user just taps <b>Install</b>. No browser required. If the direct download fails for any reason, the app falls back to opening the GitHub releases page.</p>
-  <p><b>Smart behavior:</b> Results are cached for 24 hours so the API is not called on every launch. The banner can be dismissed for the session. Download can be cancelled mid-way.</p>
-  <div class="tip"><strong>If panel asks: Why does it open the browser instead of showing the installer dialog?</strong><p>&#8220;The download works correctly &#8212; the APK is saved to the app cache with a live progress bar. Due to Android 7+ file URI restrictions, the final install step opens the GitHub releases page as a fallback. On Android 6 and below it would launch the installer directly. For a production release on Google Play, we would use a FileProvider content URI with an ACTION_INSTALL_PACKAGE intent via a MethodChannel &#8212; this is documented as Recommendation 3 in our manuscript.&#8221;</p></div>
-  </div></details>
-
-  <details class="qa"><summary>What would you build next if you had more time? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Top priorities from our Feature Roadmap (43 total features):</b></p>
-  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
-    <li><b>OFW Remittance Tracker</b> &#8212; 10M+ Filipinos abroad with no dedicated remittance tracking tools. Multi-currency (USD/SAR/SGD &#8594; PHP), YTD export for BIR Form 1700.</li>
-    <li><b>Pag-IBIG MP2 Savings Goal Tracker</b> &#8212; Track voluntary contributions with 6&#8211;8% return projection and goal widget.</li>
-    <li><b>Quarterly BIR Tax Reminders</b> &#8212; Automated alerts for Apr 15, Jul 15, Oct 15, and Jan 15 deadlines for freelancers and self-employed.</li>
-    <li><b>Price Hike Detection</b> &#8212; Using DOE weekly fuel prices and PSA CPI data to give users context on price increases in their spending.</li>
-    <li><b>Vehicle Compliance Tracker</b> &#8212; LTO renewal, CTPL insurance, and vehicle registration reminders with multi-year scheduling.</li>
-    <li><b>20 eGov service integrations</b> &#8212; LTO, PSA, NBI, Passport, BIR calendar, and local tax trackers &#8212; all documented in our Feature Roadmap.</li>
-  </ul>
-  </div></details>
-
-  <details class="qa"><summary>If you could redo the research, what would you change? <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>Three things with the highest impact:</b></p>
-  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-    <li><b>Add open-ended SUS follow-up questions.</b> Our study used quantitative instruments only &#8212; we know Q6 and Q2/Q4 scored low, but we cannot say with certainty why. Open-ended items after each SUS rating would identify the specific UI patterns causing inconsistency and complexity perceptions.</li>
-    <li><b>Conduct a longitudinal study.</b> Administer SUS at week 1 and week 4 to separate first-use friction from sustained-use experience. This would also measure whether the app actually changes financial behavior &#8212; Recommendation 7 proposes exactly this.</li>
-    <li><b>Recruit a larger, stratified sample.</b> Our standard deviation of 17.58 indicates very different experiences across users. A sample stratified by digital literacy level would reveal whether complexity concerns come from less tech-savvy users &#8212; informing which features need progressive disclosure vs. simplified defaults.</li>
-  </ol>
-  </div></details>
-
-</details>
-<h2 class="sec">Phrases to avoid / use instead</h2>
-  <div class="scroll"><table>
-    <tr><th>&#10060; Don&#8217;t say</th><th>&#9989; Say instead</th></tr>
-    <tr><td>"I don&#8217;t know"</td><td>"Let me clarify &#8212; what we implemented is..."</td></tr>
-    <tr><td>"It&#8217;s complicated"</td><td>"The way it works is simple &#8212; ..."</td></tr>
-    <tr><td>"We didn&#8217;t have time to..."</td><td>"That&#8217;s on our post-capstone roadmap &#8212; specifically..."</td></tr>
-    <tr><td>"It sometimes doesn&#8217;t work"</td><td>"There&#8217;s an edge case we handle by..."</td></tr>
-    <tr><td>"The AI decides"</td><td>"The AI parses the text and returns a structured action, which the app executes"</td></tr>
-    <tr><td>"It just works"</td><td>Explain HOW it works &#8212; always</td></tr>
-    <tr><td>"We copied from..."</td><td>"We were inspired by [app] but our implementation differs because..."</td></tr>
-    <tr><td>"I&#8217;m not sure but..."</td><td>Say nothing, let a team member answer, then add if you can</td></tr>
-  </table></div>
-
-</section>
-
-
-<!-- Additional Q&A: Gamification, Methodology Deep Dive, Edge Cases -->
-<details class="cat" id="cat-gamification">
-  <summary>12 &#8212; Gamification &amp; Engagement Features</summary>
-  <details class="qa"><summary>What is the Peso mascot and why include it? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>Peso is SmartSpend&#8217;s AI mascot &#8212; a friendly peso coin character who guides users through the app, celebrates financial wins, and nudges gently when something needs attention. <b>12 moods</b>: idle, happy, proud, worried, celebrating, thinking, sleeping, surprised, sad, excited, encouraging, disappointed. Peso appears on <b>45 screens</b>, reacts to actual financial data (proud when FHS is high, worried when budget is tight), speaks in Taglish (warm, non-judgmental), and is tappable anywhere for a bounce + mood reaction.</p>
-  <p><b>Why gamification matters:</b> The literature on behavior change (Fogg Behavior Model) shows that motivation + ability + prompt must converge for a behavior to happen. Peso serves as the prompt mechanism &#8212; daily nudges (no log by 2PM), budget warnings, goal celebrations &#8212; while making the app feel emotionally engaging rather than bureaucratic.</p>
-  </div></details>
-  <details class="qa"><summary>How do the 36 achievement badges work? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>Badges are earned by hitting financial milestones, logging streaks, and interacting with Peso. Categories: (1) <b>Expense logging streaks</b> (3-day, 7-day, 30-day), (2) <b>Budget milestones</b> (first budget set, full month on budget), (3) <b>Savings goals</b> (25%/50%/75%/100% milestones), (4) <b>AI interactions</b> (first AI log, 50 AI messages), (5) <b>Financial health</b> (FHS reaching 60/80/100), (6) <b>Peso interactions</b> (tap streak, long-press reactions). Each badge unlock triggers a Peso bottom sheet animation with a mood-matched celebration message. Badges are stored in the <code>badges</code> SQLite table and synced to Firestore.</p>
-  </div></details>
-  <details class="qa"><summary>What are Daily Quests? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>10 rotating quests that reset daily, designed to build financial habits: (1) Log an expense today, (2) Check your budget status, (3) Ask Peso for financial advice, (4) Review last week&#8217;s spending, (5) Update a savings goal progress, (6) Check your FHS score, (7) Set a bill reminder, (8) Try batch screenshot import, (9) Check your Safe-to-Spend amount, (10) Log a government contribution. Each completed quest earns a small badge progress. The goal is to make finance tracking feel like a daily routine rather than a chore.</p>
-  </div></details>
-  <details class="qa"><summary>How does the Financial Health Certificate work? <span class="tag tag-fhs">FHS</span></summary><div class="a">
-  <p>At the end of each month, users can generate a <b>Financial Health Certificate</b> &#8212; a shareable digital card showing: (1) Final month FHS score with tier label, (2) Top achievement unlocked that month, (3) Best financial stat (e.g., "Saved 23% of income"), (4) Peso mood matching the score, (5) SmartSpend branding with month/year. The certificate is generated as a PNG via Flutter&#8217;s <code>RepaintBoundary</code> and shared via the system share sheet. It&#8217;s a social proof element that encourages users to share progress with friends or family, creating organic word-of-mouth distribution.</p>
-  </div></details>
-</details>
-
-<details class="cat" id="cat-methodology-deep">
-  <summary>13 &#8212; Research Methodology Deep Dive</summary>
-  <details class="qa"><summary>How did you calculate the SUS score? Walk through the formula. <span class="tag tag-sus">SUS</span></summary><div class="a">
-  <p>SUS uses a 10-item questionnaire (Brooke, 1996). Each item is rated 1&#8211;5 (Strongly Disagree to Strongly Agree). Scoring: (1) For <b>odd-numbered items</b> (1,3,5,7,9): <code>response - 1</code>. (2) For <b>even-numbered items</b> (2,4,6,8,10): <code>5 - response</code>. (3) Sum all 10 contributions and multiply by 2.5. Formula: <code>SUS = 2.5 &times; (&Sigma;odd_contributions + &Sigma;even_contributions)</code>. Result range: 0&#8211;100. Our mean across 30 valid respondents: <b>61.83</b>.</p>
-  <p><b>Figure 16</b> in the manuscript shows a sample computation for one illustrative respondent that yielded 75.0 &#8212; this is <em>only the example</em>. The actual study mean is 61.83.</p>
-  </div></details>
-  <details class="qa"><summary>How do you justify 30 respondents statistically? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
-  <p>Three justifications: (1) <b>SUS validation literature</b> &#8212; Tullis &amp; Stetson (2004) found SUS produces reliable results with as few as 12&#8211;14 participants; our 30 is well above this. (2) <b>Capstone scope</b> &#8212; developmental research at this level commonly uses 20&#8211;30 respondents for prototype evaluation. (3) <b>Practical constraint</b> &#8212; recruiting participants who would use the app for 10+ minutes (minimum) and complete a formal survey is resource-intensive for a 1-semester project. We acknowledge this limits generalizability, hence Recommendation 7 (longitudinal study with larger sample).</p>
-  </div></details>
-  <details class="qa"><summary>Why use SUS and not a custom usability questionnaire? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
-  <p>SUS is the industry-standard usability metric: (1) <b>Validated</b> &#8212; 30+ years of research, 5,000+ studies. (2) <b>Standardized</b> &#8212; 10 questions, Likert 1&#8211;5, consistent algorithm. (3) <b>Benchmarked</b> &#8212; Average SUS = 68; &ge;80 = "Good" (Bangor 2009). (4) <b>Quick</b> &#8212; 2&#8211;3 minutes per respondent, minimizes survey fatigue. (5) <b>Panel-recognizable</b> &#8212; Panelists will know and trust SUS. A custom questionnaire would have no normative data for comparison and would require its own validation process.</p>
-  </div></details>
-  <details class="qa"><summary>How did you exclude the 6 invalid SUS respondents? <span class="tag tag-sus">SUS</span> <span class="tag tag-research">research</span></summary><div class="a">
-  <p>Exclusion criteria were defined before data collection: (1) <b>5 excluded for insufficient usage time</b> &#8212; respondents who completed the SUS survey but had not used the app for the required minimum of 10 minutes. Usage time was verified via self-report on the survey form and cross-checked against app session logs where available. (2) <b>1 excluded for straight-line responding</b> &#8212; a respondent who selected the same response (e.g., all 3s) for all 10 SUS items, indicating non-engagement with the instrument. This reduces the valid sample from 36 to 30.</p>
-  </div></details>
-  <details class="qa"><summary>What are the specific SUS item results? <span class="tag tag-sus">SUS</span></summary><div class="a">
-  <p><b>Strongest items (highest scores):</b></p>
-  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
-  <li>Q1 "I think I would like to use this system frequently" &#8212; mean 4.35/5 (intent to use)</li>
-  <li>Q3 "I thought the system was easy to use" &#8212; mean 4.19/5 (confidence)</li>
-  </ul>
-  <p><b>Weakest items (lowest scores, driving the score below benchmark):</b></p>
-  <ul style="margin:6px 0; padding-left:20px; font-size:.9rem;">
-  <li>Q6 "I thought there was too much inconsistency in this system" &#8212; weakness (consistency concerns)</li>
-  <li>Q2 "I found the system unnecessarily complex" &#8212; weakness (complexity)</li>
-  <li>Q4 "I think I would need the support of a technical person to be able to use this system" &#8212; weakness (complexity)</li>
-  </ul>
-  <p>These item-level results directly inform Recommendation 8 (UI/UX refinement targeting consistency and complexity).</p>
-  </div></details>
-  <details class="qa"><summary>How do you ensure research ethics and data privacy? <span class="tag tag-security">security</span> <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>Informed consent:</b> All 30 respondents signed consent forms explaining: (1) Purpose (capstone thesis evaluation), (2) Data collected (usage logs, SUS responses), (3) Anonymization (no names in published results), (4) Right to withdraw anytime, (5) No compensation (voluntary). <b>Data handling:</b> Firestore data encrypted in transit (TLS) and at rest. Only aggregated SUS scores published. Usage logs stripped of PII before analysis. <b>RA 10173 compliance:</b> Privacy policy in-app (Settings &#8594; About &#8594; Privacy Policy), data retention policy.</p>
-  </div></details>
-</details>
-
-<details class="cat" id="cat-edgecases">
-  <summary>14 &#8212; Edge Cases &amp; Tricky Panelist Traps</summary>
-  <details class="qa"><summary>Your Figure 16 shows 75.0. But you said 61.83. Which is correct? <span class="tag tag-sus">SUS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>61.83 is the actual mean</b> across all 30 valid respondents. Figure 16 is a <b>sample computation</b> that shows how the SUS formula works for one illustrative respondent &#8212; that individual scored 75.0, but it is only the example in the manuscript. The mean SUS of 61.83 (SD 17.58) is in Table 8. Never confuse Figure 16&#8217;s example with the study result.</p>
-  </div></details>
-  <details class="qa"><summary>Isn&#8217;t 61.83 a failure? Should we be embarrassed? <span class="tag tag-sus">SUS</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p><b>No &#8212; and here&#8217;s why:</b> (1) This is a <em>prototype</em> &#8212; the purpose of evaluation is to find what needs improvement, not to prove perfection. (2) Users scored high on intent to use (4.35/5) &#8212; they want to use it again. (3) The score is "OK" per Bangor et al. 2009 &#8212; not failing, just below our target. (4) The specific weaknesses (consistency, complexity) are addressable through Recommendation 8. (5) This is an honest finding &#8212; a research contribution is more credible when it acknowledges limitations rather than overstating success. <b>Frame it as: "Our evaluation identified specific areas for improvement &#8212; that is what good developmental research does."</b></p>
-  </div></details>
-  <details class="qa"><summary>Why is the app called "SmartSpend" and not something in Filipino? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>Three reasons: (1) <b>International appeal</b> &#8212; a Filipino-English name is accessible to both local and international users, supporting the goal of a consumer app that could grow beyond the Philippines. (2) <b>App store searchability</b> &#8212; English keywords have higher search volume on Google Play. (3) <b>Brand clarity</b> &#8212; "SmartSpend" immediately communicates the value proposition (smart management of spending) without requiring translation. The app remains Filipino-first in content and UX (Taglish, Filipino item catalog, government contributions) while having an accessible English name.</p>
-  </div></details>
-  <details class="qa"><summary>What if someone says your app was tested before it was finished? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>The SUS evaluation used <b>SmartSpend v3.1.0</b>, which was the complete, production-ready version at the time of evaluation. All 34 AI actions, the Financial Health Score, batch screenshot import, government contributions, and all core features were fully implemented and tested in v3.1.0. Subsequent versions (v3.2.0, v3.2.2, v3.2.5, v3.3.0) added new features (Government Contributions Tracker, OpenRouter, payday-cycle budgeting, Quick Stats) but were released after the evaluation was complete. This is standard practice &#8212; evaluate a stable version, then continue development based on findings.</p>
-  </div></details>
-  <details class="qa"><summary>How did you choose Lorma Colleges as the sampling location? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>Convenience and accessibility sampling, as stated in the Scope and Limitations section of the manuscript. The researchers are enrolled at Lorma Colleges, and the target population (parents aged 35&#8211;55, young professionals aged 21&#8211;35) is accessible in San Fernando City, La Union, where the institution is located. We acknowledge this limits generalizability to other regions. Recommendation 7 (longitudinal evaluation with larger sample from multiple locales) addresses this limitation.</p>
-  </div></details>
-  <details class="qa"><summary>How did the content validator evaluate the survey instrument? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>Avigail Candevario, PFMe, reviewed the needs-assessment questionnaire for three criteria: (1) <b>Relevance</b> &#8212; does each item address the research objectives? (2) <b>Clarity</b> &#8212; are questions unambiguous and understandable to the target demographic? (3) <b>Appropriateness</b> &#8212; are the response options suitable for the type of information being gathered? She was selected via purposive sampling specifically for her expertise in personal finance and financial education. Her validation certificate is in Appendix D. The instrument was finalized after her feedback was incorporated.</p>
-  </div></details>
-  <details class="qa"><summary>What would you change if you had 12 months instead of 1 semester? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>(1) <b>Two-round evaluation</b> &#8212; Evaluate v1, fix weaknesses, evaluate v2. This would likely improve SUS above 68. (2) <b>Larger sample</b> &#8212; 100+ respondents across multiple regions of the Philippines for better generalizability. (3) <b>Longitudinal study</b> &#8212; Measure actual behavior change over 3 months (did users save more? spend less?). (4) <b>Focus groups</b> &#8212; Qualitative insights from the demographic to validate feature prioritization. (5) <b>Server-side backend</b> &#8212; Complete Recommendation 2 before evaluation, eliminating the API key security limitation. These are exactly what Recommendations 7 and 8 propose for future research.</p>
-  </div></details>
-</details>
-
-<details class="cat" id="cat-business">
-  <summary>15 &#8212; Business Case &amp; Competition</summary>
-  <details class="qa"><summary>What is the business case for SmartSpend post-capstone? <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>Market opportunity:</b> 110M+ Filipinos, growing smartphone penetration (73% as of 2025), rising digital payments (GCash: 90M+ users, Maya: 15M+), BSP financial literacy as national agenda. The market is underserved &#8212; existing apps either lack AI (BudgetPH) or lack Filipino context (YNAB, Mint).</p>
-  <p><b>Path to revenue:</b> Freemium model &#8212; free tier (50 AI messages/month) + Premium (&#8369;99/month: unlimited AI + advanced analytics). With 100K active users at 10% conversion = 10K premium users = &#8369;990K/month recurring. B2B: corporate financial wellness programs. Affiliate: digital banks, MP2 investment products.</p>
-  <p><b>Competitive moat:</b> Government contributions tracking (first mover), Taglish AI (cultural moat), 10-provider AI chain (technical moat), Peso mascot (brand moat), 12+ months of user data lock-in.</p>
-  </div></details>
-  <details class="qa"><summary>How does SmartSpend address the BSP financial literacy agenda? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>The 2021 BSP Financial Inclusion Survey found only 2% of Filipino adults correctly answered all 6 basic financial literacy questions. BSP&#8217;s National Strategy for Financial Inclusion (NSFI 2022-2028) targets increased adoption of digital financial services and improved financial behavior. SmartSpend directly supports three NSFI goals: (1) <b>Digital payment adoption</b> &#8212; supports GCash/Maya transaction import. (2) <b>Savings behavior</b> &#8212; FHS Savings Rate component incentivizes saving 20%. (3) <b>Financial awareness</b> &#8212; analytics, 50/30/20 rule, government contributions visibility. Our research contributes to understanding how mobile AI can drive behavior change in this demographic.</p>
-  </div></details>
-  <details class="qa"><summary>What is paluwagan and why include a tracker? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>Paluwagan is a traditional Filipino rotating savings group &#8212; a fixed number of members each contribute a set amount every period (weekly, monthly), and one member receives the full pot per period until everyone has had a turn. It&#8217;s essentially a zero-interest, trust-based lending and savings mechanism widely used in Filipino communities, especially among those without access to formal banking. SmartSpend&#8217;s paluwagan tracker: (1) Tracks contribution schedule (who pays when), (2) Records received payouts vs. outstanding contributions, (3) Calculates net position (how much you&#8217;ve paid vs. received), (4) Sends reminders before contribution due dates. This is culturally specific &#8212; no international app has paluwagan support.</p>
-  </div></details>
-</details>
-
+<!-- ===== [TECH REF] ARCHITECTURE DETAILS ===== -->
 <details class="cat" id="cat-implementation-extra">
-  <summary>16 &#8212; Technical Deep Dive: Architecture &amp; Implementation</summary>
+  <summary>&#127959;&#65039; [TECH REF] Architecture Details</summary>
   <details class="qa"><summary>What is the app&#8217;s SQLite database schema structure? <span class="tag tag-tech">tech</span></summary><div class="a">
   <p><b>26 tables in schema v14:</b></p>
   <p><b>Core financial tables (8):</b> expenses, income, budgets, savings_goals, wallets, debts, bills, categories.</p>
@@ -1380,6 +1361,21 @@
   <p><b>Tier 3 &#8212; On-device AI:</b> NOT implemented. Would require a ~2.6GB model download (Recommendation 4). Would run entirely on-phone via Google&#8217;s LiteRT-LM API, with zero network calls for AI.</p>
   </div></details>
 </details>
+
+<h2 class="sec">Phrases to avoid / use instead</h2>
+  <div class="scroll"><table>
+    <tr><th>&#10060; Don&#8217;t say</th><th>&#9989; Say instead</th></tr>
+    <tr><td>"I don&#8217;t know"</td><td>"Let me clarify &#8212; what we implemented is..."</td></tr>
+    <tr><td>"It&#8217;s complicated"</td><td>"The way it works is simple &#8212; ..."</td></tr>
+    <tr><td>"We didn&#8217;t have time to..."</td><td>"That&#8217;s on our post-capstone roadmap &#8212; specifically..."</td></tr>
+    <tr><td>"It sometimes doesn&#8217;t work"</td><td>"There&#8217;s an edge case we handle by..."</td></tr>
+    <tr><td>"The AI decides"</td><td>"The AI parses the text and returns a structured action, which the app executes"</td></tr>
+    <tr><td>"It just works"</td><td>Explain HOW it works &#8212; always</td></tr>
+    <tr><td>"We copied from..."</td><td>"We were inspired by [app] but our implementation differs because..."</td></tr>
+    <tr><td>"I&#8217;m not sure but..."</td><td>Say nothing, let a team member answer, then add if you can</td></tr>
+  </table></div>
+
+</section>
 <!-- ================================================================ NUMBERS TAB -->
 <section class="panel" id="p-numbers">
 
