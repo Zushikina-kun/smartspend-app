@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.3.0';
-  static const _prefKey = 'whats_new_seen_3_3_0';
+  static const _version = '3.3.2';
+  static const _prefKey = 'whats_new_seen_3_3_2';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,6 +21,11 @@ class WhatsNewScreen extends StatelessWidget {
 
   static const _features = [
     (
+      '🔄',
+      'In-App Auto-Update (v3.3.2)',
+      'SmartSpend now detects new releases automatically. Tap Update to download the APK directly with a progress bar — no browser needed. Android installer opens when done.',
+    ),
+    (
       '📅',
       'Payday-cycle budgeting (v3.3.0)',
       'Budgets now reset on your actual payday cycle. If you receive salary on the 15th and 30th (bi-monthly), your budget period starts on the 15th — not the 1st. Budget screen, FHS score, home alerts, and the add-expense bar all use your real pay cycle.',
@@ -28,12 +33,12 @@ class WhatsNewScreen extends StatelessWidget {
     (
       '📊',
       'Quick Stats — This Month at a Glance (v3.3.0)',
-      'A new home screen card shows your monthly snapshot instantly: total spent, average per day, top spending category, and days logged this month. No need to navigate to Analytics for a quick check.',
+      'A new home screen card shows your monthly snapshot instantly: total spent, average per day, top spending category, and days logged this month.',
     ),
     (
       '🔥',
       'Logging streak badge (v3.3.0)',
-      'Log expenses every day and build a streak! The home screen now shows your consecutive daily logging streak. Keep it going to build the habit.',
+      'Log expenses every day and build a streak! The home screen now shows your consecutive daily logging streak.',
     ),
     (
       '🏷️',
@@ -44,11 +49,6 @@ class WhatsNewScreen extends StatelessWidget {
       '🌐',
       'OpenRouter AI Gateway (v3.2.5)',
       'SmartSpend now uses openrouter/free — auto-routes to the best available free AI model (Nemotron 550B, Gemma 4, etc.) with a 10-provider fallback chain for 24/7 reliability.',
-    ),
-    (
-      '🏛️',
-      'Government Contributions Tracker (v3.2.0)',
-      'Track SSS, PhilHealth, and Pag-IBIG year-to-date contributions. First Filipino finance app to treat mandatory government contributions as a first-class expense category.',
     ),
   ];
 
@@ -193,4 +193,3 @@ class WhatsNewScreen extends StatelessWidget {
     );
   }
 }
-
