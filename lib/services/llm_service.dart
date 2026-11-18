@@ -864,6 +864,8 @@ Give 3-4 specific financial tips. Include savings suggestions.""";
     buffer.writeln('- Match Row 1 date to first DEBIT or CREDIT amount');
     buffer.writeln('- Rows with DEBIT amounts = expenses to import');
     buffer.writeln('- Rows with CREDIT amounts = income, skip');
+    // NOTE: These amounts below are illustrative examples from a demo account
+    // to help the AI understand the classification pattern. They are NOT user data.
     buffer.writeln('- GLoan Repayment (734.99) = debt payment, SKIP');
     buffer.writeln('- Buy Load (101.00) = Bills');
     buffer.writeln('- Payment to Shopee (69.00) = Shopping');
