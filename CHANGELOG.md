@@ -2,6 +2,67 @@
 
 All notable changes to SmartSpend are documented here.
 
+## [3.3.3] - 2026-11-18
+
+### Fixed (Final Defense Audit)
+- Reviewer HTML `<title>` tag updated from v3.3.0 to v3.3.3
+- Reviewer Version Discrepancy section: 4× v3.3.1 → v3.3.3
+- Reviewer auto-update Q&A: added panel tip for browser fallback on Android 7+
+- README note updated from v3.3.1 → v3.3.3
+- README Research section: "November 16" → "November 20"
+- index.html Research Complete banner: "November 16" → "November 20"
+- Duplicate `_spentInPeriod` assignment in `home_screen.dart` removed
+- WhatsNew screen `_version` and `_prefKey` updated to 3.3.3
+
+### Added
+- CHANGELOG entries for v3.3.1 and v3.3.2 (were missing)
+
+### Technical
+- Version: 3.3.2+119 → 3.3.3+120
+
+---
+
+## [3.3.2] - 2026-11-17
+
+### Added
+- **In-app auto-update checker** — detects new GitHub releases automatically on startup (3-sec non-blocking delay)
+- **Auto-download APK with progress bar** — downloads arm64-v8a APK directly to app cache using `dio` with real-time progress
+- **Android package installer trigger** — launches installer after download; falls back to GitHub releases page on Android 7+ (file URI restriction)
+- **Settings → Check for Updates tile** — shows current version + update status; force re-check button clears 24-hr cache
+- **About screen version badge** — "✓ Up to date" or "🆕 Update available" next to version number
+- **New permission:** `REQUEST_INSTALL_PACKAGES` in AndroidManifest
+- **FileProvider** configured for APK sharing (`file_provider_paths.xml`)
+
+### Fixed
+- `WhatsNew` screen `_version` and `_prefKey` updated to 3.3.2
+- Duplicate `_spentInPeriod` assignment in home screen removed (code smell)
+- GCash example amounts in `llm_service.dart` clarified as illustrative, not user data
+
+### Technical
+- New: `lib/services/update_service.dart` (UpdateService, UpdateInfo, DownloadProgress)
+- New: `android/app/src/main/res/xml/file_provider_paths.xml`
+- Added: `dio: ^5.4.0` to pubspec.yaml
+- Version: 3.3.1+118 → 3.3.2+119
+
+---
+
+## [3.3.1] - 2026-11-17
+
+### Added
+- **Quick Stats and streak badge moved to top of home screen** — now immediately visible after balance card without scrolling
+- **Reviewer: Research Relevance block** — "Why Our Research Matters" highlighted panel with 7 reasons to pass
+- **Reviewer: Version Discrepancy block** — 6 Q&A covering every version mismatch question (manuscript vs app)
+- **Reviewer: global search bar** permanently visible above all tabs, searches all 4 tabs simultaneously
+
+### Changed
+- kAppVersion → 3.3.1
+- Defense date updated to November 20 throughout reviewer
+
+### Technical
+- Version: 3.3.0+117 → 3.3.1+118
+
+---
+
 ## [3.3.0] - 2026-11-17
 
 ### Added

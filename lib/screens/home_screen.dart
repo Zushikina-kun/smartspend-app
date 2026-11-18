@@ -2608,7 +2608,6 @@ class _DashboardState extends State<Dashboard> {
       _spendingLimit = spendingLimit;
       _spendingLimitPeriod = spendingLimitPeriod;
       _spentInPeriod = spentInPeriod;
-      _spentInPeriod = spentInPeriod;
       _allLimits = allLimits;
       _allSpent = allSpent;
       // Section visibility

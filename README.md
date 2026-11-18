@@ -6,7 +6,7 @@ Version 3.3.2 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 [![Download](https://img.shields.io/badge/Download-v3.3.2-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
-> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The actual app has been significantly updated since. Download the latest APK (v3.3.1) for the full experience.
+> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The actual app has been significantly updated since. Download the latest APK (v3.3.2) for the full experience.
 
 ---
 
@@ -159,7 +159,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 SmartSpend is a capstone research project at Lorma Colleges (AY 2026-2027, 1st Semester). 
 
-**Final Defense:** November 16, 2026 at 3:00 PM 🎯 Ready
+**Final Defense:** November 20, 2026 at 3:00 PM 🎯 Ready
 
 **Research Evaluation Results (v3.1.0):**
 - **System Usability Scale (SUS):** 61.83/100 (SD 17.58), Grade D, "OK" acceptability
@@ -253,7 +253,7 @@ git tag v3.0.X && git push origin v3.0.X
 ## 🎓 Defense Materials (November 2026)
 
 ### Final Thesis Defense
-**Date**: November 16, 2026 at 3:00 PM  
+**Date**: November 20, 2026 at 3:00 PM  
 **Status**: 🎯 **READY** - All materials prepared and verified
 
 All defense materials are located in: **`docs/handsoff/FOR_CYRILLE/`**
@@ -274,5 +274,6 @@ All defense materials are located in: **`docs/handsoff/FOR_CYRILLE/`**
 See: `docs/handsoff/FOR_CYRILLE/MASTER_CHANGELOG.md` for complete change history
 
 ---
+
 
 

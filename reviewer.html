@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SmartSpend &#8212; Defense Reviewer v3.3.0</title>
+<title>SmartSpend &#8212; Defense Reviewer v3.3.2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -673,7 +673,7 @@
 
   <div style="background:var(--warn-soft);border-left:3px solid var(--warn);border-radius:4px;padding:12px 14px;">
     <div style="font-weight:700;font-size:.84rem;color:var(--warn);margin-bottom:5px;">💡 The Golden Rule for Version Questions</div>
-    <p style="font-size:.88rem;color:var(--ink);margin:0;">Always distinguish between <b>the research version (v3.1.0)</b> and <b>the current version (v3.3.1)</b>. The manuscript documents the research. The app demonstrates continuous improvement. Both are valid and both are correct — they just describe different moments in the same project timeline. Never apologize for the app being more advanced than the manuscript.</p>
+    <p style="font-size:.88rem;color:var(--ink);margin:0;">Always distinguish between <b>the research version (v3.1.0)</b> and <b>the current version (v3.3.2)</b>. The manuscript documents the research. The app demonstrates continuous improvement. Both are valid and both are correct — they just describe different moments in the same project timeline. Never apologize for the app being more advanced than the manuscript.</p>
   </div>
 </div>
 
@@ -1210,8 +1210,9 @@
 
   <details class="qa"><summary>How does the in-app auto-update work? <span class="tag tag-tech">tech</span></summary><div class="a">
   <p>On startup (after a 3-second non-blocking delay), <code>UpdateService.checkForUpdate()</code> calls the GitHub Releases API (<code>api.github.com/repos/Zushikina-kun/smartspend-app/releases/latest</code>) and compares the returned <code>tag_name</code> against <code>kAppVersion</code>. If a newer version exists, the home screen shows a dismissible update banner.</p>
-  <p>When the user taps <b>Update</b>: the app downloads the <code>arm64-v8a</code> APK directly from GitHub into the app cache directory using <code>dio</code> with real-time progress updates. After download completes, Android's package installer is triggered &#8212; the user just taps <b>Install</b>. No browser required. If the direct download fails for any reason, the app falls back to opening the GitHub releases page.</p>
+  <p>When the user taps <b>Update</b>: the app downloads the <code>arm64-v8a</code> APK directly from GitHub into the app cache directory using <code>dio</code> with real-time progress updates. After download completes, Android&#8217;s package installer is triggered &#8212; the user just taps <b>Install</b>. No browser required. If the direct download fails for any reason, the app falls back to opening the GitHub releases page.</p>
   <p><b>Smart behavior:</b> Results are cached for 24 hours so the API is not called on every launch. The banner can be dismissed for the session. Download can be cancelled mid-way.</p>
+  <div class="tip"><strong>If panel asks: Why does it open the browser instead of showing the installer dialog?</strong><p>&#8220;The download works correctly &#8212; the APK is saved to the app cache with a live progress bar. Due to Android 7+ file URI restrictions, the final install step opens the GitHub releases page as a fallback. On Android 6 and below it would launch the installer directly. For a production release on Google Play, we would use a FileProvider content URI with an ACTION_INSTALL_PACKAGE intent via a MethodChannel &#8212; this is documented as Recommendation 3 in our manuscript.&#8221;</p></div>
   </div></details>
 
   <details class="qa"><summary>What would you build next if you had more time? <span class="tag tag-ai">AI</span></summary><div class="a">
@@ -2658,6 +2659,7 @@ document.addEventListener("keydown", function(e) {
 
 </body>
 </html>
+
 
 
 
