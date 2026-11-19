@@ -280,7 +280,7 @@
     </div>
     <!-- ALWAYS-VISIBLE GLOBAL SEARCH BAR -->
     <div class="global-search-bar">
-      <input type="text" id="global-search-input" placeholder="🔍 Search all tabs… (or press / )" oninput="(function(v){console.log('INLINE search:',v);var p=document.getElementById('gsearch-results-panel');if(p){p.innerHTML='<div style=\"padding:10px\">Search: '+v+'</div>';p.className+=' open';}else{console.error('No panel found');}})(this.value)" autocomplete="off" spellcheck="false">
+      <input type="text" id="global-search-input" placeholder="🔍 Search all tabs… (or press / )" autocomplete="off" spellcheck="false">
       <span id="global-search-count"></span>
       <button class="gsb-clear" onclick="clearGlobalSearch()" title="Clear search">✕</button>
     </div>
@@ -2927,6 +2927,22 @@ document.addEventListener("keydown", function(e) {
 
   window.runGlobalSearch = doGlobalSearch;
 
+  // Wire input immediately (don't wait for DOMContentLoaded)
+  (function wireSearch(){
+    var inp = document.getElementById('global-search-input');
+    if (!inp) {
+      // DOM not ready yet, try again in 50ms
+      setTimeout(wireSearch, 50);
+      return;
+    }
+    console.log('[SEARCH] Input element found, wiring events');
+    inp.addEventListener('input', function(e){ 
+      console.log('[SEARCH] Input event fired, value:', e.target.value);
+      doGlobalSearch(e.target.value); 
+    });
+    inp.addEventListener('keyup', function(e){ doGlobalSearch(e.target.value); });
+  })();
+
   window.jumpToResult = function(tabId, panelId, snippet, term) {
     switchToTab(tabId);
     document.getElementById('gsearch-results-panel').className =
@@ -2973,21 +2989,27 @@ document.addEventListener("keydown", function(e) {
     }
   });
 
-  // Also wire the input directly in case oninput isn't firing
-  document.addEventListener('DOMContentLoaded', function(){
-    var inp = document.getElementById('global-search-input');
-    if (inp) {
-      inp.addEventListener('input', function(){ doGlobalSearch(this.value); });
-      inp.addEventListener('keyup', function(){ doGlobalSearch(this.value); });
+  // Wire keyboard shortcuts and outside-click
+  document.addEventListener('keydown', function(e){
+    if ((e.key==='/' && document.activeElement.tagName!=='INPUT') ||
+        (e.key==='k' && (e.ctrlKey||e.metaKey))) {
+      e.preventDefault();
+      var inp = document.getElementById('global-search-input');
+      if (inp) { inp.focus(); inp.select(); }
     }
-    // Close on outside click
-    document.addEventListener('click', function(e){
-      var panel = document.getElementById('gsearch-results-panel');
-      var bar = document.querySelector('.global-search-bar');
-      if (panel && bar && !bar.contains(e.target) && !panel.contains(e.target)){
-        panel.className = panel.className.replace(' open','');
-      }
-    });
+    if (e.key==='Escape') {
+      window.clearGlobalSearch();
+      var inp = document.getElementById('global-search-input');
+      if (inp) inp.blur();
+    }
+  });
+
+  document.addEventListener('click', function(e){
+    var panel = document.getElementById('gsearch-results-panel');
+    var bar = document.querySelector('.global-search-bar');
+    if (panel && bar && !bar.contains(e.target) && !panel.contains(e.target)){
+      panel.className = panel.className.replace(' open','');
+    }
   });
 
 })();
