@@ -2855,9 +2855,13 @@ document.addEventListener("keydown", function(e) {
 
   // ── GLOBAL SEARCH — works on ALL hidden tabs using textContent ──────────
   function doGlobalSearch(val) {
+    console.log('[SEARCH] doGlobalSearch called with:', val);
     var panel = document.getElementById('gsearch-results-panel');
     var count = document.getElementById('global-search-count');
-    if (!panel || !count) return;
+    if (!panel || !count) {
+      console.error('[SEARCH] Missing panel or count element');
+      return;
+    }
 
     // Position below sticky header
     var header = document.querySelector('header.top');
@@ -2905,9 +2909,10 @@ document.addEventListener("keydown", function(e) {
 
     count.textContent = results.length ? results.length+' result'+(results.length===1?'':'s') : 'No results';
 
-    if (!results.length) {
+    if (results.length === 0) {
       panel.innerHTML = '<div class="gsr-empty">No results for &ldquo;'+val.replace(/</g,'&lt;')+'&rdquo;</div>';
     } else {
+      console.log('[SEARCH] Found', results.length, 'results');
       panel.innerHTML = results.slice(0,40).map(function(r){
         var safe = r.snippet.replace(/</g,'&lt;').replace(/>/g,'&gt;');
         var hl = safe.replace(new RegExp('('+escapeRe(r.term)+')','gi'),'<mark class="hl">$1</mark>');
