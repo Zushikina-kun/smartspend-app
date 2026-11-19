@@ -37,11 +37,7 @@ class LLMService {
             },
           },
           body: jsonEncode({
-            // OpenRouter: send 'models' array for automatic internal fallback
-            if (AppConfig.activeModelId == 'openrouter')
-              "models": AppConfig.openRouterModels
-            else
-              "model": _groqModel,
+            "model": _groqModel,
             "messages": [
               {"role": "system", "content": systemPrompt},
               {"role": "user", "content": userPrompt},

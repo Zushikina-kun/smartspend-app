@@ -1272,8 +1272,8 @@ PH BNPL/Loan Services (2026):
     // 429 (rate limit) gets model fallback instead of backoff.
     // 401/403/400 are fatal — never retry.
     http.Response response;
-    final maxRetries = 3;
-    final baseDelayMs = 1500; // 1.5 seconds
+    final maxRetries = 2; // Reduced from 3 — fail fast, fallback faster
+    final baseDelayMs = 800; // Reduced from 1500ms
     int attempt = 0;
     while (true) {
       try {
@@ -1293,20 +1293,14 @@ PH BNPL/Loan Services (2026):
                 },
               },
               body: jsonEncode({
-                // OpenRouter: send 'models' array for automatic internal fallback
-                // across 5 free models (Nemotron 550B → Lightning → Super VL →
-                // Gemma 4 31B → Gemma 4 26B). If all fail, our app-level
-                // autoFallback() switches to Gemini/Groq/Cerebras chain.
-                if (AppConfig.activeModelId == 'openrouter')
-                  "models": AppConfig.openRouterModels
-                else
-                  "model": AppConfig.groqModel,
+                "model": AppConfig.groqModel,
                 "messages": messages,
                 "temperature": 0.3,
                 "max_tokens": _estimateMaxTokens(message),
               }),
             )
-            .timeout(const Duration(seconds: 35));
+            .timeout(
+                const Duration(seconds: 15)); // Fast fail → quicker fallback
       } on Exception {
         // Timeout or network error — retryable
         if (attempt < maxRetries - 1) {

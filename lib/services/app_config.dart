@@ -264,26 +264,21 @@ class AppConfig {
   }
 
   /// Internal: resolve which concrete model Auto mode routes to for a given task.
+  /// Auto mode priority (Nov 2026): Gemini first (most reliable), then Groq.
+  /// OpenRouter is disabled from Auto mode — it has consistent 400 errors with
+  /// the models array and unreliable routing. Use it manually via Settings → AI.
   static String _autoActualModel(String taskType) {
     final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
-    final hasOpenRouter =
-        (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
-    // Prioritize OpenRouter when available — $100 credit, unified gateway
+    // OpenRouter intentionally excluded from Auto mode until stable.
+    // Priority: Gemini (best quality) → Groq (always works, hardcoded key)
     switch (taskType) {
       case 'fast':
-        // Expense logging — Flash-Lite is fast + low cost
-        if (hasOpenRouter)
-          return 'openrouter'; // Gemini Flash 1.5 via OpenRouter
         return hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
       case 'financial_advice':
-        // Complex reasoning — use best available
-        if (hasOpenRouter) return 'openrouter'; // Best quality via OpenRouter
         return hasGemini ? 'gemini_flash' : 'groq_llama4_scout';
       case 'smart':
       default:
-        // General chat — Flash-Lite is good default, falls back to Groq
-        if (hasOpenRouter) return 'openrouter'; // Balanced via OpenRouter
         return hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
     }
   }
@@ -458,24 +453,20 @@ class AppConfig {
       return true;
     }
 
-    // 10-provider chain: Custom Local → OpenRouter → Gemini Flash → Flash-Lite →
-    //                    GPT-OSS 120B (Groq) → Qwen3.6 27B → Qwen3.8 27B →
-    //                    Compound → Compound Mini → Cerebras GPT-OSS 120B
+    // NEW PRIORITY ORDER (Nov 2026):
+    // Custom Local → Gemini Flash → Flash-Lite → Groq chain → Cerebras → OpenRouter (last)
+    // OpenRouter moved to LAST because it has consistent 400 errors currently.
+    // Once OpenRouter is stable, move it back up between Local and Gemini.
     switch (_activeModelId) {
       case 'custom_local':
-        // Local LLM failed/unreachable.
-        // If local-only mode is on, do NOT fall back to cloud — fail hard.
-        // This preserves the "data never leaves your network" guarantee.
         if (_localOnlyMode) {
-          return false; // signal: all providers exhausted, show error
+          return false;
         }
-        // Default: fall back to cloud (convenient but data leaves device)
-        _activeModelId = hasOpenRouter
-            ? 'openrouter'
-            : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
+        _activeModelId = hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
         _saveActiveModel();
         return true;
       case 'openrouter':
+        // OpenRouter failed — go to Gemini as next best
         _activeModelId = hasGemini ? 'gemini_flash' : 'groq_llama4_scout';
         _saveActiveModel();
         return true;
@@ -510,17 +501,12 @@ class AppConfig {
           _saveActiveModel();
           return true;
         }
-        if (hasGemini) {
-          _activeModelId = 'gemini_flash_lite';
-          _saveActiveModel();
-          return true;
-        }
+        // Try OpenRouter as last resort before giving up
         if (hasOpenRouter) {
           _activeModelId = 'openrouter';
           _saveActiveModel();
           return true;
         }
-        // All providers exhausted — reset to auto so next attempt tries fresh
         _activeModelId = 'auto';
         _saveActiveModel();
         return false;
