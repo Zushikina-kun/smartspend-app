@@ -37,7 +37,11 @@ class LLMService {
             },
           },
           body: jsonEncode({
-            "model": _groqModel,
+            // OpenRouter: send 'models' array for automatic internal fallback
+            if (AppConfig.activeModelId == 'openrouter')
+              "models": AppConfig.openRouterModels
+            else
+              "model": _groqModel,
             "messages": [
               {"role": "system", "content": systemPrompt},
               {"role": "user", "content": userPrompt},
@@ -69,7 +73,9 @@ class LLMService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return (data['choices']?[0]?['message']?['content'] ?? data['choices']?[0]?['message']?['reasoning_content'] ?? '') as String;
+        return (data['choices']?[0]?['message']?['content'] ??
+            data['choices']?[0]?['message']?['reasoning_content'] ??
+            '') as String;
       }
 
       throw Exception("AI failed (${response.statusCode}): ${response.body}");
@@ -81,7 +87,9 @@ class LLMService {
           final response = await _doRequest();
           if (response.statusCode == 200) {
             final data = jsonDecode(response.body);
-            return (data['choices']?[0]?['message']?['content'] ?? data['choices']?[0]?['message']?['reasoning_content'] ?? '') as String;
+            return (data['choices']?[0]?['message']?['content'] ??
+                data['choices']?[0]?['message']?['reasoning_content'] ??
+                '') as String;
           }
         }
       }
@@ -113,7 +121,9 @@ class LLMService {
       throw Exception("Fallback AI failed (${response.statusCode})");
     }
     final data = jsonDecode(response.body);
-    return (data['choices']?[0]?['message']?['content'] ?? data['choices']?[0]?['message']?['reasoning_content'] ?? '') as String;
+    return (data['choices']?[0]?['message']?['content'] ??
+        data['choices']?[0]?['message']?['reasoning_content'] ??
+        '') as String;
   }
 
   /// Redact Philippine PII from text before sending to cloud LLM (RA 10173).
@@ -1575,4 +1585,3 @@ Return ONLY this JSON array:
     return results;
   }
 }
-

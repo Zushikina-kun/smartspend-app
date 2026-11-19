@@ -1293,7 +1293,14 @@ PH BNPL/Loan Services (2026):
                 },
               },
               body: jsonEncode({
-                "model": AppConfig.groqModel,
+                // OpenRouter: send 'models' array for automatic internal fallback
+                // across 5 free models (Nemotron 550B → Lightning → Super VL →
+                // Gemma 4 31B → Gemma 4 26B). If all fail, our app-level
+                // autoFallback() switches to Gemini/Groq/Cerebras chain.
+                if (AppConfig.activeModelId == 'openrouter')
+                  "models": AppConfig.openRouterModels
+                else
+                  "model": AppConfig.groqModel,
                 "messages": messages,
                 "temperature": 0.3,
                 "max_tokens": _estimateMaxTokens(message),

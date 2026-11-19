@@ -79,10 +79,28 @@ class AppConfig {
   // 1M tokens/day free, 5 RPM free tier, ~3,000 t/s
 
   // OpenRouter (unified API gateway to 100+ models)
-  // google/gemma-4-31b-it:free — Google Gemma 4 31B, 262K context, completely FREE
-  // Verified available on OpenRouter as of Nov 2026. Reliable — no null content issues.
-  static const _openRouterModel = "google/gemma-4-31b-it:free";
-  // Backup: "google/gemma-4-26b-a4b-it:free" — MoE variant, also free, 262K context
+  // Multi-model fallback chain — OpenRouter tries these in order automatically.
+  // If model 1 fails/rate-limits/returns null, OpenRouter moves to model 2, etc.
+  // This is done by sending the 'models' array in the request body instead of 'model'.
+  // Source: https://openrouter.ai/collections/free-models (top used, Nov 2026)
+  //
+  // Tier 1 — Best quality, largest context (1M tokens):
+  //   nvidia/nemotron-3-ultra-550b-a55b:free — 550B frontier, top ranked, 1M ctx
+  //   nvidia/nemotron-3.5-lightning:free     — fast MoE, 1M ctx
+  //   nvidia/nemotron-3.5-super-vl:free      — multimodal, 1M ctx
+  // Tier 2 — Google Gemma 4 (reliable, 262K ctx):
+  //   google/gemma-4-31b-it:free             — 31B dense, well-tested
+  //   google/gemma-4-26b-a4b-it:free         — 26B MoE variant
+  // If ALL of these fail → app falls back to Gemini/Groq/Cerebras chain
+  static const _openRouterModels = [
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "nvidia/nemotron-3.5-lightning:free",
+    "nvidia/nemotron-3.5-super-vl:free",
+    "google/gemma-4-31b-it:free",
+    "google/gemma-4-26b-a4b-it:free",
+  ];
+  // Primary model for single-model fallback display (first in chain)
+  static const _openRouterModel = "nvidia/nemotron-3-ultra-550b-a55b:free";
 
   // ── REMOTE KEYS (from Firebase Remote Config) ─────────────────────────────
   static String? _remoteGroqKey;
@@ -299,6 +317,10 @@ class AppConfig {
         return _remoteGroqKey ?? _fallbackGroqKey;
     }
   }
+
+  /// The OpenRouter multi-model fallback list (sent as 'models' array in request)
+  static List<String> get openRouterModels =>
+      List.unmodifiable(_openRouterModels);
 
   /// The API base URL for the active model
   static String get groqBaseUrl {
