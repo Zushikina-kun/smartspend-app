@@ -1393,7 +1393,23 @@ PH BNPL/Loan Services (2026):
     }
 
     final data = jsonDecode(response.body);
-    String fullReply = data['choices'][0]['message']['content'] as String;
+    // Guard against null content — some OpenRouter models (especially free-tier
+    // experimental ones) return content: null with reasoning in a separate field.
+    // Fall back to reasoning_content, then trigger autoFallback if both are null.
+    final rawContent = data['choices']?[0]?['message']?['content'] ??
+        data['choices']?[0]?['message']?['reasoning_content'] ??
+        data['choices']?[0]?['message']?['reasoning'];
+    if (rawContent == null) {
+      // Model returned a null content — treat as a provider failure and fallback
+      if (needsSwitch) AppConfig.setModel(originalModelId);
+      final switched = AppConfig.autoFallback();
+      if (switched && !isFallbackRetry) {
+        return sendMessage(message, isFallbackRetry: true);
+      }
+      throw Exception(
+          'AI returned an empty response. Try again or switch models.');
+    }
+    String fullReply = rawContent as String;
 
     // ── §25 OBSERVABILITY — extract token usage ───────────────────────────────
     final usage = data['usage'] as Map<String, dynamic>?;
@@ -1859,7 +1875,9 @@ PH BNPL/Loan Services (2026):
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final summary = data['choices'][0]['message']['content'] as String;
+        final summary = (data['choices']?[0]?['message']?['content'] ??
+            data['choices']?[0]?['message']?['reasoning_content'] ??
+            '') as String;
         await DBService.saveConversationSummary(summary, _history.length);
         // Trim history to last 4 messages now that older ones are summarized
         if (_history.length > 4) {

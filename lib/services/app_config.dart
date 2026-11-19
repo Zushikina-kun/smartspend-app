@@ -79,13 +79,13 @@ class AppConfig {
   // 1M tokens/day free, 5 RPM free tier, ~3,000 t/s
 
   // OpenRouter (unified API gateway to 100+ models)
-  // openrouter/free = auto-routes to best available free model at request time
-  // Fallback chain: nemotron-3-ultra (550B frontier) → gemma-4-31b → nemotron-3.5-lightning
-  static const _openRouterModel = "openrouter/free";
-  // Best explicit model if free routing is unavailable:
-  // "nvidia/nemotron-3-ultra-550b-a55b:free" — 550B frontier, 1M context, FREE
-  // "google/gemma-4-31b-it:free" — Google latest dense, 262K context, FREE
-  // "nvidia/nemotron-3.5-lightning:free" — fast MoE, 1M context, FREE
+  // Using google/gemma-3-27b-it:free — reliable, fast, good for finance tasks
+  // Avoid openrouter/free: routes to experimental models that may return null content
+  static const _openRouterModel = "google/gemma-3-27b-it:free";
+  // Other reliable free alternatives:
+  // "meta-llama/llama-3.3-70b-instruct:free" — strong reasoning
+  // "google/gemma-3-12b-it:free" — faster, lighter
+  // "mistralai/mistral-7b-instruct:free" — consistent, well-tested
 
   // ── REMOTE KEYS (from Firebase Remote Config) ─────────────────────────────
   static String? _remoteGroqKey;

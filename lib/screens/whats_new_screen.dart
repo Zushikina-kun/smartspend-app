@@ -6,8 +6,8 @@ import '../widgets/peso_mascot.dart';
 class WhatsNewScreen extends StatelessWidget {
   const WhatsNewScreen({super.key});
 
-  static const _version = '3.3.4';
-  static const _prefKey = 'whats_new_seen_3_3_4';
+  static const _version = '3.3.5';
+  static const _prefKey = 'whats_new_seen_3_3_5';
 
   static Future<bool> shouldShow() async {
     final prefs = await SharedPreferences.getInstance();
@@ -193,5 +193,6 @@ class WhatsNewScreen extends StatelessWidget {
     );
   }
 }
+
 
 
