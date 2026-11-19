@@ -1362,9 +1362,6 @@
   <li>Line ~59: <code>_openRouterModel</code> default (<code>openrouter/free</code>)</li>
   <li>Line ~129: Added to <code>availableModels</code> list (3rd position)</li>
   <li>Line ~284: Integrated into <code>autoFallback()</code> chain (2nd position)</li>
-  <li>Line ~431: Added to Firebase Remote Config defaults</li>
-  <li>Line ~456: Added OpenRouter key loading from Remote Config</li>
-  </ul>
   <p><b>API format:</b> OpenRouter uses OpenAI-compatible format. Authorization: <code>Bearer sk-or-v1-...</code>. No code restructuring needed &#8212; dropped in alongside existing Groq/Cerebras integration.</p>
   </div></details>
 </details>
@@ -1510,8 +1507,6 @@
   <p><b>Gamification (3):</b> achievements, badges, peso_mood_history.</p>
   <p><b>Config &amp; sync (5):</b> user_settings, firebase_sync_queue, remote_config_cache, notification_queue, startup_alerts.</p>
   <p><b>Specialized (6):</b> government_contributions (view/query layer), paluwagan, installment_plans, recurring_transactions, financial_calendar, evidence_category_map.</p>
-  <p>Schema uses foreign keys for referential integrity (wallet_id &#8594; wallets.id). Migrations via <code>onUpgrade</code> callback in DBService. Full schema in <code>docs/database_schema.md</code>.</p>
-  </div></details>
   <details class="qa"><summary>How does the evidence-based categorization system prevent AI mistakes? <span class="tag tag-tech">tech</span> <span class="tag tag-ai">AI</span></summary><div class="a">
   <p>Three layers: (1) <b>Evidence threshold</b> &#8212; if "Sting" has been logged as Food 10 times, one uncertain AI response cannot reclassify it as Others. Requires &#8805;3 prior entries and &#8805;60% category agreement. Stored in <code>evidence_log</code> table and <code>evidence_category_map</code>. (2) <b>Action allowlist</b> &#8212; OCR/import flows can only trigger expense-logging actions, not delete records or modify account settings. The AI action parser validates action type against an allowlist before execution. (3) <b>Confidence score</b> &#8212; every AI-logged expense gets a confidence score 0&#8211;1; below 70% shows a "Review" badge so users know to double-check. This three-layer system gives users trust in AI-categorized expenses while catching edge cases.</p>
   </div></details>
