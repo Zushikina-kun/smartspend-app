@@ -2853,11 +2853,137 @@ document.addEventListener("keydown", function(e) {
     if (radio) radio.checked = true;
   }
 
-  window.runGlobalSearch = function(val) {
+  // ── GLOBAL SEARCH — works on ALL hidden tabs using textContent ──────────
+  function doGlobalSearch(val) {
     var panel = document.getElementById('gsearch-results-panel');
-    // Position panel below the sticky header dynamically
+    var count = document.getElementById('global-search-count');
+    if (!panel || !count) return;
+
+    // Position below sticky header
     var header = document.querySelector('header.top');
     if (header) panel.style.top = header.offsetHeight + 'px';
+
+    val = (val || '').trim().toLowerCase();
+    if (val.length < 2) {
+      panel.className = panel.className.replace(' open','');
+      panel.innerHTML = '';
+      count.textContent = '';
+      return;
+    }
+
+    var results = [];
+    var tabMap = {
+      'p-essentials': {label:'🧠 Essentials', tabId:'t-essentials'},
+      'p-demo':       {label:'📋 Demo',       tabId:'t-demo'},
+      'p-qa':         {label:'🎤 Q&A',        tabId:'t-qa'},
+      'p-numbers':    {label:'🔢 Facts',      tabId:'t-numbers'},
+      'p-script':     {label:'📝 Script',     tabId:'t-script'}
+    };
+
+    Object.keys(tabMap).forEach(function(pid) {
+      var el = document.getElementById(pid);
+      if (!el) return;
+      // querySelectorAll works on hidden elements; textContent works too
+      var nodes = el.querySelectorAll('details.qa > summary, .a p, .a li, .say, p, li, h2, h3, blockquote p, .fact .k, .fact .v');
+      nodes.forEach(function(node) {
+        var txt = (node.textContent || '').replace(/\s+/g,' ').trim();
+        if (txt.length < 4) return;
+        if (txt.toLowerCase().indexOf(val) !== -1) {
+          var snippet = txt.length > 120 ? txt.slice(0,120)+'…' : txt;
+          results.push({pid:pid, snippet:snippet, term:val, tabId:tabMap[pid].tabId, label:tabMap[pid].label});
+        }
+      });
+    });
+
+    // Deduplicate
+    var seen = {};
+    results = results.filter(function(r){
+      var k = r.pid+'|'+r.snippet.slice(0,50);
+      if(seen[k]) return false;
+      seen[k]=1; return true;
+    });
+
+    count.textContent = results.length ? results.length+' result'+(results.length===1?'':'s') : 'No results';
+
+    if (!results.length) {
+      panel.innerHTML = '<div class="gsr-empty">No results for &ldquo;'+val.replace(/</g,'&lt;')+'&rdquo;</div>';
+    } else {
+      panel.innerHTML = results.slice(0,40).map(function(r){
+        var safe = r.snippet.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        var hl = safe.replace(new RegExp('('+escapeRe(r.term)+')','gi'),'<mark class="hl">$1</mark>');
+        return '<div class="gsr-item" onclick="jumpToResult(\''+r.tabId+'\',\''+r.pid+'\','+JSON.stringify(r.snippet)+','+JSON.stringify(r.term)+')">'
+          +'<span class="gsr-tab">'+r.label+'</span>'
+          +'<span class="gsr-text">'+hl+'</span>'
+          +'</div>';
+      }).join('');
+    }
+    if (panel.className.indexOf('open') === -1) panel.className += ' open';
+  }
+
+  window.runGlobalSearch = doGlobalSearch;
+
+  window.jumpToResult = function(tabId, panelId, snippet, term) {
+    switchToTab(tabId);
+    document.getElementById('gsearch-results-panel').className =
+      document.getElementById('gsearch-results-panel').className.replace(' open','');
+    setTimeout(function(){
+      var panel = document.getElementById(panelId);
+      if (!panel) return;
+      var re = new RegExp(escapeRe(term), 'i');
+      var nodes = panel.querySelectorAll('details.qa > summary, .say, p, li, h2, h3, blockquote p');
+      for (var i=0; i<nodes.length; i++){
+        if (re.test(nodes[i].textContent || '')){
+          nodes[i].scrollIntoView({behavior:'smooth', block:'center'});
+          var d = nodes[i].closest ? nodes[i].closest('details') : null;
+          if (d) d.open = true;
+          var d2 = d && d.closest ? d.closest('details.cat') : null;
+          if (d2) d2.open = true;
+          break;
+        }
+      }
+    }, 200);
+  };
+
+  window.clearGlobalSearch = function() {
+    var inp = document.getElementById('global-search-input');
+    if (inp) inp.value = '';
+    var panel = document.getElementById('gsearch-results-panel');
+    if (panel) { panel.className = panel.className.replace(' open',''); panel.innerHTML=''; }
+    var count = document.getElementById('global-search-count');
+    if (count) count.textContent = '';
+  };
+
+  // Wire up keyboard shortcuts
+  document.addEventListener('keydown', function(e){
+    if ((e.key==='/' && document.activeElement.tagName!=='INPUT') ||
+        (e.key==='k' && (e.ctrlKey||e.metaKey))) {
+      e.preventDefault();
+      var inp = document.getElementById('global-search-input');
+      if (inp) { inp.focus(); inp.select(); }
+    }
+    if (e.key==='Escape') {
+      window.clearGlobalSearch();
+      var inp = document.getElementById('global-search-input');
+      if (inp) inp.blur();
+    }
+  });
+
+  // Also wire the input directly in case oninput isn't firing
+  document.addEventListener('DOMContentLoaded', function(){
+    var inp = document.getElementById('global-search-input');
+    if (inp) {
+      inp.addEventListener('input', function(){ doGlobalSearch(this.value); });
+      inp.addEventListener('keyup', function(){ doGlobalSearch(this.value); });
+    }
+    // Close on outside click
+    document.addEventListener('click', function(e){
+      var panel = document.getElementById('gsearch-results-panel');
+      var bar = document.querySelector('.global-search-bar');
+      if (panel && bar && !bar.contains(e.target) && !panel.contains(e.target)){
+        panel.className = panel.className.replace(' open','');
+      }
+    });
+  });
     var count = document.getElementById('global-search-count');
     val = (val || '').trim();
     if (val.length < 2) {
@@ -2911,62 +3037,6 @@ document.addEventListener("keydown", function(e) {
     panel.classList.add('open');
   };
 
-  window.switchTab = function(tabId, panelId, snippet, term) {
-    switchToTab(tabId);
-    document.getElementById('gsearch-results-panel').classList.remove('open');
-    document.getElementById('global-search-count').textContent = '';
-    // Scroll to matching element in new tab
-    setTimeout(function(){
-      var panel = document.getElementById(panelId);
-      if (!panel) return;
-      var re = new RegExp(escapeRe(term), 'i');
-      var nodes = panel.querySelectorAll('details.qa > summary, .say, p, li, h2.sec, h3, blockquote p');
-      for (var i=0; i<nodes.length; i++){
-        if (re.test(nodes[i].innerText || nodes[i].textContent)){
-          nodes[i].scrollIntoView({behavior:'smooth', block:'center'});
-          // Open parent details if collapsed
-          var d = nodes[i].closest('details');
-          if (d) d.open = true;
-          var d2 = d && d.closest('details.cat');
-          if (d2) d2.open = true;
-          break;
-        }
-      }
-    }, 150);
-  };
-
-  window.clearGlobalSearch = function() {
-    var inp = document.getElementById('global-search-input');
-    if (inp) { inp.value = ''; }
-    var panel = document.getElementById('gsearch-results-panel');
-    if (panel) { panel.classList.remove('open'); panel.innerHTML = ''; }
-    var count = document.getElementById('global-search-count');
-    if (count) count.textContent = '';
-  };
-
-  // Also wire / key to focus the visible search bar
-  document.addEventListener('keydown', function(e){
-    if ((e.key === '/' && document.activeElement.tagName !== 'INPUT') ||
-        (e.key === 'k' && (e.ctrlKey || e.metaKey))) {
-      e.preventDefault();
-      var inp = document.getElementById('global-search-input');
-      if (inp) { inp.focus(); inp.select(); }
-    }
-    if (e.key === 'Escape') {
-      window.clearGlobalSearch();
-      var inp = document.getElementById('global-search-input');
-      if (inp) inp.blur();
-    }
-  });
-
-  // Close results when clicking outside
-  document.addEventListener('click', function(e){
-    var panel = document.getElementById('gsearch-results-panel');
-    var bar = document.querySelector('.global-search-bar');
-    if (panel && bar && !bar.contains(e.target) && !panel.contains(e.target)){
-      panel.classList.remove('open');
-    }
-  });
 })();
 </script>
 
