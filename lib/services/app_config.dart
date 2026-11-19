@@ -300,7 +300,10 @@ class AppConfig {
       case 'custom_local':
         return _customLocalKey ?? '';
       case 'openrouter':
-        return _remoteOpenRouterKey ?? _fallbackOpenRouterKey;
+        // If OpenRouter key is empty (not loaded from Firebase yet),
+        // fall back to Groq so we don't get 401 errors
+        final orKey = _remoteOpenRouterKey ?? _fallbackOpenRouterKey;
+        return orKey.isNotEmpty ? orKey : (_remoteGroqKey ?? _fallbackGroqKey);
       case 'auto':
         return _remoteGeminiKey ?? _fallbackGeminiKey;
       case 'gemini_flash':
@@ -387,25 +390,30 @@ class AppConfig {
       return _autoActualModel(taskType);
     }
 
+    // OpenRouter is currently unstable — never use it for background tasks
+    // (insights, OCR parsing, voice, batch screenshots). These use llm_service
+    // which needs a reliable fast response. If user manually selected OpenRouter,
+    // redirect background tasks to Gemini or Groq instead.
+    final effectiveModel = _activeModelId == 'openrouter'
+        ? ((_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty
+            ? 'gemini_flash_lite'
+            : 'groq_llama4_scout')
+        : _activeModelId;
+
     final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
     switch (taskType) {
       case 'fast':
-        // Single-item expense logging — use the active model (user preference)
-        // so we don't burn through groq_8b's limited 250 RPD quota.
-        return _activeModelId;
+        return effectiveModel;
       case 'financial_advice':
-        // Best reasoning model available
-        if (hasGemini)
-          return 'gemini_flash'; // Gemini 3.5 Flash: frontier reasoning
-        return 'groq_llama4_scout'; // GPT-OSS 120B (Groq): best reasoning fallback
+        if (hasGemini) return 'gemini_flash';
+        return 'groq_llama4_scout';
       case 'smart':
-        if (hasGemini && _activeModelId.startsWith('gemini'))
-          return _activeModelId;
-        if (hasGemini)
-          return 'gemini_flash_lite'; // Gemini Lite: good quality + speed
-        return 'groq_llama4_scout'; // LLaMA 4 Scout over 70B: newer arch
+        if (hasGemini && effectiveModel.startsWith('gemini'))
+          return effectiveModel;
+        if (hasGemini) return 'gemini_flash_lite';
+        return 'groq_llama4_scout';
       default:
-        return _activeModelId;
+        return effectiveModel;
     }
   }
 
