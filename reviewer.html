@@ -125,6 +125,8 @@
   :root[data-theme="dark"] .tag-critical{background:#2E2019; color:#E28C7A;}
   :root[data-theme="dark"] .tag-openrouter{background:#0D2240; color:#7AABF0;}
   :root[data-theme="dark"] .tag-fhs{background:#0F2B1A; color:#7FBE9B;}
+  .tag-filipino{background:#FFE0E0;color:#8B0000;}
+  :root[data-theme="dark"] .tag-filipino{background:#3D1010;color:#F0A0A0;}
   mark.hl{background:var(--gold-soft); color:var(--ink); border-radius:2px; padding:0 1px;}
   .jump-links{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;}
   .jump-links a{font-size:.77rem; color:var(--ledger); text-decoration:none; padding:3px 9px;
@@ -752,6 +754,10 @@
     <a href="#cat-edgecases">10 &#8212; Tricky Panelist Traps</a>
     <a href="#cat-gamification">11 &#8212; Gamification &amp; Badges</a>
     <a href="#cat-methodology-deep">12 &#8212; Research Deep Dive</a>
+    <a href="#cat-research-questions">&#127891; 13 &#8212; Research Questions (SUS, Sampling, Limitations)</a>
+    <a href="#cat-filipino-context">&#127477;&#127469; 14 &#8212; Filipino Finance Context (paluwagan, BSP, competitors)</a>
+    <a href="#cat-tech-impl">&#128296; 15 &#8212; Technical Implementation (Flutter, SQLite, security)</a>
+    <a href="#cat-what-if">&#10067; 16 &#8212; What If Questions (AI risks, credits, fraud)</a>
     <a href="#cat-ai">&#9881;&#65039; [TECH REF] How the AI Works</a>
     <a href="#cat-openrouter">&#127760; [TECH REF] OpenRouter &amp; 13-provider chain</a>
     <a href="#cat-tech">&#128295; [TECH REF] Technical Implementation</a>
@@ -1262,6 +1268,118 @@
   <details class="qa"><summary>How do you ensure research ethics and data privacy? <span class="tag tag-security">security</span> <span class="tag tag-research">research</span></summary><div class="a">
   <p><b>Informed consent:</b> All 30 respondents signed consent forms explaining: (1) Purpose (capstone thesis evaluation), (2) Data collected (usage logs, SUS responses), (3) Anonymization (no names in published results), (4) Right to withdraw anytime, (5) No compensation (voluntary). <b>Data handling:</b> Firestore data encrypted in transit (TLS) and at rest. Only aggregated SUS scores published. Usage logs stripped of PII before analysis. <b>RA 10173 compliance:</b> Privacy policy in-app (Settings &#8594; About &#8594; Privacy Policy), data retention policy.</p>
   </div></details>
+</details>
+
+<!-- ===== 13 &#8212; RESEARCH QUESTIONS ===== -->
+<details class="cat" id="cat-research-questions">
+  <summary>&#127891; 13 &#8212; Research Questions (SUS, Sampling, Limitations)</summary>
+
+  <details class="qa"><summary>Why did you choose SUS over other usability evaluation methods? SUS usability score 61.83 evaluation instrument <span class="tag tag-research">research</span> <span class="tag tag-sus">SUS</span></summary><div class="a">
+  <p>SUS (System Usability Scale) is the most widely validated usability instrument — over 30 years of research and 5,000+ published studies use it, so our result of <b>61.83</b> is directly comparable to a known benchmark (68 average, Bangor et al. 2009). Alternatives like CSUQ or UMUX-Lite are less recognized by academic reviewers in the Philippine capstone context. SUS also takes only 2–3 minutes per respondent, minimizing survey fatigue for our 30 participants. The 10-item Likert scale produces a single interpretable score from 0–100, making it straightforward to report and defend.</p>
+  </div></details>
+
+  <details class="qa"><summary>Why 30 respondents? Is that statistically sufficient? sample size respondents purposive sampling <span class="tag tag-research">research</span> <span class="tag tag-sus">SUS</span></summary><div class="a">
+  <p>For SUS specifically, the literature supports as few as 12–14 respondents to detect major usability issues (Tullis &amp; Stetson, 2004). Our 30 respondents — split 10 parents and 20 young professionals — exceed this threshold and follow purposive sampling aligned with our two target user groups. We chose purposive over random sampling for SUS because our target population is specific: Filipino adults who actively use smartphones for financial transactions. A random sample from the general population would dilute results with users who have no relevance to the app.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is purposive sampling and why did you use it? purposive sampling judgmental <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Purposive sampling (also called judgmental sampling) means deliberately selecting participants who match your research criteria rather than randomly. We required: Filipino adults, smartphone users, at least occasional financial transactions (GCash/Maya or bank usage). This produced a sample that accurately represents our target market. The tradeoff is that results cannot be generalized to all Filipinos — our conclusion is specifically about this demographic profile, which is explicitly stated as a limitation in Chapter V.</p>
+  </div></details>
+
+  <details class="qa"><summary>What are the limitations of your study? limitations sample size quantitative <span class="tag tag-research">research</span> <span class="tag tag-critical">critical</span></summary><div class="a">
+  <p>Four main limitations: (1) <b>Sample size of 30</b> — while sufficient for SUS, limits statistical generalizability. (2) <b>Single evaluation point</b> — users evaluated the app once; a longitudinal study would reveal learning effects (Recommendation 7). (3) <b>Quantitative-only instrument</b> — SUS does not explain WHY items scored low, only THAT they did. Open-ended follow-up questions would have added qualitative depth. (4) <b>Self-reported data</b> — participants may rate usability differently from how they actually use the app in daily life (social desirability bias).</p>
+  </div></details>
+
+  <details class="qa"><summary>How did you address ethical considerations in your research? informed consent data privacy anonymity ethics <span class="tag tag-research">research</span> <span class="tag tag-security">security</span></summary><div class="a">
+  <p>Three measures: (1) <b>Informed consent</b> — all 30 respondents were briefed on the study purpose and voluntarily participated, with signed consent forms. (2) <b>Data privacy</b> — no personal financial data was collected; respondents used demo data only. (3) <b>Anonymity</b> — survey responses were collected anonymously; individual scores are not attributed to named participants in the manuscript. These measures align with RA 10173 (Data Privacy Act) requirements for research involving human participants.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is your research design? applied developmental quantitative descriptive <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Applied research with a developmental design. We built a system (SmartSpend) and evaluated it using a validated instrument (SUS). The design follows the classic software engineering research cycle: requirements → design → implementation → testing → evaluation. Chapter III details the SDLC methodology (Agile Kanban with iterative sprints). It is <b>quantitative descriptive developmental</b> — not mixed methods, not qualitative, not experimental.</p>
+  </div></details>
+
+  <details class="qa"><summary>Why did you choose Agile/iterative development? Agile Kanban Waterfall SDLC <span class="tag tag-research">research</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Finance apps require frequent user feedback loops — a feature that seems obvious in design often fails usability in practice. Agile let us test partial features (AI chat, OCR, FHS) with the development team early and pivot before the final evaluation. Waterfall would have locked us into a potentially wrong design before any user testing. The 12 panel recommendations from Capstone 1 (which shaped v3.1.0) were themselves an Agile feedback cycle — each recommendation was a sprint item addressed before final defense.</p>
+  </div></details>
+
+</details>
+
+<!-- ===== 14 &#8212; FILIPINO FINANCE CONTEXT ===== -->
+<details class="cat" id="cat-filipino-context">
+  <summary>&#127477;&#127469; 14 &#8212; Filipino Finance Context (paluwagan, BSP, competitors)</summary>
+
+  <details class="qa"><summary>Why specifically target Filipinos? Why not build a generic finance app? Filipino context GCash Maya Taglish paluwagan SSS <span class="tag tag-research">research</span> <span class="tag tag-filipino">Filipino</span></summary><div class="a">
+  <p>Generic finance apps (YNAB, Mint, PocketGuard) are US-centric — they assume bank linking via Plaid (not available in PH), US dollar amounts, and English-only input. Filipino users face distinct financial realities: GCash/Maya as primary payment tools, 15th/30th salary cycles, mandatory SSS/PhilHealth/Pag-IBIG deductions, paluwagan group savings, and Taglish as the natural language for money conversations. Building for the Philippines specifically meant every feature had to earn its place against Filipino user behavior, not generic Western personal finance assumptions.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is paluwagan and why did you include it? paluwagan rotating savings Filipino <span class="tag tag-research">research</span> <span class="tag tag-filipino">Filipino</span></summary><div class="a">
+  <p>Paluwagan is a traditional Filipino rotating savings group where a fixed number of participants contribute a fixed amount each cycle, and one member receives the full pot per cycle. It is widespread across income levels in the Philippines — office paluwagan, neighborhood paluwagan, online paluwagan groups. No international finance app supports it. SmartSpend tracks paluwagan contributions, expected payout dates, and your position in the rotation. This is a culturally specific feature that validates SmartSpend's Filipino-first approach.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is the financial literacy situation in the Philippines? BSP financial literacy survey 24.5% statistics <span class="tag tag-research">research</span> <span class="tag tag-filipino">Filipino</span></summary><div class="a">
+  <p>The Bangko Sentral ng Pilipinas (BSP) Financial Inclusion Survey consistently shows low financial literacy rates. The 2021 survey found only 24.5% of Filipino adults were considered financially literate, and only 2% correctly answered all six basic financial literacy questions. The same survey found that more than half of Filipinos do not keep track of their income and expenses at all. This is the exact problem SmartSpend addresses — the barrier is not awareness (people know they should track) but friction (available tools are too complicated for daily use).</p>
+  </div></details>
+
+  <details class="qa"><summary>Who are your direct competitors in the Philippines? BudgetPH PISO Agila competitors Filipino apps <span class="tag tag-research">research</span> <span class="tag tag-filipino">Filipino</span></summary><div class="a">
+  <p>Three main Filipino competitors: (1) <b>BudgetPH</b> — covers Filipino features including SSS/PhilHealth/Pag-IBIG and paluwagan, recently added Claude AI via MCP (requires paid subscription). (2) <b>PISO</b> — expense tracker, manual entry, no AI. (3) <b>Agila</b> — has AI chat for expense logging. SmartSpend differentiates through: 34 AI actions vs Agila's logging-only chat, built-in AI with no subscription required vs BudgetPH's Claude add-on, batch OCR from 40+ platforms, and an SSS pension estimator not found in competitors.</p>
+  </div></details>
+
+</details>
+
+<!-- ===== 15 &#8212; TECHNICAL IMPLEMENTATION ===== -->
+<details class="cat" id="cat-tech-impl">
+  <summary>&#128296; 15 &#8212; Technical Implementation (Flutter, SQLite, Firebase, Android)</summary>
+
+  <details class="qa"><summary>Why Flutter instead of native Android Kotlin? Flutter cross-platform APK size <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Three reasons: (1) <b>Cross-platform future</b> — Flutter compiles to Android today; iOS, web, and desktop with minimal code changes later. Kotlin locks us to Android. (2) <b>Single codebase</b> — our 3-person team maintained one codebase instead of separate Android/iOS teams. (3) <b>Rich UI library</b> — Flutter's widget system made it faster to build the complex, animated Peso mascot interactions and custom FHS score visualization. The tradeoff: slightly larger APK (~46 MB vs ~15 MB native) and no access to some Android-specific APIs without plugins.</p>
+  </div></details>
+
+  <details class="qa"><summary>Why SQLite for local storage instead of Firebase Firestore? SQLite offline local storage <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>SQLite stores data on-device, so the app works fully offline. Firestore requires internet for every read/write. For a finance app, offline capability is non-negotiable — users log expenses at markets, on jeepneys, in areas with poor signal. SQLite also has zero per-operation cost (no Firestore read/write pricing). Firebase is used for authentication and optional cloud sync only; local SQLite is the source of truth.</p>
+  </div></details>
+
+  <details class="qa"><summary>How does the app handle data if a user loses their phone? data recovery backup cloud sync <span class="tag tag-tech">tech</span> <span class="tag tag-security">security</span></summary><div class="a">
+  <p>Two recovery paths: (1) <b>Cloud sync</b> — if the user signed in with Google/email, their data is synced to Firestore and restored on a new device by logging in. (2) <b>Manual backup</b> — the app exports a full backup JSON file at any time (Profile → Export Backup), which can be imported on a new install. Both paths are available; signed-in users get automatic sync, offline-only users get the manual export option.</p>
+  </div></details>
+
+  <details class="qa"><summary>What is the minimum Android version required? Android 8.0 Oreo API 26 compatibility minimum <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p><b>Android 8.0 Oreo (API level 26)</b>, released August 2017. This covers approximately 97% of active Android devices globally as of 2026. We chose API 26 as the minimum because it supports all Flutter features we use and the in-app APK installer (<code>REQUEST_INSTALL_PACKAGES</code> permission) requires API 26+. Devices below Android 8.0 account for less than 3% of the Philippine market based on Google Play distribution data.</p>
+  </div></details>
+
+  <details class="qa"><summary>How do you ensure the AI does not make harmful financial recommendations? AI safety safeguards confidence score disclaimer <span class="tag tag-ai">AI</span> <span class="tag tag-security">security</span></summary><div class="a">
+  <p>Three safeguards: (1) The system prompt explicitly instructs the AI to give general guidance only, never specific investment advice, and to recommend professional consultation for significant decisions. (2) SmartSpend shows Peso's confidence level on AI-categorized expenses — below 70% confidence shows a "Review" badge so users know to double-check. (3) The AI cannot access external financial markets, real-time prices, or account balances from banks — it only sees the data the user has logged in the app. The worst-case scenario of an AI error is a miscategorized ₱60 expense, not a financial loss.</p>
+  </div></details>
+
+  <details class="qa"><summary>Is user financial data secure? data security Firebase SQLite biometric API keys <span class="tag tag-security">security</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>Multiple layers: (1) <b>Local storage</b> — all expense data lives in SQLite on the user's device, never on our servers. (2) <b>Cloud sync (optional)</b> — if enabled, data goes to Firebase Firestore with Firebase Security Rules restricting each user to their own data. (3) <b>API keys</b> — stored in Firebase Remote Config, not in the app binary. (4) <b>Biometric lock</b> — the app supports fingerprint/face unlock via <code>local_auth</code>. (5) The debug log export masks all settings keys containing 'key' or 'token' with asterisks. Known limitation: local SQLite is currently unencrypted (Recommendation 5).</p>
+  </div></details>
+
+</details>
+
+<!-- ===== 16 &#8212; WHAT IF QUESTIONS ===== -->
+<details class="cat" id="cat-what-if">
+  <summary>&#10067; 16 &#8212; What If Questions (AI risks, credits, fraud, security)</summary>
+
+  <details class="qa"><summary>What if the AI gives wrong financial advice? AI wrong advice harmful financial recommendation <span class="tag tag-critical">critical</span> <span class="tag tag-ai">AI</span></summary><div class="a">
+  <p>SmartSpend's AI is a budgeting assistant, not a financial advisor. The system prompt explicitly frames every AI output as "general guidance, not professional advice" and recommends consulting a licensed financial advisor for significant decisions. The app cannot place trades, move money, or access bank accounts — it only reads what the user has logged. If the AI miscategorizes an expense, the user can edit it immediately. The worst-case scenario of an AI error is a miscategorized ₱60 expense, not a financial loss.</p>
+  </div></details>
+
+  <details class="qa"><summary>What if OpenRouter runs out of credits? OpenRouter credits fallback chain depleted <span class="tag tag-critical">critical</span> <span class="tag tag-openrouter">OpenRouter</span></summary><div class="a">
+  <p>The app automatically falls through the full 13-provider chain. OpenRouter credits ($100, expires May 2027) are only used when the OpenRouter model is selected. If credits are exhausted, the app switches to Gemini (free via Google AI Studio key in Firebase Remote Config), then Groq (hardcoded free-tier key), then Cerebras. The user experience is unaffected — only the response latency may change slightly between providers. This is exactly why the multi-provider fallback chain exists.</p>
+  </div></details>
+
+  <details class="qa"><summary>What if Google Play rejects the app? Google Play deployment distribution GitHub APK <span class="tag tag-critical">critical</span> <span class="tag tag-deploy">deployment</span></summary><div class="a">
+  <p>The current distribution is via GitHub Releases (direct APK download), which is our primary deployment channel for this capstone. Google Play submission is Recommendation 3 from our study. The app passes all Flutter build checks and targets API 34. The main Play Store review risk would be the financial advice content — we would need to add a disclaimer screen and potentially apply for the 'Personal Finance' category. This is a post-defense roadmap item already anticipated in our recommendations.</p>
+  </div></details>
+
+  <details class="qa"><summary>What if a competitor copies your features? competition moat open source <span class="tag tag-critical">critical</span> <span class="tag tag-research">research</span></summary><div class="a">
+  <p>Competition validates the market. If BudgetPH or Agila copies our FHS scoring or payday-cycle budgeting, that proves our research identified genuine user needs. SmartSpend's moat is the combination: 34 AI actions + batch OCR + FHS + Filipino features + no subscription required. Each individual feature can be copied; the full combination at zero cost is harder to replicate. Additionally, SmartSpend is open-source (Source Available License) — the roadmap and research are public, which builds community trust rather than trying to hide IP.</p>
+  </div></details>
+
+  <details class="qa"><summary>Could this app be used for financial fraud? fraud security misuse bank access <span class="tag tag-critical">critical</span> <span class="tag tag-security">security</span></summary><div class="a">
+  <p>No. SmartSpend is a read-write-to-your-own-data app only. It cannot connect to bank accounts (no Plaid or Open Banking integration), cannot initiate transfers, and cannot access any financial institution directly. All data it shows was entered by the user themselves. The only external connections are: AI providers (expense text only, no personal identifiers), Firebase (user auth + user's own data), and GitHub API (version check — no user data sent). There is no mechanism for fraud — the app has no access to anyone's money.</p>
+  </div></details>
+
 </details>
 
 <div style="margin:28px 0 16px;padding:10px 14px;background:var(--ledger-soft);border-radius:6px;border:1px solid var(--line);">
