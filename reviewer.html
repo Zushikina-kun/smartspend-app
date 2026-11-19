@@ -218,9 +218,9 @@
   .gsb-clear:hover{background:rgba(255,255,255,.3);}
 
   /* ── GLOBAL SEARCH RESULTS PANEL ───────────────────────────────────── */
-  #gsearch-results-panel{position:absolute; top:100%; left:0; right:0; z-index:200;
-    background:var(--paper); border:1px solid var(--line); border-top:none;
-    box-shadow:0 8px 24px var(--shadow); max-height:60vh; overflow-y:auto; display:none;}
+  #gsearch-results-panel{position:fixed; top:auto; left:0; right:0; z-index:9999;
+    background:var(--paper); border:1px solid var(--line); border-top:2px solid var(--ledger);
+    box-shadow:0 8px 32px var(--shadow); max-height:55vh; overflow-y:auto; display:none;}
   #gsearch-results-panel.open{display:block;}
   .gsr-item{padding:10px 18px; border-bottom:1px solid var(--line); cursor:pointer; display:flex; gap:10px; align-items:flex-start;}
   .gsr-item:hover{background:var(--ledger-soft);}
@@ -2821,12 +2821,14 @@ document.addEventListener("keydown", function(e) {
 // Indexes ALL 4 tabs and shows results in a dropdown panel under the header.
 (function(){
   var TAB_LABELS = {
+    'p-essentials': '🧠 Essentials',
     'p-demo': '📋 Demo',
     'p-qa': '🎤 Q&A',
     'p-numbers': '🔢 Facts',
     'p-script': '📝 Script'
   };
   var TAB_IDS = {
+    'p-essentials': 't-essentials',
     'p-demo': 't-demo',
     'p-qa': 't-qa',
     'p-numbers': 't-numbers',
@@ -2853,6 +2855,9 @@ document.addEventListener("keydown", function(e) {
 
   window.runGlobalSearch = function(val) {
     var panel = document.getElementById('gsearch-results-panel');
+    // Position panel below the sticky header dynamically
+    var header = document.querySelector('header.top');
+    if (header) panel.style.top = header.offsetHeight + 'px';
     var count = document.getElementById('global-search-count');
     val = (val || '').trim();
     if (val.length < 2) {
@@ -2863,38 +2868,44 @@ document.addEventListener("keydown", function(e) {
     }
     var re = new RegExp(escapeRe(val), 'gi');
     var results = [];
-    ['p-demo','p-qa','p-numbers','p-script'].forEach(function(pid){
+    // Include ALL tabs including p-essentials (Core Essentials default tab)
+    // Use textContent NOT innerText — innerText returns '' on hidden (display:none) elements
+    ['p-essentials','p-demo','p-qa','p-numbers','p-script'].forEach(function(pid){
       var el = document.getElementById(pid);
       if (!el) return;
-      // Search through text nodes and details summaries
-      var nodes = el.querySelectorAll('details.qa > summary, details.cat > summary, .step-head h3, .say, p, li, blockquote p, .a p, .fact .k, h2.sec, h3');
+      var nodes = el.querySelectorAll('details.qa > summary, details.cat > summary, .step-head h3, .say, p, li, blockquote p, .a p, .fact .k, h2.sec, h3, .essentials-section h3, .essentials-section p, .essentials-section li');
       nodes.forEach(function(node){
-        var txt = node.innerText || node.textContent || '';
+        var txt = node.textContent || '';
+        txt = txt.replace(/\s+/g,' ').trim();
+        if (!txt || txt.length < 3) return;
         if (re.test(txt)) {
           re.lastIndex = 0;
-          var snippet = txt.length > 120 ? txt.substring(0,120) + '…' : txt;
+          var snippet = txt.length > 130 ? txt.substring(0,130) + '…' : txt;
           results.push({pid: pid, snippet: snippet, term: val});
         }
         re.lastIndex = 0;
       });
     });
-    // Deduplicate by snippet
+    // Deduplicate
     var seen = new Set();
     results = results.filter(function(r){
-      var key = r.pid + r.snippet;
+      var key = r.pid + '|' + r.snippet.substring(0,60);
       if (seen.has(key)) return false;
       seen.add(key); return true;
     });
     count.textContent = results.length ? results.length + ' result' + (results.length===1?'':'s') : 'No results';
     if (!results.length) {
-      panel.innerHTML = '<div class="gsr-empty">No results for "' + val + '" across all tabs</div>';
+      panel.innerHTML = '<div class="gsr-empty">No results for &ldquo;' + val.replace(/</g,'&lt;') + '&rdquo; across all tabs</div>';
       panel.classList.add('open');
       return;
     }
-    panel.innerHTML = results.slice(0,30).map(function(r){
-      return '<div class="gsr-item" onclick="switchTab(\'' + TAB_IDS[r.pid] + '\',\'' + r.pid + '\',' + JSON.stringify(r.snippet) + ',' + JSON.stringify(r.term) + ')">'
-        + '<span class="gsr-tab">' + TAB_LABELS[r.pid] + '</span>'
-        + '<span class="gsr-text">' + highlight(r.snippet.replace(/</g,'&lt;').replace(/>/g,'&gt;'), r.term) + '</span>'
+    panel.innerHTML = results.slice(0,40).map(function(r){
+      var label = TAB_LABELS[r.pid] || r.pid;
+      var tabId = TAB_IDS[r.pid] || 't-essentials';
+      var safe = r.snippet.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return '<div class="gsr-item" onclick="switchTab(\'' + tabId + '\',\'' + r.pid + '\',' + JSON.stringify(r.snippet) + ',' + JSON.stringify(r.term) + ')">'
+        + '<span class="gsr-tab">' + label + '</span>'
+        + '<span class="gsr-text">' + highlight(safe, r.term) + '</span>'
         + '</div>';
     }).join('');
     panel.classList.add('open');
