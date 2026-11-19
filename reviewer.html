@@ -2984,58 +2984,6 @@ document.addEventListener("keydown", function(e) {
       }
     });
   });
-    var count = document.getElementById('global-search-count');
-    val = (val || '').trim();
-    if (val.length < 2) {
-      panel.classList.remove('open');
-      panel.innerHTML = '';
-      count.textContent = '';
-      return;
-    }
-    var re = new RegExp(escapeRe(val), 'gi');
-    var results = [];
-    // Include ALL tabs including p-essentials (Core Essentials default tab)
-    // Use textContent NOT innerText — innerText returns '' on hidden (display:none) elements
-    ['p-essentials','p-demo','p-qa','p-numbers','p-script'].forEach(function(pid){
-      var el = document.getElementById(pid);
-      if (!el) return;
-      var nodes = el.querySelectorAll('details.qa > summary, details.cat > summary, .step-head h3, .say, p, li, blockquote p, .a p, .fact .k, h2.sec, h3, .essentials-section h3, .essentials-section p, .essentials-section li');
-      nodes.forEach(function(node){
-        var txt = node.textContent || '';
-        txt = txt.replace(/\s+/g,' ').trim();
-        if (!txt || txt.length < 3) return;
-        if (re.test(txt)) {
-          re.lastIndex = 0;
-          var snippet = txt.length > 130 ? txt.substring(0,130) + '…' : txt;
-          results.push({pid: pid, snippet: snippet, term: val});
-        }
-        re.lastIndex = 0;
-      });
-    });
-    // Deduplicate
-    var seen = new Set();
-    results = results.filter(function(r){
-      var key = r.pid + '|' + r.snippet.substring(0,60);
-      if (seen.has(key)) return false;
-      seen.add(key); return true;
-    });
-    count.textContent = results.length ? results.length + ' result' + (results.length===1?'':'s') : 'No results';
-    if (!results.length) {
-      panel.innerHTML = '<div class="gsr-empty">No results for &ldquo;' + val.replace(/</g,'&lt;') + '&rdquo; across all tabs</div>';
-      panel.classList.add('open');
-      return;
-    }
-    panel.innerHTML = results.slice(0,40).map(function(r){
-      var label = TAB_LABELS[r.pid] || r.pid;
-      var tabId = TAB_IDS[r.pid] || 't-essentials';
-      var safe = r.snippet.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      return '<div class="gsr-item" onclick="switchTab(\'' + tabId + '\',\'' + r.pid + '\',' + JSON.stringify(r.snippet) + ',' + JSON.stringify(r.term) + ')">'
-        + '<span class="gsr-tab">' + label + '</span>'
-        + '<span class="gsr-text">' + highlight(safe, r.term) + '</span>'
-        + '</div>';
-    }).join('');
-    panel.classList.add('open');
-  };
 
 })();
 </script>
