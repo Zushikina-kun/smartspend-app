@@ -50,11 +50,13 @@
     cursor:pointer; color:rgba(255,255,255,.65); border-bottom:2px solid transparent; transition:all .15s;}
   .tabs label:hover{color:#fff;}
   input[name=tab]{display:none;}
+  #t-essentials:checked~header .tabs label[for="t-essentials"],
   #t-demo:checked~header .tabs label[for="t-demo"],
   #t-qa:checked~header .tabs label[for="t-qa"],
   #t-numbers:checked~header .tabs label[for="t-numbers"],
   #t-script:checked~header .tabs label[for="t-script"]{color:#fff; border-color:var(--gold);}
   section.panel{display:none; padding-top:24px;}
+  #t-essentials:checked~main #p-essentials{display:block;}
   #t-demo:checked~main #p-demo{display:block;}
   #t-qa:checked~main #p-qa{display:block;}
   #t-numbers:checked~main #p-numbers{display:block;}
@@ -248,7 +250,8 @@
 <div id="shortcuts-hint" title="Keyboard shortcuts" onclick="document.getElementById('shortcuts-hint').style.display='none'">
   / or &#8963;K = search &nbsp;&#183;&nbsp; Esc = clear &nbsp;&#183;&nbsp; 1&#8211;4 = tabs
 </div>
-<input type="radio" name="tab" id="t-demo" checked>
+<input type="radio" name="tab" id="t-essentials" checked>
+<input type="radio" name="tab" id="t-demo">
 <input type="radio" name="tab" id="t-qa">
 <input type="radio" name="tab" id="t-numbers">
 <input type="radio" name="tab" id="t-script">
@@ -267,6 +270,7 @@
       <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">&#127769; Dark</button>
     </div>
     <div class="tabs">
+      <label for="t-essentials">🧠 Core Essentials</label>
       <label for="t-demo">&#128203; Demo Script</label>
       <label for="t-qa">&#127908; Panel Q&amp;A</label>
       <label for="t-numbers">&#128290; Quick Facts &amp; Guide</label>
@@ -284,6 +288,177 @@
 </header>
 
 <main class="wrap">
+
+<!-- ================================================================ CORE ESSENTIALS TAB -->
+<section class="panel" id="p-essentials">
+
+  <div style="background:var(--ledger); color:#fff; border-radius:8px; padding:16px 20px; margin-bottom:24px;">
+    <div style="font-family:'Fraunces',serif; font-size:1.3rem; font-weight:700; margin-bottom:4px;">🧠 Core Essentials</div>
+    <div style="font-size:.85rem; opacity:.85;">The 10-minute brain dump — everything you MUST know before the defense. Plain language, no jargon, no code. Read it once and it sticks.</div>
+  </div>
+
+  <!-- 1. THE ONE-SENTENCE ANSWER -->
+  <h2 class="sec" style="border-top:none; margin-top:0;">🎯 The One-Sentence Answer</h2>
+  <blockquote style="font-size:1.1rem; line-height:1.65;">
+    SmartSpend is a free AI-powered personal finance Android app for Filipinos that lets you log expenses just by typing naturally in Taglish, gives you a Financial Health Score from 0 to 100, and was formally evaluated by 30 Filipino users with a usability score of 61.83 out of 100.
+  </blockquote>
+  <p style="font-size:.85rem;">If you remember nothing else, remember this sentence. It answers "What is SmartSpend?" in a single breath.</p>
+
+  <!-- 2. THE PROBLEM -->
+  <h2 class="sec">🤔 The Problem We're Solving (Why This App Exists)</h2>
+  <p>Most Filipinos <b>know</b> they should track their money — but they <b>don't</b>. Not because they're irresponsible, but because the tools that exist make it feel like homework.</p>
+  <ul style="margin:8px 0 14px; padding-left:20px; font-size:.93rem; color:var(--ink-soft); line-height:1.65;">
+    <li><b>Current apps are tedious</b> — manual forms, dropdowns, English-only, zero Filipino context. You give up after three days.</li>
+    <li><b>Our research question:</b> Can an AI-assisted app remove enough of that friction to actually change behavior? Can you just <em>talk</em> to your finance app in Taglish?</li>
+    <li><b>Target users:</b> Filipino students juggling irregular allowances, and young professionals earning their first salary who have never tracked finances.</li>
+    <li><b>Why it matters:</b> BSP surveys show low financial literacy in the Philippines, and no Filipino finance app had ever been <em>formally usability-tested</em> before this study.</li>
+  </ul>
+
+  <!-- 3. WHY OUR RESEARCH IS RELEVANT -->
+  <h2 class="sec">🌟 Why Our Research is Relevant (Say This With Conviction)</h2>
+  <div style="background:var(--gold-soft); border:2px solid var(--gold); border-radius:8px; padding:18px 20px; margin:10px 0 26px;">
+    <div style="font-size:.78rem; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px;">Memorize these four — recite from memory</div>
+    <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:16px;">
+      <span style="background:var(--gold); color:#fff; border-radius:50%; min-width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem; flex-shrink:0;">1</span>
+      <div>
+        <div style="font-weight:700; color:var(--ink); margin-bottom:3px; font-size:.95rem;">We're the first to formally study this.</div>
+        <div style="font-size:.88rem; color:var(--ink-soft); line-height:1.55;">No Filipino personal finance app had been formally evaluated with a usability instrument before this study. We produced the first SUS benchmark for this app category in the Philippines.</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:16px;">
+      <span style="background:var(--gold); color:#fff; border-radius:50%; min-width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem; flex-shrink:0;">2</span>
+      <div>
+        <div style="font-weight:700; color:var(--ink); margin-bottom:3px; font-size:.95rem;">The problem is real and widespread.</div>
+        <div style="font-size:.88rem; color:var(--ink-soft); line-height:1.55;">BSP's own surveys show most Filipinos have low financial literacy and don't track spending. Apps exist, but adoption is low because they're tedious and not built for Filipino habits.</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:14px; align-items:flex-start; margin-bottom:16px;">
+      <span style="background:var(--gold); color:#fff; border-radius:50%; min-width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem; flex-shrink:0;">3</span>
+      <div>
+        <div style="font-weight:700; color:var(--ink); margin-bottom:3px; font-size:.95rem;">Our solution is genuinely different.</div>
+        <div style="font-size:.88rem; color:var(--ink-soft); line-height:1.55;">We didn't just build another expense tracker. We built the first Filipino app that (a) understands Taglish, (b) works via natural conversation, and (c) includes Filipino-specific features no international app has — SSS/PhilHealth/Pag-IBIG, paluwagan, the 15th/30th payday cycle, and GCash/Maya.</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:14px; align-items:flex-start;">
+      <span style="background:var(--gold); color:#fff; border-radius:50%; min-width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.9rem; flex-shrink:0;">4</span>
+      <div>
+        <div style="font-weight:700; color:var(--ink); margin-bottom:3px; font-size:.95rem;">We acted on our own findings.</div>
+        <div style="font-size:.88rem; color:var(--ink-soft); line-height:1.55;">A score of 61.83 told us users found it complex and inconsistent. Between our original defense (Nov 16) and today (Nov 20), we implemented Recommendation 1, added a Quick Stats card, section headers, and a streak badge — directly targeting the exact SUS questions that scored lowest. Research → identified problem → fixed it. That's the full cycle.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. WHAT OUR APP DOES -->
+  <h2 class="sec">📱 What Our App Actually Does (The 5 Things to Remember)</h2>
+  <p style="font-size:.9rem; margin-bottom:10px;">These five cover about 90% of demo questions. Memorize them.</p>
+  <ol style="margin:0 0 14px; padding-left:24px; font-size:.94rem; color:var(--ink); line-height:1.7;">
+    <li><b>You talk to it naturally in Taglish</b> → it logs your expenses automatically. (34 AI actions in total.)</li>
+    <li><b>It gives you a Financial Health Score (0–100)</b> across 4 pillars — savings, spending control, budget, and consistency.</li>
+    <li><b>It imports receipts from Shopee, GCash, and Lazada</b> (40+ platforms) just by taking a screenshot.</li>
+    <li><b>It tracks Filipino-specific things:</b> SSS/PhilHealth/Pag-IBIG contributions, paluwagan, and the 15th/30th payday cycle.</li>
+    <li><b>It has 10 AI providers as backup</b> — if one is down, it automatically switches to the next, so the AI keeps working.</li>
+  </ol>
+
+  <!-- 5. OUR RESEARCH IN 60 SECONDS -->
+  <h2 class="sec">📊 Our Research in 60 Seconds</h2>
+  <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:16px 18px; margin-bottom:18px;">
+    <ol style="margin:0; padding-left:22px; font-size:.93rem; color:var(--ink-soft); line-height:1.85;">
+      <li>We <b>built</b> the app — version 3.1.0 was the version we tested.</li>
+      <li><b>30 Filipinos</b> used it (10 parents + 20 young professionals).</li>
+      <li>They each filled out a 10-question usability survey called <b>SUS</b> (System Usability Scale).</li>
+      <li>We got a score of <b>61.83 out of 100</b>.</li>
+      <li>What that means: <b>below</b> the 68 average, but still in the "OK / Acceptable" range.</li>
+      <li>We <b>identified what dragged the score down</b> — Q2 (too complex), Q4 (needed help), Q6 (inconsistent).</li>
+      <li>We <b>fixed those issues</b> in v3.3.0 and v3.3.3.</li>
+    </ol>
+  </div>
+  <h3 style="font-family:'Fraunces',serif; font-size:1rem; margin:20px 0 8px;">The SUS scale — where we land</h3>
+  <div style="background:var(--card); border:1px solid var(--line); border-radius:8px; overflow:hidden; font-size:.9rem;">
+    <div style="display:flex; align-items:center; gap:12px; padding:9px 14px; background:#1B4332; color:#fff;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:58px;">90–100</span><span>Best Imaginable ⭐⭐⭐⭐⭐</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; padding:9px 14px; background:#2D6A4F; color:#fff;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:58px;">80–89</span><span>Excellent ⭐⭐⭐⭐</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; padding:9px 14px; background:#52B788; color:#fff;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:58px;">70–79</span><span>Good ⭐⭐⭐</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; padding:9px 14px; background:var(--warn-soft); border-left:4px solid var(--gold);">
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:58px; color:var(--warn);">68</span><span style="color:var(--warn);"><b>Industry Average</b> — the benchmark</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--gold-soft); border-left:4px solid var(--gold);">
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:58px; color:var(--gold);">61.83</span><span style="font-weight:700; color:var(--ink);"><b>SmartSpend</b> ← WE ARE HERE</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; padding:9px 14px; background:var(--bad-soft);">
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:58px; color:var(--bad);">51–60</span><span style="color:var(--bad);">Poor</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; padding:9px 14px; background:var(--bad-soft);">
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:700; min-width:58px; color:var(--bad);">Below 51</span><span style="color:var(--bad);">Awful</span>
+    </div>
+  </div>
+
+  <!-- 6. DID WE ACHIEVE OUR OBJECTIVES -->
+  <h2 class="sec">✅ Did We Achieve Our Objectives?</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; margin:10px 0 20px;">
+    <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:15px 16px; border-top:3px solid var(--ledger);">
+      <div style="font-weight:700; font-size:.92rem; color:var(--ink); margin-bottom:4px;">Objective 1 — Design &amp; develop SmartSpend</div>
+      <div style="font-size:.82rem; color:var(--ledger); font-weight:700; margin-bottom:7px;">✅ FULLY ACHIEVED</div>
+      <div style="font-size:.84rem; color:var(--ink-soft); line-height:1.5;">We built it, it works, it's on GitHub, and 30 people used it.</div>
+    </div>
+    <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:15px 16px; border-top:3px solid var(--ledger);">
+      <div style="font-weight:700; font-size:.92rem; color:var(--ink); margin-bottom:4px;">Objective 2 — Evaluate usability with SUS</div>
+      <div style="font-size:.82rem; color:var(--ledger); font-weight:700; margin-bottom:7px;">✅ FULLY ACHIEVED</div>
+      <div style="font-size:.84rem; color:var(--ink-soft); line-height:1.5;">30 respondents, got a real score, analyzed the results.</div>
+    </div>
+    <div style="background:var(--card); border:1px solid var(--line); border-radius:6px; padding:15px 16px; border-top:3px solid var(--gold);">
+      <div style="font-weight:700; font-size:.92rem; color:var(--ink); margin-bottom:4px;">Objective 3 — Meet the 68-point SUS threshold</div>
+      <div style="font-size:.82rem; color:var(--warn); font-weight:700; margin-bottom:7px;">⚠️ PARTIALLY ACHIEVED</div>
+      <div style="font-size:.84rem; color:var(--ink-soft); line-height:1.5;">We got 61.83 (below 68) but still in the acceptable range. We found why and fixed it.</div>
+    </div>
+  </div>
+
+  <!-- 7. WHY OUR SCORE IS DEFENSIBLE -->
+  <h2 class="sec">💪 Why Our Score is Defensible (Say This With Confidence)</h2>
+  <div class="tip"><strong>Say this with confidence — every point is true.</strong>
+    <ol style="margin:7px 0 0; padding-left:22px; font-size:.9rem; color:var(--ink); line-height:1.65;">
+      <li><b>61.83 is below average but not failing</b> — it sits in the "OK / Acceptable" range.</li>
+      <li>The <b>industry average (68)</b> includes apps built by full teams with millions in funding.</li>
+      <li>We're a <b>3-person student team</b> building this for the first time.</li>
+      <li>We identified <b>exactly what was wrong</b> (Q2, Q4, Q6) and fixed it in v3.3.3.</li>
+      <li>A <b>future evaluation of v3.3.3 would likely score higher</b> — and we have a roadmap to prove it.</li>
+    </ol>
+  </div>
+
+  <!-- 8. THE 12 NUMBERS THAT MATTER -->
+  <h2 class="sec">🔑 The 12 Numbers That Matter</h2>
+  <div class="facts-grid">
+    <div class="fact"><div class="v">61.83</div><div class="k">Our SUS score</div></div>
+    <div class="fact"><div class="v">30</div><div class="k">Number of respondents</div></div>
+    <div class="fact"><div class="v">10</div><div class="k">Parents surveyed</div></div>
+    <div class="fact"><div class="v">20</div><div class="k">Young professionals surveyed</div></div>
+    <div class="fact"><div class="v">68</div><div class="k">Industry average SUS</div></div>
+    <div class="fact"><div class="v">3</div><div class="k">Research objectives (2 fully + 1 partially)</div></div>
+    <div class="fact"><div class="v">12</div><div class="k">Panel recommendations (all addressed)</div></div>
+    <div class="fact"><div class="v">34</div><div class="k">AI actions Peso can do</div></div>
+    <div class="fact"><div class="v">7</div><div class="k">Ways to log an expense</div></div>
+    <div class="fact"><div class="v">10</div><div class="k">AI providers in fallback chain</div></div>
+    <div class="fact"><div class="v">36</div><div class="k">Achievement badges in app</div></div>
+    <div class="fact"><div class="v">3.3.3</div><div class="k">Current app version</div></div>
+  </div>
+
+  <!-- 9. IF YOU BLANK OUT -->
+  <h2 class="sec">🛟 If You Blank Out During the Defense</h2>
+  <div class="trouble"><strong>Rescue phrases — never just say "I don't know."</strong>
+    <ul style="margin:7px 0 0; padding-left:20px; font-size:.9rem; color:var(--ink); line-height:1.65;">
+      <li>"That specific detail I'd need to verify, but what I can tell you is…"</li>
+      <li>"Our research focused on [X], and what we found was…"</li>
+      <li>"Let me add to what [teammate] said — from the implementation side…"</li>
+      <li>"That's actually a great point — Recommendation [N] from our panel addresses exactly that…"</li>
+    </ul>
+    <p style="margin-top:9px; font-size:.86rem; color:var(--bad);"><b>Never</b> say just "I don't know." Always bridge to something you DO know.</p>
+  </div>
+
+</section>
 
 <!-- ================================================================ DEMO TAB -->
 <section class="panel" id="p-demo">
