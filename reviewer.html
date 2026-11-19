@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SmartSpend &#8212; Defense Reviewer v3.3.2</title>
+<title>SmartSpend &#8212; Defense Reviewer v3.3.6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
@@ -261,7 +261,7 @@
     <div class="top-row">
       <div>
         <h1>SmartSpend Defense Reviewer</h1>
-        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Thu Nov 20, 2026 11:00 AM &nbsp;&middot;&nbsp; v3.3.2 &nbsp;&middot;&nbsp;
+        <div class="top-meta">Lucid Frame &nbsp;&middot;&nbsp; Final Defense &nbsp;&middot;&nbsp; Thu Nov 20, 2026 11:00 AM &nbsp;&middot;&nbsp; v3.3.6 &nbsp;&middot;&nbsp;
           <a href="https://zushikina-kun.github.io/smartspend-app/" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">🌐 Website</a> &nbsp;&middot;&nbsp;
           <a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">📦 GitHub</a> &nbsp;&middot;&nbsp;
           <a href="https://github.com/Zushikina-kun/smartspend-app/releases/latest" target="_blank" style="color:rgba(255,255,255,.8);text-decoration:none;">⬇️ Latest APK</a>
@@ -446,7 +446,7 @@
     <div class="fact"><div class="v">12</div><div class="k">Panel recommendations (all addressed)</div></div>
     <div class="fact"><div class="v">34</div><div class="k">AI actions Peso can do</div></div>
     <div class="fact"><div class="v">7</div><div class="k">Ways to log an expense</div></div>
-    <div class="fact"><div class="v">10</div><div class="k">AI providers in fallback chain</div></div>
+    <div class="fact"><div class="v">13</div><div class="k">AI providers in fallback chain</div></div>
     <div class="fact"><div class="v">36</div><div class="k">Achievement badges in app</div></div>
     <div class="fact"><div class="v">3.3.3</div><div class="k">Current app version</div></div>
   </div>
@@ -487,8 +487,8 @@
       <li><b>Quick Stats card</b> &mdash; &ldquo;This Month at a Glance&rdquo; home card: total spent, avg/day, top spending category, days logged. Addresses SUS Q2 complexity &mdash; no need to navigate to Analytics.</li>
       <li><b>Logging streak badge</b> &mdash; &#128293; consecutive-day expense logging streak shown on home screen. Addresses SUS Q8 engagement.</li>
       <li><b>Home screen section headers</b> &mdash; &ldquo;YOUR FINANCES&rdquo;, &ldquo;QUICK ACTIONS&rdquo;, &ldquo;GOALS &amp; TRACKING&rdquo; section labels between card groups. Addresses SUS Q6 inconsistency.</li>
-      <li><b>OpenRouter AI Gateway</b> &mdash; Multi-provider AI architecture with 100+ model access via unified API endpoint; default model <code>google/gemma-3-27b-it:free</code> (auto-routes to best available free model)</li>
-      <li><b>10-Provider Fallback Chain</b> &mdash; Automatic failover ensures AI features work 24/7 (Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B &#8594; Qwen 3.6 &#8594; Qwen 3.8 &#8594; Compound &#8594; Compound Mini &#8594; Cerebras)</li>
+      <li><b>OpenRouter AI Gateway</b> &mdash; Multi-provider AI architecture with 100+ model access via unified API endpoint; default model <code>nvidia/nemotron-3-ultra-550b-a55b:free</code> (auto-routes to best available free model)</li>
+      <li><b>13-Provider Fallback Chain</b> &mdash; Automatic failover ensures AI features work 24/7 (Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B &#8594; Qwen 3.6 &#8594; Qwen 3.8 &#8594; Compound &#8594; Compound Mini &#8594; Cerebras)</li>
       <li><b>Intelligent Auto Routing</b> &mdash; Auto mode selects optimal provider for speed and quality; caches last successful provider</li>
       <li><b>Government Contributions Tracker</b> &mdash; Tracks SSS, PhilHealth, and Pag-IBIG with an SSS pension estimator calculator, AI-logged contributions via Taglish chat, and direct links to official government portals</li>
       <li><b>Defense Reviewer Upgrade</b> &mdash; Global search, keyboard shortcuts, reading progress bar, 140+ Q&amp;A questions</li>
@@ -528,7 +528,7 @@
           <li>Watch it log 2 expenses simultaneously with Filipino/English parsing</li>
         </ul>
         <div class="say">"I just logged 2 expenses in one sentence in Taglish. The AI understood the items, amounts, categories, and dates &#8212; without me filling any form. This is what we call an agentic action &#8212; we have 34 types in total, from logging expenses to setting budgets to computing savings."</div>
-        <div class="say">If panel asks how it works: "The message goes to our AI engine. In Auto mode, it tries our 10-provider chain &#8212; starting with OpenRouter (which routes to <code>google/gemma-3-27b-it:free</code>, auto-selecting the best available free model) then falling back through Gemini, 5 Groq models, and Cerebras. The AI returns a JSON action like <code>{type:'log_expense', item:'lunch', amount:65}</code> which the app then executes. Users type naturally in Filipino, English, or Taglish."</div>
+        <div class="say">If panel asks how it works: "The message goes to our AI engine. In Auto mode, it tries our 13-provider chain &#8212; starting with OpenRouter (which routes to <code>nvidia/nemotron-3-ultra-550b-a55b:free</code>, auto-selecting the best available free model) then falling back through Gemini, 5 Groq models, and Cerebras. The AI returns a JSON action like <code>{type:'log_expense', item:'lunch', amount:65}</code> which the app then executes. Users type naturally in Filipino, English, or Taglish."</div>
       </div>
     </div>
 
@@ -640,7 +640,7 @@
     <tr><td>"13 parents"</td><td>"16 parents and 14 young professionals" (needs assessment, 30 total)</td></tr>
     <tr><td>"fully achieved" for Obj. 3</td><td>"Objective 3 was <b>partially achieved</b>"</td></tr>
     <tr><td>"passed" / "excellent" SUS</td><td>"61.83, below the 68 benchmark and the 80 target"</td></tr>
-    <tr><td>"eight-provider chain"</td><td>"8-model cloud failover chain" or "10-provider chain" (v3.3.0)</td></tr>
+    <tr><td>"eight-provider chain"</td><td>"8-model cloud failover chain" or "13-provider chain" (v3.3.0)</td></tr>
     <tr><td>"the highest free-tier quota"</td><td>"a high free-tier quota" (Table 6: Groq/Cerebras are higher)</td></tr>
     <tr><td>"fully offline"</td><td>"offline-first; core features work offline; cloud AI needs internet"</td></tr>
     <tr><td>"Recommendation 1 for UI/UX"</td><td>"UI/UX refinement is Recommendation 8"</td></tr>
@@ -753,7 +753,7 @@
     <a href="#cat-gamification">11 &#8212; Gamification &amp; Badges</a>
     <a href="#cat-methodology-deep">12 &#8212; Research Deep Dive</a>
     <a href="#cat-ai">&#9881;&#65039; [TECH REF] How the AI Works</a>
-    <a href="#cat-openrouter">&#127760; [TECH REF] OpenRouter &amp; 10-Provider Chain</a>
+    <a href="#cat-openrouter">&#127760; [TECH REF] OpenRouter &amp; 13-provider chain</a>
     <a href="#cat-tech">&#128295; [TECH REF] Technical Implementation</a>
     <a href="#cat-security">&#128274; [TECH REF] Security &amp; Privacy</a>
     <a href="#cat-newqa">&#128218; [TECH REF] Technical Deep-Dive Q&amp;A</a>
@@ -778,7 +778,7 @@
     </div>
     <div style="background:var(--card);border-radius:8px;padding:14px;">
       <div style="font-weight:700;font-size:.88rem;color:var(--ledger);margin-bottom:6px;">🤖 Novel Architecture</div>
-      <p style="font-size:.84rem;color:var(--ink-soft);margin:0;">34 agentic AI actions in Taglish + a 10-provider fallback chain for 24/7 uptime is not just an app feature — it's a replicable resilience model for cost-constrained AI apps in developing countries.</p>
+      <p style="font-size:.84rem;color:var(--ink-soft);margin:0;">34 agentic AI actions in Taglish + a 13-Provider Fallback Chain for 24/7 uptime is not just an app feature — it's a replicable resilience model for cost-constrained AI apps in developing countries.</p>
     </div>
     <div style="background:var(--card);border-radius:8px;padding:14px;">
       <div style="font-weight:700;font-size:.88rem;color:var(--ledger);margin-bottom:6px;">📈 We Acted on Results</div>
@@ -873,10 +873,10 @@
   <p>SUS is built to be reliable with small samples &#8212; research shows it stabilizes around 12&#8211;14 participants, and our 30 is well above that. For a one-semester capstone, 30 is a common and defensible sample size. We are upfront that it limits how far we can generalize, which is exactly why we recommend a larger, longer follow-up study.</p>
   </div></details>
   <details class="qa"><summary>What LLM did you use and why? <span class="tag tag-ai">AI</span> <span class="tag tag-critical">critical</span></summary><div class="a">
-  <p>We evaluated Gemini Flash-Lite as the main model because it handled Taglish well, was fast, and had a generous free tier. We did not commit to one model, though &#8212; the app now auto-falls back across 10 providers so the AI keeps working even when one is down. Full technical details are in the Technical Reference section below.</p>
+  <p>We evaluated Gemini Flash-Lite as the main model because it handled Taglish well, was fast, and had a generous free tier. We did not commit to one model, though &#8212; the app now auto-falls back across 13 providers so the AI keeps working even when one is down. Full technical details are in the Technical Reference section below.</p>
   </div></details>
   <details class="qa"><summary>How does SmartSpend compare to BudgetPH, PISO, Agila? <span class="tag tag-research">research</span></summary><div class="a">
-  <p>BudgetPH recently added AI assistant support via Claude&#8217;s MCP protocol, which requires a separate Claude subscription. SmartSpend&#8217;s AI is built-in, free, works through 10 providers automatically, and needs no external subscription or setup. Agila has an AI chat, but it can only log expenses; it cannot set budgets, track debts, or give advice. SmartSpend is the only one whose AI actually performs 34 different actions, plus Filipino-specific features like SSS/PhilHealth/Pag-IBIG tracking and paluwagan.</p>
+  <p>BudgetPH recently added AI assistant support via Claude&#8217;s MCP protocol, which requires a separate Claude subscription. SmartSpend&#8217;s AI is built-in, free, works through 13 providers automatically, and needs no external subscription or setup. Agila has an AI chat, but it can only log expenses; it cannot set budgets, track debts, or give advice. SmartSpend is the only one whose AI actually performs 34 different actions, plus Filipino-specific features like SSS/PhilHealth/Pag-IBIG tracking and paluwagan.</p>
   </div></details>
   <details class="qa"><summary>Is this quantitative, qualitative, or mixed methods? <span class="tag tag-research">research</span> <span class="tag tag-critical">critical</span></summary><div class="a">
   <p>It is purely <b>quantitative descriptive developmental</b> &#8212; no interviews, no open-ended data, no mixed methods. We used validated structured surveys for both the needs assessment and the SUS usability evaluation, and we developed the app using an Agile Kanban workflow.</p>
@@ -979,7 +979,7 @@
   <p>Two primary groups: (1) Filipino college students with irregular allowances &#8212; handled by the allowance cycle and student account type. (2) Young working professionals aged 21&#8211;35 who earn a salary but have never tracked finances. Designed mobile-first, AI-assisted, to fit existing phone habits. Survey respondents: parents aged 35&#8211;55 and young professionals aged 21&#8211;35 in San Fernando City, La Union.</p>
   </div></details>
   <details class="qa"><summary>How is this different from BudgetPH, PISO, or Agila? <span class="tag tag-research">research</span></summary><div class="a">
-  <p><b>vs BudgetPH/PISO:</b> BudgetPH recently added AI assistant support via Claude&#8217;s MCP protocol, which requires a separate Claude subscription. SmartSpend&#8217;s AI is built-in, free, works through 10 providers automatically, and needs no external subscription or setup. We also support voice, OCR, barcode, and batch screenshot import from 40+ platforms. BudgetPH has Safe-to-Spend (we copied it); we also have FHS scoring and government contributions tracking.</p>
+  <p><b>vs BudgetPH/PISO:</b> BudgetPH recently added AI assistant support via Claude&#8217;s MCP protocol, which requires a separate Claude subscription. SmartSpend&#8217;s AI is built-in, free, works through 13 providers automatically, and needs no external subscription or setup. We also support voice, OCR, barcode, and batch screenshot import from 40+ platforms. BudgetPH has Safe-to-Spend (we copied it); we also have FHS scoring and government contributions tracking.</p>
   <p><b>vs Agila:</b> Agila has &#8220;Agila Chat&#8221; but its AI is logging-only &#8212; it cannot set budgets, track debts, compute savings, or give advice (based on published app store descriptions as of November 2026). Our 34 agentic actions cover all of that.</p>
   <p><b>Unique to SmartSpend:</b> Dual-mode Financial Health Score, paluwagan tracker, SSS/PhilHealth/Pag-IBIG tracking, 10-provider AI fallback for 24/7 uptime, Private Local AI mode, batch screenshot import.</p>
   </div></details>
@@ -1140,8 +1140,8 @@
   <p><b>Also fixed:</b> AI Model Selector bottom sheet scrolling on small screens (&lt;5.5"). Build 111 released as production-ready APK (119.8 MB, Android 5.0+).</p>
   </div></details>
   <details class="qa"><summary>What's new in v3.2.2&#8211;3.2.3? <span class="tag tag-openrouter">OpenRouter</span></summary><div class="a">
-  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: <code>google/gemma-3-27b-it:free</code> (auto-selects best available free model on OpenRouter network).</p>
-  <p><b>10-provider fallback chain</b> &#8212; Upgraded from 8 to 10 providers. Auto mode now prioritizes OpenRouter for optimal model selection across any task type.</p>
+  <p><b>OpenRouter AI Gateway</b> &#8212; Unified access to 100+ AI models via single API. Added as 2nd priority in fallback chain after Custom Local. Default model: <code>nvidia/nemotron-3-ultra-550b-a55b:free</code> (auto-selects best available free model on OpenRouter network).</p>
+  <p><b>13-Provider Fallback Chain</b> &#8212; Upgraded from 8 to 13 providers. Auto mode now prioritizes OpenRouter for optimal model selection across any task type.</p>
   <p><b>Intelligent routing</b> &#8212; App caches last successful provider, reducing latency for repeat requests.</p>
   </div></details>
   <details class="qa"><summary>Why government contributions tracking? <span class="tag tag-ai">AI</span></summary><div class="a">
@@ -1282,7 +1282,7 @@
   <p><b>Gamification (3):</b> check_achievements, show_badges, check_peso_mood. <b>Meta (3):</b> help, clarify_question, multi_action.</p>
   </div></details>
   <details class="qa"><summary>What happens when the AI is down or the internet is slow? <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>A 10-provider fallback chain automatically switches (v3.3.0): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
+  <p>A 13-Provider Fallback Chain automatically switches (v3.3.0): Local &#8594; OpenRouter &#8594; Gemini Flash &#8594; Gemini Flash-Lite &#8594; GPT-OSS 120B (Groq) &#8594; Qwen 3.6 (Groq) &#8594; Qwen 3.8 (Groq) &#8594; Compound (Groq) &#8594; Compound Mini (Groq) &#8594; Cerebras GPT-OSS. Each has its own daily limit. If all fail, all manual entry features still work 100% offline.</p>
   </div></details>
   <details class="qa"><summary>How does the AI understand Taglish? Did you train a custom model? <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
   <p>No custom training &#8212; we use prompt engineering. The system prompt includes: (1) Filipino cultural context (jeepney, pandesal, allowance, paluwagan), (2) 150+ Filipino item catalog, (3) Taglish instruction examples, (4) Category mapping guidance (taho = Food, tricycle = Transportation), (5) Common Filipino merchants (Jollibee, 7-Eleven, SM, Puregold). Gemini 3.5 and GPT-OSS-120B handle this well because their training data includes Filipino text. We don&#8217;t need fine-tuning &#8212; the base models + good prompts suffice.</p>
@@ -1298,9 +1298,9 @@
   </div></details>
 </details>
 
-<!-- ===== [TECH REF] OPENROUTER AND 10-PROVIDER CHAIN ===== -->
+<!-- ===== [TECH REF] OPENROUTER AND 13-provider chain ===== -->
 <details class="cat" id="cat-openrouter">
-  <summary>&#127760; [TECH REF] OpenRouter &amp; 10-Provider Chain</summary>
+  <summary>&#127760; [TECH REF] OpenRouter &amp; 13-provider chain</summary>
   <details class="qa"><summary>Why add OpenRouter to the app? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
   <p><b>OpenRouter is an AI gateway service</b> that provides unified access to 100+ language models through a single API endpoint. We added it in v3.2.2 for three reasons:</p>
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
@@ -1310,24 +1310,37 @@
   </ul>
   <p>The integration required minimal code changes because OpenRouter uses OpenAI-compatible API format &#8212; same Authorization header, same request/response structure.</p>
   </div></details>
-  <details class="qa"><summary>Explain the 10-provider fallback chain <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
-  <p>When Auto mode is enabled, SmartSpend tries providers in this priority order:</p>
-  <ol style="margin:8px 0; padding-left:20px; font-size:.9rem;">
-  <li><b>Custom Local</b> (if configured) &#8212; user&#8217;s own PC running Ollama/LM Studio/Jan</li>
-  <li><b>OpenRouter</b> &#8212; <code>google/gemma-3-27b-it:free</code> default; $100 credit; routes to 100+ models</li>
-  <li><b>Gemini 3.5 Flash</b> &#8212; Google AI Studio direct connection</li>
-  <li><b>Gemini 3.5 Flash-Lite</b> &#8212; lighter/faster Google model (primary in v3.1.0)</li>
-  <li><b>GPT-OSS 120B (Groq)</b> &#8212; fast inference</li>
-  <li><b>Qwen 3.6 27B (Groq)</b> &#8212; Filipino-English capable</li>
-  <li><b>Qwen 3.8 27B (Groq)</b> &#8212; newer Qwen variant</li>
-  <li><b>Compound (Groq)</b> &#8212; ensemble model</li>
-  <li><b>Compound Mini (Groq)</b> &#8212; smaller ensemble</li>
-  <li><b>Cerebras GPT-OSS 120B</b> &#8212; ultra-fast via wafer-scale engine</li>
-  </ol>
-  <p>If a provider returns an error (rate limit, timeout, 503), the app immediately tries the next one. This happens automatically in &lt;1 second &#8212; users don&#8217;t notice the switch. The last successful provider is cached to reduce latency for subsequent requests.</p>
+  <details class="qa"><summary>Explain the 13-Provider Fallback Chain <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span> <span class="tag tag-tech">tech</span></summary><div class="a">
+  <p>SmartSpend has <b>two layers</b> of fallback — OpenRouter handles its own internally, then our app handles the rest:</p>
+  <div style="background:var(--card);border-radius:8px;padding:12px 14px;margin:8px 0;">
+    <div style="font-weight:700;font-size:.85rem;color:var(--ledger);margin-bottom:6px;">Layer 1: OpenRouter Internal (automatic, invisible to user)</div>
+    <ol style="margin:0;padding-left:18px;font-size:.88rem;color:var(--ink-soft);">
+      <li>nvidia/nemotron-3-ultra-550b-a55b:free &#8212; 550B frontier, #1 ranked on OpenRouter</li>
+      <li>nvidia/nemotron-3.5-lightning:free &#8212; fast MoE, 1M context</li>
+      <li>nvidia/nemotron-3.5-super-vl:free &#8212; multimodal, 1M context</li>
+      <li>google/gemma-4-31b-it:free &#8212; Google Gemma 4, 262K context</li>
+      <li>google/gemma-4-26b-a4b-it:free &#8212; Google Gemma 4 MoE variant</li>
+    </ol>
+    <p style="font-size:.82rem;color:var(--ink-soft);margin:6px 0 0;">If any model returns an error or null content, OpenRouter automatically tries the next one. Our app never even knows a switch happened.</p>
+  </div>
+  <div style="background:var(--card);border-radius:8px;padding:12px 14px;margin:8px 0;">
+    <div style="font-weight:700;font-size:.85rem;color:var(--ledger);margin-bottom:6px;">Layer 2: App-Level Fallback (if ALL 5 OpenRouter models fail)</div>
+    <ol style="margin:0;padding-left:18px;font-size:.88rem;color:var(--ink-soft);" start="6">
+      <li>Custom Local (user&#8217;s own PC — if configured)</li>
+      <li>Gemini 3.5 Flash &#8212; Google AI Studio direct</li>
+      <li>Gemini 3.5 Flash-Lite &#8212; faster/lighter Gemini</li>
+      <li>GPT-OSS 120B on Groq &#8212; hardcoded key, always available</li>
+      <li>Qwen 3.6 27B on Groq</li>
+      <li>Qwen 3.8 27B on Groq</li>
+      <li>Compound on Groq</li>
+      <li>Compound Mini on Groq</li>
+      <li>Cerebras GPT-OSS 120B &#8212; last resort, wafer-scale speed</li>
+    </ol>
+  </div>
+  <p style="font-size:.88rem;color:var(--ink-soft);">Total: <b>13 fallback options</b> across 5 different infrastructure providers (NVIDIA/OpenRouter, Google, Groq, Cerebras, user&#8217;s local hardware). The app switches in &lt;1 second. Users never see a failure unless all 13 fail simultaneously &#8212; at which point manual entry still works.</p>
   </div></details>
   <details class="qa"><summary>What happens when all providers fail? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>If all 10 providers fail simultaneously (extremely unlikely &#8212; they span 4 different infrastructure providers: Google, Groq, Cerebras, OpenRouter):</p>
+  <p>If all 13 providers fail simultaneously (extremely unlikely &#8212; they span 4 different infrastructure providers: Google, Groq, Cerebras, OpenRouter):</p>
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li>AI chat shows "AI unavailable &#8212; use manual entry" with quick action button</li>
   <li>All manual features remain fully functional: expense logging (form), budgets, analytics, wallets, goals</li>
@@ -1337,7 +1350,7 @@
   <p>SmartSpend is designed so AI enhances the experience but is never a single point of failure. Core finance tracking works without AI.</p>
   </div></details>
   <details class="qa"><summary>How much does the AI cost to run? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Current cost: approximately $0 recurring.</b> All direct providers (Gemini, Groq, Cerebras) are on free tiers. OpenRouter credit: $100 available (expires May 14, 2027) &#8212; at $0.30/1M tokens for <code>google/gemma-3-27b-it:free</code>, that&#8217;s ~83,000 AI advice chats or ~166,000 expense logs possible from the credit alone. Per-user 150 message/day limit enforces zero-cost operation for a research prototype. For production scaling, Recommendation 2 (backend proxy) would implement per-user API keys and usage billing.</p>
+  <p><b>Current cost: approximately $0 recurring.</b> All direct providers (Gemini, Groq, Cerebras) are on free tiers. OpenRouter credit: $100 available (expires May 14, 2027) &#8212; at $0.30/1M tokens for <code>nvidia/nemotron-3-ultra-550b-a55b:free</code>, that&#8217;s ~83,000 AI advice chats or ~166,000 expense logs possible from the credit alone. Per-user 150 message/day limit enforces zero-cost operation for a research prototype. For production scaling, Recommendation 2 (backend proxy) would implement per-user API keys and usage billing.</p>
   </div></details>
   <details class="qa"><summary>Is user data sent to AI providers? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-security">security</span></summary><div class="a">
   <p>Only the text the user typed and a summarized financial context (categories and amounts, never names or account numbers). Mobile numbers, reference numbers, and account patterns are <b>redacted on-device</b> before any API call, using regex patterns. A one-time privacy disclosure appears before the first AI message. We are upfront that free Gemini quota terms say content may be used to improve Google&#8217;s products &#8212; redaction reduces but does not fully eliminate that exposure. Users who want zero exposure can use Private Local Mode (Tier 2) where requests go only to their own PC.</p>
@@ -1346,7 +1359,7 @@
   <p>The API key (<code>sk-or-v1-...</code>) is stored in Firebase Remote Config under the parameter <code>openrouter_api_key</code> &#8212; never hardcoded in the APK. The key is loaded at app startup via <code>AppConfig.init()</code>. Usage can be monitored at <code>openrouter.ai/workspaces/default/activity</code>. The credit expires May 14, 2027. Post-capstone, Recommendation 2 (backend proxy) would move to per-user API key management so each user&#8217;s usage is tracked separately, preventing one heavy user from exhausting the shared credit.</p>
   </div></details>
   <details class="qa"><summary>What model does OpenRouter use by default? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p><b>Default: <code>google/gemma-3-27b-it:free</code></b> &#8212; SmartSpend's OpenRouter model, chosen because it auto-routes to the best available free model on the OpenRouter network, providing:
+  <p><b>Default: <code>nvidia/nemotron-3-ultra-550b-a55b:free</code></b> &#8212; SmartSpend's OpenRouter model, chosen because it auto-routes to the best available free model on the OpenRouter network, providing:
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li>&#9989; Fast response time (good for real-time expense logging)</li>
   <li>&#9989; Strong reasoning (handles financial advice and calculations)</li>
@@ -1357,14 +1370,14 @@
   <p>Alternative models available via OpenRouter: Claude 3.5 Sonnet (better quality, more expensive ~$3&#8211;15/1M tokens), Gemini Flash-8B (cheaper, weaker reasoning), Llama 3.1 70B (open source). The model can be changed in <code>app_config.dart</code> line ~59.</p>
   </div></details>
   <details class="qa"><summary>Why not just use one AI provider? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-ai">AI</span></summary><div class="a">
-  <p>Single-provider risks: (1) <b>Downtime</b> &#8212; Google Gemini had a notable outage in October 2024; SmartSpend users would have lost AI features for hours. (2) <b>Rate limits</b> &#8212; Free tiers have per-day limits; a single popular app can exhaust them. (3) <b>Policy changes</b> &#8212; Providers can tighten free tiers with 30-day notice. The 10-provider chain spreads risk across 4 different infrastructure operators: Google, Groq (Meta/startup), Cerebras (chip startup), and OpenRouter (aggregator). The probability that all 4 fail simultaneously is extremely low.</p>
+  <p>Single-provider risks: (1) <b>Downtime</b> &#8212; Google Gemini had a notable outage in October 2024; SmartSpend users would have lost AI features for hours. (2) <b>Rate limits</b> &#8212; Free tiers have per-day limits; a single popular app can exhaust them. (3) <b>Policy changes</b> &#8212; Providers can tighten free tiers with 30-day notice. The 13-provider chain spreads risk across 4 different infrastructure operators: Google, Groq (Meta/startup), Cerebras (chip startup), and OpenRouter (aggregator). The probability that all 4 fail simultaneously is extremely low.</p>
   </div></details>
   <details class="qa"><summary>How is OpenRouter integrated technically? <span class="tag tag-openrouter">OpenRouter</span> <span class="tag tag-tech">tech</span></summary><div class="a">
   <p><b>File:</b> <code>lib/services/app_config.dart</code>. Added in v3.2.2:</p>
   <ul style="margin:8px 0; padding-left:20px; font-size:.9rem;">
   <li>Line ~18: <code>_fallbackOpenRouterKey</code> constant</li>
   <li>Line ~28: <code>_openRouterUrl</code> (<code>https://openrouter.ai/api/v1/chat/completions</code>)</li>
-  <li>Line ~59: <code>_openRouterModel</code> default (<code>google/gemma-3-27b-it:free</code>)</li>
+  <li>Line ~59: <code>_openRouterModel</code> default (<code>nvidia/nemotron-3-ultra-550b-a55b:free</code>)</li>
   <li>Line ~129: Added to <code>availableModels</code> list (3rd position)</li>
   <li>Line ~284: Integrated into <code>autoFallback()</code> chain (2nd position)</li>
   <p><b>API format:</b> OpenRouter uses OpenAI-compatible format. Authorization: <code>Bearer sk-or-v1-...</code>. No code restructuring needed &#8212; dropped in alongside existing Groq/Cerebras integration.</p>
@@ -1485,7 +1498,7 @@
   </div></details>
 
   <details class="qa"><summary>Did you do any testing beyond the SUS survey? <span class="tag tag-research">research</span> <span class="tag tag-sus">SUS</span></summary><div class="a">
-  <p>Yes — several additional testing activities are documented in the manuscript even though the SUS is the primary formal usability instrument. <b>Parsing accuracy testing</b> (Table 9) used development-phase inputs to measure field-level extraction accuracy across amount (88.2%), description (79.9%), date (70.4%), and category (83.4%) — though this was not an independent audit. <b>AI action testing</b> verified all 34 agentic actions against a test corpus of Filipino/English/Taglish inputs. <b>Fallback chain testing</b> confirmed automatic provider switching worked within &lt;1 second for each of the 10 providers. <b>OCR platform testing</b> covered 40+ screenshot formats to build the keyword templates. <b>Demo Mode testing</b> confirmed the pre-loaded Filipino sample data displayed correctly across all screens. These are not formal benchmarks, which is why Recommendation 9 (formal parsing evaluation with standardized receipts) remains in the manuscript as future work.</p>
+  <p>Yes — several additional testing activities are documented in the manuscript even though the SUS is the primary formal usability instrument. <b>Parsing accuracy testing</b> (Table 9) used development-phase inputs to measure field-level extraction accuracy across amount (88.2%), description (79.9%), date (70.4%), and category (83.4%) — though this was not an independent audit. <b>AI action testing</b> verified all 34 agentic actions against a test corpus of Filipino/English/Taglish inputs. <b>Fallback chain testing</b> confirmed automatic provider switching worked within &lt;1 second for each of the 13 providers. <b>OCR platform testing</b> covered 40+ screenshot formats to build the keyword templates. <b>Demo Mode testing</b> confirmed the pre-loaded Filipino sample data displayed correctly across all screens. These are not formal benchmarks, which is why Recommendation 9 (formal parsing evaluation with standardized receipts) remains in the manuscript as future work.</p>
   </div></details>
 
   <details class="qa"><summary>How does the app handle multiple currencies? <span class="tag tag-tech">tech</span></summary><div class="a">
@@ -1709,7 +1722,7 @@
     <div class="fact"><div class="v">34</div><div class="k">AI agentic actions</div></div>
     <div class="fact"><div class="v">7</div><div class="k">Input methods</div></div>
     <div class="fact"><div class="v">36</div><div class="k">Achievement badges</div></div>
-    <div class="fact"><div class="v">10</div><div class="k">AI providers in chain</div></div>
+    <div class="fact"><div class="v"">13</div><div class="k">AI providers in chain</div></div>
     <div class="fact"><div class="v">v3.1.0</div><div class="k">Version that was evaluated</div></div>
     <div class="fact"><div class="v">v3.3.0</div><div class="k">Current version (build 117)</div></div>
     <div class="fact"><div class="v">68</div><div class="k">SUS industry average (we are below)</div></div>
@@ -1736,7 +1749,7 @@
   <h2 class="sec" id="oneliners-sec">One-line rapid-fire answers</h2>
   <ul class="oneliners">
     <li><b>What is SmartSpend?</b><span>An AI-powered expense tracker for Filipinos that lets you log spending by just talking to it in Taglish or English.</span></li>
-    <li><b>What&#8217;s new in v3.3.0?</b><span>Payday-cycle budget reset (Recommendation 1 implemented) + Quick Stats home card + logging streak badge + home screen section headers. v3.2.5 added OpenRouter AI Gateway (100+ models, $100 credit) + 10-provider fallback chain. v3.2.0 added Government Contributions Tracker (SSS/PhilHealth/Pag-IBIG YTD + pension calculator).</span></li>
+    <li><b>What&#8217;s new in v3.3.0?</b><span>Payday-cycle budget reset (Recommendation 1 implemented) + Quick Stats home card + logging streak badge + home screen section headers. v3.2.5 added OpenRouter AI Gateway (100+ models, $100 credit) + 13-Provider Fallback Chain. v3.2.0 added Government Contributions Tracker (SSS/PhilHealth/Pag-IBIG YTD + pension calculator).</span></li>
     <li><b>What is the FHS?</b><span>A 0&#8211;100 prototype indicator measuring savings rate, spending control, budget adherence, and logging consistency &#8212; 25 points each. Formally: Prototype Observed Financial Health Indicator.</span></li>
     <li><b>Why AI?</b><span>To eliminate the manual data entry barrier that stops most people from tracking finances.</span></li>
     <li><b>What database?</b><span>SQLite locally (26 tables, schema v14), Firebase Firestore for optional cloud backup.</span></li>
@@ -1767,7 +1780,7 @@
   <div class="scroll"><table>
     <tr><th>#</th><th>Provider / Model</th><th>Limit</th><th>Notes</th></tr>
     <tr><td>1</td><td>Custom Local (if configured)</td><td>&#8734;</td><td>User&#8217;s own Ollama / LM Studio / Jan server</td></tr>
-    <tr><td>2</td><td><b>OpenRouter</b> (<code>google/gemma-3-27b-it:free</code>)</td><td>$100 credit</td><td>Gateway to 100+ models. Auto-routes to best free model. Expires May 2027. (added v3.2.2)</td></tr>
+    <tr><td>2</td><td><b>OpenRouter</b> (<code>nvidia/nemotron-3-ultra-550b-a55b:free</code>)</td><td>$100 credit</td><td>Gateway to 100+ models. Auto-routes to best free model. Expires May 2027. (added v3.2.2)</td></tr>
     <tr><td>3</td><td>Gemini 3.5 Flash</td><td>Free tier</td><td>Best reasoning, GA stable (Google direct)</td></tr>
     <tr><td>4</td><td>Gemini 3.5 Flash-Lite</td><td>Free tier</td><td>Fastest + cheapest 3.5. Primary in v3.1.0.</td></tr>
     <tr><td>5</td><td>GPT-OSS 120B (Groq)</td><td>1,000/day</td><td>Best open-source quality</td></tr>
@@ -1890,13 +1903,13 @@
     <tr><td>&#8220;13 parents&#8221;</td><td>&#8220;16 parents and 14 young professionals&#8221; (needs assessment)</td></tr>
     <tr><td>&#8220;fully achieved&#8221; for Obj 3</td><td>&#8220;Objective 3 was <b>partially achieved</b>&#8221;</td></tr>
     <tr><td>&#8220;passed&#8221; / &#8220;excellent&#8221; / &#8220;acceptable&#8221;</td><td>&#8220;61.83, below the 68 benchmark and the 80 target&#8221;</td></tr>
-    <tr><td>&#8220;eight-provider chain&#8221;</td><td>&#8220;8-model cloud failover chain&#8221; (v3.1.0) or &#8220;10-provider chain&#8221; (v3.3.0)</td></tr>
+    <tr><td>&#8220;eight-provider chain&#8221;</td><td>&#8220;8-model cloud failover chain&#8221; (v3.1.0) or &#8220;13-provider chain&#8221; (v3.3.0)</td></tr>
     <tr><td>&#8220;the highest free-tier quota&#8221;</td><td>&#8220;a high free-tier quota&#8221; (Table 6: Groq/Cerebras are higher)</td></tr>
     <tr><td>&#8220;fully offline&#8221;</td><td>&#8220;offline-first; core features work offline; cloud AI needs internet&#8221;</td></tr>
     <tr><td>&#8220;Recommendation 1 for UI/UX&#8221;</td><td>&#8220;UI/UX refinement is <b>Recommendation 8</b>&#8221;</td></tr>
     <tr><td>&#8220;proposed&#8221; (for the app)</td><td>&#8220;developed&#8221; / &#8220;built&#8221; (the app exists!)</td></tr>
     <tr><td>&#8220;seven recommendations&#8221;</td><td>&#8220;<b>nine</b> recommendations&#8221;</td></tr>
-    <tr><td>&#8220;20 models&#8221; / &#8220;10 providers&#8221;</td><td>&#8220;10 candidate models from 4 providers&#8221; (evaluation)</td></tr>
+    <tr><td>&#8220;20 models&#8221; / &#8220;13 providers&#8221;</td><td>&#8220;10 candidate models from 4 providers&#8221; (evaluation)</td></tr>
     <tr><td>&#8220;version 3.2.4&#8221; for evaluation</td><td>&#8220;version 3.1.0 was evaluated; v3.3.0 is current&#8221;</td></tr>
     <tr><td>&#8220;validated instrument&#8221; (FHS)</td><td>&#8220;Prototype Observed Financial Health Indicator&#8221;</td></tr>
     <tr><td>&#8220;33 badges&#8221;</td><td>&#8220;36 achievement badges&#8221;</td></tr>
@@ -1987,7 +2000,7 @@
     <p>&#8220;The Financial Health Score is a <b>prototype indicator</b> on a 0-to-100 scale. In Full Mode it has four equally weighted components of 25 points each: savings rate, overspend control, budget adherence, and logging consistency. Lightweight Mode, for users without income tracking, uses spending restraint, logging consistency, category balance, and habit streak. We adapted ideas from the CBA-MI Observed scale and the Financial Health Network&#8217;s FinHealth Score. The weights are a design choice, not a statistically derived result, and we formally classify the score as a Prototype Observed Financial Health Indicator, not a validated instrument.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q5 &#8212; What LLM did you use?</summary><div class="a">
-    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b> as the primary model in v3.1.0. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral &#8212; against six weighted criteria: Filipino-English accuracy 25%, speed 20%, tool use/JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. Our fallback chain adds seven more models across Google, Groq, and Cerebras. In v3.2.5, we added OpenRouter as the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
+    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b> as the primary model in v3.1.0. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral &#8212; against six weighted criteria: Filipino-English accuracy 25%, speed 20%, tool use/JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. Our fallback chain adds seven more models across Google, Groq, and Cerebras. In v3.2.5, we added OpenRouter as the second-priority gateway, bringing the total to a 13-provider chain.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q6 &#8212; Why are there 16 parents and 14 young professionals if three said both?</summary><div class="a">
     <p>&#8220;Three of our 30 respondents answered &#8216;Both a parent and a young professional&#8217; in Question 2. For analysis and reporting, we counted them with the parent group based on their Q1 age bracket, which was 35 to 55. This is stated in the notes to Tables 3 and 5 and the Figure 5 footnote. The SUS evaluation was a completely separate group where respondents self-identified, giving 10 parents and 20 young professionals.&#8221;</p>
@@ -2005,7 +2018,7 @@
     <p>&#8220;We have <b>nine recommendations</b>: (1) Payday-cycle-aware budgeting aligned to the 15th-and-30th salary cycle. (2) Backend API proxy and per-user keys to remove device-side key exposure. (3) Google Play release, after the proxy and a privacy policy are in place. (4) On-device AI tier, an opt-in model of about 2.6 gigabytes for fully offline AI. (5) SQLite encryption using SQLCipher. (6) Household and remittance features: shared wallets and OFW remittance as a distinct income category. (7) Longitudinal evaluation over 3&#8211;6 months with a larger sample. (8) UI/UX refinement addressing consistency in Q6 and complexity in Q2. (9) Formal parsing evaluation using standardized test receipts across multiple platforms. All nine come from the specific limitations of the current prototype.&#8221;</p>
     </div></details>
     <details class="qa"><summary>Q11 &#8212; What about OpenRouter? (v3.2.2+)</summary><div class="a">
-    <p>&#8220;We integrated OpenRouter as an AI gateway starting in v3.2.2. OpenRouter provides access to 100+ language models from multiple providers through a single OpenAI-compatible API endpoint. We added it as the second priority in our 10-provider fallback chain &#8212; after the user&#8217;s optional local model, before direct Gemini. The default model through OpenRouter is <code>google/gemma-3-27b-it:free</code>, which auto-selects the best available free model on the OpenRouter network, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. We have $100 in OpenRouter credits expiring May 2027. This upgrade, included in v3.2.5, raised the chain from 8 to 10 providers, further improving 24/7 AI availability.&#8221;</p>
+    <p>&#8220;We integrated OpenRouter as an AI gateway starting in v3.2.2. OpenRouter provides access to 100+ language models from multiple providers through a single OpenAI-compatible API endpoint. We added it as the second priority in our 13-Provider Fallback Chain &#8212; after the user&#8217;s optional local model, before direct Gemini. The default model through OpenRouter is <code>nvidia/nemotron-3-ultra-550b-a55b:free</code>, which auto-selects the best available free model on the OpenRouter network, chosen for its balance of speed, quality, and cost efficiency at $0.30 per 1M tokens. We have $100 in OpenRouter credits expiring May 2027. This upgrade, included in v3.2.5, raised the chain from 8 to 13 providers, further improving 24/7 AI availability.&#8221;</p>
     </div></details>
   </details>
 
@@ -2258,7 +2271,7 @@
     </div></details>
 
     <details class="qa"><summary>Q6 &#8212; What LLM did you use?</summary><div class="a">
-    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b>. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral. The criteria were weighted: Filipino-English accuracy 25%, speed 20%, tool use and JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. We also built an eight-model failover chain across Google, Groq, and Cerebras. In v3.3.0, OpenRouter remains the second-priority gateway, bringing the total to a 10-provider chain.&#8221;</p>
+    <p>&#8220;We used <b>Gemini 3.5 Flash-Lite</b>. We evaluated <b>ten candidate models from four providers</b>: Google, Groq, Cerebras, and Mistral. The criteria were weighted: Filipino-English accuracy 25%, speed 20%, tool use and JSON reliability 20%, free-tier availability 15%, context window 10%, and financial reasoning quality 10%. Gemini 3.5 Flash-Lite offered a one-million-token context window, native function calling for our 34 actions, good Taglish handling in our trials, and a high free-tier request quota. We also built an eight-model failover chain across Google, Groq, and Cerebras. In v3.3.0, OpenRouter remains the second-priority gateway, bringing the total to a 13-provider chain.&#8221;</p>
     </div></details>
 
     <details class="qa"><summary>Q7 &#8212; Is the app available on iOS?</summary><div class="a">
@@ -2300,7 +2313,7 @@
     <li><b>Needs assessment: 16 parents (including 3 &#8220;both&#8221;) + 14 young professionals = 30.</b><span>SUS evaluation: 10 parents + 20 young professionals = 30 valid of 36 (separate group).</span></li>
     <li><b>Always say &#8220;quantitative descriptive developmental&#8221;.</b><span>No interviews, so never say &#8220;respondents said&#8221; or &#8220;respondents cited&#8221;. Say &#8220;the SUS items showed&#8221;.</span></li>
     <li><b>Don&#8217;t say &#8220;proposed&#8221; about the app.</b><span>It is built and tested.</span></li>
-    <li><b>&#8220;Ten candidate models from four providers&#8221; and &#8220;eight-model failover chain&#8221; (v3.1.0 evaluated).</b><span>&#8220;10-provider chain&#8221; for the current v3.3.0 build.</span></li>
+    <li><b>&#8220;Ten candidate models from four providers&#8221; and &#8220;eight-model failover chain&#8221; (v3.1.0 evaluated).</b><span>&#8220;13-provider chain&#8221; for the current v3.3.0 build.</span></li>
     <li><b>Gemini had &#8220;a high free-tier quota&#8221;, not &#8220;the highest&#8221;.</b><span>Table 6: Groq and Cerebras are higher.</span></li>
     <li><b>Rec 8 = UI/UX refinement. Rec 9 = Formal parsing evaluation.</b><span>Never swap these or say &#8220;seven recommendations&#8221;.</span></li>
     <li><b>Don&#8217;t quote stats not in the manuscript.</b><span>No requests per day, APK size, screen count, currencies, or precision/recall unless they appear in the manuscript.</span></li>
@@ -2830,6 +2843,10 @@ document.addEventListener("keydown", function(e) {
 
 </body>
 </html>
+
+
+
+
 
 
 
