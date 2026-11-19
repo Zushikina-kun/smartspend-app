@@ -79,13 +79,10 @@ class AppConfig {
   // 1M tokens/day free, 5 RPM free tier, ~3,000 t/s
 
   // OpenRouter (unified API gateway to 100+ models)
-  // Using google/gemma-3-27b-it:free — reliable, fast, good for finance tasks
-  // Avoid openrouter/free: routes to experimental models that may return null content
-  static const _openRouterModel = "google/gemma-3-27b-it:free";
-  // Other reliable free alternatives:
-  // "meta-llama/llama-3.3-70b-instruct:free" — strong reasoning
-  // "google/gemma-3-12b-it:free" — faster, lighter
-  // "mistralai/mistral-7b-instruct:free" — consistent, well-tested
+  // google/gemma-4-31b-it:free — Google Gemma 4 31B, 262K context, completely FREE
+  // Verified available on OpenRouter as of Nov 2026. Reliable — no null content issues.
+  static const _openRouterModel = "google/gemma-4-31b-it:free";
+  // Backup: "google/gemma-4-26b-a4b-it:free" — MoE variant, also free, 262K context
 
   // ── REMOTE KEYS (from Firebase Remote Config) ─────────────────────────────
   static String? _remoteGroqKey;
