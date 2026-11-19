@@ -280,7 +280,7 @@
     </div>
     <!-- ALWAYS-VISIBLE GLOBAL SEARCH BAR -->
     <div class="global-search-bar">
-      <input type="text" id="global-search-input" placeholder="🔍 Search all tabs… (or press / )" oninput="runGlobalSearch(this.value)" autocomplete="off" spellcheck="false">
+      <input type="text" id="global-search-input" placeholder="🔍 Search all tabs… (or press / )" oninput="(function(v){console.log('INLINE search:',v);var p=document.getElementById('gsearch-results-panel');if(p){p.innerHTML='<div style=\"padding:10px\">Search: '+v+'</div>';p.className+=' open';}else{console.error('No panel found');}})(this.value)" autocomplete="off" spellcheck="false">
       <span id="global-search-count"></span>
       <button class="gsb-clear" onclick="clearGlobalSearch()" title="Clear search">✕</button>
     </div>
