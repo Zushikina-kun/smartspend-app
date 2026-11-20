@@ -31,7 +31,9 @@ class LLMService {
             // Fix 6 / Fix 4: OpenRouter requires these headers for proper
             // routing. Without them, OpenRouter may return HTTP 400.
             // Added conditionally so other providers are unaffected.
-            if (AppConfig.activeModelId == 'openrouter') ...{
+            // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway
+            if (AppConfig.activeModelId.startsWith('or_') ||
+                AppConfig.activeModelId == 'openrouter') ...{
               "HTTP-Referer": "https://zushikina-kun.github.io/smartspend-app/",
               "X-Title": "SmartSpend",
             },

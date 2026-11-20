@@ -1286,7 +1286,9 @@ PH BNPL/Loan Services (2026):
                 // Fix 4: OpenRouter requires these headers for proper routing.
                 // Without HTTP-Referer + X-Title, OpenRouter may return 400.
                 // Added conditionally so other providers are unaffected.
-                if (AppConfig.activeModelId == 'openrouter') ...{
+                // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway
+                if (AppConfig.activeModelId.startsWith('or_') ||
+                    AppConfig.activeModelId == 'openrouter') ...{
                   "HTTP-Referer":
                       "https://zushikina-kun.github.io/smartspend-app/",
                   "X-Title": "SmartSpend",
