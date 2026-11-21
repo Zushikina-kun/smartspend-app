@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:speech_to_text/speech_to_text.dart';
 
 class VoiceService {
@@ -22,7 +23,8 @@ class VoiceService {
           "Microphone not available. Check permissions and try again.");
     }
 
-    String finalResult = "";
+    final completer = Completer<String>();
+    String latestResult = '';
 
     // Try en_PH first (Filipino English), fall back to en_US
     final locales = await _speech.locales();
@@ -31,8 +33,11 @@ class VoiceService {
 
     await _speech.listen(
       onResult: (val) {
-        finalResult = val.recognizedWords;
-        if (onPartialResult != null) onPartialResult(finalResult);
+        latestResult = val.recognizedWords;
+        if (onPartialResult != null) onPartialResult(latestResult);
+        if (val.finalResult && !completer.isCompleted) {
+          completer.complete(latestResult);
+        }
       },
       listenFor: const Duration(seconds: 15),
       pauseFor:
@@ -40,16 +45,15 @@ class VoiceService {
       localeId: localeId,
     );
 
-    // Wait until speech recognition stops on its own (pause detected)
-    while (_speech.isListening) {
-      await Future.delayed(const Duration(milliseconds: 200));
-    }
-
-    if (finalResult.isEmpty) {
-      throw Exception("No speech detected. Please try again.");
-    }
-
-    return finalResult;
+    // Await the final recognition result instead of polling isListening,
+    // which can flip false before the final-result callback fires.
+    return await completer.future.timeout(
+      const Duration(seconds: 18),
+      onTimeout: () {
+        if (latestResult.isNotEmpty) return latestResult;
+        throw Exception('No speech detected. Please try again.');
+      },
+    );
   }
 
   Future<void> stop() async {
