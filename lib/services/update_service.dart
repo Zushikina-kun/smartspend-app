@@ -46,7 +46,7 @@ class DownloadProgress {
 /// In-app update checker + APK downloader.
 ///
 /// Flow:
-///   1. checkForUpdate() — hits GitHub API, caches 24 hrs.
+///   1. checkForUpdate() — hits GitHub API, caches 6 hrs.
 ///   2. If hasUpdate: show banner in home screen.
 ///   3. User taps "Update":
 ///      a. If apkDownloadUrl available → downloadAndInstall() — downloads
@@ -56,7 +56,7 @@ class UpdateService {
   static const _repo = 'Zushikina-kun/smartspend-app';
   static const _cacheKey = 'update_check_result';
   static const _cacheTimeKey = 'update_check_last';
-  static const _cacheHours = 24;
+  static const _cacheHours = 6;
 
   static UpdateInfo? _cached;
   static bool _dismissed = false;
@@ -117,7 +117,12 @@ class UpdateService {
                 releaseNotes: map['releaseNotes'] as String,
                 apkDownloadUrl: map['apkDownloadUrl'] as String?,
               );
-              return _cached;
+              // Invalidate cache if it was built for a different app version,
+              // then fall through to a fresh API call below.
+              if (_cached != null && _cached!.currentVersion != kAppVersion) {
+                _cached = null;
+              }
+              if (_cached != null) return _cached;
             }
           }
         }
@@ -173,7 +178,7 @@ class UpdateService {
         apkDownloadUrl: apkUrl,
       );
 
-      // Cache for 24 hours
+      // Cache for 6 hours
       await DBService.setSetting(
         _cacheKey,
         jsonEncode({
