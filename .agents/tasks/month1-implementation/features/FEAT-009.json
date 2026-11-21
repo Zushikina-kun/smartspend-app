@@ -1,0 +1,34 @@
+{
+  "id": "FEAT-009",
+  "type": "feat",
+  "description": "Budget Categories - Auto-categorization - AI suggests category based on expense description, reducing manual categorization work.",
+  "status": "pending",
+  "steps": [
+    "Enhance lib/services/app_config.dart (or create new ai_categorization_service.dart) to add suggestCategory(String description) method that calls LLM with prompt: 'Categorize this expense into one of these categories: {list of categories from CategoryService}. Expense description: {description}. Return only the category name, no explanation.'",
+    "Add getCategorySuggestion() helper that: (1) checks if description contains obvious keywords (e.g., 'jollibee', 'mcdo', 'restaurant' → Food; 'grab', 'angkas', 'taxi' → Transportation; 'shopee', 'lazada' → Shopping), (2) if no keyword match, calls LLM for suggestion, (3) returns suggested category with confidence score (keyword match = 1.0, LLM = 0.7-0.9 based on response clarity)",
+    "Integrate auto-categorization into add_expense_screen.dart: when user types description and tabs away from description field, call getCategorySuggestion() and auto-select the suggested category in dropdown. Show small 'AI suggested' badge next to category dropdown when auto-selected.",
+    "Add user feedback mechanism: if user changes auto-suggested category, log the correction (description, suggested_category, actual_category) to new 'category_corrections' table for future ML training. This creates a learning dataset without needing cloud infrastructure.",
+    "Enhance batch import flows (batch_image_import_screen.dart, ai_screen.dart batch processing) to auto-categorize all imported expenses before showing review screen, reducing manual work for bulk imports",
+    "Add preference toggle in settings_screen.dart: 'Auto-Categorize Expenses' (default ON) with info explaining that AI suggests categories but user can always override"
+  ],
+  "acceptance_criteria": [
+    "Typing '150 pesos at jollibee' auto-suggests Food category",
+    "Typing 'grab to office' auto-suggests Transportation category",
+    "Ambiguous descriptions call LLM for categorization suggestion",
+    "User can override auto-suggestion and correction is logged for learning",
+    "Batch imports have categories auto-assigned before review screen",
+    "Auto-categorization respects user preference toggle"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Type 'lunch at mcdonalds' in description → Food category auto-selected with 'AI suggested' badge",
+    "Test scenario 2: Type 'new shirt from shopee' → Shopping category auto-selected",
+    "Test scenario 3: Type ambiguous description 'gift for friend' → LLM suggests 'Gifts' or 'Personal' category",
+    "Test scenario 4: Auto-suggest shows Food but user changes to Entertainment → correction logged in category_corrections table",
+    "Test scenario 5: Batch import 10 expenses → all have categories pre-assigned, user reviews and accepts/modifies",
+    "Test scenario 6: Disable auto-categorization in settings → no auto-suggestions appear"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

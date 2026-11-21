@@ -300,6 +300,67 @@ class OCRService {
     return 'unknown';
   }
 
+  /// Extract line items (product names and prices) from receipt text.
+  /// Returns a list of maps with keys: 'productName' and 'price'.
+  /// Matches patterns like "ItemName ... ₱XX.XX" or "ItemName XX.XX"
+  static List<Map<String, dynamic>> extractLineItems(String receiptText) {
+    final lines = receiptText.split('\n');
+    final items = <Map<String, dynamic>>[];
+
+    // Patterns to match:
+    // 1. "ProductName ₱99.99" or "ProductName 99.99"
+    // 2. "ProductName ... ₱99.99"
+    // 3. "ProductName 1x 99.99"
+    final patterns = [
+      // Pattern: text followed by currency symbol and price
+      RegExp(r'^(.+?)\s*[₱P]?\s*(\d+[,.]?\d*\.?\d{2})\s*$'),
+      // Pattern: text with dots/spaces leading to price
+      RegExp(r'^(.+?)\s*[.…\s]{2,}\s*[₱P]?\s*(\d+[,.]?\d*\.?\d{2})\s*$'),
+      // Pattern: text with quantity indicator
+      RegExp(r'^(.+?)\s+\d+x?\s+[₱P]?\s*(\d+[,.]?\d*\.?\d{2})\s*$'),
+    ];
+
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.isEmpty) continue;
+
+      // Skip obvious non-item lines
+      if (trimmed.toLowerCase().contains('total') ||
+          trimmed.toLowerCase().contains('subtotal') ||
+          trimmed.toLowerCase().contains('change') ||
+          trimmed.toLowerCase().contains('cash') ||
+          trimmed.toLowerCase().contains('vat') ||
+          trimmed.toLowerCase().contains('discount') ||
+          trimmed.length < 3) {
+        continue;
+      }
+
+      for (final pattern in patterns) {
+        final match = pattern.firstMatch(trimmed);
+        if (match != null) {
+          final productName = match.group(1)?.trim();
+          final priceStr = match.group(2)?.replaceAll(',', '');
+
+          if (productName != null &&
+              productName.isNotEmpty &&
+              priceStr != null) {
+            final price = double.tryParse(priceStr);
+            if (price != null && price > 0 && price < 1000000) {
+              // Reasonable price range
+              items.add({
+                'productName': productName,
+                'price': price,
+              });
+              break; // Found match, don't try other patterns
+            }
+          }
+        }
+      }
+    }
+
+    return items;
+  }
+
   static String _cleanReceiptText(String raw) {
     final lines = raw.split('\n');
 

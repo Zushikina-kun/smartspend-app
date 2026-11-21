@@ -1,0 +1,35 @@
+{
+  "id": "FEAT-013",
+  "type": "feat",
+  "description": "Insights Dashboard - Spending Trends - Month-over-month comparison showing 'You spent 30% more on Food this month' with category-level trend analysis.",
+  "status": "pending",
+  "steps": [
+    "Create lib/screens/insights_screen.dart as new standalone screen (or enhance existing analytics_screen.dart with new Insights tab) displaying spending trend analysis and AI-generated insights",
+    "Add getCurrentMonthVsPreviousMonth() method to insight_service.dart (enhance existing service) that: (1) queries expenses for current month and previous month, (2) groups by category, (3) calculates difference and percentage change per category, (4) returns sorted list of categories with biggest changes (increases and decreases)",
+    "Display trend cards showing: category icon, category name, current month total, previous month total, change amount (±₱X), percentage change (±X%), and trend arrow (↑ red for increase, ↓ green for decrease). Sort by absolute change magnitude.",
+    "Add AI-generated insight for each significant trend: call LLMService with prompt 'Explain this spending change: Category {cat}, Previous month {prev}, This month {curr}, Change {change}%. Is this normal? Should user be concerned?' Display AI response in expandable card under trend.",
+    "Add week-over-week comparison section: show last 4 weeks of spending in bar chart with week labels (Week 1, Week 2, Week 3, Week 4). Color bars by spending level (green=below avg, orange=near avg, red=above avg).",
+    "Add top insights summary at top of screen: 3 highlighted cards with: (1) Biggest spending increase category, (2) Biggest spending decrease category, (3) Most consistent category (lowest volatility). Each with brief AI-generated explanation.",
+    "Add time range selector: Month-over-month (default), Week-over-week, Year-over-year. Each recalculates comparisons for selected range.",
+    "Add navigation link to insights_screen from home_screen.dart main navigation or drawer, and add 'View Insights' button on home screen AI insights widget"
+  ],
+  "acceptance_criteria": [
+    "Insights screen shows month-over-month spending comparison by category",
+    "Trend cards display percentage change and trend direction (up/down)",
+    "AI generates contextual explanations for significant spending changes",
+    "Week-over-week chart visualizes spending volatility",
+    "Top insights summary highlights 3 most notable patterns",
+    "Time range selector switches between monthly, weekly, yearly comparisons"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Current month Food ₱8,500 vs previous month ₱6,500 → trend card shows '+30.8% (↑₱2,000)' with red upward arrow",
+    "Test scenario 2: Current month Transportation ₱2,000 vs previous month ₱3,500 → trend card shows '-42.9% (↓₱1,500)' with green downward arrow",
+    "Test scenario 3: AI insight for Food increase explains 'Your food spending increased significantly. This could be due to dining out more or price increases. Review your receipts to identify the cause.'",
+    "Test scenario 4: Week-over-week chart shows 4 bars: Week 1 ₱3k (orange), Week 2 ₱4.5k (red), Week 3 ₱2.8k (green), Week 4 ₱3.2k (orange)",
+    "Test scenario 5: Top insights cards show: Biggest increase = Food +30%, Biggest decrease = Transportation -43%, Most consistent = Bills ±5%"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

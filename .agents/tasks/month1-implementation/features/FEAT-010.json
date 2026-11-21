@@ -1,0 +1,36 @@
+{
+  "id": "FEAT-010",
+  "type": "feat",
+  "description": "Receipt Gallery - Search & Filter - Search receipts by text, date range, amount range, and filter by category/store for easier receipt management.",
+  "status": "pending",
+  "steps": [
+    "Create lib/screens/receipt_gallery_screen.dart as new screen showing GridView of all expenses that have photo_path set (expenses with receipt photos). Each grid item shows thumbnail image, date, amount, and store name if available.",
+    "Add search bar at top of receipt_gallery_screen that filters receipts by: (1) item_name or notes text match (case-insensitive), (2) shop_name text match, (3) category match",
+    "Add filter button in app bar that opens FilterDialog with: (1) date range picker (from date, to date), (2) amount range sliders (min, max), (3) category multi-select chips (select multiple categories), (4) store name text field. Apply filters button refreshes gallery with filtered results.",
+    "Enhance db_service.dart to add getExpensesWithReceipts({String? searchText, DateTime? dateFrom, DateTime? dateTo, double? amountMin, double? amountMax, List<String>? categories, String? storeName}) method that queries expenses table with photo_path IS NOT NULL and applies all filter criteria using SQL WHERE clauses",
+    "Add receipt detail view: tapping a grid item opens full-screen dialog showing large receipt image, expense details (amount, date, category, description, store), and action buttons (Edit Expense, Delete Receipt, Share Image)",
+    "Add sorting options dropdown: Sort by Date (newest/oldest), Amount (high/low), Store (A-Z). Applies to filtered results.",
+    "Add empty state when no receipts found: 'No receipts match your filters' with Clear Filters button",
+    "Add navigation link to receipt_gallery_screen from home_screen.dart drawer under 'Tools' section with camera/gallery icon and 'Receipt Gallery' label"
+  ],
+  "acceptance_criteria": [
+    "Receipt gallery displays grid of receipt thumbnails for all expenses with photos",
+    "Search bar filters receipts in real-time as user types",
+    "Filter dialog applies multiple criteria simultaneously (date range, amount range, categories, store)",
+    "Tapping receipt shows full-screen detail with image and expense info",
+    "Sorting options correctly reorder receipts",
+    "Empty state appears when no receipts match filters with option to clear"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Gallery shows all 15 expenses that have receipt photos attached",
+    "Test scenario 2: Search 'grocery' → only receipts with 'grocery' in description or store name shown",
+    "Test scenario 3: Filter by date range Jan 1 - Jan 31 → only receipts from January shown",
+    "Test scenario 4: Filter by amount ₱100-₱500 and category Food → only Food receipts in that price range shown",
+    "Test scenario 5: Apply filter with no matches → empty state with 'Clear Filters' button displayed",
+    "Test scenario 6: Sort by Amount (high to low) → receipts reordered with highest amount first"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

@@ -1,0 +1,23 @@
+{
+  "task_id": "task-month1-implementation",
+  "task_description": "Implement all 15 Month 1 high-priority features (120 hours): Cash Flow Forecasting, Price Intelligence Phase 1, eGov Integrations (SSS/PhilHealth/Pag-IBIG), Bill Payment Reminders, OFW Features (Remittance Tracking + Balikbayan Box Tracker), Auto-categorization, Receipt Search, Debt Payoff Calculator, Goal Progress Visualization, Insights Dashboard, Export to CSV, and Backup & Restore",
+  "status": "pending",
+  "feature_order": [
+    "FEAT-001",
+    "FEAT-002",
+    "FEAT-003",
+    "FEAT-004",
+    "FEAT-005",
+    "FEAT-006",
+    "FEAT-007",
+    "FEAT-008",
+    "FEAT-009",
+    "FEAT-010",
+    "FEAT-011",
+    "FEAT-012",
+    "FEAT-013",
+    "FEAT-014",
+    "FEAT-015"
+  ],
+  "blocked_reason": null
+}

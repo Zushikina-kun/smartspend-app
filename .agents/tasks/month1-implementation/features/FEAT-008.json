@@ -1,0 +1,36 @@
+{
+  "id": "FEAT-008",
+  "type": "feat",
+  "description": "OFW Features - Balikbayan Box Tracker - Track boxes sent to Philippines with contents list, cost tracking, and delivery status.",
+  "status": "pending",
+  "steps": [
+    "Create lib/models/balikbayan_box.dart model with fields: id, trackingNumber, sentDate, estimatedArrival, actualArrival, recipient, recipientAddress, shippingCompany, shippingCost, status ('preparing', 'shipped', 'in_transit', 'customs', 'delivered'), contents (List of items), totalValue, notes, createdAt",
+    "Add balikbayan_boxes table to db_service.dart: CREATE TABLE balikbayan_boxes (id INTEGER PRIMARY KEY AUTOINCREMENT, tracking_number TEXT, sent_date TEXT, estimated_arrival TEXT, actual_arrival TEXT, recipient TEXT NOT NULL, recipient_address TEXT, shipping_company TEXT, shipping_cost REAL, status TEXT DEFAULT 'preparing', total_value REAL DEFAULT 0, notes TEXT, created_at TEXT NOT NULL)",
+    "Add box_contents table for items: CREATE TABLE box_contents (id INTEGER PRIMARY KEY AUTOINCREMENT, box_id INTEGER NOT NULL, item_name TEXT NOT NULL, quantity INTEGER DEFAULT 1, estimated_value REAL, category TEXT, FOREIGN KEY(box_id) REFERENCES balikbayan_boxes(id) ON DELETE CASCADE)",
+    "Add database methods to db_service.dart: addBBox(Map data), getBBoxes(), updateBBox(int id, Map data), deleteBBox(int id), addBBoxItem(int boxId, Map item), getBBoxItems(int boxId), deleteBBoxItem(int itemId)",
+    "Create lib/screens/ofw/balikbayan_tracker_screen.dart with: (1) ListView of boxes showing tracking number, recipient, status badge, sent date, estimated arrival, (2) status filter chips (All/Preparing/Shipped/Delivered), (3) FAB to add new box",
+    "Add box detail screen/dialog showing: tracking number, recipient info, shipping details, timeline visualization (sent → in transit → customs → delivered with dates), contents list with item names/quantities/values, total box value, and action buttons (Edit, Add Item, Mark as Delivered, Delete)",
+    "Add box form dialog with fields: tracking number (optional), sent date picker, estimated arrival picker, recipient name, recipient address (multiline), shipping company dropdown (LBC, Forex, Umac, Atlas, JRS, Other), shipping cost input, notes",
+    "Add contents management: 'Add Item' button in box detail opens dialog with item name, quantity, estimated value, category (Clothing, Food, Electronics, Medicine, Toys, Household, Other). Contents shown in expandable list with total value calculation.",
+    "Add navigation link to balikbayan_tracker_screen from home_screen.dart drawer under 'OFW Features' section with box icon and 'Balikbayan Boxes' label"
+  ],
+  "acceptance_criteria": [
+    "Box tracker screen shows list of boxes with key info and status badges",
+    "Status filter chips correctly filter boxes by current status",
+    "Box detail shows complete timeline, recipient info, and contents list",
+    "Adding items to box updates total value calculation automatically",
+    "Marking box as delivered sets actual_arrival date to today and status to 'delivered'",
+    "Delete box also deletes all associated contents (CASCADE)"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Add box with tracking ABC123, recipient 'Mother', sent today, est. arrival in 45 days → box appears in list with 'Shipped' status",
+    "Test scenario 2: Add 5 items to box (3 clothing ₱500 each, 2 food ₱300 each) → total value shows ₱2,100",
+    "Test scenario 3: Mark box as delivered → status badge changes to 'Delivered', actual arrival date set to today",
+    "Test scenario 4: Filter by 'Preparing' → only boxes with 'preparing' status shown",
+    "Test scenario 5: Delete box → box and all contents removed from database (verify with query)"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

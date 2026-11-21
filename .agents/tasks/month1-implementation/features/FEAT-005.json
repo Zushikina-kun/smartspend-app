@@ -1,0 +1,34 @@
+{
+  "id": "FEAT-005",
+  "type": "feat",
+  "description": "eGov Phase 1 - Pag-IBIG Integration - Housing loan calculator, MP2 savings calculator with year-by-year projections, and contribution rate calculator.",
+  "status": "pending",
+  "steps": [
+    "Create lib/services/egov/pagibig_service.dart with calculateMonthlyContribution(monthlySalary) method that returns Pag-IBIG contribution based on 2026 rates: 2% of monthly salary (₱1,500 salary minimum, ₱5,000 salary maximum for computation), split 2% employer + 2% employee = 4% total on salary",
+    "Add housing loan calculator to pagibig_service.dart: calculateHousingLoan(loanAmount, years, annualInterestRate) returns monthly amortization using standard amortization formula. Use default 6.5% interest rate for 5-30 year terms. Include max loan amount note: up to ₱6,000,000 depending on affordability",
+    "Add MP2 savings calculator to pagibig_service.dart: calculateMP2Projection(monthlyContribution, years, annualDividendRate) returns year-by-year projection array showing: year, total contributions, estimated dividends (default 6-8% average), total value. Include note that dividends vary yearly based on Pag-IBIG fund performance",
+    "Create lib/screens/egov/pagibig_screen.dart with 3 tabs: (1) Contribution Calculator with salary input showing employee/employer/total breakdown, (2) Housing Loan Calculator with loan amount, term (years), and interest rate sliders showing monthly payment and total interest, (3) MP2 Savings Calculator with monthly contribution and years inputs showing year-by-year projection table and final value chart",
+    "Add MP2 projection visualization using fl_chart: BarChart showing total value at years 5, 10, 15, 20 with breakdown of contributions vs dividends in stacked bars",
+    "Add Pag-IBIG screen navigation link to home_screen.dart drawer under 'Government' section with Pag-IBIG logo icon and 'Pag-IBIG Calculators' label",
+    "Add info buttons explaining: Pag-IBIG contribution rates, housing loan eligibility, MP2 voluntary savings program (5-year lock-in, tax-free dividends), and links to pagibigfund.gov.ph portal"
+  ],
+  "acceptance_criteria": [
+    "Contribution calculator shows correct 2% employee + 2% employer = 4% total (capped at ₱5,000 salary for computation)",
+    "Housing loan calculator accurately computes monthly amortization for various loan amounts and terms",
+    "MP2 calculator shows year-by-year projection with contributions and estimated dividends",
+    "MP2 chart visualizes growth over time with clear contribution vs dividend breakdown",
+    "All three calculators have reasonable defaults and input validation",
+    "Info buttons explain each calculator and link to official Pag-IBIG portal"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Enter ₱25,000 salary → contribution shows ₱500 employee + ₱500 employer = ₱1,000 total (2% of salary)",
+    "Test scenario 2: Enter ₱10,000 salary → contribution capped at ₱100 employee + ₱100 employer = ₱200 total (2% of ₱5,000 max)",
+    "Test scenario 3: Housing loan ₱2,000,000 at 6.5% for 20 years → monthly payment approximately ₱14,990",
+    "Test scenario 4: MP2 ₱5,000/month for 10 years at 7% average dividend → final value approximately ₱865,000 (₱600k contributions + ₱265k dividends)",
+    "Test scenario 5: MP2 chart displays 5 bars (5-year increments) with visible contribution and dividend segments"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

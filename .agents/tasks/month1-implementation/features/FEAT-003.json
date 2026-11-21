@@ -1,0 +1,32 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "eGov Phase 1 - SSS Integration - SSS contribution calculator, loan calculators (salary loan, calamity loan, emergency loan), and mock contribution history viewer.",
+  "status": "pending",
+  "steps": [
+    "Create lib/services/egov/sss_service.dart with calculateMonthlyContribution(monthlySalary) method that returns SSS contribution based on 2026 SSS contribution table (₱1,000-₱29,750 salary range, 14% total rate split 9.5% employer / 4.5% employee)",
+    "Add SSS loan calculators to sss_service.dart: (1) calculateSalaryLoan(monthlyPay, loanAmount) returns monthly amortization at 10% annual interest for 24 months, (2) calculateCalamityLoan(monthlyPay) returns max ₱20,000 loan with 10% annual interest for 24 months, (3) calculateEmergencyLoan(monthlyPay) returns ₱5,000-₱20,000 range with 10% annual interest for 12 months",
+    "Create lib/screens/egov/sss_screen.dart with 3 tabs: (1) Contribution Calculator with salary input and result card showing employer/employee/total breakdown, (2) Loan Calculators with 3 expandable sections for each loan type with amount slider and monthly payment result, (3) Contribution History with mock data showing last 12 months of contributions in DataTable format",
+    "Add mock data generator in sss_service.dart: generateMockContributionHistory() returns list of 12 monthly contributions with random dates and amounts based on user's salary from settings (if available) or default ₱15,000",
+    "Add SSS screen navigation link to home_screen.dart drawer under new 'Government' section with SSS logo icon and 'SSS Calculator' label",
+    "Add info buttons throughout SSS screen explaining: SSS contribution rates, loan eligibility requirements, and how to check real contribution history at sss.gov.ph portal"
+  ],
+  "acceptance_criteria": [
+    "SSS contribution calculator correctly computes employee/employer shares based on 2026 SSS table",
+    "Salary loan calculator shows accurate monthly amortization for 24-month term at 10% interest",
+    "Calamity and emergency loan calculators show correct max amounts and monthly payments",
+    "Mock contribution history displays 12 months of data in readable table format",
+    "Info buttons provide helpful explanations with links to official SSS portal",
+    "Screen works offline (mock data only, no API calls)"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Enter ₱20,000 monthly salary → contribution shows ₱1,900 employee + ₱4,033 employer = ₱5,933 total (verify against SSS 2026 table)",
+    "Test scenario 2: Salary loan of ₱40,000 for ₱20,000/month salary → monthly payment approximately ₱1,840 (principal + 10% interest / 24 months)",
+    "Test scenario 3: Mock history shows 12 entries with realistic contribution amounts and dates from past year",
+    "Test scenario 4: All info buttons display Peso explanations and link to sss.gov.ph"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

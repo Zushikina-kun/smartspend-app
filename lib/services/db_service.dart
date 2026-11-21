@@ -897,6 +897,18 @@ class DBService {
         notes TEXT
       )
     ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS prices(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_name TEXT NOT NULL,
+        store_name TEXT,
+        price REAL NOT NULL,
+        date TEXT NOT NULL,
+        category TEXT,
+        expense_id INTEGER,
+        created_at TEXT
+      )
+    ''');
   }
 
   // ── EXPENSES ──────────────────────────────────────────────

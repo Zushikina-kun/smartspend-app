@@ -1,0 +1,38 @@
+{
+  "id": "FEAT-015",
+  "type": "feat",
+  "description": "Backup & Restore - Export complete database to JSON format and restore from backup file, enabling data migration and disaster recovery.",
+  "status": "pending",
+  "steps": [
+    "Enhance existing lib/services/backup_service.dart (service already exists from v3.3.9) to add createFullBackup() method that: (1) queries all tables from DBService (expenses, budgets, savings_goals, debts, recurring, income, chat_history, etc - all 26 tables), (2) serializes to JSON format with metadata (version, backup_date, device_info), (3) saves to app documents directory as smartspend_backup_YYYY-MM-DD_HHmm.json, (4) returns file path and file size",
+    "Add restoreFromBackup(String filePath) method that: (1) reads JSON file, (2) validates format and version compatibility, (3) shows confirmation dialog with backup date and record counts, (4) if confirmed, clears current database, (5) imports all records from JSON maintaining referential integrity, (6) shows success message with imported counts",
+    "Add backup verification: after creating backup, compute SHA256 hash of file and store in backup metadata. Before restore, verify hash matches to detect corruption.",
+    "Enhance backup_screen.dart (create if doesn't exist) with: (1) 'Create Backup' button that generates backup and shows success dialog with 'Open Location' and 'Share Backup' buttons, (2) 'Restore from Backup' button that opens file picker, validates JSON, shows preview of backup contents, and confirms before restoring",
+    "Add automatic backup scheduling: create setting 'Auto-Backup' (Daily/Weekly/Off) that schedules background backup using WorkManager. Store last backup date and show badge in settings if backup is overdue.",
+    "Add backup history list in backup_screen showing: backup date, file size, record counts (X expenses, Y budgets, Z goals), age indicator (e.g., '3 days ago'), and action buttons (Restore, Share, Delete). Limit to 10 most recent backups with option to delete old ones.",
+    "Add safety features: (1) before restore, create automatic pre-restore backup in case restore fails or user wants to revert, (2) show warnings if backup is from different app version with migration notes, (3) validate that backup JSON contains all required tables before proceeding",
+    "Add navigation to backup screen from: settings_screen 'Backup & Restore' button, profile_screen 'Manage Data' section, and home drawer 'Backup Data'"
+  ],
+  "acceptance_criteria": [
+    "Create Backup generates complete JSON file with all database tables and metadata",
+    "Backup file can be shared via email/drive and opened on different device",
+    "Restore from Backup imports all data correctly without data loss",
+    "Backup verification using hash prevents corrupted file restoration",
+    "Auto-backup scheduling works for daily/weekly intervals",
+    "Backup history shows recent backups with ability to restore any of them",
+    "Safety features prevent accidental data loss during restore"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Create backup with 200 expenses, 5 budgets, 3 goals → JSON file ~500KB containing all records",
+    "Test scenario 2: Open JSON in text editor → validate structure has metadata, expenses array, budgets array, etc with correct schema",
+    "Test scenario 3: Delete all data, restore from backup → all 200 expenses, 5 budgets, 3 goals restored exactly",
+    "Test scenario 4: Attempt restore of corrupted JSON (modify hash) → validation fails with 'Backup file corrupted' error",
+    "Test scenario 5: Enable auto-backup Daily → after 24 hours, new backup appears in backup history automatically",
+    "Test scenario 6: Backup history shows 5 backups from last 2 weeks → restore 3-day-old backup → data reverts to that snapshot",
+    "Test scenario 7: Before restore, automatic pre-restore backup created → if restore fails, can revert using pre-restore backup"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

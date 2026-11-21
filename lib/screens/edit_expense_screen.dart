@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../models/expense.dart';
+import '../models/price_data.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
+import '../services/price_intelligence_service.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
 import 'package:image_picker/image_picker.dart';
@@ -376,6 +378,9 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
             // Photo attachment
             _buildPhotoSection(),
             const SizedBox(height: 12),
+            // Price comparison button (if photo exists)
+            if (_photoPath != null) _buildPriceComparisonButton(),
+            if (_photoPath != null) const SizedBox(height: 12),
             // Tags
             _buildTagsSection(),
             const SizedBox(height: 24),
@@ -540,6 +545,110 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: _pickPhoto,
+    );
+  }
+
+  Widget _buildPriceComparisonButton() {
+    return OutlinedButton.icon(
+      icon: const Icon(Icons.compare_arrows, size: 18),
+      label: const Text("View Price Comparison"),
+      style: OutlinedButton.styleFrom(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      onPressed: _showPriceComparison,
+    );
+  }
+
+  Future<void> _showPriceComparison() async {
+    final productName = _itemNameCtrl.text.trim();
+    if (productName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Enter a product name first")),
+      );
+      return;
+    }
+
+    final comparisons =
+        await PriceIntelligenceService.findPriceComparisons(productName);
+
+    if (!mounted) return;
+
+    if (comparisons.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("No price data found for this product")),
+      );
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => _buildPriceComparisonSheet(comparisons),
+    );
+  }
+
+  Widget _buildPriceComparisonSheet(List<PriceData> prices) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.compare_arrows),
+              const SizedBox(width: 8),
+              const Text(
+                "Price Comparison",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: prices.length,
+              itemBuilder: (context, index) {
+                final price = prices[index];
+                final isLowest = index == 0;
+                return Card(
+                  color: isLowest ? Colors.green.withValues(alpha: 0.1) : null,
+                  child: ListTile(
+                    leading: Icon(
+                      isLowest ? Icons.star : Icons.store,
+                      color: isLowest ? Colors.green : null,
+                    ),
+                    title: Text(price.productName),
+                    subtitle: Text(
+                      '${price.storeName ?? "Unknown Store"} • ${DateFormat('MMM d, yyyy').format(price.date)}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    trailing: Text(
+                      CurrencyService.format(price.price),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight:
+                            isLowest ? FontWeight.bold : FontWeight.normal,
+                        color: isLowest ? Colors.green : null,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Close"),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

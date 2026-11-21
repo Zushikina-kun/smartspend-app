@@ -19,6 +19,7 @@ import '../services/notification_service.dart';
 import '../services/ai_chat_service.dart';
 import '../services/behavioral_feedback_service.dart';
 import '../services/category_service.dart';
+import '../services/price_intelligence_service.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
@@ -2437,6 +2438,9 @@ class _DashboardState extends State<Dashboard> {
   // are suppressed when a historical (past-month) entry was just logged.
   String? _lastAddedExpenseDate;
 
+  // FEAT-002: Price intelligence alerts
+  List<Map<String, dynamic>> _priceAlerts = [];
+
   final _currentMonth = DateFormat('yyyy-MM').format(DateTime.now());
   final _lastMonth = DateFormat('yyyy-MM')
       .format(DateTime(DateTime.now().year, DateTime.now().month - 1));
@@ -2985,6 +2989,12 @@ class _DashboardState extends State<Dashboard> {
     try {
       final wallets = await DBService.getWallets();
       if (mounted) setState(() => _wallets = wallets);
+    } catch (_) {}
+
+    // FEAT-002: Load price alerts
+    try {
+      final alerts = await PriceIntelligenceService.checkForPriceAlerts();
+      if (mounted) setState(() => _priceAlerts = alerts);
     } catch (_) {}
   }
 
@@ -5573,6 +5583,83 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  /// FEAT-002: Price Intelligence Alert Card
+  Widget _buildPriceAlertCard(BuildContext context) {
+    if (_priceAlerts.isEmpty) return const SizedBox.shrink();
+
+    final cs = Theme.of(context).colorScheme;
+    final alert = _priceAlerts.first; // Show first alert
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.lightBlue.withValues(alpha: 0.08),
+              Colors.lightBlue.withValues(alpha: 0.03),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: Colors.lightBlue.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.lightbulb, color: Colors.amber, size: 22),
+                const SizedBox(width: 8),
+                const Text(
+                  'Price Alert',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 18),
+                  onPressed: () async {
+                    await PriceIntelligenceService.dismissAlert(
+                        alert['productName'] as String);
+                    _loadData();
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '${alert['productName']} at ${alert['storeName']} costs ${CurrencyService.format(alert['pricePaid'])} '
+              'but it\'s available for ${CurrencyService.format(alert['lowestPrice'])} at ${alert['lowestStore']}',
+              style: const TextStyle(fontSize: 14),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Save ${CurrencyService.format(alert['savings'])}',
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildSubscriptionSummaryCard(BuildContext context) {
     // Show subscriptions from recurring table (is_expense=1, monthly/yearly)
     final subs = _allRecurring.where((r) {
@@ -6638,6 +6725,9 @@ class _DashboardState extends State<Dashboard> {
 
               // Government Contributions Mini Card
               _GovContributionsMiniCard(),
+
+              // FEAT-002: Price Intelligence Alert Card
+              _buildPriceAlertCard(context),
 
               if (_lastMonthTotal > 0 &&
                   _totalSpent > 0 &&

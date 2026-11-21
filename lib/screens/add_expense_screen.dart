@@ -12,6 +12,8 @@ import '../services/merchant_normalization_service.dart';
 import '../services/event_bus.dart';
 import '../services/currency_service.dart';
 import '../services/budget_period_util.dart';
+import '../services/ocr_service.dart';
+import '../services/price_intelligence_service.dart';
 import '../models/budget.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
@@ -565,6 +567,36 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         if (_photoPath != null) 'photo_path': _photoPath,
         if (_tags.isNotEmpty) 'tags': _tags.join(','),
       });
+
+      // FEAT-002: Extract price data from receipt photo if available
+      if (_photoPath != null && _photoPath!.isNotEmpty) {
+        try {
+          final receiptText = await OCRService.scanReceipt(_photoPath!);
+          final lineItems = OCRService.extractLineItems(receiptText);
+
+          // Get the expense ID that was just inserted
+          final recentExpenses = await DBService.getExpenses();
+          final expenseId =
+              recentExpenses.isNotEmpty ? recentExpenses.first.id : null;
+
+          // Store price data for each line item
+          for (final item in lineItems) {
+            await PriceIntelligenceService.addPriceFromReceipt(
+              productName: item['productName'] as String,
+              storeName: _shopNameCtrl.text.trim().isEmpty
+                  ? null
+                  : MerchantNormalizationService.normalize(
+                      _shopNameCtrl.text.trim()),
+              price: item['price'] as double,
+              date: DateTime.parse(_selectedDate),
+              category: _selectedCategory,
+              expenseId: expenseId,
+            );
+          }
+        } catch (_) {
+          // Silently fail if price extraction doesn't work
+        }
+      }
 
       // ── PRICE MEMORY — manual entry version ──────────────────────────────
       // Same logic as AI chat: alert when the same item costs ≥15% more than

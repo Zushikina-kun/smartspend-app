@@ -1,0 +1,35 @@
+{
+  "id": "FEAT-007",
+  "type": "feat",
+  "description": "OFW Features - Remittance Tracking - Track sent/received remittances with multi-currency support (USD, SAR, AED, SGD, HKD), exchange rate history, and YTD summary.",
+  "status": "pending",
+  "steps": [
+    "Create lib/models/remittance.dart model with fields: id, date, type ('sent'/'received'), amountForeign, currencyForeign, amountPHP, exchangeRate, recipient (for sent), sender (for received), purpose ('family_support', 'savings', 'investment', 'bills', 'emergency'), method ('western_union', 'palawan', 'moneygram', 'bank', 'gcash', 'paypal'), referenceNumber, notes, createdAt",
+    "Add remittances table to db_service.dart in _createTables() and _ensureColumns(): CREATE TABLE remittances (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, type TEXT NOT NULL, amount_foreign REAL NOT NULL, currency_foreign TEXT NOT NULL, amount_php REAL NOT NULL, exchange_rate REAL NOT NULL, recipient TEXT, sender TEXT, purpose TEXT, method TEXT, reference_number TEXT, notes TEXT, created_at TEXT NOT NULL)",
+    "Add database methods to db_service.dart: addRemittance(Map data), getRemittances({String? type}), updateRemittance(int id, Map data), deleteRemittance(int id)",
+    "Enhance currency_service.dart to add getExchangeRate(String from, String to) method that fetches from ExchangeRate-API (https://api.exchangerate-api.com/v4/latest/{from}), with fallback to hardcoded rates if API fails. Cache rates for 24 hours in SharedPreferences to minimize API calls.",
+    "Create lib/screens/ofw/remittance_screen.dart with: (1) YTD summary cards at top showing Total Sent and Total Received in PHP, (2) filter chips for All/Sent/Received, (3) ListView of remittance entries with foreign amount, PHP amount, exchange rate, person, date, (4) FAB to add new remittance with dialog form",
+    "Add remittance form dialog with fields: type radio (Sent/Received), date picker, foreign currency dropdown (USD, SAR, AED, HKD, SGD, EUR, JPY, GBP, CAD, AUD), foreign amount input, 'Fetch Rate' button to auto-fill exchange rate and PHP amount, recipient/sender text field, purpose dropdown, method dropdown, reference number (optional), notes (optional)",
+    "Add CSV export button in remittance_screen.dart app bar that generates remittances_YYYY-MM-DD.csv with all fields using existing export_service.dart pattern, useful for tax reporting (BIR Form 1700 for OFWs)",
+    "Add navigation link to remittance_screen from home_screen.dart drawer under new 'OFW Features' section with airplane/money icon and 'Remittance Tracker' label"
+  ],
+  "acceptance_criteria": [
+    "Remittance screen shows YTD totals for sent and received in PHP",
+    "Add remittance form fetches current exchange rate from API and calculates PHP amount",
+    "Filter chips correctly filter remittances by type",
+    "Remittance list displays all key info: amounts, exchange rate, person, date, method",
+    "CSV export includes all remittances with proper formatting for tax reporting",
+    "Exchange rate caching reduces API calls (no more than 1 call per currency per day)"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Add 'Sent' remittance of $500 USD → tap 'Fetch Rate' → PHP amount auto-fills with current rate (e.g., ₱28,500 at 57 PHP/USD)",
+    "Test scenario 2: Add 3 remittances (2 sent, 1 received) → YTD summary cards show correct totals",
+    "Test scenario 3: Filter by 'Sent' → only sent remittances visible in list",
+    "Test scenario 4: Export to CSV → file contains all remittances with headers: Date, Type, Foreign Amount, Currency, PHP Amount, Exchange Rate, Person, Purpose, Method, Reference, Notes",
+    "Test scenario 5: API call fails → fallback hardcoded rates used (USD=57, SAR=15.2, AED=15.5, HKD=7.3, SGD=42.5)"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

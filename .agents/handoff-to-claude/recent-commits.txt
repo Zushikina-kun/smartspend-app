@@ -1,0 +1,20 @@
+c0c2db7 fix: Close </script> tag properly - was missing >
+bc2c916 fix: Wire search with immediate IIFE retry, remove broken inline oninput
+3da60b4 debug: Inline IIFE in oninput to bypass function lookup
+5e38929 debug: Add console.log to search function to diagnose
+0fd5443 fix: Remove orphaned runGlobalSearch code breaking JS execution
+dd1071c fix: Global search completely rewritten - textContent, DOMContentLoaded, removes duplicates
+eb61e27 fix: v3.3.8 - block OpenRouter from background AI tasks, fix empty key fallback
+1da25e2 fix: Global search and Q&A search actually working now
+5c09e9c feat: Reviewer - 25 new Q&A covering research methodology, Filipino context, tech, what-if questions
+8bd65e6 fix: AI reliability overhaul v3.3.7 — Gemini first, OpenRouter last
+861c23d docs: Update reviewer to v3.3.6 - 13-provider chain, OpenRouter 5-model details
+3151696 feat: OpenRouter 5-model internal fallback chain (v3.3.6)
+b663453 fix: Correct OpenRouter model to gemma-4-31b-it:free (gemma-3-27b:free doesn't exist)
+79da24c fix: Update reviewer OpenRouter model to gemma-3-27b-it:free
+498b874 fix: Critical null content crash + OpenRouter model fix (v3.3.5)
+936d820 fix: Update defense time to 11:00 AM (rescheduled from 3 PM)
+d9e476b chore: Bump to v3.3.4+121 — corrected claims, Core Essentials tab, clean reviewer
+be25b70 fix: Remove last remaining 'first Filipino app' claim in Core Essentials tab
+b35e6e0 fix: Correct overstated uniqueness claims based on competitor research
+cf94e17 chore: Remove 2 purely-code Q&As, simplify OpenRouter technical answer

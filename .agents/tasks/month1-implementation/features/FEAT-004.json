@@ -1,0 +1,33 @@
+{
+  "id": "FEAT-004",
+  "type": "feat",
+  "description": "eGov Phase 1 - PhilHealth Integration - Premium calculator based on 2026 PhilHealth rates and mock coverage verification.",
+  "status": "pending",
+  "steps": [
+    "Create lib/services/egov/philhealth_service.dart with calculateMonthlyPremium(monthlySalary) method that returns PhilHealth premium based on 2026 rates: 5% of monthly basic salary (max ₱5,000 contribution = ₱100,000 salary cap), split 50-50 between employer and employee for employed, or full 5% for self-employed/voluntary",
+    "Add premium breakdown helper: getPremiumBreakdown(monthlySalary, employmentType) returns object with {totalPremium, employeeShare, employerShare, isMaxCap} where employmentType is 'employed', 'self-employed', or 'voluntary'",
+    "Enhance existing lib/screens/gov_contributions_screen.dart (from v3.2.0) to add PhilHealth calculator tab: input for monthly salary and employment type dropdown, result card showing premium breakdown with color-coded employee vs employer shares",
+    "Add mock coverage verification to philhealth_service.dart: generateMockCoverageInfo() returns object with {isActive: true, membershipType: 'Employed', lastContribution: 'Oct 2026', availableBenefits: ['Inpatient', 'Outpatient', 'Z Benefits', 'Maternity Care']}",
+    "Add coverage verification card to PhilHealth section showing mock active status, last contribution date, and list of available benefits with info buttons explaining each benefit type",
+    "Add info button explaining PhilHealth contribution rates, premium caps, and how to verify real coverage at philhealth.gov.ph portal"
+  ],
+  "acceptance_criteria": [
+    "Premium calculator correctly computes 5% of monthly salary up to ₱5,000 max contribution",
+    "Premium breakdown differentiates between employed (50-50 split) and self-employed (100% member pays)",
+    "Calculator shows when max cap is reached (salary ≥₱100,000)",
+    "Mock coverage verification displays active status and available benefits",
+    "Info buttons explain PhilHealth rates and link to official portal",
+    "Integration with existing gov_contributions_screen.dart maintains backward compatibility"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Enter ₱30,000 salary as 'Employed' → premium shows ₱1,500 total (₱750 employee + ₱750 employer)",
+    "Test scenario 2: Enter ₱150,000 salary → premium capped at ₱5,000 total with warning 'Max contribution reached'",
+    "Test scenario 3: Enter ₱20,000 as 'Self-Employed' → premium shows ₱1,000 total (100% member pays)",
+    "Test scenario 4: Mock coverage card displays 'Active' status with 4 benefit categories listed",
+    "Test scenario 5: Existing gov_contributions_screen.dart YTD totals still work correctly after adding PhilHealth tab"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

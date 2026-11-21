@@ -1,0 +1,34 @@
+{
+  "id": "FEAT-012",
+  "type": "feat",
+  "description": "Goal Progress Visualization - Enhanced progress bars for savings goals showing percentage complete, amount remaining, days remaining, and milestone celebrations.",
+  "status": "pending",
+  "steps": [
+    "Enhance existing lib/screens/savings_goals_screen.dart to improve goal cards: replace simple progress bar with enhanced visualization showing: (1) large circular progress indicator with percentage in center, (2) current amount / target amount below, (3) color-coded progress (red <25%, orange 25-50%, yellow 50-75%, green 75-100%), (4) 'X days remaining' until deadline if set",
+    "Add milestone markers to progress visualization: show icons at 25%, 50%, 75%, 100% checkpoints. Animate checkmark appearing when milestone is passed.",
+    "Add goal insights card below each goal showing: (1) 'You need to save ₱X per day to reach goal by deadline', (2) 'At current rate, you'll reach goal on [projected date]', (3) 'You're X% ahead/behind pace' based on time elapsed vs progress made",
+    "Add celebration animation when goal is completed (100%): show full-screen Peso mascot celebration with confetti animation (use existing peso_mascot.dart widget), play sound effect if enabled, save achievement to achievements database",
+    "Add goal history tracking: create goal_history table (id, goal_id, amount_added, date, note) to track all contributions. Show contribution history timeline in goal detail view.",
+    "Enhance goal detail view (tap on goal card) to show: circular progress, insights, contribution history timeline (reverse chronological list of deposits), projection chart (if deadline set), and action buttons (Add Funds, Edit Goal, Complete Early, Delete)",
+    "Add 'Add Funds to Goal' quick action from multiple screens: home screen goal widget, goal list, goal detail, with amount input and optional note. Updates current_amount and creates history entry."
+  ],
+  "acceptance_criteria": [
+    "Goal cards show circular progress with percentage and color-coding",
+    "Milestone markers (25%, 50%, 75%) appear on progress indicator",
+    "Goal insights calculate daily savings needed and projected completion date",
+    "Completing a goal (100%) triggers Peso celebration animation and sound",
+    "Goal detail view shows contribution history timeline",
+    "Add Funds quick action updates goal progress and creates history entry"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Goal with ₱30k of ₱50k target → circular progress shows 60% with yellow color",
+    "Test scenario 2: Goal with 20 days remaining and ₱15k needed → insight shows 'Save ₱750 per day to reach goal'",
+    "Test scenario 3: Add ₱5k to goal → goal updates to ₱35k, contribution appears in history timeline",
+    "Test scenario 4: Add final ₱15k to reach 100% → Peso celebration animation plays with confetti and sound",
+    "Test scenario 5: Goal detail view shows 5 contributions in timeline with dates, amounts, and notes"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

@@ -1,0 +1,35 @@
+{
+  "id": "FEAT-014",
+  "type": "feat",
+  "description": "Export to Excel/CSV - Export all transactions and categorized spending reports to CSV format for external analysis or record-keeping.",
+  "status": "pending",
+  "steps": [
+    "Enhance existing lib/services/export_service.dart (service already exists from v3.3.9) to add exportAllTransactionsCSV() method that: (1) queries all expenses from DBService, (2) formats as CSV with headers: Date, Category, Item, Amount, Payment Method, Store, Location, Notes, Receipt, (3) saves to app documents directory, (4) returns file path",
+    "Add exportCategorizedReportCSV(DateTime startDate, DateTime endDate) method that: (1) queries expenses in date range, (2) groups by category and calculates totals, (3) creates CSV with headers: Category, Total Spent, Percentage of Total, Transaction Count, Average Per Transaction, (4) includes summary row with grand total",
+    "Add exportMonthlyBreakdownCSV(int year) method that creates 12-month breakdown showing each category's spending per month in table format (rows=categories, columns=months, cells=amounts), useful for identifying seasonal patterns",
+    "Enhance settings_screen.dart or create new export screen: add 'Export Data' section with 3 export options: (1) All Transactions (date range picker, 'Export' button), (2) Categorized Report (date range picker, 'Export' button), (3) Monthly Breakdown (year picker, 'Export' button)",
+    "After export, show success dialog with: file name, file size, 'Open File' button (launches CSV viewer if available), 'Share' button (uses share_plus to share via email/drive/etc), 'OK' button to dismiss",
+    "Add export history tracking: save export events to new exports_log table (id, export_type, date_range, file_path, created_at) and show recent exports list in export screen with 'Re-export' and 'Share' buttons",
+    "Add CSV formatting options in settings: checkbox for 'Include receipt paths in export', checkbox for 'Use period separators for decimals' (for Excel locale compatibility)",
+    "Add navigation to export feature from: settings_screen 'Export Data' button, home drawer 'Export Transactions', and transactions_screen app bar 'Export' action button"
+  ],
+  "acceptance_criteria": [
+    "All Transactions export creates CSV with complete expense data including optional receipt paths",
+    "Categorized Report export shows category totals with percentages and averages",
+    "Monthly Breakdown export creates 12-month table suitable for Excel pivot analysis",
+    "Success dialog provides Open and Share options after export",
+    "Export history tracks recent exports with re-export capability",
+    "CSV formatting options handle different Excel locale requirements"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Export All Transactions for Jan 1 - Mar 31 → CSV contains all 127 expenses from that period with proper headers and formatting",
+    "Test scenario 2: Open exported CSV in Excel/Google Sheets → data displays correctly with proper column alignment and no encoding issues",
+    "Test scenario 3: Export Categorized Report for last month → CSV shows 8 categories with totals summing to ₱45,632 (match verify with home screen total)",
+    "Test scenario 4: Export Monthly Breakdown for 2026 → CSV has 12 columns (Jan-Dec) with category rows, Food row shows ₱5k-₱9k range across months",
+    "Test scenario 5: Share exported file via Share dialog → file successfully sent via email/Drive/Messenger"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

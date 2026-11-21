@@ -1,0 +1,33 @@
+{
+  "id": "FEAT-006",
+  "type": "feat",
+  "description": "Bill Payment Reminders - Push notifications for bills due in 3 days, 1 day, and on due date, with 'Mark as Paid' quick action.",
+  "status": "pending",
+  "steps": [
+    "Enhance existing notification_service.dart to add bill reminder methods: scheduleBillReminder(billId, billTitle, amount, dueDate) that schedules 3 notifications at: 3 days before (at 9 AM), 1 day before (at 6 PM), and on due date (at 8 AM)",
+    "Add checkAndScheduleBillReminders() method to notification_service.dart that: (1) queries all recurring bills from DBService.getRecurring() where is_expense=1, (2) calculates next_date from recurring records, (3) schedules reminders for bills due within next 7 days, (4) stores 'last_reminder_check' timestamp in settings to avoid duplicate scheduling",
+    "Enhance notification payload handling in notification_service.dart's init() to include 'bill_id' in payload so tapping notification can navigate to bill detail or mark-as-paid dialog",
+    "Create quick action notification with 2 buttons: 'Mark as Paid' and 'View Details'. Mark as Paid button creates expense record for the bill amount and advances next_date by frequency (monthly +1 month, etc.)",
+    "Add bill reminder preference toggle in settings_screen.dart: 'Bill Reminders' switch (default ON) with info explaining reminder schedule (3 days, 1 day, due date)",
+    "Call NotificationService.checkAndScheduleBillReminders() from home_screen.dart initState and also after any bill is added/updated in recurring_screen.dart to keep reminders current"
+  ],
+  "acceptance_criteria": [
+    "Bills due within 7 days have reminders scheduled at correct times (3 days before, 1 day before, due date)",
+    "Tapping notification navigates to bill details or shows mark-as-paid dialog",
+    "'Mark as Paid' quick action creates expense and advances next due date automatically",
+    "Reminders respect user preference toggle in settings",
+    "No duplicate notifications scheduled for same bill",
+    "Reminders update when bills are added/modified/deleted"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: Add recurring bill with due date 2 days from now → receive notification at 9 AM today (3-day reminder), then again tomorrow at 6 PM (1-day reminder), then on due date at 8 AM",
+    "Test scenario 2: Tap 'Mark as Paid' on notification → expense created for bill amount with correct category and date, bill's next_date advanced by 1 month",
+    "Test scenario 3: Disable 'Bill Reminders' in settings → no new notifications scheduled",
+    "Test scenario 4: Delete a bill → scheduled notifications for that bill are canceled",
+    "Test scenario 5: Modify bill due date → notifications rescheduled to new dates"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

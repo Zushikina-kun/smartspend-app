@@ -1,0 +1,35 @@
+{
+  "id": "FEAT-011",
+  "type": "feat",
+  "description": "Debt Payoff Calculator - Calculate payoff timeline using Avalanche (highest interest first) vs Snowball (smallest balance first) methods with month-by-month projection.",
+  "status": "pending",
+  "steps": [
+    "Create lib/services/debt_calculator.dart with calculateAvalanche(List<Debt> debts, double monthlyPayment) method that: (1) sorts debts by interest rate descending, (2) applies minimum payments to all debts, (3) applies remaining monthly payment to highest interest debt first, (4) generates month-by-month projection showing which debts are paid off when and total interest paid",
+    "Add calculateSnowball(List<Debt> debts, double monthlyPayment) method that uses same logic but sorts debts by remaining balance ascending (smallest first), prioritizing psychological wins of clearing small debts quickly",
+    "Both methods return projection object with: totalMonths, totalInterestPaid, monthByMonthBreakdown (array of {month, remainingBalances, paymentAllocations}), debtFreeDate",
+    "Create lib/screens/debt_payoff_screen.dart with: (1) input section showing list of current debts from DBService with balance and interest rate, (2) monthly payment amount slider, (3) method selector (Avalanche/Snowball radio buttons with explanations), (4) Calculate button that generates comparison",
+    "Add results section showing side-by-side comparison: Avalanche vs Snowball with cards displaying total months, total interest paid, debt-free date, and savings difference. Highlight which method saves more money (usually Avalanche) vs which provides faster psychological wins (Snowball).",
+    "Add month-by-month breakdown table or chart showing payment allocation and remaining balances over time. Use fl_chart BarChart or LineChart to visualize decreasing debt balances.",
+    "Add debt interest rate management: enhance debt_screen.dart to add optional interest_rate field to debts table (ALTER TABLE debts ADD COLUMN interest_rate REAL DEFAULT 0). Update debt form to include interest rate input (annual %) with info explaining why this matters for payoff strategy.",
+    "Add navigation link to debt_payoff_screen from debt_screen.dart (add button in app bar) and from home_screen.dart drawer under 'Tools' section"
+  ],
+  "acceptance_criteria": [
+    "Debt payoff calculator shows comparison of Avalanche vs Snowball methods",
+    "Avalanche method correctly prioritizes highest interest rate debts",
+    "Snowball method correctly prioritizes smallest balance debts",
+    "Results show total months, total interest paid, and debt-free date for both methods",
+    "Month-by-month projection visualizes how debts decrease over time",
+    "Calculator handles edge cases (monthly payment less than minimum payments, single debt, zero interest debts)"
+  ],
+  "verification": [
+    "flutter analyze returns zero errors/warnings",
+    "flutter build apk --debug compiles successfully",
+    "Test scenario 1: 3 debts (₱10k at 18%, ₱5k at 12%, ₱8k at 15%), monthly payment ₱3k → Avalanche pays 18% debt first, Snowball pays ₱5k debt first",
+    "Test scenario 2: Results show Avalanche pays off in 9 months with ₱2,100 interest, Snowball pays off in 10 months with ₱2,300 interest → Avalanche saves ₱200",
+    "Test scenario 3: Monthly payment of ₱1k (less than sum of minimums) → shows warning 'Monthly payment must be at least ₱X to cover minimum payments'",
+    "Test scenario 4: Chart visualizes 3 lines (one per debt) decreasing to zero over time",
+    "Test scenario 5: Single debt → both methods show identical results"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

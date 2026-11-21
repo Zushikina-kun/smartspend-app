@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#results { border:1px solid #ccc; padding:10px; margin:10px 0; min-height:50px; }
+.result { padding:5px; border-bottom:1px solid #eee; }
+</style>
+</head>
+<body>
+<h1>Search Test</h1>
+<input type="text" id="search-input" placeholder="Type to search..." style="width:400px; padding:8px;">
+<div id="results"></div>
+<div id="debug" style="color:red; margin-top:20px;"></div>
+
+<div id="content" style="display:none;">
+<p>This is about SUS and usability testing</p>
+<p>Filipino finance includes paluwagan</p>
+<p>Flutter is a framework for mobile development</p>
+</div>
+
+<script>
+function testSearch(val) {
+  var debug = document.getElementById('debug');
+  var results = document.getElementById('results');
+  
+  debug.textContent = 'Search called with: "' + val + '"';
+  
+  if (!val || val.length < 2) {
+    results.innerHTML = '<i>Type at least 2 characters</i>';
+    return;
+  }
+  
+  var content = document.getElementById('content');
+  var paras = content.querySelectorAll('p');
+  var matches = [];
+  
+  paras.forEach(function(p){
+    var txt = p.textContent.toLowerCase();
+    if (txt.indexOf(val.toLowerCase()) !== -1) {
+      matches.push(p.textContent);
+    }
+  });
+  
+  if (matches.length === 0) {
+    results.innerHTML = '<i>No results for "' + val + '"</i>';
+  } else {
+    results.innerHTML = matches.map(function(m){
+      return '<div class="result">' + m + '</div>';
+    }).join('');
+  }
+}
+
+var inp = document.getElementById('search-input');
+inp.addEventListener('input', function(){ testSearch(this.value); });
+inp.addEventListener('keyup', function(){ testSearch(this.value); });
+
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('debug').textContent = 'Page loaded, listeners attached';
+});
+</script>
+</body>
+</html>
