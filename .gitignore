@@ -82,3 +82,6 @@ Run
 
 
 releases/*.apk
+
+# APK files generated during tasks/testing
+*.apk
