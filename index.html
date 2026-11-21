@@ -214,13 +214,15 @@
     .apk-dl-btn { background: var(--primary); color: #000; font-weight: 700; font-size: 13px; padding: 7px 16px; border-radius: 8px; white-space: nowrap; display: inline-block; }
     .apk-dl-btn:hover { background: var(--primary-dark); text-decoration: none; color: #000; }
     .version-note { margin-top: 16px; font-size: 12px; color: var(--text-muted); }
-    .about-section { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .about-section { max-width: 900px; margin: 0 auto 60px; padding: 0 24px; }
     .about-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
     .about-card.visible { opacity: 1; transform: translateY(0); }
     .about-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary); font-family: 'Plus Jakarta Sans', sans-serif; }
     .about-card p, .about-card li { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .about-card ul { padding-left: 16px; }
     .about-card li { margin-bottom: 4px; }
+    .institution-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .institution-text strong { color: var(--text); }
     footer { border-top: 1px solid var(--border); padding: 32px 24px; text-align: center; color: var(--text-muted); font-size: 13px; transition: border-color 0.3s ease; }
     footer a { color: var(--text-muted); }
     footer a:hover { color: var(--text); }
@@ -229,7 +231,6 @@
     #backToTop { position: fixed; bottom: 24px; right: 24px; z-index: 500; background: var(--primary); color: #000; border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.2s ease; box-shadow: 0 4px 16px rgba(0,200,150,0.4); }
     #backToTop.visible { opacity: 1; pointer-events: auto; }
     #backToTop:hover { transform: scale(1.1); }
-    @media (max-width: 700px) { .about-section { grid-template-columns: 1fr; } }
     @media (max-width: 767px) {
       .hero { flex-direction: column; text-align: center; }
       .hero-left { text-align: center; }
@@ -254,7 +255,7 @@
       height:560px !important;
       border-radius:32px;
       border:3px solid #333;
-      background:#0f1117;
+      background:#0f1a0f;
       overflow:hidden;
       position:relative;
       cursor:default;
@@ -277,7 +278,7 @@
       position:relative;
       scroll-behavior:smooth;
       -webkit-overflow-scrolling:touch;
-      background:#0f1117;
+      background:#0f1a0f;
       color:#f0f0f4;
     }
     .demo-screens::-webkit-scrollbar { width:0; }
@@ -285,7 +286,7 @@
       display:none;
       padding:40px 12px 12px;
       min-height:100%;
-      background:#0f1117;
+      background:#0f1a0f;
       color:#f0f0f4;
       font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
     }
@@ -721,6 +722,13 @@
     @media (max-width: 767px) { .about-grid { grid-template-columns: 1fr; } }
     .about-info-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
     .about-info-card strong { font-size: 1rem; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .dev-cards { display: flex; flex-direction: column; gap: 16px; }
+    .dev-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; gap: 16px; transition: background 0.2s, border-color 0.2s, opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
+    .dev-card.visible { opacity: 1; transform: translateY(0); }
+    .dev-card:hover { background: var(--surface3); border-color: var(--border-strong); }
+    .dev-photo { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); flex-shrink: 0; }
+    .dev-name { font-weight: 700; font-size: 14px; color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .dev-role { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
     .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     @media (max-width: 600px) { .team-grid { grid-template-columns: 1fr; } }
     .team-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
@@ -734,7 +742,9 @@
     .institution-divider { width: 1px; height: 60px; background: var(--border); }
 
     /* ===== FOOTER REDESIGN ===== */
-    .footer-brand { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 12px; font-weight: 800; font-size: 18px; color: var(--brand-blue); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .footer-brand { display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .footer-brand-name { font-weight: 800; font-size: 16px; font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); }
+    .footer-lucidframe { display: flex; align-items: center; gap: 8px; justify-content: center; margin-bottom: 16px; font-size: 12px; color: var(--text-muted); }
     .footer-lucid { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 12px 0; }
     .footer-lucid-label { font-size: 12px; color: var(--text-dim); }
       /* WHAT IS SMARTSPEND */
@@ -2168,63 +2178,67 @@
     <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer" style="color:var(--primary)">Full release history on GitHub →</a>
   </p>
 </section>
-<section class="section" id="about">
-  <div class="section-title">About SmartSpend</div>
-  <p class="section-sub">A source-available capstone project built by final-year BSIT students at Lorma Colleges for Filipino users.</p>
+<div class="about-section" id="about">
+  <div class="section-title" style="padding:0 24px;margin-bottom:8px;">About the Project</div>
+  <div class="section-sub" style="padding:0 24px;margin-bottom:28px;">Built by students, for Filipinos.</div>
   <div class="about-grid">
-    <div class="about-info">
-      <div class="about-info-card">
-        <div style="font-size:1.5rem;margin-bottom:8px">🎓</div>
-        <strong>Built by Students</strong>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Capstone project by final-year BSIT students at Lorma Colleges, College of Computer Studies and Engineering, La Union, Philippines.</p>
+    <!-- Left: project info cards -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="about-card" style="background:var(--surface2);">
+        <h3>About SmartSpend</h3>
+        <p>A capstone thesis project by <strong>LucidFrame</strong> at <strong>Lorma Colleges, CCSE</strong> — Bachelor of Science in Information Technology, 4th Year, AY 2026–2027.</p>
+        <br/>
+        <p>Free, open-source, and built specifically for Filipino spending habits, income cycles, and financial products. No account required. Works offline. MIT Non-Commercial License.</p>
       </div>
-      <div class="about-info-card">
-        <div style="font-size:1.5rem;margin-bottom:8px">🔓</div>
-        <strong>Source-Available</strong>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Free to use, free to inspect (Source Available License — academic &amp; personal use). No subscriptions, no ads. Your financial data stays on your device.</p>
-      </div>
-      <div class="about-info-card">
-        <div style="font-size:1.5rem;margin-bottom:8px">🇵🇭</div>
-        <strong>Made for Filipinos</strong>
-        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px">Philippine Peso, Taglish AI, local payment categories. Built with Filipino financial habits in mind.</p>
+      <div class="about-card" style="background:var(--surface2);">
+        <h3>Technical Highlights</h3>
+        <ul>
+          <li>Flutter / Dart — Android API 21–36</li>
+          <li>SQLite local database (v14, 26 tables)</li>
+          <li>Firebase Auth, Firestore, Remote Config, Crashlytics</li>
+          <li>Gemini 3.5 Flash-Lite as primary AI</li>
+          <li>9-provider AI fallback chain</li>
+          <li>Local LLM: Ollama / LM Studio / Jan support</li>
+          <li>Fully offline core features</li>
+          <li><a href="https://github.com/Zushikina-kun/smartspend-app" target="_blank" rel="noopener noreferrer">Open source — MIT Non-Commercial</a></li>
+        </ul>
       </div>
     </div>
-    <div class="team-grid">
-      <div class="team-card">
-        <img src="assets/Devs/BRIX A. DIRECTO.png" alt="BRIX A. DIRECTO" class="team-photo" onerror="this.style.display='none'">
-        <div class="team-name">Brix A. Directo</div>
-        <div class="team-role">Lead Developer</div>
+    <!-- Right: developer cards -->
+    <div class="dev-cards">
+      <div class="dev-card">
+        <img class="dev-photo" src="assets/Devs/BRIX A. DIRECTO.png" alt="Brix A. Directo" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><circle cx=%2236%22 cy=%2236%22 r=%2236%22 fill=%22%232D9E6B%22/><text x=%2236%22 y=%2242%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2224%22>B</text></svg>'" />
+        <div>
+          <div class="dev-name">BRIX A. DIRECTO</div>
+          <div class="dev-role">Developer · Lead</div>
+        </div>
       </div>
-      <div class="team-card">
-        <img src="assets/Devs/CYRILLE JOHN M. RUBIS.png" alt="CYRILLE JOHN M. RUBIS" class="team-photo" onerror="this.style.display='none'">
-        <div class="team-name">Cyrille John M. Rubis</div>
-        <div class="team-role">UI/UX &amp; Docs</div>
+      <div class="dev-card">
+        <img class="dev-photo" src="assets/Devs/CYRILLE JOHN M. RUBIS.png" alt="Cyrille John M. Rubis" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><circle cx=%2236%22 cy=%2236%22 r=%2236%22 fill=%22%232D9E6B%22/><text x=%2236%22 y=%2242%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2224%22>C</text></svg>'" />
+        <div>
+          <div class="dev-name">CYRILLE JOHN M. RUBIS</div>
+          <div class="dev-role">Developer · UI/UX &amp; Documentation</div>
+        </div>
       </div>
-      <div class="team-card">
-        <img src="assets/Devs/DJAUNATHAN ALBERT S. MADAYAG.png" alt="DJAUNATHAN ALBERT S. MADAYAG" class="team-photo" onerror="this.style.display='none'">
-        <div class="team-name">Djaunathan Albert S. Madayag</div>
-        <div class="team-role">PM &amp; QA</div>
+      <div class="dev-card">
+        <img class="dev-photo" src="assets/Devs/DJAUNATHAN ALBERT S. MADAYAG.png" alt="Djaunathan Albert S. Madayag" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2272%22 height=%2272%22><circle cx=%2236%22 cy=%2236%22 r=%2236%22 fill=%22%232D9E6B%22/><text x=%2236%22 y=%2242%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2224%22>D</text></svg>'" />
+        <div>
+          <div class="dev-name">DJAUNATHAN ALBERT S. MADAYAG</div>
+          <div class="dev-role">Developer · Project Manager &amp; QA</div>
+        </div>
       </div>
     </div>
   </div>
+  <!-- Institution row -->
   <div class="institution-row">
-    <div class="institution-card">
-      <div class="lucid-logo-wrap"><img src="assets/LucidFrameLogo.png" alt="LucidFrame" style="width:110px;height:auto;" onerror="this.style.display='none'"></div>
-      <span class="institution-label">LucidFrame</span>
-    </div>
-    <div class="institution-divider"></div>
-    <div class="institution-card">
-      <div class="lorma-logo-wrap"><img src="assets/LormaLogo.jpg" alt="Lorma Colleges" style="width:80px;height:auto;" onerror="this.style.display='none'"></div>
-      <span class="institution-label">Lorma Colleges</span>
-    </div>
-    <div class="institution-divider"></div>
-    <div style="text-align:center">
-      <p style="font-size:0.9rem;color:var(--text-muted)">Advised by <strong style="color:var(--text)">Dr. Ellen F. Mangaoang, DIT</strong></p>
-      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:4px">Panel: Jeoffrey B. Layco (Chair) · Shekiro R. Raposas · Mary-Ann Mzana</p>
-      <p style="font-size:0.8rem;color:var(--text-dim);margin-top:2px">Content Validator: Avigail Candevario, PFMe | Capstone 2026</p>
+    <img src="assets/LucidFrameLogo.png" alt="LucidFrame logo" style="width:120px;" onerror="this.style.display='none'" />
+    <img src="assets/LormaLogo.jpg" alt="Lorma Colleges logo" style="width:80px;" onerror="this.style.display='none'" />
+    <div class="institution-text">
+      Advised by <strong>Ellen F. Mangaoang, MIT</strong> · Lorma Colleges · Capstone Project 2026<br/>
+      Panel: <strong>Shekiro R. Raposas</strong> · <strong>Mary-Ann Mzana</strong>
     </div>
   </div>
-</section>
+</div>
 
 <div class="share-strip">
   <span class="share-strip-text">Found SmartSpend useful? Share it! 🙏</span>
@@ -2474,7 +2488,7 @@ var fadeIO = new IntersectionObserver(function(entries) {
     if (entry.isIntersecting) { entry.target.classList.add('visible'); fadeIO.unobserve(entry.target); }
   });
 }, ioOptions);
-document.querySelectorAll('.feature-card, .stat, .about-card, .team-card, .ai-example, .modality-chip').forEach(function(el, i) {
+document.querySelectorAll('.feature-card, .stat, .about-card, .team-card, .dev-card, .ai-example, .modality-chip').forEach(function(el, i) {
   el.style.transitionDelay = (Math.min(i % 4, 3) * 80) + 'ms';
   fadeIO.observe(el);
 });
