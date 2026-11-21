@@ -735,6 +735,22 @@ class DBService {
             conflictAlgorithm: ConflictAlgorithm.ignore);
       }
     } catch (_) {}
+
+    // Ensure lto_vehicles table — LTO vehicle compliance & renewal tracking
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS lto_vehicles (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nickname TEXT NOT NULL,
+          plate_number TEXT NOT NULL,
+          vehicle_type TEXT NOT NULL DEFAULT 'Car',
+          weight_kg REAL NOT NULL DEFAULT 0,
+          year_model INTEGER,
+          notes TEXT,
+          created_at TEXT NOT NULL
+        )
+      ''');
+    } catch (_) {}
   }
 
   static Future<void> _createTables(Database db) async {

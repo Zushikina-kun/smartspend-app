@@ -2480,9 +2480,6 @@ class _DashboardState extends State<Dashboard> {
   double _avgIncomeAmount = 0; // average of last 3 income amounts
   int _avgIncomeInterval = 0; // average days between last 3 income entries
 
-  // ── Logging streak (Feature 6) ───────────────────────────────────────────
-  int _loggingStreak = 0;
-
   // ── Safe-to-Spend ─────────────────────────────────────────────────────────
   // Computed from wallet balance minus upcoming obligations before next payday.
   double _safeToSpend = 0;
