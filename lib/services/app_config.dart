@@ -204,28 +204,45 @@ class AppConfig {
   static int _consecutiveFailures = 0;
 
   /// All available models shown in the model selector UI, ordered best → fallback
+  /// Sorted by quality: Tier 1 (Premium) → Tier 2 (High Quality) → Tier 3 (Good) → Tier 4 (Utility) → Tier 5 (Last Resort)
   static const availableModels = [
+    // ── TIER 0: SPECIAL ──────────────────────────────────────────────────────
     (
       'auto',
       'Auto (Recommended)',
-      '🤖 Smart routing — OpenRouter for best balance, falls back as needed'
+      '🤖 Smart routing — best quality available, auto-fallback'
     ),
     (
       'custom_local',
       'Local AI (Your Computer)',
       '🏠 Your own LLM via WiFi — private, no cloud, configure in Local AI settings'
     ),
-    // ── OPENROUTER FREE MODELS ───────────────────────────────────────────────
-    // All support tool calling • 50 req/day shared quota • resets UTC midnight
+    // ── TIER 1: PREMIUM QUALITY (Best Reasoning) ─────────────────────────────
+    (
+      'or_nemotron_ultra',
+      'Nemotron 3 Ultra (OpenRouter)',
+      '🏆 Frontier-tier — 550B MoE, 1M ctx, top free model'
+    ),
     (
       'or_llama33',
       'Llama 3.3 70B (OpenRouter)',
       '🦙 Best reasoning — 70B, 128K ctx, 9.4 Intelligence Index'
     ),
     (
-      'or_nemotron_ultra',
-      'Nemotron 3 Ultra (OpenRouter)',
-      '🏆 Frontier-tier — 550B MoE, 1M ctx, top free model'
+      'gemini_flash',
+      'Gemini 3.5 Flash',
+      '💎 Best Gemini — frontier reasoning, GA stable (needs Gemini key)'
+    ),
+    (
+      'gemini_flash_lite',
+      'Gemini 3.5 Flash-Lite ⭐',
+      '⚡ Default — fastest + reliable, GA stable (needs Gemini key)'
+    ),
+    // ── TIER 2: HIGH QUALITY (Solid Performance) ─────────────────────────────
+    (
+      'or_gemma_4_31b',
+      'Gemma 4 31B (OpenRouter)',
+      '💎 Reliable — 262K ctx, well-tested, balanced'
     ),
     (
       'or_nemotron_lightning',
@@ -233,15 +250,16 @@ class AppConfig {
       '⚡ Fastest — MoE, 1M ctx, near-instant responses'
     ),
     (
-      'or_gemma_4_31b',
-      'Gemma 4 31B (OpenRouter)',
-      '💎 Reliable — 262K ctx, well-tested, balanced'
-    ),
-    (
       'or_qwen38',
       'Qwen 3.8 27B (OpenRouter)',
-      '🌐 Multimodal — 128K ctx, best computer-use, OCR'
+      '🌐 Multimodal — 128K ctx, OCR, computer-use'
     ),
+    (
+      'groq_llama4_scout',
+      'GPT-OSS 120B (Groq)',
+      '🚀 Best Groq — 1,000/day, 8K TPM'
+    ),
+    // ── TIER 3: GOOD (Reliable Workhorses) ───────────────────────────────────
     (
       'or_nemotron_super_vl',
       'Nemotron 3.5 Super VL (OpenRouter)',
@@ -253,28 +271,6 @@ class AppConfig {
       '⚙️ Efficient — MoE 3.8B active, 262K ctx'
     ),
     (
-      'openrouter',
-      'OpenRouter Gateway (Legacy)',
-      r'🌐 Auto-routes to best free model — use individual models above instead'
-    ),
-    // ── GEMINI MODELS ────────────────────────────────────────────────────────
-    (
-      'gemini_flash',
-      'Gemini 3.5 Flash',
-      '🏆 Best — frontier reasoning, GA stable (needs Gemini key)'
-    ),
-    (
-      'gemini_flash_lite',
-      'Gemini 3.5 Flash-Lite',
-      '⭐ Great — fastest + cheapest 3.5, GA stable (needs Gemini key)'
-    ),
-    // ── GROQ MODELS ──────────────────────────────────────────────────────────
-    (
-      'groq_llama4_scout',
-      'GPT-OSS 120B (Groq)',
-      '🚀 Best Groq — 1,000/day, 8K TPM'
-    ),
-    (
       'groq_kimi_k2',
       'Qwen3.6 27B (Groq)',
       '🌐 Multimodal + reasoning — 1,000/day'
@@ -284,13 +280,19 @@ class AppConfig {
       'Qwen3.8 27B (Groq)',
       '✨ Newer Qwen, multimodal — 1,000/day'
     ),
+    // ── TIER 4: UTILITY (Fast & Available) ───────────────────────────────────
     ('groq_70b', 'Compound (Groq)', '⚡ 250/day, 70K TPM — good general'),
     ('groq_8b', 'Compound Mini (Groq)', '💨 250/day, 70K TPM — fast tasks'),
-    // ── CEREBRAS MODELS ──────────────────────────────────────────────────────
+    (
+      'openrouter',
+      'OpenRouter Gateway (Legacy)',
+      '🌐 Auto-route — use individual models above instead'
+    ),
+    // ── TIER 5: LAST RESORT (Fallback) ───────────────────────────────────────
     (
       'cerebras_120b',
       'GPT-OSS 120B (Cerebras)',
-      '🔄 Fallback — 1M tokens/day, ~3,000 t/s (needs Cerebras key)'
+      '🔄 Fallback — 1M tokens/day (slow)'
     ),
   ];
 
@@ -316,27 +318,28 @@ class AppConfig {
   }
 
   /// Internal: resolve which concrete model Auto mode routes to for a given task.
-  /// Auto mode priority (Nov 2026): Gemini first (most reliable), then OpenRouter (free, good), then Groq.
+  /// Auto mode priority (Nov 2026): Best quality first (OpenRouter Nemotron/Llama), then Gemini, then Groq.
   static String _autoActualModel(String taskType) {
     final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
     final hasOpenRouter =
         (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
-    // Priority: Gemini (best quality) → OpenRouter Llama 3.3 (free, good reasoning) → Groq
+    // Priority: OpenRouter best (Nemotron Ultra) → Gemini → Groq
+    // For fast tasks: prioritize speed (Lightning, Flash-Lite)
     switch (taskType) {
       case 'fast':
-        return hasGemini
-            ? 'gemini_flash_lite'
-            : (hasOpenRouter ? 'or_nemotron_lightning' : 'groq_llama4_scout');
+        return hasOpenRouter
+            ? 'or_nemotron_lightning'
+            : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
       case 'financial_advice':
-        return hasGemini
-            ? 'gemini_flash'
-            : (hasOpenRouter ? 'or_llama33' : 'groq_llama4_scout');
+        return hasOpenRouter
+            ? 'or_nemotron_ultra'
+            : (hasGemini ? 'gemini_flash' : 'groq_llama4_scout');
       case 'smart':
       default:
-        return hasGemini
-            ? 'gemini_flash_lite'
-            : (hasOpenRouter ? 'or_llama33' : 'groq_llama4_scout');
+        return hasOpenRouter
+            ? 'or_llama33'
+            : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
     }
   }
 
@@ -550,55 +553,55 @@ class AppConfig {
       return true;
     }
 
-    // NEW FALLBACK CHAIN (Nov 2026):
-    // Custom Local → Gemini Flash → Flash-Lite → OpenRouter (Llama 3.3) →
-    // OpenRouter (Nemotron Ultra) → OpenRouter (remaining models) → Groq chain → Cerebras
+    // NEW FALLBACK CHAIN (Nov 2026 - SORTED BEST TO WORST):
+    // Custom Local → Nemotron Ultra → Llama 3.3 → Gemini Flash → Flash-Lite →
+    // Gemma 4 31B → Nemotron Lightning → Qwen 3.8 → Groq chain → Cerebras
     switch (_activeModelId) {
       case 'custom_local':
         if (_localOnlyMode) {
           return false;
         }
-        _activeModelId = hasGemini
-            ? 'gemini_flash_lite'
-            : (hasOpenRouter ? 'or_llama33' : 'groq_llama4_scout');
+        _activeModelId = hasOpenRouter
+            ? 'or_nemotron_ultra'
+            : (hasGemini ? 'gemini_flash' : 'groq_llama4_scout');
+        _saveActiveModel();
+        return true;
+
+      // OpenRouter fallback chain (SORTED: best quality → fast → utility)
+      case 'or_nemotron_ultra':
+        _activeModelId = 'or_llama33';
+        _saveActiveModel();
+        return true;
+
+      case 'or_llama33':
+        _activeModelId = hasGemini ? 'gemini_flash' : 'or_gemma_4_31b';
         _saveActiveModel();
         return true;
 
       case 'gemini_flash':
         _activeModelId = hasGemini
             ? 'gemini_flash_lite'
-            : (hasOpenRouter ? 'or_llama33' : 'groq_llama4_scout');
+            : (hasOpenRouter ? 'or_gemma_4_31b' : 'groq_llama4_scout');
         _saveActiveModel();
         return true;
 
       case 'gemini_flash_lite':
-        _activeModelId = hasOpenRouter ? 'or_llama33' : 'groq_llama4_scout';
+        _activeModelId = hasOpenRouter ? 'or_gemma_4_31b' : 'groq_llama4_scout';
         _saveActiveModel();
         return true;
 
-      // OpenRouter fallback chain (quality → speed)
-      case 'or_llama33':
-        _activeModelId = 'or_nemotron_ultra';
-        _saveActiveModel();
-        return true;
-
-      case 'or_nemotron_ultra':
+      case 'or_gemma_4_31b':
         _activeModelId = 'or_nemotron_lightning';
         _saveActiveModel();
         return true;
 
       case 'or_nemotron_lightning':
-        _activeModelId = 'or_gemma_4_31b';
-        _saveActiveModel();
-        return true;
-
-      case 'or_gemma_4_31b':
         _activeModelId = 'or_qwen38';
         _saveActiveModel();
         return true;
 
       case 'or_qwen38':
-        _activeModelId = 'or_nemotron_super_vl';
+        _activeModelId = 'groq_llama4_scout';
         _saveActiveModel();
         return true;
 
@@ -608,14 +611,14 @@ class AppConfig {
         return true;
 
       case 'or_gemma_4_26b':
-        _activeModelId = 'groq_llama4_scout';
+        _activeModelId = 'groq_kimi_k2';
         _saveActiveModel();
         return true;
 
       case 'openrouter':
-        // Legacy gateway failed — switch to individual model
+        // Legacy gateway failed — switch to best individual model
         _activeModelId = hasOpenRouter
-            ? 'or_llama33'
+            ? 'or_nemotron_ultra'
             : (hasGemini ? 'gemini_flash' : 'groq_llama4_scout');
         _saveActiveModel();
         return true;
