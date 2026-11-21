@@ -184,7 +184,9 @@ class CurrencyService {
     }
     if (!force &&
         _lastFetched != null &&
-        DateTime.now().difference(_lastFetched!).inHours < 1) return;
+        DateTime.now().difference(_lastFetched!).inHours < 1) {
+      return;
+    }
 
     try {
       final response = await http
