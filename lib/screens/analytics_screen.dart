@@ -30,6 +30,7 @@ import 'bank_import_screen.dart';
 import 'profile_screen.dart' show WalletsSheet;
 import 'bill_calendar_screen.dart';
 import 'ofw/remittance_screen.dart';
+import 'ofw/balikbayan_tracker_screen.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -1000,6 +1001,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => const RemittanceScreen()))
+                            ),
+                            (
+                              Icons.inventory_2_outlined,
+                              'Balikbayan Box',
+                              Colors.brown,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const BalikbayanTrackerScreen()))
                             ),
                           ])
                             Padding(

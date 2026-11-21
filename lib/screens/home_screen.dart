@@ -63,6 +63,7 @@ import 'gov_contributions_screen.dart';
 import 'egov/sss_screen.dart';
 import 'egov/pagibig_screen.dart';
 import 'ofw/remittance_screen.dart';
+import 'ofw/balikbayan_tracker_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
@@ -1818,6 +1819,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "Track money sent home — USD, SAR, AED, SGD, HKD",
             Colors.teal,
             () => _go(const RemittanceScreen())
+          ),
+          (
+            Icons.inventory_2_outlined,
+            "Balikbayan Box Tracker",
+            "Track boxes sent home — contents, status, value",
+            Colors.brown,
+            () => _go(const BalikbayanTrackerScreen())
           ),
         ]
       ),
