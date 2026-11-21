@@ -34,6 +34,29 @@ enum PesoContext {
   newGoalAdded,
   debtPaidOff,
   firstLogin,
+  // Phase 2 contexts
+  session5,
+  session10,
+  session20,
+  lowBalance,
+  overBudget,
+  goalMilestone100,
+  badgeUnlock,
+  weeklyReview,
+  bigExpense,
+  recurringDue,
+  savingsStreak,
+  debtPaid,
+  backupReminder,
+  aiRateLimit,
+  receiptScanned,
+  voiceLogged,
+  ocrSuccess,
+  exportDone,
+  newBudgetPeriod,
+  paydayReminder,
+  billOverdue,
+  appBirthday,
   // Idle / screen-specific lines
   idleHome,
   idleAnalytics,
@@ -197,6 +220,118 @@ class PesoVoiceService {
       'Kumusta! Ako si Peso — your money buddy! Magtayo tayo ng magandang financial future! 💚',
       "Hi! I'm Peso! Tell me what you spent, ask me anything, or let's set some goals! 😊",
     ],
+    // ── Phase 2 phrases ───────────────────────────────────────────────────
+    PesoContext.session5: [
+      'Uy, 5 messages na tayo! 🎉 Lagi akong nandito para sa iyo!',
+      "5 messages in — kumusta ang budget mo so far? 💚",
+      'Huy, 5 na tayong kwentuhan! Sige, ituloy natin! 😄',
+    ],
+    PesoContext.session10: [
+      '10 messages! Peso Fan badge on the way! 🎤 Maraming salamat sa chat!',
+      "Double digits na tayo! 10 messages — you're a pro! 💬",
+      'Wow, 10 na! Salamat sa pagsasabi sa akin ng lahat! 😊',
+    ],
+    PesoContext.session20: [
+      '20 messages! Chatterbox level unlocked! 💬 Grabe ka talaga!',
+      "20 messages! Peso is your biggest fan — keep it coming! 🎤",
+      'Dalawampung usapan na tayo! Hindi ka tinatamad — love it! 🔥',
+    ],
+    PesoContext.lowBalance: [
+      'Mababa na ang balance mo — ingat sa gastos! 💸',
+      "Low balance alert! Baka time to hold off on big buys? 😬",
+      'Piso na lang! Huwag muna mag-impulsive buy ha? 😅',
+    ],
+    PesoContext.overBudget: [
+      'Over budget ka na ngayon — but no worries, kaya natin i-adjust! 💪',
+      "Ay, lampas na sa budget! Let's see where we can cut back. 📊",
+      'Budget exceeded — susunod na buwan mas maingat tayo! 🎯',
+    ],
+    PesoContext.goalMilestone100: [
+      'GOAL COMPLETE! 🏆 Grabe — nabuo mo na ang {goal}! Taas kamay!',
+      '100% na si {goal}! Ikaw talaga — goal getter! 🎉',
+      'NAKUHA MO NA! {goal} fully funded! Peso is SO proud of you! 🥹',
+    ],
+    PesoContext.badgeUnlock: [
+      'Badge unlocked! 🏅 Galing mo — isa pang achievement nabuksan!',
+      "New badge! You're leveling up sa financial game! 🎖️",
+      'Achievement unlocked! Peso claps for you! 👏 Keep going!',
+    ],
+    PesoContext.weeklyReview: [
+      "It's review time! Kumusta ang linggo mo financially? 📊",
+      'Weekly check-in: handa ka na bang i-review ang spending mo? 🗓️',
+      "One week done — let's see how you did! Peso's proud either way. 💚",
+    ],
+    PesoContext.bigExpense: [
+      'Malaking gastos yan — ₱{amount}! Worth it ba? 🤔',
+      "Big purchase logged! ₱{amount} — sana enjoy mo! 😄",
+      'Grabe, ₱{amount}! Okay lang — basta naka-budget! 💪',
+    ],
+    PesoContext.recurringDue: [
+      'May recurring na due na! Huwag kalimutan bayaran. 🔁',
+      "Recurring bill reminder! Check ka muna bago malate. 📅",
+      'Due na ang recurring — Peso reminds you! 💡',
+    ],
+    PesoContext.savingsStreak: [
+      'Savings streak! 💰 Consistent ka sa pag-iimpok — amazing!',
+      "You're on a savings roll! Keep it going! 🔥",
+      'Walang praning sa savings — steady ka! 🌱 Galing!',
+    ],
+    PesoContext.debtPaid: [
+      'Utang paid off! 🎉 Pakiramdam mo ba yung relief? Grabe!',
+      "Debt cleared! One less thing to worry about — Peso celebrates! 💚",
+      'Bayad na! 🏆 Debt-free on that one — you did it!',
+    ],
+    PesoContext.backupReminder: [
+      "Don't forget to backup your data! 🔒 Safety first!",
+      'Backup mo na ang data mo — Peso worries about data loss! 😬',
+      'Ilang linggo na walang backup — kaya mo naman mag-backup ngayon? 💾',
+    ],
+    PesoContext.aiRateLimit: [
+      "Konting pahinga lang — AI limit reached for now. Try ulit mamaya! ⏳",
+      "Daily AI limit hit! Rest muna si Peso — babalik agad! 😄",
+      "Rate limit reached. Balik tayo mamaya — promise! 🙏",
+    ],
+    PesoContext.receiptScanned: [
+      'Receipt scanned! 🧾 Easy logging — love the tech life!',
+      "OCR done! Items extracted — no manual typing needed! 📷",
+      "Scanned and logged! Mabilis lang 'yan with Peso! ✅",
+    ],
+    PesoContext.voiceLogged: [
+      'Voice logged! 🎙️ Madali lang magsalita kaysa mag-type, diba?',
+      "Expense logged via voice! Peso hears you loud and clear! 🎤",
+      'Voice entry done! Salamat sa pagsasabi! 🗣️',
+    ],
+    PesoContext.ocrSuccess: [
+      'OCR success! 📷 All text extracted — nice and clean!',
+      'Receipt text naka-capture na! Ayos! 🧾 Peso approves.',
+      'OCR done perfectly! Lahat ng items nakuha! ✅',
+    ],
+    PesoContext.exportDone: [
+      'Export complete! 📤 Your data is ready to share!',
+      "Data exported! Handa na — padala mo na kung kailangan! 💾",
+      'Export done! Salamat sa pag-backup ng data mo! ✅',
+    ],
+    PesoContext.newBudgetPeriod: [
+      "Bagong budget period! 🗓️ Fresh start — let's crush it!",
+      "New month, new budget! Handa ka na ba? 💪",
+      'New budget period starts now! Peso is excited for you! 🎯',
+    ],
+    PesoContext.paydayReminder: [
+      'Payday na! 💸 Huwag kalimutang i-allocate ang budget mo agad!',
+      "It's payday! Allot first, spend after — Peso's golden rule! 🏆",
+      'Sweldo na! 🎉 Set aside savings agad bago pa maubos! 💰',
+    ],
+    PesoContext.billOverdue: [
+      'May overdue na bill! ⚠️ Bayad na bago lumaki ang interest!',
+      "Bill overdue alert! Huwag hayaang lumaki pa — Peso nag-aalala! 😬",
+      'Overdue bill detected! Check mo na — Peso reminds you! 📅',
+    ],
+    PesoContext.appBirthday: [
+      "Happy SmartSpend Anniversary! 🎂 Salamat sa trust mo sa Peso!",
+      "It's our app birthday! 🥳 One more year of tracking together — grabe!",
+      "Anniversary natin! 🎉 Ikaw at Peso — financial partners forever! 💚",
+    ],
+    // ── Idle / screen-specific lines ─────────────────────────────────────
     PesoContext.idleHome: [
       'Kamusta ang budget mo ngayon? Tap me to ask! 💬',
       "I can log expenses, check FHS, or answer anything! 😊",

@@ -30,6 +30,7 @@ import 'income_screen.dart';
 import 'bank_import_screen.dart';
 import 'profile_screen.dart' show WalletsSheet;
 import 'bill_calendar_screen.dart';
+import 'heatmap_screen.dart';
 import 'ofw/remittance_screen.dart';
 import 'ofw/balikbayan_tracker_screen.dart';
 
@@ -1001,6 +1002,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   MaterialPageRoute(
                                       builder: (_) =>
                                           const BillCalendarScreen()))
+                            ),
+                            (
+                              Icons.grid_view_outlined,
+                              'Heatmap',
+                              Colors.deepOrange,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const HeatmapScreen()))
                             ),
                             (
                               Icons.send_to_mobile_outlined,
