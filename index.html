@@ -161,8 +161,8 @@
     .modalities { display: flex; flex-wrap: wrap; gap: 10px; }
     .modality-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(20px); }
     .modality-chip.visible { opacity: 1; transform: translateY(0); }    .screenshots-section { max-width: 1000px; margin: 0 auto 70px; padding: 0 24px; }
-    .screenshots-section .section-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; }
-    .screenshots-section .section-sub { color: var(--text-muted); margin-bottom: 36px; }
+    .screenshots-section .section-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; text-align: center; }
+    .screenshots-section .section-sub { color: var(--text-muted); margin-bottom: 36px; text-align: center; }
     .swiper { width: 100%; padding-bottom: 48px !important; }
     .swiper-slide { width: 220px !important; display: flex; flex-direction: column; align-items: center; gap: 0; }
     .phone-frame { width: 220px; background: #111; border-radius: 32px; border: 3px solid #333; overflow: hidden; box-shadow: 0 8px 32px var(--shadow), 0 0 0 1px rgba(255,255,255,0.05); position: relative; aspect-ratio: 9/19.5; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
@@ -686,8 +686,8 @@
 
     /* ===== PRIVACY-AI SECTION ===== */
     .privacy-ai-section { max-width: 900px; margin: 0 auto 70px; padding: 0 24px; }
-    .privacy-ai-section .section-title { margin-bottom: 8px; }
-    .privacy-ai-section .section-sub { color: var(--text-muted); margin-bottom: 36px; }
+    .privacy-ai-section .section-title { margin-bottom: 8px; text-align: center; }
+    .privacy-ai-section .section-sub { color: var(--text-muted); margin-bottom: 36px; text-align: center; }
     .pai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
     @media (max-width: 700px) { .pai-grid { grid-template-columns: 1fr; } }
     .pai-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 16px; }
@@ -788,7 +788,7 @@
     .faq-a a { color:var(--primary); }
     .faq-a a:hover { text-decoration:underline; }
       /* RESEARCH / SURVEY SECTION */
-    .research-section { max-width:900px; margin:0 auto 70px; padding:0 24px; }
+    .research-section { max-width:900px; margin:0 auto 70px; padding:0 24px; text-align:center; }
     .research-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:32px; }
     .research-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:28px 24px; display:flex; flex-direction:column; gap:14px; transition:border-color 0.2s, box-shadow 0.2s; }
     .research-card:hover { border-color:var(--border-strong); box-shadow:0 0 20px var(--primary-glow); }
@@ -968,6 +968,7 @@
     }
   </style></head>
 <body>
+<canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
 
 <!-- Defense Banner -->
 <div style="background:linear-gradient(135deg,rgba(0,200,150,0.12),rgba(37,99,235,0.08));border-bottom:2px solid var(--primary);padding:12px 20px;text-align:center;font-size:14px;color:var(--text);position:sticky;top:0;z-index:1000;backdrop-filter:blur(10px)">
@@ -1116,7 +1117,7 @@
         <span class="hero-survey-text">We need your feedback for our capstone research!</span>
         <a href="#research" class="hero-survey-link">Take the survey →</a>
       </div>
-      <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.2.2 · Free & Open Source</div>
+      <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.5.0 · Free & Open Source</div>
     </div>
     <div class="hero-right">
       <div class="hero-peso-wrap">
@@ -1131,7 +1132,7 @@
 <div class="stats-card">
 <div class="stats">
   <div class="stat"><div class="stat-number" data-target="30">0</div><div class="stat-label">Research Respondents</div></div>
-  <div class="stat"><div class="stat-number" data-target="62">0</div><div class="stat-label">SUS Score (v3.1.0)</div></div>
+  <div class="stat"><div class="stat-number" data-target="62">0</div><div class="stat-label">SUS Score (v3.5.0)</div></div>
   <div class="stat"><div class="stat-number" data-target="7">0</div><div class="stat-label">Input Modalities</div></div>
   <div class="stat"><div class="stat-number" data-target="10">0</div><div class="stat-label">AI Providers</div></div>
   <div class="stat"><div class="stat-number" data-target="36">0</div><div class="stat-label">Achievement Badges</div></div>
@@ -1360,7 +1361,7 @@
 </section>
 <section class="screenshots-section" id="screenshots">
   <div class="section-title">See it in action</div>
-  <div class="section-sub">Real screenshots from SmartSpend v3.1.0 — the version evaluated in our capstone research. Click any screenshot to zoom.</div>
+  <div class="section-sub">Real screenshots from SmartSpend v3.5.0 — the version evaluated in our capstone research. Click any screenshot to zoom.</div>
   <div class="ss-tabs">
     <div class="ss-tab active" onclick="filterSlides('all', this)">All</div>
     <div class="ss-tab" onclick="filterSlides('ai', this)">🤖 AI &amp; Chat</div>
@@ -1369,7 +1370,7 @@
     <div class="ss-tab" onclick="filterSlides('tools', this)">&#x1F6E0;&#xFE0F; Tools</div>
     <div class="ss-tab" onclick="filterSlides('gamify', this)">🏅 Gamification</div>
   </div>
-  <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:10px 16px;margin-bottom:20px;font-size:13px;color:var(--text-muted);display:flex;gap:10px;align-items:center"><span style="font-size:1.2rem;flex-shrink:0">📸</span><span>These screenshots are from SmartSpend v3.1.0 — the research-evaluated version. The latest release may include additional improvements and features.</span></div>
+  <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:10px 16px;margin-bottom:20px;font-size:13px;color:var(--text-muted);display:flex;gap:10px;align-items:center"><span style="font-size:1.2rem;flex-shrink:0">📸</span><span>These screenshots are from SmartSpend v3.5.0 — the research-evaluated version. The latest release may include additional improvements and features.</span></div>
   <div class="swiper screenshotsSwiper">
     <div class="swiper-wrapper" id="screenshotsWrapper">
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View startup screen full size"><img src="docs/tools/image_converter/Kiro_Ready/startup screen.jpg" alt="SmartSpend splash screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Welcome Screen</strong><span>Clean splash with the SmartSpend brand and tagline &mdash; &ldquo;Your AI Financial Assistant.&rdquo;</span></div></div>
@@ -1422,13 +1423,13 @@
 </div>
 
 <!-- RESEARCH FINDINGS -->
-<section class="section" id="research-findings" style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px;margin:0">
+<section class="section" id="research-findings" style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px;margin:0;text-align:center">
   <div style="max-width:900px;margin:0 auto">
     <div class="section-eyebrow">🎓 Capstone Research Study</div>
-    <div class="section-title">SmartSpend v3.1.0 Research Findings</div>
+    <div class="section-title">SmartSpend v3.5.0 Research Findings</div>
     <p class="section-sub">SmartSpend was evaluated by 30 Filipino respondents (10 parents, 20 young professionals) using the System Usability Scale (SUS) — a standardized 10-question usability assessment used in academic research worldwide.</p>
     
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;text-align:left">
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px">
         <div style="font-size:3rem;font-weight:800;color:var(--primary);margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">61.83</div>
         <div style="font-size:14px;font-weight:700;margin-bottom:4px">SUS Score (out of 100)</div>
@@ -1441,7 +1442,7 @@
       </div>
     </div>
 
-    <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px">
+    <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:20px 24px;margin-bottom:20px;text-align:left">
       <div style="font-weight:700;font-size:14px;color:#f87171;margin-bottom:12px;font-family:'Plus Jakarta Sans',sans-serif">📋 Panel Recommendations (Title Defense)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;color:var(--text-muted);line-height:1.6">
         <div>
@@ -1467,7 +1468,7 @@
       </div>
     </div>
 
-    <div style="background:var(--primary-glow);border:1px solid var(--border-strong);border-radius:12px;padding:20px 24px">
+    <div style="background:var(--primary-glow);border:1px solid var(--border-strong);border-radius:12px;padding:20px 24px;text-align:left">
       <div style="font-weight:700;font-size:14px;color:var(--primary);margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">✅ What's Next</div>
       <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin:0">The development team is actively addressing panel feedback. <strong>v3.2.0 and beyond</strong> will focus on UI/UX refinement (Recommendation #8), stability improvements, and feature expansion based on user testing insights. <a href="#feedback" style="color:var(--primary)">Your feedback helps shape SmartSpend's future.</a></p>
     </div>
@@ -1475,7 +1476,7 @@
 </section>
 
 <section id="demo" style="max-width:900px;margin:0 auto 70px;padding:0 24px;">
-  <div class="section-title" style="display:flex;align-items:center;gap:10px;">
+  <div class="section-title" style="display:flex;align-items:center;gap:10px;text-align:center;justify-content:center;">
     <svg class="peso-mascot" style="--peso-size:40px" aria-label="Peso mascot"><use href="#peso-face"/></svg>
     📱 Try it — Interactive Demo
   </div>
@@ -1771,7 +1772,7 @@
 
   </div>
   <div class="research-note">
-    Both surveys are hosted on Google Forms. Your responses help validate SmartSpend as a capstone study and directly shape future improvements to the app. Salamat! 🙏 You can also find these surveys linked in the nav bar above.<br><small style="opacity:0.7">All responses are for academic research only — Lorma Colleges CCSE Capstone 2026.</small>`n  </div>
+    Both surveys are hosted on Google Forms. Your responses help validate SmartSpend as a capstone study and directly shape future improvements to the app. Salamat! 🙏 You can also find these surveys linked in the nav bar above.<br><small style="opacity:0.7">All responses are for academic research only — Lorma Colleges CCSE Capstone 2026.</small></div>
 </section>
 <!-- FAQ -->
 <div class="section-divider"></div>
@@ -1981,7 +1982,7 @@
   </table>
   <div class="version-note">
     Latest version: <strong>v3.3.2</strong> &#x00B7;
-    Research-evaluated version: <strong>v3.1.0</strong> &#x00B7;
+    Research-evaluated version: <strong>v3.5.0</strong> &#x00B7;
     <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">All releases &#x2192;</a> &#x00B7;
     Not sure which APK? Install the arm64-v8a version first.
   </div>
@@ -2179,7 +2180,7 @@
   </p>
 </section>
 <section class="about-section" id="about">
-  <div class="section-title" style="padding:0 24px;margin-bottom:8px;">About the Project</div>
+  <div class="section-title" style="margin-bottom:8px;">About the Project</div>
   <div class="section-sub" style="padding:0 24px;margin-bottom:28px;">Built by students, for Filipinos.</div>
   <div class="about-grid">
     <!-- Left: project info cards -->
