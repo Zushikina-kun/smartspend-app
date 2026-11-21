@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../services/sms_parser_service.dart';
 import '../services/db_service.dart';
 import '../services/app_config.dart';
 import '../services/backup_service.dart';
@@ -37,6 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool walletConfirmDeduct = false; // opt-in: ask before deducting each expense
   bool impulseEnabled = true;
   bool budgetAlerts = true;
+  bool smsSyncEnabled = false;
 
   // ── Display ─────────────────────────────────────────────────────────────────
   bool balanceMode = false;
@@ -123,6 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         (await DBService.getSetting('impulse_pause_enabled')) != 'false';
     budgetAlerts =
         (await DBService.getSetting('budget_alerts_enabled')) != 'false';
+    smsSyncEnabled = await SmsParserService.isSmssyncEnabled();
     balanceMode = (await DBService.getSetting('balance_mode')) == 'true';
     roundUpSavings =
         (await DBService.getSetting('round_up_savings')) != 'false';
@@ -248,6 +251,110 @@ class _SettingsScreenState extends State<SettingsScreen> {
         showEmergencyFund == s.emergencyFund &&
         showMilestones == s.milestones &&
         showMarketInsights == s.marketInsights;
+  }
+
+  void _showNotificationAccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.notifications_active_outlined, size: 20),
+            SizedBox(width: 8),
+            Text('Enable Notification Access'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Follow these steps to allow SmartSpend to auto-detect GCash and Maya transactions:',
+                style: TextStyle(fontSize: 13),
+              ),
+              const SizedBox(height: 12),
+              _instructionStep('1', 'Open Settings on your Android device'),
+              _instructionStep(
+                  '2', 'Go to Apps → three-dot menu → Special app access'),
+              _instructionStep('3', 'Tap "Notification access"'),
+              _instructionStep('4', 'Find SmartSpend and enable it'),
+              _instructionStep('5',
+                  'Return to the app — transactions from GCash and Maya will be auto-detected'),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border:
+                      Border.all(color: Colors.amber.withValues(alpha: 0.4)),
+                ),
+                child: const Text(
+                  'Note: Full auto-detection requires a future app update. This enables the permission for when that feature launches.',
+                  style: TextStyle(fontSize: 11, height: 1.4),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final uri = Uri.parse(
+                  'package:android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS');
+              try {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              } catch (_) {
+                // url_launcher could not open the settings intent — instructions
+                // dialog was already shown above, so nothing further needed.
+              }
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _instructionStep(String number, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 20,
+            height: 20,
+            margin: const EdgeInsets.only(right: 10, top: 1),
+            decoration: BoxDecoration(
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                number,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child:
+                Text(text, style: const TextStyle(fontSize: 13, height: 1.4)),
+          ),
+        ],
+      ),
+    );
   }
 
   void _save(String key, bool value) {
@@ -493,6 +600,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (v) {
                       setState(() => budgetAlerts = v);
                       _save('budget_alerts_enabled', v);
+                    },
+                  ),
+                  _tile(
+                    icon: Icons.sms_outlined,
+                    title: 'SMS Auto-sync',
+                    subtitle: 'Import GCash/Maya transactions from SMS',
+                    value: smsSyncEnabled,
+                    onChanged: (v) async {
+                      await SmsParserService.setSmsSync(v);
+                      setState(() => smsSyncEnabled = v);
                     },
                   ),
                   // Spending limits nav row
@@ -863,6 +980,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() => billRemindersEnabled = v);
                       _save('bill_reminders_enabled', v);
                     },
+                  ),
+                ]),
+
+                // ── NOTIFICATION ACCESS ──────────────────────────────────────
+                _sectionCard([
+                  InkWell(
+                    onTap: () => _showNotificationAccessDialog(context),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      child: Row(children: [
+                        Icon(Icons.notifications_active_outlined,
+                            size: 20, color: Colors.grey[600]),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Enable Notification Access',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500)),
+                                Text('Auto-detect GCash and Maya transactions',
+                                    style: TextStyle(
+                                        fontSize: 11, color: Colors.grey[500])),
+                              ]),
+                        ),
+                        Icon(Icons.chevron_right, color: Colors.grey[400]),
+                      ]),
+                    ),
                   ),
                 ]),
 
