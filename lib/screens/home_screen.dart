@@ -59,6 +59,7 @@ import 'chat_history_screen.dart';
 import 'data_quality_screen.dart';
 import 'help_screen.dart';
 import 'debt_payoff_screen.dart';
+import 'debt_calculator_screen.dart';
 import 'gov_contributions_screen.dart';
 import 'egov/sss_screen.dart';
 import 'egov/pagibig_screen.dart';
@@ -1933,6 +1934,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "Avalanche vs snowball — see which saves you more interest",
             Colors.deepPurple,
             () => _go(const DebtPayoffScreen())
+          ),
+          (
+            Icons.calculate_outlined,
+            "Debt Payoff (Manual)",
+            "Enter any debts manually — avalanche vs snowball side-by-side",
+            Colors.indigo,
+            () => _go(const DebtCalculatorScreen())
           ),
           (
             Icons.account_balance_outlined,
