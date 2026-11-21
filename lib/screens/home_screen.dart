@@ -60,6 +60,7 @@ import 'data_quality_screen.dart';
 import 'help_screen.dart';
 import 'debt_payoff_screen.dart';
 import 'gov_contributions_screen.dart';
+import 'egov/sss_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
@@ -1911,6 +1912,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "Track SSS, PhilHealth, Pag-IBIG year-to-date totals",
             Colors.blue,
             () => _go(const GovContributionsScreen())
+          ),
+          (
+            Icons.calculate_outlined,
+            "SSS Calculator",
+            "SSS contributions, loan calculators & contribution history",
+            Colors.indigo,
+            () => _go(const SSSScreen())
           ),
           (
             Icons.category_outlined,
