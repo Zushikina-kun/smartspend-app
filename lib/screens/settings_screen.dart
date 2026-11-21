@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/db_service.dart';
 import '../services/app_config.dart';
+import '../services/backup_service.dart';
 import '../services/export_service.dart';
 import '../services/app_lock_service.dart';
 import '../services/event_bus.dart';
@@ -1472,6 +1473,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         }
                       }
                     },
+                  ),
+                ]),
+
+                // ── BACKUP & RESTORE ─────────────────────────────────────────
+                _sectionLabel('BACKUP & RESTORE'),
+                _sectionCard([
+                  ListTile(
+                    leading: const Icon(Icons.backup_outlined, size: 20),
+                    iconColor: Colors.grey[600],
+                    title: const Text('Create Backup',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500)),
+                    subtitle: Text('Export all data as a JSON file',
+                        style:
+                            TextStyle(fontSize: 11, color: Colors.grey[500])),
+                    trailing: const Icon(Icons.share_outlined, size: 18),
+                    onTap: () async {
+                      try {
+                        await BackupService.exportBackup();
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Backup failed: $e'),
+                            behavior: SnackBarBehavior.floating,
+                          ));
+                        }
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.restore_outlined, size: 20),
+                    iconColor: Colors.grey[600],
+                    title: const Text('Restore from Backup',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500)),
+                    subtitle: Text('Pick a .json file to restore all data',
+                        style:
+                            TextStyle(fontSize: 11, color: Colors.grey[500])),
+                    trailing: const Icon(Icons.upload_file_outlined, size: 18),
+                    onTap: () => BackupService.importBackup(context),
                   ),
                 ]),
 

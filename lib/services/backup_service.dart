@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -142,6 +144,139 @@ class BackupService {
       return folder.path;
     } catch (_) {
       return null;
+    }
+  }
+
+  // ── FEAT-015 PUBLIC API ───────────────────────────────────────────────────
+
+  /// Serializes all app data to a timestamped JSON file and shares it.
+  static Future<void> exportBackup() async {
+    await backup();
+  }
+
+  /// Picks a .json backup file, asks for confirmation, then restores all data.
+  static Future<void> importBackup(BuildContext context) async {
+    // Pick file
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['json'],
+        allowMultiple: false,
+      );
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Could not open file picker: $e'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+      return;
+    }
+
+    if (result == null || result.files.isEmpty) return;
+    final filePath = result.files.single.path;
+    if (filePath == null) return;
+
+    // Validate JSON keys before showing dialog
+    Map<String, dynamic> data;
+    try {
+      final raw = await File(filePath).readAsString();
+      data = jsonDecode(raw) as Map<String, dynamic>;
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Invalid backup file: $e'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+      return;
+    }
+
+    const requiredKeys = ['expenses', 'budgets', 'goals'];
+    final missingKeys =
+        requiredKeys.where((k) => !data.containsKey(k)).toList();
+    if (missingKeys.isNotEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text('File is missing required keys: ${missingKeys.join(', ')}'),
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+      return;
+    }
+
+    // Confirmation dialog
+    if (!context.mounted) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Restore Backup'),
+        content:
+            const Text('This will overwrite all current data. Are you sure?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Restore'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    // Delete existing rows before restore
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Restoring backup…'),
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ));
+    }
+
+    try {
+      final db = await DBService.getDB();
+      for (final table in [
+        'expenses',
+        'budgets',
+        'goals',
+        'income',
+        'recurring',
+        'debts',
+        'scan_history',
+        'installments',
+        'installment_plans',
+        'custom_categories',
+        'category_rules',
+        'mood_log',
+        'wallets',
+        'insurance_policies',
+        'remittances',
+        'balikbayan_boxes',
+      ]) {
+        try {
+          await db.delete(table);
+        } catch (_) {
+          // Table may not exist — skip silently
+        }
+      }
+    } catch (_) {}
+
+    final restoreResult = await restoreFromFile(filePath);
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(restoreResult.success
+            ? '✅ ${restoreResult.message}'
+            : '❌ ${restoreResult.message}'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 4),
+      ));
     }
   }
 
