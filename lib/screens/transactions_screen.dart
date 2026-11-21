@@ -106,6 +106,28 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   bool _showNeedsOnly = false;
   String? _activeTag;
 
+  // ── FEAT-010: Date range & amount range filters ──────────────────────
+  DateTimeRange? _dateRangeFilter;
+  double? _minAmountFilter;
+  double? _maxAmountFilter;
+
+  /// True when any of the FEAT-010 filters (date range or amount range) is active.
+  bool get _hasAdvancedFilter =>
+      _dateRangeFilter != null ||
+      _minAmountFilter != null ||
+      _maxAmountFilter != null;
+
+  /// True when ANY filter beyond the defaults is active.
+  bool get _hasAnyFilter =>
+      _searchQuery.isNotEmpty ||
+      _period != 'all' ||
+      _selectedCategory != 'All' ||
+      _showWantsOnly ||
+      _showNeedsOnly ||
+      _showLowConfidenceOnly ||
+      _activeTag != null ||
+      _hasAdvancedFilter;
+
   // 12C: Recent AI-logged expenses for undo card (last 3, within 24h)
   List<Expense> _recentAiExpenses = [];
   bool _undoCardDismissed = false;
@@ -251,6 +273,30 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     if (_selectedCategory != 'All') {
       result = result.where((e) => e.category == _selectedCategory).toList();
+    }
+
+    // ── FEAT-010: Date range filter ──────────────────────────────────────
+    if (_dateRangeFilter != null) {
+      final start = DateTime(_dateRangeFilter!.start.year,
+          _dateRangeFilter!.start.month, _dateRangeFilter!.start.day);
+      final end = DateTime(_dateRangeFilter!.end.year,
+          _dateRangeFilter!.end.month, _dateRangeFilter!.end.day, 23, 59, 59);
+      result = result.where((e) {
+        try {
+          final d = DateTime.parse(e.date);
+          return !d.isBefore(start) && !d.isAfter(end);
+        } catch (_) {
+          return true;
+        }
+      }).toList();
+    }
+
+    // ── FEAT-010: Amount range filter ────────────────────────────────────
+    if (_minAmountFilter != null) {
+      result = result.where((e) => e.amount >= _minAmountFilter!).toList();
+    }
+    if (_maxAmountFilter != null) {
+      result = result.where((e) => e.amount <= _maxAmountFilter!).toList();
     }
 
     if (_searchQuery.isNotEmpty) {
@@ -456,6 +502,25 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
   }
 
+  /// Format a DateTime as "MMM d, yyyy".
+  String _formatDateShort(DateTime dt) {
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
+  }
+
   /// Show the sort/group bottom sheet.
   void _showSortGroupSheet() {
     showModalBottomSheet(
@@ -551,6 +616,145 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         ),
       ),
     );
+  }
+
+  // ── FEAT-010: Date range picker ───────────────────────────────────────
+  Future<void> _pickDateRange() async {
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(const Duration(days: 1)),
+      initialDateRange: _dateRangeFilter,
+      builder: (context, child) => Theme(
+        data: Theme.of(context),
+        child: child!,
+      ),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateRangeFilter = picked;
+        _applyFilter();
+      });
+    }
+  }
+
+  // ── FEAT-010: Amount range filter dialog ──────────────────────────────
+  Future<void> _showAmountRangeDialog() async {
+    final minCtrl = TextEditingController(
+        text: _minAmountFilter != null
+            ? _minAmountFilter!.toStringAsFixed(2)
+            : '');
+    final maxCtrl = TextEditingController(
+        text: _maxAmountFilter != null
+            ? _maxAmountFilter!.toStringAsFixed(2)
+            : '');
+    final formKey = GlobalKey<FormState>();
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Amount Range Filter'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: minCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                  labelText: 'Min Amount (optional)',
+                  prefixText: '₱ ',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return null;
+                  final n = double.tryParse(v.trim());
+                  if (n == null || n < 0) return 'Enter a valid amount';
+                  return null;
+                },
+              ),
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: maxCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                  labelText: 'Max Amount (optional)',
+                  prefixText: '₱ ',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return null;
+                  final n = double.tryParse(v.trim());
+                  if (n == null || n < 0) return 'Enter a valid amount';
+                  final minVal = double.tryParse(minCtrl.text.trim());
+                  if (minVal != null && n < minVal) {
+                    return 'Max must be ≥ Min';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          if (_minAmountFilter != null || _maxAmountFilter != null)
+            TextButton(
+              onPressed: () {
+                minCtrl.clear();
+                maxCtrl.clear();
+                Navigator.pop(ctx, true);
+              },
+              child: const Text('Clear', style: TextStyle(color: Colors.red)),
+            ),
+          FilledButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                Navigator.pop(ctx, true);
+              }
+            },
+            child: const Text('Apply'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      setState(() {
+        final minText = minCtrl.text.trim();
+        final maxText = maxCtrl.text.trim();
+        _minAmountFilter = minText.isNotEmpty ? double.tryParse(minText) : null;
+        _maxAmountFilter = maxText.isNotEmpty ? double.tryParse(maxText) : null;
+        _applyFilter();
+      });
+    }
+    minCtrl.dispose();
+    maxCtrl.dispose();
+  }
+
+  /// Clear all active filters and reset to defaults.
+  void _clearAllFilters() {
+    setState(() {
+      _searchCtrl.clear();
+      _searchQuery = '';
+      _period = 'all';
+      _selectedCategory = 'All';
+      _showWantsOnly = false;
+      _showNeedsOnly = false;
+      _showLowConfidenceOnly = false;
+      _activeTag = null;
+      _dateRangeFilter = null;
+      _minAmountFilter = null;
+      _maxAmountFilter = null;
+      _applyFilter();
+      _persistFilter();
+    });
   }
 
   double get _filteredTotal => _filtered.fold(0.0, (s, e) => s + e.amount);
@@ -769,6 +973,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       "• Search by item name or shop\n"
                       "• Use Sort / Group to change the order and grouping\n"
                       "• Filter by time period or category\n"
+                      "• Use the date range (📅) or amount (₱) icons to narrow results\n"
                       "• Long-press any transaction to select multiple, then delete them at once\n"
                       "• Tap the download icon to export the filtered list to CSV",
                 ),
@@ -777,6 +982,27 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                   icon: const Icon(Icons.swap_vert),
                   tooltip: "Sort & group",
                   onPressed: _showSortGroupSheet,
+                ),
+                // FEAT-010: Date range filter button
+                IconButton(
+                  icon: Icon(
+                    Icons.date_range,
+                    color: _dateRangeFilter != null ? cs.primary : null,
+                  ),
+                  tooltip: "Filter by date range",
+                  onPressed: _pickDateRange,
+                ),
+                // FEAT-010: Amount range filter button
+                IconButton(
+                  icon: Icon(
+                    Icons.price_change_outlined,
+                    color:
+                        (_minAmountFilter != null || _maxAmountFilter != null)
+                            ? cs.primary
+                            : null,
+                  ),
+                  tooltip: "Filter by amount range",
+                  onPressed: _showAmountRangeDialog,
                 ),
                 IconButton(
                   icon: const Icon(Icons.download_outlined),
@@ -1045,7 +1271,71 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     );
                   }),
 
-                  // Summary bar
+                  // ── FEAT-010: Active filter chips (date range + amount) ──────
+                  if (_hasAdvancedFilter)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+                      child: Row(
+                        children: [
+                          if (_dateRangeFilter != null)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 6),
+                              child: Chip(
+                                avatar: Icon(Icons.date_range,
+                                    size: 14, color: cs.primary),
+                                label: Text(
+                                  '${_formatDateShort(_dateRangeFilter!.start)} – ${_formatDateShort(_dateRangeFilter!.end)}',
+                                  style: TextStyle(
+                                      fontSize: 11, color: cs.primary),
+                                ),
+                                deleteIcon: Icon(Icons.close,
+                                    size: 14, color: cs.primary),
+                                onDeleted: () => setState(() {
+                                  _dateRangeFilter = null;
+                                  _applyFilter();
+                                }),
+                                backgroundColor:
+                                    cs.primary.withValues(alpha: 0.08),
+                                side: BorderSide(
+                                    color: cs.primary.withValues(alpha: 0.3)),
+                              ),
+                            ),
+                          if (_minAmountFilter != null ||
+                              _maxAmountFilter != null)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 6),
+                              child: Chip(
+                                avatar: Icon(Icons.price_change_outlined,
+                                    size: 14, color: cs.primary),
+                                label: Text(
+                                  _minAmountFilter != null &&
+                                          _maxAmountFilter != null
+                                      ? '₱${_minAmountFilter!.toStringAsFixed(0)} – ₱${_maxAmountFilter!.toStringAsFixed(0)}'
+                                      : _minAmountFilter != null
+                                          ? '≥ ₱${_minAmountFilter!.toStringAsFixed(0)}'
+                                          : '≤ ₱${_maxAmountFilter!.toStringAsFixed(0)}',
+                                  style: TextStyle(
+                                      fontSize: 11, color: cs.primary),
+                                ),
+                                deleteIcon: Icon(Icons.close,
+                                    size: 14, color: cs.primary),
+                                onDeleted: () => setState(() {
+                                  _minAmountFilter = null;
+                                  _maxAmountFilter = null;
+                                  _applyFilter();
+                                }),
+                                backgroundColor:
+                                    cs.primary.withValues(alpha: 0.08),
+                                side: BorderSide(
+                                    color: cs.primary.withValues(alpha: 0.3)),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+
+                  // Summary bar + results count + clear filters
                   Container(
                     margin: const EdgeInsets.fromLTRB(16, 10, 16, 0),
                     padding: const EdgeInsets.symmetric(
@@ -1061,17 +1351,57 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         ),
                       ],
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        Text("${_filtered.length} transactions",
-                            style: TextStyle(
-                                color: cs.onPrimaryContainer, fontSize: 13)),
-                        Text(CurrencyService.format(_filteredTotal),
-                            style: TextStyle(
-                                color: cs.onPrimaryContainer,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // ── FEAT-010: "Showing X of Y" when any filter active
+                            if (_hasAnyFilter)
+                              Text(
+                                "Showing ${_filtered.length} of ${_all.length}",
+                                style: TextStyle(
+                                    color: cs.onPrimaryContainer, fontSize: 13),
+                              )
+                            else
+                              Text("${_filtered.length} transactions",
+                                  style: TextStyle(
+                                      color: cs.onPrimaryContainer,
+                                      fontSize: 13)),
+                            Text(CurrencyService.format(_filteredTotal),
+                                style: TextStyle(
+                                    color: cs.onPrimaryContainer,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16)),
+                          ],
+                        ),
+                        // ── FEAT-010: Clear Filters button ──────────────────────
+                        if (_hasAnyFilter)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton.icon(
+                                    onPressed: _clearAllFilters,
+                                    icon: const Icon(Icons.filter_alt_off,
+                                        size: 14),
+                                    label: const Text('Clear Filters',
+                                        style: TextStyle(fontSize: 12)),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: cs.onPrimaryContainer,
+                                      side: BorderSide(
+                                          color: cs.onPrimaryContainer
+                                              .withValues(alpha: 0.4)),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                       ],
                     ),
                   ),
