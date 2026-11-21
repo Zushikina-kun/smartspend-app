@@ -166,6 +166,17 @@ class CurrencyService {
     return '$symbol${converted.toStringAsFixed(2)}';
   }
 
+  /// Format with compact notation (K, M) for charts and small displays
+  static String formatCompact(double phpAmount) {
+    final converted = convert(phpAmount);
+    if (converted.abs() >= 1000000) {
+      return '$symbol${(converted / 1000000).toStringAsFixed(1)}M';
+    } else if (converted.abs() >= 1000) {
+      return '$symbol${(converted / 1000).toStringAsFixed(1)}K';
+    }
+    return '$symbol${converted.toStringAsFixed(0)}';
+  }
+
   static Future<void> _loadRate({bool force = false}) async {
     if (_currentCurrency == 'PHP') {
       _rateFromPHP = 1.0;

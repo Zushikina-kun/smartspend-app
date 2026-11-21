@@ -1999,6 +1999,75 @@ class DBService {
     return db.query('debts', orderBy: 'created_at DESC');
   }
 
+  /// Returns upcoming obligations (recurring bills, debts, goals) due between now and the given date
+  /// Used by cash flow forecast to identify future financial commitments
+  static Future<List<Map<String, dynamic>>> getUpcomingObligations(
+      DateTime until) async {
+    final obligations = <Map<String, dynamic>>[];
+    final now = DateTime.now();
+    final untilStr = until.toIso8601String().substring(0, 10);
+
+    // Get recurring expenses due in the window
+    final recurring = await getRecurring();
+    for (final r in recurring) {
+      final nextDate = r['next_date'] as String?;
+      if (nextDate == null) continue;
+      final isExpense = (r['is_expense'] as int? ?? 1) == 1;
+      if (isExpense && nextDate.compareTo(untilStr) <= 0) {
+        obligations.add({
+          'type': 'recurring',
+          'title': r['title'],
+          'amount': r['amount'],
+          'date': nextDate,
+          'frequency': r['frequency'],
+        });
+      }
+    }
+
+    // Get debts due in the window
+    final debts = await getDebts();
+    for (final d in debts) {
+      final dueDate = d['due_date'] as String?;
+      if (dueDate == null) continue;
+      if (dueDate.compareTo(untilStr) <= 0) {
+        final remaining = (d['amount'] as num) - (d['paid_amount'] as num);
+        if (remaining > 0) {
+          obligations.add({
+            'type': 'debt',
+            'title': d['title'],
+            'amount': remaining,
+            'date': dueDate,
+            'person': d['person'],
+          });
+        }
+      }
+    }
+
+    // Get savings goals with deadlines in the window
+    final goals = await getGoals();
+    for (final g in goals) {
+      final deadline = g['deadline'] as String?;
+      if (deadline == null || deadline.isEmpty) continue;
+      if (deadline.compareTo(untilStr) <= 0) {
+        final remaining =
+            (g['target_amount'] as num) - (g['current_amount'] as num);
+        if (remaining > 0) {
+          obligations.add({
+            'type': 'goal',
+            'title': g['name'],
+            'amount': remaining,
+            'date': deadline,
+          });
+        }
+      }
+    }
+
+    // Sort by date
+    obligations
+        .sort((a, b) => (a['date'] as String).compareTo(b['date'] as String));
+    return obligations;
+  }
+
   // ── CLOUD SYNC ────────────────────────────────────────────
 
   /// Pull all data from Firestore and merge into local SQLite.

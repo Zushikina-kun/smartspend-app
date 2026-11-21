@@ -25,6 +25,7 @@ import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
 import 'edit_expense_screen.dart';
 import 'analytics_screen.dart';
+import 'forecast_screen.dart';
 import 'ai_screen.dart';
 import 'profile_screen.dart';
 import 'budget_screen.dart';
@@ -1889,6 +1890,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
       (
         'TOOLS',
         [
+          (
+            Icons.trending_up_outlined,
+            "Cash Flow Forecast",
+            "30-day balance projection based on bills & spending patterns",
+            Colors.blue,
+            () => _go(const ForecastScreen())
+          ),
           (
             Icons.account_balance_wallet_outlined,
             "Debt Payoff Calculator",
