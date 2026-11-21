@@ -14,6 +14,7 @@ import '../services/currency_service.dart';
 import '../services/budget_period_util.dart';
 import '../services/ocr_service.dart';
 import '../services/price_intelligence_service.dart';
+import '../services/auto_category_service.dart';
 import '../models/budget.dart';
 import '../widgets/info_button.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,6 +70,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   String? _photoPath;
   List<String> _tags = []; // user-defined tags e.g. ['#capstone', '#school']
   final _tagInputCtrl = TextEditingController();
+
+  // ── AUTO-CATEGORY SUGGESTION ──────────────────────────────────────────────
+  String? _suggestedCategory;
 
   // ── AUTOCOMPLETE STATE ────────────────────────────────────────────────────
   List<Map<String, dynamic>> _itemSuggestions = [];
@@ -150,6 +154,17 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   /// Load past-item suggestions as user types the item name.
   void _onItemNameChanged(String value) {
     _autoSuggestCategory();
+    // Auto-category suggestion chip (FEAT-009)
+    final suggestion = AutoCategoryService.suggest(value);
+    final isDefaultCategory =
+        _selectedCategory == 'Others' || _selectedCategory.isEmpty;
+    if (suggestion != null && isDefaultCategory) {
+      if (_suggestedCategory != suggestion) {
+        setState(() => _suggestedCategory = suggestion);
+      }
+    } else if (suggestion == null && _suggestedCategory != null) {
+      setState(() => _suggestedCategory = null);
+    }
     if (value.trim().length < 2) {
       if (_showSuggestions)
         setState(() {
@@ -185,6 +200,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       _isWant = isWant;
       _itemSuggestions = [];
       _showSuggestions = false;
+      _suggestedCategory = null;
     });
   }
 
@@ -402,6 +418,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               DateTime.now().toIso8601String().substring(0, 10);
           _isAnalyzing = false;
           _statusText = "";
+          _suggestedCategory = null; // AI handled it
         });
       }
     } catch (e) {
@@ -1140,6 +1157,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
             TextField(
               controller: _itemNameCtrl,
+              onChanged: (value) {
+                _onItemNameChanged(value);
+                final suggestion = AutoCategoryService.suggest(value);
+                final isDefault =
+                    _selectedCategory == 'Others' || _selectedCategory.isEmpty;
+                setState(() {
+                  if (suggestion != null && isDefault) {
+                    _suggestedCategory = suggestion;
+                  } else if (suggestion == null) {
+                    _suggestedCategory = null;
+                  }
+                });
+              },
               decoration: InputDecoration(
                 labelText: "Item Name",
                 prefixIcon: const Icon(Icons.label_outline),
@@ -1156,6 +1186,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           setState(() {
                             _itemSuggestions = [];
                             _showSuggestions = false;
+                            _suggestedCategory = null;
                           });
                         },
                       ),
@@ -1168,6 +1199,58 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 ),
               ),
             ),
+            // ── AUTO-CATEGORY SUGGESTION CHIP (FEAT-009) ─────────────────
+            if (_suggestedCategory != null &&
+                (_selectedCategory == 'Others' || _selectedCategory.isEmpty))
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 2),
+                child: Row(
+                  children: [
+                    const Icon(Icons.auto_awesome,
+                        size: 13, color: Colors.blueGrey),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Suggested:',
+                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(width: 6),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedCategory = _suggestedCategory!;
+                          _suggestedCategory = null;
+                        });
+                      },
+                      child: Chip(
+                        label: Text(
+                          _suggestedCategory!,
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.w600),
+                        ),
+                        avatar: const Icon(Icons.touch_app, size: 13),
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.12),
+                        side: BorderSide(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.35)),
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text('tap to apply',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[500],
+                            fontStyle: FontStyle.italic)),
+                  ],
+                ),
+              ),
             // ── ITEM SUGGESTIONS ─────────────────────────────────────────
             if (_showSuggestions && _itemSuggestions.isNotEmpty)
               Padding(
@@ -1281,7 +1364,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               items: _categories
                   .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                   .toList(),
-              onChanged: (v) => setState(() => _selectedCategory = v!),
+              onChanged: (v) => setState(() {
+                _selectedCategory = v!;
+                _suggestedCategory = null;
+              }),
             ),
             // ── CATEGORY BUDGET PROGRESS ─────────────────────────────────
             Builder(builder: (context) {
