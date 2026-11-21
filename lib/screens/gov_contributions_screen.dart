@@ -6,6 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
+import '../services/egov/philhealth_service.dart';
+import '../widgets/info_button.dart';
 
 /// Government Contributions Tracker — SSS, PhilHealth, Pag-IBIG
 /// Tracks year-to-date contributions for Filipino government programs
@@ -16,7 +18,8 @@ class GovContributionsScreen extends StatefulWidget {
   State<GovContributionsScreen> createState() => _GovContributionsScreenState();
 }
 
-class _GovContributionsScreenState extends State<GovContributionsScreen> {
+class _GovContributionsScreenState extends State<GovContributionsScreen>
+    with SingleTickerProviderStateMixin {
   Map<String, double> _ytdTotals = {};
   bool _loading = true;
   int _selectedYear = DateTime.now().year;
@@ -26,16 +29,29 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
   final TextEditingController _salaryCtrl = TextEditingController();
   double? _estimatedPension;
 
+  // PhilHealth calculator inputs
+  final TextEditingController _phSalaryCtrl = TextEditingController();
+  String _employmentType = 'employed';
+  Map<String, dynamic>? _premiumBreakdown;
+  Map<String, dynamic>? _mockCoverage;
+
+  // Tab controller
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _loadData();
+    _mockCoverage = PhilHealthService.generateMockCoverageInfo();
   }
 
   @override
   void dispose() {
     _yearsCtrl.dispose();
     _salaryCtrl.dispose();
+    _phSalaryCtrl.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -97,6 +113,25 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
     }
 
     setState(() => _estimatedPension = basePension.clamp(1000, 20000));
+  }
+
+  void _calculatePhilHealthPremium() {
+    final salary = double.tryParse(_phSalaryCtrl.text) ?? 0;
+
+    if (salary <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Enter a valid monthly salary'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _premiumBreakdown =
+          PhilHealthService.getPremiumBreakdown(salary, _employmentType);
+    });
   }
 
   Future<void> _launchURL(String url) async {
@@ -229,250 +264,26 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
             }),
           ),
         ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'YTD Tracker', icon: Icon(Icons.bar_chart, size: 20)),
+            Tab(
+                text: 'PhilHealth Calculator',
+                icon: Icon(Icons.calculate, size: 20)),
+          ],
+        ),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-              onRefresh: _loadData,
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  // Header
-                  Text(
-                    '$_selectedYear Government Contributions',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: cs.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Track your SSS, PhilHealth, and Pag-IBIG contributions',
-                    style: TextStyle(
-                        fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // SSS Card
-                  _buildContributionCard(
-                    context: context,
-                    title: 'SSS',
-                    subtitle: 'Social Security System',
-                    amount: _ytdTotals['SSS'] ?? 0,
-                    color: Colors.blue,
-                    icon: Icons.security,
-                    url: 'https://www.sss.gov.ph',
-                  ),
-                  const SizedBox(height: 12),
-
-                  // PhilHealth Card
-                  _buildContributionCard(
-                    context: context,
-                    title: 'PhilHealth',
-                    subtitle: 'Philippine Health Insurance',
-                    amount: _ytdTotals['PhilHealth'] ?? 0,
-                    color: Colors.green,
-                    icon: Icons.local_hospital,
-                    url: 'https://www.philhealth.gov.ph',
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Pag-IBIG Card
-                  _buildContributionCard(
-                    context: context,
-                    title: 'Pag-IBIG',
-                    subtitle: 'Home Development Mutual Fund',
-                    amount: _ytdTotals['Pag-IBIG'] ?? 0,
-                    color: Colors.orange,
-                    icon: Icons.home,
-                    url: 'https://www.pagibigfund.gov.ph',
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Total Summary
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Total YTD Contributions',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            CurrencyService.format(
-                              (_ytdTotals['SSS'] ?? 0) +
-                                  (_ytdTotals['PhilHealth'] ?? 0) +
-                                  (_ytdTotals['Pag-IBIG'] ?? 0),
-                            ),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: cs.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // SSS Pension Calculator
-                  Card(
-                    color: cs.primaryContainer.withOpacity(0.3),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.calculate,
-                                  size: 20, color: cs.primary),
-                              const SizedBox(width: 8),
-                              const Text(
-                                'SSS Pension Estimator',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Simple calculator for estimated monthly pension',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: cs.onSurface.withOpacity(0.6),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _yearsCtrl,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Years Contributed',
-                                    hintText: 'e.g., 20',
-                                    border: OutlineInputBorder(),
-                                    isDense: true,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: TextField(
-                                  controller: _salaryCtrl,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    labelText: 'Avg Monthly Salary',
-                                    hintText: '15000',
-                                    prefixText: '${CurrencyService.symbol} ',
-                                    border: const OutlineInputBorder(),
-                                    isDense: true,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: _calculatePension,
-                              icon: const Icon(Icons.calculate, size: 18),
-                              label: const Text('Calculate'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: cs.primary,
-                                foregroundColor: cs.onPrimary,
-                              ),
-                            ),
-                          ),
-                          if (_estimatedPension != null) ...[
-                            const SizedBox(height: 16),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: cs.primary.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'Est. Monthly Pension:',
-                                    style: TextStyle(fontSize: 13),
-                                  ),
-                                  Text(
-                                    CurrencyService.format(_estimatedPension!),
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: cs.primary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              '⚠️ This is a simplified estimate. Visit SSS.gov.ph for accurate calculations.',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: cs.error,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Info note
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: cs.surfaceContainerHighest.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: cs.outline.withOpacity(0.2)),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.info_outline,
-                            size: 18, color: cs.onSurface.withOpacity(0.6)),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Log your contributions as expenses using the "SSS", "PhilHealth", or "Pag-IBIG" categories. They will automatically appear here.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: cs.onSurface.withOpacity(0.7),
-                              height: 1.4,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Research Findings - Coming Soon
-                  _buildComingSoonSection(context),
-                ],
-              ),
+          : TabBarView(
+              controller: _tabController,
+              children: [
+                // YTD Tracker Tab
+                _buildYTDTrackerTab(cs),
+                // PhilHealth Calculator Tab
+                _buildPhilHealthCalculatorTab(cs),
+              ],
             ),
     );
   }
@@ -537,6 +348,636 @@ class _GovContributionsScreenState extends State<GovContributionsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildYTDTrackerTab(ColorScheme cs) {
+    return RefreshIndicator(
+      onRefresh: _loadData,
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          // Header
+          Text(
+            '$_selectedYear Government Contributions',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: cs.primary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Track your SSS, PhilHealth, and Pag-IBIG contributions',
+            style:
+                TextStyle(fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
+          ),
+          const SizedBox(height: 24),
+
+          // SSS Card
+          _buildContributionCard(
+            context: context,
+            title: 'SSS',
+            subtitle: 'Social Security System',
+            amount: _ytdTotals['SSS'] ?? 0,
+            color: Colors.blue,
+            icon: Icons.security,
+            url: 'https://www.sss.gov.ph',
+          ),
+          const SizedBox(height: 12),
+
+          // PhilHealth Card
+          _buildContributionCard(
+            context: context,
+            title: 'PhilHealth',
+            subtitle: 'Philippine Health Insurance',
+            amount: _ytdTotals['PhilHealth'] ?? 0,
+            color: Colors.green,
+            icon: Icons.local_hospital,
+            url: 'https://www.philhealth.gov.ph',
+          ),
+          const SizedBox(height: 12),
+
+          // Pag-IBIG Card
+          _buildContributionCard(
+            context: context,
+            title: 'Pag-IBIG',
+            subtitle: 'Home Development Mutual Fund',
+            amount: _ytdTotals['Pag-IBIG'] ?? 0,
+            color: Colors.orange,
+            icon: Icons.home,
+            url: 'https://www.pagibigfund.gov.ph',
+          ),
+          const SizedBox(height: 24),
+
+          // Total Summary
+          Card(
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Total YTD Contributions',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    CurrencyService.format(
+                      (_ytdTotals['SSS'] ?? 0) +
+                          (_ytdTotals['PhilHealth'] ?? 0) +
+                          (_ytdTotals['Pag-IBIG'] ?? 0),
+                    ),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: cs.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
+
+          // SSS Pension Calculator
+          Card(
+            color: cs.primaryContainer.withOpacity(0.3),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.calculate, size: 20, color: cs.primary),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'SSS Pension Estimator',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Simple calculator for estimated monthly pension',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: cs.onSurface.withOpacity(0.6),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _yearsCtrl,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Years Contributed',
+                            hintText: 'e.g., 20',
+                            border: OutlineInputBorder(),
+                            isDense: true,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          controller: _salaryCtrl,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Avg Monthly Salary',
+                            hintText: '15000',
+                            prefixText: '${CurrencyService.symbol} ',
+                            border: const OutlineInputBorder(),
+                            isDense: true,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _calculatePension,
+                      icon: const Icon(Icons.calculate, size: 18),
+                      label: const Text('Calculate'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: cs.primary,
+                        foregroundColor: cs.onPrimary,
+                      ),
+                    ),
+                  ),
+                  if (_estimatedPension != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: cs.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Est. Monthly Pension:',
+                            style: TextStyle(fontSize: 13),
+                          ),
+                          Text(
+                            CurrencyService.format(_estimatedPension!),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: cs.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '⚠️ This is a simplified estimate. Visit SSS.gov.ph for accurate calculations.',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: cs.error,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Info note
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: cs.surfaceContainerHighest.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: cs.outline.withOpacity(0.2)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.info_outline,
+                    size: 18, color: cs.onSurface.withOpacity(0.6)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Log your contributions as expenses using the "SSS", "PhilHealth", or "Pag-IBIG" categories. They will automatically appear here.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: cs.onSurface.withOpacity(0.7),
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Research Findings - Coming Soon
+          _buildComingSoonSection(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPhilHealthCalculatorTab(ColorScheme cs) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        // Header
+        Row(
+          children: [
+            Icon(Icons.local_hospital, size: 28, color: Colors.green),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'PhilHealth Premium Calculator',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Based on 2026 PhilHealth rates',
+                    style: TextStyle(
+                        fontSize: 13, color: cs.onSurface.withOpacity(0.6)),
+                  ),
+                ],
+              ),
+            ),
+            InfoButton(
+              title: 'PhilHealth Contribution Rates',
+              body: 'PhilHealth 2026 rates: 5% of monthly basic salary. '
+                  'Maximum contribution is ₱5,000 (salary cap at ₱100,000). '
+                  'For employed members, contributions are split 50-50 between employee and employer. '
+                  'Self-employed and voluntary members pay 100% of the contribution. '
+                  'Verify your actual coverage at philhealth.gov.ph portal.',
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+
+        // Calculator Card
+        Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Calculate Monthly Premium',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _phSalaryCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Monthly Basic Salary',
+                    hintText: 'e.g., 30000',
+                    prefixText: '${CurrencyService.symbol} ',
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: _employmentType,
+                  decoration: const InputDecoration(
+                    labelText: 'Employment Type',
+                    border: OutlineInputBorder(),
+                  ),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'employed',
+                      child: Text('Employed (50-50 split)'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'self-employed',
+                      child: Text('Self-Employed (100% member)'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'voluntary',
+                      child: Text('Voluntary (100% member)'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() => _employmentType = value);
+                    }
+                  },
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _calculatePhilHealthPremium,
+                    icon: const Icon(Icons.calculate, size: 18),
+                    label: const Text('Calculate Premium'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Premium Breakdown Result
+        if (_premiumBreakdown != null) ...[
+          const SizedBox(height: 16),
+          Card(
+            elevation: 2,
+            color: Colors.green.withOpacity(0.05),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Premium Breakdown',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      if (_premiumBreakdown!['isMaxCap'] as bool)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            'Max cap reached',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildPremiumRow(
+                    'Total Premium',
+                    _premiumBreakdown!['totalPremium'] as double,
+                    Colors.green,
+                    isBold: true,
+                  ),
+                  const Divider(height: 24),
+                  _buildPremiumRow(
+                    'Employee Share',
+                    _premiumBreakdown!['employeeShare'] as double,
+                    Colors.blue,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildPremiumRow(
+                    'Employer Share',
+                    _premiumBreakdown!['employerShare'] as double,
+                    Colors.purple,
+                  ),
+                  if (_premiumBreakdown!['isMaxCap'] as bool) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.info_outline,
+                              size: 16, color: Colors.orange),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Maximum contribution reached at ₱100,000 salary',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.orange.shade700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ],
+
+        const SizedBox(height: 24),
+
+        // Coverage Verification Card
+        if (_mockCoverage != null) ...[
+          Card(
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        'Coverage Verification',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.green.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.check_circle,
+                                size: 14, color: Colors.green.shade700),
+                            const SizedBox(width: 4),
+                            Text(
+                              _mockCoverage!['isActive'] as bool
+                                  ? 'Active'
+                                  : 'Inactive',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green.shade700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInfoRow('Membership Type',
+                      _mockCoverage!['membershipType'] as String),
+                  const SizedBox(height: 8),
+                  _buildInfoRow('Last Contribution',
+                      _mockCoverage!['lastContribution'] as String),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Available Benefits',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 12),
+                  ...(_mockCoverage!['availableBenefits'] as List<String>)
+                      .map((benefit) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _buildBenefitRow(benefit, cs),
+                          )),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: cs.surfaceVariant.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.info_outline,
+                            size: 16, color: cs.onSurface.withOpacity(0.6)),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '⚠️ This is mock data for demonstration. Verify your real coverage at philhealth.gov.ph',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: cs.onSurface.withOpacity(0.7),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+
+        const SizedBox(height: 16),
+
+        // Link to PhilHealth Portal
+        Card(
+          elevation: 1,
+          child: InkWell(
+            onTap: () => _launchURL('https://www.philhealth.gov.ph'),
+            borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.open_in_new, color: cs.primary),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Visit PhilHealth Portal',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Check your real coverage and contribution history',
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: cs.onSurface.withOpacity(0.6)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 16, color: cs.onSurface.withOpacity(0.4)),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPremiumRow(String label, double amount, Color color,
+      {bool isBold = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: isBold ? 15 : 14,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        Text(
+          CurrencyService.format(amount),
+          style: TextStyle(
+            fontSize: isBold ? 18 : 16,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 13)),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBenefitRow(String benefit, ColorScheme cs) {
+    final descriptions = PhilHealthService.getBenefitDescriptions();
+    return Row(
+      children: [
+        Icon(Icons.check_circle_outline, size: 18, color: Colors.green),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(benefit, style: const TextStyle(fontSize: 13)),
+        ),
+        InfoButton(
+          title: benefit,
+          body: descriptions[benefit] ?? 'No description available.',
+          size: 18,
+        ),
+      ],
     );
   }
 
