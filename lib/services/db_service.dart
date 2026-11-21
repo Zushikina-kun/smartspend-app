@@ -299,8 +299,26 @@ class DBService {
             );
           } catch (_) {}
         }
+        if (oldVersion < 15) {
+          // v15 — investment portfolio tracker
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS investments(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                type TEXT NOT NULL,
+                ticker TEXT,
+                shares_or_units REAL NOT NULL DEFAULT 0,
+                buy_price REAL NOT NULL DEFAULT 0,
+                current_price REAL NOT NULL DEFAULT 0,
+                buy_date TEXT,
+                notes TEXT
+              )
+            ''');
+          } catch (_) {}
+        }
       },
-      version: 14,
+      version: 15,
     );
     return _db!;
   }
@@ -456,6 +474,23 @@ class DBService {
           summary TEXT NOT NULL,
           message_count_at_summary INTEGER NOT NULL,
           created_at TEXT NOT NULL
+        )
+      ''');
+    } catch (_) {}
+
+    // Ensure investments table — portfolio tracker (v15)
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS investments(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          ticker TEXT,
+          shares_or_units REAL NOT NULL DEFAULT 0,
+          buy_price REAL NOT NULL DEFAULT 0,
+          current_price REAL NOT NULL DEFAULT 0,
+          buy_date TEXT,
+          notes TEXT
         )
       ''');
     } catch (_) {}
@@ -907,6 +942,19 @@ class DBService {
         category TEXT,
         expense_id INTEGER,
         created_at TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS investments(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        type TEXT NOT NULL,
+        ticker TEXT,
+        shares_or_units REAL NOT NULL DEFAULT 0,
+        buy_price REAL NOT NULL DEFAULT 0,
+        current_price REAL NOT NULL DEFAULT 0,
+        buy_date TEXT,
+        notes TEXT
       )
     ''');
   }
@@ -3302,5 +3350,28 @@ class DBService {
   static Future<void> deletePalawagan(int id) async {
     final db = await getDB();
     await db.delete('paluwagan', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // ── INVESTMENTS ───────────────────────────────────────────────────────────
+
+  static Future<List<Map<String, dynamic>>> getInvestments() async {
+    final db = await getDB();
+    return db.query('investments', orderBy: 'id DESC');
+  }
+
+  static Future<int> insertInvestment(Map<String, dynamic> data) async {
+    final db = await getDB();
+    return db.insert('investments', data);
+  }
+
+  static Future<void> updateInvestment(
+      int id, Map<String, dynamic> data) async {
+    final db = await getDB();
+    await db.update('investments', data, where: 'id = ?', whereArgs: [id]);
+  }
+
+  static Future<void> deleteInvestment(int id) async {
+    final db = await getDB();
+    await db.delete('investments', where: 'id = ?', whereArgs: [id]);
   }
 }

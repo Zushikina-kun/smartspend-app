@@ -50,6 +50,7 @@ import 'merchant_merge_screen.dart';
 import 'log_due_bills_screen.dart';
 import 'paluwagan_screen.dart';
 import 'pca_calculator_screen.dart';
+import 'investment_screen.dart';
 import 'glossary_screen.dart';
 import 'add_expense_screen.dart';
 import 'batch_manual_entry_screen.dart';
@@ -63,6 +64,7 @@ import 'debt_calculator_screen.dart';
 import 'gov_contributions_screen.dart';
 import 'egov/sss_screen.dart';
 import 'egov/pagibig_screen.dart';
+import 'tax_screen.dart';
 import 'ofw/remittance_screen.dart';
 import 'ofw/balikbayan_tracker_screen.dart';
 import '../services/startup_alerts_service.dart';
@@ -1808,6 +1810,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             () => _go(const PCACalculatorScreen())
           ),
           (
+            Icons.show_chart,
+            "Investment Portfolio",
+            "Track PSE, MP2, UITF, Bonds & Crypto holdings",
+            Colors.indigo,
+            () => _go(const InvestmentScreen())
+          ),
+          (
             Icons.account_balance,
             "PH Banks & Investments",
             "Compare 20 banks, digital banks, e-wallets & investments",
@@ -1955,6 +1964,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "SSS contributions, loan calculators & contribution history",
             Colors.indigo,
             () => _go(const SSSScreen())
+          ),
+          (
+            Icons.receipt_long_outlined,
+            'Tax Calculator',
+            'BIR quarterly deadlines, income & percentage tax estimator',
+            Colors.deepOrange,
+            () => _go(const TaxScreen())
           ),
           (
             Icons.home_work_outlined,
