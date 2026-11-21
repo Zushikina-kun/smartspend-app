@@ -109,7 +109,7 @@ class AboutScreen extends StatelessWidget {
               ("✏️ Manual Entry", "Type expenses in plain language"),
               (
                 "🤖 Peso (AI Chat)",
-                "Powered by Gemini 3.5 Flash-Lite (9-provider auto-failover + Local LLM)"
+                "Powered by 18 AI Models (OpenRouter, Gemini, Groq, Cerebras + Local LLM)"
               ),
               (
                 "🧾 AI Expense Logging",
@@ -433,7 +433,7 @@ class AboutScreen extends StatelessWidget {
 
             _infoCard(context, [
               "Framework: Flutter (Dart)",
-              "AI Engine: Multi-model LLM with 9-provider auto-failover — Gemini 3.5 Flash-Lite (primary), Gemini 3.5 Flash, GPT-OSS 120B (Groq), Qwen3.6 27B (Groq), Qwen3.8 27B (Groq), GPT-OSS 20B (Groq), Compound Mini (Groq), GPT-OSS 120B (Cerebras), Custom Local LLM — 34 agentic actions",
+              "AI Engine: 18 AI Models across 6 providers — OpenRouter (Nemotron Ultra, Llama 3.3, Gemma 4 31B, Nemotron Lightning, Qwen 3.8, Nemotron Super VL, Gemma 4 26B), Gemini 3.5 Flash/Flash-Lite, GPT-OSS 120B (Groq), Qwen3.6/3.8 27B (Groq), Compound/Mini (Groq), GPT-OSS 120B (Cerebras), Custom Local LLM — auto-fallback chain",
               "Local Database: SQLite v14, 26 tables",
               "Cloud Auth & Sync: Firebase Auth + Firestore",
               "Synced collections: expenses, budgets, goals, income, recurring, debts, custom_categories, installment_plans, wallets, category_rules, insurance_policies",
