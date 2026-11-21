@@ -589,6 +589,60 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       if (_photoPath != null && _photoPath!.isNotEmpty) {
         try {
           final receiptText = await OCRService.scanReceipt(_photoPath!);
+
+          // Government receipt detection
+          final govType = OCRService.detectGovReceiptType(receiptText);
+          if (govType != null) {
+            // Show banner
+            if (mounted) {
+              ScaffoldMessenger.of(context).showMaterialBanner(
+                MaterialBanner(
+                  content: Text('🏛 Government Receipt Detected: $govType'),
+                  actions: [
+                    TextButton(
+                        onPressed: () => ScaffoldMessenger.of(context)
+                            .hideCurrentMaterialBanner(),
+                        child: const Text('OK'))
+                  ],
+                ),
+              );
+            }
+            // Auto-set category to Bills
+            setState(() {
+              _selectedCategory = 'Bills';
+            });
+            // Extract fields and append to notes
+            String extraNotes = '';
+            if (govType == 'BIR') {
+              final fields = OCRService.parseBirReceipt(receiptText);
+              if (fields['orNumber'] != null)
+                extraNotes += 'OR No: ${fields['orNumber']}\n';
+              if (fields['tin'] != null)
+                extraNotes += 'TIN: ${fields['tin']}\n';
+              if (fields['date'] != null)
+                extraNotes += 'Date: ${fields['date']}\n';
+            } else if (govType == 'SSS') {
+              final fields = OCRService.parseSssReceipt(receiptText);
+              if (fields['ssNumber'] != null)
+                extraNotes += 'SS No: ${fields['ssNumber']}\n';
+              if (fields['date'] != null)
+                extraNotes += 'Date: ${fields['date']}\n';
+            } else if (govType == 'PhilHealth') {
+              final fields = OCRService.parsePhilhealthReceipt(receiptText);
+              if (fields['pin'] != null)
+                extraNotes += 'PIN: ${fields['pin']}\n';
+              if (fields['date'] != null)
+                extraNotes += 'Date: ${fields['date']}\n';
+            }
+            if (extraNotes.isNotEmpty) {
+              setState(() {
+                _notesCtrl.text =
+                    (_notesCtrl.text.isEmpty ? '' : _notesCtrl.text + '\n') +
+                        extraNotes.trim();
+              });
+            }
+          }
+
           final lineItems = OCRService.extractLineItems(receiptText);
 
           // Get the expense ID that was just inserted

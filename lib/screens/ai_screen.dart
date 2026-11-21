@@ -2879,6 +2879,22 @@ class _AIScreenState extends State<AIScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
 
+      // Government receipt detection
+      final govType = OCRService.detectGovReceiptType(ocrText);
+      if (govType != null && mounted) {
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            content: Text('🏛 Government Receipt Detected: $govType'),
+            actions: [
+              TextButton(
+                  onPressed: () =>
+                      ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+                  child: const Text('OK'))
+            ],
+          ),
+        );
+      }
+
       final screenshotType = LLMService.detectScreenshotType(ocrText);
       final docType = OCRService.detectDocumentType(ocrText);
 
