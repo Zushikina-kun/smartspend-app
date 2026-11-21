@@ -73,6 +73,8 @@ import '../services/peso_voice_service.dart';
 import '../services/peso_context_service.dart';
 import '../services/peso_activity_log.dart';
 import '../services/update_service.dart';
+import '../services/streak_service.dart';
+import 'challenges_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -2477,6 +2479,9 @@ class _DashboardState extends State<Dashboard> {
   DateTime? _nextExpectedIncome; // predicted next income date
   double _avgIncomeAmount = 0; // average of last 3 income amounts
   int _avgIncomeInterval = 0; // average days between last 3 income entries
+
+  // ── Logging streak (Feature 6) ───────────────────────────────────────────
+  int _loggingStreak = 0;
 
   // ── Safe-to-Spend ─────────────────────────────────────────────────────────
   // Computed from wallet balance minus upcoming obligations before next payday.
