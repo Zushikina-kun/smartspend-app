@@ -64,6 +64,7 @@ import 'debt_calculator_screen.dart';
 import 'gov_contributions_screen.dart';
 import 'egov/sss_screen.dart';
 import 'egov/pagibig_screen.dart';
+import 'egov/lto_screen.dart';
 import 'tax_screen.dart';
 import 'ofw/remittance_screen.dart';
 import 'ofw/balikbayan_tracker_screen.dart';
@@ -1980,6 +1981,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "Housing loan, MP2 savings, contribution calculators",
             Colors.green,
             () => _go(const PagIBIGScreen())
+          ),
+          (
+            Icons.directions_car_outlined,
+            'LTO Vehicle Renewal',
+            'Registration renewal dates, fee calculator & reminders',
+            Colors.red,
+            () => _go(const LTOScreen())
           ),
           (
             Icons.category_outlined,

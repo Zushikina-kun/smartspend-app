@@ -61,7 +61,7 @@ class _ProductsTabState extends State<_ProductsTab> {
 
   Future<void> _loadData() async {
     final prices = await PriceIntelligenceService.getAllPrices();
-    final alerts = await PriceIntelligenceService.addPriceTrendAlert();
+    final alerts = await PriceIntelligenceService.checkForPriceAlerts();
 
     // Find the product with the single lowest price across all data
     Map<String, dynamic>? bestDeal;
@@ -107,14 +107,16 @@ class _ProductsTabState extends State<_ProductsTab> {
     if (prices.length < 2) {
       return const Icon(Icons.sell_outlined, size: 22, color: Colors.grey);
     }
-    final sorted = List<PriceData>.from(prices)..sort((a, b) => a.date.compareTo(b.date));
+    final sorted = List<PriceData>.from(prices)
+      ..sort((a, b) => a.date.compareTo(b.date));
     final latest = sorted.last.price;
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
     final recent = sorted.where((p) => p.date.isAfter(thirtyDaysAgo)).toList();
     if (recent.isEmpty) {
       return const Icon(Icons.sell_outlined, size: 22, color: Colors.grey);
     }
-    final avg = recent.map((p) => p.price).reduce((a, b) => a + b) / recent.length;
+    final avg =
+        recent.map((p) => p.price).reduce((a, b) => a + b) / recent.length;
     final changePct = ((latest - avg) / avg) * 100;
     if (changePct > 10) {
       return const Icon(Icons.arrow_upward, size: 22, color: Colors.red);
@@ -158,14 +160,17 @@ class _ProductsTabState extends State<_ProductsTab> {
           if (_overallBestDeal != null) ...[
             Card(
               color: Colors.green.shade50,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
               child: ListTile(
                 leading: const Text('🏆', style: TextStyle(fontSize: 28)),
                 title: const Text('Best Deal',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                 subtitle: Text(
                   _titleCase(_overallBestDeal!['productName'] as String),
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w600),
                 ),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -231,7 +236,8 @@ class _ProductsTabState extends State<_ProductsTab> {
             final prices = entry.value
               ..sort((a, b) => b.date.compareTo(a.date));
             final latest = prices.first;
-            final stores = prices.map((p) => p.storeName).whereType<String>().toSet();
+            final stores =
+                prices.map((p) => p.storeName).whereType<String>().toSet();
 
             // Check if cheapest store differs from latest store (best deal chip)
             final sortedByPrice = List<PriceData>.from(prices)
@@ -260,8 +266,7 @@ class _ProductsTabState extends State<_ProductsTab> {
                         backgroundColor: Colors.green.shade50,
                         side: BorderSide(color: Colors.green.shade200),
                         padding: EdgeInsets.zero,
-                        labelPadding:
-                            const EdgeInsets.symmetric(horizontal: 6),
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 6),
                       )
                     : null,
                 onTap: () {
@@ -329,7 +334,7 @@ class _PriceHistoryTabState extends State<_PriceHistoryTab> {
 
   Future<void> _loadHistory(String productName) async {
     setState(() => _loadingHistory = true);
-    final history = await PriceIntelligenceService.getPriceHistory(productName);
+    final history = await PriceIntelligenceService.getPriceTrend(productName);
     if (mounted) {
       setState(() {
         _history = history;
@@ -539,8 +544,8 @@ class _PriceHistoryTabState extends State<_PriceHistoryTab> {
           return DataRow(cells: [
             DataCell(Text(DateFormat('MMM d, y').format(h.date),
                 style: const TextStyle(fontSize: 12))),
-            DataCell(Text(h.storeName ?? '—',
-                style: const TextStyle(fontSize: 12))),
+            DataCell(
+                Text(h.storeName ?? '—', style: const TextStyle(fontSize: 12))),
             DataCell(Text('₱${h.price.toStringAsFixed(2)}',
                 style: const TextStyle(fontSize: 12))),
           ]);

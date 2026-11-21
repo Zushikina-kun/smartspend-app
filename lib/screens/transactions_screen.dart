@@ -13,6 +13,7 @@ import '../services/category_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/info_button.dart';
+import '../services/sms_parser_service.dart';
 import 'edit_expense_screen.dart';
 import 'add_expense_screen.dart';
 
@@ -902,6 +903,108 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     _load();
   }
 
+  Future<void> _scanSms() async {
+    final granted = await SmsParserService.requestSmsPermission();
+    if (!granted) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content:
+                  Text('SMS permission denied. Please grant it in Settings.')),
+        );
+      }
+      return;
+    }
+    final parsed = await SmsParserService.parseSmsInbox();
+    if (!mounted) return;
+    if (parsed.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('No GCash or Maya transactions found in SMS.')),
+      );
+      return;
+    }
+    // Show bottom sheet with checkboxes
+    final selected = List<bool>.filled(parsed.length, true);
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.7,
+          maxChildSize: 0.95,
+          builder: (_, controller) => Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    const Expanded(
+                        child: Text('Detected SMS Transactions',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.pop(ctx);
+                        int count = 0;
+                        for (int i = 0; i < parsed.length; i++) {
+                          if (selected[i]) {
+                            final tx = parsed[i];
+                            await DBService.insertExpense(Expense(
+                              id: null,
+                              amount: tx.amount,
+                              category: 'Others',
+                              date: tx.date.toIso8601String().substring(0, 10),
+                              notes:
+                                  '${tx.type == "received" ? "Received from" : "Sent to"} ${tx.recipient ?? tx.sender} via ${tx.sender}',
+                              itemName: tx.recipient ?? tx.sender,
+                              paymentMethod: tx.sender,
+                              aiGenerated: true,
+                              confidenceScore: 0.9,
+                            ).toMap());
+                            count++;
+                          }
+                        }
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text('Imported $count transaction(s)')),
+                          );
+                          setState(() {});
+                        }
+                      },
+                      child: const Text('Import Selected'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  controller: controller,
+                  itemCount: parsed.length,
+                  itemBuilder: (_, i) {
+                    final tx = parsed[i];
+                    return CheckboxListTile(
+                      value: selected[i],
+                      onChanged: (v) =>
+                          setModalState(() => selected[i] = v ?? false),
+                      title:
+                          Text('₱${tx.amount.toStringAsFixed(2)} — ${tx.type}'),
+                      subtitle: Text(
+                          '${tx.sender} • ${tx.recipient ?? ""} • ${tx.date.toLocal().toString().substring(0, 10)}'),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
@@ -1018,6 +1121,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                                   SnackBar(content: Text("Export failed: $e")));
                           }
                         },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.sms),
+                  tooltip: 'Scan SMS',
+                  onPressed: _scanSms,
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
