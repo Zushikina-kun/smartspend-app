@@ -1,12 +1,12 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.3.2 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version 3.3.9 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.3.2-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.3.9-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
 
-> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The actual app has been significantly updated since. Download the latest APK (v3.3.2) for the full experience.
+> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The actual app has been significantly updated since. Download the latest APK (v3.3.9) for the full experience.
 
 ---
 
@@ -28,12 +28,11 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 The app is actively developed and regularly updated. Features, UI, and Peso mascot interactions evolve with each release.
 
-**✨ What's New in v3.3.2:**
-- 🔄 **In-App Auto-Update** — detects new releases, downloads APK with progress bar, triggers Android installer — one tap to update
-- 📅 **Payday-cycle Budget Reset** (Recommendation 1) — budgets reset on 15th for bi-monthly salary users
-- 📊 **Quick Stats Card** — "This Month at a Glance" home screen card
-- 🔥 **Logging Streak Badge** — consecutive daily logging streak
-- 🏷️ **Home Screen Section Headers** — clearer navigation
+**✨ What's New in v3.3.9:**
+- 🤖 **18 AI Models** — 11 existing + 7 new OpenRouter models (Nemotron Ultra, Llama 3.3 70B, Gemma 4, Qwen 3.8, more)
+- 🌐 **OpenRouter Integration** — access frontier-tier models through OpenRouter free tier (1000 requests/day shared)
+- ⚡ **Model Selector Improvements** — clearer descriptions, tier-based organization, legacy gateway redirect
+- 🐛 **Bug Fixes** — AI fallback logic refined, Firebase config optimized, empty-key provider skip
 
 **Final Defense Date:** November 20, 2026 at 11:00 AM *(rescheduled from Nov 16)*
 
@@ -89,7 +88,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 ### Core Tracking
 - 🎙️ **7 Input Methods** — Voice, OCR receipt scan, barcode, manual entry, batch screenshots (40+ platforms), bank CSV paste, natural language chat
-- 🤖 **Peso AI** — **34 agentic action types** via natural language in Taglish or English (Gemini 3.5 Flash-Lite primary, **10-provider** auto-fallback chain with OpenRouter gateway)
+- 🤖 **Peso AI** — **34 agentic action types** via natural language in Taglish or English with **18 AI models** across 4 providers (see [AI Models](#ai-models) section)
 - 📱 **Use Without Account** — start immediately, no sign-up required; data stays on device
 - 🔒 **Local AI Mode** — connect to Ollama, LM Studio, or Jan on your PC; zero cloud exposure
 
@@ -135,12 +134,104 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 ---
 
+## AI Models
+
+SmartSpend integrates **18 AI models** across multiple providers, with intelligent auto-fallback to ensure reliability. Users can choose their preferred model or use Auto mode for smart routing.
+
+### Model Overview
+
+| Provider | Models Available | Key Features |
+|----------|------------------|--------------|
+| **Firebase Vertex AI** | 2 models | Primary models, GA stable, fast |
+| **Groq** | 5 models | High speed, generous free tier |
+| **Cerebras** | 1 model | 1M tokens/day, fallback |
+| **OpenRouter** | 7 models | Frontier-tier reasoning, vision, multimodal |
+| **Custom Local** | Unlimited | Your own LLM via WiFi, fully private |
+
+### Available Models by Tier
+
+#### Tier 0: Special Modes
+- **Auto (Recommended)** 🤖 — Smart routing with best quality available, auto-fallback on errors
+- **Local AI (Your Computer)** 🏠 — Connect to Ollama/LM Studio/Jan via WiFi, private, no cloud
+
+#### Tier 1: Premium Quality (Best Reasoning)
+- **Nemotron 3 Ultra (OpenRouter)** 🏆 — 550B MoE, 1M context, frontier-tier free model
+- **Llama 3.3 70B (OpenRouter)** 🦙 — 70B params, 128K ctx, 9.4 Intelligence Index
+- **Gemini 3.5 Flash** 💎 — Best Gemini, frontier reasoning, GA stable (requires Gemini key)
+- **Gemini 3.5 Flash-Lite** ⚡ — Default model, fastest + reliable, GA stable (requires Gemini key)
+
+#### Tier 2: High Quality (Solid Performance)
+- **Gemma 4 31B (OpenRouter)** 💎 — 262K context, well-tested, balanced
+- **Nemotron 3.5 Lightning (OpenRouter)** ⚡ — MoE architecture, 1M ctx, near-instant responses
+- **Qwen 3.8 27B (OpenRouter)** 🌐 — Multimodal with OCR & computer-use capabilities, 128K ctx
+- **GPT-OSS 120B (Groq)** 🚀 — Best Groq model, 1,000/day limit, 8K TPM
+
+#### Tier 3: Good (Reliable Workhorses)
+- **Nemotron 3.5 Super VL (OpenRouter)** 🎨 — Vision model, 1M ctx, image + video understanding
+- **Gemma 4 26B A4B (OpenRouter)** ⚙️ — Efficient MoE 3.8B active, 262K ctx
+- **Qwen3.6 27B (Groq)** 🌐 — Multimodal + reasoning, 1,000/day
+- **Qwen3.8 27B (Groq)** ✨ — Newer Qwen iteration, multimodal, 1,000/day
+
+#### Tier 4: Utility (Fast & Available)
+- **Compound (Groq)** ⚡ — 250/day, 70K TPM, good general-purpose
+- **Compound Mini (Groq)** 💨 — 250/day, 70K TPM, fast tasks
+
+#### Tier 5: Last Resort (Fallback)
+- **GPT-OSS 120B (Cerebras)** 🔄 — 1M tokens/day free tier (slower speeds)
+
+### OpenRouter Integration
+
+[OpenRouter](https://openrouter.ai/) is an AI gateway that provides access to frontier-tier models through a unified API. SmartSpend integrates 7 OpenRouter models, including NVIDIA Nemotron and Meta Llama 3.3.
+
+**Key Features:**
+- **Free tier:** 1000 requests/day shared across all users (with $10 credit added)
+- **Tool calling support:** All models support function calling for SmartSpend's 34 agentic actions
+- **Auto-fallback:** Seamlessly switches to alternative models on errors
+- **No setup required:** API key managed via Firebase Remote Config
+
+**Usage Limits:**
+- Free tier: 1000 requests/day (shared across all SmartSpend users)
+- Resets daily at UTC midnight
+- For unlimited access: Users can add $10+ credit at [openrouter.ai/credits](https://openrouter.ai/credits)
+
+**Documentation:** [OpenRouter API Docs](https://openrouter.ai/docs)
+
+### Auto Mode Behavior
+
+When set to Auto mode, SmartSpend intelligently routes requests based on task type and available API keys:
+
+| Task Type | Priority 1 | Priority 2 | Priority 3 |
+|-----------|------------|------------|------------|
+| **Fast tasks** | Nemotron Lightning (OpenRouter) | Gemini Flash-Lite | Groq Scout |
+| **Financial advice** | Nemotron Ultra (OpenRouter) | Gemini Flash | Groq Scout |
+| **Smart/default** | Llama 3.3 (OpenRouter) | Gemini Flash-Lite | Groq Scout |
+
+Auto mode automatically falls back to the next available provider if:
+- API key is missing or invalid
+- Rate limit exceeded
+- Network timeout (35 seconds)
+- Model returns an error
+
+### 34 Agentic Actions
+
+All models support SmartSpend's 34 agentic actions via tool calling (function calling):
+- Add/edit/delete expenses, budgets, savings goals, debts, bills
+- Financial Health Score analysis
+- Budget recommendations
+- Spending insights & trends
+- Safe-to-spend calculations
+- Category suggestions
+- Receipt parsing & batch screenshot analysis
+- And more...
+
+---
+
 ## Tech Stack
 
 | Component | Technology |
 |-----------|-----------|
 | Framework | Flutter (Dart) |
-| AI Engine | Multi-model LLM with **9-provider** auto-failover — Gemini 3.5 Flash-Lite (primary), Gemini 3.5 Flash, GPT-OSS 120B (Groq), Qwen3.6/3.8 27B, Compound Mini, GPT-OSS 120B (Cerebras), Custom Local LLM — **34 agentic actions** |
+| AI Engine | **18 models** across 4 providers — Gemini 3.5 Flash-Lite (primary), OpenRouter (7 models: Nemotron Ultra, Llama 3.3 70B, Gemma 4, Qwen 3.8, etc.), Groq (5 models), Cerebras — **34 agentic actions** with intelligent auto-fallback |
 | Local DB | SQLite via sqflite (v14 schema, 26 tables) |
 | Cloud | Firebase Auth + Firestore + Remote Config + Crashlytics + App Check |
 | OCR | Google ML Kit Text Recognition |
@@ -177,6 +268,7 @@ Data collection and defense complete. Thank you to all respondents and panelists
 
 | Version | Highlights |
 |---------|-----------|
+| **3.3.9** | 🤖 18 AI models integrated (7 new OpenRouter models: Nemotron Ultra, Llama 3.3, Gemma 4, Qwen 3.8, Nemotron Lightning, Nemotron Super VL, Gemma 4 26B); OpenRouter integration; model selector improvements; AI fallback refinements |
 | **3.2.0** | 🆕 Government contributions tracker (SSS/PhilHealth/Pag-IBIG) with YTD totals, pension estimator, portal links; scrolling fixes for small screens |
 | **3.1.2** | UX polish — clearSnackBars, FHS tier ring, setup CTA, quick input bar prominence, weekly notification fix |
 | **3.1.1** | Peso gestures (double-tap, long-press, idle timer), AI transaction save fix, site factual corrections |
