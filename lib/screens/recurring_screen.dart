@@ -6,6 +6,7 @@ import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
 import '../services/currency_service.dart';
 import '../services/category_service.dart';
+import '../services/recurring_detector.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/event_bus.dart';
 import '../widgets/info_button.dart';
@@ -22,6 +23,7 @@ class RecurringScreen extends StatefulWidget {
 
 class _RecurringScreenState extends State<RecurringScreen> {
   List<Map<String, dynamic>> _items = [];
+  List<RecurringSuggestion> _suggestions = [];
   bool _loading = true;
   List<String> _categories = CategoryService.builtIn;
   StreamSubscription<AppEvent>? _eventSub;
@@ -46,19 +48,27 @@ class _RecurringScreenState extends State<RecurringScreen> {
   Future<void> _load() async {
     final items = await DBService.getRecurring();
     final cats = await CategoryService.getAll();
+    final suggestions = await RecurringDetector.analyzeExpenses();
     setState(() {
       _items = items;
       _categories = cats;
+      _suggestions = suggestions;
       _loading = false;
     });
   }
 
-  void _showAddDialog({Map<String, dynamic>? existing}) {
-    final titleCtrl = TextEditingController(text: existing?['title'] ?? '');
+  void _showAddDialog(
+      {Map<String, dynamic>? existing,
+      String? prefillTitle,
+      double? prefillAmount}) {
+    final titleCtrl =
+        TextEditingController(text: existing?['title'] ?? prefillTitle ?? '');
     final amountCtrl = TextEditingController(
         text: existing != null
             ? (existing['amount'] as double).toStringAsFixed(0)
-            : '');
+            : prefillAmount != null
+                ? prefillAmount.toStringAsFixed(0)
+                : '');
     String category = existing?['category'] ?? 'Bills';
     String frequency = existing?['frequency'] ?? 'monthly';
     bool isExpense = (existing?['is_expense'] ?? 1) == 1;
@@ -513,53 +523,154 @@ class _RecurringScreenState extends State<RecurringScreen> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : _items.isEmpty
-              ? RefreshIndicator(
-                  onRefresh: _load,
-                  child: ListView(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.6,
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              PesoMascot.withSpeech(
-                                size: 64,
-                                mood: PesoMood.winking,
-                                text:
-                                    'No recurring bills yet! 🔁\nAdd Netflix, GCash load, Meralco — I\'ll remind you before they\'re due!',
-                              ),
-                              const SizedBox(height: 12),
-                              const Text("No recurring transactions yet",
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 4),
-                              const Text(
-                                  "Add subscriptions, bills, or recurring income.",
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12)),
-                              const SizedBox(height: 16),
-                              ElevatedButton.icon(
-                                icon: const Icon(Icons.add),
-                                label: const Text("Add Recurring"),
-                                onPressed: () => _showAddDialog(),
-                              ),
-                            ],
+          : RefreshIndicator(
+              onRefresh: _load,
+              child: ListView(
+                padding: EdgeInsets.fromLTRB(
+                    16, 16, 16, 80 + MediaQuery.of(context).viewPadding.bottom),
+                children: [
+                  // Smart Suggestions section
+                  if (_suggestions.isNotEmpty) ...[
+                    const Text(
+                      '💡 Smart Suggestions',
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    ..._suggestions.map((suggestion) {
+                      return Dismissible(
+                        key: Key(suggestion.merchant),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (_) async {
+                          await RecurringDetector.dismissMerchant(
+                              suggestion.merchant);
+                          setState(() => _suggestions.remove(suggestion));
+                        },
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child:
+                              const Icon(Icons.close, color: Colors.redAccent),
+                        ),
+                        child: Card(
+                          elevation: 2,
+                          shadowColor: Colors.black.withValues(alpha: 0.08),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '💡 Looks like you pay '
+                                        '${CurrencyService.format(suggestion.avgAmount)} '
+                                        'to ${suggestion.merchant} every '
+                                        '${suggestion.frequency} — add as recurring bill?',
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${suggestion.confidence == 'high' ? '✅ High' : '⚠️ Medium'} confidence',
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            color:
+                                                suggestion.confidence == 'high'
+                                                    ? Colors.green
+                                                    : Colors.orange),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4),
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap),
+                                      onPressed: () => _showAddDialog(
+                                        prefillTitle: suggestion.merchant,
+                                        prefillAmount: suggestion.avgAmount,
+                                      ),
+                                      child: const Text('Add Bill',
+                                          style: TextStyle(fontSize: 12)),
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 4),
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          foregroundColor: Colors.grey),
+                                      onPressed: () async {
+                                        await RecurringDetector.dismissMerchant(
+                                            suggestion.merchant);
+                                        setState(() =>
+                                            _suggestions.remove(suggestion));
+                                      },
+                                      child: const Text('Dismiss',
+                                          style: TextStyle(fontSize: 12)),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                      );
+                    }),
+                    const SizedBox(height: 8),
+                  ],
+                  // Existing bills or empty state
+                  if (_items.isEmpty)
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            PesoMascot.withSpeech(
+                              size: 64,
+                              mood: PesoMood.winking,
+                              text:
+                                  'No recurring bills yet! 🔁\nAdd Netflix, GCash load, Meralco — I\'ll remind you before they\'re due!',
+                            ),
+                            const SizedBox(height: 12),
+                            const Text("No recurring transactions yet",
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w500)),
+                            const SizedBox(height: 4),
+                            const Text(
+                                "Add subscriptions, bills, or recurring income.",
+                                style: TextStyle(
+                                    color: Colors.grey, fontSize: 12)),
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              icon: const Icon(Icons.add),
+                              label: const Text("Add Recurring"),
+                              onPressed: () => _showAddDialog(),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _load,
-                  child: ListView.builder(
-                    padding: EdgeInsets.fromLTRB(16, 16, 16,
-                        80 + MediaQuery.of(context).viewPadding.bottom),
-                    itemCount: _items.length,
-                    itemBuilder: (_, i) {
+                    )
+                  else
+                    ..._items.asMap().entries.map((entry) {
+                      final i = entry.key;
                       final item = _items[i];
                       final isExpense = (item['is_expense'] as int) == 1;
                       final nextLabel =
@@ -796,9 +907,10 @@ class _RecurringScreenState extends State<RecurringScreen> {
                           ),
                         ),
                       );
-                    },
-                  ),
-                ),
+                    }),
+                ],
+              ),
+            ),
     );
   }
 }
