@@ -2485,15 +2485,19 @@ class _AIScreenState extends State<AIScreen> {
   void _showModelSelector() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => StatefulBuilder(
-        builder: (ctx, setSheet) => Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+        builder: (ctx, setSheet) => DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (_, scrollController) => Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+            child: ListView(
+              controller: scrollController,
               children: [
                 Center(
                   child: Container(
@@ -4214,156 +4218,161 @@ class _RelogHelperSheetState extends State<_RelogHelperSheet> {
       minChildSize: 0.4,
       maxChildSize: 0.92,
       expand: false,
-      builder: (ctx, scrollCtrl) => Column(
-        children: [
-          // Handle
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: cs.onSurface.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(2),
+      builder: (ctx, scrollCtrl) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(ctx).viewInsets.bottom,
+        ),
+        child: Column(
+          children: [
+            // Handle
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: cs.onSurface.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                const Text('Re-log missing items',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const Spacer(),
-                TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Close')),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  const Text('Re-log missing items',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const Spacer(),
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Close')),
+                ],
+              ),
             ),
-          ),
-          const Divider(),
-          Expanded(
-            child: ListView.builder(
-              controller: scrollCtrl,
-              padding: const EdgeInsets.all(16),
-              itemCount: _items.length,
-              itemBuilder: (_, i) {
-                final item = _items[i];
-                if (item.logged) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.check_circle,
-                            color: Colors.green, size: 18),
-                        const SizedBox(width: 8),
-                        Text(item.nameCtrl.text,
-                            style: const TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w500)),
-                        const Text(' — logged',
-                            style:
-                                TextStyle(color: Colors.green, fontSize: 12)),
-                      ],
+            const Divider(),
+            Expanded(
+              child: ListView.builder(
+                controller: scrollCtrl,
+                padding: const EdgeInsets.all(16),
+                itemCount: _items.length,
+                itemBuilder: (_, i) {
+                  final item = _items[i];
+                  if (item.logged) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.check_circle,
+                              color: Colors.green, size: 18),
+                          const SizedBox(width: 8),
+                          Text(item.nameCtrl.text,
+                              style: const TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w500)),
+                          const Text(' — logged',
+                              style:
+                                  TextStyle(color: Colors.green, fontSize: 12)),
+                        ],
+                      ),
+                    );
+                  }
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(item.category,
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: cs.onSurface.withValues(alpha: 0.5))),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: TextField(
+                                  controller: item.nameCtrl,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Item name',
+                                    isDense: true,
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  controller: item.amountCtrl,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    labelText: 'Amount',
+                                    prefixText: '${CurrencyService.symbol} ',
+                                    isDense: true,
+                                    border: const OutlineInputBorder(),
+                                  ),
+                                  style: const TextStyle(fontSize: 13),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today_outlined,
+                                  size: 12,
+                                  color: cs.onSurface.withValues(alpha: 0.5)),
+                              const SizedBox(width: 4),
+                              Text(item.date,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color:
+                                          cs.onSurface.withValues(alpha: 0.6))),
+                              const SizedBox(width: 6),
+                              GestureDetector(
+                                onTap: () async {
+                                  final picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.tryParse(item.date) ??
+                                        DateTime.now(),
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime.now(),
+                                  );
+                                  if (picked != null) {
+                                    setState(() => item.date = picked
+                                        .toIso8601String()
+                                        .substring(0, 10));
+                                  }
+                                },
+                                child: Text('(change)',
+                                    style: TextStyle(
+                                        fontSize: 11, color: cs.primary)),
+                              ),
+                              const Spacer(),
+                              FilledButton(
+                                onPressed: () => _logItem(i),
+                                style: FilledButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14, vertical: 6),
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity.compact),
+                                child: const Text('Log this',
+                                    style: TextStyle(fontSize: 12)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
-                }
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item.category,
-                            style: TextStyle(
-                                fontSize: 11,
-                                color: cs.onSurface.withValues(alpha: 0.5))),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: TextField(
-                                controller: item.nameCtrl,
-                                decoration: const InputDecoration(
-                                  labelText: 'Item name',
-                                  isDense: true,
-                                  border: OutlineInputBorder(),
-                                ),
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              flex: 2,
-                              child: TextField(
-                                controller: item.amountCtrl,
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  labelText: 'Amount',
-                                  prefixText: '${CurrencyService.symbol} ',
-                                  isDense: true,
-                                  border: const OutlineInputBorder(),
-                                ),
-                                style: const TextStyle(fontSize: 13),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(Icons.calendar_today_outlined,
-                                size: 12,
-                                color: cs.onSurface.withValues(alpha: 0.5)),
-                            const SizedBox(width: 4),
-                            Text(item.date,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color:
-                                        cs.onSurface.withValues(alpha: 0.6))),
-                            const SizedBox(width: 6),
-                            GestureDetector(
-                              onTap: () async {
-                                final picked = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.tryParse(item.date) ??
-                                      DateTime.now(),
-                                  firstDate: DateTime(2020),
-                                  lastDate: DateTime.now(),
-                                );
-                                if (picked != null) {
-                                  setState(() => item.date = picked
-                                      .toIso8601String()
-                                      .substring(0, 10));
-                                }
-                              },
-                              child: Text('(change)',
-                                  style: TextStyle(
-                                      fontSize: 11, color: cs.primary)),
-                            ),
-                            const Spacer(),
-                            FilledButton(
-                              onPressed: () => _logItem(i),
-                              style: FilledButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 14, vertical: 6),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  visualDensity: VisualDensity.compact),
-                              child: const Text('Log this',
-                                  style: TextStyle(fontSize: 12)),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
