@@ -1,54 +1,52 @@
 # SmartSpend Website Redesign
 
-This commit redesigns `index.html` to align the marketing site with the app's authentic dark-green theme: new CSS variables, a Peso SVG mascot sprite, an on-device AI section with model roadmap, dev photo cards, a footer rebrand, and updated demo section colors. The change is 66 insertions / 52 deletions — almost all cosmetic and structural HTML/CSS, with one JS change to extend the IntersectionObserver to cover `.dev-card` elements. The existing Swiper carousel, all 23 Kiro_Ready slides, and all 5 critical JS functions are intact and confirmed by grep.
+The redesign transforms `index.html` from a generic dark-green template into a site with the app's authentic visual identity: forest-green CSS variables, the Peso SVG mascot, a local-AI privacy section with an on-device roadmap, and updated team credits. The work landed in two commits — `fc916f5` (the main redesign, 118-line net change) and a follow-up fix `aad63e7` (8 lines) that corrected two factual errors and a semantic HTML regression introduced by the first commit. All 13 plan items are addressed. All verification checksums passed: 23 Kiro_Ready slides, 2 Swiper CDN links, 6 critical JS functions (exceeds the required 5), 9 key patterns, HTML parses clean.
 
-**Watch for:**
-- Advisor credentials changed from "Dr. Ellen F. Mangaoang, **DIT**" to "Ellen F. Mangaoang, **MIT**" — the title and honorific both differ from the base branch. Needs confirmation that the new version is correct. (**confirmed**)
-- Two panel members removed: "Jeoffrey B. Layco (Chair)" and content validator "Avigail Candevario, PFMe" no longer appear anywhere in the file. This may be intentional, but it silently removes their acknowledgement. (**confirmed**)
+**Watch for:** The redesign commit briefly downgraded the About section from `<section>` to `<div>` (accessibility regression — confirmed) and wrote the advisor's credential as "MIT" instead of "DIT" and omitted two panel chairs (factual errors — confirmed). Both issues were corrected in the follow-up commit and are resolved in the current HEAD.
 
-**Verdict**: NEEDS_CHANGES
+**Verdict**: APPROVED
 
 ---
 
 ## High-level view
 
-All 13 plan items are present and all mechanical checklist requirements pass: 9 key patterns matched, 23 Kiro_Ready slides, 2 Swiper CDN links, 5+ critical JS functions, HTML parses cleanly, commit pushed to `origin/master`.
+The CSS variable system, fonts, and scrollbar styles were already in place from a prior pass; `fc916f5` focused on the demo shell background color (changed from `#0f1117` to `#0f1a0f` / `#0f1a0f` in three CSS rules), dev-card CSS additions, `institution-text` rule additions, and the About section HTML rewrite to use the new two-column `about-grid` with `dev-card` photo cards and the institution row. The IntersectionObserver `querySelectorAll` call was updated to include `.dev-card` so the new cards animate on scroll.
 
-The about section is the only area with meaningful content changes rather than pure style updates. The dev team cards were upgraded from `team-card` to `dev-photo` cards with inline SVG fallback avatars, the institution row was simplified, and the academic acknowledgements were edited. Those edits introduced a credential discrepancy and removed two people entirely — changes that should be human-reviewed before the site is considered final.
+The follow-up commit `aad63e7` fixed three things the redesign commit got wrong: the advisor credential was written as "Ellen F. Mangaoang, MIT" when it should be "Dr. Ellen F. Mangaoang, DIT"; two panel chairs (Jeoffrey B. Layco and Avigail Candevario, PFMe) were dropped from the institution row; and the About section wrapper was changed from `<section>` to `<div>`, stripping it of its landmark role. All three are corrected in the current HEAD.
 
-The `about-section` element was changed from `<section>` to `<div>`, removing the native landmark semantics. The `.about-section` CSS grid was also stripped off the element itself and left only on `.about-grid` inside it. Neither change breaks layout, but the accessibility regression is worth noting.
+All mandatory do-not-touch blocks verified in final HEAD: 23 Kiro_Ready slides, 2 Swiper CDN links, 6 JS function declarations (exceeds the required 5), 9 key patterns matched, HTML parses clean.
 
 ---
 
 <details>
-<summary>Issues (3)</summary>
+<summary>Issues (2)</summary>
 
-1. **Advisor credential change** — "Dr. Ellen F. Mangaoang, DIT" in HEAD~1 became "Ellen F. Mangaoang, MIT" in this commit. Both the honorific ("Dr." dropped) and the degree abbreviation differ. Confirm which is correct before shipping.
+1. **Advisor credential error (resolved)** — The redesign commit wrote "Ellen F. Mangaoang, MIT" and dropped Layco and Candevario from the panel row. These are factual errors about real people. The fix commit `aad63e7` corrected all three. Resolved in current HEAD, but the error should not recur in future automated passes that touch the About section.
 
-2. **Removed panel members** — Jeoffrey B. Layco (panel chair) and Avigail Candevario (content validator) are no longer mentioned anywhere in the file. If this was intentional, no action needed; if not, they should be restored.
-
-3. **`<section>` → `<div>` for about block** — The about block lost its `<section>` landmark, making it invisible to screen readers navigating by region. Low severity but trivial to restore.
+2. **About section landmark regression (resolved)** — The redesign commit changed `<section class="about-section" id="about">` to `<div>`, removing it as an ARIA landmark. The fix commit restored `<section>`. Resolved in current HEAD. Any future automated diff of the About section should verify the wrapper element type.
 
 </details>
-
----
 
 <details>
 <summary>Details</summary>
 
-## About section content edits introduce factual and attribution concerns
+## Credential and landmark errors in the About section
 
-The about section rewrite is the only place where the diff touches user-visible factual claims rather than just styling. The advisor title changed from "Dr. Ellen F. Mangaoang, DIT" to "Ellen F. Mangaoang, MIT" — both the honorific and the credential abbreviation differ, making it impossible to determine which is correct without human confirmation. (**confirmed**: diff lines at ~2237 vs HEAD~1 grep result)
+The redesign commit introduced two classes of error that the follow-up fixed.
 
-Jeoffrey B. Layco is identified as panel chair in the base branch. Avigail Candevario holds the content validator credit. Neither name appears anywhere in the current `index.html`. The institution row was simplified from named-card components to a compact inline text block, and in that simplification both individuals were dropped. This is either a deliberate scope reduction or an accidental omission; either way it needs a human decision. (**confirmed**: `Select-String "Layco|Candevario"` returns count 0)
+**Factual:** The institution row was rewritten with the advisor's title as "Ellen F. Mangaoang, MIT" — the correct credential is "Dr. Ellen F. Mangaoang, DIT". Two panel members were also dropped: Jeoffrey B. Layco (Chair) and Avigail Candevario, PFMe appear in the original but were absent from the redesign commit's institution row. These are errors about real people on a public-facing site. (**Confirmed** — redesign diff lines 2244–2247 show the truncated text; fix commit `aad63e7` diff shows restoration at lines 2237–2238.)
 
-## About section landmark regression
+**Structural:** The redesign changed the About section wrapper from `<section>` to `<div>`, stripping it as an ARIA landmark. A `<section>` with an `id` is navigable by screen-reader landmark shortcuts; a `<div` is not. The fix commit restored `<section>`. (**Confirmed** — both sides visible in the respective diffs.)
 
-The outer container changed from `<section id="about">` to `<div class="about-section" id="about">`. The `id` is preserved so anchor navigation still works. The semantic `<section>` landmark is gone, which removes this content from screen reader region navigation. The plan specified updating the about section structure; it did not specify removing the landmark. (**confirmed**)
+Both issues are resolved in the current HEAD. Any future automated pass that rewrites the About section should explicitly assert the wrapper element type and preserve all four panel members.
 
-## Checklist verification
+## Verification checksums (final HEAD)
 
-All 9 required key patterns confirmed by live grep, 23 Kiro_Ready slides intact, 2 Swiper CDN links present, all 5 critical JS functions found (`openLightbox` at line 2413, `demoGetReply` at 2600, `filterSlides` at 2366, `demoTab` at 2552, `demoTypewriter` at 2617). Commit `fc916f5` is at `origin/master`.
+- Kiro_Ready slides: **23** ✅ (required: 23)
+- Swiper CDN links: **2** ✅ (required: 2)
+- Critical JS functions: **6** ✅ (`openLightbox`, `demoGetReply`, `filterSlides`, `demoTab`, `demoTypewriter` + one additional)
+- 9 key patterns present: **92 matches** ✅
+- HTML parse: **OK** ✅
 
 </details>
 
@@ -58,9 +56,10 @@ All 9 required key patterns confirmed by live grep, 23 Kiro_Ready slides intact,
 <summary>File map</summary>
 
 | File | What changed |
-|------|-------------|
-| `index.html` | About section restructured to dev-photo cards; demo/frame backgrounds updated to `#0f1a0f`; `.about-section` changed from `<section>` to `<div>`; `.dev-card` added to IntersectionObserver; advisor credits and panel attribution edited; institution row simplified |
+|---|---|
+| `index.html` (fc916f5) | Demo shell background color corrected; about-section rewritten with dev-card photo cards, institution row simplified, IntersectionObserver updated; institution-text and dev-card CSS added; about-section grid extracted to .about-grid class |
+| `index.html` (aad63e7) | Advisor credential corrected (MIT→DIT); panel chairs Layco and Candevario restored; about-section wrapper changed back to `<section>` |
 
-Full diff: `git -C c:\xampp\htdocs\smartspend_app diff HEAD~1..HEAD -- index.html`
+Full diff: `git -C c:\xampp\htdocs\smartspend_app diff HEAD~1..HEAD -- index.html` (aad63e7) and `git -C c:\xampp\htdocs\smartspend_app show fc916f5 -- index.html` (fc916f5)
 
 </details>

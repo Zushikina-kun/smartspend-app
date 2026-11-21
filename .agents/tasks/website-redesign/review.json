@@ -1,7 +1,8 @@
 {
   "verdict": "APPROVED",
-  "findings": [],
-  "reviewDoc": "c:\\xampp\\htdocs\\smartspend_app\\.agents\\tasks\\website-redesign\\review.md",
-  "resolvedAt": "aad63e7",
-  "notes": "All 3 CHANGES_REQUESTED findings resolved: Dr. Ellen F. Mangaoang DIT credential restored, Jeoffrey B. Layco and Avigail Candevario restored to panel row, about block changed back to <section> landmark."
+  "findings": [
+    "Advisor credential error (resolved) — The redesign commit wrote 'Ellen F. Mangaoang, MIT' and dropped Layco and Candevario from the panel row. These are factual errors about real people. Corrected in fix commit aad63e7. Future automated passes that touch the About section should preserve all four panel members and the DIT credential.",
+    "About section landmark regression (resolved) — The redesign commit changed <section class=\"about-section\" id=\"about\"> to <div>, removing it as an ARIA landmark. Restored in fix commit aad63e7. Future passes should explicitly assert the wrapper element type."
+  ],
+  "reviewDoc": "c:\\xampp\\htdocs\\smartspend_app\\.agents\\tasks\\website-redesign\\review.md"
 }

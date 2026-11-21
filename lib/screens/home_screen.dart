@@ -68,6 +68,7 @@ import 'egov/lto_screen.dart';
 import 'tax_screen.dart';
 import 'ofw/remittance_screen.dart';
 import 'ofw/balikbayan_tracker_screen.dart';
+import 'net_worth_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
@@ -1818,6 +1819,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "Track PSE, MP2, UITF, Bonds & Crypto holdings",
             Colors.indigo,
             () => _go(const InvestmentScreen())
+          ),
+          (
+            Icons.account_balance,
+            "Net Worth",
+            "Track assets, liabilities, and your overall net worth",
+            Colors.teal,
+            () => _go(const NetWorthScreen())
           ),
           (
             Icons.account_balance,

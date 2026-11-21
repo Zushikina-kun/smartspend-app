@@ -33,6 +33,7 @@ import 'bill_calendar_screen.dart';
 import 'heatmap_screen.dart';
 import 'ofw/remittance_screen.dart';
 import 'ofw/balikbayan_tracker_screen.dart';
+import 'net_worth_screen.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -1030,6 +1031,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   MaterialPageRoute(
                                       builder: (_) =>
                                           const BalikbayanTrackerScreen()))
+                            ),
+                            (
+                              Icons.account_balance,
+                              'Net Worth',
+                              Colors.teal,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const NetWorthScreen()))
                             ),
                           ])
                             Padding(

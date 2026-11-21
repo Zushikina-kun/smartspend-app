@@ -317,8 +317,21 @@ class DBService {
             ''');
           } catch (_) {}
         }
+        if (oldVersion < 16) {
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS net_worth_assets(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                value REAL NOT NULL,
+                category TEXT NOT NULL,
+                date TEXT NOT NULL
+              )
+            ''');
+          } catch (_) {}
+        }
       },
-      version: 15,
+      version: 16,
     );
     return _db!;
   }
@@ -748,6 +761,18 @@ class DBService {
           year_model INTEGER,
           notes TEXT,
           created_at TEXT NOT NULL
+        )
+      ''');
+    } catch (_) {}
+    // Ensure net_worth_assets table — manual assets and liabilities for net worth tracker (v16)
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS net_worth_assets(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          value REAL NOT NULL,
+          category TEXT NOT NULL,
+          date TEXT NOT NULL
         )
       ''');
     } catch (_) {}
@@ -2879,6 +2904,23 @@ class DBService {
   static Future<void> clearConversationSummaries() async {
     final db = await getDB();
     await db.delete('conversation_summaries');
+  }
+
+  // ── NET WORTH ASSETS ─────────────────────────────────────────────────────
+
+  static Future<List<Map<String, dynamic>>> getNetWorthAssets() async {
+    final db = await getDB();
+    return db.query('net_worth_assets', orderBy: 'date DESC');
+  }
+
+  static Future<int> insertNetWorthAsset(Map<String, dynamic> asset) async {
+    final db = await getDB();
+    return db.insert('net_worth_assets', asset);
+  }
+
+  static Future<void> deleteNetWorthAsset(int id) async {
+    final db = await getDB();
+    await db.delete('net_worth_assets', where: 'id = ?', whereArgs: [id]);
   }
 
   // ── WALLETS ───────────────────────────────────────────────────────────────
