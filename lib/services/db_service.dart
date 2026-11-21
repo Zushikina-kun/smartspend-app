@@ -2991,6 +2991,157 @@ class DBService {
     return null;
   }
 
+  // ── SAFE-TO-SPEND CALCULATION ─────────────────────────────────────────────
+
+  /// Returns the sum of unpaid recurring bills (is_expense=1) due within the next [daysAhead] days.
+  /// Used for Safe-to-Spend calculation to reserve money for upcoming bills.
+  static Future<double> getUpcomingBills({int daysAhead = 30}) async {
+    final db = await getDB();
+    final recurring = await getRecurring();
+    final now = DateTime.now();
+    final windowEnd = now.add(Duration(days: daysAhead));
+
+    double total = 0;
+    for (final r in recurring) {
+      // Skip non-expense entries (income)
+      if ((r['is_expense'] as int? ?? 1) != 1) continue;
+
+      try {
+        final nextDate = DateTime.parse(r['next_date'] as String);
+        // Include bills due within the window
+        if (!nextDate.isAfter(windowEnd)) {
+          total += (r['amount'] as num).toDouble();
+        }
+      } catch (_) {
+        // Skip entries with invalid dates
+      }
+    }
+    return total;
+  }
+
+  /// Returns the estimated goal contributions needed within the next [daysAhead] days.
+  /// Pro-rates monthly contribution based on goal deadline and remaining amount.
+  /// Used for Safe-to-Spend calculation to reserve money for savings goals.
+  static Future<double> getUpcomingGoalContributions(
+      {int daysAhead = 30}) async {
+    final goals = await getGoals();
+    final now = DateTime.now();
+
+    double total = 0;
+    for (final g in goals) {
+      final target = (g['target_amount'] as num).toDouble();
+      final current = (g['current_amount'] as num).toDouble();
+
+      // Skip completed goals
+      if (current >= target) continue;
+
+      final remaining = target - current;
+
+      // Calculate monthly contribution based on deadline
+      final deadline = g['deadline'] as String?;
+      double monthlyContrib;
+
+      if (deadline != null && deadline.isNotEmpty) {
+        try {
+          final due = DateTime.parse(deadline);
+          final months = due.difference(now).inDays / 30.0;
+          if (months > 0) {
+            // Spread remaining amount over remaining months
+            monthlyContrib = remaining / months;
+          } else {
+            // Overdue goal - entire remaining amount is due
+            monthlyContrib = remaining;
+          }
+        } catch (_) {
+          // Invalid date - default to 6 month plan
+          monthlyContrib = remaining / 6;
+        }
+      } else {
+        // No deadline set - conservative 6 month default
+        monthlyContrib = remaining / 6;
+      }
+
+      // Pro-rate to the specified window (e.g., 30 days)
+      final windowContrib =
+          (monthlyContrib * daysAhead / 30).clamp(0.0, remaining);
+      total += windowContrib;
+    }
+    return total;
+  }
+
+  /// Returns the sum of overdue debt payments (type='owe') due within the next [daysAhead] days.
+  /// Only includes unpaid portion of debts with due dates.
+  /// Used for Safe-to-Spend calculation to reserve money for debt obligations.
+  static Future<double> getUpcomingDebtPayments({int daysAhead = 30}) async {
+    final debts = await getDebts();
+    final now = DateTime.now();
+    final windowEnd = now.add(Duration(days: daysAhead));
+
+    double total = 0;
+    for (final d in debts) {
+      // Only count money we owe (not money owed to us)
+      if (d['type'] != 'owe') continue;
+
+      final totalAmount = (d['amount'] as num).toDouble();
+      final paidAmount = (d['paid_amount'] as num?)?.toDouble() ?? 0;
+      final remaining = totalAmount - paidAmount;
+
+      // Skip fully paid debts
+      if (remaining <= 0) continue;
+
+      // Check if due date falls within window
+      final dueDate = d['due_date'] as String?;
+      if (dueDate != null && dueDate.isNotEmpty) {
+        try {
+          final due = DateTime.parse(dueDate);
+          // Include debts due within the window
+          if (!due.isAfter(windowEnd)) {
+            total += remaining;
+          }
+        } catch (_) {
+          // Skip entries with invalid due dates
+        }
+      }
+    }
+    return total;
+  }
+
+  /// Calculates Safe-to-Spend amount using the formula:
+  /// Safe-to-Spend = wallet_balance - (upcoming_bills + goal_contributions + debt_payments)
+  ///
+  /// This represents the amount of money that can be freely spent without affecting
+  /// upcoming financial obligations within the next 30 days.
+  ///
+  /// Returns a map containing:
+  /// - 'safeToSpend': The calculated safe-to-spend amount (can be negative if obligations exceed balance)
+  /// - 'walletBalance': Total balance across all wallets
+  /// - 'upcomingBills': Sum of bills due in next 30 days
+  /// - 'goalContributions': Estimated goal contributions needed in next 30 days
+  /// - 'debtPayments': Sum of debt payments due in next 30 days
+  static Future<Map<String, double>> calculateSafeToSpend(
+      {int daysAhead = 30}) async {
+    // Get total wallet balance
+    final walletBalance = await getTotalWalletBalance();
+
+    // Get upcoming obligations
+    final upcomingBills = await getUpcomingBills(daysAhead: daysAhead);
+    final goalContributions =
+        await getUpcomingGoalContributions(daysAhead: daysAhead);
+    final debtPayments = await getUpcomingDebtPayments(daysAhead: daysAhead);
+
+    // Calculate safe-to-spend: balance minus all obligations
+    final safeToSpend =
+        walletBalance - (upcomingBills + goalContributions + debtPayments);
+
+    return {
+      'safeToSpend': safeToSpend,
+      'walletBalance': walletBalance,
+      'upcomingBills': upcomingBills,
+      'goalContributions': goalContributions,
+      'debtPayments': debtPayments,
+    };
+  }
+
   // ─── INSURANCE POLICIES ─────────────────────────────────────────────────────
 
   static Future<List<Map<String, dynamic>>> getInsurancePolicies() async {

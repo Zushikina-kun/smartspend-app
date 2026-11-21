@@ -2787,86 +2787,23 @@ class _DashboardState extends State<Dashboard> {
     // Only computed in income/wallet mode.
     if (incomeWalletMode) {
       try {
-        // Fetch wallets directly — _wallets state var loads separately/later
-        final wallets = await DBService.getWallets();
-        final walletTotal = wallets.fold<double>(
-            0, (s, w) => s + (w['balance'] as num).toDouble());
-
+        // Use db_service methods to calculate Safe-to-Spend
         // Determine the window: today → next expected income date
         final now = DateTime.now();
         final windowEnd =
             _nextExpectedIncome ?? now.add(const Duration(days: 30));
         final daysInWindow = windowEnd.difference(now).inDays.clamp(1, 60);
 
-        // 1. Upcoming recurring bills due before next payday
-        double reservedBills = 0;
-        for (final r in recurring) {
-          if ((r['is_expense'] as int? ?? 1) != 1) continue; // skip income
-          try {
-            final nextDate = DateTime.parse(r['next_date'] as String);
-            if (!nextDate.isAfter(windowEnd)) {
-              reservedBills += (r['amount'] as num).toDouble();
-            }
-          } catch (_) {}
-        }
+        // Call the centralized Safe-to-Spend calculation from DBService
+        final calculation =
+            await DBService.calculateSafeToSpend(daysAhead: daysInWindow);
 
-        // 2. Savings goal contributions — pro-rated for remaining days
-        double reservedGoals = 0;
-        final goals = await DBService.getGoals();
-        for (final g in goals) {
-          final target = (g['target_amount'] as num).toDouble();
-          final current = (g['current_amount'] as num).toDouble();
-          if (current >= target) continue; // already reached
-          // Estimate a monthly contribution: (target - current) / 6 months
-          // as a conservative default when no deadline is set
-          final deadline = g['deadline'] as String?;
-          double monthlyContrib;
-          if (deadline != null && deadline.isNotEmpty) {
-            try {
-              final due = DateTime.parse(deadline);
-              final months = due.difference(now).inDays / 30.0;
-              if (months > 0) {
-                monthlyContrib = (target - current) / months;
-              } else {
-                monthlyContrib = target - current; // overdue goal
-              }
-            } catch (_) {
-              monthlyContrib = (target - current) / 6;
-            }
-          } else {
-            monthlyContrib = (target - current) / 6;
-          }
-          // Pro-rate to the window
-          reservedGoals +=
-              (monthlyContrib * daysInWindow / 30).clamp(0, target - current);
-        }
-
-        // 3. Overdue debts (owe type, unpaid portion, past due date)
-        double reservedDebts = 0;
-        for (final d in debts) {
-          if (d['type'] != 'owe') continue;
-          final paid = (d['paid_amount'] as num?)?.toDouble() ?? 0;
-          final total = (d['amount'] as num).toDouble();
-          if (paid >= total) continue;
-          final dueDate = d['due_date'] as String?;
-          if (dueDate != null && dueDate.isNotEmpty) {
-            try {
-              final due = DateTime.parse(dueDate);
-              if (!due.isAfter(windowEnd)) {
-                reservedDebts += (total - paid);
-              }
-            } catch (_) {}
-          }
-        }
-
-        final safe =
-            (walletTotal - reservedBills - reservedGoals - reservedDebts);
         if (mounted) {
           setState(() {
-            _safeToSpend = safe;
-            _reservedBills = reservedBills;
-            _reservedGoals = reservedGoals;
-            _reservedDebts = reservedDebts;
+            _safeToSpend = calculation['safeToSpend']!;
+            _reservedBills = calculation['upcomingBills']!;
+            _reservedGoals = calculation['goalContributions']!;
+            _reservedDebts = calculation['debtPayments']!;
           });
         }
       } catch (_) {}
