@@ -62,6 +62,7 @@ import 'debt_payoff_screen.dart';
 import 'gov_contributions_screen.dart';
 import 'egov/sss_screen.dart';
 import 'egov/pagibig_screen.dart';
+import 'ofw/remittance_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
@@ -1810,6 +1811,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "Compare 20 banks, digital banks, e-wallets & investments",
             Colors.blue,
             () => _go(const BankComparisonScreen())
+          ),
+          (
+            Icons.send_to_mobile_outlined,
+            "OFW Remittance",
+            "Track money sent home — USD, SAR, AED, SGD, HKD",
+            Colors.teal,
+            () => _go(const RemittanceScreen())
           ),
         ]
       ),

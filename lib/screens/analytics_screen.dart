@@ -29,6 +29,7 @@ import 'income_screen.dart';
 import 'bank_import_screen.dart';
 import 'profile_screen.dart' show WalletsSheet;
 import 'bill_calendar_screen.dart';
+import 'ofw/remittance_screen.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -990,6 +991,15 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                   MaterialPageRoute(
                                       builder: (_) =>
                                           const BillCalendarScreen()))
+                            ),
+                            (
+                              Icons.send_to_mobile_outlined,
+                              'Remittance',
+                              Colors.teal,
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const RemittanceScreen()))
                             ),
                           ])
                             Padding(
