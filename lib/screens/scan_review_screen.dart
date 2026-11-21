@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../services/ocr_service.dart';
 import '../widgets/peso_mascot.dart';
 
 /// Shown after OCR or barcode scan — lets user review and edit
@@ -28,11 +29,43 @@ class _ScanReviewScreenState extends State<ScanReviewScreen> {
   late final TextEditingController _ctrl;
   bool _imageExpanded = false;
   final _focusNode = FocusNode();
+  String? _govReceiptType;
+  Map<String, String?> _govReceiptFields = {};
 
   @override
   void initState() {
     super.initState();
     _ctrl = TextEditingController(text: widget.initialText);
+    // Detect government receipt
+    if (!widget.isBarcode && widget.initialText.isNotEmpty) {
+      final govType = OCRService.detectGovReceiptType(widget.initialText);
+      if (govType != null) {
+        _govReceiptType = govType;
+        switch (govType) {
+          case 'BIR':
+            _govReceiptFields = OCRService.parseBirReceipt(widget.initialText);
+            break;
+          case 'SSS':
+            _govReceiptFields = OCRService.parseSssReceipt(widget.initialText);
+            break;
+          case 'PhilHealth':
+            _govReceiptFields =
+                OCRService.parsePhilhealthReceipt(widget.initialText);
+            break;
+          default:
+            _govReceiptFields = {};
+        }
+        // Auto-fill note with extracted fields
+        final fieldLines = _govReceiptFields.entries
+            .where((e) => e.value != null)
+            .map((e) => '${e.key}: ${e.value}')
+            .join('\n');
+        if (fieldLines.isNotEmpty) {
+          _ctrl.text =
+              '[Category: Bills]\n[Gov Receipt: $_govReceiptType]\n$fieldLines\n\n${_ctrl.text}';
+        }
+      }
+    }
     _ctrl.addListener(() => setState(() {}));
     final delay = widget.isBarcode
         ? const Duration(milliseconds: 100)
@@ -151,6 +184,39 @@ class _ScanReviewScreenState extends State<ScanReviewScreen> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            const Divider(height: 1),
+          ],
+
+          // Government receipt banner
+          if (_govReceiptType != null) ...[
+            Container(
+              width: double.infinity,
+              color: Colors.amber.shade100,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '🏛 Government Receipt Detected: $_govReceiptType',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: Colors.brown,
+                    ),
+                  ),
+                  ..._govReceiptFields.entries
+                      .where((e) => e.value != null)
+                      .map((e) => Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              '${e.key}: ${e.value}',
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.brown),
+                            ),
+                          )),
+                ],
               ),
             ),
             const Divider(height: 1),

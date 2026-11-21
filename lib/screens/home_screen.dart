@@ -2025,6 +2025,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             () => _go(const AchievementsScreen())
           ),
           (
+            Icons.emoji_events,
+            "Challenges",
+            "Weekly savings challenges & streak goals",
+            Colors.orange,
+            () => _go(const ChallengesScreen())
+          ),
+          (
             Icons.menu_book_outlined,
             "Financial Glossary",
             "23 key terms — FHS, MP2, DTI, UITF and more",
@@ -6644,6 +6651,29 @@ class _DashboardState extends State<Dashboard> {
               // Safe-to-Spend — wallet balance minus reserved bills/goals/debts
               if (_incomeWalletMode && _showSafeToSpend)
                 _buildSafeToSpendCard(context),
+
+              // Logging streak mini-row — shown below Safe-to-Spend card
+              FutureBuilder<int>(
+                future: StreakService.getLoggingStreak(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      child: Text('Loading...', style: TextStyle(fontSize: 13)),
+                    );
+                  }
+                  final streak = snapshot.data!;
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    child: Text(
+                      '🔥 $streak day streak',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  );
+                },
+              ),
 
               // Multi-period spending limits card — tappable, shown when any limit set
               _buildSpendingLimitCard(context),

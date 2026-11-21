@@ -361,6 +361,101 @@ class OCRService {
     return items;
   }
 
+  /// Detect if OCR text is from a Philippine government receipt.
+  /// Returns 'BIR' | 'SSS' | 'PhilHealth' | 'PagIBIG' | 'LTO' | null.
+  static String? detectGovReceiptType(String text) {
+    final t = text.toUpperCase();
+    if (t.contains('BUREAU OF INTERNAL REVENUE') ||
+        t.contains('BIR') && t.contains('OFFICIAL RECEIPT')) return 'BIR';
+    if (t.contains('SOCIAL SECURITY SYSTEM') ||
+        t.contains('SSS') && (t.contains('CONTRIBUTION') || t.contains('LOAN')))
+      return 'SSS';
+    if (t.contains('PHILHEALTH') || t.contains('PHILIPPINE HEALTH'))
+      return 'PhilHealth';
+    if (t.contains('PAG-IBIG') ||
+        t.contains('PAGIBIG') ||
+        t.contains('HOME DEVELOPMENT MUTUAL')) return 'PagIBIG';
+    if (t.contains('LAND TRANSPORTATION OFFICE') ||
+        (t.contains('LTO') &&
+            (t.contains('REGISTRATION') ||
+                t.contains('PLATE') ||
+                t.contains('DRIVER')))) return 'LTO';
+    return null;
+  }
+
+  /// Parse a BIR Official Receipt.
+  /// Extracts: orNumber, tin, amount, date.
+  static Map<String, String?> parseBirReceipt(String text) {
+    final orMatch = RegExp(r'O\.?R\.?\s*(?:NO\.?|NUMBER)?\s*[:#]?\s*([\d-]+)',
+            caseSensitive: false)
+        .firstMatch(text);
+    final tinMatch = RegExp(r'TIN\s*[:#]?\s*([\d-]+)', caseSensitive: false)
+        .firstMatch(text);
+    final amountMatch = RegExp(r'(?:AMOUNT|TOTAL|DUE)[^\d]*([\d,]+\.?\d*)',
+            caseSensitive: false)
+        .firstMatch(text);
+    final dateMatch = RegExp(
+            r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[a-z]*\s+\d{1,2},?\s*\d{4})',
+            caseSensitive: false)
+        .firstMatch(text);
+    return {
+      'orNumber': orMatch?.group(1),
+      'tin': tinMatch?.group(1),
+      'amount': amountMatch?.group(1)?.replaceAll(',', ''),
+      'date': dateMatch?.group(0),
+    };
+  }
+
+  /// Parse an SSS receipt/confirmation.
+  /// Extracts: ssNumber, amount, date, referenceNumber.
+  static Map<String, String?> parseSssReceipt(String text) {
+    final ssMatch = RegExp(r'SS\s*(?:NO\.?|NUMBER)?\s*[:#]?\s*([\d-]+)',
+            caseSensitive: false)
+        .firstMatch(text);
+    final amountMatch = RegExp(
+            r'(?:AMOUNT|TOTAL|CONTRIBUTION)[^\d]*([\d,]+\.?\d*)',
+            caseSensitive: false)
+        .firstMatch(text);
+    final dateMatch =
+        RegExp(r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})', caseSensitive: false)
+            .firstMatch(text);
+    final refMatch = RegExp(
+            r'(?:REF(?:ERENCE)?|TXN|TRANSACTION)\s*(?:NO\.?)?\s*[:#]?\s*([\dA-Z-]+)',
+            caseSensitive: false)
+        .firstMatch(text);
+    return {
+      'ssNumber': ssMatch?.group(1),
+      'amount': amountMatch?.group(1)?.replaceAll(',', ''),
+      'date': dateMatch?.group(0),
+      'referenceNumber': refMatch?.group(1),
+    };
+  }
+
+  /// Parse a PhilHealth receipt/confirmation.
+  /// Extracts: pin, amount, date, referenceNumber.
+  static Map<String, String?> parsePhilhealthReceipt(String text) {
+    final pinMatch = RegExp(r'(?:PIN|PHILHEALTH\s*NO\.?)\s*[:#]?\s*([\d-]+)',
+            caseSensitive: false)
+        .firstMatch(text);
+    final amountMatch = RegExp(
+            r'(?:AMOUNT|PREMIUM|CONTRIBUTION)[^\d]*([\d,]+\.?\d*)',
+            caseSensitive: false)
+        .firstMatch(text);
+    final dateMatch =
+        RegExp(r'(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})', caseSensitive: false)
+            .firstMatch(text);
+    final refMatch = RegExp(
+            r'(?:REF(?:ERENCE)?|TXN|OR\s*NO\.?)\s*[:#]?\s*([\dA-Z-]+)',
+            caseSensitive: false)
+        .firstMatch(text);
+    return {
+      'pin': pinMatch?.group(1),
+      'amount': amountMatch?.group(1)?.replaceAll(',', ''),
+      'date': dateMatch?.group(0),
+      'referenceNumber': refMatch?.group(1),
+    };
+  }
+
   static String _cleanReceiptText(String raw) {
     final lines = raw.split('\n');
 

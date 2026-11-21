@@ -191,13 +191,25 @@ class _StreakTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 24)),
-          const SizedBox(height: 4),
-          Text(
-            '$count',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.5, end: 1.0),
+            duration: const Duration(milliseconds: 600),
+            builder: (ctx, v, _) => Transform.scale(
+              scale: v,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(emoji, style: const TextStyle(fontSize: 24)),
+                  const SizedBox(height: 4),
+                  Text(
+                    '$count',
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Text(
