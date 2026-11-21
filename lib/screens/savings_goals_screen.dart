@@ -385,8 +385,8 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
     );
   }
 
-  Future<void> _checkGoalMilestone(
-      double savedAmount, double targetAmount, String goalName) async {
+  Future<void> _checkGoalMilestone(double savedAmount, double targetAmount,
+      String goalName, int goalId) async {
     if (targetAmount <= 0) return;
     final pct = (savedAmount / targetAmount * 100).round();
 
@@ -394,25 +394,45 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
     PesoMood mood = PesoMood.celebrating;
 
     final prefs = await SharedPreferences.getInstance();
-    final key = 'goal_milestone_${goalName.toLowerCase().replaceAll(' ', '_')}';
-    final lastMilestone = prefs.getInt(key) ?? 0;
 
-    if (pct >= 100 && lastMilestone < 100) {
-      message = 'GOAL REACHED! 🏆\n$goalName complete!';
-      mood = PesoMood.excited;
-      await prefs.setInt(key, 100);
-    } else if (pct >= 75 && lastMilestone < 75) {
-      message = '75%! Almost there — isang push na lang! 💪';
-      mood = PesoMood.celebrating;
-      await prefs.setInt(key, 75);
-    } else if (pct >= 50 && lastMilestone < 50) {
-      message = 'Kalahati na ng $goalName! Hindi na malayo! 🔥';
-      mood = PesoMood.celebrating;
-      await prefs.setInt(key, 50);
-    } else if (pct >= 25 && lastMilestone < 25) {
-      message = '25% na! Simula palang — kaya mo! 🎯';
-      mood = PesoMood.happy;
-      await prefs.setInt(key, 25);
+    // Check milestones from highest to lowest so we only show one at a time
+    // per invocation, and use per-goal-id per-milestone keys as specified.
+    final milestones = [100, 75, 50, 25];
+    int? triggeredMilestone;
+    for (final m in milestones) {
+      if (pct >= m) {
+        final key = 'goal_milestone_${goalId}_$m';
+        final alreadyShown = prefs.getBool(key) ?? false;
+        if (!alreadyShown) {
+          triggeredMilestone = m;
+          await prefs.setBool(key, true);
+          break;
+        }
+      }
+    }
+
+    if (triggeredMilestone == null) return;
+
+    switch (triggeredMilestone) {
+      case 100:
+        message = '🏆 100% milestone reached for $goalName!\nGoal complete!';
+        mood = PesoMood.excited;
+        break;
+      case 75:
+        message =
+            '🎉 75% milestone reached for $goalName!\nAlmost there — isang push na lang! 💪';
+        mood = PesoMood.celebrating;
+        break;
+      case 50:
+        message =
+            '🎉 50% milestone reached for $goalName!\nKalahati na — hindi na malayo! 🔥';
+        mood = PesoMood.celebrating;
+        break;
+      case 25:
+        message =
+            '🎯 25% milestone reached for $goalName!\nSimula palang — kaya mo!';
+        mood = PesoMood.happy;
+        break;
     }
 
     if (message == null || !mounted) return;
@@ -467,6 +487,74 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
     );
   }
 
+  /// Derive estimated monthly contribution rate from goal history / created_at.
+  /// Returns null if rate cannot be determined.
+  double? _deriveMonthlyRate(Map<String, dynamic> goal) {
+    // First check for explicit monthly_contribution field (future-proofing)
+    final explicit = goal['monthly_contribution'];
+    if (explicit != null) {
+      final v = (explicit as num).toDouble();
+      if (v > 0) return v;
+    }
+
+    // Derive from (current_amount / months since created_at)
+    final current = (goal['current_amount'] as num).toDouble();
+    if (current <= 0) return null;
+
+    final createdStr = goal['created_at'] as String?;
+    if (createdStr == null) return null;
+
+    try {
+      final created = DateTime.parse(createdStr);
+      final months = DateTime.now().difference(created).inDays / 30.0;
+      if (months < 0.5) return null; // too early to derive meaningful rate
+      return current / months;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Return estimated completion month as "MMM yyyy" string, or null.
+  String? _estimatedCompletion(Map<String, dynamic> goal) {
+    final target = (goal['target_amount'] as num).toDouble();
+    final current = (goal['current_amount'] as num).toDouble();
+    if (current >= target) return null; // already done
+
+    // If deadline is set, use that for the monthly rate calculation
+    final deadlineStr = goal['deadline'] as String?;
+    if (deadlineStr != null) {
+      try {
+        final deadline = DateTime.parse(deadlineStr);
+        final monthsLeft = deadline.difference(DateTime.now()).inDays / 30.0;
+        if (monthsLeft > 0) return null; // deadline already shows days-left
+      } catch (_) {}
+    }
+
+    final rate = _deriveMonthlyRate(goal);
+    if (rate == null || rate <= 0) return null;
+
+    final monthsNeeded = (target - current) / rate;
+    final completionDate =
+        DateTime.now().add(Duration(days: (monthsNeeded * 30).round()));
+
+    // Format as "MMM yyyy"
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+    return '${months[completionDate.month - 1]} ${completionDate.year}';
+  }
+
   void _addContribution(Map<String, dynamic> goal) {
     final ctrl = TextEditingController();
     showDialog(
@@ -500,7 +588,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
 
               // GM-4: Peso milestone celebrations (non-retroactive, SharedPreferences-gated)
               await _checkGoalMilestone(
-                  newAmount, target, goal['name'] as String);
+                  newAmount, target, goal['name'] as String, goal['id'] as int);
             },
             child: const Text("Add"),
           ),
@@ -804,18 +892,39 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                     ),
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(6),
-                                    child: LinearProgressIndicator(
-                                      value: ratio,
-                                      minHeight: 10,
-                                      backgroundColor:
-                                          cs.surfaceContainerHighest,
-                                      valueColor: AlwaysStoppedAnimation(done
-                                          ? Colors.green
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .primary),
+                                    child: TweenAnimationBuilder<double>(
+                                      tween:
+                                          Tween<double>(begin: 0.0, end: ratio),
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.easeInOut,
+                                      builder: (context, animValue, _) {
+                                        return LinearProgressIndicator(
+                                          value: animValue,
+                                          minHeight: 10,
+                                          backgroundColor:
+                                              cs.surfaceContainerHighest,
+                                          valueColor: AlwaysStoppedAnimation(
+                                              done
+                                                  ? Colors.green
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .primary),
+                                        );
+                                      },
                                     ),
                                   ),
+                                  const SizedBox(height: 6),
+                                  // ₱X more needed
+                                  if (!done)
+                                    Text(
+                                      '₱${(target - current).toStringAsFixed(2)} more needed',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: cs.onSurface
+                                              .withValues(alpha: 0.6),
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   const SizedBox(height: 8),
                                   Row(
                                     mainAxisAlignment:
@@ -874,6 +983,40 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                         ],
                                       ),
                                     ),
+                                  // Estimated completion date
+                                  if (!done)
+                                    Builder(builder: (ctx) {
+                                      final estDate = _estimatedCompletion(g);
+                                      if (estDate != null) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 3),
+                                          child: Text(
+                                            'Est. completion: $estDate',
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.5)),
+                                          ),
+                                        );
+                                      }
+                                      // No rate derivable and no deadline set
+                                      if (g['deadline'] == null) {
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 3),
+                                          child: Text(
+                                            'Set a monthly contribution to see estimate',
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.38),
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                        );
+                                      }
+                                      return const SizedBox.shrink();
+                                    }),
                                   if (!done)
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8),
@@ -904,8 +1047,9 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                                   .difference(DateTime.now())
                                                   .inDays /
                                               30;
-                                          if (monthsLeft <= 0)
+                                          if (monthsLeft <= 0) {
                                             return const SizedBox.shrink();
+                                          }
                                           final needed =
                                               (target - current) / monthsLeft;
                                           // Estimate monthly contribution from income
@@ -948,11 +1092,11 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                                 color: Colors.amber
                                                     .withValues(alpha: 0.3)),
                                           ),
-                                          child: Row(children: [
-                                            const Icon(Icons.flag_outlined,
+                                          child: const Row(children: [
+                                            Icon(Icons.flag_outlined,
                                                 size: 13, color: Colors.amber),
-                                            const SizedBox(width: 6),
-                                            const Expanded(
+                                            SizedBox(width: 6),
+                                            Expanded(
                                               child: Text(
                                                 "Tap to set a deadline — unlocks monthly contribution suggestions",
                                                 style: TextStyle(
@@ -960,7 +1104,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                                                     color: Colors.amber),
                                               ),
                                             ),
-                                            const Icon(Icons.chevron_right,
+                                            Icon(Icons.chevron_right,
                                                 size: 14, color: Colors.amber),
                                           ]),
                                         ),
@@ -973,7 +1117,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                         }, // closes itemBuilder
                       ), // closes ListView.builder
                     ), // closes outer widget
-          PesoScreenTip(
+          const PesoScreenTip(
             screenKey: 'tip_goals',
             tipText:
                 'Set goals with deadlines — I\'ll track your monthly contribution needed! 🎯',
