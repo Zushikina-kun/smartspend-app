@@ -61,6 +61,7 @@ import 'help_screen.dart';
 import 'debt_payoff_screen.dart';
 import 'gov_contributions_screen.dart';
 import 'egov/sss_screen.dart';
+import 'egov/pagibig_screen.dart';
 import '../services/startup_alerts_service.dart';
 import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
@@ -1919,6 +1920,13 @@ class _QuickAccessHubState extends State<_QuickAccessHub> {
             "SSS contributions, loan calculators & contribution history",
             Colors.indigo,
             () => _go(const SSSScreen())
+          ),
+          (
+            Icons.home_work_outlined,
+            "Pag-IBIG Calculators",
+            "Housing loan, MP2 savings, contribution calculators",
+            Colors.green,
+            () => _go(const PagIBIGScreen())
           ),
           (
             Icons.category_outlined,
