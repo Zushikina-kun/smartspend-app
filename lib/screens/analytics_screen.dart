@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/expense.dart';
 import '../services/db_service.dart';
+import 'package:smartspend_app/screens/insights_screen.dart';
 import '../services/peso_context_service.dart';
 import '../services/peso_sound_service.dart';
 import '../services/peso_voice_service.dart';
@@ -687,6 +688,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   content: Text(PesoVoiceService.get(PesoContext.holdGreeting)),
                 ));
               },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.insights),
+            tooltip: 'Spending Insights',
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const InsightsScreen()),
             ),
           ),
           IconButton(
