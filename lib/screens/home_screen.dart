@@ -111,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _checkFhsTierChange();
     _checkStreakMilestone();
     _checkNotificationTap();
+    _checkBillReminders();
     _checkReturnVisit();
     _checkPesoNeglect();
     _showPesoNavTip();
@@ -578,6 +579,16 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: Text(msg, style: const TextStyle(fontSize: 13))),
         ]),
       ));
+    } catch (_) {}
+  }
+
+  Future<void> _checkBillReminders() async {
+    try {
+      final billRemEnabled =
+          await DBService.getSetting('bill_reminders_enabled');
+      if (billRemEnabled != 'false') {
+        await NotificationService.checkAndScheduleBillReminders();
+      }
     } catch (_) {}
   }
 

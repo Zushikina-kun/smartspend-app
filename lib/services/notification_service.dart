@@ -1,6 +1,7 @@
 ﻿import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'db_service.dart';
 
 class NotificationService {
@@ -23,6 +24,16 @@ class NotificationService {
             'peso_notification_tap_payload',
             response.payload ?? response.notificationResponseType.name,
           );
+
+          // Handle bill reminder actions
+          final actionId = response.actionId ?? '';
+          if (actionId.startsWith('mark_paid_')) {
+            final billIdStr = actionId.replaceFirst('mark_paid_', '');
+            final billId = int.tryParse(billIdStr);
+            if (billId != null) {
+              await _handleMarkBillAsPaid(billId);
+            }
+          }
         } catch (_) {}
       },
     );
@@ -807,5 +818,259 @@ class NotificationService {
         const NotificationDetails(android: android),
       );
     } catch (_) {}
+  }
+
+  /// Schedule 3 timezone-aware bill reminder notifications:
+  ///   - 3 days before dueDate at 09:00 AM local time  (id: billId * 10 + 0)
+  ///   - 1 day before dueDate at 06:00 PM local time   (id: billId * 10 + 1)
+  ///   - On dueDate at 08:00 AM local time              (id: billId * 10 + 2)
+  /// Each notification includes a 'Mark as Paid' quick action.
+  static Future<void> scheduleBillReminder(
+    int billId,
+    String billTitle,
+    double amount,
+    DateTime dueDate,
+  ) async {
+    await init();
+
+    final location = tz.local;
+    final now = tz.TZDateTime.now(location);
+
+    final threeDaysBefore = dueDate.subtract(const Duration(days: 3));
+    final oneDayBefore = dueDate.subtract(const Duration(days: 1));
+
+    final markPaidAction = AndroidNotificationAction(
+      'mark_paid_$billId',
+      'Mark as Paid',
+      showsUserInterface: true,
+    );
+
+    // ── 3 days before at 09:00 AM ──────────────────────────────────────────
+    final schedule0 = tz.TZDateTime(
+      location,
+      threeDaysBefore.year,
+      threeDaysBefore.month,
+      threeDaysBefore.day,
+      9, // 09:00 AM
+    );
+    if (schedule0.isAfter(now)) {
+      await _plugin.zonedSchedule(
+        billId * 10 + 0,
+        '📅 Bill due in 3 days: $billTitle',
+        '₱${amount.toStringAsFixed(0)} — Plan ahead',
+        schedule0,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'bill_reminders',
+            'Bill Reminders',
+            channelDescription: 'Bill payment reminders',
+            importance: Importance.defaultImportance,
+            priority: Priority.defaultPriority,
+            actions: [markPaidAction],
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: 'bill_id:$billId',
+      );
+    }
+
+    // ── 1 day before at 06:00 PM ───────────────────────────────────────────
+    final schedule1 = tz.TZDateTime(
+      location,
+      oneDayBefore.year,
+      oneDayBefore.month,
+      oneDayBefore.day,
+      18, // 06:00 PM
+    );
+    if (schedule1.isAfter(now)) {
+      await _plugin.zonedSchedule(
+        billId * 10 + 1,
+        '⚠️ Bill due tomorrow: $billTitle',
+        '₱${amount.toStringAsFixed(0)} — Don\'t forget!',
+        schedule1,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'bill_reminders',
+            'Bill Reminders',
+            channelDescription: 'Bill payment reminders',
+            importance: Importance.high,
+            priority: Priority.high,
+            actions: [markPaidAction],
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: 'bill_id:$billId',
+      );
+    }
+
+    // ── On due date at 08:00 AM ────────────────────────────────────────────
+    final schedule2 = tz.TZDateTime(
+      location,
+      dueDate.year,
+      dueDate.month,
+      dueDate.day,
+      8, // 08:00 AM
+    );
+    if (schedule2.isAfter(now)) {
+      await _plugin.zonedSchedule(
+        billId * 10 + 2,
+        '🚨 Bill due today: $billTitle',
+        '₱${amount.toStringAsFixed(0)} — Pay now to avoid late fees',
+        schedule2,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'bill_reminders',
+            'Bill Reminders',
+            channelDescription: 'Bill payment reminders',
+            importance: Importance.max,
+            priority: Priority.max,
+            actions: [markPaidAction],
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: 'bill_id:$billId',
+      );
+    }
+  }
+
+  /// Check and schedule bill reminders for recurring entries whose next_date
+  /// falls within the next 7 days. Guarded by SharedPreferences key
+  /// 'bill_reminder_last_check' — runs at most once per calendar day.
+  static Future<void> checkAndScheduleBillReminders() async {
+    await init();
+
+    final prefs = await SharedPreferences.getInstance();
+    final todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    if (prefs.getString('bill_reminder_last_check') == todayKey) return;
+    await prefs.setString('bill_reminder_last_check', todayKey);
+
+    try {
+      final now = DateTime.now();
+      final windowEnd = now.add(const Duration(days: 7));
+      final recurring = await DBService.getRecurring();
+
+      for (final r in recurring) {
+        final nextDateStr = r['next_date'] as String?;
+        if (nextDateStr == null || nextDateStr.isEmpty) continue;
+        try {
+          final nextDate = DateTime.parse(nextDateStr);
+          if (!nextDate.isBefore(now) && !nextDate.isAfter(windowEnd)) {
+            await scheduleBillReminder(
+              r['id'] as int,
+              r['title'] as String,
+              (r['amount'] as num).toDouble(),
+              nextDate,
+            );
+          }
+        } catch (_) {
+          continue;
+        }
+      }
+    } catch (_) {}
+  }
+
+  /// Handle "Mark as Paid" action from notification
+  static Future<void> _handleMarkBillAsPaid(int billId) async {
+    try {
+      // Get the bill details
+      final recurring = await DBService.getRecurring();
+      final bill = recurring.firstWhere(
+        (r) => r['id'] == billId,
+        orElse: () => <String, dynamic>{},
+      );
+
+      if (bill.isEmpty) return;
+
+      final amount = (bill['amount'] as num).toDouble();
+      final category = bill['category'] as String? ?? 'Bills';
+      final title = bill['title'] as String;
+      final frequency = bill['frequency'] as String? ?? 'monthly';
+
+      // Create expense record for the bill amount
+      await DBService.insertExpense({
+        'item_name': title,
+        'amount': amount,
+        'category': category,
+        'date': DateTime.now().toIso8601String(),
+        'is_want': 0,
+        'notes': 'Auto-logged from bill reminder',
+      });
+
+      // Advance next_date by frequency
+      final nextDateStr = bill['next_date'] as String?;
+      if (nextDateStr != null && nextDateStr.isNotEmpty) {
+        final currentDate = DateTime.parse(nextDateStr);
+        DateTime newNextDate;
+
+        switch (frequency) {
+          case 'daily':
+            newNextDate = currentDate.add(const Duration(days: 1));
+            break;
+          case 'weekly':
+            newNextDate = currentDate.add(const Duration(days: 7));
+            break;
+          case 'yearly':
+            newNextDate = DateTime(
+              currentDate.year + 1,
+              currentDate.month,
+              currentDate.day,
+            );
+            break;
+          case 'monthly':
+          default:
+            newNextDate = DateTime(
+              currentDate.year,
+              currentDate.month + 1,
+              currentDate.day,
+            );
+            break;
+        }
+
+        // Update the recurring bill's next_date
+        await DBService.updateRecurring({
+          'id': billId,
+          'next_date': newNextDate.toIso8601String().substring(0, 10),
+        });
+
+        // Reschedule reminders for the new date
+        await cancelBillReminders(billId);
+        await scheduleBillReminder(
+          billId,
+          title,
+          amount,
+          newNextDate,
+        );
+      }
+
+      // Show confirmation notification
+      await _plugin.show(
+        ('bill_paid_confirm_$billId').hashCode,
+        '✅ Bill marked as paid',
+        '$title — ₱${amount.toStringAsFixed(0)} logged',
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'bill_confirmations',
+            'Bill Confirmations',
+            channelDescription: 'Bill payment confirmations',
+            importance: Importance.low,
+            priority: Priority.low,
+          ),
+        ),
+      );
+    } catch (_) {}
+  }
+
+  /// Cancel all scheduled reminders for a specific bill
+  static Future<void> cancelBillReminders(int billId) async {
+    await init();
+    await _plugin.cancel(billId * 10 + 0);
+    await _plugin.cancel(billId * 10 + 1);
+    await _plugin.cancel(billId * 10 + 2);
   }
 }
