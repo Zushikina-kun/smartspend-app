@@ -84,7 +84,7 @@ class AppConfig {
   // For 1000/day limit: add $10 credit at https://openrouter.ai/credits
 
   // Tier 1: Best quality (frontier-tier reasoning)
-  static const _orLlama33 = "meta-llama/llama-3.3-70b-instruct:free";
+  static const _orLlama33 = "meta-llama/llama-3.3-70b-instruct";
   // Llama 3.3 70B: 128K ctx, 9.4 Intelligence Index, excellent reasoning
   static const _orNemotronUltra = "nvidia/nemotron-3-ultra-550b-a55b:free";
   // Nemotron 3 Ultra: 550B MoE, 1M ctx, top-ranked free model
@@ -94,7 +94,7 @@ class AppConfig {
   // Tier 2: Balanced quality + multimodal
   static const _orGemma431B = "google/gemma-4-31b-it:free";
   // Gemma 4 31B: 262K ctx, reliable, well-tested
-  static const _orQwen38 = "qwen/qwen3.8-27b:free";
+  static const _orQwen38 = "qwen/qwen3.8-27b";
   // Qwen 3.8 27B: 128K ctx, best computer-use, multimodal
 
   // Tier 3: Special purpose
@@ -102,6 +102,9 @@ class AppConfig {
   // Nemotron 3.5 Super VL: 1M ctx, multimodal (image + video)
   static const _orGemma426B = "google/gemma-4-26b-a4b-it:free";
   // Gemma 4 26B A4B: 262K ctx, MoE variant (3.8B active)
+  static const _orNemotronNano =
+      "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free";
+  // Nemotron 3 Nano 30B: reasoning MoE, free tier, omni model
 
   // Legacy: Keep multi-model array for fallback routing (currently unused)
   static const _openRouterModels = [
@@ -271,6 +274,11 @@ class AppConfig {
       '⚙️ Efficient — MoE 3.8B active, 262K ctx'
     ),
     (
+      'or_nemotron_nano',
+      'Nemotron Nano 30B (OpenRouter)',
+      '🧠 Reasoning — 30B MoE, free tier, omni model'
+    ),
+    (
       'groq_kimi_k2',
       'Qwen3.6 27B (Groq)',
       '🌐 Multimodal + reasoning — 1,000/day'
@@ -298,6 +306,14 @@ class AppConfig {
 
   static String get activeModelId => _activeModelId;
 
+  /// The concrete model ID the current request actually uses. In Auto mode
+  /// this is the chain walk model (or the first available if not yet
+  /// walking); otherwise it's the user's selected model. Use this — not
+  /// [activeModelId] — to decide provider-specific request headers, because
+  /// Auto mode keeps activeModelId as 'auto' while routing to a concrete model.
+  static String get effectiveModelId =>
+      _activeModelId == 'auto' ? _autoActiveModelId() : _activeModelId;
+
   /// When in Auto mode, show "Auto · <actual model name>" so users can see
   /// which model is actually being used for the current task.
   static String get activeModelLabel {
@@ -317,31 +333,15 @@ class AppConfig {
         'Gemini 3.5 Flash-Lite';
   }
 
-  /// Internal: resolve which concrete model Auto mode routes to for a given task.
-  /// Auto mode priority (Nov 2026): Best quality first (OpenRouter Nemotron/Llama), then Gemini, then Groq.
-  static String _autoActualModel(String taskType) {
-    final hasGemini = (_remoteGeminiKey ?? _fallbackGeminiKey).isNotEmpty;
-    final hasOpenRouter =
-        (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
-
-    // Priority: OpenRouter best (Nemotron Ultra) → Gemini → Groq
-    // For fast tasks: prioritize speed (Lightning, Flash-Lite)
-    switch (taskType) {
-      case 'fast':
-        return hasOpenRouter
-            ? 'or_nemotron_lightning'
-            : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
-      case 'financial_advice':
-        return hasOpenRouter
-            ? 'or_nemotron_ultra'
-            : (hasGemini ? 'gemini_flash' : 'groq_llama4_scout');
-      case 'smart':
-      default:
-        return hasOpenRouter
-            ? 'or_llama33'
-            : (hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout');
-    }
-  }
+  /// Internal: the concrete model an Auto-mode request uses right now. Auto
+  /// mode walks `_autoFallbackChain` best→worst. The first attempt uses the
+  /// first chain entry whose provider key is available; once a fallback is in
+  /// progress, `_autoWalkModel` holds the model the current (failed) request
+  /// used and autoFallback() advances past it. The task type no longer
+  /// affects routing — every Auto request starts at the top of the chain so
+  /// the walk is genuinely best→worst (the user's "from best to worse" intent).
+  static String _autoActualModel(String taskType) =>
+      _autoWalkModel ?? _firstAvailableChainModel();
 
   static bool get groqLimitReached => _groqLimitReached;
 
@@ -355,8 +355,11 @@ class AppConfig {
       (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
   /// The active API key for the current model
-  static String get groqApiKey {
-    switch (_activeModelId) {
+  static String get groqApiKey => _apiKeyFor(
+      _activeModelId == 'auto' ? _autoActiveModelId() : _activeModelId);
+
+  static String _apiKeyFor(String id) {
+    switch (id) {
       case 'custom_local':
         return _customLocalKey ?? '';
       // All OpenRouter models use the same API key
@@ -367,13 +370,12 @@ class AppConfig {
       case 'or_qwen38':
       case 'or_nemotron_super_vl':
       case 'or_gemma_4_26b':
+      case 'or_nemotron_nano':
       case 'openrouter':
         // If OpenRouter key is empty (not loaded from Firebase yet),
         // fall back to Groq so we don't get 401 errors
         final orKey = _remoteOpenRouterKey ?? _fallbackOpenRouterKey;
         return orKey.isNotEmpty ? orKey : (_remoteGroqKey ?? _fallbackGroqKey);
-      case 'auto':
-        return _remoteGeminiKey ?? _fallbackGeminiKey;
       case 'gemini_flash':
       case 'gemini_flash_lite':
         return _remoteGeminiKey ?? _fallbackGeminiKey;
@@ -389,8 +391,11 @@ class AppConfig {
       List.unmodifiable(_openRouterModels);
 
   /// The API base URL for the active model
-  static String get groqBaseUrl {
-    switch (_activeModelId) {
+  static String get groqBaseUrl => _baseUrlFor(
+      _activeModelId == 'auto' ? _autoActiveModelId() : _activeModelId);
+
+  static String _baseUrlFor(String id) {
+    switch (id) {
       case 'custom_local':
         // Use user-configured URL; default to Ollama if not set
         final url = _customLocalUrl ?? 'http://localhost:11434/v1';
@@ -405,11 +410,9 @@ class AppConfig {
       case 'or_qwen38':
       case 'or_nemotron_super_vl':
       case 'or_gemma_4_26b':
+      case 'or_nemotron_nano':
       case 'openrouter':
         return _openRouterUrl;
-      case 'auto':
-        // Auto mode defaults to Gemini endpoint
-        return _geminiUrl;
       case 'gemini_flash':
       case 'gemini_flash_lite':
         return _geminiUrl;
@@ -421,8 +424,11 @@ class AppConfig {
   }
 
   /// The model name string sent to the API
-  static String get groqModel {
-    switch (_activeModelId) {
+  static String get groqModel => _modelNameFor(
+      _activeModelId == 'auto' ? _autoActiveModelId() : _activeModelId);
+
+  static String _modelNameFor(String id) {
+    switch (id) {
       case 'custom_local':
         return _customLocalModel ?? 'qwen3:7b';
       // OpenRouter individual models
@@ -440,12 +446,10 @@ class AppConfig {
         return _orNemotronSuperVL;
       case 'or_gemma_4_26b':
         return _orGemma426B;
+      case 'or_nemotron_nano':
+        return _orNemotronNano;
       case 'openrouter':
         return _openRouterModel; // Legacy gateway
-      case 'auto':
-        // Auto mode defaults to Flash-Lite — task-specific routing handled
-        // by modelForTask(); this getter is used for the system prompt header
-        return _geminiFlashLite;
       case 'gemini_flash':
         return _geminiFlash;
       case 'gemini_flash_lite':
@@ -509,6 +513,56 @@ class AppConfig {
     }
   }
 
+  // Auto mode chain — walked best→worst, skipping providers with no key.
+  // The walk is driven by `_autoWalkModel` (the concrete model the current
+  // Auto request is using) rather than a separate counter, so there is no
+  // index that can survive a failed request or interleave across concurrent
+  // calls. resetAutoChain() clears the walk so the next request starts from
+  // the top of the chain.
+  static const _autoFallbackChain = [
+    'or_nemotron_ultra',
+    'or_llama33',
+    'or_gemma_4_31b',
+    'or_nemotron_lightning',
+    'or_qwen38',
+    'or_nemotron_nano',
+    'or_nemotron_super_vl',
+    'or_gemma_4_26b',
+    'gemini_flash',
+    'gemini_flash_lite',
+    'groq_kimi_k2',
+    'groq_qwen3',
+    'groq_70b',
+    'groq_8b',
+    'cerebras_120b',
+  ];
+  // The concrete chain model the current Auto request uses. null when not
+  // yet walking (the request uses the first available chain entry). Set by
+  // autoFallback(); cleared by resetAutoChain() (success/failure) and on
+  // exhaustion, so a failed request can never leave the walk mid-chain.
+  static String? _autoWalkModel;
+
+  /// First chain entry whose provider key is available — Auto mode's
+  /// starting point, so an empty-key provider is never tried first.
+  static String _firstAvailableChainModel() {
+    for (final m in _autoFallbackChain) {
+      if (m.startsWith('or_') && !hasOpenRouterKey) continue;
+      if (m.startsWith('gemini') && !hasGeminiKey) continue;
+      if (m == 'cerebras_120b' && !hasCerebrasKey) continue;
+      return m;
+    }
+    return _autoFallbackChain.first;
+  }
+
+  /// The concrete model an Auto request uses right now: the in-progress walk
+  /// model, or the first available chain entry when not yet walking.
+  static String _autoActiveModelId() =>
+      _autoWalkModel ?? _firstAvailableChainModel();
+
+  /// Clear the Auto-mode walk so the next request starts at the top of the
+  /// chain. Called after a successful response and on every failure path.
+  static void resetAutoChain() => _autoWalkModel = null;
+
   /// Auto-fallback when current model hits rate limit (429) or auth failure (401/403).
   /// Falls through the priority chain: best → good → volume.
   /// When in Auto mode, marks the current preferred provider failed and re-routes.
@@ -519,38 +573,29 @@ class AppConfig {
     final hasOpenRouter =
         (_remoteOpenRouterKey ?? _fallbackOpenRouterKey).isNotEmpty;
 
-    // Auto mode: on the FIRST failure, immediately switch away from the
-    // provider that _autoActualModel() chose so we don't waste 3 × 35 s
-    // retrying the same broken endpoint.
-    // Fix 1 & 5: skip OpenRouter entirely when key is empty; go straight
-    // to Gemini or Groq so an empty-key cold start never times out.
+    // Auto mode: walk `_autoFallbackChain` best→worst, starting one step past
+    // the model the current (failed) request used. On the first failure
+    // `_autoWalkModel` is null, so the "current" model is the first available
+    // chain entry — which the request just used — and we skip it instead of
+    // re-trying it. Because the first request also uses that same first
+    // available entry (via the getters), the chain's best model is always
+    // tried and never skipped. Session-only: only `_autoWalkModel` advances —
+    // we never touch `_activeModelId`, so the user stays on Auto.
     if (_activeModelId == 'auto') {
-      _consecutiveFailures++;
-      if (_consecutiveFailures >= 3) {
-        // All auto-routing attempts failed — temporarily force Groq as base
-        // for this SESSION ONLY (do not persist — next cold start returns to auto)
-        _consecutiveFailures = 0;
-        _activeModelId = 'groq_llama4_scout';
-        // Note: intentionally NOT calling _saveActiveModel() here so the
-        // fallback is session-only. Auto mode resumes on next cold start.
+      final current = _autoWalkModel ?? _firstAvailableChainModel();
+      final startIdx = _autoFallbackChain.indexOf(current);
+      for (int i = startIdx + 1; i < _autoFallbackChain.length; i++) {
+        final next = _autoFallbackChain[i];
+        // Skip OR models if no OR key
+        if (next.startsWith('or_') && !hasOpenRouter) continue;
+        if (next.startsWith('gemini') && !hasGemini) continue;
+        if (next == 'cerebras_120b' && !hasCerebras) continue;
+        _autoWalkModel = next;
         return true;
       }
-      // First or second failure: detect which concrete provider was active
-      // and jump to its next-in-chain immediately.
-      // This prevents 3 × 35 s timeout cycles against the same broken endpoint.
-      final currentProvider = _autoActualModel('smart');
-      if (currentProvider == 'openrouter' || !hasOpenRouterKey) {
-        // OpenRouter was chosen (or key is empty) — skip it and go to Gemini
-        _activeModelId = hasGemini ? 'gemini_flash_lite' : 'groq_llama4_scout';
-      } else if (currentProvider == 'gemini_flash_lite' ||
-          currentProvider == 'gemini_flash') {
-        _activeModelId = 'groq_llama4_scout';
-      } else {
-        // Already on a Groq model — advance within the Groq chain
-        _activeModelId = 'groq_llama4_scout';
-      }
-      // Session-only switch — do NOT persist so auto mode resumes on restart
-      return true;
+      // All models exhausted — reset for next session
+      _autoWalkModel = null;
+      return false;
     }
 
     // NEW FALLBACK CHAIN (Nov 2026 - SORTED BEST TO WORST):
@@ -611,6 +656,11 @@ class AppConfig {
         return true;
 
       case 'or_gemma_4_26b':
+        _activeModelId = 'or_nemotron_nano';
+        _saveActiveModel();
+        return true;
+
+      case 'or_nemotron_nano':
         _activeModelId = 'groq_kimi_k2';
         _saveActiveModel();
         return true;
@@ -674,6 +724,7 @@ class AppConfig {
     _consecutiveFailures = 0;
     // Always reset to Auto so the next session re-evaluates the best model
     _activeModelId = 'auto';
+    _autoWalkModel = null; // clear any in-progress Auto chain walk
     _saveActiveModel();
   }
 

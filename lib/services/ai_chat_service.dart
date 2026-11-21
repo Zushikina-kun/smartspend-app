@@ -1247,11 +1247,19 @@ PH BNPL/Loan Services (2026):
       ..._history,
     ];
 
-    // Task-based model routing — temporarily switch for this request if needed
+    // Task-based model routing — temporarily switch for this request if needed.
+    // In Auto mode the AppConfig getters already resolve to the chain model,
+    // so we must NOT task-route or persist (setModel would pin the user off
+    // Auto). The whole fallback stays session-only and keeps activeModelId
+    // == 'auto', so the Auto chain drives every hop instead of the static
+    // switch (which has a different order and persists each switch).
     final taskType = _detectTaskType(message);
-    final taskModelId = AppConfig.modelForTask(taskType);
     final originalModelId = AppConfig.activeModelId;
-    final needsSwitch = taskModelId != originalModelId &&
+    final isAutoMode = originalModelId == 'auto';
+    final taskModelId =
+        isAutoMode ? originalModelId : AppConfig.modelForTask(taskType);
+    final needsSwitch = !isAutoMode &&
+        taskModelId != originalModelId &&
         taskModelId != 'default' &&
         AppConfig.groqApiKey.isNotEmpty;
     if (needsSwitch) AppConfig.setModel(taskModelId);
@@ -1263,6 +1271,9 @@ PH BNPL/Loan Services (2026):
     // were somehow emptied AND Remote Config was also unreachable.
     if (AppConfig.groqApiKey.isEmpty) {
       if (needsSwitch) AppConfig.setModel(originalModelId);
+      // No usable key — clear any in-progress Auto walk before failing so the
+      // next request starts at the top of the chain.
+      AppConfig.resetAutoChain();
       throw Exception("AI configuration error — no API key available. "
           "Try restarting the app. If the problem persists, check your internet connection.");
     }
@@ -1286,9 +1297,11 @@ PH BNPL/Loan Services (2026):
                 // Fix 4: OpenRouter requires these headers for proper routing.
                 // Without HTTP-Referer + X-Title, OpenRouter may return 400.
                 // Added conditionally so other providers are unaffected.
-                // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway
-                if (AppConfig.activeModelId.startsWith('or_') ||
-                    AppConfig.activeModelId == 'openrouter') ...{
+                // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway.
+                // Use effectiveModelId (resolves Auto mode to the concrete chain
+                // model) so Auto-mode OpenRouter requests get the headers too.
+                if (AppConfig.effectiveModelId.startsWith('or_') ||
+                    AppConfig.effectiveModelId == 'openrouter') ...{
                   "HTTP-Referer":
                       "https://zushikina-kun.github.io/smartspend-app/",
                   "X-Title": "SmartSpend",
@@ -1319,7 +1332,7 @@ PH BNPL/Loan Services (2026):
         // All retries exhausted — try fallback to next provider
         if (needsSwitch) AppConfig.setModel(originalModelId);
         final switched = AppConfig.autoFallback();
-        if (switched && !isFallbackRetry) {
+        if (switched) {
           // Fix 3: Chat context is preserved across the provider switch.
           // _history (conversation turns) is a static list that is NOT cleared
           // by autoFallback(). The recursive call rebuilds `messages` from
@@ -1390,11 +1403,15 @@ PH BNPL/Loan Services (2026):
             "This is an API key issue, not your connection. "
             "Try the ⋮ menu → Reset Daily Limit, or check Settings.");
       }
-      // All other errors — fatal
+      // All other errors — fatal. Clear the Auto walk so the next request
+      // starts at the top of the chain instead of mid-walk.
+      AppConfig.resetAutoChain();
       throw Exception(
           "AI error (${response.statusCode}). If this keeps happening, try the ⋮ menu → Reset Daily Limit.");
     }
 
+    // Success — reset the auto-fallback chain so the next request starts fresh
+    AppConfig.resetAutoChain();
     final data = jsonDecode(response.body);
     // Guard against null content — some OpenRouter models (especially free-tier
     // experimental ones) return content: null with reasoning in a separate field.
@@ -1406,7 +1423,7 @@ PH BNPL/Loan Services (2026):
       // Model returned a null content — treat as a provider failure and fallback
       if (needsSwitch) AppConfig.setModel(originalModelId);
       final switched = AppConfig.autoFallback();
-      if (switched && !isFallbackRetry) {
+      if (switched) {
         return sendMessage(message, isFallbackRetry: true);
       }
       throw Exception(

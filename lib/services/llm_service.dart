@@ -22,6 +22,10 @@ class LLMService {
   /// On 401/403/429, calls AppConfig.autoFallback() and retries once.
   static Future<String> _callGroq(String systemPrompt, String userPrompt,
       {int maxTokens = 512}) async {
+    // Start every request at the top of the Auto chain so a previous failed
+    // request can't leave the walk mid-chain (which would skip the best model).
+    AppConfig.resetAutoChain();
+
     Future<http.Response> _doRequest() => http
         .post(
           Uri.parse(_groqUrl),
@@ -31,9 +35,11 @@ class LLMService {
             // Fix 6 / Fix 4: OpenRouter requires these headers for proper
             // routing. Without them, OpenRouter may return HTTP 400.
             // Added conditionally so other providers are unaffected.
-            // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway
-            if (AppConfig.activeModelId.startsWith('or_') ||
-                AppConfig.activeModelId == 'openrouter') ...{
+            // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway.
+            // Use effectiveModelId (resolves Auto mode to the concrete chain
+            // model) so Auto-mode OpenRouter requests get the headers too.
+            if (AppConfig.effectiveModelId.startsWith('or_') ||
+                AppConfig.effectiveModelId == 'openrouter') ...{
               "HTTP-Referer": "https://zushikina-kun.github.io/smartspend-app/",
               "X-Title": "SmartSpend",
             },
@@ -53,41 +59,36 @@ class LLMService {
 
     try {
       var response = await _doRequest();
-
-      // 401/402/403/404 = auth/billing/quota failure, 429 = rate limit — try next provider
-      if (response.statusCode == 401 ||
-          response.statusCode == 402 ||
-          response.statusCode == 403 ||
-          response.statusCode == 404 ||
-          response.statusCode == 429) {
+      int attempts = 0;
+      while (response.statusCode != 200 && attempts < 16) {
+        attempts++;
         final switched = AppConfig.autoFallback();
-        if (switched) {
-          // _groqKey / _groqUrl / _groqModel are lazy getters — they read the
-          // new model from AppConfig on every access, so the retry uses the
-          // new provider automatically.
+        if (!switched) break;
+        try {
           response = await _doRequest();
+        } catch (timeoutErr) {
+          // Timeout on this provider — try next
+          continue;
         }
       }
-
       if (response.statusCode == 200) {
+        AppConfig.resetAutoChain();
         final data = jsonDecode(response.body);
         return (data['choices']?[0]?['message']?['content'] ??
             data['choices']?[0]?['message']?['reasoning_content'] ??
             '') as String;
       }
-
       throw Exception("AI failed (${response.statusCode}): ${response.body}");
     } catch (e) {
       if (e is Exception && e.toString().contains('timed out')) {
-        // Timeout — try fallback provider once
         final switched = AppConfig.autoFallback();
         if (switched) {
           final response = await _doRequest();
           if (response.statusCode == 200) {
+            AppConfig.resetAutoChain();
             final data = jsonDecode(response.body);
-            return (data['choices']?[0]?['message']?['content'] ??
-                data['choices']?[0]?['message']?['reasoning_content'] ??
-                '') as String;
+            return (data['choices']?[0]?['message']?['content'] ?? '')
+                as String;
           }
         }
       }
