@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/db_service.dart';
 import '../services/app_config.dart';
+import '../services/export_service.dart';
 import '../services/app_lock_service.dart';
 import '../services/event_bus.dart';
 import '../services/theme_service.dart';
@@ -47,6 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // ── Notifications ───────────────────────────────────────────────────────────
   bool anomalyEnabled = true;
   bool proactiveNudgesEnabled = true;
+  bool billRemindersEnabled = true;
 
   // ── Local AI ────────────────────────────────────────────────────────────────
   final _localUrlCtrl = TextEditingController();
@@ -129,6 +131,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         (await DBService.getSetting('anomaly_detection_enabled')) != 'false';
     proactiveNudgesEnabled =
         (await DBService.getSetting('show_proactive_nudges')) != 'false';
+    billRemindersEnabled =
+        (await DBService.getSetting('bill_reminders_enabled')) != 'false';
     showSubscriptions =
         (await DBService.getSetting('show_subscriptions')) != 'false';
     showQuickLog = (await DBService.getSetting('show_quick_log')) != 'false';
@@ -848,6 +852,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _save('show_proactive_nudges', v);
                     },
                   ),
+                  _tile(
+                    icon: Icons.receipt_long_outlined,
+                    title: 'Bill reminders',
+                    subtitle:
+                        'Get notified 3 days before, 1 day before, and on due date for upcoming bills',
+                    value: billRemindersEnabled,
+                    onChanged: (v) {
+                      setState(() => billRemindersEnabled = v);
+                      _save('bill_reminders_enabled', v);
+                    },
+                  ),
                 ]),
 
                 // ── AI MODEL ─────────────────────────────────────────────────
@@ -1406,6 +1421,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Icon(Icons.chevron_right, color: Colors.grey[400]),
                       ]),
                     ),
+                  ),
+                ]),
+
+                // ── EXPORT DATA ──────────────────────────────────────────────
+                _sectionLabel('EXPORT DATA'),
+                _sectionCard([
+                  ListTile(
+                    leading: const Icon(Icons.table_rows_outlined, size: 20),
+                    iconColor: Colors.grey[600],
+                    title: const Text('Export Transactions (CSV)',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500)),
+                    subtitle: Text('All expenses — full detail',
+                        style:
+                            TextStyle(fontSize: 11, color: Colors.grey[500])),
+                    trailing: const Icon(Icons.share_outlined, size: 18),
+                    onTap: () async {
+                      try {
+                        await ExportService.exportTransactionsToCSV();
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Export failed: $e'),
+                            behavior: SnackBarBehavior.floating,
+                          ));
+                        }
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.summarize_outlined, size: 20),
+                    iconColor: Colors.grey[600],
+                    title: const Text('Export Summary (CSV)',
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500)),
+                    subtitle: Text('Monthly totals by category',
+                        style:
+                            TextStyle(fontSize: 11, color: Colors.grey[500])),
+                    trailing: const Icon(Icons.share_outlined, size: 18),
+                    onTap: () async {
+                      try {
+                        await ExportService.exportSummaryToCSV();
+                      } catch (e) {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Export failed: $e'),
+                            behavior: SnackBarBehavior.floating,
+                          ));
+                        }
+                      }
+                    },
                   ),
                 ]),
 
