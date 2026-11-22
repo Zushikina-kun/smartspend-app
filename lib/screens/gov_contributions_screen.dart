@@ -351,7 +351,7 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'N = 5 respondents (preliminary); target N = 30',
+                        'N = 30 respondents (SD 17.58) — final study',
                         style: TextStyle(
                             fontSize: 11, color: cs.onSurface.withOpacity(0.6)),
                       ),
@@ -387,10 +387,10 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
             icon: Icons.people_alt_outlined,
             title: 'Methodology',
             body:
-                'Mixed-methods design. Participants completed tasks using SmartSpend v3.1.1 '
-                'on Android devices, then filled out the 10-item SUS questionnaire. '
-                'Two respondent groups: parents (n = 20 target) and young professionals '
-                '(n = 10 target). Preliminary data from N = 5 respondents.',
+                'Mixed-methods design with N = 30 Filipino respondents. Participants '
+                'completed tasks using SmartSpend v3.1.1 on Android devices, then filled '
+                'out the 10-item SUS questionnaire. Two respondent groups: parents (n = 10) '
+                'and young professionals (n = 20).',
           ),
           const SizedBox(height: 10),
 
@@ -421,9 +421,11 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
               _recItem(cs, 'Simplified onboarding with contextual tooltips'),
               _recItem(cs, 'Real-time DOE fuel price data feed'),
               _recItem(cs, 'PSA retail commodity price feed'),
-              _recItem(cs, 'Government contribution tracker (SSS, PhilHealth, Pag-IBIG)'),
+              _recItem(cs,
+                  'Government contribution tracker (SSS, PhilHealth, Pag-IBIG)'),
               _recItem(cs, 'AI financial advisor with PESO model guidance'),
-              _recItem(cs, 'Price Intelligence for personal receipt-based tracking'),
+              _recItem(
+                  cs, 'Price Intelligence for personal receipt-based tracking'),
             ],
           ),
 
@@ -454,7 +456,8 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
           Icon(icon, size: 16, color: cs.primary),
           const SizedBox(width: 6),
           Text(title,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              style:
+                  const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
         ]),
         const SizedBox(height: 6),
         if (body != null)
@@ -510,6 +513,7 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
       ),
     );
   }
+
   Widget _buildYTDTrackerTab(ColorScheme cs) {
     return RefreshIndicator(
       onRefresh: _loadData,

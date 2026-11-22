@@ -171,8 +171,18 @@ class DoeService {
 
   static String _weekLabel(DateTime d) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return '${months[d.month - 1]} ${d.day}, ${d.year}';
   }
@@ -181,7 +191,8 @@ class DoeService {
 
   /// Returns cached fuel prices, refreshing from DOE if the cache is stale.
   /// Never throws — always returns a list (may be empty if no data at all).
-  static Future<List<FuelPrice>> getFuelPrices({bool forceRefresh = false}) async {
+  static Future<List<FuelPrice>> getFuelPrices(
+      {bool forceRefresh = false}) async {
     final cached = await _getCached();
 
     if (!forceRefresh && cached.isNotEmpty) {
@@ -201,21 +212,24 @@ class DoeService {
 
     // Last resort: static reference values
     final now = DateTime.now();
-    return _staticFallback.map((m) => FuelPrice(
-          commodity: m['commodity'] as String,
-          priceMin: m['price_min'] as double,
-          priceMax: m['price_max'] as double,
-          unit: m['unit'] as String,
-          fetchedAt: now.subtract(const Duration(days: 90)), // mark as old
-          periodLabel: m['period_label'] as String?,
-        )).toList();
+    return _staticFallback
+        .map((m) => FuelPrice(
+              commodity: m['commodity'] as String,
+              priceMin: m['price_min'] as double,
+              priceMax: m['price_max'] as double,
+              unit: m['unit'] as String,
+              fetchedAt: now.subtract(const Duration(days: 90)), // mark as old
+              periodLabel: m['period_label'] as String?,
+            ))
+        .toList();
   }
 
   /// Returns whether the cached data is considered stale (> 14 days old).
   static Future<bool> isDataStale() async {
     final cached = await _getCached();
     if (cached.isEmpty) return true;
-    return DateTime.now().difference(cached.first.fetchedAt).inDays > _staleDays;
+    return DateTime.now().difference(cached.first.fetchedAt).inDays >
+        _staleDays;
   }
 
   /// Returns the age of cached data in days, or null if no cache exists.
@@ -223,6 +237,15 @@ class DoeService {
     final cached = await _getCached();
     if (cached.isEmpty) return null;
     return DateTime.now().difference(cached.first.fetchedAt).inDays;
+  }
+
+  /// Returns true when the displayed data is the hardcoded reference fallback,
+  /// meaning the live DOE scrape has never succeeded (or the cache was cleared).
+  /// Used by the UI to show "live update unavailable" rather than "data is old".
+  static Future<bool> isLiveFeedUnavailable() async {
+    final cached = await _getCached();
+    if (cached.isEmpty) return true;
+    return cached.any((p) => p.periodLabel == 'Reference data');
   }
 
   /// Fire-and-forget background refresh.

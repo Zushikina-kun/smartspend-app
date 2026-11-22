@@ -264,9 +264,16 @@ class PsaService {
         strides[i] = strides[i + 1] * sizes[i + 1];
       }
 
-      // Collect the latest value per commodity (last time period)
+      // Collect the latest value per commodity (last time period).
+      //
+      // PX-Web orders the value array as the Cartesian product of dimension
+      // indices, with time categories listed oldest-to-latest, so the last
+      // non-null value per commodity is the most recent period. We pick the
+      // latest period by its dimension INDEX position (guaranteed chronological),
+      // not by comparing label strings — non-ISO labels such as "March 2024" or
+      // "2024M01" do not sort lexicographically by recency.
       final latestPerCommodity = <String, double>{};
-      String latestPeriod = '';
+      int latestPeriodIdx = -1;
 
       for (int idx = 0; idx < values.length; idx++) {
         final v = values[idx];
@@ -283,20 +290,20 @@ class PsaService {
         final commodityLabel = dimLabels[dimIds[commodityDimIdx]]
                 ?[dimIndices[commodityDimIdx]] ??
             '';
-        String periodLabel = '';
-        if (periodDimIdx >= 0) {
-          periodLabel =
-              dimLabels[dimIds[periodDimIdx]]?[dimIndices[periodDimIdx]] ?? '';
-        }
-
-        // Keep track of the latest period encountered
-        if (periodLabel.isNotEmpty && periodLabel.compareTo(latestPeriod) > 0) {
-          latestPeriod = periodLabel;
-        }
 
         // Store/overwrite; last (chronologically latest) wins since values are ordered
         latestPerCommodity[commodityLabel] = v.toDouble();
-        if (periodLabel.isNotEmpty) latestPeriod = periodLabel;
+
+        // Track the latest period by dimension index (oldest-to-latest order)
+        if (periodDimIdx >= 0) {
+          final periodIdx = dimIndices[periodDimIdx];
+          if (periodIdx > latestPeriodIdx) latestPeriodIdx = periodIdx;
+        }
+      }
+
+      String? latestPeriod;
+      if (periodDimIdx >= 0 && latestPeriodIdx >= 0) {
+        latestPeriod = dimLabels[dimIds[periodDimIdx]]?[latestPeriodIdx];
       }
 
       for (final entry in latestPerCommodity.entries) {
@@ -306,7 +313,9 @@ class PsaService {
           price: entry.value,
           unit: 'per kg',
           fetchedAt: now,
-          periodLabel: latestPeriod.isNotEmpty ? latestPeriod : null,
+          periodLabel: latestPeriod != null && latestPeriod.isNotEmpty
+              ? latestPeriod
+              : null,
         ));
       }
 
