@@ -38,9 +38,15 @@ class AppConfig {
   static const _fallbackGeminiKey = ""; // Set in Firebase Remote Config
   static const _fallbackCerebrasKey =
       "csk-cwr9ye2pxwyhe89hmexm3t84e5fe3tykjd2d9c86p5vxjd94";
-  // OpenRouter key: Set in Firebase Remote Config for security
+  // OpenRouter key: compile-time fallback read from the OPENROUTER_API_KEY
+  // environment variable (flutter build ... --dart-define=OPENROUTER_API_KEY=sk-or-v1-...)
   // Key format: sk-or-v1-... with $100 credit (expires May 14, 2027)
-  static const _fallbackOpenRouterKey = ""; // Set in Firebase Remote Config
+  // The real key is also stored in Firebase Remote Config and loaded at runtime.
+  // If neither source provides a key, OR models are skipped (hasOpenRouterKey = false).
+  static const _fallbackOpenRouterKey = String.fromEnvironment(
+    'OPENROUTER_API_KEY',
+    defaultValue: '',
+  );
 
   // ── API ENDPOINTS ──────────────────────────────────────────────────────────
   static const _groqUrl = "https://api.groq.com/openai/v1/chat/completions";
@@ -459,10 +465,11 @@ class AppConfig {
       case 'or_gemma_4_26b':
       case 'or_nemotron_nano':
       case 'openrouter':
-        // If OpenRouter key is empty (not loaded from Firebase yet),
-        // fall back to Groq so we don't get 401 errors
-        final orKey = _remoteOpenRouterKey ?? _fallbackOpenRouterKey;
-        return orKey.isNotEmpty ? orKey : (_remoteGroqKey ?? _fallbackGroqKey);
+        // Return the OR key (or empty string if unavailable).
+        // hasOpenRouterKey guards callers — an empty return here prevents the
+        // request from being made. Never substitute a Groq key: sending gsk_…
+        // to OpenRouter causes a silent 401 that bypasses the real OR key.
+        return _remoteOpenRouterKey ?? _fallbackOpenRouterKey;
       case 'gemini_flash':
       case 'gemini_flash_lite':
         return _remoteGeminiKey ?? _fallbackGeminiKey;

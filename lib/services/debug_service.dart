@@ -58,6 +58,8 @@ class DebugService {
         '  cerebras_key_loaded = ${AppConfig.hasCerebrasKey ? 'YES' : 'NO'}');
     buffer
         .writeln('  groq_key_loaded = ${AppConfig.hasGroqKey ? 'YES' : 'NO'}');
+    buffer.writeln(
+        '  openrouter_key_loaded = ${AppConfig.hasOpenRouterKey ? 'YES' : 'NO'}');
     final rcStatus =
         await DBService.getSetting('rc_last_fetch_status') ?? 'unknown';
     buffer.writeln('  rc_last_fetch_status = $rcStatus');
