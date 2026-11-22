@@ -28,8 +28,8 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 ## What's New in v3.5.2
 
-- 🤖 **20 AI Models** — full OpenRouter individual model routing with corrected model IDs
-- 🔄 **16-model continuous fallback chain** — walks best→worst without stopping; every model in the chain is tried before giving up
+- 🤖 **16 AI Models** — full OpenRouter individual model routing with corrected model IDs
+- 🔄 **15-model continuous fallback chain** — walks best→worst without stopping; every model in the chain is tried before giving up
 - 📋 **BIR Tax Reminders** — quarterly deadlines, income tax estimator, percentage tax calculator, local notifications
 - 🏠 **Home Menu Entry** — Tax Calculator accessible from Quick Access Hub
 - 👁️ **Vision model priority** — OCR receipt parsing prefers vision-capable models first
@@ -70,7 +70,7 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 ### Core Tracking
 - 🎙️ **7 Input Methods** — Voice, OCR receipt scan, barcode, manual entry, batch screenshots (40+ platforms), bank CSV paste, natural language chat
-- 🤖 **Peso AI** — 34 agentic action types via natural language in Taglish or English with 20 AI models across 5 providers
+- 🤖 **Peso AI** — 34 agentic action types via natural language in Taglish or English with 16 AI models across 5 providers
 - 📱 **Use Without Account** — start immediately, no sign-up required; data stays on device
 - 🔒 **Local AI Mode** — connect to Ollama, LM Studio, or Jan on your PC; zero cloud exposure
 
@@ -119,7 +119,7 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 ## AI Models
 
-SmartSpend integrates **20 AI models** across multiple providers with intelligent auto-fallback. Auto mode walks the full chain best→worst without stopping until a model responds.
+SmartSpend integrates **16 AI models** across multiple providers with intelligent auto-fallback. Auto mode walks the full chain best→worst without stopping until a model responds.
 
 ### Automatic Fallback Chain
 
@@ -207,7 +207,7 @@ All models support SmartSpend's 34 agentic actions via tool calling:
 | Component | Technology |
 |-----------|-----------|
 | Framework | Flutter (Dart) |
-| AI Engine | 20 models across 5 providers — Gemini, OpenRouter, Groq, Cerebras, Custom Local — 34 agentic actions, automatic fallback chain |
+| AI Engine | 16 models across 5 providers — Gemini, OpenRouter, Groq, Cerebras, Custom Local — 34 agentic actions, automatic fallback chain |
 | Local DB | SQLite via sqflite (v14 schema, 26+ tables) |
 | Cloud | Firebase Auth + Firestore + Remote Config + Crashlytics + App Check |
 | OCR | Google ML Kit Text Recognition |
@@ -320,7 +320,7 @@ SmartSpend is a capstone research project at Lorma Colleges (AY 2026–2027, 1st
 
 | Version | Highlights |
 |---------|-----------|
-| **3.5.2** | 🔄 Corrected OR model IDs, 16-model continuous fallback chain, BIR tax reminders, vision + fast model routing |
+| **3.5.2** | 🔄 Corrected OR model IDs, 15-model continuous fallback chain, BIR tax reminders, vision + fast model routing |
 | **3.5.1** | Update cache fix, voice input Completer fix |
 | **3.5.0** | Net worth tracker, government receipt OCR, savings streak, weekly challenges |
 | **3.4.0** | Spending heatmap, investment tracker, GCash/Maya SMS parsing, notification listener |
