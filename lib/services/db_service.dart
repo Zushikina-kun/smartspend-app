@@ -12,6 +12,14 @@ class DBService {
   static Database? _db;
   static bool _columnsEnsured = false;
 
+  /// Inject a pre-opened database — used in tests to supply an in-memory DB.
+  /// Pass null to clear the injection (restores normal file-based behaviour).
+  // ignore: invalid_use_of_visible_for_testing_member
+  static void injectDatabase(Database? db) {
+    _db = db;
+    _columnsEnsured = db != null; // skip _ensureColumns for injected test DBs
+  }
+
   static Future<Database> getDB() async {
     if (_db != null) {
       if (!_columnsEnsured) {
