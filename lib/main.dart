@@ -18,6 +18,7 @@ import 'services/pro_service.dart';
 import 'services/analytics_service.dart';
 import 'services/doe_service.dart';
 import 'services/psa_service.dart';
+import 'services/debug_service.dart';
 
 final themeService = ThemeService();
 
@@ -26,6 +27,8 @@ final localeNotifier = ValueNotifier<Locale>(const Locale('en'));
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initAppVersion();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

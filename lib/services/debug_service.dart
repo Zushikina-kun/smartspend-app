@@ -3,13 +3,25 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'db_service.dart';
 import 'score_service.dart';
 import 'app_config.dart';
 import 'peso_activity_log.dart';
 
-/// Current app version — keep in sync with pubspec.yaml.
-const kAppVersion = '3.5.1';
+/// App version — set dynamically from PackageInfo at startup via initAppVersion().
+/// Falls back to the pubspec version if PackageInfo is unavailable.
+String kAppVersion = '3.5.5';
+
+/// Call this once during app startup (before any version checks).
+Future<void> initAppVersion() async {
+  try {
+    final info = await PackageInfo.fromPlatform();
+    if (info.version.isNotEmpty) kAppVersion = info.version;
+  } catch (_) {
+    // Keep fallback value
+  }
+}
 
 /// Debug signing certificate SHA-1 fingerprint for this machine.
 /// Add this to Firebase Console → Project Settings → Android → SHA certificate fingerprints

@@ -45,6 +45,7 @@ dependencies:
   file_picker: ^8.0.0
   shake: ^2.2.0
   url_launcher: ^6.3.1
+  package_info_plus: ^8.0.0
 
 dependency_overrides:
   sensors_plus: ^3.1.0
