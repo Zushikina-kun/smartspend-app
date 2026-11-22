@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
 import '../services/sms_parser_service.dart';
 import '../services/db_service.dart';
 import '../services/app_config.dart';
@@ -602,16 +603,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _save('budget_alerts_enabled', v);
                     },
                   ),
-                  _tile(
-                    icon: Icons.sms_outlined,
-                    title: 'SMS Auto-sync',
-                    subtitle: 'Import GCash/Maya transactions from SMS',
-                    value: smsSyncEnabled,
-                    onChanged: (v) async {
-                      await SmsParserService.setSmsSync(v);
-                      setState(() => smsSyncEnabled = v);
-                    },
-                  ),
+                  // TODO: unhide when SMS MethodChannel is implemented
+                  if (kDebugMode)
+                    _tile(
+                      icon: Icons.sms_outlined,
+                      title: 'SMS Auto-sync',
+                      subtitle: 'Import GCash/Maya transactions from SMS',
+                      value: smsSyncEnabled,
+                      onChanged: (v) async {
+                        await SmsParserService.setSmsSync(v);
+                        setState(() => smsSyncEnabled = v);
+                      },
+                    ),
                   // Spending limits nav row
                   InkWell(
                     onTap: () => SpendingLimitsSheet.show(context),
@@ -983,35 +986,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ]),
 
-                // ── NOTIFICATION ACCESS ──────────────────────────────────────
-                _sectionCard([
-                  InkWell(
-                    onTap: () => _showNotificationAccessDialog(context),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      child: Row(children: [
-                        Icon(Icons.notifications_active_outlined,
-                            size: 20, color: Colors.grey[600]),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Enable Notification Access',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                                Text('Auto-detect GCash and Maya transactions',
-                                    style: TextStyle(
-                                        fontSize: 11, color: Colors.grey[500])),
-                              ]),
-                        ),
-                        Icon(Icons.chevron_right, color: Colors.grey[400]),
-                      ]),
+                // TODO: unhide when SMS MethodChannel is implemented
+                if (kDebugMode)
+                  _sectionCard([
+                    InkWell(
+                      onTap: () => _showNotificationAccessDialog(context),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        child: Row(children: [
+                          Icon(Icons.notifications_active_outlined,
+                              size: 20, color: Colors.grey[600]),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Enable Notification Access',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
+                                  Text(
+                                      'Auto-detect GCash and Maya transactions',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.grey[500])),
+                                ]),
+                          ),
+                          Icon(Icons.chevron_right, color: Colors.grey[400]),
+                        ]),
+                      ),
                     ),
-                  ),
-                ]),
+                  ]),
 
                 // ── AI MODEL ─────────────────────────────────────────────────
                 Padding(
