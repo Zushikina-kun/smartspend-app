@@ -288,7 +288,7 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
     );
   }
 
-  Widget _buildComingSoonSection(BuildContext context) {
+  Widget _buildResearchFindingsSection(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0),
@@ -750,8 +750,8 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
           ),
           const SizedBox(height: 24),
 
-          // Research Findings - Coming Soon
-          _buildComingSoonSection(context),
+          // Research Findings — SUS 61.83, N=30
+          _buildResearchFindingsSection(context),
         ],
       ),
     );
