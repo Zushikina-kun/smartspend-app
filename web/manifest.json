@@ -1,11 +1,11 @@
 {
-    "name": "smartspend_app",
-    "short_name": "smartspend_app",
-    "start_url": ".",
+    "name": "SmartSpend",
+    "short_name": "SmartSpend",
+    "description": "AI-powered personal finance tracker for Filipinos",
+    "start_url": "/",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0d1117",
+    "theme_color": "#00C896",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

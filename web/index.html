@@ -18,6 +18,12 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <!-- sqflite_common_ffi_web requires SharedArrayBuffer; needs COOP/COEP headers on the server too.
+       For XAMPP add to httpd.conf or .htaccess:
+         Header set Cross-Origin-Opener-Policy "same-origin"
+         Header set Cross-Origin-Embedder-Policy "require-corp" -->
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+  <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
   <meta name="description" content="A new Flutter project.">
 
   <!-- iOS meta tags & icons -->

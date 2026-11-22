@@ -1,5 +1,7 @@
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:csv/csv.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'web_download_stub.dart' if (dart.library.html) 'web_download_web.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -46,9 +48,15 @@ class ExportService {
     ];
 
     final csv = const ListToCsvConverter().convert(rows);
-    final dir = await getTemporaryDirectory();
     final fileName = 'SmartSpend_Expenses_${fileFmt.format(now)}.csv';
-    final file = File('${dir.path}/$fileName');
+
+    if (kIsWeb) {
+      triggerWebDownload(csv, fileName);
+      return;
+    }
+
+    final dir = await getTemporaryDirectory();
+    final file = io.File('${dir.path}/$fileName');
     await file.writeAsString(csv);
 
     await Share.shareXFiles(
@@ -98,9 +106,15 @@ class ExportService {
     ];
 
     final csv = const ListToCsvConverter().convert(rows);
-    final dir = await getTemporaryDirectory();
     final fileName = 'SmartSpend_Summary_${fileFmt.format(now)}.csv';
-    final file = File('${dir.path}/$fileName');
+
+    if (kIsWeb) {
+      triggerWebDownload(csv, fileName);
+      return;
+    }
+
+    final dir = await getTemporaryDirectory();
+    final file = io.File('${dir.path}/$fileName');
     await file.writeAsString(csv);
 
     await Share.shareXFiles(

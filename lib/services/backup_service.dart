@@ -1,7 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'web_download_stub.dart' if (dart.library.html) 'web_download_web.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -90,6 +92,7 @@ class BackupService {
   ///
   /// Returns the folder path on success, null on failure.
   static Future<String?> saveToDeviceStorage(List<dynamic> expenses) async {
+    if (kIsWeb) return null;
     try {
       final now = DateTime.now();
       final fileFmt = DateFormat('yyyyMMdd_HHmmss');
@@ -100,13 +103,13 @@ class BackupService {
       if (extDir == null) return null;
 
       // Create SmartSpend subfolder
-      final folder = Directory('${extDir.path}/$_folderName');
+      final folder = io.Directory('${extDir.path}/$_folderName');
       if (!await folder.exists()) await folder.create(recursive: true);
 
       // 1. Write full JSON backup
       final data = await _exportData();
       final jsonStr = const JsonEncoder.withIndent('  ').convert(data);
-      final jsonFile = File('${folder.path}/SmartSpend_Backup_$stamp.json');
+      final jsonFile = io.File('${folder.path}/SmartSpend_Backup_$stamp.json');
       await jsonFile.writeAsString(jsonStr);
 
       // 2. Write CSV of expenses only (human-readable)
@@ -137,7 +140,8 @@ class BackupService {
           }),
         ];
         final csv = const ListToCsvConverter().convert(rows);
-        final csvFile = File('${folder.path}/SmartSpend_Expenses_$stamp.csv');
+        final csvFile =
+            io.File('${folder.path}/SmartSpend_Expenses_$stamp.csv');
         await csvFile.writeAsString(csv);
       }
 
@@ -181,7 +185,7 @@ class BackupService {
     // Validate JSON keys before showing dialog
     Map<String, dynamic> data;
     try {
-      final raw = await File(filePath).readAsString();
+      final raw = await io.File(filePath).readAsString();
       data = jsonDecode(raw) as Map<String, dynamic>;
     } catch (e) {
       if (context.mounted) {
@@ -291,9 +295,15 @@ class BackupService {
       final data = await _exportData();
       final jsonStr = const JsonEncoder.withIndent('  ').convert(data);
 
-      final dir = await getTemporaryDirectory();
       final fileName = 'SmartSpend_Backup_${fileFmt.format(now)}.json';
-      final file = File('${dir.path}/$fileName');
+
+      if (kIsWeb) {
+        triggerWebDownload(jsonStr, fileName);
+        return true;
+      }
+
+      final dir = await getTemporaryDirectory();
+      final file = io.File('${dir.path}/$fileName');
       await file.writeAsString(jsonStr);
 
       await Share.shareXFiles(
@@ -312,7 +322,7 @@ class BackupService {
   /// Restore from a backup JSON file path (picked by user).
   static Future<BackupRestoreResult> restoreFromFile(String filePath) async {
     try {
-      final file = File(filePath);
+      final file = io.File(filePath);
       if (!await file.exists()) {
         return BackupRestoreResult(
             success: false, message: "Backup file not found.");
