@@ -15,6 +15,12 @@ jobs:
           channel: stable
           cache: true
       - name: Write stub app_config.dart
-        run: cp lib/services/app_config.dart.example lib/services/app_config.dart || echo "No example file, using committed stub"
+        run: |
+          # app_config.dart is gitignored in production but the committed version
+          # has empty keys and all correct method signatures — use it as-is for analysis.
+          # If it somehow doesn't exist, copy the example as fallback.
+          if [ ! -f lib/services/app_config.dart ]; then
+            cp lib/services/app_config.dart.example lib/services/app_config.dart || echo "No stub available"
+          fi
       - run: flutter pub get
       - run: flutter analyze --no-fatal-infos --no-fatal-warnings
