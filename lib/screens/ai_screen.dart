@@ -527,7 +527,7 @@ class _AIScreenState extends State<AIScreen> {
     AIChatService.setFullContext(
       expenses: expenses
           .take(
-              30) // keep context compact — recent 10 detailed + 20 summarized by category
+              100) // keep context compact — recent 10 detailed + older summarized by category
           .map((e) => {
                 'item_name': e.itemName,
                 'category': e.category,
@@ -536,6 +536,16 @@ class _AIScreenState extends State<AIScreen> {
                 'shop_name': e.shopName ?? '',
                 'notes': e.notes ?? '',
                 'is_want': e.isWant == true ? 1 : 0,
+              })
+          .toList(),
+      monthExpenses: monthExpenses
+          .take(100)
+          .map((e) => {
+                'item_name': e.itemName,
+                'category': e.category,
+                'amount': e.amount,
+                'date': e.date,
+                'payment_method': e.paymentMethod ?? 'Cash',
               })
           .toList(),
       budgets: budgets
@@ -1174,8 +1184,11 @@ class _AIScreenState extends State<AIScreen> {
               if (walletName != null) {
                 final wallet = await DBService.findWalletByName(walletName);
                 if (wallet != null && (wallet['balance'] as num) > 0) {
+                  // Only show deduct dialog for amounts worth confirming (> ₱10)
+                  // Skip silently for micro-amounts that are almost certainly correct small purchases
+                  final shouldConfirm = confirmDeduct && amount > 10.0;
                   // Optional confirm-before-deduct dialog
-                  if (confirmDeduct && mounted) {
+                  if (shouldConfirm && mounted) {
                     final bal = (wallet['balance'] as num).toDouble();
                     final proceed = await showDialog<bool>(
                       context: context,
