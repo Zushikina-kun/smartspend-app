@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -355,6 +356,15 @@ class _SmartCameraScreenState extends State<SmartCameraScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Smart Camera')),
+        body: const Center(
+          child:
+              Text('📱 Camera scanning is available in the mobile app only.'),
+        ),
+      );
+    }
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(

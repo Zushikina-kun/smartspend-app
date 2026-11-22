@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/expense.dart';
@@ -27,6 +29,9 @@ class DBService {
         _columnsEnsured = true;
       }
       return _db!;
+    }
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
     }
     _db = await openDatabase(
       join(await getDatabasesPath(), 'smartspend.db'),

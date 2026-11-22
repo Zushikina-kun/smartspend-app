@@ -1,4 +1,5 @@
-﻿import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+﻿import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -13,6 +14,10 @@ class NotificationService {
 
   static Future<void> init() async {
     if (_initialized) return;
+    if (kIsWeb) {
+      _initialized = true;
+      return;
+    }
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
     const settings = InitializationSettings(android: android);
     await _plugin.initialize(
@@ -49,6 +54,7 @@ class NotificationService {
   /// Show a weekly spending summary notification
   static Future<void> showWeeklySummary() async {
     await init();
+    if (kIsWeb) return;
 
     final now = DateTime.now();
     // Use a rolling 7-day window ending yesterday so the summary covers a
@@ -102,6 +108,7 @@ class NotificationService {
   /// Check if weekly notification should be shown (every Sunday)
   static Future<void> checkAndNotify() async {
     await init();
+    if (kIsWeb) return;
     final now = DateTime.now();
     if (now.weekday != DateTime.sunday) return;
 
@@ -119,6 +126,7 @@ class NotificationService {
   /// "Your week in review: Savings Rate 38%, 2 days over budget, logged 5/7 days."
   static Future<void> checkWeeklyBehavioralSummary() async {
     await init();
+    if (kIsWeb) return;
     try {
       final now = DateTime.now();
       // Rolling 7-day window (past 7 complete days, not the current calendar week)
@@ -191,6 +199,7 @@ class NotificationService {
   /// Runs locally, no AI call needed. Only fires once per week.
   static Future<void> checkAnomalyDetection() async {
     await init();
+    if (kIsWeb) return;
     try {
       final now = DateTime.now();
       // Only run on Sunday (same day as weekly summary)
@@ -264,6 +273,7 @@ class NotificationService {
   static Future<void> showBudgetAlert(
       String category, double spent, double budget) async {
     await init();
+    if (kIsWeb) return;
     const android = AndroidNotificationDetails(
       'budget_alerts',
       'Budget Alerts',
@@ -311,6 +321,7 @@ class NotificationService {
   /// Show daily spending limit alert
   static Future<void> showDailyLimitAlert(double spent, double limit) async {
     await init();
+    if (kIsWeb) return;
     const android = AndroidNotificationDetails(
       'daily_limit',
       'Daily Limit',
@@ -343,6 +354,7 @@ class NotificationService {
     if (ratio < 0.8) return; // below warning threshold — nothing to do
 
     await init();
+    if (kIsWeb) return;
     final isOver = ratio >= 1.0;
     final periodLabel = {
           'daily': 'daily',
@@ -389,6 +401,7 @@ class NotificationService {
   }) async {
     if (decayDays <= 0) return;
     await init();
+    if (kIsWeb) return;
 
     String title;
     String body;
@@ -441,6 +454,7 @@ class NotificationService {
   /// Check for overdue or due-today recurring transactions and notify
   static Future<List<Map<String, dynamic>>> checkRecurringDue() async {
     await init();
+    if (kIsWeb) return [];
     final recurring = await DBService.getRecurring();
     final due = <Map<String, dynamic>>[];
 
@@ -492,6 +506,7 @@ class NotificationService {
   /// Check for upcoming or overdue debts and notify
   static Future<void> checkDebtsDue() async {
     await init();
+    if (kIsWeb) return;
     final debts = await DBService.getDebts();
 
     for (final d in debts) {
@@ -569,6 +584,7 @@ class NotificationService {
   /// Check savings goals approaching deadline
   static Future<void> checkGoalDeadlines() async {
     await init();
+    if (kIsWeb) return;
     final goals = await DBService.getGoals();
 
     for (final g in goals) {
@@ -624,6 +640,7 @@ class NotificationService {
   /// Runs once per month on app open.
   static Future<void> checkCategoryVelocity() async {
     await init();
+    if (kIsWeb) return;
     try {
       final now = DateTime.now();
       final monthKey = DateFormat('yyyy-MM').format(now);
@@ -690,6 +707,7 @@ class NotificationService {
   /// Only runs once per month.
   static Future<void> checkWantSpendingAlert() async {
     await init();
+    if (kIsWeb) return;
     try {
       final now = DateTime.now();
       final monthKey = DateFormat('yyyy-MM').format(now);
@@ -732,6 +750,7 @@ class NotificationService {
   /// Fires when FHS crosses 60, 70, 80, or 90 for the first time.
   static Future<void> checkLevelUp(int newScore) async {
     await init();
+    if (kIsWeb) return;
     final thresholds = [60, 70, 80, 90];
     for (final t in thresholds) {
       final key = 'level_up_$t';
@@ -762,6 +781,7 @@ class NotificationService {
   /// Call this on app open; only fires once per day between 6AM-10AM
   static Future<void> checkDailyBriefing() async {
     await init();
+    if (kIsWeb) return;
     final now = DateTime.now();
     // Only show between 6AM and 10AM
     if (now.hour < 6 || now.hour >= 10) return;
@@ -832,6 +852,7 @@ class NotificationService {
     DateTime dueDate,
   ) async {
     await init();
+    if (kIsWeb) return;
 
     final location = tz.local;
     final now = tz.TZDateTime.now(location);
@@ -944,6 +965,7 @@ class NotificationService {
   /// 'bill_reminder_last_check' — runs at most once per calendar day.
   static Future<void> checkAndScheduleBillReminders() async {
     await init();
+    if (kIsWeb) return;
 
     final prefs = await SharedPreferences.getInstance();
     final todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -1069,6 +1091,7 @@ class NotificationService {
   /// Cancel all scheduled reminders for a specific bill
   static Future<void> cancelBillReminders(int billId) async {
     await init();
+    if (kIsWeb) return;
     await _plugin.cancel(billId * 10 + 0);
     await _plugin.cancel(billId * 10 + 1);
     await _plugin.cancel(billId * 10 + 2);

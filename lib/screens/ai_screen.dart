@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -101,17 +102,19 @@ class _AIScreenState extends State<AIScreen> {
     });
     // Shake to undo — firm shake threshold, shows confirmation sheet
     // Wrapped in try/catch — some devices don't support setAccelerationSamplingPeriod
-    try {
-      _shakeDetector = ShakeDetector.autoStart(
-        shakeThresholdGravity: 2.7,
-        onPhoneShake: () {
-          if (UndoService.canUndo && mounted) {
-            _showUndoSheet();
-          }
-        },
-      );
-    } catch (_) {
-      // Shake not supported on this device — feature silently disabled
+    if (!kIsWeb) {
+      try {
+        _shakeDetector = ShakeDetector.autoStart(
+          shakeThresholdGravity: 2.7,
+          onPhoneShake: () {
+            if (UndoService.canUndo && mounted) {
+              _showUndoSheet();
+            }
+          },
+        );
+      } catch (_) {
+        // Shake not supported on this device — feature silently disabled
+      }
     }
   }
 

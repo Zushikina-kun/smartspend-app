@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,6 +57,7 @@ class AppLockService {
   // ── LOCK STATE ────────────────────────────────────────────
 
   static Future<bool> isEnabled() async {
+    if (kIsWeb) return false;
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_enabledKey()) ?? false;
   }
@@ -71,6 +73,7 @@ class AppLockService {
   /// Uses isDeviceSupported() as primary check — more reliable on
   /// Xiaomi/POCO devices with custom biometric stacks (HyperOS, MIUI).
   static Future<bool> isBiometricAvailable() async {
+    if (kIsWeb) return false;
     try {
       // isDeviceSupported covers fingerprint, face, iris, and device PIN
       final isSupported = await _localAuth.isDeviceSupported();

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -40,11 +41,17 @@ void main() async {
   // Play Integrity only works for apps installed via Play Store with valid signing
   // For sideloaded APKs (QA testing), use debug provider
   try {
-    await FirebaseAppCheck.instance.activate(
-      // Use debug provider for all non-Play-Store builds
-      // Switch to playIntegrity only when publishing to Play Store
-      androidProvider: AndroidProvider.debug,
-    );
+    if (kIsWeb) {
+      await FirebaseAppCheck.instance.activate(
+        webProvider: ReCaptchaV3Provider('placeholder-site-key'),
+      );
+    } else {
+      await FirebaseAppCheck.instance.activate(
+        // Use debug provider for all non-Play-Store builds
+        // Switch to playIntegrity only when publishing to Play Store
+        androidProvider: AndroidProvider.debug,
+      );
+    }
   } catch (_) {
     // App Check activation failed — auth still works without it
   }

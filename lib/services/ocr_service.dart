@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image/image.dart' as img;
@@ -33,6 +34,7 @@ class OCRService {
   /// Scan a receipt image and return cleaned, structured text for AI parsing.
   /// Handles image rotation, noise removal, and receipt-specific formatting.
   static Future<String> scanReceipt(String path) async {
+    if (kIsWeb) return '';
     return _scan(path, cleanForReceipt: true);
   }
 
@@ -40,6 +42,7 @@ class OCRService {
   /// Use this for transaction history tables, bank statements, etc.
   /// Does NOT apply receipt-specific filtering that would destroy table structure.
   static Future<String> scanDocument(String path) async {
+    if (kIsWeb) return '';
     return _scan(path, cleanForReceipt: false);
   }
 
