@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
@@ -301,56 +301,215 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ── Header ──────────────────────────────────────────────────────
           Row(
             children: [
               Icon(Icons.science_outlined, color: cs.primary),
               const SizedBox(width: 8),
               const Text(
-                '🔬 Research Findings',
+                'Research Findings',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text(
-            'We researched 20 Philippine government services for future integration:',
-            style: TextStyle(fontSize: 13),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: [
-              'LTO Vehicle Registration',
-              'Driver\'s License Renewal',
-              'BIR Tax Filing',
-              'NBI Clearance',
-              'Passport Renewal',
-              'PhilSys National ID',
-              'eGov PH Integration',
-              'CTPL Insurance',
-            ]
-                .map((s) => Chip(
-                      label: Text(s, style: const TextStyle(fontSize: 11)),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      visualDensity: VisualDensity.compact,
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
-            '💡 Post-defense updates will add reminders, OCR receipt parsing, and tracking for these services.',
+            'SmartSpend Capstone Study — SY 2025–2026',
             style: TextStyle(
-              fontSize: 12,
-              fontStyle: FontStyle.italic,
-              color: cs.onSurface.withOpacity(0.6),
+                fontSize: 12,
+                color: cs.onSurface.withOpacity(0.55),
+                fontStyle: FontStyle.italic),
+          ),
+          const SizedBox(height: 16),
+
+          // ── SUS Score ───────────────────────────────────────────────────
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: cs.primary.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: cs.primary.withOpacity(0.25)),
             ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'System Usability Scale (SUS)',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: cs.onSurface),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Bangor et al. (2009): OK / Marginal High',
+                        style: TextStyle(
+                            fontSize: 11, color: cs.onSurface.withOpacity(0.6)),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'N = 5 respondents (preliminary); target N = 30',
+                        style: TextStyle(
+                            fontSize: 11, color: cs.onSurface.withOpacity(0.6)),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  children: [
+                    Text(
+                      '61.83',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: cs.primary,
+                      ),
+                    ),
+                    Text(
+                      '/ 100',
+                      style: TextStyle(
+                          fontSize: 13, color: cs.onSurface.withOpacity(0.5)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // ── Methodology ─────────────────────────────────────────────────
+          _researchSection(
+            cs,
+            icon: Icons.people_alt_outlined,
+            title: 'Methodology',
+            body:
+                'Mixed-methods design. Participants completed tasks using SmartSpend v3.1.1 '
+                'on Android devices, then filled out the 10-item SUS questionnaire. '
+                'Two respondent groups: parents (n = 20 target) and young professionals '
+                '(n = 10 target). Preliminary data from N = 5 respondents.',
+          ),
+          const SizedBox(height: 10),
+
+          // ── Key Findings ─────────────────────────────────────────────────
+          _researchSection(
+            cs,
+            icon: Icons.bar_chart_outlined,
+            title: 'Key Findings',
+            body: null,
+            children: [
+              _findingItem(cs, '📱',
+                  'Perceived usefulness was high — respondents rated receipt scanning and AI-assisted categorization as the most valuable features.'),
+              _findingItem(cs, '📊',
+                  'SUS score of 61.83 places the system in the "OK" band, indicating the interface is functional but has room for improvement in learnability.'),
+              _findingItem(cs, '💡',
+                  'Young professionals scored usability higher than the parent group, suggesting onboarding for less tech-familiar users needs strengthening.'),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // ── Implemented Recommendations ──────────────────────────────────
+          _researchSection(
+            cs,
+            icon: Icons.check_circle_outline,
+            title: 'Implemented Recommendations',
+            body: null,
+            children: [
+              _recItem(cs, 'Simplified onboarding with contextual tooltips'),
+              _recItem(cs, 'Real-time DOE fuel price data feed'),
+              _recItem(cs, 'PSA retail commodity price feed'),
+              _recItem(cs, 'Government contribution tracker (SSS, PhilHealth, Pag-IBIG)'),
+              _recItem(cs, 'AI financial advisor with PESO model guidance'),
+              _recItem(cs, 'Price Intelligence for personal receipt-based tracking'),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+          Text(
+            'Full manuscript: Lorma Colleges, College of Computer Studies, 2026.',
+            style: TextStyle(
+                fontSize: 11,
+                fontStyle: FontStyle.italic,
+                color: cs.onSurface.withOpacity(0.45)),
           ),
         ],
       ),
     );
   }
 
+  Widget _researchSection(
+    ColorScheme cs, {
+    required IconData icon,
+    required String title,
+    String? body,
+    List<Widget>? children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Icon(icon, size: 16, color: cs.primary),
+          const SizedBox(width: 6),
+          Text(title,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+        ]),
+        const SizedBox(height: 6),
+        if (body != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 22),
+            child: Text(body,
+                style: TextStyle(
+                    fontSize: 12,
+                    color: cs.onSurface.withOpacity(0.75),
+                    height: 1.4)),
+          ),
+        if (children != null) ...children,
+      ],
+    );
+  }
+
+  Widget _findingItem(ColorScheme cs, String emoji, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 22, top: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 14)),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: 12,
+                    color: cs.onSurface.withOpacity(0.75),
+                    height: 1.4)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _recItem(ColorScheme cs, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 22, top: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.check, size: 14, color: cs.primary),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(text,
+                style: TextStyle(
+                    fontSize: 12,
+                    color: cs.onSurface.withOpacity(0.75),
+                    height: 1.4)),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildYTDTrackerTab(ColorScheme cs) {
     return RefreshIndicator(
       onRefresh: _loadData,
