@@ -3121,7 +3121,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         );
                       }),
 
-                      // Score history placeholder — shown when too few data points
+                      // Score history empty state — shown when too few data points
                       // (score only saved on days the app is opened)
                       if (_scoreHistory.length < 2) ...[
                         Builder(builder: (ctx) {
