@@ -355,7 +355,7 @@ class AppConfig {
       'GPT-OSS 120B (Cerebras)',
       '🔄 Fallback — 1M tokens/day, ~3,000 t/s throughput',
       false,
-      true, // ~3,000 t/s throughput
+      false, // last-resort throughput; excluded from fast pool (5 RPM free tier)
     ),
   ];
 

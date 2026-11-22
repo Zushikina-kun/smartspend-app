@@ -175,7 +175,7 @@ Qwen3.8 (Groq) → Compound → Compound Mini → GPT-OSS 120B (Cerebras)
 #### Tier 5: Last Resort (Fallback)
 | ID | Model | Fast | Notes |
 |----|-------|------|-------|
-| `cerebras_120b` | GPT-OSS 120B (Cerebras) | ⚡ | 🔄 1M tokens/day, ~3,000 t/s |
+| `cerebras_120b` | GPT-OSS 120B (Cerebras) | — | 🔄 1M tokens/day, ~3,000 t/s |
 
 **Vision** (✅): model accepts image input — preferred by OCR receipt parsing.  
 **Fast** (⚡): low-latency model — preferred by voice command processing.
