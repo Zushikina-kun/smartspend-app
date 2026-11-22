@@ -24,6 +24,7 @@ import '../widgets/expense_tile.dart';
 import '../widgets/feature_tour.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
+import '../l10n/app_localizations.dart';
 import 'edit_expense_screen.dart';
 import 'analytics_screen.dart';
 import 'forecast_screen.dart';
@@ -1264,16 +1265,20 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _navItem(Icons.home, "Home", 0, onTap: () {
+                  _navItem(Icons.home, AppLocalizations.of(context)!.navHome, 0,
+                      onTap: () {
                     setState(() => _index = 0);
                     _checkTour();
                   }),
-                  _navItem(Icons.bar_chart, "Analytics", 1),
-                  _navItem(Icons.smart_toy, "Peso",
+                  _navItem(Icons.bar_chart,
+                      AppLocalizations.of(context)!.navAnalytics, 1),
+                  _navItem(Icons.smart_toy, AppLocalizations.of(context)!.navAI,
                       2), // icon ignored — AI tab uses PesoMascot directly
-                  _navItem(Icons.grid_view_rounded, "Tools", -1,
+                  _navItem(Icons.grid_view_rounded,
+                      AppLocalizations.of(context)!.navTools, -1,
                       onTap: () => _showQuickAccessHub(context)),
-                  _navItem(Icons.person, "Profile", 3),
+                  _navItem(Icons.person,
+                      AppLocalizations.of(context)!.navProfile, 3),
                 ],
               ),
             ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/db_service.dart';
 import '../services/llm_service.dart';
@@ -1002,7 +1003,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Expense"),
+        title: Text(AppLocalizations.of(context)!.addExpense),
         actions: const [
           InfoButton(
             title: "Add Expense",
@@ -1225,7 +1226,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 });
               },
               decoration: InputDecoration(
-                labelText: "Item Name",
+                labelText: AppLocalizations.of(context)!.itemName,
                 prefixIcon: const Icon(Icons.label_outline),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -1389,7 +1390,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                labelText: "Amount (₱)",
+                labelText: AppLocalizations.of(context)!.amount + " (₱)",
                 prefixIcon: const Icon(Icons.attach_money),
                 hintText: "e.g. 85 or 3x85",
                 hintStyle: const TextStyle(fontSize: 12),
@@ -1410,7 +1411,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   ? _selectedCategory
                   : _categories.first,
               decoration: InputDecoration(
-                labelText: "Category",
+                labelText: AppLocalizations.of(context)!.category,
                 prefixIcon: const Icon(Icons.category),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -1558,7 +1559,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             DropdownButtonFormField<String>(
               initialValue: _selectedPayment,
               decoration: InputDecoration(
-                labelText: "Payment Method",
+                labelText: AppLocalizations.of(context)!.paymentMethod,
                 prefixIcon: const Icon(Icons.payment),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
