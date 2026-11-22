@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
+import '../l10n/app_localizations.dart';
 import '../services/analytics_service.dart';
 import '../services/sms_parser_service.dart';
 import '../services/db_service.dart';
@@ -11,7 +12,7 @@ import '../services/app_lock_service.dart';
 import '../services/event_bus.dart';
 import '../services/theme_service.dart';
 import '../services/update_service.dart';
-import '../main.dart';
+import '../main.dart' show themeService, localeNotifier;
 import '../widgets/local_ai_setup_sheet.dart';
 import '../widgets/peso_mascot.dart';
 import 'home_screen.dart' show SpendingLimitsSheet;
@@ -35,6 +36,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // ── Update checker ───────────────────────────────────────────────────────
   bool _updateChecking = false;
   UpdateInfo? _updateInfo;
+  // ── Language ─────────────────────────────────────────────────────────────
+  String _appLanguage = 'en'; // 'en' or 'tl'
   // ── Behavior ────────────────────────────────────────────────────────────────
   bool autoDeduct = true;
   bool walletConfirmDeduct = false; // opt-in: ask before deducting each expense
@@ -163,6 +166,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _localUrlCtrl.text = AppConfig.customLocalUrl;
     _localModelCtrl.text = AppConfig.customLocalModel;
     _localKeyCtrl.text = AppConfig.customLocalKey;
+    // Load language setting
+    _appLanguage = (await DBService.getSetting('app_language')) ?? 'en';
     // Populate update info from cache (no network call on settings open)
     _updateInfo = UpdateService.cached;
     if (mounted) setState(() => _loading = false);
@@ -544,7 +549,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('App Settings'),
+        title: Text(AppLocalizations.of(context)!.appSettings),
         elevation: 0,
       ),
       body: _loading
@@ -553,14 +558,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.fromLTRB(18, 12, 18, 40),
               children: [
                 // ── EXPERIENCE PRESETS ──────────────────────────────────
-                _sectionLabel('QUICK PRESETS'),
+                _sectionLabel(
+                    AppLocalizations.of(context)!.sectionQuickPresets),
                 _ExperiencePresetSelector(
                   activePreset: _activePreset,
                   onSelect: _applyPreset,
                 ),
 
                 // ── BEHAVIOR ────────────────────────────────────────────────
-                _sectionLabel('BEHAVIOR'),
+                _sectionLabel(AppLocalizations.of(context)!.sectionBehavior),
                 _sectionCard([
                   _tile(
                     icon: Icons.account_balance_wallet_outlined,
@@ -647,7 +653,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── DISPLAY ─────────────────────────────────────────────────
-                _sectionLabel('DISPLAY'),
+                _sectionLabel(AppLocalizations.of(context)!.sectionDisplay),
                 _sectionCard([
                   _tile(
                     icon: Icons.account_balance_wallet,
@@ -674,7 +680,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── APPEARANCE ───────────────────────────────────────────────
-                _sectionLabel('APPEARANCE'),
+                _sectionLabel(AppLocalizations.of(context)!.sectionAppearance),
                 _sectionCard([
                   _tile(
                     icon: Icons.dark_mode_outlined,
@@ -806,7 +812,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── SECURITY ─────────────────────────────────────────────────
-                _sectionLabel('SECURITY'),
+                _sectionLabel(AppLocalizations.of(context)!.sectionSecurity),
                 _sectionCard([
                   FutureBuilder<bool>(
                     future: AppLockService.isEnabled(),
@@ -893,7 +899,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── TRACKING MODE ────────────────────────────────────────────
-                _sectionLabel('TRACKING MODE'),
+                _sectionLabel(
+                    AppLocalizations.of(context)!.sectionTrackingMode),
                 _sectionHint(
                     'Controls how your Financial Health Score is calculated.'),
                 _sectionCard([
@@ -925,7 +932,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── NOTIFICATIONS ────────────────────────────────────────────
-                _sectionLabel('NOTIFICATIONS'),
+                _sectionLabel(
+                    AppLocalizations.of(context)!.sectionNotifications),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Container(
@@ -1498,7 +1506,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── UPDATE CHECKER ───────────────────────────────────────
-                _sectionLabel('APP INFO'),
+                _sectionLabel(AppLocalizations.of(context)!.sectionAppInfo),
                 _sectionCard([
                   InkWell(
                     onTap: () async {
@@ -1582,7 +1590,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── EXPORT DATA ──────────────────────────────────────────────
-                _sectionLabel('EXPORT DATA'),
+                _sectionLabel(AppLocalizations.of(context)!.sectionExportData),
                 _sectionCard([
                   ListTile(
                     leading: const Icon(Icons.table_rows_outlined, size: 20),
@@ -1633,7 +1641,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
 
                 // ── BACKUP & RESTORE ─────────────────────────────────────────
-                _sectionLabel('BACKUP & RESTORE'),
+                _sectionLabel(
+                    AppLocalizations.of(context)!.sectionBackupRestore),
                 _sectionCard([
                   ListTile(
                     leading: const Icon(Icons.backup_outlined, size: 20),
@@ -1672,8 +1681,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ]),
 
+                // ── LANGUAGE ─────────────────────────────────────────────
+                _sectionLabel('LANGUAGE / WIKA'),
+                _sectionCard([
+                  RadioListTile<String>(
+                    dense: true,
+                    title:
+                        const Text('English', style: TextStyle(fontSize: 14)),
+                    value: 'en',
+                    groupValue: _appLanguage,
+                    onChanged: (v) async {
+                      if (v == null) return;
+                      await DBService.setSetting('app_language', v);
+                      localeNotifier.value = const Locale('en');
+                      if (mounted) setState(() => _appLanguage = v);
+                    },
+                  ),
+                  RadioListTile<String>(
+                    dense: true,
+                    title: const Text('Filipino (Tagalog)',
+                        style: TextStyle(fontSize: 14)),
+                    value: 'tl',
+                    groupValue: _appLanguage,
+                    onChanged: (v) async {
+                      if (v == null) return;
+                      await DBService.setSetting('app_language', v);
+                      localeNotifier.value = const Locale('tl');
+                      if (mounted) setState(() => _appLanguage = v);
+                    },
+                  ),
+                ]),
+
                 // ── FEEDBACK ─────────────────────────────────────────────────
-                _sectionLabel('FEEDBACK'),
+                _sectionLabel(AppLocalizations.of(context)!.sectionFeedback),
                 _sectionCard([
                   ListTile(
                     leading: SizedBox(
