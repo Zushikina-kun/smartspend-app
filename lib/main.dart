@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'screens/splash_screen.dart';
 import 'services/theme_service.dart';
 import 'services/currency_service.dart';
@@ -17,6 +19,9 @@ import 'services/doe_service.dart';
 import 'services/psa_service.dart';
 
 final themeService = ThemeService();
+
+/// Global locale notifier — settings screen writes to this to change language.
+final localeNotifier = ValueNotifier<Locale>(const Locale('en'));
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +63,10 @@ void main() async {
 
   // Initialize Pro entitlement (v3.x: always Pro; v4.0: RevenueCat check)
   await ProService.init();
+
+  // Restore saved locale before the app renders
+  final savedLang = await DBService.getSetting('app_language');
+  if (savedLang == 'tl') localeNotifier.value = const Locale('tl');
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
@@ -105,6 +114,7 @@ class _SmartSpendAppState extends State<SmartSpendApp> {
   void initState() {
     super.initState();
     themeService.addListener(() => setState(() {}));
+    localeNotifier.addListener(() => setState(() {}));
   }
 
   @override
@@ -117,6 +127,9 @@ class _SmartSpendAppState extends State<SmartSpendApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Smart Spend',
+      locale: localeNotifier.value,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       themeMode: themeService.themeMode,
       theme: themeService.lightTheme,
       darkTheme: themeService.darkTheme,
