@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import '../services/app_config.dart';
 import '../services/llm_service.dart';
+import '../services/ocr_service.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/event_bus.dart';
@@ -91,12 +93,20 @@ class _BankImportScreenState extends State<BankImportScreen> {
     });
 
     try {
+      // Use the preferred vision model for OCR→LLM parsing, then restore.
+      final savedModel = AppConfig.activeModelId;
+      final ocrModel = OCRService.preferredModelForOcr();
+      if (ocrModel != savedModel) AppConfig.setModel(ocrModel);
       List<Map<String, dynamic>> transactions;
-      if (_selectedSource == 'Receipt') {
-        // Use receipt-specific parser for OCR'd receipts
-        transactions = await LLMService.parseReceipt(text);
-      } else {
-        transactions = await LLMService.parseTransactionHistory(text);
+      try {
+        if (_selectedSource == 'Receipt') {
+          // Use receipt-specific parser for OCR'd receipts
+          transactions = await LLMService.parseReceipt(text);
+        } else {
+          transactions = await LLMService.parseTransactionHistory(text);
+        }
+      } finally {
+        if (ocrModel != savedModel) AppConfig.setModel(savedModel);
       }
       if (transactions.isEmpty) {
         setState(() {

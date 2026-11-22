@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../services/ocr_service.dart';
+import '../services/app_config.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/llm_service.dart';
 import '../services/db_service.dart';
@@ -172,8 +173,16 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
       // Parse each image individually so we can map results back
       final futures = batch.map((entry) async {
         try {
-          final rows =
-              await LLMService.parseScreenshot(entry.ocrText, entry.type);
+          // Use the preferred vision model for OCR→LLM parsing, then restore.
+          final savedModel = AppConfig.activeModelId;
+          final ocrModel = OCRService.preferredModelForOcr();
+          if (ocrModel != savedModel) AppConfig.setModel(ocrModel);
+          late final List<Map<String, dynamic>> rows;
+          try {
+            rows = await LLMService.parseScreenshot(entry.ocrText, entry.type);
+          } finally {
+            if (ocrModel != savedModel) AppConfig.setModel(savedModel);
+          }
           entry.rows = rows
               .map((r) => _BatchRow(
                     description: r['description'] as String? ?? 'Purchase',
