@@ -1710,6 +1710,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       if (mounted) setState(() => _appLanguage = v);
                     },
                   ),
+                  RadioListTile<String>(
+                    dense: true,
+                    title: const Text('Cebuano (Bisaya)',
+                        style: TextStyle(fontSize: 14)),
+                    value: 'ceb',
+                    groupValue: _appLanguage,
+                    onChanged: (v) async {
+                      if (v == null) return;
+                      await DBService.setSetting('app_language', v);
+                      localeNotifier.value = const Locale('ceb');
+                      if (mounted) setState(() => _appLanguage = v);
+                    },
+                  ),
                 ]),
 
                 // ── FEEDBACK ─────────────────────────────────────────────────

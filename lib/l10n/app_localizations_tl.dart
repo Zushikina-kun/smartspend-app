@@ -377,4 +377,220 @@ class AppLocalizationsTl extends AppLocalizations {
 
   @override
   String get financialAdviceNotice => 'Paunawa sa Pinansyal na Payo';
+
+  @override
+  String get languageCebuano => 'Cebuano (Bisaya)';
+
+  @override
+  String get analyticsScreenTitle => 'Analytics';
+
+  @override
+  String get budgetsScreenTitle => 'Mga Budget';
+
+  @override
+  String get savingsGoalsScreenTitle => 'Layunin sa Ipon';
+
+  @override
+  String get recurringScreenTitle => 'Mga Paulit-ulit na Transaksyon';
+
+  @override
+  String get debtScreenTitle => 'Mga Utang';
+
+  @override
+  String get incomeScreenTitle => 'Kita';
+
+  @override
+  String get profileScreenTitle => 'Profile';
+
+  @override
+  String get transactionsScreenTitle => 'Mga Transaksyon';
+
+  @override
+  String get addBudget => 'Magdagdag ng Budget';
+
+  @override
+  String get newGoal => 'Bagong Layunin';
+
+  @override
+  String get addRecurring => 'Magdagdag ng Recurring';
+
+  @override
+  String get addDebt => 'Magdagdag ng Utang';
+
+  @override
+  String get addIncome => 'Magdagdag ng Kita';
+
+  @override
+  String get noExpensesYet => 'Wala pang mga gastos';
+
+  @override
+  String get noBudgetsYet => 'Wala pang mga budget na itinakda';
+
+  @override
+  String get noGoalsYet => 'Wala pang mga layunin sa ipon';
+
+  @override
+  String get noRecurringYet => 'Wala pang mga paulit-ulit na transaksyon';
+
+  @override
+  String get noDebtsYet => 'Wala pang mga utang';
+
+  @override
+  String get noIncomeYet => 'Wala pang mga rekord ng kita';
+
+  @override
+  String get deleteExpense => 'Burahin ang Gastos';
+
+  @override
+  String get deleteGoal => 'Burahin ang Layunin';
+
+  @override
+  String get deleteDebt => 'Burahin ang Utang';
+
+  @override
+  String get deleteIncome => 'Burahin ang Kita';
+
+  @override
+  String get deleteRecurring => 'Burahin ang Recurring';
+
+  @override
+  String get recordPayment => 'I-record ang Bayad';
+
+  @override
+  String get logAllDue => 'I-log ang Lahat ng Due';
+
+  @override
+  String get logNow => 'I-log Ngayon';
+
+  @override
+  String get createGoal => 'Gumawa ng Layunin';
+
+  @override
+  String get saveChanges => 'I-save ang mga Pagbabago';
+
+  @override
+  String get emergencyFund => 'Emergency Fund';
+
+  @override
+  String get overBudgetWarning => 'Babala sa Over Budget';
+
+  @override
+  String get confirmAndLog => 'Kumpirmahin at I-log';
+
+  @override
+  String get refresh => 'I-refresh';
+
+  @override
+  String get getAiAdvice => 'Kumuha ng AI Financial Advice';
+
+  @override
+  String get thisMonth => 'Ngayong Buwan';
+
+  @override
+  String get allTime => 'Lahat ng Panahon';
+
+  @override
+  String get entries => 'Mga Entry';
+
+  @override
+  String get total => 'Kabuuan';
+
+  @override
+  String get income => 'Kita';
+
+  @override
+  String get balance => 'Balanse';
+
+  @override
+  String get spent => 'Nagastos';
+
+  @override
+  String get budgeted => 'Na-budget';
+
+  @override
+  String get add => 'Magdagdag';
+
+  @override
+  String get pay => 'Bayaran';
+
+  @override
+  String get resetAllData => 'I-reset ang Lahat ng Data';
+
+  @override
+  String get about => 'Tungkol sa App';
+
+  @override
+  String get achievements => 'Mga Nagawa';
+
+  @override
+  String get help => 'Tulong';
+
+  @override
+  String get transactions => 'Mga Transaksyon';
+
+  @override
+  String get chatHistoryScreenTitle => 'Kasaysayan ng Chat';
+
+  @override
+  String get feedbackScreenTitle => 'Magpadala ng Feedback';
+
+  @override
+  String get forecastScreenTitle => 'Cash Flow Forecast';
+
+  @override
+  String get govContributionsScreenTitle => 'Mga Kontribusyon sa Gobyerno';
+
+  @override
+  String get heatmapScreenTitle => 'Heatmap ng Paggastos';
+
+  @override
+  String get insightsScreenTitle => 'Mga Insight sa Paggastos';
+
+  @override
+  String get investmentScreenTitle => 'Investment Portfolio';
+
+  @override
+  String get netWorthScreenTitle => 'Net Worth';
+
+  @override
+  String get taxScreenTitle => 'BIR Tax Calculator';
+
+  @override
+  String get challengesScreenTitle => 'Mga Hamon at Streaks';
+
+  @override
+  String get debtCalculatorScreenTitle => 'Debt Payoff Calculator';
+
+  @override
+  String get priceIntelligenceScreenTitle => 'Price Intelligence';
+
+  @override
+  String get insuranceScreenTitle => 'Insurance at Mga Kontribusyon';
+
+  @override
+  String get palawaganScreenTitle => 'Paluwagan Tracker';
+
+  @override
+  String get pcaCalculatorScreenTitle => 'Peso Cost Averaging';
+
+  @override
+  String get merchantMergeScreenTitle => 'Paglilinis ng Merchant';
+
+  @override
+  String get bankComparisonScreenTitle => 'Mga Bangko at Investments sa PH';
+
+  @override
+  String get currencyScreenTitle => 'Currency at Rehiyon';
+
+  @override
+  String get glossaryScreenTitle => 'Talasalitaan sa Pananalapi';
+
+  @override
+  String get logDueBillsScreenTitle => 'I-log ang Mga Due na Bayad';
+
+  @override
+  String get manageCategoriesScreenTitle => 'Pamahalaan ang Mga Kategorya';
+
+  @override
+  String get manageRulesScreenTitle => 'Pamahalaan ang Mga Panuntunan';
 }

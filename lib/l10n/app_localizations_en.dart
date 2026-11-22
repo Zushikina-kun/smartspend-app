@@ -371,4 +371,220 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get financialAdviceNotice => 'Financial Advice Notice';
+
+  @override
+  String get languageCebuano => 'Cebuano (Bisaya)';
+
+  @override
+  String get analyticsScreenTitle => 'Analytics';
+
+  @override
+  String get budgetsScreenTitle => 'Budgets';
+
+  @override
+  String get savingsGoalsScreenTitle => 'Savings Goals';
+
+  @override
+  String get recurringScreenTitle => 'Recurring Transactions';
+
+  @override
+  String get debtScreenTitle => 'Debts';
+
+  @override
+  String get incomeScreenTitle => 'Income';
+
+  @override
+  String get profileScreenTitle => 'Profile';
+
+  @override
+  String get transactionsScreenTitle => 'Transactions';
+
+  @override
+  String get addBudget => 'Add Budget';
+
+  @override
+  String get newGoal => 'New Goal';
+
+  @override
+  String get addRecurring => 'Add Recurring';
+
+  @override
+  String get addDebt => 'Add Debt';
+
+  @override
+  String get addIncome => 'Add Income';
+
+  @override
+  String get noExpensesYet => 'No expenses yet';
+
+  @override
+  String get noBudgetsYet => 'No budgets set yet';
+
+  @override
+  String get noGoalsYet => 'No savings goals yet';
+
+  @override
+  String get noRecurringYet => 'No recurring transactions yet';
+
+  @override
+  String get noDebtsYet => 'No debts yet';
+
+  @override
+  String get noIncomeYet => 'No income records yet';
+
+  @override
+  String get deleteExpense => 'Delete Expense';
+
+  @override
+  String get deleteGoal => 'Delete Goal';
+
+  @override
+  String get deleteDebt => 'Delete Debt';
+
+  @override
+  String get deleteIncome => 'Delete Income';
+
+  @override
+  String get deleteRecurring => 'Delete Recurring';
+
+  @override
+  String get recordPayment => 'Record Payment';
+
+  @override
+  String get logAllDue => 'Log All Due';
+
+  @override
+  String get logNow => 'Log Now';
+
+  @override
+  String get createGoal => 'Create Goal';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get emergencyFund => 'Emergency Fund';
+
+  @override
+  String get overBudgetWarning => 'Over Budget Warning';
+
+  @override
+  String get confirmAndLog => 'Confirm & Log';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get getAiAdvice => 'Get AI Financial Advice';
+
+  @override
+  String get thisMonth => 'This Month';
+
+  @override
+  String get allTime => 'All Time';
+
+  @override
+  String get entries => 'Entries';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get income => 'Income';
+
+  @override
+  String get balance => 'Balance';
+
+  @override
+  String get spent => 'Spent';
+
+  @override
+  String get budgeted => 'Budgeted';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get pay => 'Pay';
+
+  @override
+  String get resetAllData => 'Reset All Data';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get achievements => 'Achievements';
+
+  @override
+  String get help => 'Help';
+
+  @override
+  String get transactions => 'Transactions';
+
+  @override
+  String get chatHistoryScreenTitle => 'Chat History';
+
+  @override
+  String get feedbackScreenTitle => 'Send Feedback';
+
+  @override
+  String get forecastScreenTitle => 'Cash Flow Forecast';
+
+  @override
+  String get govContributionsScreenTitle => 'Gov Contributions';
+
+  @override
+  String get heatmapScreenTitle => 'Spending Heatmap';
+
+  @override
+  String get insightsScreenTitle => 'Spending Insights';
+
+  @override
+  String get investmentScreenTitle => 'Investment Portfolio';
+
+  @override
+  String get netWorthScreenTitle => 'Net Worth';
+
+  @override
+  String get taxScreenTitle => 'BIR Tax Calculator';
+
+  @override
+  String get challengesScreenTitle => 'Challenges & Streaks';
+
+  @override
+  String get debtCalculatorScreenTitle => 'Debt Payoff Calculator';
+
+  @override
+  String get priceIntelligenceScreenTitle => 'Price Intelligence';
+
+  @override
+  String get insuranceScreenTitle => 'Insurance & Contributions';
+
+  @override
+  String get palawaganScreenTitle => 'Paluwagan Tracker';
+
+  @override
+  String get pcaCalculatorScreenTitle => 'Peso Cost Averaging';
+
+  @override
+  String get merchantMergeScreenTitle => 'Merchant Cleanup';
+
+  @override
+  String get bankComparisonScreenTitle => 'PH Banks & Investments';
+
+  @override
+  String get currencyScreenTitle => 'Currency & Region';
+
+  @override
+  String get glossaryScreenTitle => 'Financial Glossary';
+
+  @override
+  String get logDueBillsScreenTitle => 'Log Due Bills';
+
+  @override
+  String get manageCategoriesScreenTitle => 'Manage Categories';
+
+  @override
+  String get manageRulesScreenTitle => 'Manage Rules';
 }

@@ -74,6 +74,7 @@ void main() async {
   // Restore saved locale before the app renders
   final savedLang = await DBService.getSetting('app_language');
   if (savedLang == 'tl') localeNotifier.value = const Locale('tl');
+  if (savedLang == 'ceb') localeNotifier.value = const Locale('ceb');
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 

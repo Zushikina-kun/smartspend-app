@@ -350,5 +350,221 @@
   "@fullChat": {"description": "Full chat action in snackbar"},
 
   "financialAdviceNotice": "Financial Advice Notice",
-  "@financialAdviceNotice": {"description": "Financial advice disclaimer title"}
+  "@financialAdviceNotice": {"description": "Financial advice disclaimer title"},
+
+  "languageCebuano": "Cebuano (Bisaya)",
+  "@languageCebuano": {"description": "Cebuano language option"},
+
+  "analyticsScreenTitle": "Analytics",
+  "@analyticsScreenTitle": {"description": "Analytics screen AppBar title"},
+
+  "budgetsScreenTitle": "Budgets",
+  "@budgetsScreenTitle": {"description": "Budgets screen AppBar title"},
+
+  "savingsGoalsScreenTitle": "Savings Goals",
+  "@savingsGoalsScreenTitle": {"description": "Savings Goals screen AppBar title"},
+
+  "recurringScreenTitle": "Recurring Transactions",
+  "@recurringScreenTitle": {"description": "Recurring Transactions screen AppBar title"},
+
+  "debtScreenTitle": "Debts",
+  "@debtScreenTitle": {"description": "Debts screen AppBar title"},
+
+  "incomeScreenTitle": "Income",
+  "@incomeScreenTitle": {"description": "Income screen AppBar title"},
+
+  "profileScreenTitle": "Profile",
+  "@profileScreenTitle": {"description": "Profile screen AppBar title"},
+
+  "transactionsScreenTitle": "Transactions",
+  "@transactionsScreenTitle": {"description": "Transactions screen AppBar title"},
+
+  "addBudget": "Add Budget",
+  "@addBudget": {"description": "Add Budget button label"},
+
+  "newGoal": "New Goal",
+  "@newGoal": {"description": "New Goal FAB label"},
+
+  "addRecurring": "Add Recurring",
+  "@addRecurring": {"description": "Add Recurring FAB label"},
+
+  "addDebt": "Add Debt",
+  "@addDebt": {"description": "Add Debt FAB label"},
+
+  "addIncome": "Add Income",
+  "@addIncome": {"description": "Add Income FAB label"},
+
+  "noExpensesYet": "No expenses yet",
+  "@noExpensesYet": {"description": "Empty state: no expenses"},
+
+  "noBudgetsYet": "No budgets set yet",
+  "@noBudgetsYet": {"description": "Empty state: no budgets"},
+
+  "noGoalsYet": "No savings goals yet",
+  "@noGoalsYet": {"description": "Empty state: no goals"},
+
+  "noRecurringYet": "No recurring transactions yet",
+  "@noRecurringYet": {"description": "Empty state: no recurring"},
+
+  "noDebtsYet": "No debts yet",
+  "@noDebtsYet": {"description": "Empty state: no debts"},
+
+  "noIncomeYet": "No income records yet",
+  "@noIncomeYet": {"description": "Empty state: no income"},
+
+  "deleteExpense": "Delete Expense",
+  "@deleteExpense": {"description": "Delete expense dialog title"},
+
+  "deleteGoal": "Delete Goal",
+  "@deleteGoal": {"description": "Delete goal dialog title"},
+
+  "deleteDebt": "Delete Debt",
+  "@deleteDebt": {"description": "Delete debt dialog title"},
+
+  "deleteIncome": "Delete Income",
+  "@deleteIncome": {"description": "Delete income dialog title"},
+
+  "deleteRecurring": "Delete Recurring",
+  "@deleteRecurring": {"description": "Delete recurring dialog title"},
+
+  "recordPayment": "Record Payment",
+  "@recordPayment": {"description": "Record payment dialog title"},
+
+  "logAllDue": "Log All Due",
+  "@logAllDue": {"description": "Log all due button label"},
+
+  "logNow": "Log Now",
+  "@logNow": {"description": "Log now button label"},
+
+  "createGoal": "Create Goal",
+  "@createGoal": {"description": "Create goal button label"},
+
+  "saveChanges": "Save Changes",
+  "@saveChanges": {"description": "Save changes button label"},
+
+  "emergencyFund": "Emergency Fund",
+  "@emergencyFund": {"description": "Emergency fund label"},
+
+  "overBudgetWarning": "Over Budget Warning",
+  "@overBudgetWarning": {"description": "Over budget warning dialog title"},
+
+  "confirmAndLog": "Confirm & Log",
+  "@confirmAndLog": {"description": "Confirm and log button"},
+
+  "refresh": "Refresh",
+  "@refresh": {"description": "Refresh button label"},
+
+  "getAiAdvice": "Get AI Financial Advice",
+  "@getAiAdvice": {"description": "Get AI advice button label"},
+
+  "thisMonth": "This Month",
+  "@thisMonth": {"description": "This month label"},
+
+  "allTime": "All Time",
+  "@allTime": {"description": "All time label"},
+
+  "entries": "Entries",
+  "@entries": {"description": "Entries count label"},
+
+  "total": "Total",
+  "@total": {"description": "Total label"},
+
+  "income": "Income",
+  "@income": {"description": "Income label"},
+
+  "balance": "Balance",
+  "@balance": {"description": "Balance label"},
+
+  "spent": "Spent",
+  "@spent": {"description": "Spent label"},
+
+  "budgeted": "Budgeted",
+  "@budgeted": {"description": "Budgeted label"},
+
+  "add": "Add",
+  "@add": {"description": "Generic add button label"},
+
+  "pay": "Pay",
+  "@pay": {"description": "Pay button label"},
+
+  "resetAllData": "Reset All Data",
+  "@resetAllData": {"description": "Reset all data dialog title"},
+
+  "about": "About",
+  "@about": {"description": "About screen title"},
+
+  "achievements": "Achievements",
+  "@achievements": {"description": "Achievements screen title"},
+
+  "help": "Help",
+  "@help": {"description": "Help screen title"},
+
+  "transactions": "Transactions",
+  "@transactions": {"description": "Transactions label"},
+
+  "chatHistoryScreenTitle": "Chat History",
+  "@chatHistoryScreenTitle": {"description": "Chat history screen AppBar title"},
+
+  "feedbackScreenTitle": "Send Feedback",
+  "@feedbackScreenTitle": {"description": "Feedback screen AppBar title"},
+
+  "forecastScreenTitle": "Cash Flow Forecast",
+  "@forecastScreenTitle": {"description": "Forecast screen AppBar title"},
+
+  "govContributionsScreenTitle": "Gov Contributions",
+  "@govContributionsScreenTitle": {"description": "Gov contributions screen AppBar title"},
+
+  "heatmapScreenTitle": "Spending Heatmap",
+  "@heatmapScreenTitle": {"description": "Heatmap screen AppBar title"},
+
+  "insightsScreenTitle": "Spending Insights",
+  "@insightsScreenTitle": {"description": "Insights screen AppBar title"},
+
+  "investmentScreenTitle": "Investment Portfolio",
+  "@investmentScreenTitle": {"description": "Investment screen AppBar title"},
+
+  "netWorthScreenTitle": "Net Worth",
+  "@netWorthScreenTitle": {"description": "Net worth screen AppBar title"},
+
+  "taxScreenTitle": "BIR Tax Calculator",
+  "@taxScreenTitle": {"description": "Tax screen AppBar title"},
+
+  "challengesScreenTitle": "Challenges & Streaks",
+  "@challengesScreenTitle": {"description": "Challenges screen AppBar title"},
+
+  "debtCalculatorScreenTitle": "Debt Payoff Calculator",
+  "@debtCalculatorScreenTitle": {"description": "Debt calculator screen AppBar title"},
+
+  "priceIntelligenceScreenTitle": "Price Intelligence",
+  "@priceIntelligenceScreenTitle": {"description": "Price intelligence screen AppBar title"},
+
+  "insuranceScreenTitle": "Insurance & Contributions",
+  "@insuranceScreenTitle": {"description": "Insurance screen AppBar title"},
+
+  "palawaganScreenTitle": "Paluwagan Tracker",
+  "@palawaganScreenTitle": {"description": "Paluwagan screen AppBar title"},
+
+  "pcaCalculatorScreenTitle": "Peso Cost Averaging",
+  "@pcaCalculatorScreenTitle": {"description": "PCA calculator screen AppBar title"},
+
+  "merchantMergeScreenTitle": "Merchant Cleanup",
+  "@merchantMergeScreenTitle": {"description": "Merchant merge screen AppBar title"},
+
+  "bankComparisonScreenTitle": "PH Banks & Investments",
+  "@bankComparisonScreenTitle": {"description": "Bank comparison screen AppBar title"},
+
+  "currencyScreenTitle": "Currency & Region",
+  "@currencyScreenTitle": {"description": "Currency screen AppBar title"},
+
+  "glossaryScreenTitle": "Financial Glossary",
+  "@glossaryScreenTitle": {"description": "Glossary screen AppBar title"},
+
+  "logDueBillsScreenTitle": "Log Due Bills",
+  "@logDueBillsScreenTitle": {"description": "Log due bills screen AppBar title"},
+
+  "manageCategoriesScreenTitle": "Manage Categories",
+  "@manageCategoriesScreenTitle": {"description": "Manage categories screen AppBar title"},
+
+  "manageRulesScreenTitle": "Manage Rules",
+  "@manageRulesScreenTitle": {"description": "Manage rules screen AppBar title"}
 }

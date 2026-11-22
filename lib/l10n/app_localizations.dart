@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ceb.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_tl.dart';
 
@@ -94,6 +95,7 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ceb'),
     Locale('en'),
     Locale('tl')
   ];
@@ -799,6 +801,438 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Financial Advice Notice'**
   String get financialAdviceNotice;
+
+  /// Cebuano language option
+  ///
+  /// In en, this message translates to:
+  /// **'Cebuano (Bisaya)'**
+  String get languageCebuano;
+
+  /// Analytics screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get analyticsScreenTitle;
+
+  /// Budgets screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Budgets'**
+  String get budgetsScreenTitle;
+
+  /// Savings Goals screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Goals'**
+  String get savingsGoalsScreenTitle;
+
+  /// Recurring Transactions screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Transactions'**
+  String get recurringScreenTitle;
+
+  /// Debts screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Debts'**
+  String get debtScreenTitle;
+
+  /// Income screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get incomeScreenTitle;
+
+  /// Profile screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileScreenTitle;
+
+  /// Transactions screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get transactionsScreenTitle;
+
+  /// Add Budget button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add Budget'**
+  String get addBudget;
+
+  /// New Goal FAB label
+  ///
+  /// In en, this message translates to:
+  /// **'New Goal'**
+  String get newGoal;
+
+  /// Add Recurring FAB label
+  ///
+  /// In en, this message translates to:
+  /// **'Add Recurring'**
+  String get addRecurring;
+
+  /// Add Debt FAB label
+  ///
+  /// In en, this message translates to:
+  /// **'Add Debt'**
+  String get addDebt;
+
+  /// Add Income FAB label
+  ///
+  /// In en, this message translates to:
+  /// **'Add Income'**
+  String get addIncome;
+
+  /// Empty state: no expenses
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses yet'**
+  String get noExpensesYet;
+
+  /// Empty state: no budgets
+  ///
+  /// In en, this message translates to:
+  /// **'No budgets set yet'**
+  String get noBudgetsYet;
+
+  /// Empty state: no goals
+  ///
+  /// In en, this message translates to:
+  /// **'No savings goals yet'**
+  String get noGoalsYet;
+
+  /// Empty state: no recurring
+  ///
+  /// In en, this message translates to:
+  /// **'No recurring transactions yet'**
+  String get noRecurringYet;
+
+  /// Empty state: no debts
+  ///
+  /// In en, this message translates to:
+  /// **'No debts yet'**
+  String get noDebtsYet;
+
+  /// Empty state: no income
+  ///
+  /// In en, this message translates to:
+  /// **'No income records yet'**
+  String get noIncomeYet;
+
+  /// Delete expense dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Expense'**
+  String get deleteExpense;
+
+  /// Delete goal dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Goal'**
+  String get deleteGoal;
+
+  /// Delete debt dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Debt'**
+  String get deleteDebt;
+
+  /// Delete income dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Income'**
+  String get deleteIncome;
+
+  /// Delete recurring dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Recurring'**
+  String get deleteRecurring;
+
+  /// Record payment dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Record Payment'**
+  String get recordPayment;
+
+  /// Log all due button label
+  ///
+  /// In en, this message translates to:
+  /// **'Log All Due'**
+  String get logAllDue;
+
+  /// Log now button label
+  ///
+  /// In en, this message translates to:
+  /// **'Log Now'**
+  String get logNow;
+
+  /// Create goal button label
+  ///
+  /// In en, this message translates to:
+  /// **'Create Goal'**
+  String get createGoal;
+
+  /// Save changes button label
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// Emergency fund label
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency Fund'**
+  String get emergencyFund;
+
+  /// Over budget warning dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Over Budget Warning'**
+  String get overBudgetWarning;
+
+  /// Confirm and log button
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm & Log'**
+  String get confirmAndLog;
+
+  /// Refresh button label
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// Get AI advice button label
+  ///
+  /// In en, this message translates to:
+  /// **'Get AI Financial Advice'**
+  String get getAiAdvice;
+
+  /// This month label
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get thisMonth;
+
+  /// All time label
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get allTime;
+
+  /// Entries count label
+  ///
+  /// In en, this message translates to:
+  /// **'Entries'**
+  String get entries;
+
+  /// Total label
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// Income label
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get income;
+
+  /// Balance label
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balance;
+
+  /// Spent label
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get spent;
+
+  /// Budgeted label
+  ///
+  /// In en, this message translates to:
+  /// **'Budgeted'**
+  String get budgeted;
+
+  /// Generic add button label
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// Pay button label
+  ///
+  /// In en, this message translates to:
+  /// **'Pay'**
+  String get pay;
+
+  /// Reset all data dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Reset All Data'**
+  String get resetAllData;
+
+  /// About screen title
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// Achievements screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievements;
+
+  /// Help screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get help;
+
+  /// Transactions label
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get transactions;
+
+  /// Chat history screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Chat History'**
+  String get chatHistoryScreenTitle;
+
+  /// Feedback screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Send Feedback'**
+  String get feedbackScreenTitle;
+
+  /// Forecast screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Flow Forecast'**
+  String get forecastScreenTitle;
+
+  /// Gov contributions screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Gov Contributions'**
+  String get govContributionsScreenTitle;
+
+  /// Heatmap screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Spending Heatmap'**
+  String get heatmapScreenTitle;
+
+  /// Insights screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Spending Insights'**
+  String get insightsScreenTitle;
+
+  /// Investment screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Investment Portfolio'**
+  String get investmentScreenTitle;
+
+  /// Net worth screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Net Worth'**
+  String get netWorthScreenTitle;
+
+  /// Tax screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'BIR Tax Calculator'**
+  String get taxScreenTitle;
+
+  /// Challenges screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Challenges & Streaks'**
+  String get challengesScreenTitle;
+
+  /// Debt calculator screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Payoff Calculator'**
+  String get debtCalculatorScreenTitle;
+
+  /// Price intelligence screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Price Intelligence'**
+  String get priceIntelligenceScreenTitle;
+
+  /// Insurance screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance & Contributions'**
+  String get insuranceScreenTitle;
+
+  /// Paluwagan screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Paluwagan Tracker'**
+  String get palawaganScreenTitle;
+
+  /// PCA calculator screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Peso Cost Averaging'**
+  String get pcaCalculatorScreenTitle;
+
+  /// Merchant merge screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant Cleanup'**
+  String get merchantMergeScreenTitle;
+
+  /// Bank comparison screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'PH Banks & Investments'**
+  String get bankComparisonScreenTitle;
+
+  /// Currency screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Currency & Region'**
+  String get currencyScreenTitle;
+
+  /// Glossary screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Financial Glossary'**
+  String get glossaryScreenTitle;
+
+  /// Log due bills screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Log Due Bills'**
+  String get logDueBillsScreenTitle;
+
+  /// Manage categories screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Categories'**
+  String get manageCategoriesScreenTitle;
+
+  /// Manage rules screen AppBar title
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Rules'**
+  String get manageRulesScreenTitle;
 }
 
 class _AppLocalizationsDelegate
@@ -812,7 +1246,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'tl'].contains(locale.languageCode);
+      <String>['ceb', 'en', 'tl'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -821,6 +1255,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ceb':
+      return AppLocalizationsCeb();
     case 'en':
       return AppLocalizationsEn();
     case 'tl':
