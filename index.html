@@ -791,6 +791,9 @@
     .research-section { max-width:900px; margin:0 auto 70px; padding:0 24px; text-align:center; }
 .research-section .section-title { text-align: center; }
 .research-section .section-sub { text-align: center; }
+    /* research-findings section uses inline text-align:center — ensure .section-title/.section-sub center correctly */
+    #research-findings .section-title { text-align: center; }
+    #research-findings .section-sub { text-align: center; }
     .research-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:32px; }
     .research-card { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:28px 24px; display:flex; flex-direction:column; gap:14px; transition:border-color 0.2s, box-shadow 0.2s; }
     .research-card:hover { border-color:var(--border-strong); box-shadow:0 0 20px var(--primary-glow); }
@@ -1119,7 +1122,7 @@
         <span class="hero-survey-text">We need your feedback for our capstone research!</span>
         <a href="#research" class="hero-survey-link">Take the survey →</a>
       </div>
-      <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.5.3 · Free & Open Source</div>
+      <div class="hero-meta">🔒 Local AI supported · 🇵🇭 Taglish · 📴 Works offline · v3.5.4 · Free & Open Source</div>
     </div>
     <div class="hero-right">
       <div class="hero-peso-wrap">
@@ -1134,7 +1137,7 @@
 <div class="stats-card">
 <div class="stats">
   <div class="stat"><div class="stat-number" data-target="30">0</div><div class="stat-label">Research Respondents</div></div>
-  <div class="stat"><div class="stat-number" data-target="62">0</div><div class="stat-label">SUS Score (v3.5.3)</div></div>
+  <div class="stat"><div class="stat-number" data-target="62">0</div><div class="stat-label">SUS Score (v3.5.4)</div></div>
   <div class="stat"><div class="stat-number" data-target="7">0</div><div class="stat-label">Input Modalities</div></div>
   <div class="stat"><div class="stat-number" data-target="10">0</div><div class="stat-label">AI Providers</div></div>
   <div class="stat"><div class="stat-number" data-target="36">0</div><div class="stat-label">Achievement Badges</div></div>
@@ -1363,7 +1366,7 @@
 </section>
 <section class="screenshots-section" id="screenshots">
   <div class="section-title">See it in action</div>
-  <div class="section-sub">Real screenshots from SmartSpend v3.5.3 — the version evaluated in our capstone research. Click any screenshot to zoom.</div>
+  <div class="section-sub">Real screenshots from SmartSpend v3.5.4 — the version evaluated in our capstone research. Click any screenshot to zoom.</div>
   <div class="ss-tabs">
     <div class="ss-tab active" onclick="filterSlides('all', this)">All</div>
     <div class="ss-tab" onclick="filterSlides('ai', this)">🤖 AI &amp; Chat</div>
@@ -1372,7 +1375,7 @@
     <div class="ss-tab" onclick="filterSlides('tools', this)">&#x1F6E0;&#xFE0F; Tools</div>
     <div class="ss-tab" onclick="filterSlides('gamify', this)">🏅 Gamification</div>
   </div>
-  <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:10px 16px;margin-bottom:20px;font-size:13px;color:var(--text-muted);display:flex;gap:10px;align-items:center"><span style="font-size:1.2rem;flex-shrink:0">📸</span><span>These screenshots are from SmartSpend v3.5.3 — the research-evaluated version. The latest release may include additional improvements and features.</span></div>
+  <div style="background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:10px 16px;margin-bottom:20px;font-size:13px;color:var(--text-muted);display:flex;gap:10px;align-items:center"><span style="font-size:1.2rem;flex-shrink:0">📸</span><span>These screenshots are from SmartSpend v3.5.4 — the research-evaluated version. The latest release may include additional improvements and features.</span></div>
   <div class="swiper screenshotsSwiper">
     <div class="swiper-wrapper" id="screenshotsWrapper">
       <div class="swiper-slide" data-tag="core"><div class="phone-frame" onclick="openLightboxEl(this)" role="button" tabindex="0" aria-label="View startup screen full size"><img src="docs/tools/image_converter/Kiro_Ready/startup screen.jpg" alt="SmartSpend splash screen" loading="lazy" /></div><div class="slide-caption"><span class="slide-tag tag-core">Core</span><strong>Welcome Screen</strong><span>Clean splash with the SmartSpend brand and tagline &mdash; &ldquo;Your AI Financial Assistant.&rdquo;</span></div></div>
@@ -1426,18 +1429,18 @@
 
 <!-- RESEARCH FINDINGS -->
 <section class="section" id="research-findings" style="background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:40px 24px;margin:0;text-align:center">
-  <div style="max-width:900px;margin:0 auto">
+  <div style="max-width:900px;margin:0 auto;text-align:center">
     <div class="section-eyebrow">🎓 Capstone Research Study</div>
-    <div class="section-title">SmartSpend v3.5.3 Research Findings</div>
+    <div class="section-title">SmartSpend v3.5.4 Research Findings</div>
     <p class="section-sub">SmartSpend was evaluated by 30 Filipino respondents (10 parents, 20 young professionals) using the System Usability Scale (SUS) — a standardized 10-question usability assessment used in academic research worldwide.</p>
     
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;text-align:left">
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:left">
         <div style="font-size:3rem;font-weight:800;color:var(--primary);margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">61.83</div>
         <div style="font-size:14px;font-weight:700;margin-bottom:4px">SUS Score (out of 100)</div>
         <div style="font-size:13px;color:var(--text-muted);line-height:1.6">Grade D — "OK" acceptability. This places SmartSpend below the 68 industry benchmark and below our 80 target, signaling that <strong>UI/UX refinement is critical</strong> for future releases.</div>
       </div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:left">
         <div style="font-size:3rem;font-weight:800;color:#f59e0b;margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">Partial</div>
         <div style="font-size:14px;font-weight:700;margin-bottom:4px">Objective 3 Achievement</div>
         <div style="font-size:13px;color:var(--text-muted);line-height:1.6"><strong>Objective 3 was partially achieved.</strong> While SmartSpend successfully delivered all core features, the SUS score indicates usability improvements are needed before wide adoption.</div>
@@ -1983,8 +1986,8 @@
     </tbody>
   </table>
   <div class="version-note">
-    Latest version: <strong>v3.5.3</strong> &#x00B7;
-    Research-evaluated version: <strong>v3.5.3</strong> &#x00B7;
+    Latest version: <strong>v3.5.4</strong> &#x00B7;
+    Research-evaluated version: <strong>v3.5.4</strong> &#x00B7;
     <a href="https://github.com/Zushikina-kun/smartspend-app/releases" target="_blank" rel="noopener noreferrer">All releases &#x2192;</a> &#x00B7;
     Not sure which APK? Install the arm64-v8a version first.
   </div>
