@@ -50,12 +50,16 @@ jobs:
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > android/app/google-services.json
 
       # ── 5. Create app_config.dart (API keys) ────────────────────────────
-      # APP_CONFIG_DART is stored as base64 to preserve quotes and special chars.
-      # To regenerate the secret value run:
+      # APP_CONFIG_DART is split across two secrets (A + B) because the file
+      # exceeds GitHub's 48 KB secret limit when base64-encoded.
+      # To regenerate both secrets run:
       #   $bytes = [IO.File]::ReadAllBytes("lib/services/app_config.dart")
-      #   [Convert]::ToBase64String($bytes, [Base64FormattingOptions]::None) | clip
+      #   $b64 = [Convert]::ToBase64String($bytes, [Base64FormattingOptions]::None)
+      #   $half = [Math]::Ceiling($b64.Length / 2)
+      #   $b64.Substring(0, $half) | gh secret set APP_CONFIG_DART_A
+      #   $b64.Substring($half)    | gh secret set APP_CONFIG_DART_B
       - name: Write app_config.dart
-        run: echo "${{ secrets.APP_CONFIG_DART }}" | base64 --decode > lib/services/app_config.dart
+        run: echo "${{ secrets.APP_CONFIG_DART_A }}${{ secrets.APP_CONFIG_DART_B }}" | base64 --decode > lib/services/app_config.dart
 
       # ── 6. Get dependencies ──────────────────────────────────────────────
       - name: Flutter pub get
