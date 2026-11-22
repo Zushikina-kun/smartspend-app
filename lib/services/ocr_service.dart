@@ -3,8 +3,33 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'app_config.dart';
 
 class OCRService {
+  /// Returns the preferred model ID for AI-assisted OCR parsing.
+  ///
+  /// Vision-capable models (isVision == true in [AppConfig.availableModels])
+  /// can process images directly and produce higher-quality results for
+  /// receipt and screenshot parsing. This method returns the first available
+  /// vision model, or the current active model when none is available.
+  ///
+  /// Call this before invoking the LLM step so the caller can temporarily
+  /// switch to the vision model for the duration of the parse:
+  /// ```dart
+  /// final savedModel = AppConfig.activeModelId;
+  /// final ocrModel = OCRService.preferredModelForOcr();
+  /// if (ocrModel != savedModel) AppConfig.setModel(ocrModel);
+  /// final result = await LLMService.parseReceipt(ocrText);
+  /// if (ocrModel != savedModel) AppConfig.setModel(savedModel);
+  /// ```
+  static String preferredModelForOcr() {
+    return AppConfig.preferredVisionModelId ?? AppConfig.activeModelId;
+  }
+
+  /// Whether the given model ID is vision-capable (can accept image input).
+  static bool isVisionModel(String modelId) =>
+      AppConfig.visionModelIds.contains(modelId);
+
   /// Scan a receipt image and return cleaned, structured text for AI parsing.
   /// Handles image rotation, noise removal, and receipt-specific formatting.
   static Future<String> scanReceipt(String path) async {

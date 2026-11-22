@@ -208,103 +208,188 @@ class AppConfig {
 
   /// All available models shown in the model selector UI, ordered best → fallback
   /// Sorted by quality: Tier 1 (Premium) → Tier 2 (High Quality) → Tier 3 (Good) → Tier 4 (Utility) → Tier 5 (Last Resort)
+  /// Model record: (id, label, description, isVision, isFast)
+  /// isVision: accepts image input — suitable for receipt/screenshot OCR via AI.
+  /// isFast:   low-latency, high-throughput — preferred for real-time voice commands.
   static const availableModels = [
     // ── TIER 0: SPECIAL ──────────────────────────────────────────────────────
     (
       'auto',
       'Auto (Recommended)',
-      '🤖 Smart routing — best quality available, auto-fallback'
+      '🤖 Smart routing — best quality available, auto-fallback',
+      false, // isVision
+      false, // isFast
     ),
     (
       'custom_local',
       'Local AI (Your Computer)',
-      '🏠 Your own LLM via WiFi — private, no cloud, configure in Local AI settings'
+      '🏠 Your own LLM via WiFi — private, no cloud, configure in Local AI settings',
+      false,
+      false,
     ),
     // ── TIER 1: PREMIUM QUALITY (Best Reasoning) ─────────────────────────────
     (
       'or_nemotron_ultra',
       'Nemotron 3 Ultra (OpenRouter)',
-      '🏆 Frontier-tier — 550B MoE, 1M ctx, top free model'
+      '🏆 Frontier-tier — 550B MoE, 1M ctx, top free model',
+      false,
+      false,
     ),
     (
       'or_llama33',
       'Llama 3.3 70B (OpenRouter)',
-      '🦙 Best reasoning — 70B, 128K ctx, 9.4 Intelligence Index'
+      '🦙 Best reasoning — 70B, 128K ctx, 9.4 Intelligence Index',
+      false,
+      false,
     ),
     (
       'gemini_flash',
       'Gemini 3.5 Flash',
-      '💎 Best Gemini — frontier reasoning, GA stable (needs Gemini key)'
+      '💎 Best Gemini — frontier reasoning, GA stable (needs Gemini key)',
+      true, // Gemini 3.5 Flash accepts image input
+      false,
     ),
     (
       'gemini_flash_lite',
       'Gemini 3.5 Flash-Lite ⭐',
-      '⚡ Default — fastest + reliable, GA stable (needs Gemini key)'
+      '⚡ Default — fastest + reliable, GA stable (needs Gemini key)',
+      true, // Gemini 3.5 Flash-Lite accepts image input
+      true, // fastest Gemini
     ),
     // ── TIER 2: HIGH QUALITY (Solid Performance) ─────────────────────────────
     (
       'or_gemma_4_31b',
       'Gemma 4 31B (OpenRouter)',
-      '💎 Reliable — 262K ctx, well-tested, balanced'
+      '💎 Reliable — 262K ctx, well-tested, balanced',
+      false,
+      false,
     ),
     (
       'or_nemotron_lightning',
       'Nemotron 3.5 Lightning (OpenRouter)',
-      '⚡ Fastest — MoE, 1M ctx, near-instant responses'
+      '⚡ Fastest — MoE, 1M ctx, near-instant responses',
+      false,
+      true, // near-instant responses
     ),
     (
       'or_qwen38',
       'Qwen 3.8 27B (OpenRouter)',
-      '🌐 Multimodal — 128K ctx, OCR, computer-use'
+      '🌐 Multimodal — 128K ctx, OCR, computer-use',
+      true, // multimodal — accepts image input
+      false,
     ),
     (
       'groq_llama4_scout',
       'GPT-OSS 120B (Groq)',
-      '🚀 Best Groq — 1,000/day, 8K TPM'
+      '🚀 Best Groq — 1,000/day, 8K TPM',
+      false,
+      false,
     ),
     // ── TIER 3: GOOD (Reliable Workhorses) ───────────────────────────────────
     (
       'or_nemotron_super_vl',
       'Nemotron 3.5 Super VL (OpenRouter)',
-      '🎨 Vision — 1M ctx, image + video understanding'
+      '🎨 Vision — 1M ctx, image + video understanding',
+      true, // vision model — image + video
+      false,
     ),
     (
       'or_gemma_4_26b',
       'Gemma 4 26B A4B (OpenRouter)',
-      '⚙️ Efficient — MoE 3.8B active, 262K ctx'
+      '⚙️ Efficient — MoE 3.8B active, 262K ctx',
+      false,
+      false,
     ),
     (
       'or_nemotron_nano',
       'Nemotron Nano 30B (OpenRouter)',
-      '🧠 Reasoning — 30B MoE, free tier, omni model'
+      '🧠 Reasoning — 30B MoE, free tier, omni model',
+      false,
+      false,
     ),
     (
       'groq_kimi_k2',
       'Qwen3.6 27B (Groq)',
-      '🌐 Multimodal + reasoning — 1,000/day'
+      '🌐 Multimodal + reasoning — 1,000/day',
+      true, // multimodal — accepts image input
+      false,
     ),
     (
       'groq_qwen3',
       'Qwen3.8 27B (Groq)',
-      '✨ Newer Qwen, multimodal — 1,000/day'
+      '✨ Newer Qwen, multimodal — 1,000/day',
+      true, // multimodal — accepts image input
+      false,
     ),
     // ── TIER 4: UTILITY (Fast & Available) ───────────────────────────────────
-    ('groq_70b', 'Compound (Groq)', '⚡ 250/day, 70K TPM — good general'),
-    ('groq_8b', 'Compound Mini (Groq)', '💨 250/day, 70K TPM — fast tasks'),
+    (
+      'groq_70b',
+      'Compound (Groq)',
+      '⚡ 250/day, 70K TPM — good general',
+      false,
+      true, // good general, 70K TPM
+    ),
+    (
+      'groq_8b',
+      'Compound Mini (Groq)',
+      '💨 250/day, 70K TPM — fast tasks',
+      false,
+      true, // fast tasks
+    ),
     (
       'openrouter',
       'OpenRouter Gateway (Legacy)',
-      '🌐 Auto-route — use individual models above instead'
+      '🌐 Auto-route — use individual models above instead',
+      false,
+      false,
     ),
     // ── TIER 5: LAST RESORT (Fallback) ───────────────────────────────────────
     (
       'cerebras_120b',
       'GPT-OSS 120B (Cerebras)',
-      '🔄 Fallback — 1M tokens/day (slow)'
+      '🔄 Fallback — 1M tokens/day (slow)',
+      false,
+      true, // ~3,000 t/s throughput
     ),
   ];
 
   static String get activeModelId => _activeModelId;
+
+  /// IDs of models capable of accepting image input (isVision == true).
+  /// Used by OCR to prefer vision-capable models for AI-assisted parsing.
+  static List<String> get visionModelIds =>
+      availableModels.where((m) => m.$4).map((m) => m.$1).toList();
+
+  /// IDs of fast/low-latency models (isFast == true).
+  /// Used by voice commands to prefer speed over maximum quality.
+  static List<String> get fastModelIds =>
+      availableModels.where((m) => m.$5).map((m) => m.$1).toList();
+
+  /// Returns the best available vision model ID, preferring models with an
+  /// available key. Returns null if no vision model key is configured.
+  static String? get preferredVisionModelId {
+    for (final id in visionModelIds) {
+      if (id == 'auto' || id == 'custom_local') continue;
+      if (id.startsWith('or_') && !hasOpenRouterKey) continue;
+      if (id.startsWith('gemini') && !hasGeminiKey) continue;
+      if (id == 'cerebras_120b' && !hasCerebrasKey) continue;
+      return id;
+    }
+    return null;
+  }
+
+  /// Returns the best available fast model ID, preferring models with an
+  /// available key. Falls back to the current active model if none found.
+  static String get preferredFastModelId {
+    for (final id in fastModelIds) {
+      if (id == 'auto' || id == 'custom_local') continue;
+      if (id.startsWith('or_') && !hasOpenRouterKey) continue;
+      if (id.startsWith('gemini') && !hasGeminiKey) continue;
+      if (id == 'cerebras_120b' && !hasCerebrasKey) continue;
+      return id;
+    }
+    return _activeModelId;
+  }
 
   /// The concrete model ID the current request actually uses. In Auto mode
   /// this is the chain walk model (or the first available if not yet
