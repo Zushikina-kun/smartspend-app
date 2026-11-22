@@ -34,6 +34,7 @@ import 'heatmap_screen.dart';
 import 'ofw/remittance_screen.dart';
 import 'ofw/balikbayan_tracker_screen.dart';
 import 'net_worth_screen.dart';
+import 'price_intelligence_screen.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -5040,67 +5041,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ),
       child: InkWell(
         onTap: () {
-          // Show bottom sheet with more details
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            builder: (_) => Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.trending_up, size: 28, color: Colors.orange),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Text(
-                          'Price Intelligence',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'An upcoming feature to help you track price changes and understand market trends:',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(height: 12),
-                  _priceFeatureTile(
-                    '⛽ DOE Fuel Price Monitoring',
-                    'Weekly gas/diesel updates from Department of Energy',
-                  ),
-                  _priceFeatureTile(
-                    '📊 PSA Consumer Price Index',
-                    'Track official inflation data for common goods',
-                  ),
-                  _priceFeatureTile(
-                    '🔍 Personal Price Tracking',
-                    'See how prices of your frequent purchases change over time',
-                  ),
-                  _priceFeatureTile(
-                    '🤖 AI Trend Explanations',
-                    'Get context on why prices are rising or falling',
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    '💡 Post-defense feature — coming in future updates!',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
-                      color: cs.onSurface.withOpacity(0.6),
-                    ),
-                  ),
-                ],
-              ),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const PriceIntelligenceScreen(),
             ),
           );
         },
@@ -5135,25 +5079,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Text(
-                            'Coming Soon',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -5175,40 +5100,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _priceFeatureTile(String title, String subtitle) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

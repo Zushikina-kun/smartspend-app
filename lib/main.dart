@@ -12,6 +12,8 @@ import 'services/proactive_nudge_service.dart';
 import 'services/app_config.dart';
 import 'services/db_service.dart';
 import 'services/pro_service.dart';
+import 'services/doe_service.dart';
+import 'services/psa_service.dart';
 
 final themeService = ThemeService();
 
@@ -75,6 +77,9 @@ void main() async {
     NotificationService.checkWantSpendingAlert();
     // Proactive nudges — forward-looking alerts (subscription due, pace high, goal close, etc.)
     ProactiveNudgeService.check();
+    // Background refresh of government data feeds (fire-and-forget)
+    DoeService.refreshInBackground();
+    PsaService.refreshInBackground();
     runApp(const SmartSpendApp());
   }, (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);

@@ -330,8 +330,24 @@ class DBService {
             ''');
           } catch (_) {}
         }
+        if (oldVersion < 17) {
+          try {
+            await db.execute('''
+              CREATE TABLE IF NOT EXISTS price_cache(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                source TEXT NOT NULL,
+                commodity TEXT NOT NULL,
+                price_min REAL NOT NULL,
+                price_max REAL NOT NULL,
+                unit TEXT DEFAULT 'per liter',
+                fetched_at TEXT NOT NULL,
+                period_label TEXT
+              )
+            ''');
+          } catch (_) {}
+        }
       },
-      version: 16,
+      version: 17,
     );
     return _db!;
   }
@@ -996,6 +1012,18 @@ class DBService {
         current_price REAL NOT NULL DEFAULT 0,
         buy_date TEXT,
         notes TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS price_cache(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        source TEXT NOT NULL,
+        commodity TEXT NOT NULL,
+        price_min REAL NOT NULL,
+        price_max REAL NOT NULL,
+        unit TEXT DEFAULT 'per liter',
+        fetched_at TEXT NOT NULL,
+        period_label TEXT
       )
     ''');
   }

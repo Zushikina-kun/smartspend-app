@@ -3,6 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../models/price_data.dart';
 import '../services/price_intelligence_service.dart';
+import '../services/doe_service.dart';
+import '../services/psa_service.dart';
 
 class PriceIntelligenceScreen extends StatefulWidget {
   const PriceIntelligenceScreen({super.key});
@@ -16,14 +18,17 @@ class _PriceIntelligenceScreenState extends State<PriceIntelligenceScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Price Intelligence'),
           bottom: const TabBar(
+            isScrollable: true,
             tabs: [
-              Tab(text: 'Products'),
+              Tab(text: 'My Prices'),
               Tab(text: 'Price History'),
+              Tab(text: '⛽ Fuel (DOE)'),
+              Tab(text: '🛒 Market (PSA)'),
             ],
           ),
         ),
@@ -31,6 +36,8 @@ class _PriceIntelligenceScreenState extends State<PriceIntelligenceScreen> {
           children: [
             _ProductsTab(),
             _PriceHistoryTab(),
+            _FuelPricesTab(),
+            _MarketPricesTab(),
           ],
         ),
       ),
@@ -575,5 +582,367 @@ class _PriceDetailScreen extends StatelessWidget {
         .split(' ')
         .map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1)}')
         .join(' ');
+  }
+}
+
+// ── FUEL PRICES TAB (DOE) ─────────────────────────────────────────────────────
+class _FuelPricesTab extends StatefulWidget {
+  const _FuelPricesTab();
+  @override
+  State<_FuelPricesTab> createState() => _FuelPricesTabState();
+}
+
+class _FuelPricesTabState extends State<_FuelPricesTab> {
+  List<FuelPrice> _prices = [];
+  bool _loading = true;
+  int? _ageDays;
+  bool _isStale = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load({bool forceRefresh = false}) async {
+    setState(() => _loading = true);
+    final prices = await DoeService.getFuelPrices(forceRefresh: forceRefresh);
+    final age = await DoeService.cacheAgeDays();
+    final stale = await DoeService.isDataStale();
+    if (mounted) {
+      setState(() {
+        _prices = prices;
+        _ageDays = age;
+        _isStale = stale;
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return RefreshIndicator(
+      onRefresh: () => _load(forceRefresh: true),
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text('⛽', style: TextStyle(fontSize: 24)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('DOE Fuel Prices',
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Department of Energy — weekly pump price data',
+                      style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _buildUpdateLabel(cs),
+          const SizedBox(height: 16),
+          if (_isStale && !_loading) _buildStaleWarning(cs),
+          if (_loading)
+            const Center(
+              child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+            )
+          else if (_prices.isEmpty)
+            _buildUnavailable(cs)
+          else
+            ..._prices.map((p) => _buildFuelCard(p, cs)),
+          const SizedBox(height: 16),
+          Text(
+            'Pull down to refresh. Data sourced from DOE Philippines.',
+            style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.45)),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUpdateLabel(ColorScheme cs) {
+    if (_ageDays == null) {
+      return Text('No cached data',
+          style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.5)));
+    }
+    final label = _ageDays == 0
+        ? 'Updated today'
+        : _ageDays == 1
+            ? 'Updated yesterday'
+            : 'Last updated: $_ageDays days ago';
+    return Row(children: [
+      Icon(Icons.update, size: 14, color: _isStale ? Colors.orange : Colors.green),
+      const SizedBox(width: 4),
+      Text(label,
+          style: TextStyle(
+              fontSize: 12,
+              color: _isStale ? Colors.orange : cs.onSurface.withOpacity(0.6))),
+    ]);
+  }
+
+  Widget _buildStaleWarning(ColorScheme cs) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.orange.withOpacity(0.4)),
+      ),
+      child: const Row(children: [
+        Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 16),
+        SizedBox(width: 8),
+        Expanded(
+          child: Text('Data is over 14 days old. Pull down to try refreshing.',
+              style: TextStyle(fontSize: 12, color: Colors.orange)),
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildUnavailable(ColorScheme cs) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(children: [
+          Icon(Icons.cloud_off, size: 48, color: cs.onSurface.withOpacity(0.3)),
+          const SizedBox(height: 12),
+          Text('Fuel price data unavailable',
+              style: TextStyle(fontSize: 15, color: cs.onSurface.withOpacity(0.5))),
+          const SizedBox(height: 6),
+          Text('Pull down to retry',
+              style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.4))),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildFuelCard(FuelPrice p, ColorScheme cs) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(p.commodity,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+              if (p.periodLabel != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(p.periodLabel!,
+                      style:
+                          TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+                ),
+            ]),
+          ),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Text(
+              '₱${p.priceMin.toStringAsFixed(2)} – ₱${p.priceMax.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+            Text(p.unit,
+                style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+          ]),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── MARKET PRICES TAB (PSA) ───────────────────────────────────────────────────
+class _MarketPricesTab extends StatefulWidget {
+  const _MarketPricesTab();
+  @override
+  State<_MarketPricesTab> createState() => _MarketPricesTabState();
+}
+
+class _MarketPricesTabState extends State<_MarketPricesTab> {
+  List<MarketPrice> _prices = [];
+  bool _loading = true;
+  int? _ageDays;
+  bool _isStale = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load({bool forceRefresh = false}) async {
+    setState(() => _loading = true);
+    final prices = await PsaService.getMarketPrices(forceRefresh: forceRefresh);
+    final age = await PsaService.cacheAgeDays();
+    final stale = await PsaService.isDataStale();
+    if (mounted) {
+      setState(() {
+        _prices = prices;
+        _ageDays = age;
+        _isStale = stale;
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return RefreshIndicator(
+      onRefresh: () => _load(forceRefresh: true),
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text('🛒', style: TextStyle(fontSize: 24)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('PSA Retail Prices',
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Philippine Statistics Authority — monthly commodity prices',
+                      style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _buildUpdateLabel(cs),
+          const SizedBox(height: 16),
+          if (_isStale && !_loading) _buildStaleWarning(cs),
+          if (_loading)
+            const Center(
+              child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+            )
+          else if (_prices.isEmpty)
+            _buildUnavailable(cs)
+          else
+            ..._prices.map((p) => _buildMarketCard(p, cs)),
+          const SizedBox(height: 16),
+          Text(
+            'Pull down to refresh. Data sourced from PSA OpenStat (openstat.psa.gov.ph).',
+            style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.45)),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUpdateLabel(ColorScheme cs) {
+    if (_ageDays == null) {
+      return Text('No cached data',
+          style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.5)));
+    }
+    final label = _ageDays == 0
+        ? 'Updated today'
+        : _ageDays == 1
+            ? 'Updated yesterday'
+            : 'Last updated: $_ageDays days ago';
+    return Row(children: [
+      Icon(Icons.update, size: 14, color: _isStale ? Colors.orange : Colors.green),
+      const SizedBox(width: 4),
+      Text(label,
+          style: TextStyle(
+              fontSize: 12,
+              color: _isStale ? Colors.orange : cs.onSurface.withOpacity(0.6))),
+    ]);
+  }
+
+  Widget _buildStaleWarning(ColorScheme cs) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.orange.withOpacity(0.4)),
+      ),
+      child: const Row(children: [
+        Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 16),
+        SizedBox(width: 8),
+        Expanded(
+          child: Text('Data is over 60 days old. Pull down to try refreshing.',
+              style: TextStyle(fontSize: 12, color: Colors.orange)),
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildUnavailable(ColorScheme cs) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(children: [
+          Icon(Icons.cloud_off, size: 48, color: cs.onSurface.withOpacity(0.3)),
+          const SizedBox(height: 12),
+          Text('Market price data unavailable',
+              style: TextStyle(fontSize: 15, color: cs.onSurface.withOpacity(0.5))),
+          const SizedBox(height: 6),
+          Text('Pull down to retry',
+              style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.4))),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildMarketCard(MarketPrice p, ColorScheme cs) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(p.commodity,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+              if (p.periodLabel != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(p.periodLabel!,
+                      style:
+                          TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+                ),
+            ]),
+          ),
+          Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+            Text('₱${p.price.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(p.unit,
+                style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+          ]),
+        ]),
+      ),
+    );
   }
 }

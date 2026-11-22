@@ -1,4 +1,3 @@
-import 'package:sqflite/sqflite.dart';
 import '../models/price_data.dart';
 import 'db_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -85,8 +84,7 @@ class PriceIntelligenceService {
       final dismissKey = 'price_alert_dismissed_$normalizedName';
       final dismissedAt = prefs.getInt(dismissKey);
       if (dismissedAt != null) {
-        final dismissedDate =
-            DateTime.fromMillisecondsSinceEpoch(dismissedAt);
+        final dismissedDate = DateTime.fromMillisecondsSinceEpoch(dismissedAt);
         if (DateTime.now().difference(dismissedDate).inDays < 7) {
           continue; // Skip dismissed alerts within 7 days
         }
