@@ -260,6 +260,8 @@ class AIChatService {
     Map<String, double> allLimits = const {},
     Map<String, double> allSpent = const {},
     List<Map<String, dynamic>> categoryRules = const [],
+    // Current-month expenses — full per-entry list for detailed query answering
+    List<Map<String, dynamic>>? monthExpenses,
   }) {
     // Refresh user-defined categorization rules cache
     if (categoryRules.isNotEmpty) {
@@ -459,6 +461,27 @@ class AIChatService {
         .toIso8601String()
         .substring(0, 10);
 
+    // Build current-month per-entry list for detailed transaction queries
+    final monthLabel = '${_monthName(now.month)} ${now.year}';
+    String monthExpensesSummary = '';
+    if (monthExpenses != null && monthExpenses.isNotEmpty) {
+      final capped = monthExpenses.take(100).toList();
+      final monthTotal =
+          capped.fold<double>(0, (s, e) => s + (e['amount'] as num));
+      final lines = capped.map((e) {
+        final date = (e['date'] as String).length >= 10
+            ? (e['date'] as String).substring(5, 10)
+            : e['date'] as String;
+        final name = e['item_name'] ?? e['category'] ?? '';
+        final amt = (e['amount'] as num).toStringAsFixed(0);
+        final cat = e['category'] ?? '';
+        final wallet = e['payment_method'] ?? 'Cash';
+        return '$date | $name | ₱$amt | $cat | $wallet';
+      }).join('\n');
+      monthExpensesSummary =
+          '\n\n=== THIS MONTH\'S TRANSACTIONS ($monthLabel) ===\n$lines\nTotal: ₱${monthTotal.toStringAsFixed(0)} across ${capped.length} entries';
+    }
+
     _fullContext = """
 Today: $todayStr | Yesterday: $yesterdayStr | Account type: $accountType | Income: ${incomeWalletMode ? (monthlyIncome > 0 ? '₱${monthlyIncome.toStringAsFixed(0)}/mo${monthlyIncome < 1000 ? ' ⚠️ (looks incorrect — ask user to update)' : ''}' : 'Not set') : 'Lightweight mode — not tracked'} | Score: $healthScore/100$modeSummary$limitSummary
 This month spent: ₱${totalSpent.toStringAsFixed(0)}$wantNeedSummary
@@ -468,7 +491,7 @@ ${todayMoodScore != null ? 'Mood: $todayMoodScore/5${todayMoodScore <= 2 ? ' (lo
 ${customCategories.isNotEmpty ? 'Custom cats: ${customCategories.join(', ')}' : ''}$rulesSummary
 $walletsSummary
 Expenses (if not listed here, it does not exist in DB):
-$expenseSummary
+$expenseSummary$monthExpensesSummary
 
 Budgets: $budgetSummary$goalsSummary$debtsSummary$recurringSummary$installmentsSummary$fhsSummary$gapSummary$insuranceSummary
 
@@ -940,12 +963,13 @@ PH BNPL/Loan Services (2026):
   ///   "your lunch for"         → "Lunch"
   ///   "the tricycle fare for"  → "Tricycle fare"
   ///   "my breakfast for"       → "Breakfast"
+  ///   "For Nov 2 ("            → "Nov 2 (" → caught by _isActionValid
   ///   "Lunch"                  → "Lunch" (unchanged)
   static String _sanitizeItemName(String raw) {
     var name = raw.trim();
-    // Remove leading possessive/article prefixes
+    // Remove leading possessive/article prefixes (including "for"/"For")
     name = name.replaceFirst(
-        RegExp(r'^(your|my|the|a|an)\s+', caseSensitive: false), '');
+        RegExp(r'^(your|my|the|a|an|for)\s+', caseSensitive: false), '');
     // Remove trailing "for" or "for [date/reason]"
     name = name.replaceFirst(RegExp(r'\s+for\s*.*$', caseSensitive: false), '');
     name = name.trim();
@@ -954,8 +978,27 @@ PH BNPL/Loan Services (2026):
     return name[0].toUpperCase() + name.substring(1);
   }
 
+  /// Convert month number (1–12) to abbreviated month name.
+  static String _monthName(int month) {
+    const names = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    return names[(month - 1).clamp(0, 11)];
+  }
+
   /// Estimate appropriate max_tokens based on message type.
-  /// Simple expense logging needs ~200 tokens. Multi-item needs ~900.
+  /// Simple expense logging needs ~200 tokens. Multi-item needs ~900+.
   static int _estimateMaxTokens(String message) {
     final lower = message.toLowerCase();
     // Bulk rename/capitalization fix — needs many ACTION lines
@@ -963,7 +1006,7 @@ PH BNPL/Loan Services (2026):
         lower.contains('rename') ||
         lower.contains('fix the name') ||
         lower.contains('fix name')) {
-      return 900;
+      return 1800;
     }
     // ── MULTI-ITEM DETECTION ─────────────────────────────────────────────────
     // Count amounts that look like prices (numbers preceded by ₱ or followed by
@@ -989,10 +1032,10 @@ PH BNPL/Loan Services (2026):
         RegExp(r'\bthen\b').hasMatch(lower) ||
         RegExp(r'\bfor\b.*\bfor\b').hasMatch(lower); // "30 for X, 45 for Y"
     if (amountCount >= 2 && hasSpendVerb && hasMultiItemConnector) {
-      // Each item needs ~220 tokens (reply + ACTION line). Scale with item count,
-      // uncapped at 1400 so large batches (6+ items) don't get cut off.
+      // Each item needs ~220 tokens (reply + ACTION line). Scale freely —
+      // removed the 1400-token upper cap that was causing trimmed responses.
       final itemCount = amountCount.clamp(2, 8);
-      return (500 + itemCount * 150).clamp(800, 1400);
+      return (600 + itemCount * 220).clamp(800, 3000);
     }
     if (amountCount >= 3 && hasSpendVerb) {
       // Multiple amounts even without connector words — still multi-item
@@ -1006,13 +1049,13 @@ PH BNPL/Loan Services (2026):
     if (RegExp(
             r'\b(list|show|give me|what are|how much|total|check|see|view|transactions|this week|last week|this month|this year)\b')
         .hasMatch(lower)) {
-      return 600;
+      return 1200;
     }
     // Advice, analysis, explanation — longer response needed
     if (RegExp(
             r'\b(advice|suggest|help|explain|how|why|should|can i|what if|analyze|review|compare|plan|split|feasib)\b')
         .hasMatch(lower)) {
-      return 600;
+      return 1200;
     }
     return 450;
   }
@@ -1770,17 +1813,39 @@ PH BNPL/Loan Services (2026):
         // Must have item_name and a positive amount
         final name = p['item_name'];
         final amt = (p['amount'] as num?)?.toDouble() ?? 0;
-        return name != null &&
-            name.toString().trim().isNotEmpty &&
-            amt > 0 &&
-            amt < 10000000; // sanity cap: ₱10M
+        if (name == null || amt <= 0 || amt >= 10000000) return false;
+        final nameStr = name.toString().trim();
+        if (nameStr.isEmpty) return false;
+        // Reject names that are clearly truncated or malformed
+        if (nameStr.endsWith('(') ||
+            nameStr.endsWith(',') ||
+            nameStr.endsWith(' ')) return false;
+        if (nameStr.length < 2) return false;
+        // Reject names that are only prepositions/articles
+        final loweredName = nameStr.toLowerCase();
+        if (['for', 'the', 'a', 'an', 'my', 'your', 'of', 'in', 'at', 'on']
+            .contains(loweredName)) return false;
+        return true;
       case 'set_budget':
         return p['category'] != null &&
             (p['amount'] as num?)?.toDouble() != null;
       case 'set_income':
-      case 'add_income':
         final inc = (p['amount'] as num?)?.toDouble() ?? 0;
         return inc > 0;
+      case 'add_income':
+        final incAmt = (p['amount'] as num?)?.toDouble() ?? 0;
+        if (incAmt <= 0) return false;
+        final incTitle = p['title'];
+        if (incTitle == null) return true; // title is optional for add_income
+        final incTitleStr = incTitle.toString().trim();
+        if (incTitleStr.endsWith('(') ||
+            incTitleStr.endsWith(',') ||
+            incTitleStr.endsWith(' ')) return false;
+        if (incTitleStr.isNotEmpty && incTitleStr.length < 2) return false;
+        final incTitleLower = incTitleStr.toLowerCase();
+        if (['for', 'the', 'a', 'an', 'my', 'your', 'of', 'in', 'at', 'on']
+            .contains(incTitleLower)) return false;
+        return true;
       case 'set_wallet_balance':
         return p['wallet_name'] != null && (p['balance'] as num?) != null;
       case 'transfer_wallet':
@@ -1842,9 +1907,22 @@ PH BNPL/Loan Services (2026):
             ((p['your_share'] as num?)?.toDouble() ?? 0) > 0;
       case 'update_expense':
         // Must provide at least one identifier (id or item_name) to find the record
-        return p['id'] != null ||
-            (p['item_name'] != null &&
-                (p['item_name'] as String).trim().isNotEmpty);
+        if (p['id'] == null &&
+            (p['item_name'] == null ||
+                (p['item_name'] as String).trim().isEmpty)) return false;
+        // If new_item_name is provided, validate it too
+        final newName = p['new_item_name'];
+        if (newName != null) {
+          final newNameStr = newName.toString().trim();
+          if (newNameStr.endsWith('(') ||
+              newNameStr.endsWith(',') ||
+              newNameStr.endsWith(' ')) return false;
+          if (newNameStr.isNotEmpty && newNameStr.length < 2) return false;
+          final newNameLower = newNameStr.toLowerCase();
+          if (['for', 'the', 'a', 'an', 'my', 'your', 'of', 'in', 'at', 'on']
+              .contains(newNameLower)) return false;
+        }
+        return true;
       case 'delete_goal':
         return p['name'] != null && (p['name'] as String).trim().isNotEmpty;
       case 'delete_recurring':

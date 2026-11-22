@@ -209,7 +209,7 @@ Return ONLY this JSON:
 }''';
 
     try {
-      final raw = await _callGroq(system, user);
+      final raw = await _callGroq(system, user, maxTokens: 800);
       final cleaned =
           raw.replaceAll("```json", "").replaceAll("```", "").trim();
 
@@ -613,7 +613,7 @@ Return ONLY this JSON:
     final user =
         "Total spent this month: ₱${total.toStringAsFixed(2)}\n\nExpenses:\n$summary\n\nGive 2-3 insights based on these exact figures.";
 
-    return await _callGroq(system, user);
+    return await _callGroq(system, user, maxTokens: 1000);
   }
 
   /// Get personalized financial advice
@@ -646,7 +646,7 @@ $summary
 
 Give 3-4 specific financial tips. Include savings suggestions.""";
 
-    return await _callGroq(system, user, maxTokens: 600);
+    return await _callGroq(system, user, maxTokens: 1200);
   }
 
   /// Generate a plain-English monthly summary paragraph.
@@ -692,7 +692,7 @@ Give 3-4 specific financial tips. Include savings suggestions.""";
         "Top categories: $topCats\n\n"
         "Write a 2–4 sentence plain-English summary. Remember: this is only day $daysPassed of $daysInMonth.";
 
-    return await _callGroq(system, user, maxTokens: 200);
+    return await _callGroq(system, user, maxTokens: 400);
   }
 
   /// Pre-process raw transaction text (pasted or OCR'd) to normalize it
