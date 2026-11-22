@@ -2,6 +2,161 @@
 
 All notable changes to SmartSpend are documented here.
 
+## [3.5.3] - 2026-11-22
+
+### Added
+- **Firebase Analytics**: model usage, OCR scan, voice command, AI chat, and feature-entry events (no PII — model IDs and boolean success only).
+- **OpenRouter rate-limit warning UX**: amber dismissible banner in AI chat when fewer than 100 daily requests remain; auto-reads `X-RateLimit-Remaining` header from every OpenRouter call.
+- **Analyze CI workflow** (`.github/workflows/analyze.yml`): runs `flutter analyze --no-fatal-infos` on every push/PR to `master`.
+- Stable APK asset names (`SmartSpend-latest-*.apk`) in release workflow and website download links — links now survive version bumps.
+
+### Fixed
+- **OCR model routing**: `BankImportScreen._parse()` and `BatchImageImportScreen` now wrap the LLM parse call with `OCRService.preferredModelForOcr()` / try-finally restore, ensuring vision-capable models are used for receipt and screenshot parsing.
+- **Voice model routing**: `_startVoiceInput` in `ai_screen.dart` now wraps `await _send()` with `PesoVoiceService.preferredModelForVoice()` / try-finally restore, using the fastest available model for voice commands.
+- **Cerebras excluded from fast pool**: `isFast` changed to `false` for `cerebras_120b` (5 RPM free-tier cap makes it unsuitable for voice latency).
+- **SMS Auto-sync toggle hidden** behind `kDebugMode` until the SMS MethodChannel is implemented; Notification Access card likewise hidden.
+- Website version badges updated: `v3.5.0`/`v3.5.1` → `v3.5.3` across hero meta, SUS stat, screenshots section, research findings title, and download version note.
+- README model counts corrected: "20 AI Models" → 16; "16-model fallback chain" → 15; Cerebras `Fast` column ⚡ → —.
+
+### Changed
+- `_buildComingSoonSection` renamed to `_buildResearchFindingsSection`; call-site comment updated to `// Research Findings — SUS 61.83, N=30`.
+- Score-history comment: "placeholder" → "empty state".
+
+### Technical
+- `firebase_analytics: ^11.3.0` added to `pubspec.yaml`.
+- New services: `AnalyticsService`, `RateLimitService`.
+
+## [3.5.2] - 2026-11-22
+
+### Fixed
+- Corrected OpenRouter model IDs — removed invalid `:free` suffixes that caused 404 errors.
+- Continuous fallback chain walks all 15 models without stopping on the first failure.
+- CI: split `APP_CONFIG_DART` secret into A+B parts to stay within GitHub secret size limits.
+
+### Changed
+- Website: alignment, background canvas, and version-badge layout fixes.
+- Research section title centering corrected.
+
+### Technical
+- Version: 3.5.1+129 → 3.5.2+130.
+
+## [3.5.1] - 2026-11-22
+
+### Fixed
+- Update cache now invalidates on version change (previously stale cache persisted across upgrades).
+- Voice input uses a `Completer` to await the final speech result — fixes the empty-voice-result bug where the input text was sent before speech recognition finished.
+
+### Technical
+- Cache TTL: 6 hours.
+- Version: 3.5.0+128 → 3.5.1+129.
+
+## [3.5.0] - 2026-11-22
+
+### Added
+- Investment portfolio tracker with real-time PnL.
+- Smart recurring expense detector.
+- BIR quarterly tax reminders + Tax screen (income tax estimator, percentage tax calculator).
+- Multi-currency support — 57 currencies.
+- Price Intelligence Phase 2: price history charts, trend alerts, best-deal finder.
+- Notification listener service + GCash/Maya SMS parsing.
+- Authentic app theming + Peso SVG mascot.
+- Savings streak and weekly challenges.
+- Government receipt OCR detection.
+- Net worth tracker.
+
+### Technical
+- Version: 3.4.0+127 → 3.5.0+128.
+
+## [3.4.0] - 2026-11-21
+
+### Added
+- Cash Flow Forecasting (FEAT-001).
+- Price Intelligence Phase 1 (FEAT-002).
+- eGov contributions: SSS, PhilHealth, Pag-IBIG screens (FEAT-003/4/5).
+- Bill payment reminders (FEAT-006).
+- OFW remittance tracker (FEAT-007).
+- Balikbayan box tracker (FEAT-008).
+- Auto-categorization (FEAT-009).
+- Transaction filters (FEAT-010).
+- Debt payoff calculator (FEAT-011).
+- Animated goal progress (FEAT-012).
+- Spending insights dashboard (FEAT-013).
+- CSV export (FEAT-014).
+- Backup/restore JSON (FEAT-015).
+- Spending heatmap.
+
+### Technical
+- `kAppVersion` → 3.4.0.
+- Version: 3.3.9+126 → 3.4.0+127.
+
+## [3.3.9] - 2026-11-21
+
+### Added
+- 7 individual OpenRouter free models added to the model list.
+- OpenRouter HTTP headers (`HTTP-Referer`, `X-Title`) applied to all `or_*` model requests.
+- Safe-to-Spend dashboard card.
+
+### Fixed
+- Model-selector scrolling issues resolved.
+
+### Changed
+- README: "16 AI models" → "18 AI models" (later corrected to 16 in v3.5.3).
+
+### Technical
+- Version: 3.3.8+125 → 3.3.9+126.
+
+## [3.3.8] - 2026-11-20
+
+### Fixed
+- Global search rewritten: uses `textContent`, fires on `DOMContentLoaded`, deduplicates results.
+- OpenRouter blocked from background AI tasks (budget analysis, nudges) to conserve free quota.
+- Empty-key fallback: app no longer silently falls back to Groq when OpenRouter key is blank.
+- 25 new reviewer Q&A entries added.
+
+### Technical
+- Version: 3.3.7+124 → 3.3.8+125.
+
+## [3.3.7] - 2026-11-20
+
+### Changed
+- AI reliability overhaul: Gemini is tried first; OpenRouter moved to last in the fallback order.
+- Reviewer HTML updated with 13-provider fallback chain.
+
+### Technical
+- Version: 3.3.6+123 → 3.3.7+124.
+
+## [3.3.6] - 2026-11-19
+
+### Added
+- OpenRouter 5-model internal fallback chain (tries multiple models before giving up).
+
+### Fixed
+- Corrected OpenRouter model ID to `gemma-4-31b-it:free`.
+
+### Technical
+- Version: 3.3.5+122 → 3.3.6+123.
+
+## [3.3.5] - 2026-11-19
+
+### Fixed
+- Critical null-content crash: app no longer crashes when the AI returns a null body.
+- OpenRouter reviewer model changed to Gemma for better reliability.
+- Defense time rescheduled to 11:00 AM in HTML.
+
+### Technical
+- Version: 3.3.4+121 → 3.3.5+122.
+
+## [3.3.4] - 2026-11-19
+
+### Changed
+- Reviewer Q&A reordered — most important questions shown first.
+- Core Essentials tab added: plain-language fundamentals for evaluators.
+- Overstated uniqueness claims corrected; "first Filipino app" claim removed.
+- Version Discrepancy block updated to reference v3.3.3.
+
+### Technical
+- Version: 3.3.3+120 → 3.3.4+121.
+
 ## [3.3.3] - 2026-11-18
 
 ### Fixed (Final Defense Audit)
