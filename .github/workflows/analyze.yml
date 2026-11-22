@@ -1,0 +1,20 @@
+name: Analyze
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.6'
+          channel: stable
+          cache: true
+      - name: Write stub app_config.dart
+        run: cp lib/services/app_config.dart.example lib/services/app_config.dart || echo "No example file, using committed stub"
+      - run: flutter pub get
+      - run: flutter analyze --no-fatal-infos
