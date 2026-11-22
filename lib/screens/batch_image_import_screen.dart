@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../services/ocr_service.dart';
+import '../services/analytics_service.dart';
 import '../services/app_config.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/llm_service.dart';
@@ -198,9 +199,11 @@ class _BatchImageImportScreenState extends State<BatchImageImportScreen> {
                   ))
               .toList();
           entry.status = _ImageStatus.done;
+          AnalyticsService.logOcrScan(AppConfig.activeModelId, true);
         } catch (e) {
           entry.status = _ImageStatus.error;
           entry.error = e.toString().replaceAll('Exception: ', '');
+          AnalyticsService.logOcrScan(AppConfig.activeModelId, false);
         }
         if (mounted) setState(() => _processedCount++);
       });

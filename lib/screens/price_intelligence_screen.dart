@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../models/price_data.dart';
 import '../services/price_intelligence_service.dart';
+import '../services/analytics_service.dart';
 import '../services/doe_service.dart';
 import '../services/psa_service.dart';
 
@@ -63,6 +64,7 @@ class _ProductsTabState extends State<_ProductsTab> {
   @override
   void initState() {
     super.initState();
+    AnalyticsService.logFeatureUsed('price_intelligence');
     _loadData();
   }
 
@@ -643,10 +645,12 @@ class _FuelPricesTabState extends State<_FuelPricesTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('DOE Fuel Prices',
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold)),
                     Text(
                       'Department of Energy — weekly pump price data',
-                      style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
+                      style: TextStyle(
+                          fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
                     ),
                   ],
                 ),
@@ -659,7 +663,9 @@ class _FuelPricesTabState extends State<_FuelPricesTab> {
           if (_isStale && !_loading) _buildStaleWarning(cs),
           if (_loading)
             const Center(
-              child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+              child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: CircularProgressIndicator()),
             )
           else if (_prices.isEmpty)
             _buildUnavailable(cs)
@@ -668,7 +674,8 @@ class _FuelPricesTabState extends State<_FuelPricesTab> {
           const SizedBox(height: 16),
           Text(
             'Pull down to refresh. Data sourced from DOE Philippines.',
-            style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.45)),
+            style:
+                TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.45)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -687,7 +694,8 @@ class _FuelPricesTabState extends State<_FuelPricesTab> {
             ? 'Updated yesterday'
             : 'Last updated: $_ageDays days ago';
     return Row(children: [
-      Icon(Icons.update, size: 14, color: _isStale ? Colors.orange : Colors.green),
+      Icon(Icons.update,
+          size: 14, color: _isStale ? Colors.orange : Colors.green),
       const SizedBox(width: 4),
       Text(label,
           style: TextStyle(
@@ -724,10 +732,12 @@ class _FuelPricesTabState extends State<_FuelPricesTab> {
           Icon(Icons.cloud_off, size: 48, color: cs.onSurface.withOpacity(0.3)),
           const SizedBox(height: 12),
           Text('Fuel price data unavailable',
-              style: TextStyle(fontSize: 15, color: cs.onSurface.withOpacity(0.5))),
+              style: TextStyle(
+                  fontSize: 15, color: cs.onSurface.withOpacity(0.5))),
           const SizedBox(height: 6),
           Text('Pull down to retry',
-              style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.4))),
+              style: TextStyle(
+                  fontSize: 12, color: cs.onSurface.withOpacity(0.4))),
         ]),
       ),
     );
@@ -741,15 +751,17 @@ class _FuelPricesTabState extends State<_FuelPricesTab> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(children: [
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(p.commodity,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w600)),
               if (p.periodLabel != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 2),
                   child: Text(p.periodLabel!,
-                      style:
-                          TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+                      style: TextStyle(
+                          fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
                 ),
             ]),
           ),
@@ -759,7 +771,8 @@ class _FuelPricesTabState extends State<_FuelPricesTab> {
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             Text(p.unit,
-                style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+                style: TextStyle(
+                    fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
           ]),
         ]),
       ),
@@ -825,10 +838,12 @@ class _MarketPricesTabState extends State<_MarketPricesTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('PSA Retail Prices',
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold)),
                     Text(
                       'Philippine Statistics Authority — monthly commodity prices',
-                      style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
+                      style: TextStyle(
+                          fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
                     ),
                   ],
                 ),
@@ -841,7 +856,9 @@ class _MarketPricesTabState extends State<_MarketPricesTab> {
           if (_isStale && !_loading) _buildStaleWarning(cs),
           if (_loading)
             const Center(
-              child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+              child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: CircularProgressIndicator()),
             )
           else if (_prices.isEmpty)
             _buildUnavailable(cs)
@@ -850,7 +867,8 @@ class _MarketPricesTabState extends State<_MarketPricesTab> {
           const SizedBox(height: 16),
           Text(
             'Pull down to refresh. Data sourced from PSA OpenStat (openstat.psa.gov.ph).',
-            style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.45)),
+            style:
+                TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.45)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -869,7 +887,8 @@ class _MarketPricesTabState extends State<_MarketPricesTab> {
             ? 'Updated yesterday'
             : 'Last updated: $_ageDays days ago';
     return Row(children: [
-      Icon(Icons.update, size: 14, color: _isStale ? Colors.orange : Colors.green),
+      Icon(Icons.update,
+          size: 14, color: _isStale ? Colors.orange : Colors.green),
       const SizedBox(width: 4),
       Text(label,
           style: TextStyle(
@@ -906,10 +925,12 @@ class _MarketPricesTabState extends State<_MarketPricesTab> {
           Icon(Icons.cloud_off, size: 48, color: cs.onSurface.withOpacity(0.3)),
           const SizedBox(height: 12),
           Text('Market price data unavailable',
-              style: TextStyle(fontSize: 15, color: cs.onSurface.withOpacity(0.5))),
+              style: TextStyle(
+                  fontSize: 15, color: cs.onSurface.withOpacity(0.5))),
           const SizedBox(height: 6),
           Text('Pull down to retry',
-              style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.4))),
+              style: TextStyle(
+                  fontSize: 12, color: cs.onSurface.withOpacity(0.4))),
         ]),
       ),
     );
@@ -923,23 +944,27 @@ class _MarketPricesTabState extends State<_MarketPricesTab> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(children: [
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(p.commodity,
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w600)),
               if (p.periodLabel != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 2),
                   child: Text(p.periodLabel!,
-                      style:
-                          TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+                      style: TextStyle(
+                          fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
                 ),
             ]),
           ),
           Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             Text('₱${p.price.toStringAsFixed(2)}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             Text(p.unit,
-                style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
+                style: TextStyle(
+                    fontSize: 11, color: cs.onSurface.withOpacity(0.5))),
           ]),
         ]),
       ),

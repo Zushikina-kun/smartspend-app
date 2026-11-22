@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import '../services/analytics_service.dart';
 import '../services/app_config.dart';
 import '../services/llm_service.dart';
 import '../services/ocr_service.dart';
@@ -135,7 +136,9 @@ class _BankImportScreenState extends State<BankImportScreen> {
             .toList();
         _parsing = false;
       });
+      AnalyticsService.logOcrScan(AppConfig.activeModelId, true);
     } catch (e) {
+      AnalyticsService.logOcrScan(AppConfig.activeModelId, false);
       setState(() {
         _parseError = e.toString().replaceAll('Exception: ', '');
         _parsing = false;

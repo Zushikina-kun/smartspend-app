@@ -4,6 +4,7 @@ import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import '../services/analytics_service.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../services/egov/philhealth_service.dart';
@@ -41,6 +42,7 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
   @override
   void initState() {
     super.initState();
+    AnalyticsService.logFeatureUsed('gov_contributions');
     _tabController = TabController(length: 2, vsync: this);
     _loadData();
     _mockCoverage = PhilHealthService.generateMockCoverageInfo();

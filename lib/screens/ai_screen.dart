@@ -25,6 +25,7 @@ import '../services/debug_service.dart';
 import '../services/undo_service.dart';
 import '../services/behavioral_feedback_service.dart';
 import '../services/app_config.dart';
+import '../services/analytics_service.dart';
 import '../main.dart' show themeService;
 import '../models/expense.dart';
 import '../widgets/info_button.dart';
@@ -743,6 +744,9 @@ class _AIScreenState extends State<AIScreen> {
     });
     if (retryText == null) _controller.clear();
     _scrollToBottom();
+    if (retryText == null) {
+      AnalyticsService.logAiMessage(AppConfig.effectiveModelId);
+    }
 
     try {
       // Track session message count for chat_session_10 badge
@@ -2459,6 +2463,7 @@ class _AIScreenState extends State<AIScreen> {
             final savedModel = AppConfig.activeModelId;
             final voiceModel = PesoVoiceService.preferredModelForVoice();
             if (voiceModel != savedModel) AppConfig.setModel(voiceModel);
+            AnalyticsService.logVoiceCommand(voiceModel);
             try {
               await _send();
             } finally {
@@ -2555,7 +2560,9 @@ class _AIScreenState extends State<AIScreen> {
                             color:
                                 isGroqLimited ? Colors.orange : Colors.grey)),
                     onTap: () {
+                      final from = AppConfig.activeModelId;
                       AppConfig.setModel(m.$1);
+                      AnalyticsService.logModelSwitched(from, m.$1);
                       AIChatService.clearHistory();
                       Navigator.pop(ctx);
                       setState(() {});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
+import '../services/analytics_service.dart';
 import '../services/sms_parser_service.dart';
 import '../services/db_service.dart';
 import '../services/app_config.dart';
@@ -1044,8 +1045,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: InkWell(
                       onTap: () {
+                        final from = AppConfig.activeModelId;
                         setState(() {});
                         AppConfig.setModel(m.$1);
+                        AnalyticsService.logModelSwitched(from, m.$1);
                         // Note: AppConfig.setModel() calls _saveActiveModel()
                         // which writes 'active_model_id' — no extra DB write needed
                       },

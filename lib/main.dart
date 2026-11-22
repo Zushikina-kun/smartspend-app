@@ -12,6 +12,7 @@ import 'services/proactive_nudge_service.dart';
 import 'services/app_config.dart';
 import 'services/db_service.dart';
 import 'services/pro_service.dart';
+import 'services/analytics_service.dart';
 import 'services/doe_service.dart';
 import 'services/psa_service.dart';
 
@@ -28,6 +29,7 @@ void main() async {
   ));
 
   await Firebase.initializeApp();
+  await AnalyticsService.init();
 
   // App Check — Play Integrity for Play Store builds, debug provider otherwise
   // Play Integrity only works for apps installed via Play Store with valid signing

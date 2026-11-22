@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../services/analytics_service.dart';
 import '../services/tax_reminder_service.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
@@ -31,6 +32,7 @@ class _TaxScreenState extends State<TaxScreen>
   @override
   void initState() {
     super.initState();
+    AnalyticsService.logFeatureUsed('tax_bir');
     _tabController = TabController(length: 3, vsync: this);
     _calculateIncomeTax();
     _calculatePercentageTax();
