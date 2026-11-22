@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'app_config.dart';
 
 /// Centralized Peso speech lines — consistent Filipino/Taglish voice.
 /// All messages are warm, non-judgmental, and brief (1–2 sentences max).
@@ -84,6 +85,28 @@ class PesoVoiceService {
   /// Returns all phrase options for a given context (for use as idleSpeeches).
   static List<String> getAll(PesoContext ctx) =>
       List.unmodifiable(_phrases[ctx] ?? const []);
+
+  /// Returns the preferred model ID for processing voice commands.
+  ///
+  /// Voice commands require low latency — users are waiting in real time for
+  /// the response. Fast models (isFast == true in [AppConfig.availableModels])
+  /// are selected first so the transcribed speech is parsed quickly.
+  ///
+  /// Call this before the AI step and restore the original model after:
+  /// ```dart
+  /// final savedModel = AppConfig.activeModelId;
+  /// final voiceModel = PesoVoiceService.preferredModelForVoice();
+  /// if (voiceModel != savedModel) AppConfig.setModel(voiceModel);
+  /// final result = await AiChatService.chat(transcribedSpeech);
+  /// if (voiceModel != savedModel) AppConfig.setModel(savedModel);
+  /// ```
+  static String preferredModelForVoice() {
+    return AppConfig.preferredFastModelId;
+  }
+
+  /// Whether the given model ID is considered fast/low-latency.
+  static bool isFastModel(String modelId) =>
+      AppConfig.fastModelIds.contains(modelId);
 
   static const Map<PesoContext, List<String>> _phrases = {
     PesoContext.morningGreeting: [
