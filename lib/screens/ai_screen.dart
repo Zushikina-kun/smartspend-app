@@ -2455,7 +2455,15 @@ class _AIScreenState extends State<AIScreen> {
         if (text.trim().isNotEmpty) {
           await Future.delayed(const Duration(milliseconds: 600));
           if (mounted && _controller.text.trim() == text.trim()) {
-            await _send();
+            // Use the preferred fast model for voice input, then restore.
+            final savedModel = AppConfig.activeModelId;
+            final voiceModel = PesoVoiceService.preferredModelForVoice();
+            if (voiceModel != savedModel) AppConfig.setModel(voiceModel);
+            try {
+              await _send();
+            } finally {
+              if (voiceModel != savedModel) AppConfig.setModel(savedModel);
+            }
           }
         }
       }
