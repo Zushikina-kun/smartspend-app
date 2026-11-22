@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
@@ -78,7 +79,7 @@ class _PCACalculatorScreenState extends State<PCACalculatorScreen> {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Peso Cost Averaging"),
+        title: Text(AppLocalizations.of(context)!.pcaCalculatorScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),

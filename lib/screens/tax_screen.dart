@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../services/analytics_service.dart';
 import '../services/tax_reminder_service.dart';
@@ -102,7 +103,7 @@ class _TaxScreenState extends State<TaxScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BIR Tax Calculator'),
+        title: Text(AppLocalizations.of(context)!.taxScreenTitle),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

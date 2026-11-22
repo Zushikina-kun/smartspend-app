@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/db_service.dart';
 import '../services/category_service.dart';
 import '../widgets/info_button.dart';

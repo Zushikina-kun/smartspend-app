@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
 
@@ -145,7 +146,7 @@ class _GlossaryScreenState extends State<GlossaryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Financial Glossary"),
+        title: Text(AppLocalizations.of(context)!.glossaryScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),

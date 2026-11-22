@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
@@ -49,7 +50,7 @@ class _BankComparisonScreenState extends State<BankComparisonScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("PH Banks & Investments"),
+        title: Text(AppLocalizations.of(context)!.bankComparisonScreenTitle),
         actions: const [
           InfoButton(
             title: "PH Banks & Investments",

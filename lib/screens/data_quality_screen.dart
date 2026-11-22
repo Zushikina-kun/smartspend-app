@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/data_quality_service.dart';
 import '../services/event_bus.dart';
 import '../widgets/peso_mascot.dart';

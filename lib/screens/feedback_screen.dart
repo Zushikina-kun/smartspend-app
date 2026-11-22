@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/debug_service.dart' show kAppVersion;

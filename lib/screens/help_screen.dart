@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/peso_mascot.dart';
 
 class HelpScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _HelpScreenState extends State<HelpScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Help & Guide"),
+        title: Text(AppLocalizations.of(context)!.help),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: Padding(

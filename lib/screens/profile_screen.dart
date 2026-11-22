@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import '../l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import '../main.dart';
@@ -1488,7 +1489,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: Text(AppLocalizations.of(context)!.profileScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),

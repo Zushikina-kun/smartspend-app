@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/expense.dart';
@@ -1013,7 +1014,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       appBar: AppBar(
         title: _isSelecting
             ? Text("${_selected.length} selected")
-            : const Text("All Transactions"),
+            : Text(AppLocalizations.of(context)!.transactionsScreenTitle),
         leading: _isSelecting
             ? IconButton(
                 icon: const Icon(Icons.close),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/db_service.dart';
 import '../widgets/info_button.dart';
@@ -510,7 +511,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Achievements"),
+        title: Text(AppLocalizations.of(context)!.achievements),
         actions: [
           const InfoButton(
             title: "Achievements",

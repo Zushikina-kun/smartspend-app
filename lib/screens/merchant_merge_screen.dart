@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/info_button.dart';
 import '../services/merchant_normalization_service.dart';
 import '../services/event_bus.dart';
@@ -72,7 +73,7 @@ class _MerchantMergeScreenState extends State<MerchantMergeScreen> {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Merchant Cleanup"),
+        title: Text(AppLocalizations.of(context)!.merchantMergeScreenTitle),
         actions: [
           const InfoButton(
             title: "Merchant Cleanup",

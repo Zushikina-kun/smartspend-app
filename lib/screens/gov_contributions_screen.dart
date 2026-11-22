@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
@@ -236,7 +237,7 @@ class _GovContributionsScreenState extends State<GovContributionsScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gov Contributions'),
+        title: Text(AppLocalizations.of(context)!.govContributionsScreenTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.file_download_outlined),

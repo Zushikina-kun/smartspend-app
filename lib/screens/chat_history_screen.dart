@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
@@ -194,7 +195,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat History'),
+        title: Text(AppLocalizations.of(context)!.chatHistoryScreenTitle),
         actions: [
           const InfoButton(
             title: 'Chat History',

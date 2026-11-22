@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../services/forecast_service.dart';
@@ -69,7 +70,7 @@ class _ForecastScreenState extends State<ForecastScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cash Flow Forecast'),
+        title: Text(AppLocalizations.of(context)!.forecastScreenTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

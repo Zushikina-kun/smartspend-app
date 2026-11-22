@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/app_lock_service.dart';
 import '../services/auth_service.dart';

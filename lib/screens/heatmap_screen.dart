@@ -1,5 +1,6 @@
 // lib/screens/heatmap_screen.dart
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
 import '../models/expense.dart';
@@ -166,7 +167,7 @@ class _HeatmapScreenState extends State<HeatmapScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Spending Heatmap'),
+        title: Text(AppLocalizations.of(context)!.heatmapScreenTitle),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())

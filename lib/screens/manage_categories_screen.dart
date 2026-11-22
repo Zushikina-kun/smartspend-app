@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/category_service.dart';
 import '../services/db_service.dart';
 import '../widgets/info_button.dart';
@@ -123,7 +124,7 @@ class _ManageCategoriesScreenState extends State<ManageCategoriesScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Manage Categories"),
+        title: Text(AppLocalizations.of(context)!.manageCategoriesScreenTitle),
         actions: [
           const InfoButton(
             title: "Custom Categories",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../models/price_data.dart';
@@ -22,7 +23,7 @@ class _PriceIntelligenceScreenState extends State<PriceIntelligenceScreen> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Price Intelligence'),
+          title: Text(AppLocalizations.of(context)!.priceIntelligenceScreenTitle),
           bottom: const TabBar(
             isScrollable: true,
             tabs: [

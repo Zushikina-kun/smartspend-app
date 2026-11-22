@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../l10n/app_localizations.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
 import '../widgets/info_button.dart';
@@ -395,11 +396,12 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _summaryItem("This Month",
+                      _summaryItem(AppLocalizations.of(context)!.thisMonth,
                           CurrencyService.format(thisMonthIncome)),
-                      _summaryItem(
-                          "All Time", CurrencyService.format(totalIncome)),
-                      _summaryItem("Entries", "${_income.length}"),
+                      _summaryItem(AppLocalizations.of(context)!.allTime,
+                          CurrencyService.format(totalIncome)),
+                      _summaryItem(AppLocalizations.of(context)!.entries,
+                          "${_income.length}"),
                     ],
                   ),
                 ),

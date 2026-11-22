@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
@@ -170,7 +171,7 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
     final netWorthColor = netWorth >= 0 ? Colors.green : Colors.red;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Net Worth')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.netWorthScreenTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
         child: const Icon(Icons.add),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
@@ -78,7 +79,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Spending Insights'),
+        title: Text(AppLocalizations.of(context)!.insightsScreenTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

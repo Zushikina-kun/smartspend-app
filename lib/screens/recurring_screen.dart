@@ -1,5 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'dart:async';
+import '../l10n/app_localizations.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
 import '../services/peso_sound_service.dart';
@@ -384,7 +385,7 @@ class _RecurringScreenState extends State<RecurringScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Recurring Transactions"),
+        title: Text(AppLocalizations.of(context)!.recurringScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -510,7 +511,7 @@ class _RecurringScreenState extends State<RecurringScreen> {
           }))
             TextButton.icon(
               icon: const Icon(Icons.playlist_add_check, size: 18),
-              label: const Text("Log All Due"),
+              label: Text(AppLocalizations.of(context)!.logAllDue),
               onPressed: _logAllDue,
             ),
         ],
@@ -519,7 +520,7 @@ class _RecurringScreenState extends State<RecurringScreen> {
         heroTag: 'fab_recurring',
         onPressed: () => _showAddDialog(),
         icon: const Icon(Icons.add),
-        label: const Text("Add Recurring"),
+        label: Text(AppLocalizations.of(context)!.addRecurring),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
@@ -661,7 +662,7 @@ class _RecurringScreenState extends State<RecurringScreen> {
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               icon: const Icon(Icons.add),
-                              label: const Text("Add Recurring"),
+                              label: Text(AppLocalizations.of(context)!.addRecurring),
                               onPressed: () => _showAddDialog(),
                             ),
                           ],

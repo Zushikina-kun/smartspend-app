@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/debug_service.dart' show kAppVersion;
@@ -14,7 +15,7 @@ class AboutScreen extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("About")),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.about)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(

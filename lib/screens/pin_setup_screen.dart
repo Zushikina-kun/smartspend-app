@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/app_lock_service.dart';
 
 /// Screen to set or change the 4-digit PIN for app lock.

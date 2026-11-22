@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../l10n/app_localizations.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
 import '../services/peso_sound_service.dart';
@@ -603,7 +604,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Savings Goals"),
+        title: Text(AppLocalizations.of(context)!.savingsGoalsScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -648,7 +649,7 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
         heroTag: 'fab_savings_goals',
         onPressed: () => _showAddDialog(),
         icon: const Icon(Icons.add),
-        label: const Text("New Goal"),
+        label: Text(AppLocalizations.of(context)!.newGoal),
       ),
       body: Stack(
         children: [

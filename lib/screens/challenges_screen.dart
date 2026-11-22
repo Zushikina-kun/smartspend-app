@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/streak_service.dart';
 
 class ChallengesScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Challenges & Streaks')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.challengesScreenTitle)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(

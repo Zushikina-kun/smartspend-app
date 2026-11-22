@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/info_button.dart';
 import '../widgets/peso_mascot.dart';
 import '../services/db_service.dart';
@@ -137,7 +138,7 @@ class _LogDueBillsScreenState extends State<LogDueBillsScreen> {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Log Due Bills"),
+        title: Text(AppLocalizations.of(context)!.logDueBillsScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4),

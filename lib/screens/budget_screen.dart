@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart';
 import '../models/budget.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
@@ -288,7 +289,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Budgets"),
+        title: Text(AppLocalizations.of(context)!.budgetsScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -329,7 +330,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         heroTag: 'fab_budget',
         onPressed: () => _showSetBudgetDialog(),
         icon: const Icon(Icons.add),
-        label: const Text("Add Budget"),
+        label: Text(AppLocalizations.of(context)!.addBudget),
       ),
       body: Stack(
         children: [
@@ -435,18 +436,21 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           _summaryItem(
-                                              "Budgeted",
+                                              AppLocalizations.of(context)!
+                                                  .budgeted,
                                               CurrencyService.format(
                                                   totalBudgeted),
                                               Colors.white70),
                                           _summaryItem(
-                                              "Spent",
+                                              AppLocalizations.of(context)!
+                                                  .spent,
                                               CurrencyService.format(
                                                   totalSpent),
                                               Colors.white),
                                           if (_monthlyIncome > 0)
                                             _summaryItem(
-                                                "Income",
+                                                AppLocalizations.of(context)!
+                                                    .income,
                                                 CurrencyService.format(
                                                     _monthlyIncome),
                                                 Colors.greenAccent),

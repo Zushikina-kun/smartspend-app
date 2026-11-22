@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shake/shake.dart';
 import 'package:share_plus/share_plus.dart';
@@ -251,7 +252,7 @@ class _AIScreenState extends State<AIScreen> {
                     await DBService.setSetting('ai_privacy_disclosed', 'true');
                     if (context.mounted) Navigator.pop(context);
                   },
-                  child: const Text('Got it'),
+                  child: Text(AppLocalizations.of(context)!.gotIt),
                 ),
               ),
               const SizedBox(height: 8),
@@ -282,9 +283,9 @@ class _AIScreenState extends State<AIScreen> {
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: const Row(children: [
-          Text("⚠️ ", style: TextStyle(fontSize: 20)),
-          Text("Financial Advice Notice"),
+        title: Row(children: [
+          const Text("⚠️ ", style: TextStyle(fontSize: 20)),
+          Text(AppLocalizations.of(context)!.financialAdviceNotice),
         ]),
         content: const Text(
           "Peso gives general financial guidance based on your logged data — "
@@ -300,11 +301,11 @@ class _AIScreenState extends State<AIScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancel"),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text("I understand"),
+            child: Text(AppLocalizations.of(context)!.iUnderstand),
           ),
         ],
       ),

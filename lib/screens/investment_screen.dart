@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../services/db_service.dart';
@@ -142,7 +143,7 @@ class _InvestmentScreenState extends State<InvestmentScreen> {
     final fmt = NumberFormat('#,##0.00');
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Investment Portfolio')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.investmentScreenTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showForm(),
         child: const Icon(Icons.add),

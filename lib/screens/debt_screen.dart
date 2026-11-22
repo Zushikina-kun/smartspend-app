@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
 import '../services/peso_sound_service.dart';
@@ -1373,7 +1374,7 @@ class _DebtScreenState extends State<DebtScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Debts & Lending"),
+        title: Text(AppLocalizations.of(context)!.debtScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -1439,7 +1440,7 @@ class _DebtScreenState extends State<DebtScreen>
           }
         },
         icon: const Icon(Icons.add),
-        label: const Text("Add"),
+        label: Text(AppLocalizations.of(context)!.add),
       ),
       body: Stack(
         children: [

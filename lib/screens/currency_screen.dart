@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/currency_service.dart';
 import '../services/peso_context_service.dart';
 import '../widgets/info_button.dart';
@@ -63,7 +64,7 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Currency & Region"),
+        title: Text(AppLocalizations.of(context)!.currencyScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),

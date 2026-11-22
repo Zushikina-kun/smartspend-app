@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../l10n/app_localizations.dart';
 import '../models/expense.dart';
 import '../services/db_service.dart';
 import 'package:smartspend_app/screens/insights_screen.dart';
@@ -666,7 +667,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Analytics"),
+        title: Text(AppLocalizations.of(context)!.analyticsScreenTitle),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 4),
@@ -4152,7 +4153,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 ),
                                 TextButton.icon(
                                   icon: const Icon(Icons.refresh, size: 16),
-                                  label: const Text("Refresh"),
+                                  label: Text(AppLocalizations.of(context)!.refresh),
                                   onPressed: _loadingAdvice || _expenses.isEmpty
                                       ? null
                                       : _getAIAdvice,
@@ -4204,7 +4205,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         padding: const EdgeInsets.only(bottom: 4),
                         child: OutlinedButton.icon(
                           icon: const Icon(Icons.auto_awesome, size: 16),
-                          label: const Text("Get AI Financial Advice"),
+                          label: Text(AppLocalizations.of(context)!.getAiAdvice),
                           onPressed: _expenses.isEmpty ? null : _getAIAdvice,
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(

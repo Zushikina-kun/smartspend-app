@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import '../services/db_service.dart';
 import '../services/currency_service.dart';
@@ -165,7 +166,7 @@ class _DebtPayoffScreenState extends State<DebtPayoffScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Debt Payoff Calculator'),
+        title: Text(AppLocalizations.of(context)!.debtCalculatorScreenTitle),
         centerTitle: false,
         elevation: 0,
       ),

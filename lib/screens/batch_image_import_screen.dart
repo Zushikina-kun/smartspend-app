@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../services/ocr_service.dart';
 import '../services/analytics_service.dart';
 import '../services/app_config.dart';
