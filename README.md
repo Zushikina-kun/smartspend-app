@@ -1,18 +1,16 @@
 # SmartSpend
 
 **AI-Assisted Financial Tracking & Advisory for Filipinos**  
-Version 3.3.9 | Lucid Frame | Academic Year 2026–2027, 1st Semester
+Version v3.5.2 | Lucid Frame | Academic Year 2026–2027, 1st Semester
 
-[![Download](https://img.shields.io/badge/Download-v3.3.9-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
+[![Download](https://img.shields.io/badge/Download-v3.5.2-00C896?style=for-the-badge&logo=android)](https://github.com/Zushikina-kun/smartspend-app/releases/latest)
 [![Website](https://img.shields.io/badge/Website-smartspend-00C896?style=for-the-badge&logo=googlechrome)](https://zushikina-kun.github.io/smartspend-app/)
-
-> **Note on screenshots and demo:** The website screenshots were taken from v3.1.0 — the version formally evaluated in our research. The actual app has been significantly updated since. Download the latest APK (v3.3.9) for the full experience.
 
 ---
 
 ## Support the Project
 
-SmartSpend is free right now. Source Available License (Non-Commercial) — see LICENSE. If it helped you, consider supporting the dev:
+SmartSpend is free. Source Available License (Non-Commercial) — see LICENSE. If it helped you, consider supporting the dev:
 
 | Platform | Link |
 |----------|------|
@@ -26,17 +24,20 @@ SmartSpend is free right now. Source Available License (Non-Commercial) — see 
 
 SmartSpend is a free AI-powered personal finance tracker for Android, built for everyday Filipino users. It helps you record, analyze, and manage your spending with minimal effort — using voice, camera, or just typing naturally in Taglish or English.
 
-The app is actively developed and regularly updated. Features, UI, and Peso mascot interactions evolve with each release.
+---
 
-**✨ What's New in v3.3.9:**
-- 🤖 **18 AI Models** — 11 existing + 7 new OpenRouter models (Nemotron Ultra, Llama 3.3 70B, Gemma 4, Qwen 3.8, more)
-- 🌐 **OpenRouter Integration** — access frontier-tier models through OpenRouter free tier (1000 requests/day shared)
-- ⚡ **Model Selector Improvements** — clearer descriptions, tier-based organization, legacy gateway redirect
-- 🐛 **Bug Fixes** — AI fallback logic refined, Firebase config optimized, empty-key provider skip
+## What's New in v3.5.2
 
-**Final Defense Date:** November 20, 2026 at 11:00 AM *(rescheduled from Nov 16)*
+- 🤖 **20 AI Models** — full OpenRouter individual model routing with corrected model IDs
+- 🔄 **16-model continuous fallback chain** — walks best→worst without stopping; every model in the chain is tried before giving up
+- 📋 **BIR Tax Reminders** — quarterly deadlines, income tax estimator, percentage tax calculator, local notifications
+- 🏠 **Home Menu Entry** — Tax Calculator accessible from Quick Access Hub
+- 👁️ **Vision model priority** — OCR receipt parsing prefers vision-capable models first
+- ⚡ **Voice speed routing** — voice commands prefer fast/low-latency models
 
-[View Full Changelog](CHANGELOG.md) | [Feature Roadmap](docs/handsoff/FEATURE_ROADMAP_POST_DEFENSE.md) | [🌐 Website](https://zushikina-kun.github.io/smartspend-app/) | [📋 Defense Reviewer](https://zushikina-kun.github.io/smartspend-app/reviewer.html)
+**Final Defense Date:** November 20, 2026 at 11:00 AM *(completed)*
+
+[View Full Changelog](CHANGELOG.md) | [🌐 Website](https://zushikina-kun.github.io/smartspend-app/)
 
 **Developed by Lucid Frame:**
 - Brix A. Directo — Lead Developer
@@ -44,12 +45,6 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
 - Djaunathan Albert S. Madayag — Project Manager & QA Lead
 
 **Adviser:** Dr. Ellen F. Mangaoang, DIT — Lorma Colleges, College of Computer Studies and Engineering (CCSE)
-
-**Panel Chair:** Jeoffrey B. Layco, MIS — Dean, CCSE  
-**Panel Members:** Shekiro R. Raposas, MTS, MIS · Mary-Ann Mzana, MTS  
-**Content Validator:** Avigail Candevario, PFMe
-
----
 
 ---
 
@@ -67,20 +62,7 @@ The app is actively developed and regularly updated. Features, UI, and Peso masc
   <img src="docs/images/screenshots/Figure_3.10_Local_AI_Setup.jpg" width="200" alt="Local AI Setup"/>
 </p>
 
-*App screenshots from v3.1.1 (October 2026). See [docs/images/screenshots/](docs/images/screenshots/) for full resolution.*
-
----
-
-## Meet Peso 🤖
-
-Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides you through the app, celebrates your financial wins, and nudges you gently when something needs attention.
-
-- **Appears on 45 screens** — from login to analytics to achievements
-- **Reacts to your data** — proud when FHS is high, worried when budget is tight, celebrating when you hit goals
-- **Speaks in Taglish** — warm, non-judgmental, always helpful
-- **Tappable** — tap Peso anywhere for a bounce + mood reaction
-- **All ❓ info buttons** show Peso explaining the feature instead of a plain dialog
-- **AI chat** — every reply shows Peso's avatar; he changes mood based on what he's saying
+*Screenshots from v3.1.1 (October 2026). See [docs/images/screenshots/](docs/images/screenshots/) for full resolution.*
 
 ---
 
@@ -88,7 +70,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 
 ### Core Tracking
 - 🎙️ **7 Input Methods** — Voice, OCR receipt scan, barcode, manual entry, batch screenshots (40+ platforms), bank CSV paste, natural language chat
-- 🤖 **Peso AI** — **34 agentic action types** via natural language in Taglish or English with **18 AI models** across 4 providers (see [AI Models](#ai-models) section)
+- 🤖 **Peso AI** — 34 agentic action types via natural language in Taglish or English with 20 AI models across 5 providers
 - 📱 **Use Without Account** — start immediately, no sign-up required; data stays on device
 - 🔒 **Local AI Mode** — connect to Ollama, LM Studio, or Jan on your PC; zero cloud exposure
 
@@ -97,18 +79,21 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 - 💚 **Safe to Spend** — how much you can freely spend before payday after bills and goals
 - 📊 **Analytics** — pie chart, trend bars, 50/30/20 rule, savings rate, FHS history, spending heatmap, long-range forecast (3/6/12 months), AI financial advice
 - 💹 **Peso Cost Averaging Calculator** — MP2, UITFs, stocks with year-by-year projections
+- 📈 **Price Intelligence** — track prices across stores, spot trends, find best deals
 
 ### Filipino-Specific Features
+- 📋 **BIR Tax Reminders** ⭐ NEW in v3.5.2
+  - Quarterly deadlines (Q1 Apr 15, Q2 Aug 15, Q3 Nov 15, Annual ITR Apr 15)
+  - Income tax estimator (TRAIN Law — 8% flat rate vs. graduated)
+  - Quarterly percentage tax calculator (2551Q — 3% flat rate)
+  - Local push notifications 30, 7, and 1 day before each deadline
 - 💳 **Installment Plans** — ShopeePayLater, GCash GLoan, HomeCredit, any fixed monthly payment
-- 🏛️ **Government Contributions Tracker** ⭐ NEW in v3.2.0
-  - Track SSS, PhilHealth, and Pag-IBIG contributions year-to-date
-  - SSS pension estimator calculator
-  - Dashboard integration with auto-hiding total expenses widget
-  - Direct links to official government portals
-  - Year selector for viewing historical contribution data
+- 🏛️ **Government Contributions Tracker** — SSS, PhilHealth, Pag-IBIG YTD totals, pension estimator
+- 🚗 **LTO Vehicle Renewal** — registration dates, fee calculator, reminders
 - 🏦 **PH Banks Database** — 20 banks, 5 digital banks, e-wallets, investment options comparison
 - 🏅 **Paluwagan Tracker** — rotating savings group management
 - 💱 **57 currencies** with live exchange rates
+- 🌏 **OFW Tools** — remittance tracking, Balikbayan box tracker
 
 ### Gamification & Engagement
 - 🏆 **36 Achievement Badges** — earn badges for financial milestones, streaks, Peso interactions
@@ -116,7 +101,7 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 - 😊 **Daily Mood Check-In** with spending correlation analysis
 - 🎉 **Peso Milestone Celebrations** — 25/50/75/100% goal progress, expense count milestones, streak milestones
 
-### Peso Companion (v3.0.5+)
+### Peso Companion
 - 💬 **Daily Nudges** — gentle check-in if no expenses logged by 2PM, budget status reactions
 - 🎯 **Goal Celebrations** — Peso appears at each milestone with mood-matched message
 - 🏅 **Badge Celebrations** — Peso bottom sheet on every badge unlock
@@ -128,99 +113,90 @@ Peso is SmartSpend's AI mascot — a friendly ₱ peso coin character who guides
 - ☁️ **Full Firestore sync** across devices (optional)
 - 🔒 **App Lock** — PIN + biometric
 - 🗓️ **Financial Calendar** — bills, goals, debts all in one view
-- 🏅 **Financial Health Certificate** — shareable monthly score card
-- 📖 **Financial Glossary** — 23 key terms in plain Filipino-English
 - 💬 **In-App Feedback** — submit bug reports and feature requests directly to GitHub Issues
 
 ---
 
 ## AI Models
 
-SmartSpend integrates **18 AI models** across multiple providers, with intelligent auto-fallback to ensure reliability. Users can choose their preferred model or use Auto mode for smart routing.
+SmartSpend integrates **20 AI models** across multiple providers with intelligent auto-fallback. Auto mode walks the full chain best→worst without stopping until a model responds.
 
-### Model Overview
+### Automatic Fallback Chain
 
-| Provider | Models Available | Key Features |
-|----------|------------------|--------------|
-| **Firebase Vertex AI** | 2 models | Primary models, GA stable, fast |
-| **Groq** | 5 models | High speed, generous free tier |
-| **Cerebras** | 1 model | 1M tokens/day, fallback |
-| **OpenRouter** | 7 models | Frontier-tier reasoning, vision, multimodal |
-| **Custom Local** | Unlimited | Your own LLM via WiFi, fully private |
+Auto mode walks this chain in order, skipping providers with no key:
+
+```
+Nemotron 3 Ultra → Llama 3.3 70B → Gemma 4 31B → Nemotron 3.5 Lightning →
+Qwen 3.8 (OR) → Nemotron Nano → Nemotron Super VL → Gemma 4 26B →
+Gemini 3.5 Flash → Gemini 3.5 Flash-Lite → Qwen3.6 (Groq) →
+Qwen3.8 (Groq) → Compound → Compound Mini → GPT-OSS 120B (Cerebras)
+```
 
 ### Available Models by Tier
 
 #### Tier 0: Special Modes
-- **Auto (Recommended)** 🤖 — Smart routing with best quality available, auto-fallback on errors
-- **Local AI (Your Computer)** 🏠 — Connect to Ollama/LM Studio/Jan via WiFi, private, no cloud
+| ID | Model | Notes |
+|----|-------|-------|
+| `auto` | Auto (Recommended) | 🤖 Smart routing — best quality available, auto-fallback |
+| `custom_local` | Local AI (Your Computer) | 🏠 Ollama/LM Studio/Jan via WiFi — private, no cloud |
 
 #### Tier 1: Premium Quality (Best Reasoning)
-- **Nemotron 3 Ultra (OpenRouter)** 🏆 — 550B MoE, 1M context, frontier-tier free model
-- **Llama 3.3 70B (OpenRouter)** 🦙 — 70B params, 128K ctx, 9.4 Intelligence Index
-- **Gemini 3.5 Flash** 💎 — Best Gemini, frontier reasoning, GA stable (requires Gemini key)
-- **Gemini 3.5 Flash-Lite** ⚡ — Default model, fastest + reliable, GA stable (requires Gemini key)
+| ID | Model | Vision | Notes |
+|----|-------|--------|-------|
+| `or_nemotron_ultra` | Nemotron 3 Ultra (OpenRouter) | — | 🏆 550B MoE, 1M ctx, top free model |
+| `or_llama33` | Llama 3.3 70B (OpenRouter) | — | 🦙 70B, 128K ctx, 9.4 Intelligence Index |
+| `gemini_flash` | Gemini 3.5 Flash | ✅ | 💎 Best Gemini, frontier reasoning, GA stable |
+| `gemini_flash_lite` | Gemini 3.5 Flash-Lite ⭐ | ✅ ⚡ | Default — fastest + reliable, GA stable |
 
 #### Tier 2: High Quality (Solid Performance)
-- **Gemma 4 31B (OpenRouter)** 💎 — 262K context, well-tested, balanced
-- **Nemotron 3.5 Lightning (OpenRouter)** ⚡ — MoE architecture, 1M ctx, near-instant responses
-- **Qwen 3.8 27B (OpenRouter)** 🌐 — Multimodal with OCR & computer-use capabilities, 128K ctx
-- **GPT-OSS 120B (Groq)** 🚀 — Best Groq model, 1,000/day limit, 8K TPM
+| ID | Model | Vision | Fast | Notes |
+|----|-------|--------|------|-------|
+| `or_gemma_4_31b` | Gemma 4 31B (OpenRouter) | — | — | 💎 262K ctx, well-tested, balanced |
+| `or_nemotron_lightning` | Nemotron 3.5 Lightning (OpenRouter) | — | ⚡ | Near-instant responses, 1M ctx |
+| `or_qwen38` | Qwen 3.8 27B (OpenRouter) | ✅ | — | 🌐 Multimodal, 128K ctx, OCR |
+| `groq_llama4_scout` | GPT-OSS 120B (Groq) | — | — | 🚀 1,000/day, 8K TPM |
 
 #### Tier 3: Good (Reliable Workhorses)
-- **Nemotron 3.5 Super VL (OpenRouter)** 🎨 — Vision model, 1M ctx, image + video understanding
-- **Gemma 4 26B A4B (OpenRouter)** ⚙️ — Efficient MoE 3.8B active, 262K ctx
-- **Qwen3.6 27B (Groq)** 🌐 — Multimodal + reasoning, 1,000/day
-- **Qwen3.8 27B (Groq)** ✨ — Newer Qwen iteration, multimodal, 1,000/day
+| ID | Model | Vision | Notes |
+|----|-------|--------|-------|
+| `or_nemotron_super_vl` | Nemotron 3.5 Super VL (OpenRouter) | ✅ | 🎨 1M ctx, image + video |
+| `or_gemma_4_26b` | Gemma 4 26B A4B (OpenRouter) | — | ⚙️ MoE 3.8B active, 262K ctx |
+| `or_nemotron_nano` | Nemotron Nano 30B (OpenRouter) | — | 🧠 30B MoE, free tier |
+| `groq_kimi_k2` | Qwen3.6 27B (Groq) | ✅ | 🌐 Multimodal + reasoning, 1,000/day |
+| `groq_qwen3` | Qwen3.8 27B (Groq) | ✅ | ✨ Newer Qwen, multimodal, 1,000/day |
 
 #### Tier 4: Utility (Fast & Available)
-- **Compound (Groq)** ⚡ — 250/day, 70K TPM, good general-purpose
-- **Compound Mini (Groq)** 💨 — 250/day, 70K TPM, fast tasks
+| ID | Model | Fast | Notes |
+|----|-------|------|-------|
+| `groq_70b` | Compound (Groq) | ⚡ | 250/day, 70K TPM — good general |
+| `groq_8b` | Compound Mini (Groq) | ⚡ | 250/day, 70K TPM — fast tasks |
+| `openrouter` | OpenRouter Gateway (Legacy) | — | Use individual models above |
 
 #### Tier 5: Last Resort (Fallback)
-- **GPT-OSS 120B (Cerebras)** 🔄 — 1M tokens/day free tier (slower speeds)
+| ID | Model | Fast | Notes |
+|----|-------|------|-------|
+| `cerebras_120b` | GPT-OSS 120B (Cerebras) | ⚡ | 🔄 1M tokens/day, ~3,000 t/s |
 
-### OpenRouter Integration
+**Vision** (✅): model accepts image input — preferred by OCR receipt parsing.  
+**Fast** (⚡): low-latency model — preferred by voice command processing.
 
-[OpenRouter](https://openrouter.ai/) is an AI gateway that provides access to frontier-tier models through a unified API. SmartSpend integrates 7 OpenRouter models, including NVIDIA Nemotron and Meta Llama 3.3.
+### Provider Summary
 
-**Key Features:**
-- **Free tier:** 1000 requests/day shared across all users (with $10 credit added)
-- **Tool calling support:** All models support function calling for SmartSpend's 34 agentic actions
-- **Auto-fallback:** Seamlessly switches to alternative models on errors
-- **No setup required:** API key managed via Firebase Remote Config
-
-**Usage Limits:**
-- Free tier: 1000 requests/day (shared across all SmartSpend users)
-- Resets daily at UTC midnight
-- For unlimited access: Users can add $10+ credit at [openrouter.ai/credits](https://openrouter.ai/credits)
-
-**Documentation:** [OpenRouter API Docs](https://openrouter.ai/docs)
-
-### Auto Mode Behavior
-
-When set to Auto mode, SmartSpend intelligently routes requests based on task type and available API keys:
-
-| Task Type | Priority 1 | Priority 2 | Priority 3 |
-|-----------|------------|------------|------------|
-| **Fast tasks** | Nemotron Lightning (OpenRouter) | Gemini Flash-Lite | Groq Scout |
-| **Financial advice** | Nemotron Ultra (OpenRouter) | Gemini Flash | Groq Scout |
-| **Smart/default** | Llama 3.3 (OpenRouter) | Gemini Flash-Lite | Groq Scout |
-
-Auto mode automatically falls back to the next available provider if:
-- API key is missing or invalid
-- Rate limit exceeded
-- Network timeout (35 seconds)
-- Model returns an error
+| Provider | Models | Daily Limit |
+|----------|--------|-------------|
+| **OpenRouter** | 8 models | 1,000 req/day (shared, with $10 credit) |
+| **Gemini** (Google AI Studio) | 2 models | Generous free tier |
+| **Groq** | 5 models | 250–1,000 req/day per model |
+| **Cerebras** | 1 model | 1M tokens/day |
+| **Custom Local** | Unlimited | No limits (your hardware) |
 
 ### 34 Agentic Actions
 
-All models support SmartSpend's 34 agentic actions via tool calling (function calling):
+All models support SmartSpend's 34 agentic actions via tool calling:
 - Add/edit/delete expenses, budgets, savings goals, debts, bills
 - Financial Health Score analysis
-- Budget recommendations
-- Spending insights & trends
-- Safe-to-spend calculations
-- Category suggestions
+- Budget recommendations, spending insights & trends
+- Safe-to-spend calculations, category suggestions
 - Receipt parsing & batch screenshot analysis
 - And more...
 
@@ -231,8 +207,8 @@ All models support SmartSpend's 34 agentic actions via tool calling (function ca
 | Component | Technology |
 |-----------|-----------|
 | Framework | Flutter (Dart) |
-| AI Engine | **18 models** across 4 providers — Gemini 3.5 Flash-Lite (primary), OpenRouter (7 models: Nemotron Ultra, Llama 3.3 70B, Gemma 4, Qwen 3.8, etc.), Groq (5 models), Cerebras — **34 agentic actions** with intelligent auto-fallback |
-| Local DB | SQLite via sqflite (v14 schema, 26 tables) |
+| AI Engine | 20 models across 5 providers — Gemini, OpenRouter, Groq, Cerebras, Custom Local — 34 agentic actions, automatic fallback chain |
+| Local DB | SQLite via sqflite (v14 schema, 26+ tables) |
 | Cloud | Firebase Auth + Firestore + Remote Config + Crashlytics + App Check |
 | OCR | Google ML Kit Text Recognition |
 | Barcode | Google ML Kit Barcode Scanning + MobileScanner |
@@ -242,82 +218,78 @@ All models support SmartSpend's 34 agentic actions via tool calling (function ca
 | App Lock | local_auth (PIN + biometric) |
 | Exchange Rates | open.er-api.com |
 
-**Architecture:** Serverless/client-side only. No backend server. All logic runs on-device + Firebase + third-party APIs. Zero hosting costs.
+**Architecture:** Serverless/client-side only. No backend server. All logic runs on-device + Firebase + third-party APIs.
 
 ---
 
-## Research & Evaluation
+## Setup
 
-SmartSpend is a capstone research project at Lorma Colleges (AY 2026-2027, 1st Semester). 
+### Prerequisites
 
-**Final Defense:** November 20, 2026 at 11:00 AM 🎯 Ready
+1. Install [Flutter](https://docs.flutter.dev/get-started/install) (stable channel).
+2. An Android device or emulator (API level 23+).
+3. Optionally: a Firebase project for cloud sync.
 
-**Research Evaluation Results (v3.1.0):**
-- **System Usability Scale (SUS):** 61.83/100 (SD 17.58), Grade D, "OK" acceptability
-- **Respondents:** N=30 (parents n=10, young professionals n=20)
-- **Score Range:** 35.0–92.5
-- **Interpretation:** Below the 68.0 benchmark and 80.0 target; acknowledged as prototype limitation
-- **Objective 3 Status:** Partially achieved — system demonstrates functional capability but did not meet the target acceptability threshold
-- **Supporting Data:** 96.7% want AI financial app, 93.3% use GCash
+### API Keys
 
-Data collection and defense complete. Thank you to all respondents and panelists!
+API keys are stored in **Firebase Remote Config** — not in code. The app reads them at startup. Set these values in your Firebase project's Remote Config console:
 
----
+| Key | Format | Provider |
+|-----|--------|----------|
+| `openrouter_api_key` | `sk-or-v1-...` | [openrouter.ai](https://openrouter.ai/) |
+| `groq_api_key` | `gsk_...` | [console.groq.com](https://console.groq.com/) |
+| `gemini_api_key` | `AQ....` | [aistudio.google.com](https://aistudio.google.com/) |
+| `cerebras_api_key` | `csk-...` | [cloud.cerebras.ai](https://cloud.cerebras.ai/) |
 
-## Version History
+> **Important:** Gemini API keys issued since May 28, 2026 start with `AQ.` — these are permanent auth keys bound to a service account. Old `AIza...` keys are rejected by the new endpoint.
 
-| Version | Highlights |
-|---------|-----------|
-| **3.3.9** | 🤖 18 AI models integrated (7 new OpenRouter models: Nemotron Ultra, Llama 3.3, Gemma 4, Qwen 3.8, Nemotron Lightning, Nemotron Super VL, Gemma 4 26B); OpenRouter integration; model selector improvements; AI fallback refinements |
-| **3.2.0** | 🆕 Government contributions tracker (SSS/PhilHealth/Pag-IBIG) with YTD totals, pension estimator, portal links; scrolling fixes for small screens |
-| **3.1.2** | UX polish — clearSnackBars, FHS tier ring, setup CTA, quick input bar prominence, weekly notification fix |
-| **3.1.1** | Peso gestures (double-tap, long-press, idle timer), AI transaction save fix, site factual corrections |
-| **3.1.0** | FHS tier change announcements, streak milestones, notification tap reaction, session tips |
-| **3.0.9** | Swipe-to-delete, Quick Undo, profile section headers, PesoContextService on 6 screens |
-| **3.0.8** | All notifications Peso-voiced, PesoContextService (17 screens), smart nav tap logic |
-| **3.0.7** | Peso on 45 screens, nav AI button is Peso, chat bubbles show Peso avatar, typing indicator |
-| **3.0.6** | Peso companion system — daily nudges, goal celebrations, 36 badges, PesoVoice, tappable Peso |
-| **3.0.5** | Peso animation (12 moods), feedback screen, privacy disclosure, Quick Tips |
-| **3.0.4** | Local-only AI mode, login warning, use-without-account |
-| **3.0.0** | Paluwagan, Insurance tracker, PH Banks guide, Achievements, Daily Quests |
+The app works without all keys — it skips providers with no key and falls back to those that are configured.
 
----
+### Quick Start
 
-## How to Run
-
-Quick start:
 ```bash
+git clone https://github.com/Zushikina-kun/smartspend-app.git
+cd smartspend-app
 flutter pub get
 flutter run
 ```
+
+The app starts in demo mode if no Firebase credentials are present.
 
 ---
 
 ## Build
 
 ```bash
+flutter build apk --debug
+```
+
+For a release build split by ABI (smallest download size):
+
+```bash
 flutter build apk --release --split-per-abi --shrink --obfuscate --split-debug-info=build/debug-info
 ```
 
-**Output:** Three optimized APKs in `build/app/outputs/flutter-apk/`:
+**Output APKs** in `build/app/outputs/flutter-apk/`:
 - `app-armeabi-v7a-release.apk` (ARM 32-bit)
-- `app-arm64-v8a-release.apk` (ARM 64-bit, most common)
-- `app-x86_64-release.apk` (x86 64-bit)
+- `app-arm64-v8a-release.apk` (ARM 64-bit — most devices)
+- `app-x86_64-release.apk` (x86 64-bit — emulators)
 
-**CI/CD — Automated Release Pipeline:**
+**Automated release pipeline:**
 ```bash
-git tag v3.0.X && git push origin v3.0.X
-# GitHub Actions auto-builds and publishes signed APKs to Releases
+git tag v3.5.X && git push origin v3.5.X
+# GitHub Actions builds and publishes signed APKs to Releases
 ```
 
 ---
 
-## Configuration
+## Configuration Files
 
 | File | Purpose |
 |------|---------|
-| `android/app/google-services.json` | Firebase config (not in repo) |
-| `lib/services/app_config.dart` | API keys — in `.gitignore`, copy from `app_config.dart.example` |
+| `android/app/google-services.json` | Firebase config (not in repo — download from Firebase console) |
+| `lib/services/app_config.dart` | Model list, API endpoints, fallback chain logic |
+| `lib/services/app_config.dart.example` | Copy this to `app_config.dart` to start without Remote Config |
 
 ---
 
@@ -329,44 +301,37 @@ git tag v3.0.X && git push origin v3.0.X
 | `docs/reference/CAPSTONE_REFERENCE.md` | Single source of truth for capstone numbers |
 | `docs/guides/DEFENSE_GUIDE.md` | Pre-defense quick reference — FHS formula, demo script, Q&A |
 | `docs/reference/BENCHMARK.md` | 22-app comparison + LLM benchmark |
-| `docs/handsoff/kiro-to-kiro-handoff-2026-10-12-final.md` | Full session record — all features built |
-| `docs/handsoff/remaining-tasks-2026-10-12.md` | Remaining tasks with estimates |
 | `docs/status/PROJECT_STATUS.md` | What's done, what's left, roadmap |
 
 ---
 
-*Smart Spend — Spend Smart, Live Better.*  
+## Research & Evaluation
+
+SmartSpend is a capstone research project at Lorma Colleges (AY 2026–2027, 1st Semester).
+
+**Research Evaluation Results (v3.1.0, N=30):**
+- **System Usability Scale (SUS):** 61.83/100 (Grade D, "OK" acceptability)
+- **Supporting Data:** 96.7% want AI financial app, 93.3% use GCash
+- **Final Defense:** November 20, 2026 — completed ✅
+
+---
+
+## Version History
+
+| Version | Highlights |
+|---------|-----------|
+| **3.5.2** | 🔄 Corrected OR model IDs, 16-model continuous fallback chain, BIR tax reminders, vision + fast model routing |
+| **3.5.1** | Update cache fix, voice input Completer fix |
+| **3.5.0** | Net worth tracker, government receipt OCR, savings streak, weekly challenges |
+| **3.4.0** | Spending heatmap, investment tracker, GCash/Maya SMS parsing, notification listener |
+| **3.3.9** | 20 AI models (7 new OpenRouter models), OpenRouter integration, model selector |
+| **3.2.0** | Government contributions tracker (SSS/PhilHealth/Pag-IBIG), pension estimator |
+| **3.1.0** | FHS tier change announcements, streak milestones, notification tap reaction |
+| **3.0.9** | Swipe-to-delete, Quick Undo, PesoContextService on 6 screens |
+| **3.0.0** | Paluwagan, Insurance tracker, PH Banks guide, Achievements, Daily Quests |
+
+---
+
+*SmartSpend — Spend Smart, Live Better.*  
 *© 2026 Lucid Frame. Capstone Research Project — Lorma Colleges CCSE.*  
 *Not affiliated with any financial institution.*
-
-
----
-
-## 🎓 Defense Materials (November 2026)
-
-### Final Thesis Defense
-**Date**: November 20, 2026 at 11:00 AM  
-**Status**: 🎯 **READY** - All materials prepared and verified
-
-All defense materials are located in: **`docs/handsoff/FOR_CYRILLE/`**
-
-#### Quick Access
-- **Final Manuscript**: `docs/handsoff/FOR_CYRILLE/1_MAIN_MANUSCRIPT_FINAL.docx`
-- **Final Presentation**: `docs/handsoff/FOR_CYRILLE/3_PRESENTATION_FINAL.pptx`
-- **Defense Script**: `docs/handsoff/FOR_CYRILLE/4_DEFENSE_SCRIPT_FINAL.md`
-- **Complete Documentation**: `docs/handsoff/FOR_CYRILLE/00_START_HERE.md`
-
-#### Defense Results (Nov 16, 2026)
-✅ Final defense completed successfully  
-✅ System evaluated at v3.1.0 with N=30 respondents  
-✅ SUS score: 61.83/100 (Grade D, "OK" acceptability)  
-✅ Objective 3: Partially achieved (below 68 benchmark, system functional)  
-✅ Panel: Jeoffrey B. Layco (Chair), Shekiro R. Raposas, Mary-Ann Mzana
-
-See: `docs/handsoff/FOR_CYRILLE/MASTER_CHANGELOG.md` for complete change history
-
----
-
-
-
-
