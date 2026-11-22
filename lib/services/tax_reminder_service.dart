@@ -31,6 +31,12 @@ class TaxReminderService {
         'year': year
       },
       {
+        'name': 'Q4 Percentage Tax (2551Q)',
+        'month': 1,
+        'day': 30,
+        'year': year + 1
+      },
+      {
         'name': 'Annual ITR (1700/1701/1701A)',
         'month': 4,
         'day': 15,

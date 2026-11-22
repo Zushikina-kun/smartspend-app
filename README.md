@@ -83,7 +83,7 @@ SmartSpend is a free AI-powered personal finance tracker for Android, built for 
 
 ### Filipino-Specific Features
 - 📋 **BIR Tax Reminders** ⭐ NEW in v3.5.2
-  - Quarterly deadlines (Q1 Apr 15, Q2 Aug 15, Q3 Nov 15, Annual ITR Apr 15)
+  - Quarterly deadlines (Q1 Apr 15, Q2 Aug 15, Q3 Nov 15, Q4 Jan 30, Annual ITR Apr 15)
   - Income tax estimator (TRAIN Law — 8% flat rate vs. graduated)
   - Quarterly percentage tax calculator (2551Q — 3% flat rate)
   - Local push notifications 30, 7, and 1 day before each deadline

@@ -143,9 +143,10 @@ class _TaxScreenState extends State<TaxScreen>
                     title: 'BIR Quarterly Deadlines',
                     body:
                         'Non-VAT registered taxpayers file BIR Form 2551Q (Percentage Tax) quarterly.\n\n'
-                        'Q1 (Jan–Mar): due April 25\n'
-                        'Q2 (Apr–Jun): due August 25\n'
-                        'Q3 (Jul–Sep): due November 25\n\n'
+                        'Q1 (Jan–Mar): due April 15\n'
+                        'Q2 (Apr–Jun): due August 15\n'
+                        'Q3 (Jul–Sep): due November 15\n'
+                        'Q4 (Oct–Dec): due January 30\n\n'
                         'Annual ITR (1700/1701/1701A) is due April 15 of the following year.\n\n'
                         'Dates shown use simplified deadlines for reference. Always verify at bir.gov.ph.',
                   ),

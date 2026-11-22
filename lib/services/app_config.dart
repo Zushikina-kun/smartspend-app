@@ -347,7 +347,7 @@ class AppConfig {
     (
       'cerebras_120b',
       'GPT-OSS 120B (Cerebras)',
-      '🔄 Fallback — 1M tokens/day (slow)',
+      '🔄 Fallback — 1M tokens/day, ~3,000 t/s throughput',
       false,
       true, // ~3,000 t/s throughput
     ),
@@ -372,6 +372,7 @@ class AppConfig {
       if (id == 'auto' || id == 'custom_local') continue;
       if (id.startsWith('or_') && !hasOpenRouterKey) continue;
       if (id.startsWith('gemini') && !hasGeminiKey) continue;
+      if (id.startsWith('groq_') && !hasGroqKey) continue;
       if (id == 'cerebras_120b' && !hasCerebrasKey) continue;
       return id;
     }
@@ -385,6 +386,7 @@ class AppConfig {
       if (id == 'auto' || id == 'custom_local') continue;
       if (id.startsWith('or_') && !hasOpenRouterKey) continue;
       if (id.startsWith('gemini') && !hasGeminiKey) continue;
+      if (id.startsWith('groq_') && !hasGroqKey) continue;
       if (id == 'cerebras_120b' && !hasCerebrasKey) continue;
       return id;
     }
