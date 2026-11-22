@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'app_config.dart';
+import 'rate_limit_service.dart';
 
 class LLMService {
   static String get _groqKey => AppConfig.groqApiKey;
@@ -26,36 +27,41 @@ class LLMService {
     // request can't leave the walk mid-chain (which would skip the best model).
     AppConfig.resetAutoChain();
 
-    Future<http.Response> _doRequest() => http
-        .post(
-          Uri.parse(_groqUrl),
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer $_groqKey",
-            // Fix 6 / Fix 4: OpenRouter requires these headers for proper
-            // routing. Without them, OpenRouter may return HTTP 400.
-            // Added conditionally so other providers are unaffected.
-            // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway.
-            // Use effectiveModelId (resolves Auto mode to the concrete chain
-            // model) so Auto-mode OpenRouter requests get the headers too.
-            if (AppConfig.effectiveModelId.startsWith('or_') ||
-                AppConfig.effectiveModelId == 'openrouter') ...{
-              "HTTP-Referer": "https://zushikina-kun.github.io/smartspend-app/",
-              "X-Title": "SmartSpend",
+    Future<http.Response> _doRequest() async {
+      final r = await http
+          .post(
+            Uri.parse(_groqUrl),
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer $_groqKey",
+              // Fix 6 / Fix 4: OpenRouter requires these headers for proper
+              // routing. Without them, OpenRouter may return HTTP 400.
+              // Added conditionally so other providers are unaffected.
+              // Apply to ALL OpenRouter models (or_* prefix) and legacy gateway.
+              // Use effectiveModelId (resolves Auto mode to the concrete chain
+              // model) so Auto-mode OpenRouter requests get the headers too.
+              if (AppConfig.effectiveModelId.startsWith('or_') ||
+                  AppConfig.effectiveModelId == 'openrouter') ...{
+                "HTTP-Referer":
+                    "https://zushikina-kun.github.io/smartspend-app/",
+                "X-Title": "SmartSpend",
+              },
             },
-          },
-          body: jsonEncode({
-            "model": _groqModel,
-            "messages": [
-              {"role": "system", "content": systemPrompt},
-              {"role": "user", "content": userPrompt},
-            ],
-            "temperature": 0.1,
-            "max_tokens": maxTokens,
-          }),
-        )
-        .timeout(const Duration(seconds: 20),
-            onTimeout: () => throw Exception("Request timed out."));
+            body: jsonEncode({
+              "model": _groqModel,
+              "messages": [
+                {"role": "system", "content": systemPrompt},
+                {"role": "user", "content": userPrompt},
+              ],
+              "temperature": 0.1,
+              "max_tokens": maxTokens,
+            }),
+          )
+          .timeout(const Duration(seconds: 20),
+              onTimeout: () => throw Exception("Request timed out."));
+      RateLimitService.recordFromResponse(r);
+      return r;
+    }
 
     try {
       var response = await _doRequest();

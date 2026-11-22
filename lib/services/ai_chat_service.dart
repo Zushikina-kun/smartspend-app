@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'db_service.dart';
 import 'app_config.dart';
+import 'rate_limit_service.dart';
 
 /// Status of an item processed during an AI response.
 enum AiItemStatus { recorded, skipped, failed }
@@ -1367,6 +1368,8 @@ PH BNPL/Loan Services (2026):
 
     // Restore original model after task-specific routing
     if (needsSwitch) AppConfig.setModel(originalModelId);
+
+    RateLimitService.recordFromResponse(response);
 
     if (response.statusCode != 200) {
       // 429 = rate limit — try next model in chain

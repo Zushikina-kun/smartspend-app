@@ -26,6 +26,7 @@ import '../services/undo_service.dart';
 import '../services/behavioral_feedback_service.dart';
 import '../services/app_config.dart';
 import '../services/analytics_service.dart';
+import '../services/rate_limit_service.dart';
 import '../main.dart' show themeService;
 import '../models/expense.dart';
 import '../widgets/info_button.dart';
@@ -3410,6 +3411,40 @@ class _AIScreenState extends State<AIScreen> {
       body: Column(
         children: [
           if (!_contextLoaded) const LinearProgressIndicator(),
+          // ── OPENROUTER RATE LIMIT BANNER ───────────────────────────────────
+          ValueListenableBuilder<int?>(
+            valueListenable: RateLimitService.openRouterRemaining,
+            builder: (_, remaining, __) {
+              if (remaining == null || remaining >= 100) {
+                return const SizedBox.shrink();
+              }
+              return Material(
+                color: Colors.amber.shade100,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Row(children: [
+                    const Text('⚠️', style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '~$remaining OpenRouter requests left today — will auto-fallback to Groq/Gemini if exhausted.',
+                        style: const TextStyle(
+                            fontSize: 12, color: Colors.black87),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 16),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: () =>
+                          RateLimitService.openRouterRemaining.value = null,
+                    ),
+                  ]),
+                ),
+              );
+            },
+          ),
           // ── AI UNAVAILABLE BANNER ─────────────────────────────────────────
           // Shows when the last few messages all failed (auth + limit errors).
           // Gives the user a clear path to manual entry without digging around.
