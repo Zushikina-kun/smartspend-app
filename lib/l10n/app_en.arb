@@ -1,0 +1,354 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "SmartSpend",
+  "@appTitle": {"description": "Application name"},
+
+  "navHome": "Home",
+  "@navHome": {"description": "Bottom nav: Home tab"},
+
+  "navAnalytics": "Analytics",
+  "@navAnalytics": {"description": "Bottom nav: Analytics tab"},
+
+  "navAI": "Peso",
+  "@navAI": {"description": "Bottom nav: AI/Peso tab"},
+
+  "navTools": "Tools",
+  "@navTools": {"description": "Bottom nav: Tools tab"},
+
+  "navProfile": "Profile",
+  "@navProfile": {"description": "Bottom nav: Profile tab"},
+
+  "settings": "Settings",
+  "@settings": {"description": "Settings screen title"},
+
+  "appSettings": "App Settings",
+  "@appSettings": {"description": "App settings appbar title"},
+
+  "addExpense": "Add Expense",
+  "@addExpense": {"description": "Add expense button/title"},
+
+  "expenses": "Expenses",
+  "@expenses": {"description": "Expenses label"},
+
+  "safeToSpend": "Safe to Spend",
+  "@safeToSpend": {"description": "Safe to Spend card title"},
+
+  "financialHealthScore": "Financial Health Score",
+  "@financialHealthScore": {"description": "Financial Health Score card title"},
+
+  "savingsGoals": "Savings Goals",
+  "@savingsGoals": {"description": "Savings Goals label"},
+
+  "aiAssistant": "AI Assistant",
+  "@aiAssistant": {"description": "AI assistant label"},
+
+  "more": "More",
+  "@more": {"description": "More label"},
+
+  "cancel": "Cancel",
+  "@cancel": {"description": "Cancel button"},
+
+  "save": "Save",
+  "@save": {"description": "Save button"},
+
+  "saveAgain": "Save again",
+  "@saveAgain": {"description": "Save again button in duplicate dialog"},
+
+  "close": "Close",
+  "@close": {"description": "Close button"},
+
+  "confirm": "Confirm",
+  "@confirm": {"description": "Confirm button"},
+
+  "delete": "Delete",
+  "@delete": {"description": "Delete button"},
+
+  "edit": "Edit",
+  "@edit": {"description": "Edit button"},
+
+  "done": "Done",
+  "@done": {"description": "Done button"},
+
+  "gotIt": "Got it",
+  "@gotIt": {"description": "Got it button"},
+
+  "iUnderstand": "I understand",
+  "@iUnderstand": {"description": "I understand button"},
+
+  "loading": "Loading…",
+  "@loading": {"description": "Loading indicator text"},
+
+  "language": "Language",
+  "@language": {"description": "Language setting label"},
+
+  "languageEnglish": "English",
+  "@languageEnglish": {"description": "English language option"},
+
+  "languageFilipino": "Filipino (Tagalog)",
+  "@languageFilipino": {"description": "Filipino/Tagalog language option"},
+
+  "sectionBehavior": "BEHAVIOR",
+  "@sectionBehavior": {"description": "Settings section: Behavior"},
+
+  "sectionDisplay": "DISPLAY",
+  "@sectionDisplay": {"description": "Settings section: Display"},
+
+  "sectionAppearance": "APPEARANCE",
+  "@sectionAppearance": {"description": "Settings section: Appearance"},
+
+  "sectionSecurity": "SECURITY",
+  "@sectionSecurity": {"description": "Settings section: Security"},
+
+  "sectionTrackingMode": "TRACKING MODE",
+  "@sectionTrackingMode": {"description": "Settings section: Tracking Mode"},
+
+  "sectionNotifications": "NOTIFICATIONS",
+  "@sectionNotifications": {"description": "Settings section: Notifications"},
+
+  "sectionAiModel": "AI MODEL",
+  "@sectionAiModel": {"description": "Settings section: AI Model"},
+
+  "sectionLocalAi": "LOCAL AI (PRIVATE MODE)",
+  "@sectionLocalAi": {"description": "Settings section: Local AI"},
+
+  "sectionHomeScreenSections": "HOME SCREEN — SHOW / HIDE SECTIONS",
+  "@sectionHomeScreenSections": {"description": "Settings section: Home screen toggles"},
+
+  "sectionAnalyticsSections": "ANALYTICS — SHOW / HIDE SECTIONS",
+  "@sectionAnalyticsSections": {"description": "Settings section: Analytics toggles"},
+
+  "sectionExportData": "EXPORT DATA",
+  "@sectionExportData": {"description": "Settings section: Export Data"},
+
+  "sectionBackupRestore": "BACKUP & RESTORE",
+  "@sectionBackupRestore": {"description": "Settings section: Backup & Restore"},
+
+  "sectionFeedback": "FEEDBACK",
+  "@sectionFeedback": {"description": "Settings section: Feedback"},
+
+  "sectionAppInfo": "APP INFO",
+  "@sectionAppInfo": {"description": "Settings section: App Info"},
+
+  "sectionQuickPresets": "QUICK PRESETS",
+  "@sectionQuickPresets": {"description": "Settings section: Quick Presets"},
+
+  "sectionLanguage": "LANGUAGE",
+  "@sectionLanguage": {"description": "Settings section: Language"},
+
+  "autoDeductWallets": "Auto-deduct wallets",
+  "@autoDeductWallets": {"description": "Settings toggle: Auto-deduct wallets"},
+
+  "autoDeductWalletsSubtitle": "Deduct from Cash/GCash/Maya when logging expenses",
+  "@autoDeductWalletsSubtitle": {"description": "Settings toggle subtitle"},
+
+  "confirmBeforeDeducting": "Confirm before deducting",
+  "@confirmBeforeDeducting": {"description": "Settings toggle: Confirm before deducting"},
+
+  "confirmBeforeDeductingSubtitle": "Ask \"Deduct from wallet?\" before each expense — off by default for speed",
+  "@confirmBeforeDeductingSubtitle": {"description": "Settings toggle subtitle"},
+
+  "impulsePause": "Impulse pause",
+  "@impulsePause": {"description": "Settings toggle: Impulse pause"},
+
+  "impulsePauseSubtitle": "Confirm before logging large Want expenses",
+  "@impulsePauseSubtitle": {"description": "Settings toggle subtitle"},
+
+  "budgetAlerts": "Budget alerts",
+  "@budgetAlerts": {"description": "Settings toggle: Budget alerts"},
+
+  "budgetAlertsSubtitle": "Notify when a category hits 80% or 100%",
+  "@budgetAlertsSubtitle": {"description": "Settings toggle subtitle"},
+
+  "spendingLimits": "Spending limits",
+  "@spendingLimits": {"description": "Spending limits tile"},
+
+  "spendingLimitsSubtitle": "Set daily, weekly, monthly, or yearly caps",
+  "@spendingLimitsSubtitle": {"description": "Spending limits subtitle"},
+
+  "balanceMode": "Balance mode",
+  "@balanceMode": {"description": "Settings toggle: Balance mode"},
+
+  "balanceModeSubtitle": "Show total wallet balance instead of income-based remaining",
+  "@balanceModeSubtitle": {"description": "Settings toggle subtitle"},
+
+  "roundUpSavings": "Round-up savings",
+  "@roundUpSavings": {"description": "Settings toggle: Round-up savings"},
+
+  "roundUpSavingsSubtitle": "Auto-save spare change to your first goal (rounds to ₱10)",
+  "@roundUpSavingsSubtitle": {"description": "Settings toggle subtitle"},
+
+  "darkMode": "Dark mode",
+  "@darkMode": {"description": "Settings toggle: Dark mode"},
+
+  "darkModeSubtitle": "Switch between light and dark theme",
+  "@darkModeSubtitle": {"description": "Settings toggle subtitle"},
+
+  "compactMode": "Compact mode",
+  "@compactMode": {"description": "Settings toggle: Compact mode"},
+
+  "compactModeSubtitle": "Reduce spacing and list density",
+  "@compactModeSubtitle": {"description": "Settings toggle subtitle"},
+
+  "highContrast": "High contrast",
+  "@highContrast": {"description": "Settings toggle: High contrast"},
+
+  "highContrastSubtitle": "Pure black/white theme for maximum readability",
+  "@highContrastSubtitle": {"description": "Settings toggle subtitle"},
+
+  "appTheme": "App theme",
+  "@appTheme": {"description": "App theme picker tile"},
+
+  "textSize": "Text size",
+  "@textSize": {"description": "Text size picker tile"},
+
+  "displayCurrency": "Display currency",
+  "@displayCurrency": {"description": "Display currency tile"},
+
+  "displayCurrencySubtitle": "Tap to change — all amounts stored in PHP",
+  "@displayCurrencySubtitle": {"description": "Display currency subtitle"},
+
+  "trackIncomeWallets": "Track income & wallets",
+  "@trackIncomeWallets": {"description": "Settings toggle: Track income & wallets"},
+
+  "anomalyAlerts": "Spending anomaly alerts",
+  "@anomalyAlerts": {"description": "Settings toggle: Anomaly alerts"},
+
+  "anomalyAlertsSubtitle": "Weekly alert when a category spikes 2.5× above usual",
+  "@anomalyAlertsSubtitle": {"description": "Settings toggle subtitle"},
+
+  "smartSuggestions": "Smart suggestions",
+  "@smartSuggestions": {"description": "Settings toggle: Smart suggestions"},
+
+  "smartSuggestionsSubtitle": "Daily nudges: upcoming bills, pace alerts, goal milestones, shortfall risk",
+  "@smartSuggestionsSubtitle": {"description": "Settings toggle subtitle"},
+
+  "billReminders": "Bill reminders",
+  "@billReminders": {"description": "Settings toggle: Bill reminders"},
+
+  "billRemindersSubtitle": "Get notified 3 days before, 1 day before, and on due date for upcoming bills",
+  "@billRemindersSubtitle": {"description": "Settings toggle subtitle"},
+
+  "sendFeedback": "Send Feedback",
+  "@sendFeedback": {"description": "Feedback tile"},
+
+  "sendFeedbackSubtitle": "Report a bug or suggest a feature",
+  "@sendFeedbackSubtitle": {"description": "Feedback subtitle"},
+
+  "exportTransactionsCSV": "Export Transactions (CSV)",
+  "@exportTransactionsCSV": {"description": "Export transactions tile"},
+
+  "exportSummaryCSV": "Export Summary (CSV)",
+  "@exportSummaryCSV": {"description": "Export summary tile"},
+
+  "createBackup": "Create Backup",
+  "@createBackup": {"description": "Create backup tile"},
+
+  "restoreFromBackup": "Restore from Backup",
+  "@restoreFromBackup": {"description": "Restore from backup tile"},
+
+  "appVersion": "App version",
+  "@appVersion": {"description": "App version tile"},
+
+  "headsUp": "Heads Up!",
+  "@headsUp": {"description": "Heads up alert title"},
+
+  "offlineBanner": "📴 Offline — core features work. Peso AI needs internet.",
+  "@offlineBanner": {"description": "Offline banner message"},
+
+  "tellPesoHint": "Tell Peso what you spent today…",
+  "@tellPesoHint": {"description": "Quick input hint text"},
+
+  "noInternetPeso": "No internet — Peso unavailable",
+  "@noInternetPeso": {"description": "Quick input offline hint"},
+
+  "analyzeButton": "Analyze",
+  "@analyzeButton": {"description": "Analyze button in add expense"},
+
+  "retryButton": "Retry",
+  "@retryButton": {"description": "Retry button"},
+
+  "saveExpense": "Save Expense",
+  "@saveExpense": {"description": "Save expense button"},
+
+  "amount": "Amount",
+  "@amount": {"description": "Amount field label"},
+
+  "itemName": "Item name",
+  "@itemName": {"description": "Item name field label"},
+
+  "shopName": "Shop / Merchant",
+  "@shopName": {"description": "Shop name field label"},
+
+  "notes": "Notes",
+  "@notes": {"description": "Notes field label"},
+
+  "category": "Category",
+  "@category": {"description": "Category field label"},
+
+  "paymentMethod": "Payment method",
+  "@paymentMethod": {"description": "Payment method field label"},
+
+  "date": "Date",
+  "@date": {"description": "Date field label"},
+
+  "wantNeed": "Want / Need",
+  "@wantNeed": {"description": "Want/Need toggle label"},
+
+  "wantLabel": "Want",
+  "@wantLabel": {"description": "Want label"},
+
+  "needLabel": "Need",
+  "@needLabel": {"description": "Need label"},
+
+  "describeExpense": "Describe your expense…",
+  "@describeExpense": {"description": "Add expense input hint"},
+
+  "aiAnalyzing": "AI is analyzing…",
+  "@aiAnalyzing": {"description": "AI analyzing status text"},
+
+  "retrying": "Retrying…",
+  "@retrying": {"description": "Retrying status text"},
+
+  "pleaseDescribeFirst": "Please describe your expense first.",
+  "@pleaseDescribeFirst": {"description": "Error: describe expense first"},
+
+  "pleaseEnterValidAmount": "Please enter a valid amount.",
+  "@pleaseEnterValidAmount": {"description": "Error: invalid amount"},
+
+  "pleaseEnterItemName": "Please enter an item name.",
+  "@pleaseEnterItemName": {"description": "Error: missing item name"},
+
+  "alreadyLoggedToday": "Already logged today?",
+  "@alreadyLoggedToday": {"description": "Duplicate dialog title"},
+
+  "wasThisPlanned": "Was this planned? 🤔",
+  "@wasThisPlanned": {"description": "Impulse pause dialog title"},
+
+  "waitLetMeReconsider": "Wait, let me reconsider",
+  "@waitLetMeReconsider": {"description": "Impulse pause: reconsider button"},
+
+  "yesSaveIt": "Yes, save it",
+  "@yesSaveIt": {"description": "Impulse pause: save button"},
+
+  "deductFromWallet": "Deduct from wallet?",
+  "@deductFromWallet": {"description": "Wallet deduction dialog title"},
+
+  "pastedReview": "Pasted! Review the fields below and tap Analyze or Save.",
+  "@pastedReview": {"description": "Paste success message"},
+
+  "clipboardEmpty": "Clipboard is empty.",
+  "@clipboardEmpty": {"description": "Clipboard empty message"},
+
+  "aiScreenTitle": "Peso AI",
+  "@aiScreenTitle": {"description": "AI screen title"},
+
+  "typeAMessage": "Type a message…",
+  "@typeAMessage": {"description": "AI chat input hint"},
+
+  "fullChat": "Full Chat",
+  "@fullChat": {"description": "Full chat action in snackbar"},
+
+  "financialAdviceNotice": "Financial Advice Notice",
+  "@financialAdviceNotice": {"description": "Financial advice disclaimer title"}
+}
