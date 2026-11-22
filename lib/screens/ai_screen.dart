@@ -1167,6 +1167,9 @@ class _AIScreenState extends State<AIScreen> {
               // Optional confirm-before-deduct (same as manual entry)
               final confirmDeduct =
                   await DBService.getSetting('wallet_confirm_deduct') == 'true';
+              final minAmountStr =
+                  await DBService.getSetting('wallet_confirm_min_amount');
+              final minAmount = double.tryParse(minAmountStr ?? '') ?? 10.0;
               final paymentMethod =
                   action.params['payment_method'] as String? ?? 'Cash';
               String? walletName;
@@ -1184,9 +1187,10 @@ class _AIScreenState extends State<AIScreen> {
               if (walletName != null) {
                 final wallet = await DBService.findWalletByName(walletName);
                 if (wallet != null && (wallet['balance'] as num) > 0) {
-                  // Only show deduct dialog for amounts worth confirming (> ₱10)
-                  // Skip silently for micro-amounts that are almost certainly correct small purchases
-                  final shouldConfirm = confirmDeduct && amount > 10.0;
+                  // Only show deduct dialog for amounts at or above the user-configured
+                  // minimum (default ₱10). Users who want confirmation on every amount
+                  // can set the threshold to ₱0 in Settings.
+                  final shouldConfirm = confirmDeduct && amount >= minAmount;
                   // Optional confirm-before-deduct dialog
                   if (shouldConfirm && mounted) {
                     final bal = (wallet['balance'] as num).toDouble();

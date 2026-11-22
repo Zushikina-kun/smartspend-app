@@ -41,6 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // ── Behavior ────────────────────────────────────────────────────────────────
   bool autoDeduct = true;
   bool walletConfirmDeduct = false; // opt-in: ask before deducting each expense
+  double walletConfirmMinAmount = 10.0; // skip dialog for amounts below this
   bool impulseEnabled = true;
   bool budgetAlerts = true;
   bool smsSyncEnabled = false;
@@ -118,6 +119,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     autoDeduct = (await DBService.getSetting('wallet_auto_deduct')) != 'false';
     walletConfirmDeduct =
         (await DBService.getSetting('wallet_confirm_deduct')) == 'true';
+    final minAmountStr =
+        await DBService.getSetting('wallet_confirm_min_amount');
+    walletConfirmMinAmount = double.tryParse(minAmountStr ?? '') ?? 10.0;
     // mood_checkin_enabled is now unified with show_mood_home — one toggle controls both.
     // Migrate any existing mood_checkin_enabled=false → show_mood_home=false on first load.
     final oldMoodKey = await DBService.getSetting('mood_checkin_enabled');
@@ -590,6 +594,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _save('wallet_confirm_deduct', v);
                     },
                   ),
+                  if (walletConfirmDeduct)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 6),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.tune, size: 20),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Minimum amount to confirm',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                Text(
+                                  'Show dialog only for amounts ≥ ₱${walletConfirmMinAmount.toStringAsFixed(0)}. Set to ₱0 to confirm every amount.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant),
+                                ),
+                                Slider(
+                                  value: walletConfirmMinAmount.clamp(0, 500),
+                                  min: 0,
+                                  max: 500,
+                                  divisions: 50,
+                                  label:
+                                      '₱${walletConfirmMinAmount.toStringAsFixed(0)}',
+                                  onChanged: (v) {
+                                    setState(() => walletConfirmMinAmount = v);
+                                    DBService.setSetting(
+                                        'wallet_confirm_min_amount',
+                                        v.toStringAsFixed(0));
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   _tile(
                     icon: Icons.pause_circle_outline,
                     title: 'Impulse pause',

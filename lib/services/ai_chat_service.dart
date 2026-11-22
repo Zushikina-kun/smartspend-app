@@ -269,9 +269,22 @@ class AIChatService {
     } else {
       DBService.getCategoryRules().then((rules) => _userRules = rules);
     }
-    final expenseSummary = expenses.isEmpty
+    // When monthExpenses is provided, exclude current-month entries from the
+    // all-time list to avoid showing the same expense in both blocks.
+    final List<Map<String, dynamic>> allTimeExpenses;
+    if (monthExpenses != null && monthExpenses.isNotEmpty) {
+      final currentMonthPrefix =
+          DateTime.now().toIso8601String().substring(0, 7); // 'yyyy-MM'
+      allTimeExpenses = expenses
+          .where((e) =>
+              !(e['date'] as String? ?? '').startsWith(currentMonthPrefix))
+          .toList();
+    } else {
+      allTimeExpenses = expenses;
+    }
+    final expenseSummary = allTimeExpenses.isEmpty
         ? "No expenses recorded yet."
-        : _buildExpenseSummary(expenses);
+        : _buildExpenseSummary(allTimeExpenses);
 
     // Want vs Need summary
     double wantTotal = 0, needTotal = 0;
@@ -1934,6 +1947,29 @@ PH BNPL/Loan Services (2026):
       case 'plan_salary_split':
         final income = (p['income'] as num?)?.toDouble() ?? 0;
         return income > 0;
+      case 'log_multiple_expenses':
+        // Validate each item in the batch with the same guards as log_expense
+        final items = p['items'];
+        if (items == null || items is! List || (items as List).isEmpty) {
+          return false;
+        }
+        for (final item in items as List) {
+          if (item is! Map) return false;
+          final itemName = item['item_name'];
+          final itemAmt = (item['amount'] as num?)?.toDouble() ?? 0;
+          if (itemName == null || itemAmt <= 0 || itemAmt >= 10000000) {
+            return false;
+          }
+          final itemNameStr = itemName.toString().trim();
+          if (itemNameStr.isEmpty || itemNameStr.length < 2) return false;
+          if (itemNameStr.endsWith('(') ||
+              itemNameStr.endsWith(',') ||
+              itemNameStr.endsWith(' ')) return false;
+          final itemNameLower = itemNameStr.toLowerCase();
+          if (['for', 'the', 'a', 'an', 'my', 'your', 'of', 'in', 'at', 'on']
+              .contains(itemNameLower)) return false;
+        }
+        return true;
       default:
         // Unknown action type — allow through (forward-compatible with new actions)
         return true;
