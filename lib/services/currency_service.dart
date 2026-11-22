@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'db_service.dart';
 
 class CurrencyService {
@@ -145,9 +146,8 @@ class CurrencyService {
 
   static String format(double phpAmount) {
     final converted = convert(phpAmount);
-    // No decimal places for these currencies (and PHP — Filipinos don't use centavos in daily tracking)
+    // Currencies that use no decimal places in everyday display
     const noDecimal = [
-      'PHP',
       'JPY',
       'KRW',
       'IDR',
@@ -161,9 +161,13 @@ class CurrencyService {
       'COP'
     ];
     if (noDecimal.contains(_currentCurrency)) {
-      return '$symbol${converted.toStringAsFixed(0)}';
+      final fmt = NumberFormat('#,##0', 'en_US');
+      return '$symbol${fmt.format(converted.round())}';
     }
-    return '$symbol${converted.toStringAsFixed(2)}';
+    // All other currencies (including PHP) use two decimal places with
+    // thousands separators — e.g. ₱1,234.56.
+    final fmt = NumberFormat('#,##0.00', 'en_US');
+    return '$symbol${fmt.format(converted)}';
   }
 
   /// Format with compact notation (K, M) for charts and small displays

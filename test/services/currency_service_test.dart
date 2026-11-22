@@ -2,24 +2,31 @@
 // Tests run against the default PHP currency state (_currentCurrency = 'PHP',
 // _rateFromPHP = 1.0) which is set at class definition time and does not
 // require DB/network initialisation.
+//
+// Since CurrencyService v2, format() uses NumberFormat('#,##0.00') for PHP,
+// producing "₱1,234.56" rather than the old integer-rounded "₱1235".
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smartspend_app/services/currency_service.dart';
 
 void main() {
   group('CurrencyService.format (PHP default)', () {
-    // PHP is in the noDecimal list, so amounts are rounded to 0 decimal
-    // places and prefixed with the ₱ symbol.
+    // PHP uses NumberFormat('#,##0.00'), so amounts get thousands separators
+    // and two decimal places — e.g. 1234.56 → "₱1,234.56".
+
+    test('format(1234.56) contains "1,234.56"', () {
+      final result = CurrencyService.format(1234.56);
+      expect(result, contains('1,234.56'),
+          reason: 'PHP format should use thousands separator and two decimals');
+    });
 
     test('format(1234.56) contains the ₱ symbol', () {
       final result = CurrencyService.format(1234.56);
       expect(result, contains('₱'));
     });
 
-    test('format(1234.56) contains the rounded integer amount', () {
-      // PHP uses toStringAsFixed(0), so 1234.56 → "₱1235"
-      final result = CurrencyService.format(1234.56);
-      expect(result, contains('1235'));
+    test('format(1234.56) equals "₱1,234.56"', () {
+      expect(CurrencyService.format(1234.56), equals('₱1,234.56'));
     });
 
     test('format(0) contains "0"', () {
@@ -30,6 +37,10 @@ void main() {
     test('format(0) starts with ₱', () {
       final result = CurrencyService.format(0);
       expect(result.startsWith('₱'), isTrue);
+    });
+
+    test('format(0) equals "₱0.00"', () {
+      expect(CurrencyService.format(0), equals('₱0.00'));
     });
 
     test('format(-500) does not throw', () {
@@ -46,9 +57,11 @@ void main() {
       expect(result, contains('₱'));
     });
 
-    test('format(1000000) contains "1000000"', () {
+    test('format(1000000) contains thousands separator', () {
       final result = CurrencyService.format(1000000);
-      expect(result, contains('1000000'));
+      // NumberFormat produces "₱1,000,000.00"
+      expect(result, contains('1,000,000'));
+      expect(result, contains('₱'));
     });
   });
 
@@ -92,7 +105,8 @@ void main() {
     });
 
     test('supportedCurrencies contains PHP', () {
-      expect(CurrencyService.supportedCurrencies, containsPair('PHP', isA<String>()));
+      expect(CurrencyService.supportedCurrencies,
+          containsPair('PHP', isA<String>()));
     });
 
     test('currencySymbols maps PHP to ₱', () {
