@@ -391,6 +391,8 @@ class DBService {
       "ALTER TABLE income ADD COLUMN is_windfall INTEGER DEFAULT 0",
       // v14 — session_id on chat_history
       "ALTER TABLE chat_history ADD COLUMN session_id INTEGER",
+      // Feature A — installment schedule columns
+      "ALTER TABLE installment_plans ADD COLUMN credit_balance REAL NOT NULL DEFAULT 0",
     ];
     for (final sql in cols) {
       try {
@@ -490,6 +492,46 @@ class DBService {
           created_at TEXT
         )
       ''');
+    } catch (_) {}
+
+    // Ensure installment_schedule table — per-period payment schedule
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS installment_schedule(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          plan_id INTEGER NOT NULL,
+          period_index INTEGER NOT NULL,
+          due_date TEXT NOT NULL,
+          amount_due REAL NOT NULL,
+          amount_paid REAL NOT NULL DEFAULT 0,
+          credit_applied REAL NOT NULL DEFAULT 0,
+          status TEXT NOT NULL DEFAULT 'pending',
+          updated_at TEXT NOT NULL
+        )
+      ''');
+    } catch (_) {}
+
+    // Ensure installment_payments table — individual payment ledger
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS installment_payments(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          plan_id INTEGER NOT NULL,
+          schedule_id INTEGER NOT NULL,
+          amount REAL NOT NULL,
+          payment_date TEXT NOT NULL,
+          payment_method TEXT,
+          notes TEXT,
+          expense_id INTEGER,
+          created_at TEXT NOT NULL
+        )
+      ''');
+    } catch (_) {}
+
+    // Ensure credit_balance column on installment_plans
+    try {
+      await db.execute(
+          'ALTER TABLE installment_plans ADD COLUMN credit_balance REAL NOT NULL DEFAULT 0');
     } catch (_) {}
 
     // Ensure recurring_candidates table — auto-detected subscription patterns
@@ -2770,6 +2812,279 @@ class DBService {
   static Future<List<Map<String, dynamic>>> getInstallmentPlans() async {
     final db = await getDB();
     return db.query('installment_plans', orderBy: 'created_at DESC');
+  }
+
+  // ── INSTALLMENT SCHEDULE ──────────────────────────────────
+
+  /// Generate per-period schedule rows for a plan.
+  /// Computes `due_date` from `start_date` + `due_day` for each period.
+  /// Safe to call multiple times — skips generation when rows already exist.
+  static Future<void> generateScheduleForPlan(Map<String, dynamic> plan) async {
+    final db = await getDB();
+    final planId = plan['id'] as int;
+    final existing = await db.query('installment_schedule',
+        where: 'plan_id = ?', whereArgs: [planId], limit: 1);
+    if (existing.isNotEmpty) return; // already generated
+
+    final monthsTotal = (plan['months_total'] as int? ?? 1);
+    final monthly = (plan['monthly_payment'] as num).toDouble();
+    final dueDay = (plan['due_day'] as int? ?? 5);
+    final startDate = DateTime.tryParse(plan['start_date'] as String? ?? '') ??
+        DateTime.now();
+    final now = DateTime.now().toIso8601String();
+
+    for (int i = 1; i <= monthsTotal; i++) {
+      // Compute the due date for period i: start month + (i-1) months, using due_day
+      final dueMonth = startDate.month + (i - 1);
+      final dueYear = startDate.year + (dueMonth - 1) ~/ 12;
+      final adjustedMonth = ((dueMonth - 1) % 12) + 1;
+      // Clamp day to valid range for the month (e.g. 31st in February → 28th)
+      final lastDay =
+          DateTime(dueYear, adjustedMonth + 1, 0).day; // day 0 of next month
+      final clampedDay = dueDay.clamp(1, lastDay);
+      final dueDateStr = DateTime(dueYear, adjustedMonth, clampedDay)
+          .toIso8601String()
+          .substring(0, 10);
+      await db.insert('installment_schedule', {
+        'plan_id': planId,
+        'period_index': i,
+        'due_date': dueDateStr,
+        'amount_due': monthly,
+        'amount_paid': 0.0,
+        'credit_applied': 0.0,
+        'status': 'pending',
+        'updated_at': now,
+      });
+    }
+  }
+
+  /// Returns all schedule rows for a plan ordered by period.
+  static Future<List<Map<String, dynamic>>> getScheduleForPlan(
+      int planId) async {
+    final db = await getDB();
+    return db.query('installment_schedule',
+        where: 'plan_id = ?', whereArgs: [planId], orderBy: 'period_index ASC');
+  }
+
+  /// Returns the first pending or partial period for a plan.
+  static Future<Map<String, dynamic>?> getPendingPeriod(int planId) async {
+    final db = await getDB();
+    final rows = await db.query(
+      'installment_schedule',
+      where: "plan_id = ? AND status IN ('pending', 'partial')",
+      whereArgs: [planId],
+      orderBy: 'period_index ASC',
+      limit: 1,
+    );
+    return rows.isEmpty ? null : rows.first;
+  }
+
+  /// Record a payment against a schedule period.
+  ///
+  /// - Inserts into `installment_payments`.
+  /// - Updates `installment_schedule.amount_paid` and `status`.
+  /// - Carries surplus into `installment_plans.credit_balance`.
+  /// - Applies credit to the next pending period.
+  /// - Inserts an expense row (category: 'Bills').
+  static Future<void> recordPayment(
+    int planId,
+    int scheduleId,
+    double amount, {
+    String? paymentMethod,
+    String? notes,
+  }) async {
+    final db = await getDB();
+    final now = DateTime.now();
+    final nowStr = now.toIso8601String();
+    final todayStr = nowStr.substring(0, 10);
+
+    // Fetch the target period row
+    final rows = await db.query('installment_schedule',
+        where: 'id = ?', whereArgs: [scheduleId], limit: 1);
+    if (rows.isEmpty) return;
+    final period = Map<String, dynamic>.from(rows.first);
+
+    final amountDue = (period['amount_due'] as num).toDouble();
+    final creditApplied = (period['credit_applied'] as num).toDouble();
+    final prevPaid = (period['amount_paid'] as num).toDouble();
+    final effectiveDue = (amountDue - creditApplied).clamp(0.0, amountDue);
+    final newAmountPaid = prevPaid + amount;
+
+    // Determine new status and surplus
+    final String newStatus;
+    double surplus = 0.0;
+    if (newAmountPaid >= effectiveDue) {
+      newStatus = 'paid';
+      surplus = newAmountPaid - effectiveDue;
+    } else {
+      newStatus = 'partial';
+    }
+
+    // Update the schedule period
+    await db.update(
+      'installment_schedule',
+      {
+        'amount_paid': newAmountPaid,
+        'status': newStatus,
+        'updated_at': nowStr,
+      },
+      where: 'id = ?',
+      whereArgs: [scheduleId],
+    );
+
+    // Apply surplus to credit_balance on the plan
+    if (surplus > 0) {
+      final planRows = await db.query('installment_plans',
+          where: 'id = ?', whereArgs: [planId], limit: 1);
+      if (planRows.isNotEmpty) {
+        final plan = planRows.first;
+        final title = plan['title'] as String? ?? 'Payment Plan';
+        final provider = plan['provider'] as String?;
+        double creditBalance =
+            ((plan['credit_balance'] as num?) ?? 0).toDouble() + surplus;
+
+        // Apply credit to next pending period
+        final nextPeriod = await getPendingPeriod(planId);
+        if (nextPeriod != null) {
+          final nextAmountDue = (nextPeriod['amount_due'] as num).toDouble();
+          final creditToApply = creditBalance.clamp(0.0, nextAmountDue);
+          if (creditToApply > 0) {
+            await db.update(
+              'installment_schedule',
+              {
+                'credit_applied': creditToApply,
+                'updated_at': nowStr,
+              },
+              where: 'id = ?',
+              whereArgs: [nextPeriod['id']],
+            );
+            creditBalance -= creditToApply;
+          }
+        }
+
+        // Also advance months_paid count
+        final paidPeriods = await db.rawQuery(
+          "SELECT COUNT(*) as c FROM installment_schedule WHERE plan_id = ? AND status = 'paid'",
+          [planId],
+        );
+        final paidCount = (paidPeriods.first['c'] as int? ?? 0);
+        final monthsTotal = (plan['months_total'] as int? ?? 1);
+
+        await db.update(
+          'installment_plans',
+          {
+            'credit_balance': creditBalance,
+            'months_paid': paidCount.clamp(0, monthsTotal),
+          },
+          where: 'id = ?',
+          whereArgs: [planId],
+        );
+
+        // Insert expense record
+        final label = provider != null ? '$title ($provider)' : title;
+        final expenseId = await insertExpenseAndReturnId({
+          'item_name': '$label payment',
+          'category': 'Bills',
+          'amount': amount,
+          'date': todayStr,
+          'time': nowStr.substring(11, 16),
+          'payment_method': paymentMethod ?? 'Cash',
+          'notes': notes ?? 'Payment plan installment',
+          'ai_generated': 0,
+          'confidence_score': 1.0,
+        });
+
+        // Insert payment record
+        await db.insert('installment_payments', {
+          'plan_id': planId,
+          'schedule_id': scheduleId,
+          'amount': amount,
+          'payment_date': todayStr,
+          'payment_method': paymentMethod,
+          'notes': notes,
+          'expense_id': expenseId,
+          'created_at': nowStr,
+        });
+      }
+    } else {
+      // No surplus path — still insert expense and payment
+      final planRows = await db.query('installment_plans',
+          where: 'id = ?', whereArgs: [planId], limit: 1);
+      if (planRows.isNotEmpty) {
+        final plan = planRows.first;
+        final title = plan['title'] as String? ?? 'Payment Plan';
+        final provider = plan['provider'] as String?;
+        final label = provider != null ? '$title ($provider)' : title;
+
+        final paidPeriods = await db.rawQuery(
+          "SELECT COUNT(*) as c FROM installment_schedule WHERE plan_id = ? AND status = 'paid'",
+          [planId],
+        );
+        final paidCount = (paidPeriods.first['c'] as int? ?? 0);
+        final monthsTotal = (plan['months_total'] as int? ?? 1);
+        await db.update(
+          'installment_plans',
+          {'months_paid': paidCount.clamp(0, monthsTotal)},
+          where: 'id = ?',
+          whereArgs: [planId],
+        );
+
+        final expenseId = await insertExpenseAndReturnId({
+          'item_name': '$label payment',
+          'category': 'Bills',
+          'amount': amount,
+          'date': todayStr,
+          'time': nowStr.substring(11, 16),
+          'payment_method': paymentMethod ?? 'Cash',
+          'notes': notes ?? 'Payment plan installment',
+          'ai_generated': 0,
+          'confidence_score': 1.0,
+        });
+
+        await db.insert('installment_payments', {
+          'plan_id': planId,
+          'schedule_id': scheduleId,
+          'amount': amount,
+          'payment_date': todayStr,
+          'payment_method': paymentMethod,
+          'notes': notes,
+          'expense_id': expenseId,
+          'created_at': nowStr,
+        });
+      }
+    }
+    fireEvent(AppEvent.expenseChanged);
+  }
+
+  /// Helper: insert expense and return its row id.
+  static Future<int?> insertExpenseAndReturnId(
+      Map<String, dynamic> data) async {
+    final db = await getDB();
+    final toInsert = Map<String, dynamic>.from(data)..remove('id');
+    if (!toInsert.containsKey('item_name') ||
+        toInsert['item_name'] == null ||
+        (toInsert['item_name'] as String).trim().isEmpty) {
+      toInsert['item_name'] = 'Expense';
+    }
+    toInsert['updated_at'] ??= DateTime.now().toIso8601String();
+    final id = await db.insert('expenses', toInsert,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    return id;
+  }
+
+  /// Update `amount_due` for a specific period row.
+  static Future<void> updateSchedulePeriodAmount(
+      int scheduleId, double newAmountDue) async {
+    final db = await getDB();
+    await db.update(
+      'installment_schedule',
+      {
+        'amount_due': newAmountDue,
+        'updated_at': DateTime.now().toIso8601String(),
+      },
+      where: 'id = ?',
+      whereArgs: [scheduleId],
+    );
   }
 
   // ── SCAN HISTORY ──────────────────────────────────────────

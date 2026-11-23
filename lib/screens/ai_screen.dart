@@ -1753,7 +1753,7 @@ class _AIScreenState extends State<AIScreen> {
 
           if (planMonthly != null && planMonthly > 0) {
             final total = planTotal ?? planMonthly * planMonths;
-            await DBService.insertInstallmentPlan({
+            final planData = {
               'title': planTitle,
               'provider': planProvider,
               'total_amount': total,
@@ -1766,9 +1766,57 @@ class _AIScreenState extends State<AIScreen> {
               'category': 'Bills',
               'notes': 'Added via AI chat',
               'created_at': DateTime.now().toIso8601String(),
-            });
+            };
+            await DBService.insertInstallmentPlan(planData);
+            // Generate schedule for the new plan
+            try {
+              final db = await DBService.getDB();
+              final plans = await db.query('installment_plans',
+                  orderBy: 'id DESC', limit: 1);
+              if (plans.isNotEmpty) {
+                await DBService.generateScheduleForPlan(plans.first);
+              }
+            } catch (_) {}
             _showActionSnackbar(
                 "Payment plan created: $planTitle ${CurrencyService.format(planMonthly)}/mo × $planMonths months");
+          }
+          break;
+
+        case 'log_plan_payment':
+          // Record a payment against a plan's pending period
+          final lpPlanId = (action.params['plan_id'] as num?)?.toInt();
+          final lpAmount = (action.params['amount'] as num?)?.toDouble();
+          final lpNotes = action.params['notes'] as String?;
+          if (lpPlanId != null && lpAmount != null && lpAmount > 0) {
+            final db = await DBService.getDB();
+            final planRows = await db.query('installment_plans',
+                where: 'id = ?', whereArgs: [lpPlanId], limit: 1);
+            if (planRows.isNotEmpty) {
+              final plan = planRows.first;
+              // Lazily generate schedule if missing
+              var schedule = await DBService.getScheduleForPlan(lpPlanId);
+              if (schedule.isEmpty) {
+                await DBService.generateScheduleForPlan(plan);
+                schedule = await DBService.getScheduleForPlan(lpPlanId);
+              }
+              final pending = await DBService.getPendingPeriod(lpPlanId);
+              if (pending != null) {
+                await DBService.recordPayment(
+                  lpPlanId,
+                  pending['id'] as int,
+                  lpAmount,
+                  notes: lpNotes ?? 'Payment via AI chat',
+                );
+                final planTitle = plan['title'] as String? ?? 'Payment Plan';
+                _showActionSnackbar(
+                    "Payment recorded: ${CurrencyService.format(lpAmount)} for $planTitle (period ${pending['period_index']})");
+              } else {
+                _showActionSnackbar(
+                    "All periods for plan #$lpPlanId are paid.");
+              }
+            } else {
+              _showActionSnackbar("Plan #$lpPlanId not found.");
+            }
           }
           break;
 

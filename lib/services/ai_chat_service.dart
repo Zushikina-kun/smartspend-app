@@ -1228,6 +1228,7 @@ PH BNPL/Loan Services (2026):
         "• delete_by_date: {\"type\":\"delete_by_date\",\"start_date\":\"2026-01-01\",\"end_date\":\"2026-01-31\",\"confirmed\":true}\n"
         "• delete_by_logged_date: {\"type\":\"delete_by_logged_date\",\"logged_date\":\"2026-10-06\",\"confirmed\":true} — deletes expenses LOGGED (entered into app) on that date, regardless of their transaction date. Use when user says 'delete what I logged today', 'remove items I entered just now', 'items I logged this session'\n"
         "• add_installment_plan: {\"type\":\"add_installment_plan\",\"title\":\"X\",\"provider\":\"ShopeePayLater\",\"total_amount\":1120,\"monthly_payment\":373,\"months_total\":3,\"due_day\":5}\n"
+        "• log_plan_payment: {\"type\":\"log_plan_payment\",\"plan_id\":1,\"amount\":2200,\"notes\":\"March payment\"} — optional: \"notes\". Use when user says they paid/made a payment on a plan. Calls DBService.getPendingPeriod to find the target period and records against the schedule with overpayment credit carry-forward.\n"
         "• set_wallet_balance: {\"type\":\"set_wallet_balance\",\"wallet_name\":\"GCash\",\"balance\":217.27}\n"
         "• transfer_wallet: {\"type\":\"transfer_wallet\",\"from_wallet\":\"Cash on Hand\",\"to_wallet\":\"GCash\",\"amount\":1000}\n"
         "• plan_salary_split: {\"type\":\"plan_salary_split\",\"income\":25000,\"needs_pct\":50,\"wants_pct\":30,\"savings_pct\":20}\n"

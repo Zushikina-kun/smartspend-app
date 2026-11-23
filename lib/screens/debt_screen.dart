@@ -29,6 +29,9 @@ class _DebtScreenState extends State<DebtScreen>
   List<Map<String, dynamic>> _plans = [];
   bool _loading = true;
   StreamSubscription<AppEvent>? _eventSub;
+  // Track expanded plan cards and their schedule data
+  final Map<int, bool> _planExpanded = {};
+  final Map<int, List<Map<String, dynamic>>> _planSchedules = {};
 
   @override
   void initState() {
@@ -768,6 +771,15 @@ class _DebtScreenState extends State<DebtScreen>
                   };
                   if (existing == null) {
                     await DBService.insertInstallmentPlan(data);
+                    // Generate initial schedule for new plan
+                    try {
+                      final db = await DBService.getDB();
+                      final plans = await db.query('installment_plans',
+                          orderBy: 'id DESC', limit: 1);
+                      if (plans.isNotEmpty) {
+                        await DBService.generateScheduleForPlan(plans.first);
+                      }
+                    } catch (_) {}
                   } else {
                     await DBService.updateInstallmentPlan(
                         {...data, 'id': existing['id']});
@@ -795,12 +807,11 @@ class _DebtScreenState extends State<DebtScreen>
     final title = plan['title'] as String;
     final provider = plan['provider'] as String?;
     final label = provider != null ? "$title ($provider)" : title;
+    final planId = plan['id'] as int;
 
-    // For quick-pay (non-partial), confirm in one step with full sheet
     final amountCtrl = TextEditingController(text: monthly.toStringAsFixed(0));
-    String payMethod = 'GCash'; // most common for ShopeePayLater/GLoan
+    String payMethod = 'GCash';
     String payDate = DateTime.now().toIso8601String().substring(0, 10);
-    int missedCount = 1; // catch-up mode: how many months to log
 
     final cs = Theme.of(context).colorScheme;
 
@@ -817,7 +828,6 @@ class _DebtScreenState extends State<DebtScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Handle bar
               Center(
                 child: Container(
                     width: 36,
@@ -831,8 +841,6 @@ class _DebtScreenState extends State<DebtScreen>
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-
-              // Amount — pre-filled with monthly, editable for partial
               TextField(
                 controller: amountCtrl,
                 keyboardType:
@@ -848,8 +856,6 @@ class _DebtScreenState extends State<DebtScreen>
                 ),
               ),
               const SizedBox(height: 12),
-
-              // Payment method
               DropdownButtonFormField<String>(
                 value: payMethod,
                 decoration: InputDecoration(
@@ -871,8 +877,6 @@ class _DebtScreenState extends State<DebtScreen>
                 onChanged: (v) => setSheet(() => payMethod = v ?? payMethod),
               ),
               const SizedBox(height: 12),
-
-              // Date — defaults to today, tappable to change
               OutlinedButton.icon(
                 icon: const Icon(Icons.calendar_today, size: 16),
                 label: Text("Date: $payDate"),
@@ -892,61 +896,7 @@ class _DebtScreenState extends State<DebtScreen>
                   }
                 },
               ),
-              const SizedBox(height: 12),
-              // Catch-up mode — log multiple missed months at once
-              if (!partial) ...[
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: cs.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(10),
-                    border:
-                        Border.all(color: cs.outline.withValues(alpha: 0.15)),
-                  ),
-                  child: Row(children: [
-                    const Icon(Icons.history, size: 16, color: Colors.orange),
-                    const SizedBox(width: 8),
-                    const Expanded(
-                      child: Text("Catching up on missed months?",
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w500)),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.remove, size: 16),
-                      onPressed: () => setSheet(
-                          () => missedCount = (missedCount - 1).clamp(1, 12)),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                          '$missedCount month${missedCount > 1 ? 's' : ''}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 13)),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.add, size: 16),
-                      onPressed: () => setSheet(
-                          () => missedCount = (missedCount + 1).clamp(1, 12)),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ]),
-                ),
-                if (missedCount > 1)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      'Will log $missedCount separate expense records and advance months_paid by $missedCount',
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: cs.onSurface.withValues(alpha: 0.55)),
-                    ),
-                  ),
-              ],
               const SizedBox(height: 20),
-
               Row(
                 children: [
                   Expanded(
@@ -978,41 +928,44 @@ class _DebtScreenState extends State<DebtScreen>
     if (confirm != true || !mounted) return;
 
     final paidAmount = double.tryParse(amountCtrl.text.trim()) ?? monthly;
-    final now = DateTime.now();
 
-    // Log one expense per missed month (catch-up support)
-    for (int m = 0; m < missedCount; m++) {
-      await DBService.insertExpense({
-        'item_name': '$label payment',
-        'category': 'Bills',
-        'amount': paidAmount,
-        'date': payDate,
-        'time': now.toIso8601String().substring(11, 16),
-        'payment_method': payMethod,
-        'notes': missedCount > 1
-            ? 'Payment plan installment (catch-up ${m + 1}/$missedCount)'
-            : 'Payment plan installment',
-        'ai_generated': 0,
-        'confidence_score': 1.0,
-      });
-    } // end catch-up loop
-
-    // Advance months_paid by missedCount (or 0 for partial)
-    final int newPaid;
-    if (paidAmount >= monthly * 0.9) {
-      // ≥90% of monthly counts as full — advance by number of months logged
-      newPaid = ((plan['months_paid'] as int) + missedCount)
-          .clamp(0, plan['months_total'] as int);
-      await DBService.updateInstallmentPlan({...plan, 'months_paid': newPaid});
-    } else {
-      newPaid = plan['months_paid'] as int;
-      // Partial — log expense but don't advance counter
+    // Lazily generate schedule if missing
+    final schedule = await DBService.getScheduleForPlan(planId);
+    if (schedule.isEmpty) {
+      await DBService.generateScheduleForPlan(plan);
     }
 
-    final monthsTotal = plan['months_total'] as int;
+    // Find the target pending period
+    final pending = await DBService.getPendingPeriod(planId);
+    if (pending == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("All periods are already paid!"),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+        ));
+      }
+      return;
+    }
 
-    if (mounted) {
-      if (newPaid >= monthsTotal && paidAmount >= monthly * 0.9) {
+    await DBService.recordPayment(
+      planId,
+      pending['id'] as int,
+      paidAmount,
+      paymentMethod: payMethod,
+      notes: 'Payment plan installment',
+    );
+
+    // Refresh plan data for snackbar messaging
+    final db = await DBService.getDB();
+    final updatedPlans = await db
+        .query('installment_plans', where: 'id = ?', whereArgs: [planId]);
+    if (!mounted) return;
+    if (updatedPlans.isNotEmpty) {
+      final updated = updatedPlans.first;
+      final newPaid = updated['months_paid'] as int;
+      final monthsTotal = updated['months_total'] as int;
+      if (newPaid >= monthsTotal) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
               "🎉 $label fully paid off! It's now in the Completed section below."),
@@ -1026,7 +979,10 @@ class _DebtScreenState extends State<DebtScreen>
           ),
         ));
       } else {
-        final msg = paidAmount < monthly * 0.9
+        final effectiveDue = ((pending['amount_due'] as num).toDouble() -
+                (pending['credit_applied'] as num).toDouble())
+            .clamp(0.0, (pending['amount_due'] as num).toDouble());
+        final msg = paidAmount < effectiveDue
             ? "Partial payment logged — ${CurrencyService.format(paidAmount)} recorded"
             : "Payment logged ✓ — $newPaid/$monthsTotal months paid";
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1035,8 +991,10 @@ class _DebtScreenState extends State<DebtScreen>
           behavior: SnackBarBehavior.floating,
         ));
       }
-      _load();
     }
+    // Clear cached schedule so the card reloads it
+    _planSchedules.remove(planId);
+    _load();
   }
 
   Widget _buildPlansTab() {
@@ -1149,6 +1107,7 @@ class _DebtScreenState extends State<DebtScreen>
     final provider = p['provider'] as String?;
     final dueDay = p['due_day'] as int? ?? 5;
     final interestRate = (p['interest_rate'] as num?)?.toDouble();
+    final planId = p['id'] as int;
 
     final now = DateTime.now();
     DateTime nextDue = DateTime(now.year, now.month, dueDay);
@@ -1161,6 +1120,9 @@ class _DebtScreenState extends State<DebtScreen>
       final totalInterest = remaining * (interestRate / 100);
       interestStr = "≈ ${CurrencyService.format(totalInterest)} total interest";
     }
+
+    final isExpanded = _planExpanded[planId] ?? false;
+
     return Card(
       elevation: 2,
       shadowColor: Colors.black.withValues(alpha: 0.08),
@@ -1230,7 +1192,9 @@ class _DebtScreenState extends State<DebtScreen>
                       ),
                     );
                     if (confirm == true) {
-                      await DBService.deleteInstallmentPlan(p['id'] as int);
+                      await DBService.deleteInstallmentPlan(planId);
+                      _planSchedules.remove(planId);
+                      _planExpanded.remove(planId);
                       _load();
                     }
                   },
@@ -1284,7 +1248,6 @@ class _DebtScreenState extends State<DebtScreen>
                         fontSize: 11,
                         color: cs.onSurface.withValues(alpha: 0.5)),
                   ),
-                  // Next payment date — colored by urgency
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -1323,11 +1286,9 @@ class _DebtScreenState extends State<DebtScreen>
                       style:
                           TextStyle(fontSize: 11, color: Colors.orange[700])),
                 ),
-              // Quick-pay chip row — one-tap full payment + option for partial
               const SizedBox(height: 10),
               Row(
                 children: [
-                  // Quick-pay full amount
                   Expanded(
                     child: FilledButton.icon(
                       icon: const Icon(Icons.bolt, size: 14),
@@ -1346,7 +1307,6 @@ class _DebtScreenState extends State<DebtScreen>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Partial payment button
                   OutlinedButton.icon(
                     icon: const Icon(Icons.edit_outlined, size: 14),
                     label:
@@ -1364,9 +1324,249 @@ class _DebtScreenState extends State<DebtScreen>
                 ],
               ),
             ],
+            // Schedule expansion toggle
+            const SizedBox(height: 6),
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
+              onTap: () async {
+                final expanding = !isExpanded;
+                setState(() => _planExpanded[planId] = expanding);
+                if (expanding && !_planSchedules.containsKey(planId)) {
+                  // Lazily generate if empty
+                  var rows = await DBService.getScheduleForPlan(planId);
+                  if (rows.isEmpty) {
+                    await DBService.generateScheduleForPlan(p);
+                    rows = await DBService.getScheduleForPlan(planId);
+                  }
+                  if (mounted) setState(() => _planSchedules[planId] = rows);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Row(
+                  children: [
+                    Icon(
+                      isExpanded ? Icons.expand_less : Icons.expand_more,
+                      size: 16,
+                      color: cs.onSurface.withValues(alpha: 0.5),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      isExpanded ? "Hide schedule" : "Show schedule",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: cs.onSurface.withValues(alpha: 0.55)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (isExpanded) _buildScheduleSection(planId, cs),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildScheduleSection(int planId, ColorScheme cs) {
+    final rows = _planSchedules[planId];
+    if (rows == null) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      );
+    }
+    if (rows.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Text("No schedule generated yet.",
+            style: TextStyle(
+                fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5))),
+      );
+    }
+
+    Widget statusBadge(String status) {
+      final color = status == 'paid'
+          ? Colors.green
+          : status == 'partial'
+              ? Colors.orange
+              : status == 'skipped'
+                  ? Colors.grey
+                  : Colors.purple;
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          status,
+          style: TextStyle(
+              fontSize: 10, fontWeight: FontWeight.w600, color: color),
+        ),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(height: 16),
+        // Header row
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Row(
+            children: [
+              SizedBox(
+                  width: 32,
+                  child: Text("#",
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: cs.onSurface.withValues(alpha: 0.5)))),
+              Expanded(
+                  child: Text("Due Date",
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: cs.onSurface.withValues(alpha: 0.5)))),
+              SizedBox(
+                  width: 70,
+                  child: Text("Due",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: cs.onSurface.withValues(alpha: 0.5)))),
+              SizedBox(
+                  width: 70,
+                  child: Text("Paid",
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: cs.onSurface.withValues(alpha: 0.5)))),
+              const SizedBox(width: 60),
+            ],
+          ),
+        ),
+        ...rows.map((row) {
+          final periodIndex = row['period_index'] as int;
+          final dueDate = row['due_date'] as String;
+          final amountDue = (row['amount_due'] as num).toDouble();
+          final amountPaid = (row['amount_paid'] as num).toDouble();
+          final creditApplied = (row['credit_applied'] as num).toDouble();
+          final status = row['status'] as String;
+          final rowId = row['id'] as int;
+          final isEditable = status == 'pending' || status == 'partial';
+
+          String dueDateDisplay;
+          try {
+            dueDateDisplay =
+                DateFormat('MMM d, y').format(DateTime.parse(dueDate));
+          } catch (_) {
+            dueDateDisplay = dueDate;
+          }
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(
+              children: [
+                SizedBox(
+                    width: 32,
+                    child: Text('$periodIndex',
+                        style: const TextStyle(fontSize: 12))),
+                Expanded(
+                    child: Text(dueDateDisplay,
+                        style: const TextStyle(fontSize: 11))),
+                SizedBox(
+                  width: 70,
+                  child: GestureDetector(
+                    onTap: isEditable
+                        ? () async {
+                            final ctrl = TextEditingController(
+                                text: amountDue.toStringAsFixed(0));
+                            final result = await showDialog<double>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text("Edit Period $periodIndex Amount"),
+                                content: TextField(
+                                  controller: ctrl,
+                                  keyboardType: TextInputType.number,
+                                  autofocus: true,
+                                  decoration: const InputDecoration(
+                                    labelText: "New amount due",
+                                    prefixText: "₱ ",
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx),
+                                    child: const Text("Cancel"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      final v = double.tryParse(ctrl.text);
+                                      if (v != null && v > 0) {
+                                        Navigator.pop(ctx, v);
+                                      }
+                                    },
+                                    child: const Text("Save"),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (result != null) {
+                              await DBService.updateSchedulePeriodAmount(
+                                  rowId, result);
+                              final updated =
+                                  await DBService.getScheduleForPlan(planId);
+                              if (mounted) {
+                                setState(
+                                    () => _planSchedules[planId] = updated);
+                              }
+                            }
+                          }
+                        : null,
+                    child: Text(
+                      CurrencyService.format(amountDue),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: isEditable
+                            ? Colors.purple
+                            : cs.onSurface.withValues(alpha: 0.7),
+                        decoration:
+                            isEditable ? TextDecoration.underline : null,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                    width: 70,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          CurrencyService.format(amountPaid),
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(fontSize: 11),
+                        ),
+                        if (creditApplied > 0)
+                          Text(
+                            '-${CurrencyService.format(creditApplied)} cr',
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(
+                                fontSize: 9, color: Colors.teal),
+                          ),
+                      ],
+                    )),
+                SizedBox(width: 60, child: statusBadge(status)),
+              ],
+            ),
+          );
+        }),
+      ],
     );
   }
 
