@@ -4513,135 +4513,286 @@ class _DashboardState extends State<Dashboard> {
       Map<String, dynamic> wallet, List<Map<String, dynamic>> history) {
     final cs = Theme.of(context).colorScheme;
     final fmt = DateFormat('MMM d, y h:mm a');
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.6,
-      minChildSize: 0.35,
-      maxChildSize: 0.92,
-      builder: (_, ctrl) => Column(children: [
-        const SizedBox(height: 12),
-        Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2))),
-        const SizedBox(height: 14),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(children: [
-            Text(wallet['icon'] as String? ?? '💵',
-                style: const TextStyle(fontSize: 22)),
-            const SizedBox(width: 10),
+    const filters = ['All', 'Manual', 'Auto-deduct', 'Transfers'];
+
+    List<Map<String, dynamic>> applyFilter(
+        String f, List<Map<String, dynamic>> all) {
+      if (f == 'All') return all;
+      if (f == 'Manual') {
+        return all
+            .where((h) => (h['source'] as String? ?? '').startsWith('manual'))
+            .toList();
+      }
+      if (f == 'Auto-deduct') {
+        return all
+            .where((h) =>
+                (h['source'] as String? ?? '') == 'auto_deduct' ||
+                (h['source'] as String? ?? '') == 'expense_deduct' ||
+                (h['source'] as String? ?? '') == 'delete_reversal')
+            .toList();
+      }
+      if (f == 'Transfers') {
+        return all
+            .where((h) => (h['source'] as String? ?? '').startsWith('transfer'))
+            .toList();
+      }
+      return all;
+    }
+
+    return StatefulBuilder(builder: (ctx, setS) {
+      String activeFilter = 'All';
+      return StatefulBuilder(builder: (ctx2, setS2) {
+        final visible = applyFilter(activeFilter, history);
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.6,
+          minChildSize: 0.35,
+          maxChildSize: 0.92,
+          builder: (_, ctrl) => Column(children: [
+            const SizedBox(height: 12),
+            Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2))),
+            const SizedBox(height: 14),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(children: [
+                Text(wallet['icon'] as String? ?? '💵',
+                    style: const TextStyle(fontSize: 22)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text("${wallet['name']} — Balance History",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                ),
+              ]),
+            ),
+            const SizedBox(height: 8),
+            // Filter chips
+            SizedBox(
+              height: 36,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                children: filters.map((f) {
+                  final selected = activeFilter == f;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: FilterChip(
+                      label: Text(f,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: selected ? cs.onPrimary : cs.onSurface)),
+                      selected: selected,
+                      onSelected: (_) => setS2(() => activeFilter = f),
+                      backgroundColor: cs.surfaceContainerLow,
+                      selectedColor: cs.primary,
+                      showCheckmark: false,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 6),
             Expanded(
-              child: Text("${wallet['name']} — Balance History",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold)),
+              child: history.isEmpty
+                  ? Center(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.history, size: 48, color: Colors.grey[300]),
+                      const SizedBox(height: 12),
+                      const Text("No balance changes recorded yet.",
+                          style: TextStyle(color: Colors.grey)),
+                    ]))
+                  : visible.isEmpty
+                      ? Center(
+                          child: Text(
+                            "No $activeFilter entries",
+                            style: TextStyle(
+                                color: cs.onSurface.withValues(alpha: 0.5)),
+                          ),
+                        )
+                      : ListView.builder(
+                          controller: ctrl,
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                          itemCount: visible.length,
+                          itemBuilder: (_, i) {
+                            final h = visible[i];
+                            final histId = h['id'] as int;
+                            final walletId = wallet['id'] as int;
+                            final delta = (h['delta'] as num).toDouble();
+                            final isPos = delta > 0;
+                            final color = delta == 0
+                                ? cs.onSurface.withValues(alpha: 0.4)
+                                : isPos
+                                    ? Colors.green
+                                    : Colors.red;
+                            final reason = h['reason'] as String?;
+                            final source = h['source'] as String? ?? 'manual';
+                            final ts = h['timestamp'] as String? ?? '';
+                            String timeLabel = ts;
+                            try {
+                              timeLabel =
+                                  fmt.format(DateTime.parse(ts).toLocal());
+                            } catch (_) {}
+                            final icon = source == 'ai'
+                                ? '🤖'
+                                : source == 'transfer' ||
+                                        source.startsWith('transfer')
+                                    ? '↔️'
+                                    : source == 'auto_deduct' ||
+                                            source == 'expense_deduct'
+                                        ? '💳'
+                                        : source == 'delete_reversal'
+                                            ? '↩️'
+                                            : source == 'restore_snapshot'
+                                                ? '🔄'
+                                                : source == 'income'
+                                                    ? '💰'
+                                                    : '✏️';
+                            final newBal = (h['new_balance'] as num).toDouble();
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 8),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: cs.surfaceContainerLow,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                    color: color.withValues(alpha: 0.2)),
+                              ),
+                              child: Row(children: [
+                                Text(icon,
+                                    style: const TextStyle(fontSize: 18)),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(children: [
+                                          Text(
+                                            delta == 0
+                                                ? 'No change'
+                                                : isPos
+                                                    ? '+${CurrencyService.format(delta)}'
+                                                    : '−${CurrencyService.format(delta.abs())}',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: color),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            '→ ${CurrencyService.format(newBal)}',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.6)),
+                                          ),
+                                        ]),
+                                        if (reason != null && reason.isNotEmpty)
+                                          Text(reason,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: cs.onSurface
+                                                      .withValues(
+                                                          alpha: 0.55))),
+                                        Text(timeLabel,
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                color: cs.onSurface
+                                                    .withValues(alpha: 0.4))),
+                                      ]),
+                                ),
+                                Text(
+                                  CurrencyService.format(
+                                      (h['old_balance'] as num).toDouble()),
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color:
+                                          cs.onSurface.withValues(alpha: 0.35),
+                                      decoration: TextDecoration.lineThrough),
+                                ),
+                                const SizedBox(width: 6),
+                                // Restore button
+                                IconButton(
+                                  icon: const Icon(Icons.restore, size: 18),
+                                  tooltip: 'Restore to this balance',
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  onPressed: () async {
+                                    final confirmed =
+                                        await showModalBottomSheet<bool>(
+                                      context: ctx2,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(16))),
+                                      builder: (c) => Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            20, 20, 20, 32),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                              'Restore wallet to this balance?',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              CurrencyService.format(newBal),
+                                              style: const TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Row(children: [
+                                              Expanded(
+                                                child: OutlinedButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(c, false),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: ElevatedButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(c, true),
+                                                  child: const Text('Restore'),
+                                                ),
+                                              ),
+                                            ]),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                    if (confirmed != true) return;
+                                    await DBService.restoreWalletToSnapshot(
+                                        walletId, histId);
+                                    final updated =
+                                        await DBService.getWallets();
+                                    if (mounted) {
+                                      setState(() => _wallets = updated);
+                                    }
+                                    if (ctx2.mounted) {
+                                      Navigator.pop(ctx2);
+                                    }
+                                  },
+                                ),
+                              ]),
+                            );
+                          }),
             ),
           ]),
-        ),
-        const SizedBox(height: 10),
-        Expanded(
-          child: history.isEmpty
-              ? Center(
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.history, size: 48, color: Colors.grey[300]),
-                  const SizedBox(height: 12),
-                  const Text("No balance changes recorded yet.",
-                      style: TextStyle(color: Colors.grey)),
-                ]))
-              : ListView.builder(
-                  controller: ctrl,
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                  itemCount: history.length,
-                  itemBuilder: (_, i) {
-                    final h = history[i];
-                    final delta = (h['delta'] as num).toDouble();
-                    final isPos = delta > 0;
-                    final color = delta == 0
-                        ? cs.onSurface.withValues(alpha: 0.4)
-                        : isPos
-                            ? Colors.green
-                            : Colors.red;
-                    final reason = h['reason'] as String?;
-                    final source = h['source'] as String? ?? 'manual';
-                    final ts = h['timestamp'] as String? ?? '';
-                    String timeLabel = ts;
-                    try {
-                      timeLabel = fmt.format(DateTime.parse(ts).toLocal());
-                    } catch (_) {}
-                    final icon = source == 'ai'
-                        ? '🤖'
-                        : source == 'transfer'
-                            ? '↔️'
-                            : source == 'auto_deduct'
-                                ? '💳'
-                                : source == 'income'
-                                    ? '💰'
-                                    : '✏️';
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: cs.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: color.withValues(alpha: 0.2)),
-                      ),
-                      child: Row(children: [
-                        Text(icon, style: const TextStyle(fontSize: 18)),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(children: [
-                                  Text(
-                                    delta == 0
-                                        ? 'No change'
-                                        : isPos
-                                            ? '+${CurrencyService.format(delta)}'
-                                            : '−${CurrencyService.format(delta.abs())}',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: color),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    '→ ${CurrencyService.format((h['new_balance'] as num).toDouble())}',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: cs.onSurface
-                                            .withValues(alpha: 0.6)),
-                                  ),
-                                ]),
-                                if (reason != null && reason.isNotEmpty)
-                                  Text(reason,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: cs.onSurface
-                                              .withValues(alpha: 0.55))),
-                                Text(timeLabel,
-                                    style: TextStyle(
-                                        fontSize: 11,
-                                        color: cs.onSurface
-                                            .withValues(alpha: 0.4))),
-                              ]),
-                        ),
-                        Text(
-                          CurrencyService.format(
-                              (h['old_balance'] as num).toDouble()),
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: cs.onSurface.withValues(alpha: 0.35),
-                              decoration: TextDecoration.lineThrough),
-                        ),
-                      ]),
-                    );
-                  }),
-        ),
-      ]),
-    );
+        );
+      });
+    });
   }
 
   Widget _buildWalletSummaryCard(BuildContext context) {
@@ -4783,14 +4934,53 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
               const SizedBox(height: 10),
-              Text(
-                hasBalances
-                    ? CurrencyService.format(total)
-                    : "₱0.00 — Tap to set up",
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      hasBalances
+                          ? CurrencyService.format(total)
+                          : "₱0.00 — Tap to set up",
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  // Divergence indicator — shown when any wallet's stored balance
+                  // differs from its last-verified balance by more than ₱0.01
+                  if (_wallets.any((w) {
+                    final lvb = w['last_verified_balance'];
+                    if (lvb == null) return false;
+                    final stored = (w['balance'] as num).toDouble();
+                    final verified = (lvb as num).toDouble();
+                    return (stored - verified).abs() > 0.01;
+                  }))
+                    Tooltip(
+                      message: 'Balance may differ from last verified amount',
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withValues(alpha: 0.85),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('⚠️', style: TextStyle(fontSize: 12)),
+                            SizedBox(width: 3),
+                            Text('Unverified',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
               ),
               if (hasBalances) ...[
                 const SizedBox(height: 8),

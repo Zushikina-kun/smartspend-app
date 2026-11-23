@@ -393,6 +393,9 @@ class DBService {
       "ALTER TABLE chat_history ADD COLUMN session_id INTEGER",
       // Feature A — installment schedule columns
       "ALTER TABLE installment_plans ADD COLUMN credit_balance REAL NOT NULL DEFAULT 0",
+      // Feature B — wallet audit recovery columns
+      "ALTER TABLE wallets ADD COLUMN last_verified_balance REAL",
+      "ALTER TABLE wallets ADD COLUMN last_verified_at TEXT",
     ];
     for (final sql in cols) {
       try {
@@ -3827,5 +3830,55 @@ class DBService {
   static Future<void> deleteInvestment(int id) async {
     final db = await getDB();
     await db.delete('investments', where: 'id = ?', whereArgs: [id]);
+  }
+
+  // ── WALLET AUDIT RECOVERY ─────────────────────────────────────────────────
+
+  /// Restore a wallet's balance to what it was at a specific history snapshot.
+  /// Looks up the [historyId] row, reads its [balance_after] (new_balance),
+  /// sets the wallet's balance to that value, and records a restore entry.
+  /// Returns the restored balance, or null if the history row was not found.
+  static Future<double?> restoreWalletToSnapshot(
+      int walletId, int historyId) async {
+    final db = await getDB();
+    final rows = await db.query(
+      'wallet_history',
+      where: 'id = ? AND wallet_id = ?',
+      whereArgs: [historyId, walletId],
+      limit: 1,
+    );
+    if (rows.isEmpty) return null;
+    final restoredBalance = (rows.first['new_balance'] as num).toDouble();
+    await setWalletBalance(
+      walletId,
+      restoredBalance,
+      reason: 'Restored to snapshot #$historyId',
+      source: 'restore_snapshot',
+    );
+    return restoredBalance;
+  }
+
+  /// Mark the wallet's current balance as verified (user confirmed it is correct).
+  /// Updates [last_verified_balance] and [last_verified_at] on the wallets row.
+  static Future<void> markWalletVerified(int walletId) async {
+    final db = await getDB();
+    final rows = await db.query(
+      'wallets',
+      where: 'id = ?',
+      whereArgs: [walletId],
+      limit: 1,
+    );
+    if (rows.isEmpty) return;
+    final currentBalance = (rows.first['balance'] as num).toDouble();
+    final now = DateTime.now().toIso8601String();
+    await db.update(
+      'wallets',
+      {
+        'last_verified_balance': currentBalance,
+        'last_verified_at': now,
+      },
+      where: 'id = ?',
+      whereArgs: [walletId],
+    );
   }
 }
