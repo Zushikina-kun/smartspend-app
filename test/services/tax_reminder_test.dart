@@ -85,6 +85,147 @@ void main() {
     });
   });
 
+  group('TaxReminderService.getUpcomingDeadlines — vat', () {
+    test('returns 5 deadlines (4 quarterly + Annual ITR)', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'vat');
+      expect(deadlines.length, 5);
+    });
+
+    test('all daysAway values are >= 0 (no past deadlines)', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'vat');
+      for (final d in deadlines) {
+        expect(d['daysAway'] as int, greaterThanOrEqualTo(0));
+      }
+    });
+
+    test('Q1 VAT deadline falls on April 25', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'vat');
+      final q1 = deadlines.firstWhere(
+        (d) => (d['name'] as String).contains('Q1'),
+        orElse: () => {},
+      );
+      expect(q1, isNotEmpty, reason: 'Q1 VAT deadline not found');
+      final date = q1['date'] as DateTime;
+      expect(date.month, 4, reason: 'Q1 VAT deadline should be in April');
+      expect(date.day, 25, reason: 'Q1 VAT deadline should be on the 25th');
+    });
+
+    test('Q3 VAT deadline falls on October 25', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'vat');
+      final q3 = deadlines.firstWhere(
+        (d) => (d['name'] as String).contains('Q3'),
+        orElse: () => {},
+      );
+      expect(q3, isNotEmpty, reason: 'Q3 VAT deadline not found');
+      final date = q3['date'] as DateTime;
+      expect(date.month, 10, reason: 'Q3 VAT deadline should be in October');
+      expect(date.day, 25, reason: 'Q3 VAT deadline should be on the 25th');
+    });
+
+    test('all VAT quarterly deadlines are on the 25th', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'vat');
+      final quarterly = deadlines
+          .where((d) => (d['name'] as String).contains('2550Q'))
+          .toList();
+      expect(quarterly.length, 4);
+      for (final d in quarterly) {
+        expect((d['date'] as DateTime).day, 25,
+            reason: 'VAT deadline ${d['name']} should be on the 25th');
+      }
+    });
+
+    test('includes Annual ITR', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'vat');
+      final itr = deadlines.firstWhere(
+        (d) => (d['name'] as String).contains('ITR'),
+        orElse: () => {},
+      );
+      expect(itr, isNotEmpty, reason: 'Annual ITR not found in VAT deadlines');
+    });
+  });
+
+  group('TaxReminderService.getUpcomingDeadlines — professional/mixed_income',
+      () {
+    test('professional returns 9 deadlines (4×2551Q + 4×1701Q + Annual ITR)',
+        () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'professional');
+      expect(deadlines.length, 9);
+    });
+
+    test('mixed_income returns 9 deadlines', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'mixed_income');
+      expect(deadlines.length, 9);
+    });
+
+    test('all daysAway values are >= 0', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'professional');
+      for (final d in deadlines) {
+        expect(d['daysAway'] as int, greaterThanOrEqualTo(0));
+      }
+    });
+
+    test('1701Q Q1 deadline falls on January 15', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'professional');
+      final q1 = deadlines.firstWhere(
+        (d) =>
+            (d['name'] as String).contains('1701Q') &&
+            (d['name'] as String).contains('Q1'),
+        orElse: () => {},
+      );
+      expect(q1, isNotEmpty, reason: '1701Q Q1 deadline not found');
+      final date = q1['date'] as DateTime;
+      expect(date.month, 1, reason: '1701Q Q1 should be in January');
+      expect(date.day, 15, reason: '1701Q Q1 should be on the 15th');
+    });
+
+    test('1701Q Q3 deadline falls on July 15', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'professional');
+      final q3 = deadlines.firstWhere(
+        (d) =>
+            (d['name'] as String).contains('1701Q') &&
+            (d['name'] as String).contains('Q3'),
+        orElse: () => {},
+      );
+      expect(q3, isNotEmpty, reason: '1701Q Q3 deadline not found');
+      final date = q3['date'] as DateTime;
+      expect(date.month, 7, reason: '1701Q Q3 should be in July');
+      expect(date.day, 15, reason: '1701Q Q3 should be on the 15th');
+    });
+
+    test('includes both 2551Q and 1701Q deadlines', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'professional');
+      final has2551q =
+          deadlines.any((d) => (d['name'] as String).contains('2551Q'));
+      final has1701q =
+          deadlines.any((d) => (d['name'] as String).contains('1701Q'));
+      expect(has2551q, isTrue, reason: 'Missing 2551Q deadlines');
+      expect(has1701q, isTrue, reason: 'Missing 1701Q deadlines');
+    });
+
+    test('includes Annual ITR', () {
+      final deadlines =
+          TaxReminderService.getUpcomingDeadlines(taxpayerType: 'professional');
+      final itr = deadlines.firstWhere(
+        (d) => (d['name'] as String).contains('ITR'),
+        orElse: () => {},
+      );
+      expect(itr, isNotEmpty,
+          reason: 'Annual ITR not found in professional deadlines');
+    });
+  });
+
   group('TaxReminderService.estimateIncomeTax', () {
     test('income <= 250k returns 0 tax', () {
       final result = TaxReminderService.estimateIncomeTax(250000);
@@ -110,10 +251,9 @@ void main() {
 
   group('TaxReminderService.estimatePercentageTax', () {
     test('3% of quarterly revenue', () {
-      expect(
-          TaxReminderService.estimatePercentageTax(100000), closeTo(3000, 0.01));
-      expect(
-          TaxReminderService.estimatePercentageTax(0), closeTo(0, 0.01));
+      expect(TaxReminderService.estimatePercentageTax(100000),
+          closeTo(3000, 0.01));
+      expect(TaxReminderService.estimatePercentageTax(0), closeTo(0, 0.01));
     });
   });
 }

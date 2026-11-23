@@ -876,12 +876,19 @@ class DBService {
         CREATE TABLE IF NOT EXISTS tax_filings(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           period_label TEXT,
-          deadline_date TEXT,
+          deadline_date TEXT UNIQUE,
           filed_date TEXT,
           amount_paid REAL,
           reference_number TEXT,
           notes TEXT
         )
+      ''');
+    } catch (_) {}
+    // Ensure unique index on deadline_date for existing DBs that lack the constraint
+    try {
+      await db.execute('''
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_tax_filings_deadline
+        ON tax_filings(deadline_date)
       ''');
     } catch (_) {}
   }
@@ -893,7 +900,7 @@ class DBService {
       Database db, String table, String column, String type) async {
     try {
       await db.execute('ALTER TABLE $table ADD COLUMN $column $type');
-    } catch (_) {} // ignore: column already exists
+    } catch (_) {} // ignore: column already existsnal tests)
   }
 
   static Future<void> _createTables(Database db) async {
@@ -1132,7 +1139,7 @@ class DBService {
       CREATE TABLE IF NOT EXISTS tax_filings(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         period_label TEXT,
-        deadline_date TEXT,
+        deadline_date TEXT UNIQUE,
         filed_date TEXT,
         amount_paid REAL,
         reference_number TEXT,

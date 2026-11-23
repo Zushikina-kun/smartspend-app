@@ -403,6 +403,7 @@ class _TaxScreenState extends State<TaxScreen>
       String name, DateTime deadline, String deadlineKey) async {
     final amountCtrl = TextEditingController();
     final refCtrl = TextEditingController();
+    final notesCtrl = TextEditingController();
 
     final confirmed = await showDialog<bool>(
       context: context,
@@ -435,6 +436,15 @@ class _TaxScreenState extends State<TaxScreen>
                   border: OutlineInputBorder(),
                 ),
               ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: notesCtrl,
+                maxLines: 2,
+                decoration: const InputDecoration(
+                  labelText: 'Notes (optional)',
+                  border: OutlineInputBorder(),
+                ),
+              ),
             ],
           ),
         ),
@@ -464,7 +474,7 @@ class _TaxScreenState extends State<TaxScreen>
         'amount_paid': amountPaid,
         'reference_number':
             refCtrl.text.trim().isEmpty ? null : refCtrl.text.trim(),
-        'notes': null,
+        'notes': notesCtrl.text.trim().isEmpty ? null : notesCtrl.text.trim(),
       });
       await _loadFilings();
       if (mounted) {
@@ -553,6 +563,7 @@ class _TaxScreenState extends State<TaxScreen>
     final filedDate = filing['filed_date'] as String? ?? '';
     final amountPaid = (filing['amount_paid'] as num?)?.toDouble() ?? 0.0;
     final refNum = filing['reference_number'] as String?;
+    final notes = filing['notes'] as String?;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -583,6 +594,10 @@ class _TaxScreenState extends State<TaxScreen>
                           TextStyle(fontSize: 12, color: Colors.grey.shade600)),
                   if (refNum != null && refNum.isNotEmpty)
                     Text('Ref #: $refNum',
+                        style: TextStyle(
+                            fontSize: 12, color: Colors.grey.shade600)),
+                  if (notes != null && notes.isNotEmpty)
+                    Text('Notes: $notes',
                         style: TextStyle(
                             fontSize: 12, color: Colors.grey.shade600)),
                 ],
