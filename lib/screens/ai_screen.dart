@@ -1776,7 +1776,11 @@ class _AIScreenState extends State<AIScreen> {
               if (planRows.isNotEmpty) {
                 await DBService.generateScheduleForPlan(planRows.first);
               }
-            } catch (_) {}
+            } catch (e) {
+              debugPrint('Schedule generation failed: $e');
+              _showActionSnackbar(
+                  'Plan created but schedule generation failed: $e');
+            }
             _showActionSnackbar(
                 "Payment plan created: $planTitle ${CurrencyService.format(planMonthly)}/mo × $planMonths months");
           }

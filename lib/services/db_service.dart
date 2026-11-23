@@ -2945,10 +2945,12 @@ class DBService {
           final nextAmountDue = (nextPeriod['amount_due'] as num).toDouble();
           final creditToApply = creditBalance.clamp(0.0, nextAmountDue);
           if (creditToApply <= 0) break;
+          final fullyCovers = creditToApply >= nextAmountDue;
           await db.update(
             'installment_schedule',
             {
               'credit_applied': creditToApply,
+              if (fullyCovers) 'status': 'paid',
               'updated_at': nowStr,
             },
             where: 'id = ?',

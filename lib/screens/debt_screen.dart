@@ -780,7 +780,15 @@ class _DebtScreenState extends State<DebtScreen>
                       if (planRows.isNotEmpty) {
                         await DBService.generateScheduleForPlan(planRows.first);
                       }
-                    } catch (_) {}
+                    } catch (e) {
+                      debugPrint('Schedule generation failed: $e');
+                      if (ctx.mounted) {
+                        ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                          content: Text('Could not generate schedule: $e'),
+                          backgroundColor: Colors.red,
+                        ));
+                      }
+                    }
                   } else {
                     await DBService.updateInstallmentPlan(
                         {...data, 'id': existing['id']});
@@ -1387,11 +1395,21 @@ class _DebtScreenState extends State<DebtScreen>
     }
 
     Widget statusBadge(String status) {
-      final color = status == 'paid'
-          ? Colors.green
-          : status == 'partial'
-              ? Colors.orange
-              : Colors.purple;
+      final Color color;
+      switch (status) {
+        case 'paid':
+          color = Colors.green;
+          break;
+        case 'partial':
+          color = Colors.orange;
+          break;
+        case 'pending':
+          color = Colors.grey;
+          break;
+        default:
+          assert(false, 'Unexpected installment status: $status');
+          color = Colors.grey;
+      }
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
