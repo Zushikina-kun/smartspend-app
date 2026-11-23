@@ -528,12 +528,6 @@ class DBService {
       ''');
     } catch (_) {}
 
-    // Ensure credit_balance column on installment_plans
-    try {
-      await db.execute(
-          'ALTER TABLE installment_plans ADD COLUMN credit_balance REAL NOT NULL DEFAULT 0');
-    } catch (_) {}
-
     // Ensure recurring_candidates table — auto-detected subscription patterns
     try {
       await db.execute('''
@@ -2777,7 +2771,7 @@ class DBService {
 
   // ── INSTALLMENT PLANS ─────────────────────────────────────
 
-  static Future<void> insertInstallmentPlan(Map<String, dynamic> data) async {
+  static Future<int> insertInstallmentPlan(Map<String, dynamic> data) async {
     final db = await getDB();
     final id = await db.insert('installment_plans', data,
         conflictAlgorithm: ConflictAlgorithm.replace);
@@ -2786,6 +2780,7 @@ class DBService {
       CloudService.pushDoc('installment_plans', {...data, 'id': id});
     } catch (_) {}
     fireEvent(AppEvent.expenseChanged);
+    return id;
   }
 
   static Future<void> updateInstallmentPlan(Map<String, dynamic> data) async {
@@ -2943,23 +2938,23 @@ class DBService {
         double creditBalance =
             ((plan['credit_balance'] as num?) ?? 0).toDouble() + surplus;
 
-        // Apply credit to next pending period
-        final nextPeriod = await getPendingPeriod(planId);
-        if (nextPeriod != null) {
+        // Apply credit to subsequent pending periods until exhausted
+        while (creditBalance > 0) {
+          final nextPeriod = await getPendingPeriod(planId);
+          if (nextPeriod == null) break;
           final nextAmountDue = (nextPeriod['amount_due'] as num).toDouble();
           final creditToApply = creditBalance.clamp(0.0, nextAmountDue);
-          if (creditToApply > 0) {
-            await db.update(
-              'installment_schedule',
-              {
-                'credit_applied': creditToApply,
-                'updated_at': nowStr,
-              },
-              where: 'id = ?',
-              whereArgs: [nextPeriod['id']],
-            );
-            creditBalance -= creditToApply;
-          }
+          if (creditToApply <= 0) break;
+          await db.update(
+            'installment_schedule',
+            {
+              'credit_applied': creditToApply,
+              'updated_at': nowStr,
+            },
+            where: 'id = ?',
+            whereArgs: [nextPeriod['id']],
+          );
+          creditBalance -= creditToApply;
         }
 
         // Also advance months_paid count

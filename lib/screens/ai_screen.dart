@@ -1767,14 +1767,14 @@ class _AIScreenState extends State<AIScreen> {
               'notes': 'Added via AI chat',
               'created_at': DateTime.now().toIso8601String(),
             };
-            await DBService.insertInstallmentPlan(planData);
-            // Generate schedule for the new plan
+            // Generate schedule for the new plan using the returned ID
             try {
+              final newPlanId = await DBService.insertInstallmentPlan(planData);
               final db = await DBService.getDB();
-              final plans = await db.query('installment_plans',
-                  orderBy: 'id DESC', limit: 1);
-              if (plans.isNotEmpty) {
-                await DBService.generateScheduleForPlan(plans.first);
+              final planRows = await db.query('installment_plans',
+                  where: 'id = ?', whereArgs: [newPlanId], limit: 1);
+              if (planRows.isNotEmpty) {
+                await DBService.generateScheduleForPlan(planRows.first);
               }
             } catch (_) {}
             _showActionSnackbar(

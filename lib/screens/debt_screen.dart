@@ -770,14 +770,15 @@ class _DebtScreenState extends State<DebtScreen>
                         DateTime.now().toIso8601String(),
                   };
                   if (existing == null) {
-                    await DBService.insertInstallmentPlan(data);
-                    // Generate initial schedule for new plan
+                    final newPlanId =
+                        await DBService.insertInstallmentPlan(data);
+                    // Generate initial schedule for new plan using the returned ID
                     try {
                       final db = await DBService.getDB();
-                      final plans = await db.query('installment_plans',
-                          orderBy: 'id DESC', limit: 1);
-                      if (plans.isNotEmpty) {
-                        await DBService.generateScheduleForPlan(plans.first);
+                      final planRows = await db.query('installment_plans',
+                          where: 'id = ?', whereArgs: [newPlanId], limit: 1);
+                      if (planRows.isNotEmpty) {
+                        await DBService.generateScheduleForPlan(planRows.first);
                       }
                     } catch (_) {}
                   } else {
@@ -1390,9 +1391,7 @@ class _DebtScreenState extends State<DebtScreen>
           ? Colors.green
           : status == 'partial'
               ? Colors.orange
-              : status == 'skipped'
-                  ? Colors.grey
-                  : Colors.purple;
+              : Colors.purple;
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
