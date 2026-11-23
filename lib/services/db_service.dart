@@ -783,6 +783,8 @@ class DBService {
             AND (a.notes = 'Logged via AI chat' OR a.notes IS NULL)
             AND b.ai_generated = 1
             AND b.notes LIKE 'Imported from%'
+            AND a.deleted_at IS NULL
+            AND b.deleted_at IS NULL
         ''');
         for (final row in dups) {
           final chatId = row['chat_id'] as int?;
@@ -812,6 +814,7 @@ class DBService {
         final dups2 = await db.rawQuery('''
           SELECT MIN(id) as old_id
           FROM expenses
+          WHERE deleted_at IS NULL
           GROUP BY LOWER(item_name), ROUND(amount, 0), date
           HAVING COUNT(*) > 1
         ''');
@@ -1294,47 +1297,44 @@ class DBService {
 
   static Future<void> deleteExpense(int id) async {
     final db = await getDB();
-  /// Records that [expenseId] caused a deduction of [deductedAmount] from
-  /// [walletId].  Stored in the new wallet_id / wallet_deducted columns so
-  /// deleteExpense() can reverse the deduction automatically.
-  static Future<void> linkExpenseToWallet(
-      int expenseId, int walletId, double deductedAmount) async {
-    final db = await getDB();
-    await db.update(
-        'expenses', {'wallet_id': walletId, 'wallet_deducted': deductedAmount},
-        where: 'id = ?', whereArgs: [expenseId]);
-  }
-
-  /// Physically deletes a soft-deleted expense row (Recycle Bin 'Purge').
-  static Future<void> purgeExpense(int id) async {
-    final db = await getDB();
-    await db.delete('expenses',
-        where: 'id = ? AND deleted_at IS NOT NULL', whereArgs: [id]);
-    fireEvent(AppEvent.expenseChanged);
-  }
-
-  /// Restores a soft-deleted expense (sets deleted_at = NULL).
-  static Future<void> restoreExpense(int id) async {
-    final db = await getDB();
-    await db
-        .rawUpdate("UPDATE expenses SET deleted_at = NULL WHERE id = ?", [id]);
-    fireEvent(AppEvent.expenseChanged);
-  }
-
-  /// Returns soft-deleted expenses (recycle bin contents).
-  static Future<List<Expense>> getDeletedExpenses() async {
-    final db = await getDB();
-    final maps = await db.query('expenses',
-        where: 'deleted_at IS NOT NULL', orderBy: 'deleted_at DESC');
-    return maps.map((m) => Expense.fromMap(m)).toList();
-  }
-
-  /// Auto-purge entries deleted more than 30 days ago (called on startup).
-  static Future<void> purgeExpiredDeletedExpenses() async {
-    final db = await getDB();
-    await db.rawDelete(
-        "DELETE FROM expenses WHERE deleted_at IS NOT NULL AND deleted_at < datetime('now', '-30 days')");
-    CloudService.deleteDoc('expenses', id);
+    // Check if this expense had a wallet deduction and reverse it
+    final rows = await db.query('expenses', where: 'id = ?', whereArgs: [id]);
+    if (rows.isNotEmpty) {
+      final walletId = rows.first['wallet_id'] as int?;
+      final deducted = (rows.first['wallet_deducted'] as num?)?.toDouble() ?? 0;
+      if (walletId != null && deducted > 0) {
+        final wallets =
+            await db.query('wallets', where: 'id = ?', whereArgs: [walletId]);
+        if (wallets.isNotEmpty) {
+          final currentBalance = (wallets.first['balance'] as num).toDouble();
+          final itemName = rows.first['item_name'] as String? ?? 'expense';
+          await setWalletBalance(walletId, currentBalance + deducted,
+              reason: 'Expense deleted: $itemName', source: 'delete_reversal');
+        }
+      }
+      // Reverse round-up contribution if this expense triggered one
+      try {
+        final goalId = rows.first['round_up_goal_id'] as int?;
+        final roundUpAmt =
+            (rows.first['round_up_amount'] as num?)?.toDouble() ?? 0.0;
+        if (goalId != null && roundUpAmt > 0) {
+          final goalRows = await db.query('savings_goals',
+              where: 'id = ?', whereArgs: [goalId], limit: 1);
+          if (goalRows.isNotEmpty) {
+            final currentAmt =
+                (goalRows.first['current_amount'] as num).toDouble();
+            final reversedAmt =
+                (currentAmt - roundUpAmt).clamp(0.0, double.maxFinite);
+            await updateGoal({...goalRows.first, 'current_amount': reversedAmt},
+                source: 'reversal');
+          }
+        }
+      } catch (_) {}
+    }
+    // Soft-delete: mark deleted_at instead of physical removal.
+    // Cloud delete is deferred to purgeExpense so a restore can re-push.
+    await db.rawUpdate(
+        "UPDATE expenses SET deleted_at = datetime('now') WHERE id = ?", [id]);
     fireEvent(AppEvent.expenseChanged);
   }
 
@@ -1350,18 +1350,24 @@ class DBService {
   }
 
   /// Physically deletes a soft-deleted expense row (Recycle Bin "Purge").
+  /// Also fires the cloud delete here, now that the row is truly gone.
   static Future<void> purgeExpense(int id) async {
     final db = await getDB();
     await db.delete('expenses',
         where: 'id = ? AND deleted_at IS NOT NULL', whereArgs: [id]);
+    CloudService.deleteDoc('expenses', id);
     fireEvent(AppEvent.expenseChanged);
   }
 
   /// Restores a soft-deleted expense (sets deleted_at = NULL).
+  /// Re-pushes to cloud so other devices regain the record.
   static Future<void> restoreExpense(int id) async {
     final db = await getDB();
     await db
         .rawUpdate("UPDATE expenses SET deleted_at = NULL WHERE id = ?", [id]);
+    final rows =
+        await db.query('expenses', where: 'id = ?', whereArgs: [id], limit: 1);
+    if (rows.isNotEmpty) CloudService.pushDoc('expenses', rows.first);
     fireEvent(AppEvent.expenseChanged);
   }
 
@@ -1454,6 +1460,7 @@ class DBService {
       FROM expenses
       WHERE LOWER(item_name) = LOWER(?)
         AND item_name IS NOT NULL AND item_name != ''
+        AND deleted_at IS NULL
       GROUP BY category
       ORDER BY cnt DESC
       LIMIT 5
@@ -1495,6 +1502,7 @@ class DBService {
       WHERE LOWER(item_name) LIKE LOWER(?)
         AND item_name IS NOT NULL
         AND item_name != ''
+        AND deleted_at IS NULL
       GROUP BY LOWER(item_name)
       ORDER BY freq DESC, item_name ASC
       LIMIT ?
@@ -1516,6 +1524,7 @@ class DBService {
           AND LOWER(item_name) NOT LIKE LOWER(?)
           AND item_name IS NOT NULL
           AND item_name != ''
+          AND deleted_at IS NULL
         GROUP BY LOWER(item_name)
         ORDER BY freq DESC, item_name ASC
         LIMIT ?
@@ -1537,6 +1546,7 @@ class DBService {
       WHERE LOWER(shop_name) LIKE LOWER(?)
         AND shop_name IS NOT NULL
         AND shop_name != ''
+        AND deleted_at IS NULL
       ORDER BY shop_name ASC
       LIMIT ?
     ''', ['${prefix.trim()}%', limit]);

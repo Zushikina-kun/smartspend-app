@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
+import '../services/cloud_service.dart';
 import '../services/db_service.dart';
 import '../services/peso_context_service.dart';
 import '../services/peso_sound_service.dart';
@@ -656,6 +657,14 @@ class _DebtScreenState extends State<DebtScreen>
                   where: 'id = ?',
                   whereArgs: [plan['id']],
                 );
+                // Push the updated plan (with schedule) to cloud
+                try {
+                  final rows = await db.query('installment_plans',
+                      where: 'id = ?', whereArgs: [plan['id']], limit: 1);
+                  if (rows.isNotEmpty) {
+                    CloudService.pushDoc('installment_plans', rows.first);
+                  }
+                } catch (_) {}
                 if (ctx.mounted) Navigator.pop(ctx);
                 _load();
               },
@@ -924,15 +933,19 @@ class _DebtScreenState extends State<DebtScreen>
   }
 
   Future<void> _logPlanPayment(Map<String, dynamic> plan,
-      {bool partial = false}) async {
+      {bool partial = false, double? periodAmount}) async {
     final monthly = (plan['monthly_payment'] as num).toDouble();
+    // Use the per-period custom amount when available; fall back to monthly flat rate
+    final defaultAmount = periodAmount ?? monthly;
     final title = plan['title'] as String;
     final provider = plan['provider'] as String?;
     final label = provider != null ? "$title ($provider)" : title;
     final planId = plan['id'] as int;
 
-    final amountCtrl = TextEditingController(text: monthly.toStringAsFixed(0));
-    String payMethod = 'GCash';
+    // For quick-pay (non-partial), confirm in one step with full sheet
+    final amountCtrl =
+        TextEditingController(text: defaultAmount.toStringAsFixed(0));
+    String payMethod = 'GCash'; // most common for ShopeePayLater/GLoan
     String payDate = DateTime.now().toIso8601String().substring(0, 10);
 
     final cs = Theme.of(context).colorScheme;
@@ -1249,8 +1262,8 @@ class _DebtScreenState extends State<DebtScreen>
     bool hasCustomSchedule = false;
     if (scheduleJson != null && scheduleJson.isNotEmpty) {
       try {
-        final schedule = (jsonDecode(scheduleJson) as List)
-            .cast<Map<String, dynamic>>();
+        final schedule =
+            (jsonDecode(scheduleJson) as List).cast<Map<String, dynamic>>();
         final currentPeriod = monthsPaid + 1;
         final entry = schedule.firstWhere(
           (e) => e['period'] == currentPeriod,
@@ -1446,7 +1459,8 @@ class _DebtScreenState extends State<DebtScreen>
                         "Pay ${CurrencyService.format(currentPeriodAmount)}",
                         style: const TextStyle(fontSize: 12),
                       ),
-                      onPressed: () => _logPlanPayment(p),
+                      onPressed: () =>
+                          _logPlanPayment(p, periodAmount: currentPeriodAmount),
                       style: FilledButton.styleFrom(
                         backgroundColor:
                             daysUntil < 0 ? Colors.red : Colors.green,
@@ -1461,7 +1475,8 @@ class _DebtScreenState extends State<DebtScreen>
                     icon: const Icon(Icons.edit_outlined, size: 14),
                     label:
                         const Text("Partial", style: TextStyle(fontSize: 12)),
-                    onPressed: () => _logPlanPayment(p, partial: true),
+                    onPressed: () => _logPlanPayment(p,
+                        partial: true, periodAmount: currentPeriodAmount),
                     style: OutlinedButton.styleFrom(
                       side:
                           BorderSide(color: cs.outline.withValues(alpha: 0.4)),
