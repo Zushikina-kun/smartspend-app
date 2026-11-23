@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _googleLoading = false;
   bool _obscure = true;
   String? _errorMessage;
+  bool _showUnverifiedBanner = false;
 
   Future<void> _forgotPassword() async {
     final emailCtrl = TextEditingController(text: _email.text.trim());
@@ -137,7 +138,13 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = await AuthService.login(_email.text.trim(), _password.text);
       if (user != null && mounted) {
         _syncAfterLogin();
-        _goHome();
+        // Soft gate: show banner if email is not verified, but don't block login
+        if (!user.emailVerified) {
+          setState(() => _showUnverifiedBanner = true);
+          // Don't navigate yet — let user see banner and optionally resend
+        } else {
+          _goHome();
+        }
       }
     } catch (e) {
       if (mounted) setState(() => _errorMessage = _friendlyError(e.toString()));
@@ -280,6 +287,22 @@ class _LoginScreenState extends State<LoginScreen> {
     return true;
   }
 
+  Future<void> _resendVerification() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) await user.sendEmailVerification();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verification email sent.'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (_) {}
+  }
+
   String _friendlyError(String raw) {
     if (raw.contains('user-not-found'))
       return "No account found with this email.";
@@ -303,243 +326,282 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(
-              left: 28,
-              right: 28,
-              top: 28,
-              bottom: 28 + MediaQuery.of(context).viewPadding.bottom),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(
-                'assets/logo.png',
-                width: 100,
-                height: 100,
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => Icon(Icons.account_balance_wallet,
-                    size: 64, color: Theme.of(context).colorScheme.primary),
+      body: Column(
+        children: [
+          if (_showUnverifiedBanner)
+            MaterialBanner(
+              padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+              leading:
+                  const Icon(Icons.warning_amber_rounded, color: Colors.orange),
+              backgroundColor: Colors.orange.withValues(alpha: 0.15),
+              content: const Text(
+                '⚠️ Email not verified.',
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
-              const SizedBox(height: 12),
-              const Text(
-                "Smart Spend",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              const Text("Your AI financial assistant",
-                  style: TextStyle(color: Colors.grey)),
-              const SizedBox(height: 16),
-              PesoMascot.withSpeech(
-                size: 64,
-                mood: PesoMood.happy,
-                text: 'Kumusta! Ako si Peso — your money buddy! 💚',
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+              actions: [
+                TextButton(
+                  onPressed: _resendVerification,
+                  child: const Text('Resend verification email'),
                 ),
-              ),
-              const SizedBox(height: 14),
-              TextField(
-                controller: _password,
-                obscureText: _obscure,
-                onSubmitted: (_) => _login(),
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                        _obscure ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () => setState(() => _obscure = !_obscure),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                TextButton(
+                  onPressed: _goHome,
+                  child: const Text('Continue anyway'),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: _loading ? null : _forgotPassword,
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: const Size(0, 32),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: const Text("Forgot Password?",
-                      style: TextStyle(fontSize: 13)),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 18),
+                  onPressed: () =>
+                      setState(() => _showUnverifiedBanner = false),
                 ),
-              ),
-              const SizedBox(height: 8),
-              if (_errorMessage != null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.red.withValues(alpha: 0.12),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+              ],
+            ),
+          Expanded(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                    left: 28,
+                    right: 28,
+                    top: 28,
+                    bottom: 28 + MediaQuery.of(context).viewPadding.bottom),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/logo.png',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => Icon(
+                          Icons.account_balance_wallet,
+                          size: 64,
+                          color: Theme.of(context).colorScheme.primary),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "Smart Spend",
+                      style:
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    ),
+                    const Text("Your AI financial assistant",
+                        style: TextStyle(color: Colors.grey)),
+                    const SizedBox(height: 16),
+                    PesoMascot.withSpeech(
+                      size: 64,
+                      mood: PesoMood.happy,
+                      text: 'Kumusta! Ako si Peso — your money buddy! 💚',
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _email,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        prefixIcon: const Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
                       ),
-                    ],
-                  ),
-                  child: Text(
-                    _errorMessage!,
-                    style:
-                        const TextStyle(color: Colors.redAccent, fontSize: 13),
-                  ),
-                ),
-
-              // Login button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _loading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: _loading
-                      ? const SizedBox(
-                          height: 18,
-                          width: 18,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white))
-                      : const Text("Login"),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              Row(
-                children: [
-                  const Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child:
-                        Text("or", style: TextStyle(color: Colors.grey[500])),
-                  ),
-                  const Expanded(child: Divider()),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // Google Sign-In button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: _googleLoading ? null : _loginWithGoogle,
-                  icon: _googleLoading
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Icon(Icons.g_mobiledata,
-                          size: 24, color: Color(0xFFDB4437)),
-                  label: _googleLoading
-                      ? const Text("Signing in...")
-                      : const Text("Continue with Google"),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    side: BorderSide(color: Colors.grey[300]!),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: _loading
-                    ? null
-                    : () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const RegisterScreen()),
+                    ),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: _password,
+                      obscureText: _obscure,
+                      onSubmitted: (_) => _login(),
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscure
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () => setState(() => _obscure = !_obscure),
                         ),
-                child: const Text("Don't have an account? Register"),
-              ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: _loading ? null : _forgotPassword,
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: const Size(0, 32),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: const Text("Forgot Password?",
+                            style: TextStyle(fontSize: 13)),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (_errorMessage != null)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.red[50],
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withValues(alpha: 0.12),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          _errorMessage!,
+                          style: const TextStyle(
+                              color: Colors.redAccent, fontSize: 13),
+                        ),
+                      ),
 
-              // ── CONTINUE WITHOUT ACCOUNT ───────────────────────────
-              const SizedBox(height: 8),
-              const Row(children: [
-                Expanded(child: Divider()),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text("or use without an account",
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    // Login button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _loading ? null : _login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: _loading
+                            ? const SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 2, color: Colors.white))
+                            : const Text("Login"),
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Text("or",
+                              style: TextStyle(color: Colors.grey[500])),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Google Sign-In button
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _googleLoading ? null : _loginWithGoogle,
+                        icon: _googleLoading
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2))
+                            : const Icon(Icons.g_mobiledata,
+                                size: 24, color: Color(0xFFDB4437)),
+                        label: _googleLoading
+                            ? const Text("Signing in...")
+                            : const Text("Continue with Google"),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 13),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          side: BorderSide(color: Colors.grey[300]!),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: _loading
+                          ? null
+                          : () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const RegisterScreen()),
+                              ),
+                      child: const Text("Don't have an account? Register"),
+                    ),
+
+                    // ── CONTINUE WITHOUT ACCOUNT ───────────────────────────
+                    const SizedBox(height: 8),
+                    const Row(children: [
+                      Expanded(child: Divider()),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        child: Text("or use without an account",
+                            style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      ),
+                      Expanded(child: Divider()),
+                    ]),
+                    const SizedBox(height: 10),
+
+                    // Continue Locally — permanent offline account
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.tonal(
+                        onPressed: _loading ? null : _continueLocally,
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 13),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.phone_android_outlined, size: 18),
+                            SizedBox(width: 8),
+                            Text("Continue Without Account",
+                                style: TextStyle(fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      "Your data stays on this device. Connect an account anytime to sync across devices.",
+                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Try Demo — sample data for exploration
+                    OutlinedButton.icon(
+                      onPressed: _loading ? null : _tryDemo,
+                      icon: const Icon(Icons.science_outlined, size: 18),
+                      label: const Text("Try Demo (Sample Data)"),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.grey[600],
+                        side: BorderSide(color: Colors.grey[300]!),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 11, horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "Demo loads pre-filled sample data — not your real data",
+                      style: TextStyle(fontSize: 11, color: Colors.grey[400]),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                Expanded(child: Divider()),
-              ]),
-              const SizedBox(height: 10),
-
-              // Continue Locally — permanent offline account
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton.tonal(
-                  onPressed: _loading ? null : _continueLocally,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.phone_android_outlined, size: 18),
-                      SizedBox(width: 8),
-                      Text("Continue Without Account",
-                          style: TextStyle(fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                ),
               ),
-              const SizedBox(height: 6),
-              Text(
-                "Your data stays on this device. Connect an account anytime to sync across devices.",
-                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 12),
-
-              // Try Demo — sample data for exploration
-              OutlinedButton.icon(
-                onPressed: _loading ? null : _tryDemo,
-                icon: const Icon(Icons.science_outlined, size: 18),
-                label: const Text("Try Demo (Sample Data)"),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.grey[600],
-                  side: BorderSide(color: Colors.grey[300]!),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                "Demo loads pre-filled sample data — not your real data",
-                style: TextStyle(fontSize: 11, color: Colors.grey[400]),
-                textAlign: TextAlign.center,
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

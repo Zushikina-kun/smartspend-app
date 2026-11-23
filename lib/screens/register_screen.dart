@@ -5,6 +5,7 @@ import '../services/auth_service.dart';
 import '../services/db_service.dart';
 import '../widgets/peso_mascot.dart';
 import 'setup_screen.dart';
+import 'email_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -35,13 +36,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (user != null && mounted) {
         // Save the display name to Firebase profile
         await user.updateDisplayName(_name.text.trim());
+        // Send email verification before proceeding
+        await user.sendEmailVerification();
         // Kick off background sync — new account has nothing to pull,
         // but this ensures any local data (e.g. from demo mode) is cleared
         // and the account is properly initialized in Firestore.
         _syncAfterRegister();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const SetupScreen()),
+          MaterialPageRoute(
+            builder: (_) => EmailVerificationScreen(email: _email.text.trim()),
+          ),
         );
       }
     } catch (e) {
