@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -303,6 +304,9 @@ class _IncomeScreenState extends State<IncomeScreen> {
     String category = _defaultCategory;
     String date = DateTime.now().toIso8601String().substring(0, 10);
     bool isWindfall = false;
+    List<Map<String, dynamic>> wallets = [];
+    // allocations: list of {wallet_id, wallet_name, amount_ctrl}
+    final List<Map<String, dynamic>> allocations = [];
 
     // All account types get the full category list — user picks what applies
     final availableCategories = _accountType == 'student'
@@ -319,205 +323,331 @@ class _IncomeScreenState extends State<IncomeScreen> {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (_) => StatefulBuilder(
-        builder: (ctx, setSheet) => Padding(
-          padding: EdgeInsets.fromLTRB(
-              24, 20, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(_addLabel,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              TextField(
-                controller: titleCtrl,
-                decoration: InputDecoration(
-                  labelText: "Title",
-                  hintText: "e.g. Monthly Salary, Freelance Project",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: amountCtrl,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Amount",
-                  prefixText: "${CurrencyService.symbol} ",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
-              const SizedBox(height: 12),
-              DropdownButtonFormField<String>(
-                initialValue: _defaultCategory,
-                decoration: InputDecoration(
-                  labelText: "Category",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                items: availableCategories
-                    .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                    .toList(),
-                onChanged: (v) => setSheet(() => category = v!),
-              ),
-              const SizedBox(height: 12),
-              // Date picker — allows backdating income entries
-              OutlinedButton.icon(
-                icon: const Icon(Icons.calendar_today, size: 16),
-                label: Text("Date: $date"),
-                onPressed: () async {
-                  final picked = await showDatePicker(
-                    context: ctx,
-                    initialDate: DateTime.tryParse(date) ?? DateTime.now(),
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime.now().add(const Duration(days: 1)),
-                  );
-                  if (picked != null) {
-                    setSheet(
-                        () => date = picked.toIso8601String().substring(0, 10));
-                  }
-                },
-              ),
-              const SizedBox(height: 12),
-              // Windfall toggle — one-time unexpected income (bonus, gift, etc.)
-              InkWell(
-                onTap: () => setSheet(() => isWindfall = !isWindfall),
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isWindfall
-                        ? Colors.amber.withValues(alpha: 0.1)
-                        : Theme.of(ctx)
-                            .colorScheme
-                            .surfaceContainerHighest
-                            .withValues(alpha: 0.4),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: isWindfall
-                          ? Colors.amber.withValues(alpha: 0.5)
-                          : Colors.transparent,
+        builder: (ctx, setSheet) {
+          // Load wallets once
+          if (wallets.isEmpty) {
+            DBService.getWallets().then((w) {
+              if (w.isNotEmpty) setSheet(() => wallets = w);
+            });
+          }
+
+          return Padding(
+            padding: EdgeInsets.fromLTRB(
+                24, 20, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(_addLabel,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: titleCtrl,
+                    decoration: InputDecoration(
+                      labelText: "Title",
+                      hintText: "e.g. Monthly Salary, Freelance Project",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        isWindfall
-                            ? Icons.star_rounded
-                            : Icons.star_outline_rounded,
-                        color: isWindfall ? Colors.amber : Colors.grey,
-                        size: 20,
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: amountCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: "Amount",
+                      prefixText: "${CurrencyService.symbol} ",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    initialValue: _defaultCategory,
+                    decoration: InputDecoration(
+                      labelText: "Category",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    items: availableCategories
+                        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                        .toList(),
+                    onChanged: (v) => setSheet(() => category = v!),
+                  ),
+                  const SizedBox(height: 12),
+                  // Date picker — allows backdating income entries
+                  OutlinedButton.icon(
+                    icon: const Icon(Icons.calendar_today, size: 16),
+                    label: Text("Date: $date"),
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: ctx,
+                        initialDate: DateTime.tryParse(date) ?? DateTime.now(),
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime.now().add(const Duration(days: 1)),
+                      );
+                      if (picked != null) {
+                        setSheet(() =>
+                            date = picked.toIso8601String().substring(0, 10));
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  // Windfall toggle — one-time unexpected income (bonus, gift, etc.)
+                  InkWell(
+                    onTap: () => setSheet(() => isWindfall = !isWindfall),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isWindfall
+                            ? Colors.amber.withValues(alpha: 0.1)
+                            : Theme.of(ctx)
+                                .colorScheme
+                                .surfaceContainerHighest
+                                .withValues(alpha: 0.4),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isWindfall
+                              ? Colors.amber.withValues(alpha: 0.5)
+                              : Colors.transparent,
+                        ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
+                        children: [
+                          Icon(
+                            isWindfall
+                                ? Icons.star_rounded
+                                : Icons.star_outline_rounded,
+                            color: isWindfall ? Colors.amber : Colors.grey,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  isWindfall
+                                      ? "Windfall income"
+                                      : "Mark as windfall?",
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color:
+                                        isWindfall ? Colors.amber[800] : null,
+                                  ),
+                                ),
+                                const Text(
+                                  "One-time unexpected income (bonus, gift, prize). Kept separate from regular income in forecasts.",
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Switch(
+                            value: isWindfall,
+                            onChanged: (v) => setSheet(() => isWindfall = v),
+                            activeThumbColor: Colors.amber,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Wallet allocation section — optional split across wallets
+                  if (wallets.isNotEmpty) ...[
+                    const Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Allocate to Wallets",
+                            style: TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w600)),
+                        TextButton.icon(
+                          icon: const Icon(Icons.add, size: 16),
+                          label:
+                              const Text("Add", style: TextStyle(fontSize: 12)),
+                          onPressed: () {
+                            setSheet(() {
+                              allocations.add({
+                                'wallet_id': wallets.first['id'] as int,
+                                'wallet_name': wallets.first['name'] as String,
+                                'ctrl': TextEditingController(),
+                              });
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    ...allocations.asMap().entries.map((e) {
+                      final idx = e.key;
+                      final alloc = e.value;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
                           children: [
-                            Text(
-                              isWindfall
-                                  ? "Windfall income"
-                                  : "Mark as windfall?",
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: isWindfall ? Colors.amber[800] : null,
+                            Expanded(
+                              flex: 2,
+                              child: DropdownButtonFormField<int>(
+                                value: alloc['wallet_id'] as int,
+                                decoration: InputDecoration(
+                                  labelText: "Wallet",
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 8),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                                items: wallets
+                                    .map((w) => DropdownMenuItem<int>(
+                                          value: w['id'] as int,
+                                          child: Text(
+                                              '${w['icon'] ?? ''} ${w['name']}',
+                                              style: const TextStyle(
+                                                  fontSize: 12)),
+                                        ))
+                                    .toList(),
+                                onChanged: (v) => setSheet(() {
+                                  alloc['wallet_id'] = v!;
+                                  alloc['wallet_name'] = wallets.firstWhere(
+                                      (w) => w['id'] == v)['name'] as String;
+                                }),
                               ),
                             ),
-                            const Text(
-                              "One-time unexpected income (bonus, gift, prize). Kept separate from regular income in forecasts.",
-                              style:
-                                  TextStyle(fontSize: 11, color: Colors.grey),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextField(
+                                controller:
+                                    alloc['ctrl'] as TextEditingController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  labelText: "Amount",
+                                  prefixText: "${CurrencyService.symbol} ",
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 8),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close,
+                                  size: 18, color: Colors.grey),
+                              onPressed: () =>
+                                  setSheet(() => allocations.removeAt(idx)),
                             ),
                           ],
                         ),
-                      ),
-                      Switch(
-                        value: isWindfall,
-                        onChanged: (v) => setSheet(() => isWindfall = v),
-                        activeThumbColor: Colors.amber,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  final title = titleCtrl.text.trim();
-                  final amount = double.tryParse(amountCtrl.text);
-                  if (title.isEmpty || amount == null || amount <= 0) return;
-                  await DBService.insertIncome({
-                    'title': title,
-                    'amount': amount,
-                    'category': category,
-                    'date': date,
-                    'is_recurring': 0,
-                    'is_windfall': isWindfall ? 1 : 0,
-                  });
-                  if (ctx.mounted) Navigator.pop(ctx);
-                  _load();
+                      );
+                    }),
+                    const SizedBox(height: 4),
+                  ],
+                  ElevatedButton(
+                    onPressed: () async {
+                      final title = titleCtrl.text.trim();
+                      final amount = double.tryParse(amountCtrl.text);
+                      if (title.isEmpty || amount == null || amount <= 0)
+                        return;
 
-                  // UX-3: Goal contribution suggestion after logging income
-                  if (!isWindfall && mounted) {
-                    final goals = await DBService.getGoals();
-                    final incomplete = goals
-                        .where((g) =>
-                            (g['current_amount'] as num) <
-                            (g['target_amount'] as num))
-                        .toList();
-                    if (incomplete.isNotEmpty) {
-                      final topGoal = incomplete.first;
-                      final suggested = (amount * 0.20).roundToDouble();
-                      if (suggested >= 10 && mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              "💡 Allocate ${CurrencyService.format(suggested)} (20%) to \"${topGoal['name']}\"?"),
-                          behavior: SnackBarBehavior.floating,
-                          duration: const Duration(seconds: 5),
-                          action: SnackBarAction(
-                            label: "Add",
-                            onPressed: () async {
-                              final newAmt = ((topGoal['current_amount'] as num)
-                                          .toDouble() +
-                                      suggested)
-                                  .clamp(
-                                      0.0,
-                                      (topGoal['target_amount'] as num)
-                                          .toDouble());
-                              await DBService.updateGoal(
-                                  {...topGoal, 'current_amount': newAmt},
-                                  source: 'income_allocation');
-                              if (mounted) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("Contribution added ✓"),
-                                  backgroundColor: Colors.green,
-                                  behavior: SnackBarBehavior.floating,
-                                ));
-                              }
-                            },
-                          ),
-                        ));
+                      // Build wallet allocations JSON if any
+                      String? walletAllocationsJson;
+                      if (allocations.isNotEmpty) {
+                        final allocList = <Map<String, dynamic>>[];
+                        for (final alloc in allocations) {
+                          final allocAmt = double.tryParse(
+                              (alloc['ctrl'] as TextEditingController)
+                                  .text
+                                  .trim());
+                          if (allocAmt != null && allocAmt > 0) {
+                            allocList.add({
+                              'wallet_id': alloc['wallet_id'],
+                              'wallet_name': alloc['wallet_name'],
+                              'amount': allocAmt,
+                            });
+                          }
+                        }
+                        if (allocList.isNotEmpty) {
+                          walletAllocationsJson = jsonEncode(allocList);
+                        }
                       }
-                    }
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                child: Text(_addLabel),
+
+                      await DBService.insertIncome({
+                        'title': title,
+                        'amount': amount,
+                        'category': category,
+                        'date': date,
+                        'is_recurring': 0,
+                        'is_windfall': isWindfall ? 1 : 0,
+                        if (walletAllocationsJson != null)
+                          'wallet_allocations': walletAllocationsJson,
+                      });
+                      if (ctx.mounted) Navigator.pop(ctx);
+                      _load();
+
+                      // UX-3: Goal contribution suggestion after logging income
+                      if (!isWindfall && mounted) {
+                        final goals = await DBService.getGoals();
+                        final incomplete = goals
+                            .where((g) =>
+                                (g['current_amount'] as num) <
+                                (g['target_amount'] as num))
+                            .toList();
+                        if (incomplete.isNotEmpty) {
+                          final topGoal = incomplete.first;
+                          final suggested = (amount * 0.20).roundToDouble();
+                          if (suggested >= 10 && mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  "💡 Allocate ${CurrencyService.format(suggested)} (20%) to \"${topGoal['name']}\"?"),
+                              behavior: SnackBarBehavior.floating,
+                              duration: const Duration(seconds: 5),
+                              action: SnackBarAction(
+                                label: "Add",
+                                onPressed: () async {
+                                  final newAmt =
+                                      ((topGoal['current_amount'] as num)
+                                                  .toDouble() +
+                                              suggested)
+                                          .clamp(
+                                              0.0,
+                                              (topGoal['target_amount'] as num)
+                                                  .toDouble());
+                                  await DBService.updateGoal(
+                                      {...topGoal, 'current_amount': newAmt},
+                                      source: 'income_allocation');
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("Contribution added ✓"),
+                                      backgroundColor: Colors.green,
+                                      behavior: SnackBarBehavior.floating,
+                                    ));
+                                  }
+                                },
+                              ),
+                            ));
+                          }
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(_addLabel),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -546,6 +676,38 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   subtitle:
                       '${history.length} change${history.length == 1 ? '' : 's'} to declared income',
                   titleIcon: Icons.account_balance_wallet_outlined,
+                  history: history,
+                );
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.receipt_long_outlined),
+            tooltip: "Income entry history",
+            onPressed: () async {
+              final raw = await DBService.getIncomeEntryHistory();
+              // Map to HistorySheet-compatible format
+              final history = raw.map((h) {
+                final isDelete = h['action'] == 'delete';
+                final amount = (h['amount'] as num?)?.toDouble() ?? 0.0;
+                return {
+                  'action': isDelete ? 'delete' : null,
+                  'delta': isDelete ? -amount : amount,
+                  'new_amount': isDelete ? null : amount,
+                  'old_amount': null,
+                  'source': isDelete ? 'delete' : 'income',
+                  'reason':
+                      '${h['title'] ?? ''} (${h['category'] ?? ''}) — ${h['date'] ?? ''}',
+                  'timestamp': h['timestamp'] ?? '',
+                };
+              }).toList();
+              if (context.mounted) {
+                HistorySheet.show(
+                  context,
+                  title: 'Income Entry History',
+                  subtitle:
+                      '${history.length} entr${history.length == 1 ? 'y' : 'ies'} logged',
+                  titleIcon: Icons.receipt_long_outlined,
                   history: history,
                 );
               }

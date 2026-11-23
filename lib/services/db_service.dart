@@ -1,3 +1,4 @@
+﻿import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
@@ -396,6 +397,11 @@ class DBService {
       // Feature B — wallet audit recovery columns
       "ALTER TABLE wallets ADD COLUMN last_verified_balance REAL",
       "ALTER TABLE wallets ADD COLUMN last_verified_at TEXT",
+      // v17 — round-up reversal on expense delete
+      "ALTER TABLE expenses ADD COLUMN round_up_goal_id INTEGER",
+      "ALTER TABLE expenses ADD COLUMN round_up_amount REAL DEFAULT 0",
+      // v17 — wallet allocations on income entries
+      "ALTER TABLE income ADD COLUMN wallet_allocations TEXT",
     ];
     for (final sql in cols) {
       try {
@@ -844,21 +850,35 @@ class DBService {
         )
       ''');
     } catch (_) {}
-
-    // wallet_id / wallet_deducted — link each expense to the wallet deduction
+    // wallet_id / wallet_deducted -- link each expense to the wallet deduction
     // that occurred when it was logged (v17)
     await _addColumnIfMissing(db, 'expenses', 'wallet_id', 'INTEGER');
     await _addColumnIfMissing(
         db, 'expenses', 'wallet_deducted', 'REAL DEFAULT 0');
+    // Ensure income_entry_history table -- audit log for individual income inserts/deletes (v17)
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS income_entry_history(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          income_id INTEGER,
+          action TEXT NOT NULL,
+          title TEXT,
+          amount REAL,
+          category TEXT,
+          date TEXT,
+          timestamp TEXT NOT NULL
+        )
+      ''');
+    } catch (_) {}
   }
 
   /// Adds a column to [table] if it does not already exist.
   /// SQLite throws when you ALTER a table to add a column that is already
-  /// present — this helper swallows that specific error so callers stay safe.
+  /// present -- this helper swallows that specific error so callers stay safe.
   static Future<void> _addColumnIfMissing(
       Database db, String table, String column, String type) async {
     try {
-      await db.execute('ALTER TABLE $table ADD COLUMN $column $type');
+      await db.execute('ALTER TABLE  ADD COLUMN  ');
     } catch (_) {} // ignore: column already exists
   }
 
@@ -1186,6 +1206,29 @@ class DBService {
                     .clamp(
                         0.0, (activeGoal['target_amount'] as num).toDouble());
             await updateGoal({...activeGoal, 'current_amount': newAmount});
+            // Store round-up info on the expense row for reversal on delete
+            try {
+              final expRows = await db.query('expenses',
+                  where: 'item_name = ? AND amount = ? AND date = ?',
+                  whereArgs: [
+                    toInsert['item_name'],
+                    amount,
+                    toInsert['date'] ?? today
+                  ],
+                  orderBy: 'id DESC',
+                  limit: 1);
+              if (expRows.isNotEmpty) {
+                await db.update(
+                  'expenses',
+                  {
+                    'round_up_goal_id': activeGoal['id'],
+                    'round_up_amount': roundUp,
+                  },
+                  where: 'id = ?',
+                  whereArgs: [expRows.first['id']],
+                );
+              }
+            } catch (_) {}
           }
         }
       }
@@ -1217,9 +1260,27 @@ class DBService {
           final currentBalance = (wallets.first['balance'] as num).toDouble();
           final itemName = rows.first['item_name'] as String? ?? 'expense';
           await setWalletBalance(walletId, currentBalance + deducted,
-              reason: 'Expense deleted: $itemName', source: 'delete_reversal');
+              reason: 'Expense deleted: ', source: 'delete_reversal');
         }
       }
+      // Reverse round-up contribution if this expense triggered one
+      try {
+        final goalId = rows.first['round_up_goal_id'] as int?;
+        final roundUpAmt =
+            (rows.first['round_up_amount'] as num?)?.toDouble() ?? 0.0;
+        if (goalId != null && roundUpAmt > 0) {
+          final goalRows = await db.query('savings_goals',
+              where: 'id = ?', whereArgs: [goalId], limit: 1);
+          if (goalRows.isNotEmpty) {
+            final currentAmt =
+                (goalRows.first['current_amount'] as num).toDouble();
+            final reversedAmt =
+                (currentAmt - roundUpAmt).clamp(0.0, double.maxFinite);
+            await updateGoal({...goalRows.first, 'current_amount': reversedAmt},
+                source: 'reversal');
+          }
+        }
+      } catch (_) {}
     }
     await db.delete('expenses', where: 'id = ?', whereArgs: [id]);
     CloudService.deleteDoc('expenses', id);
@@ -2136,11 +2197,68 @@ class DBService {
     final id = await db.insert('income', data,
         conflictAlgorithm: ConflictAlgorithm.replace);
     CloudService.pushDoc('income', {...data, 'id': id});
+
+    // Log to income_entry_history
+    try {
+      await db.insert('income_entry_history', {
+        'income_id': id,
+        'action': 'insert',
+        'title': data['title'],
+        'amount': data['amount'],
+        'category': data['category'],
+        'date': data['date'] ?? today,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } catch (_) {}
+
+    // Apply wallet allocations if provided
+    final allocationsJson = data['wallet_allocations'] as String?;
+    if (allocationsJson != null && allocationsJson.isNotEmpty) {
+      try {
+        final allocations =
+            (jsonDecode(allocationsJson) as List).cast<Map<String, dynamic>>();
+        for (final alloc in allocations) {
+          final walletId = alloc['wallet_id'] as int?;
+          final allocAmount = (alloc['amount'] as num?)?.toDouble() ?? 0.0;
+          if (walletId != null && allocAmount > 0) {
+            final walletRows = await db.query('wallets',
+                where: 'id = ?', whereArgs: [walletId], limit: 1);
+            if (walletRows.isNotEmpty) {
+              final currentBalance =
+                  (walletRows.first['balance'] as num).toDouble();
+              await setWalletBalance(
+                walletId,
+                currentBalance + allocAmount,
+                reason: 'Income: ${data['title']}',
+                source: 'income',
+              );
+            }
+          }
+        }
+      } catch (_) {}
+    }
+
     fireEvent(AppEvent.incomeChanged);
   }
 
   static Future<void> deleteIncome(int id) async {
     final db = await getDB();
+    // Log to income_entry_history before deleting
+    try {
+      final rows =
+          await db.query('income', where: 'id = ?', whereArgs: [id], limit: 1);
+      if (rows.isNotEmpty) {
+        await db.insert('income_entry_history', {
+          'income_id': id,
+          'action': 'delete',
+          'title': rows.first['title'],
+          'amount': rows.first['amount'],
+          'category': rows.first['category'],
+          'date': rows.first['date'],
+          'timestamp': DateTime.now().toIso8601String(),
+        });
+      }
+    } catch (_) {}
     await db.delete('income', where: 'id = ?', whereArgs: [id]);
     CloudService.deleteDoc('income', id);
     fireEvent(AppEvent.incomeChanged);
@@ -3562,6 +3680,20 @@ class DBService {
     try {
       return await db.query(
         'income_history',
+        orderBy: 'timestamp DESC',
+        limit: limit,
+      );
+    } catch (_) {
+      return [];
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getIncomeEntryHistory(
+      {int limit = 100}) async {
+    final db = await getDB();
+    try {
+      return await db.query(
+        'income_entry_history',
         orderBy: 'timestamp DESC',
         limit: limit,
       );
