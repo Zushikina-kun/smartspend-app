@@ -870,6 +870,20 @@ class DBService {
         )
       ''');
     } catch (_) {}
+    // Ensure tax_filings table -- records of filed BIR returns
+    try {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS tax_filings(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          period_label TEXT,
+          deadline_date TEXT,
+          filed_date TEXT,
+          amount_paid REAL,
+          reference_number TEXT,
+          notes TEXT
+        )
+      ''');
+    } catch (_) {}
   }
 
   /// Adds a column to [table] if it does not already exist.
@@ -878,7 +892,7 @@ class DBService {
   static Future<void> _addColumnIfMissing(
       Database db, String table, String column, String type) async {
     try {
-      await db.execute('ALTER TABLE  ADD COLUMN  ');
+      await db.execute('ALTER TABLE $table ADD COLUMN $column $type');
     } catch (_) {} // ignore: column already exists
   }
 
@@ -1112,6 +1126,17 @@ class DBService {
         unit TEXT DEFAULT 'per liter',
         fetched_at TEXT NOT NULL,
         period_label TEXT
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS tax_filings(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        period_label TEXT,
+        deadline_date TEXT,
+        filed_date TEXT,
+        amount_paid REAL,
+        reference_number TEXT,
+        notes TEXT
       )
     ''');
   }
@@ -1750,6 +1775,10 @@ class DBService {
     await db.insert('settings', {'key': key, 'value': value},
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
+
+  /// Alias for [setSetting] — preferred name in feature modules.
+  static Future<void> saveSetting(String key, String value) =>
+      setSetting(key, value);
 
   static Future<String?> getSetting(String key) async {
     final db = await getDB();
@@ -3973,12 +4002,8 @@ class DBService {
     await db.delete('investments', where: 'id = ?', whereArgs: [id]);
   }
 
-  // ── WALLET AUDIT RECOVERY ─────────────────────────────────────────────────
-
+  // -- WALLET AUDIT RECOVERY --
   /// Restore a wallet's balance to what it was at a specific history snapshot.
-  /// Looks up the [historyId] row, reads its [balance_after] (new_balance),
-  /// sets the wallet's balance to that value, and records a restore entry.
-  /// Returns the restored balance, or null if the history row was not found.
   static Future<double?> restoreWalletToSnapshot(
       int walletId, int historyId) async {
     final db = await getDB();
@@ -4000,7 +4025,6 @@ class DBService {
   }
 
   /// Mark the wallet's current balance as verified (user confirmed it is correct).
-  /// Updates [last_verified_balance] and [last_verified_at] on the wallets row.
   static Future<void> markWalletVerified(int walletId) async {
     final db = await getDB();
     final rows = await db.query(
@@ -4021,5 +4045,24 @@ class DBService {
       where: 'id = ?',
       whereArgs: [walletId],
     );
+  }
+
+  // -- TAX FILINGS --
+  static Future<int> insertTaxFiling(Map<String, dynamic> data) async {
+    final db = await getDB();
+    return db.insert('tax_filings', data,
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  static Future<List<Map<String, dynamic>>> getTaxFilings() async {
+    final db = await getDB();
+    return db.query('tax_filings', orderBy: 'filed_date DESC');
+  }
+
+  static Future<List<Map<String, dynamic>>> getTaxFilingsByDeadline(
+      String deadlineDate) async {
+    final db = await getDB();
+    return db.query('tax_filings',
+        where: 'deadline_date = ?', whereArgs: [deadlineDate]);
   }
 }

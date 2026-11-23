@@ -18,6 +18,9 @@ class _TaxScreenState extends State<TaxScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  // Taxpayer type
+  String _taxpayerType = 'non_vat';
+
   // Calculator tab
   final TextEditingController _incomeController =
       TextEditingController(text: '300000');
@@ -30,14 +33,22 @@ class _TaxScreenState extends State<TaxScreen>
   List<Map<String, double>> _quarterlyTotals = [];
   bool _loadingRecords = true;
 
+  // Filing history
+  List<Map<String, dynamic>> _filings = [];
+  bool _loadingFilings = true;
+
+  // Map of deadlineDate ISO string → true (filed)
+  Map<String, bool> _filedDeadlines = {};
+
   @override
   void initState() {
     super.initState();
     AnalyticsService.logFeatureUsed('tax_bir');
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _calculateIncomeTax();
     _calculatePercentageTax();
     _loadQuarterlyRecords();
+    _loadTaxpayerType();
   }
 
   @override
@@ -46,6 +57,43 @@ class _TaxScreenState extends State<TaxScreen>
     _incomeController.dispose();
     _quarterlyRevenueController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadTaxpayerType() async {
+    final saved = await DBService.getSetting('taxpayer_type');
+    final type = saved ?? 'non_vat';
+    if (mounted) {
+      setState(() => _taxpayerType = type);
+    }
+    await _loadFilings();
+  }
+
+  Future<void> _saveTaxpayerType(String type) async {
+    await DBService.saveSetting('taxpayer_type', type);
+    if (mounted) {
+      setState(() => _taxpayerType = type);
+    }
+  }
+
+  Future<void> _loadFilings() async {
+    setState(() => _loadingFilings = true);
+    try {
+      final rows = await DBService.getTaxFilings();
+      final Map<String, bool> filed = {};
+      for (final row in rows) {
+        final dl = row['deadline_date'] as String?;
+        if (dl != null) filed[dl] = true;
+      }
+      if (mounted) {
+        setState(() {
+          _filings = rows;
+          _filedDeadlines = filed;
+          _loadingFilings = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loadingFilings = false);
+    }
   }
 
   void _calculateIncomeTax() {
@@ -106,8 +154,10 @@ class _TaxScreenState extends State<TaxScreen>
         title: Text(AppLocalizations.of(context)!.taxScreenTitle),
         bottom: TabBar(
           controller: _tabController,
+          isScrollable: true,
           tabs: const [
             Tab(text: 'Deadlines', icon: Icon(Icons.calendar_today)),
+            Tab(text: 'History', icon: Icon(Icons.history)),
             Tab(text: 'Calculator', icon: Icon(Icons.calculate)),
             Tab(text: 'Records', icon: Icon(Icons.bar_chart)),
           ],
@@ -117,8 +167,63 @@ class _TaxScreenState extends State<TaxScreen>
         controller: _tabController,
         children: [
           _buildDeadlinesTab(),
+          _buildFilingHistoryTab(),
           _buildCalculatorTab(),
           _buildRecordsTab(),
+        ],
+      ),
+    );
+  }
+
+  // ─── Taxpayer Type Selector ──────────────────────────────────────────────────
+
+  Widget _buildTaxpayerTypeSelector() {
+    const types = [
+      {'value': 'non_vat', 'label': 'Non-VAT'},
+      {'value': 'vat', 'label': 'VAT'},
+      {'value': 'professional', 'label': 'Professional'},
+      {'value': 'mixed_income', 'label': 'Mixed Income'},
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('Taxpayer Type:',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+              const SizedBox(width: 8),
+              InfoButton(
+                title: 'Taxpayer Types',
+                body:
+                    'Non-VAT: Self-employed with gross receipts ≤ ₱3M. Files 2551Q quarterly.\n\n'
+                    'VAT: Gross receipts > ₱3M or optional registrant. Files 2550Q quarterly.\n\n'
+                    'Professional / Mixed Income: Earns compensation + business income. '
+                    'Files 2551Q + 1701Q quarterly.',
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            children: types.map((t) {
+              final isSelected = _taxpayerType == t['value'];
+              return ChoiceChip(
+                label: Text(t['label']!),
+                selected: isSelected,
+                onSelected: (selected) {
+                  if (selected) _saveTaxpayerType(t['value']!);
+                },
+                selectedColor: Colors.deepOrange,
+                labelStyle: TextStyle(
+                  color: isSelected ? Colors.white : null,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              );
+            }).toList(),
+          ),
         ],
       ),
     );
@@ -127,10 +232,12 @@ class _TaxScreenState extends State<TaxScreen>
   // ─── Tab 1: Deadlines ───────────────────────────────────────────────────────
 
   Widget _buildDeadlinesTab() {
-    final deadlines = TaxReminderService.getUpcomingDeadlines();
+    final deadlines =
+        TaxReminderService.getUpcomingDeadlines(taxpayerType: _taxpayerType);
 
     return Column(
       children: [
+        _buildTaxpayerTypeSelector(),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.all(16),
@@ -181,11 +288,17 @@ class _TaxScreenState extends State<TaxScreen>
     final name = deadline['name'] as String;
     final date = deadline['date'] as DateTime;
     final daysAway = deadline['daysAway'] as int;
+    final dateKey = date.toIso8601String().substring(0, 10);
+    final isFiled = _filedDeadlines[dateKey] == true;
 
     Color chipColor;
     Color cardBorderColor;
     IconData statusIcon;
-    if (daysAway <= 7) {
+    if (isFiled) {
+      chipColor = Colors.green;
+      cardBorderColor = Colors.green.shade300;
+      statusIcon = Icons.check_circle;
+    } else if (daysAway <= 7) {
       chipColor = Colors.red;
       cardBorderColor = Colors.red.shade200;
       statusIcon = Icons.warning_amber_rounded;
@@ -225,31 +338,150 @@ class _TaxScreenState extends State<TaxScreen>
                     _formatDate(date),
                     style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
                   ),
+                  if (isFiled)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text('✅ Filed',
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.green,
+                              fontWeight: FontWeight.w600)),
+                    ),
                 ],
               ),
             ),
-            Chip(
-              label: Text(
-                daysAway == 0
-                    ? 'Due today'
-                    : '$daysAway day${daysAway == 1 ? '' : 's'}',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold),
+            if (!isFiled)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Chip(
+                    label: Text(
+                      daysAway == 0
+                          ? 'Due today'
+                          : '$daysAway day${daysAway == 1 ? '' : 's'}',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    backgroundColor: chipColor,
+                    padding: EdgeInsets.zero,
+                  ),
+                  const SizedBox(height: 6),
+                  TextButton.icon(
+                    onPressed: () =>
+                        _showMarkAsFiledDialog(name, date, dateKey),
+                    icon: const Icon(Icons.edit_note, size: 16),
+                    label: const Text('Mark as Filed',
+                        style: TextStyle(fontSize: 12)),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      foregroundColor: Colors.deepOrange,
+                    ),
+                  ),
+                ],
+              )
+            else
+              Chip(
+                label: const Text('Filed',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold)),
+                backgroundColor: Colors.green,
+                padding: EdgeInsets.zero,
               ),
-              backgroundColor: chipColor,
-              padding: EdgeInsets.zero,
-            ),
           ],
         ),
       ),
     );
   }
 
+  Future<void> _showMarkAsFiledDialog(
+      String name, DateTime deadline, String deadlineKey) async {
+    final amountCtrl = TextEditingController();
+    final refCtrl = TextEditingController();
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Mark as Filed'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text('Deadline: ${_formatDate(deadline)}',
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+              const SizedBox(height: 16),
+              TextField(
+                controller: amountCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                  labelText: 'Amount Paid (₱)',
+                  border: OutlineInputBorder(),
+                  prefixText: '₱ ',
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: refCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Reference Number (optional)',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepOrange,
+                foregroundColor: Colors.white),
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      final amountPaid =
+          double.tryParse(amountCtrl.text.replaceAll(RegExp(r'[^0-9.]'), '')) ??
+              0.0;
+      await DBService.insertTaxFiling({
+        'period_label': name,
+        'deadline_date': deadlineKey,
+        'filed_date': DateTime.now().toIso8601String().substring(0, 10),
+        'amount_paid': amountPaid,
+        'reference_number':
+            refCtrl.text.trim().isEmpty ? null : refCtrl.text.trim(),
+        'notes': null,
+      });
+      await _loadFilings();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('✅ $name marked as filed.'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _setReminders() async {
     try {
-      await TaxReminderService.scheduleAllTaxReminders();
+      await TaxReminderService.scheduleAllTaxReminders(
+          taxpayerType: _taxpayerType);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -268,7 +500,109 @@ class _TaxScreenState extends State<TaxScreen>
     }
   }
 
-  // ─── Tab 2: Calculator ──────────────────────────────────────────────────────
+  // ─── Tab 2: Filing History ───────────────────────────────────────────────────
+
+  Widget _buildFilingHistoryTab() {
+    if (_loadingFilings) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_filings.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.folder_open, size: 64, color: Colors.grey.shade400),
+            const SizedBox(height: 16),
+            Text(
+              'No filings recorded yet.',
+              style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Tap "Mark as Filed" on a deadline to record your filing.',
+              style: TextStyle(fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        const Text(
+          'Filing History',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          '${_filings.length} filing${_filings.length == 1 ? '' : 's'} recorded',
+          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+        ),
+        const SizedBox(height: 16),
+        ..._filings.map((f) => _buildFilingCard(f)),
+      ],
+    );
+  }
+
+  Widget _buildFilingCard(Map<String, dynamic> filing) {
+    final label = filing['period_label'] as String? ?? 'Unknown Period';
+    final deadlineDate = filing['deadline_date'] as String? ?? '';
+    final filedDate = filing['filed_date'] as String? ?? '';
+    final amountPaid = (filing['amount_paid'] as num?)?.toDouble() ?? 0.0;
+    final refNum = filing['reference_number'] as String?;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.green.shade200, width: 1.5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.check_circle, color: Colors.green, size: 28),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text('Deadline: $deadlineDate',
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                  Text('Filed: $filedDate',
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                  if (refNum != null && refNum.isNotEmpty)
+                    Text('Ref #: $refNum',
+                        style: TextStyle(
+                            fontSize: 12, color: Colors.grey.shade600)),
+                ],
+              ),
+            ),
+            if (amountPaid > 0)
+              Text(
+                CurrencyService.format(amountPaid),
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─── Tab 3: Calculator ──────────────────────────────────────────────────────
 
   Widget _buildCalculatorTab() {
     final income = double.tryParse(
@@ -517,7 +851,7 @@ class _TaxScreenState extends State<TaxScreen>
     );
   }
 
-  // ─── Tab 3: Records ─────────────────────────────────────────────────────────
+  // ─── Tab 4: Records ─────────────────────────────────────────────────────────
 
   Widget _buildRecordsTab() {
     if (_loadingRecords) {

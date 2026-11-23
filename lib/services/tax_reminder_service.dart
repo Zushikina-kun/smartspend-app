@@ -6,43 +6,119 @@ class TaxReminderService {
   /// Returns upcoming BIR deadlines for the current and next year.
   /// Deadlines that have already passed are rolled to the following year.
   /// Sorted ascending by days away.
-  static List<Map<String, dynamic>> getUpcomingDeadlines() {
+  ///
+  /// [taxpayerType] controls which set of deadlines is returned:
+  /// - `'non_vat'` (default): 2551Q quarterly + Annual ITR
+  /// - `'vat'`: 2550Q quarterly (Apr 25, Jul 25, Oct 25, Jan 25) + Annual ITR
+  /// - `'professional'` / `'mixed_income'`: same as non_vat + 1701Q quarterly
+  static List<Map<String, dynamic>> getUpcomingDeadlines(
+      {String taxpayerType = 'non_vat'}) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final year = now.year;
 
-    final raw = [
-      {
-        'name': 'Q1 Percentage Tax (2551Q)',
-        'month': 4,
-        'day': 15,
-        'year': year
-      },
-      {
-        'name': 'Q2 Percentage Tax (2551Q)',
-        'month': 8,
-        'day': 15,
-        'year': year
-      },
-      {
-        'name': 'Q3 Percentage Tax (2551Q)',
-        'month': 11,
-        'day': 15,
-        'year': year
-      },
-      {
-        'name': 'Q4 Percentage Tax (2551Q)',
-        'month': 1,
-        'day': 30,
-        'year': year
-      },
-      {
-        'name': 'Annual ITR (1700/1701/1701A)',
-        'month': 4,
-        'day': 15,
-        'year': year
-      },
-    ];
+    // Annual ITR — common to all types
+    final annualItr = {
+      'name': 'Annual ITR (1700/1701/1701A)',
+      'month': 4,
+      'day': 15,
+      'year': year,
+    };
+
+    List<Map<String, dynamic>> raw;
+
+    if (taxpayerType == 'vat') {
+      raw = [
+        {'name': 'Q1 VAT Return (2550Q)', 'month': 4, 'day': 25, 'year': year},
+        {'name': 'Q2 VAT Return (2550Q)', 'month': 7, 'day': 25, 'year': year},
+        {'name': 'Q3 VAT Return (2550Q)', 'month': 10, 'day': 25, 'year': year},
+        {'name': 'Q4 VAT Return (2550Q)', 'month': 1, 'day': 25, 'year': year},
+        annualItr,
+      ];
+    } else if (taxpayerType == 'professional' ||
+        taxpayerType == 'mixed_income') {
+      raw = [
+        {
+          'name': 'Q1 Percentage Tax (2551Q)',
+          'month': 4,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q2 Percentage Tax (2551Q)',
+          'month': 8,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q3 Percentage Tax (2551Q)',
+          'month': 11,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q4 Percentage Tax (2551Q)',
+          'month': 1,
+          'day': 30,
+          'year': year
+        },
+        // 1701Q quarterly deadlines
+        {
+          'name': 'Q1 Quarterly ITR (1701Q)',
+          'month': 1,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q2 Quarterly ITR (1701Q)',
+          'month': 4,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q3 Quarterly ITR (1701Q)',
+          'month': 7,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q4 Quarterly ITR (1701Q)',
+          'month': 10,
+          'day': 15,
+          'year': year
+        },
+        annualItr,
+      ];
+    } else {
+      // non_vat (default)
+      raw = [
+        {
+          'name': 'Q1 Percentage Tax (2551Q)',
+          'month': 4,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q2 Percentage Tax (2551Q)',
+          'month': 8,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q3 Percentage Tax (2551Q)',
+          'month': 11,
+          'day': 15,
+          'year': year
+        },
+        {
+          'name': 'Q4 Percentage Tax (2551Q)',
+          'month': 1,
+          'day': 30,
+          'year': year
+        },
+        annualItr,
+      ];
+    }
 
     final deadlines = <Map<String, dynamic>>[];
     for (final d in raw) {
@@ -140,9 +216,10 @@ class TaxReminderService {
   }
 
   /// Schedules local notifications at 30, 7, and 1 day before each upcoming deadline.
-  static Future<void> scheduleAllTaxReminders() async {
+  static Future<void> scheduleAllTaxReminders(
+      {String taxpayerType = 'non_vat'}) async {
     await NotificationService.init();
-    final deadlines = getUpcomingDeadlines();
+    final deadlines = getUpcomingDeadlines(taxpayerType: taxpayerType);
 
     for (final deadline in deadlines) {
       final name = deadline['name'] as String;
