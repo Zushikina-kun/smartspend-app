@@ -402,6 +402,10 @@ class DBService {
       "ALTER TABLE expenses ADD COLUMN round_up_amount REAL DEFAULT 0",
       // v17 — wallet allocations on income entries
       "ALTER TABLE income ADD COLUMN wallet_allocations TEXT",
+      // E-1 — expense soft-delete
+      "ALTER TABLE expenses ADD COLUMN deleted_at TEXT",
+      // D-1 — variable payment schedule override
+      "ALTER TABLE installment_plans ADD COLUMN payment_schedule_json TEXT",
     ];
     for (final sql in cols) {
       try {
@@ -1290,41 +1294,46 @@ class DBService {
 
   static Future<void> deleteExpense(int id) async {
     final db = await getDB();
-    // Check if this expense had a wallet deduction and reverse it
-    final rows = await db.query('expenses', where: 'id = ?', whereArgs: [id]);
-    if (rows.isNotEmpty) {
-      final walletId = rows.first['wallet_id'] as int?;
-      final deducted = (rows.first['wallet_deducted'] as num?)?.toDouble() ?? 0;
-      if (walletId != null && deducted > 0) {
-        final wallets =
-            await db.query('wallets', where: 'id = ?', whereArgs: [walletId]);
-        if (wallets.isNotEmpty) {
-          final currentBalance = (wallets.first['balance'] as num).toDouble();
-          final itemName = rows.first['item_name'] as String? ?? 'expense';
-          await setWalletBalance(walletId, currentBalance + deducted,
-              reason: 'Expense deleted: ', source: 'delete_reversal');
-        }
-      }
-      // Reverse round-up contribution if this expense triggered one
-      try {
-        final goalId = rows.first['round_up_goal_id'] as int?;
-        final roundUpAmt =
-            (rows.first['round_up_amount'] as num?)?.toDouble() ?? 0.0;
-        if (goalId != null && roundUpAmt > 0) {
-          final goalRows = await db.query('savings_goals',
-              where: 'id = ?', whereArgs: [goalId], limit: 1);
-          if (goalRows.isNotEmpty) {
-            final currentAmt =
-                (goalRows.first['current_amount'] as num).toDouble();
-            final reversedAmt =
-                (currentAmt - roundUpAmt).clamp(0.0, double.maxFinite);
-            await updateGoal({...goalRows.first, 'current_amount': reversedAmt},
-                source: 'reversal');
-          }
-        }
-      } catch (_) {}
-    }
-    await db.delete('expenses', where: 'id = ?', whereArgs: [id]);
+  /// Records that [expenseId] caused a deduction of [deductedAmount] from
+  /// [walletId].  Stored in the new wallet_id / wallet_deducted columns so
+  /// deleteExpense() can reverse the deduction automatically.
+  static Future<void> linkExpenseToWallet(
+      int expenseId, int walletId, double deductedAmount) async {
+    final db = await getDB();
+    await db.update(
+        'expenses', {'wallet_id': walletId, 'wallet_deducted': deductedAmount},
+        where: 'id = ?', whereArgs: [expenseId]);
+  }
+
+  /// Physically deletes a soft-deleted expense row (Recycle Bin 'Purge').
+  static Future<void> purgeExpense(int id) async {
+    final db = await getDB();
+    await db.delete('expenses',
+        where: 'id = ? AND deleted_at IS NOT NULL', whereArgs: [id]);
+    fireEvent(AppEvent.expenseChanged);
+  }
+
+  /// Restores a soft-deleted expense (sets deleted_at = NULL).
+  static Future<void> restoreExpense(int id) async {
+    final db = await getDB();
+    await db
+        .rawUpdate("UPDATE expenses SET deleted_at = NULL WHERE id = ?", [id]);
+    fireEvent(AppEvent.expenseChanged);
+  }
+
+  /// Returns soft-deleted expenses (recycle bin contents).
+  static Future<List<Expense>> getDeletedExpenses() async {
+    final db = await getDB();
+    final maps = await db.query('expenses',
+        where: 'deleted_at IS NOT NULL', orderBy: 'deleted_at DESC');
+    return maps.map((m) => Expense.fromMap(m)).toList();
+  }
+
+  /// Auto-purge entries deleted more than 30 days ago (called on startup).
+  static Future<void> purgeExpiredDeletedExpenses() async {
+    final db = await getDB();
+    await db.rawDelete(
+        "DELETE FROM expenses WHERE deleted_at IS NOT NULL AND deleted_at < datetime('now', '-30 days')");
     CloudService.deleteDoc('expenses', id);
     fireEvent(AppEvent.expenseChanged);
   }
@@ -1340,14 +1349,46 @@ class DBService {
         where: 'id = ?', whereArgs: [expenseId]);
   }
 
+  /// Physically deletes a soft-deleted expense row (Recycle Bin "Purge").
+  static Future<void> purgeExpense(int id) async {
+    final db = await getDB();
+    await db.delete('expenses',
+        where: 'id = ? AND deleted_at IS NOT NULL', whereArgs: [id]);
+    fireEvent(AppEvent.expenseChanged);
+  }
+
+  /// Restores a soft-deleted expense (sets deleted_at = NULL).
+  static Future<void> restoreExpense(int id) async {
+    final db = await getDB();
+    await db
+        .rawUpdate("UPDATE expenses SET deleted_at = NULL WHERE id = ?", [id]);
+    fireEvent(AppEvent.expenseChanged);
+  }
+
+  /// Returns soft-deleted expenses (recycle bin contents).
+  static Future<List<Expense>> getDeletedExpenses() async {
+    final db = await getDB();
+    final maps = await db.query('expenses',
+        where: 'deleted_at IS NOT NULL', orderBy: 'deleted_at DESC');
+    return maps.map((m) => Expense.fromMap(m)).toList();
+  }
+
+  /// Auto-purge entries deleted more than 30 days ago (called on startup).
+  static Future<void> purgeExpiredDeletedExpenses() async {
+    final db = await getDB();
+    await db.rawDelete(
+        "DELETE FROM expenses WHERE deleted_at IS NOT NULL AND deleted_at < datetime('now', '-30 days')");
+  }
+
   static Future<List<Expense>> getExpenses({String? month}) async {
     final db = await getDB();
     final maps = month != null
         ? await db.query('expenses',
-            where: "date LIKE ?",
+            where: "date LIKE ? AND deleted_at IS NULL",
             whereArgs: ['$month%'],
             orderBy: 'date DESC, COALESCE(updated_at, date) DESC, id DESC')
         : await db.query('expenses',
+            where: 'deleted_at IS NULL',
             orderBy: 'date DESC, COALESCE(updated_at, date) DESC, id DESC');
     return maps.map((m) => Expense.fromMap(m)).toList();
   }
@@ -1387,7 +1428,8 @@ class DBService {
   static Future<int> getExpenseCountForMonth(String month) async {
     final db = await getDB();
     final result = await db.rawQuery(
-        'SELECT COUNT(*) as c FROM expenses WHERE date LIKE ?', ['$month%']);
+        'SELECT COUNT(*) as c FROM expenses WHERE date LIKE ? AND deleted_at IS NULL',
+        ['$month%']);
     return (result.first['c'] as int? ?? 0);
   }
 
@@ -1503,7 +1545,8 @@ class DBService {
 
   static Future<int> getExpenseCount() async {
     final db = await getDB();
-    final result = await db.rawQuery('SELECT COUNT(*) as count FROM expenses');
+    final result = await db.rawQuery(
+        'SELECT COUNT(*) as count FROM expenses WHERE deleted_at IS NULL');
     return (result.first['count'] as int?) ?? 0;
   }
 
@@ -1512,11 +1555,13 @@ class DBService {
     final db = await getDB();
     final maps = month != null
         ? await db.query('expenses',
-            where: 'category = ? AND date LIKE ?',
+            where: 'category = ? AND date LIKE ? AND deleted_at IS NULL',
             whereArgs: [category, '$month%'],
             orderBy: 'date DESC')
         : await db.query('expenses',
-            where: 'category = ?', whereArgs: [category], orderBy: 'date DESC');
+            where: 'category = ? AND deleted_at IS NULL',
+            whereArgs: [category],
+            orderBy: 'date DESC');
     return maps.map((m) => Expense.fromMap(m)).toList();
   }
 
@@ -1609,7 +1654,7 @@ class DBService {
         // Sum expenses in previous month for this category
         final result = await db.rawQuery(
           '''SELECT COALESCE(SUM(amount),0) as total FROM expenses
-             WHERE category = ? AND date LIKE ?''',
+             WHERE category = ? AND date LIKE ? AND deleted_at IS NULL''',
           [b.category, '$previousMonth%'],
         );
         final spent = (result.first['total'] as num?)?.toDouble() ?? 0.0;
@@ -1920,7 +1965,7 @@ class DBService {
         break;
     }
     final result = await db.rawQuery(
-        'SELECT COALESCE(SUM(amount), 0) as total FROM expenses WHERE $whereClause');
+        'SELECT COALESCE(SUM(amount), 0) as total FROM expenses WHERE $whereClause AND deleted_at IS NULL');
     return (result.first['total'] as num?)?.toDouble() ?? 0.0;
   }
 
@@ -3311,7 +3356,9 @@ class DBService {
         .toIso8601String()
         .substring(0, 10);
     final expenses = await db.query('expenses',
-        where: 'date >= ?', whereArgs: [since], orderBy: 'date ASC');
+        where: 'date >= ? AND deleted_at IS NULL',
+        whereArgs: [since],
+        orderBy: 'date ASC');
 
     if (expenses.length < 4) return [];
 

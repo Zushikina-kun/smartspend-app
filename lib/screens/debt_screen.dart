@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../services/db_service.dart';
@@ -555,6 +556,118 @@ class _DebtScreenState extends State<DebtScreen>
         ],
       ),
     );
+  }
+
+  // D-1: Edit custom payment schedule for a plan
+  Future<void> _showEditScheduleDialog(Map<String, dynamic> plan) async {
+    final monthsTotal = plan['months_total'] as int;
+    final monthly = (plan['monthly_payment'] as num).toDouble();
+    // Parse existing schedule or build default
+    List<Map<String, dynamic>> schedule = [];
+    final existingJson = plan['payment_schedule_json'] as String?;
+    if (existingJson != null && existingJson.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(existingJson) as List;
+        schedule = decoded.cast<Map<String, dynamic>>();
+      } catch (_) {}
+    }
+    // Fill in missing periods with default monthly payment
+    for (int i = 1; i <= monthsTotal; i++) {
+      if (!schedule.any((e) => e['period'] == i)) {
+        schedule.add({'period': i, 'amount': monthly});
+      }
+    }
+    schedule.sort((a, b) => (a['period'] as int).compareTo(b['period'] as int));
+    // Build controllers
+    final controllers = [
+      for (final e in schedule)
+        TextEditingController(text: (e['amount'] as num).toStringAsFixed(2)),
+    ];
+    await showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setS) => AlertDialog(
+          title: const Text('Edit Payment Schedule'),
+          content: SizedBox(
+            width: 320,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Set a custom amount for each month. Leave the default to use the standard monthly payment.',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 10),
+                  ...List.generate(schedule.length, (i) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 70,
+                            child: Text('Month ${schedule[i]['period']}:',
+                                style: const TextStyle(fontSize: 13)),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: controllers[i],
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
+                              decoration: InputDecoration(
+                                prefixText: '₱ ',
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                // Build updated schedule from controllers
+                final updated = <Map<String, dynamic>>[];
+                for (int i = 0; i < schedule.length; i++) {
+                  final val = double.tryParse(
+                          controllers[i].text.replaceAll(',', '')) ??
+                      monthly;
+                  updated.add({'period': schedule[i]['period'], 'amount': val});
+                }
+                final json = jsonEncode(updated);
+                final db = await DBService.getDB();
+                await db.update(
+                  'installment_plans',
+                  {'payment_schedule_json': json},
+                  where: 'id = ?',
+                  whereArgs: [plan['id']],
+                );
+                if (ctx.mounted) Navigator.pop(ctx);
+                _load();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+    for (final c in controllers) {
+      c.dispose();
+    }
   }
 
   void _showAddPlanDialog({Map<String, dynamic>? existing}) {
@@ -1129,9 +1242,26 @@ class _DebtScreenState extends State<DebtScreen>
       final totalInterest = remaining * (interestRate / 100);
       interestStr = "≈ ${CurrencyService.format(totalInterest)} total interest";
     }
-
     final isExpanded = _planExpanded[planId] ?? false;
-
+    // D-1: resolve per-period amount for the current period (monthsPaid + 1)
+    double currentPeriodAmount = monthly;
+    final scheduleJson = p['payment_schedule_json'] as String?;
+    bool hasCustomSchedule = false;
+    if (scheduleJson != null && scheduleJson.isNotEmpty) {
+      try {
+        final schedule = (jsonDecode(scheduleJson) as List)
+            .cast<Map<String, dynamic>>();
+        final currentPeriod = monthsPaid + 1;
+        final entry = schedule.firstWhere(
+          (e) => e['period'] == currentPeriod,
+          orElse: () => <String, dynamic>{},
+        );
+        if (entry.isNotEmpty && entry['amount'] != null) {
+          currentPeriodAmount = (entry['amount'] as num).toDouble();
+          hasCustomSchedule = true;
+        }
+      } catch (_) {}
+    }
     return Card(
       elevation: 2,
       shadowColor: Colors.black.withValues(alpha: 0.08),
@@ -1173,6 +1303,15 @@ class _DebtScreenState extends State<DebtScreen>
                 IconButton(
                   icon: const Icon(Icons.edit, size: 16),
                   onPressed: () => _showAddPlanDialog(existing: p),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const SizedBox(width: 4),
+                // D-1: Edit payment schedule
+                IconButton(
+                  icon: const Icon(Icons.calendar_month_outlined, size: 16),
+                  tooltip: "Edit Schedule",
+                  onPressed: () => _showEditScheduleDialog(p),
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                 ),
@@ -1240,7 +1379,9 @@ class _DebtScreenState extends State<DebtScreen>
                 Text(
                   done
                       ? CurrencyService.format(total)
-                      : "${CurrencyService.format(monthly)}/mo",
+                      : hasCustomSchedule
+                          ? "${CurrencyService.format(currentPeriodAmount)}/mo (custom)"
+                          : "${CurrencyService.format(monthly)}/mo",
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w500),
                 ),
@@ -1302,7 +1443,7 @@ class _DebtScreenState extends State<DebtScreen>
                     child: FilledButton.icon(
                       icon: const Icon(Icons.bolt, size: 14),
                       label: Text(
-                        "Pay ${CurrencyService.format(monthly)}",
+                        "Pay ${CurrencyService.format(currentPeriodAmount)}",
                         style: const TextStyle(fontSize: 12),
                       ),
                       onPressed: () => _logPlanPayment(p),

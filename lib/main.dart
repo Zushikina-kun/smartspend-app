@@ -97,6 +97,8 @@ void main() async {
     });
     NotificationService.checkCategoryVelocity();
     NotificationService.checkWantSpendingAlert();
+    // Auto-purge soft-deleted expenses older than 30 days (E-1)
+    DBService.purgeExpiredDeletedExpenses().catchError((_) {});
     // Proactive nudges — forward-looking alerts (subscription due, pace high, goal close, etc.)
     ProactiveNudgeService.check();
     // Background refresh of government data feeds (fire-and-forget)

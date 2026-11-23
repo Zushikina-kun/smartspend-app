@@ -128,12 +128,16 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       _showWantsOnly ||
       _showNeedsOnly ||
       _showLowConfidenceOnly ||
+      _showRecycleBin ||
       _activeTag != null ||
       _hasAdvancedFilter;
 
   // 12C: Recent AI-logged expenses for undo card (last 3, within 24h)
   List<Expense> _recentAiExpenses = [];
   bool _undoCardDismissed = false;
+  // E-1: Recycle bin
+  bool _showRecycleBin = false;
+  List<Expense> _deletedExpenses = [];
 
   // Listen for AI/external data changes (update_expense, new log, delete)
   // so the list re-sorts automatically without the user needing to pull-to-refresh.
@@ -199,6 +203,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   Future<void> _load() async {
     final expenses = await DBService.getExpenses();
+    final deleted = await DBService.getDeletedExpenses();
     final allCats = await CategoryService.getAll();
     // Also include any categories that exist in expenses but aren't in the current list
     final expenseCats = expenses.map((e) => e.category).toSet();
@@ -221,6 +226,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
     setState(() {
       _all = expenses;
+      _deletedExpenses = deleted;
       _categories = ['All', ...allCats, ...orphanCats];
       if (!_categories.contains(_selectedCategory)) _selectedCategory = 'All';
       _recentAiExpenses = recentAi;
@@ -751,6 +757,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       _showWantsOnly = false;
       _showNeedsOnly = false;
       _showLowConfidenceOnly = false;
+      _showRecycleBin = false;
       _activeTag = null;
       _dateRangeFilter = null;
       _minAmountFilter = null;
@@ -1265,6 +1272,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             ),
                           ),
                         // (end of period chips)
+                        // E-1: Recycle bin chip
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: FilterChip(
+                            label: const Text('🗑 Recently Deleted'),
+                            selected: _showRecycleBin,
+                            onSelected: (v) => setState(() {
+                              _showRecycleBin = v;
+                            }),
+                            selectedColor: Colors.red.withValues(alpha: 0.15),
+                            checkmarkColor: Colors.red,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -1559,35 +1579,114 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
                   // List — grouped or flat depending on _groupKey
                   Expanded(
-                    child: _filtered.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                PesoMascot.withSpeech(
-                                  size: 60,
-                                  mood: PesoMood.thinking,
-                                  text:
-                                      "Wala pang nahanap!\nTry clearing your search or filters 🔍",
+                    child: _showRecycleBin
+                        ? _buildRecycleBin()
+                        : _filtered.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    PesoMascot.withSpeech(
+                                      size: 60,
+                                      mood: PesoMood.thinking,
+                                      text:
+                                          "Wala pang nahanap!\nTry clearing your search or filters 🔍",
+                                    ),
+                                    const SizedBox(height: 8),
+                                    const Text("No transactions found",
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500)),
+                                    const SizedBox(height: 4),
+                                    const Text(
+                                        "Try adjusting your search or filters.",
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 12)),
+                                  ],
                                 ),
-                                const SizedBox(height: 8),
-                                const Text("No transactions found",
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500)),
-                                const SizedBox(height: 4),
-                                const Text(
-                                    "Try adjusting your search or filters.",
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12)),
-                              ],
-                            ),
-                          )
-                        : _buildGroupedList(cs),
+                              )
+                            : _buildGroupedList(cs),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  // E-1: Recycle bin — shows soft-deleted expenses with Restore and Purge buttons
+  Widget _buildRecycleBin() {
+    if (_deletedExpenses.isEmpty) {
+      return const Center(
+        child:
+            Text('Recycle bin is empty', style: TextStyle(color: Colors.grey)),
+      );
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 16),
+      itemCount: _deletedExpenses.length,
+      itemBuilder: (ctx, i) {
+        final e = _deletedExpenses[i];
+        return Card(
+          margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+          child: ListTile(
+            leading: const Icon(Icons.delete_outline, color: Colors.grey),
+            title: Text(e.itemName,
+                style: const TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.grey)),
+            subtitle: Text('${e.category} · ${e.date}',
+                style: const TextStyle(fontSize: 11)),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(CurrencyService.format(e.amount),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                const SizedBox(width: 6),
+                IconButton(
+                  icon:
+                      const Icon(Icons.restore, color: Colors.green, size: 20),
+                  tooltip: 'Restore',
+                  onPressed: () async {
+                    await DBService.restoreExpense(e.id!);
+                    _load();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete_forever,
+                      color: Colors.red, size: 20),
+                  tooltip: 'Purge',
+                  onPressed: () async {
+                    final ok = await showDialog<bool>(
+                      context: ctx,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Permanently delete?'),
+                        content: Text(
+                            'Purge "${e.itemName}"? This cannot be undone.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Cancel'),
+                          ),
+                          FilledButton(
+                            style: FilledButton.styleFrom(
+                                backgroundColor: Colors.red),
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text('Purge'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (ok == true) {
+                      await DBService.purgeExpense(e.id!);
+                      _load();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
