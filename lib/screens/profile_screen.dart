@@ -24,6 +24,7 @@ import '../services/currency_service.dart';
 import '../services/event_bus.dart';
 import '../services/debug_service.dart';
 import '../services/app_lock_service.dart';
+import 'package:local_auth/local_auth.dart';
 import '../services/ai_chat_service.dart';
 import '../services/undo_service.dart';
 import '../services/category_service.dart';
@@ -3194,6 +3195,7 @@ class WalletsSheet extends StatefulWidget {
 
 class WalletsSheetState extends State<WalletsSheet> {
   late List<Map<String, dynamic>> _wallets;
+  bool _integrityLock = false;
 
   static const _presets = [
     // ── CASH ──────────────────────────────────────────────────────────────────
@@ -3243,9 +3245,43 @@ class WalletsSheetState extends State<WalletsSheet> {
   void initState() {
     super.initState();
     _wallets = List.from(widget.wallets);
+    _loadIntegrityLock();
+  }
+
+  Future<void> _loadIntegrityLock() async {
+    final val = await DBService.getSetting('wallet_integrity_lock');
+    if (mounted) setState(() => _integrityLock = val == 'true');
   }
 
   Future<void> _editBalance(Map<String, dynamic> wallet) async {
+    if (_integrityLock) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text(
+            '🔒 Wallet Integrity Mode is on — balances can only change through expense transactions.'),
+        behavior: SnackBarBehavior.floating,
+      ));
+      return;
+    }
+    // Biometric / PIN lock before any manual balance edit
+    try {
+      final auth = LocalAuthentication();
+      final ok = await auth.authenticate(
+        localizedReason: 'Confirm wallet balance change',
+        options: const AuthenticationOptions(biometricOnly: false),
+      );
+      if (!ok) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Authentication required to edit wallet balance.'),
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
+        return;
+      }
+    } catch (_) {
+      // local_auth not available on this device — allow edit
+    }
     final ctrl = TextEditingController(
         text: (wallet['balance'] as num) > 0
             ? (wallet['balance'] as num).toStringAsFixed(2)
@@ -3285,7 +3321,7 @@ class WalletsSheetState extends State<WalletsSheet> {
               ? 'Manual top-up (+${CurrencyService.format(delta)})'
               : 'Manual adjustment (${CurrencyService.format(delta)})';
       await DBService.setWalletBalance(wallet['id'] as int, result,
-          reason: reason, source: 'manual');
+          reason: reason, source: 'manual_set');
       final updated = await DBService.getWallets();
       setState(() => _wallets = updated);
       widget.onChanged();
@@ -3305,178 +3341,280 @@ class WalletsSheetState extends State<WalletsSheet> {
   }
 
   Future<void> _showHistory(Map<String, dynamic> wallet) async {
-    final history = await DBService.getWalletHistory(wallet['id'] as int);
+    var history = await DBService.getWalletHistory(wallet['id'] as int);
     if (!mounted) return;
     final cs = Theme.of(context).colorScheme;
     final fmt = DateFormat('MMM d, y h:mm a');
-    showModalBottomSheet(
+    final walletId = wallet['id'] as int;
+    final walletName = wallet['name'] as String;
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (_) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 0.6,
-        minChildSize: 0.35,
-        maxChildSize: 0.92,
-        builder: (_, ctrl) => Column(
-          children: [
-            const SizedBox(height: 12),
-            Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2))),
-            const SizedBox(height: 14),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(children: [
-                Text(wallet['icon'] as String? ?? '💵',
-                    style: const TextStyle(fontSize: 22)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "${wallet['name']} — Balance History",
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setModalState) => DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.6,
+          minChildSize: 0.35,
+          maxChildSize: 0.92,
+          builder: (_, ctrl) => Column(
+            children: [
+              const SizedBox(height: 12),
+              Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2))),
+              const SizedBox(height: 14),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(children: [
+                  Text(wallet['icon'] as String? ?? '💵',
+                      style: const TextStyle(fontSize: 22)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "$walletName — Balance History",
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-              ]),
-            ),
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                "${history.length} change${history.length == 1 ? '' : 's'} recorded",
-                style: TextStyle(
-                    fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
+                ]),
               ),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: history.isEmpty
-                  ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.history,
-                              size: 48, color: Colors.grey[300]),
-                          const SizedBox(height: 12),
-                          const Text("No history yet",
-                              style: TextStyle(color: Colors.grey)),
-                          const SizedBox(height: 6),
-                          Text(
-                            "Balance changes will appear here\nafter you next edit this wallet.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: cs.onSurface.withValues(alpha: 0.45)),
-                          ),
-                        ],
-                      ),
-                    )
-                  : ListView.builder(
-                      controller: ctrl,
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                      itemCount: history.length,
-                      itemBuilder: (_, i) {
-                        final h = history[i];
-                        final delta = (h['delta'] as num).toDouble();
-                        final isPositive = delta > 0;
-                        final isZero = delta == 0;
-                        final deltaColor = isZero
-                            ? cs.onSurface.withValues(alpha: 0.4)
-                            : isPositive
-                                ? Colors.green
-                                : Colors.red;
-                        final reason = h['reason'] as String?;
-                        final source = h['source'] as String? ?? 'manual';
-                        final ts = h['timestamp'] as String? ?? '';
-                        String timeLabel = ts;
-                        try {
-                          timeLabel = fmt.format(DateTime.parse(ts).toLocal());
-                        } catch (_) {}
-                        final sourceIcon = source == 'ai'
-                            ? '🤖'
-                            : source == 'transfer'
-                                ? '↔️'
-                                : source == 'auto_deduct'
-                                    ? '💳'
-                                    : '✏️';
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: cs.surfaceContainerLow,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                                color: deltaColor.withValues(alpha: 0.2)),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(sourceIcon,
-                                  style: const TextStyle(fontSize: 18)),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  "${history.length} change${history.length == 1 ? '' : 's'} recorded",
+                  style: TextStyle(
+                      fontSize: 12, color: cs.onSurface.withValues(alpha: 0.5)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: history.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.history,
+                                size: 48, color: Colors.grey[300]),
+                            const SizedBox(height: 12),
+                            const Text("No history yet",
+                                style: TextStyle(color: Colors.grey)),
+                            const SizedBox(height: 6),
+                            Text(
+                              "Balance changes will appear here\nafter you next edit this wallet.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: cs.onSurface.withValues(alpha: 0.45)),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: ctrl,
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                        itemCount: history.length,
+                        itemBuilder: (_, i) {
+                          final h = history[i];
+                          final delta = (h['delta'] as num).toDouble();
+                          final isPositive = delta > 0;
+                          final isZero = delta == 0;
+                          final deltaColor = isZero
+                              ? cs.onSurface.withValues(alpha: 0.4)
+                              : isPositive
+                                  ? Colors.green
+                                  : Colors.red;
+                          final reason = h['reason'] as String?;
+                          final source = h['source'] as String? ?? 'manual';
+                          final ts = h['timestamp'] as String? ?? '';
+                          final oldBalance =
+                              (h['old_balance'] as num).toDouble();
+                          String timeLabel = ts;
+                          try {
+                            timeLabel =
+                                fmt.format(DateTime.parse(ts).toLocal());
+                          } catch (_) {}
+                          final sourceIcon = source == 'ai'
+                              ? '🤖'
+                              : source == 'transfer'
+                                  ? '↔️'
+                                  : source == 'auto_deduct'
+                                      ? '💳'
+                                      : '✏️';
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: cs.surfaceContainerLow,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  color: deltaColor.withValues(alpha: 0.2)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   children: [
-                                    Row(children: [
-                                      Text(
-                                        isZero
-                                            ? 'No change'
-                                            : isPositive
-                                                ? '+${CurrencyService.format(delta)}'
-                                                : '−${CurrencyService.format(delta.abs())}',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: deltaColor,
-                                        ),
+                                    Text(sourceIcon,
+                                        style: const TextStyle(fontSize: 18)),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(children: [
+                                            Text(
+                                              isZero
+                                                  ? 'No change'
+                                                  : isPositive
+                                                      ? '+${CurrencyService.format(delta)}'
+                                                      : '−${CurrencyService.format(delta.abs())}',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: deltaColor,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              '→ ${CurrencyService.format((h['new_balance'] as num).toDouble())}',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: cs.onSurface
+                                                      .withValues(alpha: 0.6)),
+                                            ),
+                                          ]),
+                                          if (reason != null &&
+                                              reason.isNotEmpty)
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 2),
+                                              child: Text(reason,
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: cs.onSurface
+                                                          .withValues(
+                                                              alpha: 0.55))),
+                                            ),
+                                          Text(timeLabel,
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: cs.onSurface
+                                                      .withValues(alpha: 0.4))),
+                                        ],
                                       ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        '→ ${CurrencyService.format((h['new_balance'] as num).toDouble())}',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: cs.onSurface
-                                                .withValues(alpha: 0.6)),
-                                      ),
-                                    ]),
-                                    if (reason != null && reason.isNotEmpty)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 2),
-                                        child: Text(reason,
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: cs.onSurface
-                                                    .withValues(alpha: 0.55))),
-                                      ),
-                                    Text(timeLabel,
-                                        style: TextStyle(
-                                            fontSize: 11,
-                                            color: cs.onSurface
-                                                .withValues(alpha: 0.4))),
+                                    ),
+                                    // Old balance (strikethrough)
+                                    Text(
+                                      CurrencyService.format(oldBalance),
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: cs.onSurface
+                                              .withValues(alpha: 0.35),
+                                          decoration:
+                                              TextDecoration.lineThrough),
+                                    ),
                                   ],
                                 ),
-                              ),
-                              // Old balance
-                              Text(
-                                CurrencyService.format(
-                                    (h['old_balance'] as num).toDouble()),
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    color: cs.onSurface.withValues(alpha: 0.35),
-                                    decoration: TextDecoration.lineThrough),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-            ),
-          ],
+                                // Restore button
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton.icon(
+                                    icon: const Icon(Icons.restore, size: 14),
+                                    label: const Text('Restore',
+                                        style: TextStyle(fontSize: 12)),
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                    ),
+                                    onPressed: () async {
+                                      // Confirm restore
+                                      final confirm =
+                                          await showModalBottomSheet<bool>(
+                                        context: ctx,
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(16))),
+                                        builder: (_) => Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              24, 20, 24, 32),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text('Restore balance?',
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'Restore $walletName balance to ${CurrencyService.format(oldBalance)} as of $timeLabel?',
+                                                style: const TextStyle(
+                                                    fontSize: 14),
+                                              ),
+                                              const SizedBox(height: 20),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(_, false),
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  FilledButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(_, true),
+                                                    child:
+                                                        const Text('Confirm'),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                      if (confirm == true) {
+                                        await DBService.setWalletBalance(
+                                            walletId, oldBalance,
+                                            reason: 'Restored to: $timeLabel',
+                                            source: 'manual_undo');
+                                        final updated =
+                                            await DBService.getWallets();
+                                        if (mounted) {
+                                          setState(() => _wallets = updated);
+                                          widget.onChanged();
+                                        }
+                                        // Refresh history in the modal
+                                        final newHistory =
+                                            await DBService.getWalletHistory(
+                                                walletId);
+                                        setModalState(
+                                            () => history = newHistory);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -3595,6 +3733,14 @@ class WalletsSheetState extends State<WalletsSheet> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            IconButton(
+                              icon: const Icon(Icons.history, size: 18),
+                              onPressed: () => _showHistory(w),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              tooltip: 'Balance history',
+                            ),
+                            const SizedBox(width: 4),
                             IconButton(
                               icon: const Icon(Icons.edit_outlined, size: 18),
                               onPressed: () => _editBalance(w),

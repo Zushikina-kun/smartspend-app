@@ -765,6 +765,16 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 reason:
                     'Manual expense: ${_itemNameCtrl.text.trim().isEmpty ? _selectedCategory : _itemNameCtrl.text.trim()} ₱${amount.toStringAsFixed(2)}',
                 source: 'auto_deduct');
+            // Link the expense row to this wallet deduction so delete can reverse it
+            try {
+              final db = await DBService.getDB();
+              final lastRows = await db
+                  .rawQuery('SELECT id FROM expenses ORDER BY id DESC LIMIT 1');
+              if (lastRows.isNotEmpty) {
+                await DBService.linkExpenseToWallet(
+                    lastRows.first['id'] as int, wallet['id'] as int, amount);
+              }
+            } catch (_) {}
             // ── Wallet deduct confirmation snackbar with undo ──────────────
             if (mounted) {
               final walletId = wallet['id'] as int;
@@ -777,7 +787,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   label: 'Undo',
                   onPressed: () async {
                     await DBService.setWalletBalance(walletId, oldBal,
-                        reason: 'Undo deduct', source: 'manual');
+                        reason: 'Undo deduct', source: 'manual_undo');
                     fireEvent(AppEvent.incomeChanged);
                   },
                 ),

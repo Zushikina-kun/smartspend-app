@@ -42,6 +42,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool autoDeduct = true;
   bool walletConfirmDeduct = false; // opt-in: ask before deducting each expense
   double walletConfirmMinAmount = 10.0; // skip dialog for amounts below this
+  bool walletIntegrityLock =
+      false; // when true, only expenses/transfers can change balances
   bool impulseEnabled = true;
   bool budgetAlerts = true;
   bool smsSyncEnabled = false;
@@ -122,6 +124,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final minAmountStr =
         await DBService.getSetting('wallet_confirm_min_amount');
     walletConfirmMinAmount = double.tryParse(minAmountStr ?? '') ?? 10.0;
+    walletIntegrityLock =
+        (await DBService.getSetting('wallet_integrity_lock')) == 'true';
     // mood_checkin_enabled is now unified with show_mood_home — one toggle controls both.
     // Migrate any existing mood_checkin_enabled=false → show_mood_home=false on first load.
     final oldMoodKey = await DBService.getSetting('mood_checkin_enabled');
@@ -639,6 +643,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
+                  _tile(
+                    icon: Icons.lock_outline,
+                    title: 'Wallet Integrity Mode',
+                    subtitle:
+                        'Only expense logs and transfers can change wallet balances. Prevents manual overwrites.',
+                    value: walletIntegrityLock,
+                    onChanged: (v) {
+                      setState(() => walletIntegrityLock = v);
+                      _save('wallet_integrity_lock', v);
+                    },
+                  ),
                   _tile(
                     icon: Icons.pause_circle_outline,
                     title: 'Impulse pause',

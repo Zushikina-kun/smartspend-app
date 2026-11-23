@@ -34,6 +34,7 @@ import '../models/expense.dart';
 import '../widgets/info_button.dart';
 import 'chat_history_screen.dart';
 import 'smart_camera_screen.dart';
+import 'package:local_auth/local_auth.dart';
 import 'feedback_screen.dart';
 import 'scan_review_screen.dart';
 import 'add_expense_screen.dart';
@@ -1219,6 +1220,18 @@ class _AIScreenState extends State<AIScreen> {
                       reason:
                           'Auto-deduct: $itemName ₱${amount.toStringAsFixed(2)}',
                       source: 'auto_deduct');
+                  // Link the expense row to this wallet deduction
+                  try {
+                    final db = await DBService.getDB();
+                    final lastRows = await db.rawQuery(
+                        'SELECT id FROM expenses ORDER BY id DESC LIMIT 1');
+                    if (lastRows.isNotEmpty) {
+                      await DBService.linkExpenseToWallet(
+                          lastRows.first['id'] as int,
+                          wallet['id'] as int,
+                          amount);
+                    }
+                  } catch (_) {}
                   // Show snackbar confirmation with undo
                   if (mounted) {
                     final walletId = wallet['id'] as int;
@@ -1231,7 +1244,7 @@ class _AIScreenState extends State<AIScreen> {
                         label: 'Undo',
                         onPressed: () async {
                           await DBService.setWalletBalance(walletId, oldBal,
-                              reason: 'Undo deduct', source: 'manual');
+                              reason: 'Undo deduct', source: 'manual_undo');
                           fireEvent(AppEvent.incomeChanged);
                         },
                       ),
@@ -1839,6 +1852,14 @@ class _AIScreenState extends State<AIScreen> {
 
         case 'set_wallet_balance':
           // Update a wallet balance by name
+          // Block if Wallet Integrity Mode is enabled
+          final integrityLock =
+              await DBService.getSetting('wallet_integrity_lock');
+          if (integrityLock == 'true') {
+            _showActionSnackbar(
+                '🔒 Wallet Integrity Mode is on — balances can only change through expense transactions.');
+            break;
+          }
           final walletName = action.params['wallet_name'] as String?;
           final walletBalance = (action.params['balance'] as num?)?.toDouble();
           if (walletName != null &&
@@ -1945,6 +1966,25 @@ class _AIScreenState extends State<AIScreen> {
               toName != null &&
               transferAmt != null &&
               transferAmt > 0) {
+            // Biometric gate for large transfers (≥ ₱500)
+            if (transferAmt >= 500) {
+              bool authPassed = false;
+              try {
+                final auth = LocalAuthentication();
+                authPassed = await auth.authenticate(
+                  localizedReason:
+                      'Confirm wallet transfer of ${CurrencyService.format(transferAmt)}',
+                  options: const AuthenticationOptions(biometricOnly: false),
+                );
+              } catch (_) {
+                authPassed = true; // local_auth not available — allow
+              }
+              if (!authPassed) {
+                _showActionSnackbar(
+                    'Authentication required for transfers of ${CurrencyService.format(transferAmt)} or more.');
+                break;
+              }
+            }
             final fromWallet = await DBService.findWalletByName(fromName);
             final toWallet = await DBService.findWalletByName(toName);
             if (fromWallet != null && toWallet != null) {

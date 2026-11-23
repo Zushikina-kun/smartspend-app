@@ -141,6 +141,36 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
       );
       await DBService.updateExpense(updated);
 
+      // Wallet adjustment: if the expense was linked to a wallet and the
+      // amount changed, adjust the wallet balance by the delta.
+      try {
+        final db = await DBService.getDB();
+        final rows = await db
+            .query('expenses', where: 'id = ?', whereArgs: [widget.expense.id]);
+        if (rows.isNotEmpty) {
+          final walletId = rows.first['wallet_id'] as int?;
+          final oldDeducted =
+              (rows.first['wallet_deducted'] as num?)?.toDouble() ?? 0;
+          if (walletId != null && oldDeducted > 0 && amount != oldDeducted) {
+            final wallets = await db
+                .query('wallets', where: 'id = ?', whereArgs: [walletId]);
+            if (wallets.isNotEmpty) {
+              final currentBalance =
+                  (wallets.first['balance'] as num).toDouble();
+              final delta = amount - oldDeducted;
+              final itemName = updated.itemName.isNotEmpty
+                  ? updated.itemName
+                  : updated.category;
+              await DBService.setWalletBalance(walletId, currentBalance - delta,
+                  reason: 'Expense edited: $itemName',
+                  source: 'edit_adjustment');
+              await DBService.linkExpenseToWallet(
+                  widget.expense.id!, walletId, amount);
+            }
+          }
+        }
+      } catch (_) {}
+
       // UD-4b: If category changed, offer to create an auto-categorization rule
       if (widget.expense.category != _selectedCategory &&
           widget.expense.itemName.isNotEmpty &&

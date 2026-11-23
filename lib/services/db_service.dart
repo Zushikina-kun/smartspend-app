@@ -805,6 +805,22 @@ class DBService {
         )
       ''');
     } catch (_) {}
+
+    // wallet_id / wallet_deducted — link each expense to the wallet deduction
+    // that occurred when it was logged (v17)
+    await _addColumnIfMissing(db, 'expenses', 'wallet_id', 'INTEGER');
+    await _addColumnIfMissing(
+        db, 'expenses', 'wallet_deducted', 'REAL DEFAULT 0');
+  }
+
+  /// Adds a column to [table] if it does not already exist.
+  /// SQLite throws when you ALTER a table to add a column that is already
+  /// present — this helper swallows that specific error so callers stay safe.
+  static Future<void> _addColumnIfMissing(
+      Database db, String table, String column, String type) async {
+    try {
+      await db.execute('ALTER TABLE $table ADD COLUMN $column $type');
+    } catch (_) {} // ignore: column already exists
   }
 
   static Future<void> _createTables(Database db) async {
@@ -1150,9 +1166,36 @@ class DBService {
 
   static Future<void> deleteExpense(int id) async {
     final db = await getDB();
+    // Check if this expense had a wallet deduction and reverse it
+    final rows = await db.query('expenses', where: 'id = ?', whereArgs: [id]);
+    if (rows.isNotEmpty) {
+      final walletId = rows.first['wallet_id'] as int?;
+      final deducted = (rows.first['wallet_deducted'] as num?)?.toDouble() ?? 0;
+      if (walletId != null && deducted > 0) {
+        final wallets =
+            await db.query('wallets', where: 'id = ?', whereArgs: [walletId]);
+        if (wallets.isNotEmpty) {
+          final currentBalance = (wallets.first['balance'] as num).toDouble();
+          final itemName = rows.first['item_name'] as String? ?? 'expense';
+          await setWalletBalance(walletId, currentBalance + deducted,
+              reason: 'Expense deleted: $itemName', source: 'delete_reversal');
+        }
+      }
+    }
     await db.delete('expenses', where: 'id = ?', whereArgs: [id]);
     CloudService.deleteDoc('expenses', id);
     fireEvent(AppEvent.expenseChanged);
+  }
+
+  /// Records that [expenseId] caused a deduction of [deductedAmount] from
+  /// [walletId].  Stored in the new wallet_id / wallet_deducted columns so
+  /// deleteExpense() can reverse the deduction automatically.
+  static Future<void> linkExpenseToWallet(
+      int expenseId, int walletId, double deductedAmount) async {
+    final db = await getDB();
+    await db.update(
+        'expenses', {'wallet_id': walletId, 'wallet_deducted': deductedAmount},
+        where: 'id = ?', whereArgs: [expenseId]);
   }
 
   static Future<List<Expense>> getExpenses({String? month}) async {
