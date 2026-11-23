@@ -15,6 +15,7 @@ import '../services/event_bus.dart';
 import '../widgets/expense_tile.dart';
 import '../widgets/info_button.dart';
 import '../services/sms_parser_service.dart';
+import '../services/undo_service.dart';
 import 'edit_expense_screen.dart';
 import 'add_expense_screen.dart';
 
@@ -882,7 +883,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       context: context,
       builder: (_) => AlertDialog(
         title: Text("Delete ${_selected.length} transactions?"),
-        content: const Text("This cannot be undone."),
+        content: const Text("This can be undone within 60 seconds."),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -897,11 +898,50 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
     );
     if (confirm != true) return;
-    for (final id in _selected) {
+
+    // Collect full expense maps before deleting so undo can restore them
+    final selectedIds = List<int>.from(_selected);
+    final expenseMaps = _all
+        .where((e) => e.id != null && selectedIds.contains(e.id))
+        .map((e) => e.toMap())
+        .toList();
+
+    for (final id in selectedIds) {
       await DBService.deleteExpense(id);
     }
+
+    // Record batch undo action
+    UndoService.record(UndoableAction(
+      type: 'delete_expense_batch',
+      snapshot: {'expenses': expenseMaps},
+    ));
+
     setState(() => _selected.clear());
     _load();
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Deleted ${expenseMaps.length} transaction(s)'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 5),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () async {
+            final ok = await UndoService.undo();
+            if (mounted) {
+              _load();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(ok
+                    ? 'Restored ${expenseMaps.length} transaction(s)'
+                    : 'Undo window expired'),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+              ));
+            }
+          },
+        ),
+      ));
+    }
   }
 
   Future<void> _scanSms() async {

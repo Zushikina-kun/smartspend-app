@@ -18,6 +18,7 @@ import '../services/predict_service.dart';
 import '../services/llm_service.dart';
 import '../services/event_bus.dart';
 import '../services/currency_service.dart';
+import '../services/export_service.dart';
 import '../services/score_service.dart';
 import '../services/behavioral_feedback_service.dart';
 import '../widgets/peso_mascot.dart';
@@ -708,6 +709,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             tooltip: _showAdvancedCharts ? "Hide details" : "Show more charts",
             onPressed: () =>
                 setState(() => _showAdvancedCharts = !_showAdvancedCharts),
+          ),
+          IconButton(
+            icon: const Icon(Icons.download_outlined),
+            tooltip: 'Export period summary to CSV',
+            onPressed: _expenses.isEmpty
+                ? null
+                : () async {
+                    try {
+                      await ExportService.exportSummaryToCSV();
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Export failed: $e')));
+                      }
+                    }
+                  },
           ),
           const InfoButton(
             title: "Analytics",
@@ -4153,7 +4170,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 ),
                                 TextButton.icon(
                                   icon: const Icon(Icons.refresh, size: 16),
-                                  label: Text(AppLocalizations.of(context)!.refresh),
+                                  label: Text(
+                                      AppLocalizations.of(context)!.refresh),
                                   onPressed: _loadingAdvice || _expenses.isEmpty
                                       ? null
                                       : _getAIAdvice,
@@ -4205,7 +4223,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         padding: const EdgeInsets.only(bottom: 4),
                         child: OutlinedButton.icon(
                           icon: const Icon(Icons.auto_awesome, size: 16),
-                          label: Text(AppLocalizations.of(context)!.getAiAdvice),
+                          label:
+                              Text(AppLocalizations.of(context)!.getAiAdvice),
                           onPressed: _expenses.isEmpty ? null : _getAIAdvice,
                           style: OutlinedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(

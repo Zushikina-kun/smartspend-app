@@ -58,6 +58,17 @@ class UndoService {
           fireEvent(AppEvent.expenseChanged);
           return true;
 
+        case 'delete_expense_batch':
+          final raw = action.snapshot['expenses'];
+          final maps = (raw is List)
+              ? raw.map((e) => Map<String, dynamic>.from(e as Map)).toList()
+              : <Map<String, dynamic>>[];
+          for (final map in maps) {
+            await DBService.insertExpense(map);
+          }
+          fireEvent(AppEvent.expenseChanged);
+          return true;
+
         case 'add_goal':
           final id = action.snapshot['id'] as int?;
           if (id != null) {

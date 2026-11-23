@@ -99,6 +99,204 @@ class _IncomeScreenState extends State<IncomeScreen> {
     }
   }
 
+  void _showEditDialog(Map<String, dynamic> existing) {
+    final titleCtrl =
+        TextEditingController(text: existing['title'] as String? ?? '');
+    final amountCtrl = TextEditingController(
+        text: (existing['amount'] as num).toStringAsFixed(2));
+    final originalAmount = (existing['amount'] as num).toDouble();
+    String category = existing['category'] as String? ?? _defaultCategory;
+    String date = existing['date'] as String? ??
+        DateTime.now().toIso8601String().substring(0, 10);
+    bool isWindfall = (existing['is_windfall'] as int? ?? 0) == 1;
+
+    final availableCategories = _accountType == 'student'
+        ? ['Allowance', 'Freelance', 'Side Job', 'Gift', 'Bonus', 'Others']
+        : _accountType == 'unemployed'
+            ? ['Gift', 'Rental', 'Investment', 'Others']
+            : _accountType == 'pensioner'
+                ? ['Pension', 'Investment', 'Rental', 'Gift', 'Others']
+                : _incomeCategories;
+
+    // Ensure current category is in the list
+    if (!availableCategories.contains(category)) {
+      category = availableCategories.first;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setSheet) => Padding(
+          padding: EdgeInsets.fromLTRB(
+              24, 20, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('Edit Income',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              TextField(
+                controller: titleCtrl,
+                decoration: InputDecoration(
+                  labelText: "Title",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: amountCtrl,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Amount",
+                  prefixText: "${CurrencyService.symbol} ",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                value: category,
+                decoration: InputDecoration(
+                  labelText: "Category",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                items: availableCategories
+                    .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                    .toList(),
+                onChanged: (v) => setSheet(() => category = v!),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.calendar_today, size: 16),
+                label: Text("Date: $date"),
+                onPressed: () async {
+                  final picked = await showDatePicker(
+                    context: ctx,
+                    initialDate: DateTime.tryParse(date) ?? DateTime.now(),
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime.now().add(const Duration(days: 1)),
+                  );
+                  if (picked != null) {
+                    setSheet(
+                        () => date = picked.toIso8601String().substring(0, 10));
+                  }
+                },
+              ),
+              const SizedBox(height: 12),
+              InkWell(
+                onTap: () => setSheet(() => isWindfall = !isWindfall),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: isWindfall
+                        ? Colors.amber.withValues(alpha: 0.1)
+                        : Theme.of(ctx)
+                            .colorScheme
+                            .surfaceContainerHighest
+                            .withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isWindfall
+                          ? Colors.amber.withValues(alpha: 0.5)
+                          : Colors.transparent,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isWindfall
+                            ? Icons.star_rounded
+                            : Icons.star_outline_rounded,
+                        color: isWindfall ? Colors.amber : Colors.grey,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          isWindfall ? "Windfall income" : "Mark as windfall?",
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: isWindfall ? Colors.amber[800] : null,
+                          ),
+                        ),
+                      ),
+                      Switch(
+                        value: isWindfall,
+                        onChanged: (v) => setSheet(() => isWindfall = v),
+                        activeThumbColor: Colors.amber,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  final title = titleCtrl.text.trim();
+                  final newAmount = double.tryParse(amountCtrl.text);
+                  if (title.isEmpty || newAmount == null || newAmount <= 0)
+                    return;
+
+                  // Show confirmation with changed amount if it differs
+                  if (newAmount != originalAmount) {
+                    final diff = newAmount - originalAmount;
+                    final diffStr =
+                        '${diff >= 0 ? '+' : ''}${CurrencyService.format(diff.abs())}';
+                    final confirmed = await showDialog<bool>(
+                      context: ctx,
+                      builder: (d) => AlertDialog(
+                        title: const Text('Confirm Change'),
+                        content: Text(
+                            'Amount changes from ${CurrencyService.format(originalAmount)} to ${CurrencyService.format(newAmount)} ($diffStr).'),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Navigator.pop(d, false),
+                              child: const Text('Cancel')),
+                          FilledButton(
+                              onPressed: () => Navigator.pop(d, true),
+                              child: const Text('Save')),
+                        ],
+                      ),
+                    );
+                    if (confirmed != true) return;
+                  }
+
+                  await DBService.updateIncome({
+                    ...existing,
+                    'title': title,
+                    'amount': newAmount,
+                    'category': category,
+                    'date': date,
+                    'is_windfall': isWindfall ? 1 : 0,
+                  });
+                  if (ctx.mounted) Navigator.pop(ctx);
+                  _load();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Save Changes'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   void _showAddDialog() {
     final titleCtrl = TextEditingController();
     final amountCtrl = TextEditingController();
@@ -590,6 +788,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                                 subtitle: Text(
                                     "${item['category']}  •  $dateStr",
                                     style: const TextStyle(fontSize: 12)),
+                                onLongPress: () => _showEditDialog(item),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [

@@ -2146,6 +2146,15 @@ class DBService {
     fireEvent(AppEvent.incomeChanged);
   }
 
+  static Future<void> updateIncome(Map<String, dynamic> income) async {
+    final db = await getDB();
+    final id = income['id'] as int;
+    final data = Map<String, dynamic>.from(income)..remove('id');
+    await db.update('income', data, where: 'id = ?', whereArgs: [id]);
+    CloudService.pushDoc('income', income);
+    fireEvent(AppEvent.incomeChanged);
+  }
+
   static Future<List<Map<String, dynamic>>> getIncome({String? month}) async {
     final db = await getDB();
     if (month != null) {
