@@ -29,6 +29,7 @@ import '../services/undo_service.dart';
 import '../services/category_service.dart';
 import '../services/behavioral_feedback_service.dart';
 import 'package:file_picker/file_picker.dart';
+import 'phone_otp_screen.dart';
 import 'login_screen.dart';
 import 'about_screen.dart';
 import 'feedback_screen.dart';
@@ -2972,14 +2973,51 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> _save() async {
-    setState(() => _saving = true);
+    final newPhone = _phone.text.trim().isEmpty ? null : _phone.text.trim();
+    final oldPhone = widget.profile.phone;
+    final phoneChanged = newPhone != null && newPhone != oldPhone;
+
+    if (phoneChanged) {
+      // Phone changed — verify via SMS OTP before saving
+      final result = await Navigator.push<PhoneOtpResult>(
+        context,
+        MaterialPageRoute(
+            builder: (_) => PhoneOtpScreen(phoneNumber: newPhone)),
+      );
+      if (result == null) {
+        // User cancelled OTP screen
+        return;
+      }
+      // Link phone credential to Firebase Auth and fall through to save
+      setState(() => _saving = true);
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await user.updatePhoneNumber(result.credential);
+        }
+      } on FirebaseAuthException catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text('Could not link phone to account: ${e.message ?? e.code}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ));
+        }
+        setState(() => _saving = false);
+        return;
+      }
+    } else {
+      setState(() => _saving = true);
+    }
+
     final updated = widget.profile.copyWith(
       firstName: _firstName.text.trim(),
       lastName: _lastName.text.trim(),
       middleName: _middleName.text.trim(),
       email: _email.text.trim(),
       address: _address.text.trim(),
-      phone: _phone.text.trim().isEmpty ? null : _phone.text.trim(),
+      phone: newPhone,
       birthdate: _birthdateIso.isNotEmpty ? _birthdateIso : null,
       photoUrl: _photoPath,
     );
