@@ -72,16 +72,19 @@ class ExportService {
   }
 
   /// Generates a summary CSV grouped by Month + Category and shares it.
-  static Future<void> exportSummaryToCSV() async {
+  ///
+  /// Pass [expenses] to export a pre-filtered list (e.g. the current period
+  /// shown on-screen). When omitted, all expenses are fetched and exported.
+  static Future<void> exportSummaryToCSV({List<Expense>? expenses}) async {
     final now = DateTime.now();
     final fileFmt = DateFormat('yyyyMMdd_HHmmss');
     final displayFmt = DateFormat('MMM d, y HH:mm');
 
-    final expenses = await DBService.getExpenses();
+    final resolvedExpenses = expenses ?? await DBService.getExpenses();
 
     // Group by "yyyy-MM" (taken from stored date string) + category
     final Map<String, Map<String, _SummaryEntry>> grouped = {};
-    for (final e in expenses) {
+    for (final e in resolvedExpenses) {
       final month = e.date.length >= 7 ? e.date.substring(0, 7) : e.date;
       grouped.putIfAbsent(month, () => {});
       final entry = grouped[month]!.putIfAbsent(

@@ -717,7 +717,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ? null
                 : () async {
                     try {
-                      await ExportService.exportSummaryToCSV();
+                      await ExportService.exportSummaryToCSV(
+                          expenses: _expenses);
                     } catch (e) {
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
