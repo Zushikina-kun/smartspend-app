@@ -79,10 +79,14 @@ class _TaxScreenState extends State<TaxScreen>
     setState(() => _loadingFilings = true);
     try {
       final rows = await DBService.getTaxFilings();
+      // Key on "YYYY-MM-DD|period_label" so that two different forms sharing
+      // the same calendar date (e.g. Q1 2551Q and Annual ITR on Apr 15) are
+      // tracked independently.
       final Map<String, bool> filed = {};
       for (final row in rows) {
         final dl = row['deadline_date'] as String?;
-        if (dl != null) filed[dl] = true;
+        final label = row['period_label'] as String?;
+        if (dl != null && label != null) filed['$dl|$label'] = true;
       }
       if (mounted) {
         setState(() {
@@ -289,7 +293,10 @@ class _TaxScreenState extends State<TaxScreen>
     final date = deadline['date'] as DateTime;
     final daysAway = deadline['daysAway'] as int;
     final dateKey = date.toIso8601String().substring(0, 10);
-    final isFiled = _filedDeadlines[dateKey] == true;
+    // Key on composite "YYYY-MM-DD|period_label" to avoid cross-marking
+    // different forms that share the same calendar date (e.g. Apr 15).
+    final filedKey = '$dateKey|$name';
+    final isFiled = _filedDeadlines[filedKey] == true;
 
     Color chipColor;
     Color cardBorderColor;
@@ -407,59 +414,13 @@ class _TaxScreenState extends State<TaxScreen>
 
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Mark as Filed'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              Text('Deadline: ${_formatDate(deadline)}',
-                  style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
-              const SizedBox(height: 16),
-              TextField(
-                controller: amountCtrl,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  labelText: 'Amount Paid (₱)',
-                  border: OutlineInputBorder(),
-                  prefixText: '₱ ',
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: refCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Reference Number (optional)',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: notesCtrl,
-                maxLines: 2,
-                decoration: const InputDecoration(
-                  labelText: 'Notes (optional)',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepOrange,
-                foregroundColor: Colors.white),
-            child: const Text('Confirm'),
-          ),
-        ],
+      builder: (ctx) => _MarkAsFiledDialog(
+        name: name,
+        deadline: deadline,
+        amountCtrl: amountCtrl,
+        refCtrl: refCtrl,
+        notesCtrl: notesCtrl,
+        formatDate: _formatDate,
       ),
     );
 
@@ -980,5 +941,113 @@ class _TaxScreenState extends State<TaxScreen>
       'December',
     ];
     return '${months[date.month]} ${date.day}, ${date.year}';
+  }
+}
+
+// ─── Mark as Filed dialog — stateful so Confirm can be enabled/disabled ──────
+
+class _MarkAsFiledDialog extends StatefulWidget {
+  final String name;
+  final DateTime deadline;
+  final TextEditingController amountCtrl;
+  final TextEditingController refCtrl;
+  final TextEditingController notesCtrl;
+  final String Function(DateTime) formatDate;
+
+  const _MarkAsFiledDialog({
+    required this.name,
+    required this.deadline,
+    required this.amountCtrl,
+    required this.refCtrl,
+    required this.notesCtrl,
+    required this.formatDate,
+  });
+
+  @override
+  State<_MarkAsFiledDialog> createState() => _MarkAsFiledDialogState();
+}
+
+class _MarkAsFiledDialogState extends State<_MarkAsFiledDialog> {
+  bool _canConfirm = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.amountCtrl.addListener(_onAmountChanged);
+  }
+
+  void _onAmountChanged() {
+    final raw = widget.amountCtrl.text.replaceAll(RegExp(r'[^0-9.]'), '');
+    final value = double.tryParse(raw);
+    final valid = value != null && value > 0;
+    if (valid != _canConfirm) setState(() => _canConfirm = valid);
+  }
+
+  @override
+  void dispose() {
+    widget.amountCtrl.removeListener(_onAmountChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Mark as Filed'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(widget.name,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text('Deadline: ${widget.formatDate(widget.deadline)}',
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+            const SizedBox(height: 16),
+            TextField(
+              controller: widget.amountCtrl,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                labelText: 'Amount Paid (₱)',
+                border: const OutlineInputBorder(),
+                prefixText: '₱ ',
+                errorText: widget.amountCtrl.text.isNotEmpty && !_canConfirm
+                    ? 'Enter a positive amount'
+                    : null,
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: widget.refCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Reference Number (optional)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: widget.notesCtrl,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: 'Notes (optional)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel')),
+        ElevatedButton(
+          onPressed: _canConfirm ? () => Navigator.pop(context, true) : null,
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepOrange,
+              foregroundColor: Colors.white),
+          child: const Text('Confirm'),
+        ),
+      ],
+    );
   }
 }

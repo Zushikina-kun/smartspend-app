@@ -871,24 +871,33 @@ class DBService {
       ''');
     } catch (_) {}
     // Ensure tax_filings table -- records of filed BIR returns
+    // Key is composite (deadline_date, period_label) so that two distinct BIR
+    // forms that share a calendar date (e.g. Q1 2551Q and Annual ITR, both
+    // Apr 15) each keep their own row without overwriting each other.
     try {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS tax_filings(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          period_label TEXT,
-          deadline_date TEXT UNIQUE,
+          period_label TEXT NOT NULL,
+          deadline_date TEXT NOT NULL,
           filed_date TEXT,
           amount_paid REAL,
           reference_number TEXT,
-          notes TEXT
+          notes TEXT,
+          UNIQUE(deadline_date, period_label)
         )
       ''');
     } catch (_) {}
-    // Ensure unique index on deadline_date for existing DBs that lack the constraint
+    // Drop the old date-only unique index that caused same-date collisions and
+    // replace it with the composite one.  Both operations are wrapped in try/catch
+    // so they are no-ops when the index does not exist or already has the right form.
+    try {
+      await db.execute('DROP INDEX IF EXISTS idx_tax_filings_deadline');
+    } catch (_) {}
     try {
       await db.execute('''
-        CREATE UNIQUE INDEX IF NOT EXISTS idx_tax_filings_deadline
-        ON tax_filings(deadline_date)
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_tax_filings_date_label
+        ON tax_filings(deadline_date, period_label)
       ''');
     } catch (_) {}
   }
@@ -1138,12 +1147,13 @@ class DBService {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS tax_filings(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        period_label TEXT,
-        deadline_date TEXT UNIQUE,
+        period_label TEXT NOT NULL,
+        deadline_date TEXT NOT NULL,
         filed_date TEXT,
         amount_paid REAL,
         reference_number TEXT,
-        notes TEXT
+        notes TEXT,
+        UNIQUE(deadline_date, period_label)
       )
     ''');
   }
@@ -4057,6 +4067,10 @@ class DBService {
   // -- TAX FILINGS --
   static Future<int> insertTaxFiling(Map<String, dynamic> data) async {
     final db = await getDB();
+    // The UNIQUE constraint is on (deadline_date, period_label).
+    // ConflictAlgorithm.replace updates the row when the same form on the same
+    // date is re-filed, while different forms that share a calendar date each
+    // keep their own row.
     return db.insert('tax_filings', data,
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
