@@ -195,6 +195,151 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
     );
   }
 
+  /// G-3: Adjust goal balance with +/- delta and confirmation dialog.
+  void _showAdjustBalanceDialog(Map<String, dynamic> goal) {
+    final deltaCtrl = TextEditingController();
+    bool isAdd = true;
+
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setDlg) => AlertDialog(
+          title: Text("Adjust Balance — ${goal['name']}"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Current balance: ${CurrencyService.format((goal['current_amount'] as num).toDouble())}",
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setDlg(() => isAdd = true),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: isAdd
+                              ? Colors.green.withValues(alpha: 0.15)
+                              : Colors.grey.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: isAdd
+                                ? Colors.green.withValues(alpha: 0.5)
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add, color: Colors.green, size: 18),
+                            SizedBox(width: 4),
+                            Text("Add",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setDlg(() => isAdd = false),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: !isAdd
+                              ? Colors.orange.withValues(alpha: 0.15)
+                              : Colors.grey.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: !isAdd
+                                ? Colors.orange.withValues(alpha: 0.5)
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.remove, color: Colors.orange, size: 18),
+                            SizedBox(width: 4),
+                            Text("Withdraw",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: deltaCtrl,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: "Amount",
+                  prefixText: "${CurrencyService.symbol} ",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final delta = double.tryParse(deltaCtrl.text);
+                if (delta == null || delta <= 0) return;
+                final oldAmount = (goal['current_amount'] as num).toDouble();
+                final target = (goal['target_amount'] as num).toDouble();
+                final newAmount = isAdd
+                    ? (oldAmount + delta).clamp(0.0, target)
+                    : (oldAmount - delta).clamp(0.0, target);
+                final action = isAdd
+                    ? "Add ${CurrencyService.symbol}${delta.toStringAsFixed(0)} to this goal?"
+                    : "Withdraw ${CurrencyService.symbol}${delta.toStringAsFixed(0)} from this goal?";
+                // Confirmation dialog
+                if (!ctx.mounted) return;
+                final confirm = await showDialog<bool>(
+                  context: ctx,
+                  builder: (c2) => AlertDialog(
+                    title: const Text("Confirm Adjustment"),
+                    content: Text(action),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(c2, false),
+                          child: const Text("Cancel")),
+                      ElevatedButton(
+                          onPressed: () => Navigator.pop(c2, true),
+                          child: const Text("Confirm")),
+                    ],
+                  ),
+                );
+                if (confirm != true) return;
+                await DBService.updateGoal(
+                    {...goal, 'current_amount': newAmount},
+                    source: isAdd ? 'manual' : 'withdrawal');
+                if (ctx.mounted) Navigator.pop(ctx);
+                _load();
+                await _checkGoalMilestone(newAmount, target,
+                    goal['name'] as String, goal['id'] as int);
+              },
+              child: const Text("Apply"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showAddDialog({Map<String, dynamic>? existing}) {
     final nameCtrl = TextEditingController(text: existing?['name'] ?? '');
     final purposeCtrl = TextEditingController(text: existing?['purpose'] ?? '');
@@ -262,20 +407,47 @@ class _SavingsGoalsScreenState extends State<SavingsGoalsScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
+                  // G-3: "Already Saved" is read-only when editing; use Adjust Balance for changes
                   Expanded(
                     child: TextField(
                       controller: savedCtrl,
                       keyboardType: TextInputType.number,
+                      readOnly: existing != null,
                       decoration: InputDecoration(
                         labelText: "Already Saved",
                         prefixText: "${CurrencyService.symbol} ",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12)),
+                        filled: existing != null,
+                        fillColor: existing != null
+                            ? Colors.grey.withValues(alpha: 0.08)
+                            : null,
+                        helperText: existing != null ? "Use ± to adjust" : null,
+                        helperStyle: existing != null
+                            ? const TextStyle(fontSize: 10)
+                            : null,
                       ),
                     ),
                   ),
                 ],
               ),
+              // G-3: Adjust Balance shortcut when editing
+              if (existing != null) ...[
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.tune, size: 16),
+                  label: const Text("Adjust Balance (+ / −)",
+                      style: TextStyle(fontSize: 13)),
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    _showAdjustBalanceDialog(existing);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ),
+              ],
               const SizedBox(height: 12),
               Row(
                 children: [

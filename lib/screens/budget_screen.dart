@@ -24,6 +24,7 @@ class BudgetScreen extends StatefulWidget {
 class _BudgetScreenState extends State<BudgetScreen> {
   List<Budget> _budgets = [];
   Map<String, double> _spent = {};
+  Map<String, double> _rolloverCredits = {};
   bool _loading = true;
   double _monthlyIncome = 0;
   List<String> _categories = CategoryService.builtIn;
@@ -40,6 +41,19 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   Future<void> _loadData() async {
+    // B-3: Apply monthly rollover on month boundary
+    final appliedMonth =
+        await DBService.getSetting('rollover_applied_month') ?? '';
+    if (appliedMonth != _currentMonth) {
+      // Compute previous calendar month string (e.g. '2025-01')
+      final now = DateTime.now();
+      final prevMonthDate = DateTime(now.year, now.month - 1, 1);
+      final previousMonth =
+          '${prevMonthDate.year}-${prevMonthDate.month.toString().padLeft(2, '0')}';
+      await DBService.applyMonthlyRollover(previousMonth);
+      await DBService.setSetting('rollover_applied_month', _currentMonth);
+    }
+
     final budgets = await DBService.getBudgets();
     final expenses = await DBService.getExpenses(month: _currentMonth);
     final income = await DBService.getMonthlyIncome();
@@ -90,9 +104,17 @@ class _BudgetScreenState extends State<BudgetScreen> {
       suggestions = Map.fromEntries(sorted.take(5));
     }
 
+    // Load rollover credits for all budgets
+    final rolloverCredits = <String, double>{};
+    for (final b in budgets) {
+      final credit = await DBService.getBudgetRolloverCredit(b.category);
+      if (credit > 0) rolloverCredits[b.category] = credit;
+    }
+
     setState(() {
       _budgets = budgets;
       _spent = spent;
+      _rolloverCredits = rolloverCredits;
       _monthlyIncome = income;
       _categories = cats;
       _suggestedAmounts = suggestions;
@@ -716,6 +738,32 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                           ],
                                         ),
                                         const SizedBox(height: 8),
+                                        // B-3: Rollover credit note
+                                        if ((_rolloverCredits[b.category] ??
+                                                0) >
+                                            0)
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 6),
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                    Icons
+                                                        .arrow_circle_right_outlined,
+                                                    size: 13,
+                                                    color: Colors.green),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  "₱${CurrencyService.format(_rolloverCredits[b.category]!)} rollover credit applied",
+                                                  style: const TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.green,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(6),
