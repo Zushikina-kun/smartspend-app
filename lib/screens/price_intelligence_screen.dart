@@ -23,7 +23,8 @@ class _PriceIntelligenceScreenState extends State<PriceIntelligenceScreen> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)!.priceIntelligenceScreenTitle),
+          title:
+              Text(AppLocalizations.of(context)!.priceIntelligenceScreenTitle),
           bottom: const TabBar(
             isScrollable: true,
             tabs: [
@@ -136,6 +137,113 @@ class _ProductsTabState extends State<_ProductsTab> {
     return const Icon(Icons.sell_outlined, size: 22, color: Colors.grey);
   }
 
+  /// Show a bottom sheet with the price trend chart for [productName].
+  void _showTrendSheet(
+      BuildContext context, String productName, List<PriceData> prices) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (_) =>
+          _PriceTrendSheet(productName: productName, prices: prices),
+    );
+  }
+
+  /// Show a dialog to manually add a price entry.
+  void _showAddPriceDialog(BuildContext context) {
+    final productCtrl = TextEditingController();
+    final storeCtrl = TextEditingController();
+    final priceCtrl = TextEditingController();
+    DateTime selectedDate = DateTime.now();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx2, setDlg) => AlertDialog(
+          title: const Text('Add Price'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: productCtrl,
+                  decoration: InputDecoration(
+                    labelText: 'Product name',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: storeCtrl,
+                  decoration: InputDecoration(
+                    labelText: 'Store (optional)',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: priceCtrl,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'Price',
+                    prefixText: '₱ ',
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.calendar_today, size: 16),
+                  label: Text(DateFormat('MMM d, y').format(selectedDate)),
+                  onPressed: () async {
+                    final picked = await showDatePicker(
+                      context: ctx2,
+                      initialDate: selectedDate,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime.now(),
+                    );
+                    if (picked != null) {
+                      setDlg(() => selectedDate = picked);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx2),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final product = productCtrl.text.trim();
+                final price = double.tryParse(priceCtrl.text);
+                if (product.isEmpty || price == null || price <= 0) return;
+                await PriceIntelligenceService.addPriceFromReceipt(
+                  productName: product,
+                  storeName: storeCtrl.text.trim().isEmpty
+                      ? null
+                      : storeCtrl.text.trim(),
+                  price: price,
+                  date: selectedDate,
+                  expenseId: null,
+                );
+                if (ctx2.mounted) Navigator.pop(ctx2);
+                _loadData();
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -145,152 +253,361 @@ class _ProductsTabState extends State<_ProductsTab> {
     final grouped = _groupByProduct();
 
     if (grouped.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.price_check, size: 64, color: Colors.grey),
-            SizedBox(height: 12),
-            Text('No price data yet.',
-                style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 6),
-            Text('Scan receipts to start tracking prices.',
-                style: TextStyle(fontSize: 13, color: Colors.grey)),
-          ],
+      return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'fab_add_price_empty',
+          onPressed: () => _showAddPriceDialog(context),
+          child: const Icon(Icons.add),
+        ),
+        body: const Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.price_check, size: 64, color: Colors.grey),
+              SizedBox(height: 12),
+              Text('No price data yet.',
+                  style: TextStyle(fontSize: 16, color: Colors.grey)),
+              SizedBox(height: 6),
+              Text('Scan receipts or tap + to start tracking prices.',
+                  style: TextStyle(fontSize: 13, color: Colors.grey)),
+            ],
+          ),
         ),
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: _loadData,
-      child: ListView(
-        padding: const EdgeInsets.all(12),
-        children: [
-          // ── Best Deal Card ──────────────────────────────────────────────
-          if (_overallBestDeal != null) ...[
-            Card(
-              color: Colors.green.shade50,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)),
-              child: ListTile(
-                leading: const Text('🏆', style: TextStyle(fontSize: 28)),
-                title: const Text('Best Deal',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                subtitle: Text(
-                  _titleCase(_overallBestDeal!['productName'] as String),
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w600),
-                ),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '₱${(_overallBestDeal!['price'] as double).toStringAsFixed(2)}',
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          heroTag: 'fab_add_price',
+          onPressed: () => _showAddPriceDialog(context),
+          child: const Icon(Icons.add),
+        ),
+        body: RefreshIndicator(
+          onRefresh: _loadData,
+          child: ListView(
+            padding: const EdgeInsets.all(12),
+            children: [
+              // ── Best Deal Card ──────────────────────────────────────────────
+              if (_overallBestDeal != null) ...[
+                Card(
+                  color: Colors.green.shade50,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  child: ListTile(
+                    leading: const Text('🏆', style: TextStyle(fontSize: 28)),
+                    title: const Text('Best Deal',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 13)),
+                    subtitle: Text(
+                      _titleCase(_overallBestDeal!['productName'] as String),
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: Colors.green),
+                          fontSize: 15, fontWeight: FontWeight.w600),
                     ),
-                    Text(
-                      _overallBestDeal!['storeName'] as String,
-                      style: const TextStyle(fontSize: 11, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-
-          // ── Trend Alerts Banner ─────────────────────────────────────────
-          if (_trendAlerts.isNotEmpty) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.amber.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.amber.shade300),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.warning_amber_rounded,
-                      color: Colors.orange, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text('Price Rise Alert',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13)),
-                        const SizedBox(height: 4),
                         Text(
-                          'These products are >10% above their 30-day avg: '
-                          '${_trendAlerts.map((a) => _titleCase(a['productName'] as String)).join(', ')}',
-                          style: const TextStyle(fontSize: 12),
+                          '₱${(_overallBestDeal!['price'] as double).toStringAsFixed(2)}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.green),
+                        ),
+                        Text(
+                          _overallBestDeal!['storeName'] as String,
+                          style:
+                              const TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
+                const SizedBox(height: 8),
+              ],
+
+              // ── Trend Alerts Banner ─────────────────────────────────────────
+              if (_trendAlerts.isNotEmpty) ...[
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.amber.shade300),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.warning_amber_rounded,
+                          color: Colors.orange, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Price Rise Alert',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 13)),
+                            const SizedBox(height: 4),
+                            Text(
+                              'These products are >10% above their 30-day avg: '
+                              '${_trendAlerts.map((a) => _titleCase(a['productName'] as String)).join(', ')}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+
+              // ── Product List ────────────────────────────────────────────────
+              ...grouped.entries.map((entry) {
+                final prices = entry.value
+                  ..sort((a, b) => b.date.compareTo(a.date));
+                final latest = prices.first;
+                final stores =
+                    prices.map((p) => p.storeName).whereType<String>().toSet();
+
+                // Check if cheapest store differs from latest store (best deal chip)
+                final sortedByPrice = List<PriceData>.from(prices)
+                  ..sort((a, b) => a.price.compareTo(b.price));
+                final cheapestStore =
+                    sortedByPrice.first.storeName ?? 'Unknown';
+                final showBestDeal = stores.length > 1;
+
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: ListTile(
+                    leading: _trendIcon(prices),
+                    title: Text(_titleCase(entry.key),
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600)),
+                    subtitle: Text(
+                      'Latest: ₱${latest.price.toStringAsFixed(2)}'
+                      '${latest.storeName != null ? ' · ${latest.storeName}' : ''}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    trailing: showBestDeal
+                        ? Chip(
+                            label: Text(cheapestStore,
+                                style: const TextStyle(fontSize: 10)),
+                            backgroundColor: Colors.green.shade50,
+                            side: BorderSide(color: Colors.green.shade200),
+                            padding: EdgeInsets.zero,
+                            labelPadding:
+                                const EdgeInsets.symmetric(horizontal: 6),
+                          )
+                        : null,
+                    onTap: () => _showTrendSheet(context, entry.key, prices),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ));
+  }
+}
+
+// ── PRICE TREND BOTTOM SHEET ──────────────────────────────────────────────────
+
+class _PriceTrendSheet extends StatefulWidget {
+  const _PriceTrendSheet({required this.productName, required this.prices});
+
+  final String productName;
+  final List<PriceData> prices;
+
+  @override
+  State<_PriceTrendSheet> createState() => _PriceTrendSheetState();
+}
+
+class _PriceTrendSheetState extends State<_PriceTrendSheet> {
+  List<PriceData> _history = [];
+  bool _loading = true;
+  int _touchedIndex = -1;
+
+  String _titleCase(String s) => s
+      .split(' ')
+      .map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1)}')
+      .join(' ');
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final trend =
+        await PriceIntelligenceService.getPriceTrend(widget.productName);
+    if (mounted) {
+      setState(() {
+        _history = trend;
+        _loading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  _titleCase(widget.productName),
+                  style: const TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          if (_loading)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (_history.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: Center(
+                  child: Text('No trend data yet.',
+                      style: TextStyle(color: Colors.grey))),
+            )
+          else ...[
+            SizedBox(
+              height: 200,
+              child: _buildChart(),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              '${_history.length} price record${_history.length == 1 ? '' : 's'} · '
+              'Latest: ₱${_history.last.price.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChart() {
+    final spots = <FlSpot>[];
+    for (int i = 0; i < _history.length; i++) {
+      spots.add(FlSpot(i.toDouble(), _history[i].price));
+    }
+    final minY = _history.map((h) => h.price).reduce((a, b) => a < b ? a : b);
+    final maxY = _history.map((h) => h.price).reduce((a, b) => a > b ? a : b);
+    final yPad = ((maxY - minY) * 0.15).clamp(1.0, double.infinity);
+
+    return LineChart(
+      LineChartData(
+        minY: minY - yPad,
+        maxY: maxY + yPad,
+        lineTouchData: LineTouchData(
+          touchCallback: (event, response) {
+            setState(() {
+              _touchedIndex = response?.lineBarSpots?.first.spotIndex ?? -1;
+            });
+          },
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipItems: (spots) => spots.map((s) {
+              final entry = _history[s.spotIndex];
+              return LineTooltipItem(
+                '₱${entry.price.toStringAsFixed(2)}'
+                '${entry.storeName != null ? '\n${entry.storeName}' : ''}',
+                const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600),
+              );
+            }).toList(),
+          ),
+        ),
+        titlesData: FlTitlesData(
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 28,
+              interval: (_history.length > 6
+                      ? (_history.length / 5).ceilToDouble()
+                      : 1)
+                  .toDouble(),
+              getTitlesWidget: (value, meta) {
+                final idx = value.toInt();
+                if (idx < 0 || idx >= _history.length) {
+                  return const SizedBox.shrink();
+                }
+                return Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    DateFormat('MM/dd').format(_history[idx].date),
+                    style: const TextStyle(fontSize: 9),
+                  ),
+                );
+              },
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 46,
+              getTitlesWidget: (value, meta) => Text(
+                '₱${value.toStringAsFixed(0)}',
+                style: const TextStyle(fontSize: 9),
               ),
             ),
-            const SizedBox(height: 8),
-          ],
-
-          // ── Product List ────────────────────────────────────────────────
-          ...grouped.entries.map((entry) {
-            final prices = entry.value
-              ..sort((a, b) => b.date.compareTo(a.date));
-            final latest = prices.first;
-            final stores =
-                prices.map((p) => p.storeName).whereType<String>().toSet();
-
-            // Check if cheapest store differs from latest store (best deal chip)
-            final sortedByPrice = List<PriceData>.from(prices)
-              ..sort((a, b) => a.price.compareTo(b.price));
-            final cheapestStore = sortedByPrice.first.storeName ?? 'Unknown';
-            final showBestDeal = stores.length > 1;
-
-            return Card(
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: ListTile(
-                leading: _trendIcon(prices),
-                title: Text(_titleCase(entry.key),
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600)),
-                subtitle: Text(
-                  'Latest: ₱${latest.price.toStringAsFixed(2)}'
-                  '${latest.storeName != null ? ' · ${latest.storeName}' : ''}',
-                  style: const TextStyle(fontSize: 12),
-                ),
-                trailing: showBestDeal
-                    ? Chip(
-                        label: Text(cheapestStore,
-                            style: const TextStyle(fontSize: 10)),
-                        backgroundColor: Colors.green.shade50,
-                        side: BorderSide(color: Colors.green.shade200),
-                        padding: EdgeInsets.zero,
-                        labelPadding: const EdgeInsets.symmetric(horizontal: 6),
-                      )
-                    : null,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          _PriceDetailScreen(productName: entry.key),
-                    ),
-                  );
-                },
-              ),
-            );
-          }),
+          ),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
+        gridData: FlGridData(
+          drawHorizontalLine: true,
+          drawVerticalLine: false,
+          getDrawingHorizontalLine: (_) =>
+              const FlLine(color: Color(0x1A000000), strokeWidth: 1),
+        ),
+        borderData: FlBorderData(show: false),
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            color: const Color(0xFF00C896),
+            barWidth: 2.5,
+            dotData: FlDotData(
+              show: true,
+              getDotPainter: (spot, pct, bar, index) {
+                final isActive = index == _touchedIndex;
+                return FlDotCirclePainter(
+                  radius: isActive ? 6 : 4,
+                  color: isActive ? Colors.orange : const Color(0xFF00C896),
+                  strokeWidth: 2,
+                  strokeColor: Colors.white,
+                );
+              },
+            ),
+            belowBarData: BarAreaData(
+              show: true,
+              color: const Color(0xFF00C896).withValues(alpha: 0.08),
+            ),
+          ),
         ],
       ),
     );

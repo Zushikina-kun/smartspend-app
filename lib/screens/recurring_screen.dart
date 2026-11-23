@@ -293,71 +293,77 @@ class _RecurringScreenState extends State<RecurringScreen> {
     }
   }
 
+  DateTime _advanceDate(DateTime current, String frequency) {
+    switch (frequency) {
+      case 'daily':
+        return current.add(const Duration(days: 1));
+      case 'weekly':
+        return current.add(const Duration(days: 7));
+      case 'yearly':
+        final targetYear = current.year + 1;
+        final lastDay = DateTime(targetYear, current.month + 1, 0).day;
+        return DateTime(
+            targetYear, current.month, current.day.clamp(1, lastDay));
+      default: // monthly
+        final nextMonth = current.month == 12 ? 1 : current.month + 1;
+        final nextYear = current.month == 12 ? current.year + 1 : current.year;
+        final lastDay = DateTime(nextYear, nextMonth + 1, 0).day;
+        return DateTime(nextYear, nextMonth, current.day.clamp(1, lastDay));
+    }
+  }
+
   Future<void> _logNow(Map<String, dynamic> item, {bool silent = false}) async {
     final isExpense = (item['is_expense'] as int) == 1;
     final now = DateTime.now();
+    int logCount = 0;
 
-    if (isExpense) {
-      await DBService.insertExpense({
-        'item_name': item['title'],
-        'category': item['category'],
-        'amount': item['amount'],
-        'date': now.toIso8601String().substring(0, 10),
-        'time': now.toIso8601String().substring(11, 16),
-        'payment_method': 'Cash',
-        'notes': 'Logged from recurring: ${item['title']}',
-        'ai_generated': 0,
-        'confidence_score': 1.0,
-      });
-    } else {
-      // Log recurring income as an income entry
-      await DBService.insertIncome({
-        'title': item['title'],
-        'amount': item['amount'],
-        'category': item['category'] == 'Bills' ? 'Salary' : item['category'],
-        'date': now.toIso8601String().substring(0, 10),
-        'is_recurring': 1,
-      });
-    }
-
-    // Advance next_date based on frequency
+    // R-3: Loop until next_date advances past today to handle multi-month
+    // catch-up (e.g. 3 months overdue → logs 3 payments).
     try {
-      final current = DateTime.parse(item['next_date'] as String);
-      DateTime next;
-      switch (item['frequency']) {
-        case 'daily':
-          next = current.add(const Duration(days: 1));
-          break;
-        case 'weekly':
-          next = current.add(const Duration(days: 7));
-          break;
-        case 'yearly':
-          // Safe year advance — clamp to last day of target month
-          final targetMonth = current.month;
-          final targetYear = current.year + 1;
-          final lastDay = DateTime(targetYear, targetMonth + 1, 0).day;
-          next =
-              DateTime(targetYear, targetMonth, current.day.clamp(1, lastDay));
-          break;
-        default: // monthly
-          // Safe month advance — clamp to last day of next month
-          final nextMonth = current.month == 12 ? 1 : current.month + 1;
-          final nextYear =
-              current.month == 12 ? current.year + 1 : current.year;
-          final lastDay = DateTime(nextYear, nextMonth + 1, 0).day;
-          next = DateTime(nextYear, nextMonth, current.day.clamp(1, lastDay));
+      DateTime current = DateTime.parse(item['next_date'] as String);
+
+      while (!current.isAfter(now)) {
+        final logDate = current.toIso8601String().substring(0, 10);
+        if (isExpense) {
+          await DBService.insertExpense({
+            'item_name': item['title'],
+            'category': item['category'],
+            'amount': item['amount'],
+            'date': logDate,
+            'time': now.toIso8601String().substring(11, 16),
+            'payment_method': 'Cash',
+            'notes': 'Logged from recurring: ${item['title']}',
+            'ai_generated': 0,
+            'confidence_score': 1.0,
+          });
+        } else {
+          await DBService.insertIncome({
+            'title': item['title'],
+            'amount': item['amount'],
+            'category':
+                item['category'] == 'Bills' ? 'Salary' : item['category'],
+            'date': logDate,
+            'is_recurring': 1,
+          });
+        }
+        logCount++;
+        current =
+            _advanceDate(current, item['frequency'] as String? ?? 'monthly');
       }
+
       await DBService.updateRecurring({
         ...item,
-        'next_date': next.toIso8601String().substring(0, 10),
+        'next_date': current.toIso8601String().substring(0, 10),
       });
     } catch (_) {}
 
     if (mounted && !silent) {
+      final label = logCount > 1
+          ? "Logged $logCount payments for ${item['title']}"
+          : "${item['title']} logged as ${isExpense ? 'expense' : 'income'}";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-              "${item['title']} logged as ${isExpense ? 'expense' : 'income'}"),
+          content: Text(label),
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.green,
         ),
@@ -662,7 +668,8 @@ class _RecurringScreenState extends State<RecurringScreen> {
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               icon: const Icon(Icons.add),
-                              label: Text(AppLocalizations.of(context)!.addRecurring),
+                              label: Text(
+                                  AppLocalizations.of(context)!.addRecurring),
                               onPressed: () => _showAddDialog(),
                             ),
                           ],
