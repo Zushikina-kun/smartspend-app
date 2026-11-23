@@ -42,12 +42,14 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
     final allEntries = await DBService.getNetWorthAssets();
     final manualAssets = allEntries.where((e) {
       final cat = (e['category'] as String).toLowerCase();
-      return cat != 'snapshot' && cat != 'liability' &&
+      return cat != 'snapshot' &&
+          cat != 'liability' &&
           !['loan', 'credit card', 'other liability'].contains(cat);
     }).toList();
     final manualLiabilities = allEntries.where((e) {
       final cat = (e['category'] as String).toLowerCase();
-      return ['loan', 'credit card', 'other liability', 'liability'].contains(cat);
+      return ['loan', 'credit card', 'other liability', 'liability']
+          .contains(cat);
     }).toList();
     final snapshots = allEntries
         .where((e) => (e['category'] as String).toLowerCase() == 'snapshot')
@@ -62,16 +64,36 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
     final debts = await DBService.getDebts();
     final debtsOwed = debts
         .where((d) => (d['type'] ?? 'owe') == 'owe')
-        .fold<double>(0, (s, d) => s + ((d['amount'] as num?) ?? 0).toDouble() - ((d['paid_amount'] as num?) ?? 0).toDouble());
+        .fold<double>(
+            0,
+            (s, d) =>
+                s +
+                ((d['amount'] as num?) ?? 0).toDouble() -
+                ((d['paid_amount'] as num?) ?? 0).toDouble());
 
     // Compute totals
-    final walletTotal = wallets.fold<double>(0, (s, w) => s + ((w['balance'] as num?) ?? 0).toDouble());
-    final goalTotal = goals.fold<double>(0, (s, g) => s + ((g['current_amount'] as num?) ?? 0).toDouble());
-    final manualAssetTotal = manualAssets.fold<double>(0, (s, e) => s + ((e['value'] as num?) ?? 0).toDouble());
+    final walletTotal = wallets.fold<double>(
+        0, (s, w) => s + ((w['balance'] as num?) ?? 0).toDouble());
+    final goalTotal = goals.fold<double>(
+        0, (s, g) => s + ((g['current_amount'] as num?) ?? 0).toDouble());
+    final manualAssetTotal = manualAssets.fold<double>(
+        0, (s, e) => s + ((e['value'] as num?) ?? 0).toDouble());
     final totalAssets = walletTotal + goalTotal + manualAssetTotal;
 
-    final manualLiabilityTotal = manualLiabilities.fold<double>(0, (s, e) => s + ((e['value'] as num?) ?? 0).toDouble());
-    final totalLiabilities = debtsOwed + manualLiabilityTotal;
+    final manualLiabilityTotal = manualLiabilities.fold<double>(
+        0, (s, e) => s + ((e['value'] as num?) ?? 0).toDouble());
+
+    // Include installment plan remaining balances as liabilities
+    final plans = await DBService.getInstallmentPlans();
+    final installmentLiabilities = plans.fold<double>(0, (s, p) {
+      final total = (p['months_total'] as num? ?? 0).toDouble();
+      final paid = (p['months_paid'] as num? ?? 0).toDouble();
+      final monthly = (p['monthly_payment'] as num? ?? 0).toDouble();
+      return s + ((total - paid) * monthly);
+    });
+
+    final totalLiabilities =
+        debtsOwed + manualLiabilityTotal + installmentLiabilities;
 
     // Monthly snapshot: save on 1st of month if not yet saved
     final today = DateTime.now();
@@ -110,8 +132,13 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
     final valueCtrl = TextEditingController();
     String selectedCategory = 'Property';
     final categories = [
-      'Property', 'Vehicle', 'Investment', 'Other Asset',
-      'Loan', 'Credit Card', 'Other Liability'
+      'Property',
+      'Vehicle',
+      'Investment',
+      'Other Asset',
+      'Loan',
+      'Credit Card',
+      'Other Liability'
     ];
     showDialog(
       context: context,
@@ -128,24 +155,31 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
               const SizedBox(height: 8),
               TextField(
                 controller: valueCtrl,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Value (₱)', prefixText: '₱'),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                    labelText: 'Value (₱)', prefixText: '₱'),
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 value: selectedCategory,
-                items: categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                items: categories
+                    .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                    .toList(),
                 onChanged: (v) => setS(() => selectedCategory = v!),
                 decoration: const InputDecoration(labelText: 'Category'),
               ),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+            TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Cancel')),
             ElevatedButton(
               onPressed: () async {
                 final name = nameCtrl.text.trim();
-                final value = double.tryParse(valueCtrl.text.replaceAll(',', ''));
+                final value =
+                    double.tryParse(valueCtrl.text.replaceAll(',', ''));
                 if (name.isEmpty || value == null) return;
                 await DBService.insertNetWorthAsset({
                   'name': name,
@@ -171,7 +205,8 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
     final netWorthColor = netWorth >= 0 ? Colors.green : Colors.red;
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.netWorthScreenTitle)),
+      appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.netWorthScreenTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
         child: const Icon(Icons.add),
@@ -206,8 +241,14 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              _SummaryChip(label: 'Assets', value: _totalAssets, color: Colors.green),
-                              _SummaryChip(label: 'Liabilities', value: _totalLiabilities, color: Colors.red),
+                              _SummaryChip(
+                                  label: 'Assets',
+                                  value: _totalAssets,
+                                  color: Colors.green),
+                              _SummaryChip(
+                                  label: 'Liabilities',
+                                  value: _totalLiabilities,
+                                  color: Colors.red),
                             ],
                           ),
                         ],
@@ -231,22 +272,30 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
                                 showTitles: true,
                                 getTitlesWidget: (v, _) {
                                   final idx = v.toInt();
-                                  if (idx < 0 || idx >= _snapshots.length) return const SizedBox();
+                                  if (idx < 0 || idx >= _snapshots.length)
+                                    return const SizedBox();
                                   final d = _snapshots[idx]['date'] as String;
-                                  return Text(d.substring(5, 7), style: const TextStyle(fontSize: 10));
+                                  return Text(d.substring(5, 7),
+                                      style: const TextStyle(fontSize: 10));
                                 },
                               ),
                             ),
-                            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            leftTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false)),
+                            topTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false)),
+                            rightTitles: const AxisTitles(
+                                sideTitles: SideTitles(showTitles: false)),
                           ),
                           borderData: FlBorderData(show: false),
                           lineBarsData: [
                             LineChartBarData(
-                              spots: _snapshots.asMap().entries.map((e) =>
-                                  FlSpot(e.key.toDouble(),
-                                      (e.value['value'] as num).toDouble())).toList(),
+                              spots: _snapshots
+                                  .asMap()
+                                  .entries
+                                  .map((e) => FlSpot(e.key.toDouble(),
+                                      (e.value['value'] as num).toDouble()))
+                                  .toList(),
                               isCurved: true,
                               color: cs.primary,
                               barWidth: 2,
@@ -259,7 +308,10 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
                     const SizedBox(height: 16),
                   ],
                   // ── Assets ──────────────────────────────────────────────
-                  _SectionHeader(title: 'Assets', total: _totalAssets, color: Colors.green),
+                  _SectionHeader(
+                      title: 'Assets',
+                      total: _totalAssets,
+                      color: Colors.green),
                   ..._wallets.map((w) => _EntryTile(
                         name: '${w['icon'] ?? '💵'} ${w['name']}',
                         subtitle: 'Wallet',
@@ -284,7 +336,10 @@ class _NetWorthScreenState extends State<NetWorthScreen> {
                       )),
                   const SizedBox(height: 16),
                   // ── Liabilities ─────────────────────────────────────────
-                  _SectionHeader(title: 'Liabilities', total: _totalLiabilities, color: Colors.red),
+                  _SectionHeader(
+                      title: 'Liabilities',
+                      total: _totalLiabilities,
+                      color: Colors.red),
                   if (_totalDebtsOwed > 0)
                     _EntryTile(
                       name: '💸 Debts Owed',
@@ -314,7 +369,8 @@ class _SummaryChip extends StatelessWidget {
   final String label;
   final double value;
   final Color color;
-  const _SummaryChip({required this.label, required this.value, required this.color});
+  const _SummaryChip(
+      {required this.label, required this.value, required this.color});
   @override
   Widget build(BuildContext context) {
     final fmt = NumberFormat('#,##0.00', 'en_PH');
@@ -332,7 +388,8 @@ class _SectionHeader extends StatelessWidget {
   final String title;
   final double total;
   final Color color;
-  const _SectionHeader({required this.title, required this.total, required this.color});
+  const _SectionHeader(
+      {required this.title, required this.total, required this.color});
   @override
   Widget build(BuildContext context) {
     final fmt = NumberFormat('#,##0.00', 'en_PH');
