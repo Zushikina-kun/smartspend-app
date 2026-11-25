@@ -11,7 +11,7 @@ import 'peso_activity_log.dart';
 
 /// App version — set dynamically from PackageInfo at startup via initAppVersion().
 /// Falls back to the pubspec version if PackageInfo is unavailable.
-String kAppVersion = '3.5.7';
+String kAppVersion = '3.5.8';
 
 /// Call this once during app startup (before any version checks).
 Future<void> initAppVersion() async {
