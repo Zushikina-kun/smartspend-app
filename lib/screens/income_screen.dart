@@ -330,7 +330,6 @@ class _IncomeScreenState extends State<IncomeScreen> {
               if (w.isNotEmpty) setSheet(() => wallets = w);
             });
           }
-
           return Padding(
             padding: EdgeInsets.fromLTRB(
                 24, 20, 24, MediaQuery.of(ctx).viewInsets.bottom + 24),
@@ -649,7 +648,11 @@ class _IncomeScreenState extends State<IncomeScreen> {
           );
         },
       ),
-    );
+    ).then((_) {
+      for (final a in allocations) {
+        (a['ctrl'] as TextEditingController).dispose();
+      }
+    });
   }
 
   @override

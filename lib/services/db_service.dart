@@ -502,7 +502,8 @@ class DBService {
           start_date TEXT NOT NULL,
           category TEXT DEFAULT 'Bills',
           notes TEXT,
-          created_at TEXT
+          created_at TEXT,
+          payment_schedule_json TEXT
         )
       ''');
     } catch (_) {}
@@ -916,7 +917,7 @@ class DBService {
       Database db, String table, String column, String type) async {
     try {
       await db.execute('ALTER TABLE $table ADD COLUMN $column $type');
-    } catch (_) {} // ignore: column already existsnal tests)
+    } catch (_) {} // ignore: column already exists
   }
 
   static Future<void> _createTables(Database db) async {
@@ -1360,6 +1361,8 @@ class DBService {
   }
 
   /// Restores a soft-deleted expense (sets deleted_at = NULL).
+  /// Re-applies wallet deduction and round-up contribution so that a
+  /// delete–restore cycle leaves financial state intact.
   /// Re-pushes to cloud so other devices regain the record.
   static Future<void> restoreExpense(int id) async {
     final db = await getDB();
@@ -1367,7 +1370,40 @@ class DBService {
         .rawUpdate("UPDATE expenses SET deleted_at = NULL WHERE id = ?", [id]);
     final rows =
         await db.query('expenses', where: 'id = ?', whereArgs: [id], limit: 1);
-    if (rows.isNotEmpty) CloudService.pushDoc('expenses', rows.first);
+    if (rows.isNotEmpty) {
+      // Re-apply wallet deduction
+      final walletId = rows.first['wallet_id'] as int?;
+      final deducted = (rows.first['wallet_deducted'] as num?)?.toDouble() ?? 0;
+      if (walletId != null && deducted > 0) {
+        final wallets =
+            await db.query('wallets', where: 'id = ?', whereArgs: [walletId]);
+        if (wallets.isNotEmpty) {
+          final currentBalance = (wallets.first['balance'] as num).toDouble();
+          final itemName = rows.first['item_name'] as String? ?? 'expense';
+          await setWalletBalance(walletId, currentBalance - deducted,
+              reason: 'Expense restored: $itemName', source: 'restore_redebit');
+        }
+      }
+      // Re-apply round-up contribution
+      try {
+        final goalId = rows.first['round_up_goal_id'] as int?;
+        final roundUpAmt =
+            (rows.first['round_up_amount'] as num?)?.toDouble() ?? 0.0;
+        if (goalId != null && roundUpAmt > 0) {
+          final goalRows = await db.query('savings_goals',
+              where: 'id = ?', whereArgs: [goalId], limit: 1);
+          if (goalRows.isNotEmpty) {
+            final currentAmt =
+                (goalRows.first['current_amount'] as num).toDouble();
+            final target = (goalRows.first['target_amount'] as num).toDouble();
+            final restoredAmt = (currentAmt + roundUpAmt).clamp(0.0, target);
+            await updateGoal({...goalRows.first, 'current_amount': restoredAmt},
+                source: 'restore_roundup');
+          }
+        }
+      } catch (_) {}
+      CloudService.pushDoc('expenses', rows.first);
+    }
     fireEvent(AppEvent.expenseChanged);
   }
 
