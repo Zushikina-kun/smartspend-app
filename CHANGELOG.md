@@ -2,6 +2,83 @@
 
 All notable changes to SmartSpend are documented here.
 
+## [3.5.8] - 2026-11-23
+
+### Added
+- **Email verification flow** (`EmailVerificationScreen`): after registration, users verify their email via Firebase link; unverified users see a dismissible banner on login.
+- **Phone OTP verification** (`PhoneOtpScreen`): Firebase SMS OTP when adding or changing phone number in Profile (uses `pinput` widget).
+- **Wallet integrity system**: every expense records `wallet_id` / `wallet_deducted`; deleting an expense auto-reverses its wallet deduction; editing an amount adjusts the wallet delta.
+- **Biometric / PIN gate on wallet balance edits**: sensitive operations (manual balance edit, snapshot restore) require biometric or PIN confirmation via `local_auth`.
+- **Wallet audit & recovery**: `last_verified_balance` column tracks last confirmed balance; divergence indicator (⚠️) appears when drift is detected; "Restore to snapshot" button in wallet history with filter chips (All / Manual / Auto-deduct / Transfers).
+- **Flexible installment payment schedules**: `payment_schedule_json` on `installment_plans` overrides `monthly_payment` per period; supports variable BNPL promo amounts (e.g. months 1–3 = ₱2,200, months 4–12 = ₱1,600).
+- **Installment payment ledger**: `installment_schedule` and `installment_payments` tables with overpayment credit carry-forward across multiple future periods.
+- **Taxpayer type selector** in Tax screen (non-VAT / VAT / professional / mixed-income) with correct BIR deadline sets per type.
+- **Tax filing history** (`tax_filings` table): "Mark as Filed" button on each deadline; records amount paid + reference number; History tab shows all past filings.
+- **Income wallet allocation**: income entries support splitting across multiple wallets (`wallet_allocations` JSON); wallets update on save.
+- **Income entry history log** (`income_entry_history` table): inserts and deletes are audited; history button in IncomeScreen.
+- **Round-up contribution reversal**: when an expense with a round-up contribution is deleted, the savings goal balance is automatically reversed.
+- **Budget rollover auto-applied**: `BudgetScreen._loadData()` checks `rollover_applied_month` and applies `applyMonthlyRollover()` on first open of a new month; rollover credit shown per budget card.
+- **Expense soft-delete with 30-day recycle bin**: `deleted_at` column on expenses; `deleteExpense()` soft-deletes; "🗑 Recently Deleted" filter chip in Transactions; Restore and Purge buttons; auto-purge after 30 days (Firestore tombstoned on purge).
+- **Bulk expense delete undo**: `UndoService` extended to `delete_expense_batch` — all selected expenses can be restored within the undo window.
+- **Income edit capability**: `DBService.updateIncome()` added; long-press edit in IncomeScreen with before/after confirmation.
+- **Analytics CSV export scoped to current period**: export now reflects the active chart period, not all-time history.
+- **Per-product price trend chart**: tapping a product in Price Intelligence shows a `fl_chart` LineChart with historical price points.
+- **Manual price entry**: FAB in Price Intelligence to log a price without a receipt (wet market, cash purchases).
+- **Recurring multi-month catch-up**: "Log All Due" loops until `next_date > now`; shows "Logged N payments" snackbar.
+- **Goal edit balance protection**: "Already Saved" field is read-only when editing; separate Adjust/Withdraw action with confirmation required.
+
+### Fixed
+- **BIR Q4 / Annual ITR deadline year double-increment** (Critical): Q4 (Jan 30) and Annual ITR (Apr 15) were showing year+2 dates in January–April due to hardcoded `year+1` + roll-forward logic.
+- **Installment plan liabilities invisible to Net Worth** (Critical): remaining plan balances now included in `_totalLiabilities` calculation.
+- Controller disposal memory leaks in wallet-allocation bottom sheet.
+- Restore snapshot correctly re-applies wallet deductions and goal round-up contributions.
+- Soft-deleted expenses tombstoned in Firestore on 30-day purge.
+- Deduplication in `insertExpense()` excludes soft-deleted rows.
+- Composite UNIQUE key on `tax_filings(deadline_date, period_label)` prevents same-date collision.
+- Amount validation in tax filing dialog prevents ₱0 entries.
+
+## [3.5.7] - 2026-11-23
+
+### Added
+- **AI context expanded**: full current-month expense list (up to 100 entries) passed to AI context; deduped from all-time block.
+- **Token limits raised**: `_estimateMaxTokens` cap removed (was 1400 tokens); scales to 3000 for multi-item responses; "Response was trimmed" errors significantly reduced.
+- **Wallet deduct threshold setting**: configurable minimum amount (default ₱10) below which the deduct confirmation dialog is skipped; slider in Settings.
+
+### Fixed
+- Truncated expense names from partial AI responses (e.g. "For Nov 2 (") now rejected by name validation guards.
+- `log_multiple_expenses` action now validates each item name individually.
+- Context deduplication: current-month expenses no longer appear in both the month block and the all-time block.
+
+## [3.5.6] - 2026-11-23
+
+### Added
+- **Cebuano (Bisaya) localization**: 190 translation keys; "Cebuano (Bisaya)" option in Settings language selector.
+- **Full localization coverage**: all 55 screens now use `AppLocalizations` (was 3 screens).
+- **Dynamic app versioning**: `package_info_plus` reads the actual installed version at runtime; `kAppVersion` is never stale after an update.
+
+## [3.5.5] - 2026-11-23
+
+### Added
+- **Tagalog (Filipino) localization**: 90+ ARB keys across home, settings, add expense, navigation; language selector in Settings (English / Filipino) with persistent choice; `flutter_localizations` wired into MaterialApp.
+- **Automated test suite**: 82 tests covering AppConfig model routing, BIR deadlines, currency formatting, rate limits, price intelligence.
+- **Flutter Web / PWA (Option A)**: `sqflite_common_ffi_web` for in-browser SQLite; `kIsWeb` guards for OCR/notifications/biometric/shake; browser download API for exports; `manifest.json` with SmartSpend branding.
+
+### Fixed
+- PHP currency formatting now uses `NumberFormat('#,##0.00')` — displays ₱1,234.56 instead of ₱1235.
+
+## [3.5.4] - 2026-11-22
+
+### Added
+- **Firebase Analytics**: model usage, OCR, voice, AI chat, and feature-entry events (no PII).
+- **OpenRouter rate-limit warning UX**: amber banner in AI chat when < 100 daily requests remain.
+- **`flutter analyze` CI workflow**: runs on every push/PR to master.
+
+### Fixed
+- 15 "Ship Now" items from comprehensive audit: OCR/voice model routing wired, Cerebras excluded from fast pool, SMS toggle hidden, stable APK asset names for website downloads, website version badges, README model counts, `_buildComingSoonSection` renamed, score history comment cleaned up.
+- Analyze CI: switched from outdated `app_config.dart.example` to committed stub.
+- Research findings section centered on website.
+- CHANGELOG updated through v3.5.3.
+
 ## [3.5.3] - 2026-11-22
 
 ### Added
