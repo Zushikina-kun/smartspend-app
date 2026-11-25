@@ -1198,7 +1198,7 @@ class DBService {
     if (isImport) {
       // For imports: block exact same amount+date+category (prevents re-importing same file)
       final existing = await db.rawQuery(
-        "SELECT id FROM expenses WHERE amount = ? AND date = ? AND category = ? AND notes LIKE 'Imported from%'",
+        "SELECT id FROM expenses WHERE amount = ? AND date = ? AND category = ? AND notes LIKE 'Imported from%' AND deleted_at IS NULL",
         [amount, toInsert['date'] ?? today, toInsert['category']],
       );
       if (existing.isNotEmpty) {
@@ -1212,7 +1212,7 @@ class DBService {
           ? insertTime.substring(0, compareLen)
           : insertTime;
       final existing = await db.rawQuery(
-        "SELECT id FROM expenses WHERE item_name = ? AND amount = ? AND date = ? AND substr(time, 1, $compareLen) = ?",
+        "SELECT id FROM expenses WHERE item_name = ? AND amount = ? AND date = ? AND substr(time, 1, $compareLen) = ? AND deleted_at IS NULL",
         [toInsert['item_name'], amount, toInsert['date'] ?? today, checkTime],
       );
       if (existing.isNotEmpty) {
@@ -1382,8 +1382,14 @@ class DBService {
   /// Auto-purge entries deleted more than 30 days ago (called on startup).
   static Future<void> purgeExpiredDeletedExpenses() async {
     final db = await getDB();
-    await db.rawDelete(
-        "DELETE FROM expenses WHERE deleted_at IS NOT NULL AND deleted_at < datetime('now', '-30 days')");
+    // Fetch IDs before deleting so we can tombstone them in the cloud
+    final rows = await db.rawQuery(
+        "SELECT id FROM expenses WHERE deleted_at IS NOT NULL AND deleted_at < datetime('now', '-30 days')");
+    for (final row in rows) {
+      final id = row['id'] as int;
+      await db.delete('expenses', where: 'id = ?', whereArgs: [id]);
+      CloudService.deleteDoc('expenses', id);
+    }
   }
 
   static Future<List<Expense>> getExpenses({String? month}) async {
